@@ -1,0 +1,1 @@
+-DtlosAgent.tmpdir="tmp" -DtlosSwAgent.config="conf/tlosSWAgentConfig10.xml" -DDEBUG="YES"

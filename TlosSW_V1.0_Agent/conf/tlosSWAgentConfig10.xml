@@ -1,0 +1,65 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<con:AgentConfigInfo xmlns:con="http://www.likyateknoloji.com/XML_agentconfig_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"  xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agentconfig_types ../xsds/tlosSWAgentConfig_v_1_0.xsd">
+    <con:Product-info>
+        <com:comment>urun hakkindaki temel bilgileri icerir.</com:comment>
+        <com:date>2009-01-01</com:date>
+        <com:version>2.0</com:version>
+        <con:company>
+            <com:name>Likya Bilgi Teknolojileri</com:name>
+            <com:address>kayisdagi</com:address>
+            <com:telephone id="1">2124509876</com:telephone>
+        </con:company>
+    </con:Product-info>
+    <con:settings>
+        <con:machine-info>
+            <com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
+            <com:name>SUN</com:name>
+        </con:machine-info>
+        <con:server-info>
+            <res:Resource>Serkan-MacBook-Pro.local</res:Resource>
+        	<com:ipAddress>192.168.1.60</com:ipAddress>
+        	<com:portNumber>5555</com:portNumber>
+        </con:server-info>
+        <con:paths>
+            <com:comment>Urunun calisacagi dizin bilgilerini icerir</com:comment>
+            <con:agent-bins>\homebin\</con:agent-bins>
+            <con:agent-jobs>/home/tlos2.0/jobs/</con:agent-jobs>
+            <con:agent-logs>/home/tlos2.0/logs/</con:agent-logs>
+        </con:paths>
+        <con:isPersistent>
+            <com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
+			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
+            <com:value_boolean>false</com:value_boolean>
+        </con:isPersistent>
+        <con:isAuthenticationPersistent>
+            <com:comment>program server'a başarılı bir şekilde bağlandıktan sonra username password'i , 
+			diske yükleyip bir sonraki restart'da diskten okuyup baslayabilir. default deger true</com:comment>
+            <com:value_boolean>true</com:value_boolean>
+        </con:isAuthenticationPersistent>
+        <con:logFile>TlosEkran.log</con:logFile>
+        <con:agentFrequency>
+            <com:comment>Scheduler'ın calisma sikiligi (sn)</com:comment>
+            <com:frequency>1</com:frequency>
+        </con:agentFrequency>
+        <con:remoteManagerProperties>
+            <com:comment>		managementPort : yonetim konsolu haberlesme portu
+		managementBufferSize : yonetim konsolu buffer boyu</com:comment>
+            <com:portNumber>3001</com:portNumber>
+            <com:bufferSize>128</com:bufferSize>
+        </con:remoteManagerProperties>
+        <con:jmxTlsPort>
+            <com:comment>jmxTlsPort</com:comment>
+            <com:portNumber>5556</com:portNumber>
+        </con:jmxTlsPort>
+        <con:jmxPort>
+            <com:comment>jmxPort</com:comment>
+            <com:portNumber>5559</com:portNumber>
+        </con:jmxPort>
+    </con:settings>
+    <con:performance>
+        <con:threshold>
+            <con:high>10</con:high>
+            <con:low>5</con:low>
+        </con:threshold>
+    </con:performance>
+</con:AgentConfigInfo>

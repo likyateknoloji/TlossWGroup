@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/log4j/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JmxMp"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-collections-3.2.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_ClientLibs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Utils"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-vfs-1.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
+	<classpathentry kind="lib" path="/TlosSW_V1.0_Schema/TlosSW_xsd_V1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javaMail"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
