@@ -1,0 +1,100 @@
+        <dat:jobProperties ID="2" agentId="0" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+			<jsdl:JobDescription/>
+			<dat:baseJobInfos>
+				<com:jsName>WriteFileProcess</com:jsName>
+				<com:comment>File process job</com:comment>
+				<dat:jobInfos>
+					<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+					<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+					<com:jobTypeDetails>
+						<com:jobCommandType>FILE PROCESS</com:jobCommandType>
+						<com:specialParameters>
+                                    <com:inParam>
+                                        <par:parameter xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+                                            <par:name>readFileResult</par:name>
+                                            <par:valueString><![CDATA[Merve Özbey
+Likya Bilgi Teknolojileri
+ve İletişim Hiz. Ltd. Şti.
+www.likyateknoloji.com
+Tel :    + 90 216 471 81 55
+Gsm : + 90 549 242 02 10
+Faks:  + 90 216 661 14 92]]></par:valueString>
+                                            
+                                        </par:parameter>
+                                    </com:inParam>    
+							<file:fileAdapterProperties>
+								<file:adapterType>TEXT FILE PROCESS</file:adapterType>
+								<file:fileProperties>
+									<file:fileType>Ascii</file:fileType>
+									<file:fileTypeDetail>
+										<file:textFileDetail>plainText</file:textFileDetail>
+									</file:fileTypeDetail>
+									<file:recursive>false</file:recursive>
+									<file:gelGec>true</file:gelGec>
+								</file:fileProperties>
+								<file:operation>
+									<file:operationType>Write File</file:operationType>
+									<file:processedFilesOperationType>None</file:processedFilesOperationType>
+								</file:operation>
+								<file:filenameAndDirectory>
+									<file:targetDirectory>
+										<com:path>D:/test/</com:path>
+									</file:targetDirectory>
+									<file:targetFileName>
+										<com:filename>writeFileProcessResult.txt</com:filename>
+									</file:targetFileName>
+								</file:filenameAndDirectory>
+							</file:fileAdapterProperties>
+						</com:specialParameters>
+					</com:jobTypeDetails>
+				</dat:jobInfos>
+				<dat:calendarId>5</dat:calendarId>
+				<dat:jobLogFile>WriteFileProcess.log</dat:jobLogFile>
+				<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs</dat:jobLogPath>
+				<dat:oSystem>Windows</dat:oSystem>
+				<dat:jobPriority>1</dat:jobPriority>
+				<com:userId>1</com:userId>
+			</dat:baseJobInfos>
+			<dat:cascadingConditions>
+				<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+				<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+				<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+			</dat:cascadingConditions>
+			<dat:stateInfos>
+				<state-types:LiveStateInfos>
+					<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+						<state-types:StateName>PENDING</state-types:StateName>
+						<state-types:SubstateName>CREATED</state-types:SubstateName>
+					</state-types:LiveStateInfo>
+				</state-types:LiveStateInfos>
+			</dat:stateInfos>
+			<dat:advancedJobInfos>
+				<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			</dat:advancedJobInfos>
+			<dat:concurrencyManagement>
+				<com:instanceId>11</com:instanceId>
+				<com:concurrent>true</com:concurrent>
+			</dat:concurrencyManagement>
+			<dat:alarmPreference/>
+			<dat:timeManagement>
+				<dat:jsPlannedTime>
+					<dat:startTime>
+						<com:time>08:00:00</com:time>
+					</dat:startTime>
+					<dat:stopTime>
+						<com:time>23:00:00</com:time>
+					</dat:stopTime>
+				</dat:jsPlannedTime>
+				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+				<dat:jsTimeOut>
+					<com:value_integer>1</com:value_integer>
+					<com:unit>MINUTES</com:unit>
+				</dat:jsTimeOut>
+				<dat:expectedTime>
+					<com:value_integer>100</com:value_integer>
+					<com:unit>MINUTES</com:unit>
+				</dat:expectedTime>
+				<dat:tolerancePercentage>10</dat:tolerancePercentage>
+				<dat:minPercentage>10</dat:minPercentage>
+			</dat:timeManagement>
+        </dat:jobProperties>

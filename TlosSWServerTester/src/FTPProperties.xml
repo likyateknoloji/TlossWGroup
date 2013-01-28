@@ -1,0 +1,9 @@
+<ftp:ftpProperties id="1" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types">
+	<ftp:connection>
+		<com:connName>Likya 1 numara</com:connName>
+		<com:userName>likya</com:userName>
+		<com:userPassword>likya</com:userPassword>
+		<com:ftpPortNumber>0</com:ftpPortNumber>
+		<com:ipAddress>192.168.1.39</com:ipAddress>
+	</ftp:connection>
+</ftp:ftpProperties>

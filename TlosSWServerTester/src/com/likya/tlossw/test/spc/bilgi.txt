@@ -1,0 +1,25 @@
+TestSpc.java çal›ﬂt›rmak için yap›lmas› gerekenler :
+
+TlosSW_V1.0 içinde :
+
+1. Spc.java içinde Dss yetki kontrolü kald›r›lmal›.
+
+//			if (Dss.transferPermission(scheduledJob)) {
+				transfer(scheduledJob, sortType.getJobKey());
+//			} 
+
+2. LikyaDayKeeper.java içine isForced = true eklenmeli
+
+	public void run() {
+
+		boolean restartAllScenarios = false;
+
+		while (executePermission) {
+
+			isForced = true;
+			
+3. TlosSpaceWide 146. sat›rda			
+
+	boolean isPerformanceManagerEnabled = false;
+	
+	yap›lmal›

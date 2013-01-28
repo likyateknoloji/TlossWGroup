@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/cxf-2.6.0.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/wsdl4j-1.6.2.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/SharedLibs/log4j/log4j-1.2.15.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_ClientLibs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Schema"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/junit/junit-4.10.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/eXist1.4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0"/>
+	<classpathentry kind="lib" path="/SharedLibs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/oracle/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-vfs-1.0.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-api-2.2.6.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-impl-2.2.5.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-xjc-2.2.5.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/neethi-3.0.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/xml-resolver-1.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/xmlschema-core-2.0.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
+	<classpathentry kind="lib" path="/SharedLibs/Jsch/jsch-0.1.49.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
