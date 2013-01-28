@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean_xpath.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xmlbeans-qname.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/jsr173_1.0_api.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/EvalUtils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
 	<classpathentry kind="lib" path="/SharedLibs/saxon/org.apache.servicemix.bundles.saxon-9.1.0.1_1.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache/commons-net-3.0.1.jar"/>
@@ -37,5 +36,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_ClientLibs"/>
 	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-dom.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
+	<classpathentry kind="lib" path="/SharedLibs/evalUtils/EvalUtils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
