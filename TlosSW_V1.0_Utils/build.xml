@@ -1,0 +1,82 @@
+<project name="TlosSW_V1.0_Utils" default="build-all" basedir=".">
+
+	<property name="appname" value="TlosSW_Utils" />
+
+	<property file="build.properties" />
+	
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="build.dir" value="build/classes" />
+	<property name="webapp.dir" value="." />
+	<property name="build.classes.dir" value="${build.dir}" />
+	<property name="app.deploy.dir" value="${basedir}" />
+	<property name="version.num" value="1.0"/>
+
+	<target name="init" depends="init2" unless="minor.number">
+		<property name="minor.number" value="" />
+		<property name="buildchar" value="" />
+	</target>
+	
+	<target name="init2" if="minor.number">
+		<property name="buildchar" value="_b" />
+	</target>
+	
+	<available file="${build.classes.dir}" type="dir" property="build.classes.dir.present"/>
+	
+	<!-- war, jar, ear files -->
+	<target name="jar" depends="compile">
+		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<jar jarfile="${jar}">
+			<fileset dir="${build.classes.dir}">
+			</fileset>
+			<fileset dir=".">
+				<include name="lib" />
+				<include name="lib/*.jar" />
+			</fileset>
+		</jar>
+		
+		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<jar jarfile="${src.jar}">
+			<fileset dir="${src.dir}">
+			</fileset>
+			<fileset dir=".">
+				<include name="lib" />
+				<include name="lib/*.jar" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="clean" description="deleteall" if="build.classes.dir.present">
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}/" includes="**/*" />
+			<fileset dir="." includes="**/*.jar" />
+		</delete>
+	</target>
+
+	<!-- compilation options -->
+
+	<target name="compile" depends="clean">
+		<path id="build.path">
+				<pathelement location="${build.classes.dir}" />
+				<pathelement location="${sharedlib.dir}/apache/commons-net-3.0.1.jar" />
+				<pathelement location="${sharedlib.dir}/apache/commons-collections-3.2.1.jar" />
+				<pathelement location="${sharedlib.dir}/log4j/log4j-1.2.15.jar" />
+				<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
+			    <pathelement location="${sharedlib.dir}/saxonb9-1-0-8j/saxon9.jar" />
+			    <pathelement location="${tlos_commonDefinitions.dir}/TlosSW_Common_V${version.num}${buildchar}${minor.number}.jar" />
+				<pathelement location="${tlos_model.dir}/TlosSW_Model_V${version.num}${buildchar}${minor.number}.jar" />
+				<pathelement location="${tlos_schemaDefinitions.dir}/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" />
+		</path>
+		
+		<mkdir dir="${build.classes.dir}" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" deprecation="on" classpathref="build.path" optimize="off" includes="**" />
+	</target>
+
+	<target name="build-all" depends="init,jar">
+		<copy file="${jar}" todir="${app.deploy.dir}" />
+		
+		<mkdir dir="test"/>
+		<copy file="${jar}" todir="test"/>
+		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
+	</target>
+
+</project>

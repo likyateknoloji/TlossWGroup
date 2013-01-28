@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Schema"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-net-3.0.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/log4j/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-dom.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-s9api.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-xpath.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/dom4j-1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xom-1.2.8/xom-1.2.8.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/jdom-2.0.1/jdom-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-xom.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
