@@ -1,0 +1,119 @@
+
+<dat:jobProperties ID="1" agentId="0"
+	xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:x_1="http://www.likyateknoloji.com/XML_common_types">
+	<jsdl:JobDescription xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" />
+	<dat:baseJobInfos>
+		<com:jsName xmlns:com="http://www.likyateknoloji.com/XML_common_types">job1</com:jsName>
+		<com:comment xmlns:com="http://www.likyateknoloji.com/XML_common_types">ilk job</com:comment>
+		<dat:jobInfos>
+			<com:jobBaseType xmlns:com="http://www.likyateknoloji.com/XML_common_types">NON_PERIODIC
+			</com:jobBaseType>
+			<com:jobTypeDef xmlns:com="http://www.likyateknoloji.com/XML_common_types">TIME BASED</com:jobTypeDef>
+			<com:jobTypeDetails xmlns:com="http://www.likyateknoloji.com/XML_common_types">
+				<com:jobCommandType>BATCH PROCESS</com:jobCommandType>
+				<com:jobCommand>job1.bat</com:jobCommand>
+				<com:jobPath>/Users/serkan/Documents/workspace/TlosSWAgentTester</com:jobPath>
+				<com:specialParameters>
+					<com:inParam>
+						<par:parameter id="7"
+							xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+							<par:name>filename</par:name>
+							<par:valueString>local.xml</par:valueString>
+							<par:desc>tanim local.xml</par:desc>
+						</par:parameter>
+						<par:parameter id="8"
+							xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+							<par:name>filename2</par:name>
+							<par:valueString>local2.xml</par:valueString>
+							<par:desc>tanim local2.xml</par:desc>
+						</par:parameter>
+					</com:inParam>
+					<com:outParam>
+						<par:parameter id="9"
+							xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+							<par:name>LOGPATH</par:name>
+							<par:valueString>/Users/serkan/Documents/workspace/TlosSWAgentTester</par:valueString>
+							<par:desc>tanim log</par:desc>
+						</par:parameter>
+					</com:outParam>
+				</com:specialParameters>
+			</com:jobTypeDetails>
+		</dat:jobInfos>
+		<dat:calendarId>5</dat:calendarId>
+		<dat:jobLogFile>job1.log</dat:jobLogFile>
+		<dat:jobLogPath>/Users/serkan/Documents/workspace/TlosSWAgentTester</dat:jobLogPath>
+		<dat:oSystem>WINDOWS</dat:oSystem>
+		<dat:jobPriority>1</dat:jobPriority>
+		<com:userId xmlns:com="http://www.likyateknoloji.com/XML_common_types">4</com:userId>
+	</dat:baseJobInfos>
+	<!--dependencyList -->
+	<dat:cascadingConditions>
+		<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+		<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+		<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+	</dat:cascadingConditions>
+	<dat:stateInfos>
+		<state-types:LiveStateInfos
+			xmlns:state-types="http://www.likyateknoloji.com/state-types">
+			<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+				<state-types:StateName>PENDING</state-types:StateName>
+				<state-types:SubstateName>CREATED</state-types:SubstateName>
+			</state-types:LiveStateInfo>
+		</state-types:LiveStateInfos>
+	</dat:stateInfos>
+	<dat:advancedJobInfos>
+		<com:agentChoiceMethod
+			xmlns:com="http://www.likyateknoloji.com/XML_common_types">SimpleMetascheduler</com:agentChoiceMethod>
+	</dat:advancedJobInfos>
+	<dat:concurrencyManagement>
+		<com:instanceId xmlns:com="http://www.likyateknoloji.com/XML_common_types">11</com:instanceId>
+		<com:concurrent xmlns:com="http://www.likyateknoloji.com/XML_common_types">true</com:concurrent>
+	</dat:concurrencyManagement>
+	<dat:alarmPreference />
+	<dat:timeManagement>
+		<dat:jsPlannedTime>
+			<dat:startTime>
+				<com:time xmlns:com="http://www.likyateknoloji.com/XML_common_types">08:00:00</com:time>
+			</dat:startTime>
+			<dat:stopTime>
+				<com:time xmlns:com="http://www.likyateknoloji.com/XML_common_types">24:00:00</com:time>
+			</dat:stopTime>
+		</dat:jsPlannedTime>
+		<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+		<dat:jsTimeOut>
+			<com:value_integer xmlns:com="http://www.likyateknoloji.com/XML_common_types">1</com:value_integer>
+			<com:unit xmlns:com="http://www.likyateknoloji.com/XML_common_types">SECONDS</com:unit>
+		</dat:jsTimeOut>
+		<dat:expectedTime>
+			<com:value_integer xmlns:com="http://www.likyateknoloji.com/XML_common_types">10
+			</com:value_integer>
+			<com:unit xmlns:com="http://www.likyateknoloji.com/XML_common_types">MINUTES</com:unit>
+		</dat:expectedTime>
+		<dat:tolerancePercentage>10</dat:tolerancePercentage>
+		<dat:minPercentage>10</dat:minPercentage>
+	</dat:timeManagement>
+	<com:localParameters xmlns:com="http://www.likyateknoloji.com/XML_common_types">
+		<com:inParam>
+			<par:parameter id="4"
+				xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+				<par:name>filename</par:name>
+				<par:valueString>local.xml</par:valueString>
+				<par:desc>tanim local.xml</par:desc>
+			</par:parameter>
+			<par:parameter id="5"
+				xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+				<par:name>filename2</par:name>
+				<par:valueString>local2.xml</par:valueString>
+				<par:desc>tanim local2.xml</par:desc>
+			</par:parameter>
+		</com:inParam>
+		<com:outParam>
+			<par:parameter id="6"
+				xmlns:par="http://www.likyateknoloji.com/XML_parameters_types">
+				<par:name>LOGPATH</par:name>
+				<par:valueString>/Users/serkan/Documents/workspace/TlosSWAgentTester</par:valueString>
+				<par:desc>tanim log</par:desc>
+			</par:parameter>
+		</com:outParam>
+	</com:localParameters>
+</dat:jobProperties>

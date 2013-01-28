@@ -1,0 +1,21 @@
+<agnt:SWAgent xmlns:res="http://www.likyateknoloji.com/resource-extension-defs"
+	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="1">
+	<res:Resource>Serkan-MacBook-Pro.local</res:Resource>
+	<agnt:osType>Windows</agnt:osType>
+	<agnt:agentType>agent</agnt:agentType>
+	<agnt:nrpePort>5666</agnt:nrpePort>
+	<agnt:jmxPort>5556</agnt:jmxPort>
+	<agnt:jmxUser>jmxuser</agnt:jmxUser>
+	<agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
+	<agnt:inJmxAvailable>true</agnt:inJmxAvailable>
+	<agnt:outJmxAvailable>true</agnt:outJmxAvailable>
+	<agnt:jmxAvailable>true</agnt:jmxAvailable>
+	<agnt:userStopRequest>null</agnt:userStopRequest>
+	<agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+	<agnt:lastHeartBeatTime>1334252466943</agnt:lastHeartBeatTime>
+	<agnt:durationForUnavailability>900</agnt:durationForUnavailability>
+	<agnt:lastJobTransfer>true</agnt:lastJobTransfer>
+	<agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
+	<agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
+</agnt:SWAgent>
