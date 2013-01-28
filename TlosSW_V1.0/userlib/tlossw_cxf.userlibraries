@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<eclipse-userlibraries version="2">
+    <library name="cxf_260" systemlibrary="false">
+        <archive path="/SharedLibs/apache-cxf-2.6.0/cxf-2.6.0.jar" source="/CXF_260"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/neethi-3.0.2.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/xml-resolver-1.2.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/xmlschema-core-2.0.2.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/wsdl4j-1.6.2.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/jaxb-api-2.2.6.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/jaxb-impl-2.2.5.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/jaxb-xjc-2.2.5.jar"/>
+        <archive path="/SharedLibs/apache-cxf-2.6.0/commons-lang-2.6.jar"/>
+    </library>
+</eclipse-userlibraries>

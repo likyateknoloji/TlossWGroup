@@ -1,0 +1,1 @@
+-Dtlos.base="." -Dtlos.webapp="admin.war" -Dtlossw.config="/Users/serkan/Documents/workspace/TlosSW_V1.0_Schema/dbfiles/xml/tlosSWConfig10.xml"  -Dtlos.tmpdir="/Users/serkan/Documents/workspace/TlosSW_V1.0/tlos.tmpdir"

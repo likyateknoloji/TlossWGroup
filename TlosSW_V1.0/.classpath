@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/cxf-2.6.0.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/wsdl4j-1.6.2.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JmxMp"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JettyForICEFaces"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/eXist1.4"/>
+	<classpathentry kind="lib" path="/SharedLibs/log4j/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-xpath.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xbean_xpath.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/xmlbeans-qname.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xmlbeans-2.5.0/jsr173_1.0_api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/EvalUtils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxon/org.apache.servicemix.bundles.saxon-9.1.0.1_1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-net-3.0.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-vfs-1.0.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-api-2.2.6.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-impl-2.2.5.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/jaxb-xjc-2.2.5.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/neethi-3.0.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/xml-resolver-1.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/xmlschema-core-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-s9api.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/jaxp-1.4.6/JAXP_146.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/jdom-1.1.3/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/dom4j-1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/xom-1.2.8/xom-1.2.8.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Schema"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_ClientLibs"/>
+	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-dom.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

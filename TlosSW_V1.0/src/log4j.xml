@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+    <!-- ConsoleAppender : Logs to console -->
+	<appender name="ekran" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="info" />
+		</filter>
+	</appender>
+	
+    <!-- RollingFileAppender : Logs to a file, starts a new file once the max size is reached. -->
+	<appender name="dosya" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="1000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosSEkran.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="info" />
+		</filter>
+	</appender>
+	
+	<appender name="traceFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="3000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosSTrace.log" />
+		<param name="threshold" value="trace"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<!-- filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+			<param name="LevelMax" value="debug" />
+		</filter-->
+	</appender>
+
+	<appender name="heartbeatFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="3000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosHB.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="info" />
+		</filter>
+	</appender>
+	
+	<appender name="senaryoFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="3000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosSenaryo.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+			<param name="LevelMax" value="error" />
+		</filter>
+	</appender>
+	
+	<appender name="infoBusFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="3000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosInfoBus.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+			<param name="LevelMax" value="info" />
+		</filter>
+	</appender>
+	
+	<appender name="errorFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="3000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/tlosSError.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="error" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	
+	<!-- appender name="existlog" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="1000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="tlosExist.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender-->
+	
+	<!-- appender name="icelog" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="1000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="tlosIce.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender-->
+
+	<!-- appender name="jettylog" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="1000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="tlosJetty.log" />
+		<param name="threshold" value="debug"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+	</appender-->
+	
+	<!-- appender name="genellog" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="1000KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="tlosOther.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{DATE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender-->
+
+	<logger name="com.likya.tlossw" additivity="false">
+	    <level value="trace"/>
+		<appender-ref ref="traceFile" />
+		<appender-ref ref="ekran" />
+		<appender-ref ref="dosya" />
+		<appender-ref ref="errorFile" />
+	</logger>
+	
+	<logger name="com.likya.tlossw.core" additivity="false">
+	    <level value="debug"/>
+		<appender-ref ref="senaryoFile" />
+	</logger>
+	
+	<logger name="com.likya.tlossw.infobus" additivity="false">
+	    <level value="debug"/>
+		<appender-ref ref="infoBusFile" />
+	</logger>
+	
+	<logger name="com.likya.tlossw.core.agents" additivity="false">
+	    <level value="info"/>
+		<appender-ref ref="heartbeatFile" />
+	</logger>
+
+	<!-- logger name="org.exist" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="existlog" />
+	</logger>
+	
+	<logger name="org.quartz" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="existlog" />
+	</logger-->
+
+	<!-- logger name="com.icesoft" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="icelog" />
+	</logger>
+	
+	<logger name="com.sun.faces" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="icelog" />
+	</logger-->
+
+	<!-- logger name="org.mortbay" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="jettylog" />
+	</logger-->
+
+	<root>
+		<priority value="trace"></priority>
+		<!-- -appender-ref ref="genellog" / -->
+		<appender-ref ref="ekran" />
+		<appender-ref ref="dosya" />
+		<appender-ref ref="senaryoFile" />
+		<appender-ref ref="infoBusFile" />
+		<appender-ref ref="traceFile" />
+		<appender-ref ref="errorFile" />
+		<appender-ref ref="heartbeatFile" />
+	</root>
+
+</log4j:configuration>
