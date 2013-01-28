@@ -1,0 +1,165 @@
+
+<dat:jobProperties xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types"
+	xmlns:com="http://www.likyateknoloji.com/XML_common_types" 
+	xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
+	xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" 
+	xmlns:jsdl-posix="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix"
+	xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
+	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep"
+	xmlns:sweepfunc="http://schemas.ogf.org/jsdl/2009/03/sweep/functions"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="1" agentId="0"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ..\xsds\tlosSWData_v_1_0.xsd">
+
+	<jsdl:JobDescription>
+		<jsdl:Application>
+			<jsdl-posix:POSIXApplication>
+				<jsdl-posix:Executable>java</jsdl-posix:Executable>
+				<jsdl-posix:Argument>-jar</jsdl-posix:Argument>
+				<jsdl-posix:Argument>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\jobs\TlosTestJob.jar
+				</jsdl-posix:Argument>
+				<jsdl-posix:Argument>60000</jsdl-posix:Argument>
+				<jsdl-posix:Argument>0</jsdl-posix:Argument>
+				<jsdl-posix:Argument>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\job1.log
+				</jsdl-posix:Argument>
+			</jsdl-posix:POSIXApplication>
+		</jsdl:Application>
+	</jsdl:JobDescription>
+	<sweep:Sweep>
+		<sweep:Assignment>
+			<sweep:DocumentNode>
+				<sweep:NamespaceBinding
+					ns="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix" prefix="jsdl-posix"></sweep:NamespaceBinding>
+				<sweep:Match>/*//jsdl-posix:Argument[2]</sweep:Match>
+			</sweep:DocumentNode>
+			<sweep:DocumentNode>
+				<sweep:NamespaceBinding
+					ns="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix" prefix="jsdl-posix"></sweep:NamespaceBinding>
+				<sweep:Match>/*//jsdl-posix:Argument[3]</sweep:Match>
+			</sweep:DocumentNode>
+			<sweepfunc:Values>
+				<sweepfunc:Value>11</sweepfunc:Value>
+				<sweepfunc:Value>22</sweepfunc:Value>
+				<sweepfunc:Value>33</sweepfunc:Value>
+				<sweepfunc:Value>44</sweepfunc:Value>
+				<sweepfunc:Value>55</sweepfunc:Value>
+			</sweepfunc:Values>
+		</sweep:Assignment>
+		<sweep:Sweep>
+			<sweep:Assignment>
+				<sweep:DocumentNode>
+					<sweep:NamespaceBinding
+						ns="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix" prefix="jsdl-posix"></sweep:NamespaceBinding>
+					<sweep:Match>substring(/*//jsdl-posix:Argument[3], 4, 2)
+					</sweep:Match>
+				</sweep:DocumentNode>
+				<sweepfunc:Values>
+					<sweepfunc:Value>x1</sweepfunc:Value>
+					<sweepfunc:Value>y1</sweepfunc:Value>
+					<sweepfunc:Value>z1</sweepfunc:Value>
+					<sweepfunc:Value>q1</sweepfunc:Value>
+					<sweepfunc:Value>w1</sweepfunc:Value>
+				</sweepfunc:Values>
+			</sweep:Assignment>
+		</sweep:Sweep>
+	</sweep:Sweep>
+	<dat:baseJobInfos>
+		<com:jsName>job1</com:jsName>
+		<com:comment>ilk job</com:comment>
+		<dat:jobInfos>
+			<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+			<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+			<com:jobTypeDetails>
+				<com:jobCommandType>BATCH PROCESS</com:jobCommandType>
+				<com:jobCommand>job1.bat</com:jobCommand>
+				<com:jobPath>C:\Hakan\v1.7.0\jobs\</com:jobPath>
+				<com:specialParameters>
+					<com:inParam>
+						<par:parameter id="7">
+							<par:name>filename</par:name>
+							<par:valueString>tlosSWParameters10.xml</par:valueString>
+							<par:preValue type="2">tlosSWParameters10.xml
+							</par:preValue>
+							<par:desc>tanim local.xml</par:desc>
+						</par:parameter>
+						<par:parameter id="8">
+							<par:name>filePath</par:name>
+							<par:valueString>D:\dev\likyateknoloji\likyaWorkspace\TlosSW_V1.0\xml
+							</par:valueString>
+							<par:preValue type="2">D:\dev\likyateknoloji\likyaWorkspace\TlosSW_V1.0\xml
+							</par:preValue>
+							<par:desc>tanim filePath</par:desc>
+						</par:parameter>
+						<par:parameter id="18">
+							<par:name>xpathCommand</par:name>
+							<par:valueString>/par:Parameters/par:Globals/par:parameter/par:name
+							</par:valueString>
+							<par:preValue type="2">/par:Parameters/par:Globals/par:parameter/par:name
+							</par:preValue>
+							<par:desc>tanim xpathCommand</par:desc>
+						</par:parameter>
+					</com:inParam>
+					<com:outParam>
+						<par:parameter id="9">
+							<par:name>queryResult</par:name>
+							<par:valueString></par:valueString>
+							<par:preValue type="2"></par:preValue>
+							<par:desc>tanim queryResult</par:desc>
+						</par:parameter>
+					</com:outParam>
+				</com:specialParameters>
+			</com:jobTypeDetails>
+		</dat:jobInfos>
+		<dat:calendarId>5</dat:calendarId>
+		<dat:jobLogFile>job1.log</dat:jobLogFile>
+		<dat:jobLogPath>C:\Hakan\v1.7.0\jobs\logs</dat:jobLogPath>
+		<dat:oSystem>Windows</dat:oSystem>
+		<dat:jobPriority>1</dat:jobPriority>
+		<com:userId>4</com:userId>
+	</dat:baseJobInfos>
+	<!--dependencyList -->
+	<dat:cascadingConditions>
+		<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+		<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+		<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+	</dat:cascadingConditions>
+	<dat:stateInfos>
+		<state-types:LiveStateInfos>
+			<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+				<state-types:StateName>PENDING</state-types:StateName>
+				<state-types:SubstateName>CREATED</state-types:SubstateName>
+			</state-types:LiveStateInfo>
+		</state-types:LiveStateInfos>
+	</dat:stateInfos>
+	<dat:advancedJobInfos>
+		<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+	</dat:advancedJobInfos>
+	<dat:concurrencyManagement>
+		<com:instanceId>0</com:instanceId>
+		<com:concurrent>true</com:concurrent>
+	</dat:concurrencyManagement>
+	<dat:alarmPreference></dat:alarmPreference>
+	<dat:timeManagement>
+		<dat:jsPlannedTime>
+			<dat:startTime>
+				<com:time>15:38:00</com:time>
+			</dat:startTime>
+			<dat:stopTime>
+				<com:time>23:00:00</com:time>
+			</dat:stopTime>
+		</dat:jsPlannedTime>
+		<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+		<dat:jsTimeOut>
+			<com:value_integer>1</com:value_integer>
+			<com:unit>MINUTES</com:unit>
+		</dat:jsTimeOut>
+		<dat:expectedTime>
+			<com:value_integer>100</com:value_integer>
+			<com:unit>MINUTES</com:unit>
+		</dat:expectedTime>
+		<dat:tolerancePercentage>10</dat:tolerancePercentage>
+		<dat:minPercentage>10</dat:minPercentage>
+	</dat:timeManagement>
+	<com:localParameters></com:localParameters>
+</dat:jobProperties>

@@ -1,0 +1,179 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_alarm_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_alarm_types">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types" schemaLocation="tlosSWSLA_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/XML_user_types" schemaLocation="tlosSWUser_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/XML_data_types" schemaLocation="tlosSWData_v_1_0.xsd"/>
+    <xs:element name="alarmManagement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="alarm"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="alarm">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="name"/>
+                <xs:element ref="desc"/>
+				<xs:element ref="alarmType"/>
+				<xs:element ref="subscriptionType"/>
+                <xs:element ref="creationDate"/>
+                <xs:element ref="startDate"/>
+                <xs:element ref="endDate"/>
+                <xs:element ref="level"/>
+                <xs:element ref="subscriber"/>
+                <xs:element ref="focus"/>
+                <xs:element ref="caseManagement"/>
+            </xs:sequence>
+            <xs:attribute name="ID" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="name" type="xs:string"/>
+    <xs:element name="desc" type="xs:string"/>
+    <xs:element name="creationDate" type="xs:dateTime"/>
+    <xs:element name="startDate" type="xs:dateTime"/>
+    <xs:element name="endDate" type="xs:dateTime"/>
+    <xs:element name="level" type="xs:integer"/>
+    <xs:element name="subscriber">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element ref="person"/>
+                    <xs:element ref="com:role"/>
+                </xs:choice>
+                 <xs:element ref="alarmChannelTypes" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="focus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="jobs" minOccurs="0"/>
+                <xs:element ref="scenarios" minOccurs="0"/>
+                <xs:element ref="systems" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jobs">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="job"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="alarmChannelTypes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="warnBy"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>    
+    <xs:element name="warnBy">
+        <xs:complexType>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>    
+	<xs:element name="alarmType" default="Job">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Job"/>
+                <xs:enumeration value="Scenario"/>
+                <xs:enumeration value="System"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+	<xs:element name="subscriptionType" default="User">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="User"/>
+                <xs:enumeration value="Role"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>	
+    <xs:element name="person">
+        <xs:complexType>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="job">
+        <xs:complexType>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+            <xs:attribute name="depth" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="scenarios">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="scenario"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="scenario">
+        <xs:complexType>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+            <xs:attribute name="depth" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="systems">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="system"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="system">
+        <xs:complexType>
+            <xs:attribute name="entry-name" use="required" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="caseManagement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="systemManagement"/>
+                <xs:element minOccurs="0" ref="stateManagement"/>
+                <xs:element minOccurs="0" ref="SLAManagement"/>
+                <xs:element minOccurs="0" ref="timeManagement"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="systemManagement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="sla:Hardware"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="stateManagement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="state-types:LiveStateInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	<!--xs:element name="SLAManagement">
+		<xs:complexType>
+			<xs:attribute name="control" use="required" type="xs:NCName"/>
+		</xs:complexType>
+	</xs:element-->
+    <xs:element name="SLAManagement" default="NO">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="YES"/>
+                <xs:enumeration value="NO"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="timeManagement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="timeOutControl"/>
+                <xs:element ref="tolerancePercentage"/>
+                <xs:element ref="minPercentage"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="timeOutControl" type="xs:boolean"/>
+    <xs:element name="tolerancePercentage" type="xs:boolean"/>
+    <xs:element name="minPercentage" type="xs:boolean"/>
+</xs:schema>

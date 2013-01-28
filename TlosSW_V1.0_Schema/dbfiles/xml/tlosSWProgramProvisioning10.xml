@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<pp:Licenses xmlns:pp="http://www.likyateknoloji.com/XML_PP_types"
+          xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		  xsi:schemaLocation="http://www.likyateknoloji.com/XML_PP_types xmldb:exist:///db/TLOSSW/xsds/tlosSWProgramProvisioning_v_1_0.xsd 
+		                      http://www.likyateknoloji.com/XML_common_types xmldb:exist:///db/TLOSSW/xsds/tlosSWOrtak_v_1_0.xsd">
+    <pp:License licenseID="1">
+        <pp:Name>Tlos SW</pp:Name>
+        <pp:version>V1.0</pp:version>
+        <pp:StartDate>2011-05-30T09:30:10+02:00</pp:StartDate>
+        <pp:EndDate>2012-05-30T09:30:10+02:00</pp:EndDate>
+        <pp:ResourcePool>
+            <pp:Resource>laptop-hakan</pp:Resource>
+            <pp:Resource>sahin-laptop</pp:Resource>
+        </pp:ResourcePool>
+        <pp:Type>Unlimited</pp:Type>
+        <com:userId>1</com:userId>
+    </pp:License>
+    <pp:License licenseID="2">
+        <pp:Name>SAS</pp:Name>
+        <pp:version>9.2</pp:version>
+        <pp:StartDate>2011-05-30T09:30:10+02:00</pp:StartDate>
+        <pp:EndDate>2012-05-30T09:30:10+02:00</pp:EndDate>
+        <pp:ResourcePool>
+            <pp:Resource>laptop-hakan</pp:Resource>
+            <pp:Resource>sahin-laptop</pp:Resource>
+        </pp:ResourcePool>
+        <pp:Type minUser="1" maxUser="10">Limited</pp:Type>
+        <com:userId>1</com:userId>
+    </pp:License>
+</pp:Licenses>

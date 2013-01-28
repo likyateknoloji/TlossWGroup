@@ -1,0 +1,81 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_db_job_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" 
+           xmlns:dbc="http://www.likyateknoloji.com/XML_dbconnection_types" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           targetNamespace="http://www.likyateknoloji.com/XML_db_job_types" elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+	<xs:import namespace="http://www.likyateknoloji.com/XML_dbconnection_types" schemaLocation="tlosSWDBConnections_v_1_0.xsd"/>
+
+	<xs:element name="dbJobDefinition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbConnectionProperties"/>
+				<xs:element ref="dbJobType"/>
+				<xs:element ref="dbc:dbProperties" minOccurs="0"/>				
+				<xs:element ref="dbc:dbConnectionProfile" minOccurs="0"/>				
+				<xs:choice>
+                    <xs:element ref="scriptProperties"/>
+                    <xs:element ref="storeProcedureProperties"/>
+                    <xs:element ref="freeSQLProperties"/>
+                </xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+ 
+	 
+	
+	<xs:element name="dbConnectionProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbPropertiesId"/>
+				<xs:element ref="dbUserId"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dbPropertiesId" type="xs:integer"/>
+	<xs:element name="dbUserId" type="xs:integer"/>
+
+	<xs:element name="dbJobType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Script"/>
+				<xs:enumeration value="Store-Procedure"/>
+				<xs:enumeration value="Free SQL"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="scriptProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sqlScriptFileName"/>
+				<xs:element ref="sqlScriptFilePath"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="freeSQLProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sqlSentence"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="storeProcedureProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sqlStoredProcedureSchemaName"/>
+				<xs:element ref="sqlStoredProcedurePackageName"/>
+				<xs:element ref="sqlStoredProcedureName"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="sqlScriptFileName" type="xs:string"/>
+	<xs:element name="sqlScriptFilePath" type="xs:string"/>
+	<xs:element name="sqlSentence" type="xs:string"/>
+	<xs:element name="sqlStoredProcedureSchemaName" type="xs:string"/>
+	<xs:element name="sqlStoredProcedurePackageName" type="xs:string"/>
+	<xs:element name="sqlStoredProcedureName" type="xs:string"/>
+	
+</xs:schema>

@@ -1,0 +1,164 @@
+
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_web_service_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           targetNamespace="http://www.likyateknoloji.com/XML_web_service_types" elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+
+	<xs:element name="webServiceList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="webServiceDefinition" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!--xs:element name="webService">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="entryType"/>
+				<xs:choice>
+					<xs:element ref="webServiceDefinition"/>
+					<xs:element ref="webServiceJob"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element-->
+
+	<xs:element name="webServiceDefinition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="serviceName"/>
+				<xs:element ref="description"/>
+				<xs:element ref="wsdlAddress"/>
+				<xs:element ref="bindingList"/>
+				<xs:element ref="com:userId"/>
+			</xs:sequence>
+			<xs:attribute name="ID" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- hangi protokollerin kullanildigi giriliyor: http get, http post, soap1.1, soap1.2 -->
+	<xs:element name="bindingList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="binding" maxOccurs="4"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="binding">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="bindingName"/>
+				<xs:element ref="operation" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="operation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="operationName"/>
+				<xs:element ref="parameterList" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="parameterList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="parameter" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="parameter">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="parameterName"/>
+				<xs:element ref="parameterType"/>
+				<xs:element ref="parameterValue" minOccurs="0"/>
+				<xs:element ref="isEnum"/>
+				<xs:element ref="enumList" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="enumList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="enumValue" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="entryType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Web Service Definition"/>
+				<xs:enumeration value="Web Service Job"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bindingName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="HTTP GET"/>
+				<xs:enumeration value="HTTP POST"/>
+				<xs:enumeration value="SOAP1.1"/>
+				<xs:enumeration value="SOAP1.2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="serviceName" type="xs:string"/>
+	<xs:element name="description" type="xs:string"/>
+	<xs:element name="wsdlAddress" type="xs:string"/>
+	<xs:element name="operationName" type="xs:string"/>
+	<xs:element name="parameterName" type="xs:string"/>
+	<xs:element name="parameterType" type="xs:string"/>
+	<xs:element name="parameterValue" type="xs:string"/>
+	<xs:element name="isEnum" type="xs:boolean"/>
+	<xs:element name="enumValue" type="xs:string"/>
+	
+	<xs:element name="userAccessProfiles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="userAccessProfile" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="userAccessProfile">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="webServiceID"/>
+				<xs:element ref="com:active"/>
+				<xs:choice>
+                    <xs:element ref="allowedUsers"/>
+                    <xs:element ref="allowedRoles"/>
+                </xs:choice>
+			</xs:sequence>
+			<xs:attribute name="ID" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="webServiceID" type="xs:integer"/>
+	
+	<xs:element name="allowedUsers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:userId" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="allowedRoles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:role" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

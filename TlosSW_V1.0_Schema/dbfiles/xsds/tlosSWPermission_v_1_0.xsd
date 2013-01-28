@@ -1,0 +1,34 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_permission_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" targetNamespace="http://www.likyateknoloji.com/XML_permission_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    <xs:element name="permissions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="permission"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="permission">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="roles"/>
+                <xs:element ref="resource"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="type" type="xs:NCName"/>
+    <xs:element name="roles">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="role"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="role" type="xs:NCName"/>
+    <xs:element name="resource">
+        <xs:complexType mixed="true">
+            <xs:attribute name="type" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

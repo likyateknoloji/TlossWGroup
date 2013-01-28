@@ -1,0 +1,85 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_alarm_history"
+	xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types"
+	xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_alarm_history">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_alarm_types"
+		schemaLocation="tlosSWAlarm_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types"
+		schemaLocation="tlosSWSLA_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_user_types"
+		schemaLocation="tlosSWUser_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/state-types"
+		schemaLocation="tlosSWState_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_data_types"
+		schemaLocation="tlosSWData_v_1_0.xsd" />
+	<xs:element name="alarmHistory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="alarm" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="alarmId" type="xs:positiveInteger" />
+	<xs:element name="alarm">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="alm:desc" minOccurs="0" />
+				<xs:element ref="alm:creationDate" />
+				<xs:element ref="alm:level" />
+				<xs:element ref="alarmId" />
+				<xs:element ref="alm:subscriber" />
+				<xs:element ref="alm:focus" minOccurs="0" />
+				<xs:element ref="alm:caseManagement" minOccurs="0" />
+				<xs:element ref="caseOccured" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="aHistoryId" use="required" type="xs:positiveInteger" />
+			<xs:attribute name="agentId" use="required" type="xs:string" />
+			<xs:attribute name="runId" use="required" type="xs:int" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="caseOccured">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" ref="alm:systemManagement" />
+				<xs:element minOccurs="0" ref="alm:stateManagement" />
+				<xs:element minOccurs="0" ref="alm:SLAManagement" />
+				<xs:element minOccurs="0" ref="alm:timeManagement" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="alarmReportHistory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="alarmReport" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="alarmLevel">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="YUKSEK" />
+				<xs:enumeration value="NORMAL" />
+				<xs:enumeration value="BILGILENDIRME" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="alarmReport">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="alm:name" />
+				<xs:element ref="alm:desc" />
+				<xs:element ref="alm:creationDate" />
+				<xs:element ref="alarmLevel" />
+				<xs:element ref="com:userName" />
+				<xs:element ref="com:jsName" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+

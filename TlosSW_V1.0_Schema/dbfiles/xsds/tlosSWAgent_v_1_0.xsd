@@ -1,0 +1,235 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_agent_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_agent_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_data_types" schemaLocation="tlosSWData_v_1_0.xsd"/>
+    <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types" schemaLocation="tlosSWParameters_v_1_0.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/resource-extension-defs" schemaLocation="tlosSW-resource-extension-defs.xsd"/>
+    <xs:element name="TxMessageTypeEnumeration">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="JOB"/>
+                <xs:enumeration value="SCENARIO"/>
+                <xs:enumeration value="JOB_STATE"/>
+                <xs:enumeration value="SCENARIO_STATE"/>
+                <xs:enumeration value="RESULT"/>
+                <xs:enumeration value="AlARM"/>
+                <xs:enumeration value="REPORT"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="RxMessageTypeEnumeration">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="JOB"/>
+                <xs:enumeration value="SCENARIO"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="RxMessageBodyType">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="dat:jobProperties"/>
+                <xs:element ref="dat:scenario"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="TxMessageBodyType">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="dat:jobProperties"/>
+                <xs:element ref="dat:scenario"/>
+                <xs:element ref="state-types:LiveStateInfo"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RxMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="RxMessageTypeEnumeration"/>
+                <xs:element ref="RxMessageBodyType"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="TxMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="TxMessageTypeEnumeration"/>
+                <xs:element ref="TxMessageBodyType"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+	<!--========================================================================-->
+	<!-- COMPLEX TYPES : SWAgent related types -->
+    <xs:element name="SWAgents">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="SWAgent" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SWAgent">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="res:Resource"/>
+                <xs:element ref="osType"/>
+                <xs:element ref="agentType"/>
+                <xs:element ref="nrpePort"/>
+                <xs:element ref="jmxPort"/>
+                <xs:element ref="jmxUser"/>
+                <xs:element ref="jmxPassword"/>
+                <xs:element ref="inJmxAvailable"/>
+                <xs:element ref="outJmxAvailable"/>
+                <xs:element ref="jmxAvailable"/>
+                <xs:element ref="userStopRequest"/>
+                <xs:element ref="nrpeAvailable"/>
+                <xs:element ref="lastHeartBeatTime"/>
+                <xs:element ref="durationForUnavailability"/>
+                <xs:element ref="lastJobTransfer"/>
+                <xs:element ref="isPermitted"/>
+                <xs:element ref="jobTransferFailureTime"/>
+                <xs:element ref="workspacePath"/>
+                <xs:element ref="locals" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="workspacePath">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="ipAddress">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="osType">
+        <xs:simpleType>
+            <xs:restriction base="jsdl:OperatingSystemTypeEnumeration"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="agentType">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="agent"/>
+                <xs:enumeration value="server"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="inJmxAvailable" type="xs:boolean" default="true"/>
+    <xs:element name="outJmxAvailable" type="xs:boolean" default="true"/>
+    <xs:element name="jmxAvailable" type="xs:boolean" default="true"/>
+    <xs:element name="userStopRequest">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="null"/>
+                <xs:enumeration value="normal"/>
+                <xs:enumeration value="forced"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="nrpeAvailable" type="xs:boolean" default="true"/>
+    <xs:element name="nrpePort">
+        <xs:simpleType>
+            <xs:restriction base="xs:short">
+                <xs:pattern value="[1-9][0-9]{3}"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="jmxPort">
+        <xs:simpleType>
+            <xs:restriction base="xs:short">
+                <xs:pattern value="[1-9][0-9]{3}"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="jmxUser">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="([0-9a-zA-Z])+"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="jmxPassword">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:minLength value="5"/>
+                <xs:maxLength value="8"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="lastHeartBeatTime" default="0">
+        <xs:simpleType>
+            <xs:restriction base="xs:long"/>
+        </xs:simpleType>
+    </xs:element>
+    
+    <!-- agent'in kac saniye sonra unavailable olabilecegini belirtir default'u 15 dk.'-->
+    <xs:element name="durationForUnavailability" default="900">
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="jobTransferFailureTime" default="0">
+        <xs:simpleType>
+            <xs:restriction base="xs:long"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="lastJobTransfer" type="xs:boolean" default="true"/>
+    <xs:element name="isPermitted" type="xs:boolean" default="true"/>    
+ 
+ 	<!--========================================================================-->
+	<!-- COMPLEX TYPES : Parameter related types --> 
+	
+    <xs:element name="locals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="par:parameter"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+	<!--========================================================================-->
+	<!-- COMPLEX TYPES : Resources related types -->    
+	
+  <!-- xs:element name="ResourceList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="resource"/>
+      </xs:sequence>
+	  <xs:attribute name="time" use="optional" type="xs:long"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="resource">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="entry-name" use="required" type="xs:NCName"/>
+          <xs:attribute name="id" use="required" type="xs:int"/>
+          <xs:attribute name="time" use="optional" type="xs:long"/>          
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element-->
+</xs:schema>

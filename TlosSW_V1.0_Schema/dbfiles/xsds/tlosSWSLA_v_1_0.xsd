@@ -1,0 +1,249 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_SLA_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_SLA_types">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    <xs:element name="ServiceLevelAgreement">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="SLA"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="SLA">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Organization"/>
+                <xs:element ref="Name"/>
+                <xs:element ref="Desc"/>
+                <xs:element ref="CreationDate"/>
+                <xs:element ref="StartDate"/>
+                <xs:element ref="EndDate"/>
+                <xs:element ref="SInterval"/>
+                <xs:element ref="RInterval"/>
+                <xs:element ref="Priority"/>
+                <xs:element ref="ResourcePool"/>
+                <xs:element ref="ResourceReq"/>
+                <xs:element ref="calendarId"/>
+                <xs:element ref="QueueFrame"/>
+                <xs:element ref="ResolveIncident"/>
+                <xs:element ref="JobsInStatus"/>
+                <xs:element ref="lt:userId"/>
+            </xs:sequence>
+            <xs:attribute name="ID" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Organization" type="xs:NCName"/>
+    <xs:element name="Name" type="xs:string"/>
+    <xs:element name="Desc" type="xs:string"/>
+    <xs:element name="CreationDate" type="xs:dateTime"/>
+    <xs:element name="StartDate" type="xs:dateTime"/>
+    <xs:element name="EndDate" type="xs:dateTime"/>
+    <xs:element name="SInterval">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startTime"/>
+                <xs:element ref="stopTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="RInterval">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startTime"/>
+                <xs:element ref="stopTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Priority" type="xs:integer"/>
+    <xs:element name="ResourcePool">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="Resource"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Resource">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:NCName">
+                    <xs:attribute name="order" use="required" type="xs:integer"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ResourceReq">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Hardware"/>
+                <xs:element ref="Software"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Hardware">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="mem"/>
+                <xs:element ref="cpu"/>
+                <xs:element ref="disk"/>
+            </xs:sequence>
+            <xs:attribute name="entry-name" use="optional" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attribute name="birim">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="%"/>
+                <xs:enumeration value="G"/>
+                <xs:enumeration value="M"/>
+                <xs:enumeration value="K"/>
+                <xs:enumeration value="B"/>
+                <xs:enumeration value="Sec"/>
+                <xs:enumeration value="Min"/>
+                <xs:enumeration value="Hour"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="timein">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="1"/>
+                <xs:enumeration value="5"/>
+                <xs:enumeration value="15"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="for">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="used"/>
+                <xs:enumeration value="free"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="condition">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="gt"/>
+                <xs:enumeration value="lt"/>
+                <xs:enumeration value="eq"/>
+                <xs:enumeration value="ge"/>
+                <xs:enumeration value="le"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:element name="mem">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:integer">
+                    <xs:attribute ref="birim" use="required"/>
+                    <xs:attribute ref="condition" use="required"/>
+                    <xs:attribute ref="for" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="cpu">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:integer">
+                    <xs:attribute ref="birim" use="required"/>
+                    <xs:attribute ref="condition" use="required"/>
+                    <xs:attribute ref="timein" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="disk">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:integer">
+                    <xs:attribute ref="birim" use="required"/>
+                    <xs:attribute ref="condition" use="required"/>
+                    <xs:attribute ref="for" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Software">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="Program"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="ProgramType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="licenseID" use="required" type="xs:nonNegativeInteger"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:element name="Program" type="ProgramType"/>
+	<!--
+	<xs:element name="Program">
+		<xs:complexType mixed="true">
+			<xs:attribute name="licenseID" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	-->
+    <xs:element name="calendarId" type="xs:nonNegativeInteger"/>
+    <xs:element name="QueueFrame">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="MaxTimeInQueue"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MaxTimeInQueue">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:nonNegativeInteger">
+                    <xs:attribute ref="birim" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ResolveIncident">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="MaxTimeToResolve"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MaxTimeToResolve">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:nonNegativeInteger">
+                    <xs:attribute ref="birim" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="JobsInStatus">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="NumberOfJobs"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:attribute name="state">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="PENDING"/>
+                <xs:enumeration value="RUNNING"/>
+                <xs:enumeration value="CANCELLED"/>
+                <xs:enumeration value="FAILED"/>
+                <xs:enumeration value="FINISHED"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:element name="NumberOfJobs">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:integer">
+                    <xs:attribute ref="state"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="startTime" type="xs:time"/>
+    <xs:element name="stopTime" type="xs:time"/>
+</xs:schema>

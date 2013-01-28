@@ -1,0 +1,131 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<con:TlosConfigInfo xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:con="http://www.likyateknoloji.com/XML_config_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_config_types ../xsds/tlosSWConfig_v_1_0.xsd">
+	<con:Product-info>
+		<com:comment>urun hakkindaki temel bilgileri icerir.</com:comment>
+		<com:date>2011-06-01</com:date>
+		<com:version>1.0</com:version>
+		<con:company>
+			<com:name>Likya Bilgi Teknolojileri</com:name>
+			<com:address>kayisdagi</com:address>
+			<com:telephone id="1">2124509876</com:telephone>
+		</con:company>
+	</con:Product-info>
+	<con:settings>
+		<con:machine-info>
+			<com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
+			<com:name>SUN</com:name>
+		</con:machine-info>
+		<con:paths>
+			<com:comment>Urunun calisacagi dizin bilgilerini icerir</com:comment>
+			<con:tlos-bins>\homebin\</con:tlos-bins>
+			<con:tlos-jobs>/home/tlosSW/jobs/</con:tlos-jobs>
+			<con:tlos-logs>/home/tlosSW/logs/</con:tlos-logs>
+		</con:paths>
+		<con:isPersistent>
+			<com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
+			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:isPersistent>
+		<con:solstice>
+			<com:comment>gundonumu</com:comment>
+			<com:time>18:00:00</com:time>
+		</con:solstice>
+		<con:period>
+			<com:comment>period</com:comment>
+			<con:periodValue>24</con:periodValue>
+		</con:period>
+		<con:mailOptions>
+			<con:useMail>
+				<com:comment>mail sistemi kullan/kullanma, bu parametre false olur ise, diger e-posta parametreleri okunmaz.</com:comment>
+				<com:value_boolean>true</com:value_boolean>
+			</con:useMail>
+			<con:smtpServerUserName>test9027@likyateknoloji.com</con:smtpServerUserName>
+			<com:smtpServerPassword>7209tset</com:smtpServerPassword>
+			<com:smtpServerAddress>mail.likyateknoloji.com</com:smtpServerAddress>
+			<com:smtpServerPort>587</com:smtpServerPort>
+			<con:statusListForMail>
+				<state-types:StatusName>FAILED</state-types:StatusName>
+				<state-types:StatusName>SUCCESS</state-types:StatusName>
+				<state-types:StatusName>WARNING</state-types:StatusName>
+			</con:statusListForMail>
+		</con:mailOptions>
+		<con:smsOptions>
+			<con:useSms>true</con:useSms>
+		</con:smsOptions>
+		<con:logFile>TlosEkran.log</con:logFile>
+		<con:tlosFrequency>
+			<com:comment>Scheduler'ın calisma sikiligi (sn)</com:comment>
+			<com:frequency>1</com:frequency>
+		</con:tlosFrequency>
+		<con:remoteManagerProperties>
+			<com:comment>managementPort : yonetim konsolu haberlesme portu
+		managementBufferSize : yonetim konsolu buffer boyu</com:comment>
+			<com:portNumber>3001</com:portNumber>
+			<com:bufferSize>128</com:bufferSize>
+		</con:remoteManagerProperties>
+		<con:httpManagerProperties>
+			<com:ipAddress>192.168.1.60</com:ipAddress>
+			<com:portNumber>8000</com:portNumber>
+		</con:httpManagerProperties>
+		<con:agentOptions>
+			<con:InOutJmxDurationForUnavailability>
+				<com:comment>hata durumunda agent inJmxAvailable, outJmxAvailable degerlerinin false olması icin beklenecek sure (sn)</com:comment>
+				<con:durationValue>15</con:durationValue>
+			</con:InOutJmxDurationForUnavailability>
+			<con:resourceListDuration>
+				<com:comment>job bazında alınan kaynak listesinin time-out suresi sn. olarak</com:comment>
+				<con:durationValue>900</con:durationValue>
+			</con:resourceListDuration>
+		</con:agentOptions>
+		<con:infoBusOptions>
+			<con:period>
+				<com:comment>infoBus icin secilen islem sikligi suresi(ms)</com:comment>
+				<con:periodValue>200</con:periodValue>
+			</con:period>
+		</con:infoBusOptions>
+		<con:debugMode>
+			<com:comment>debug modu (true/false)</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:debugMode>
+	</con:settings>
+	<con:scenario-all>
+		<con:scenario name="senaryo1.sen">
+			<con:scenario-path>/home/tlosSW1/</con:scenario-path>
+			<con:scenario-file-name>senaryo.xml</con:scenario-file-name>
+			<com:normalization>true</com:normalization>
+		</con:scenario>
+		<con:scenario name="senaryo2.sen">
+			<con:scenario-path>/home/user/tlosSW2/</con:scenario-path>
+			<con:scenario-file-name>senaryo2.xml</con:scenario-file-name>
+			<com:normalization>false</com:normalization>
+		</con:scenario>
+	</con:scenario-all>
+	<con:performance>
+		<con:threshold>
+			<con:high>10</con:high>
+			<con:low>5</con:low>
+		</con:threshold>
+	</con:performance>
+	<con:dbparams>
+		<con:name>eXist</con:name>
+		<con:connectionUrl>xmldb:exist://localhost:8093/exist/xmlrpc/db/TLOSSW</con:connectionUrl>
+		<con:username>admin</con:username>
+		<con:password>admin</con:password>
+	</con:dbparams>
+	<con:monitoringAgentParams>
+		<con:name>nagios</con:name>
+		<con:frequency>24</con:frequency>
+		<con:cleanUpTimer>10000</con:cleanUpTimer>
+		<con:username>admin</con:username>
+		<con:password>admin</con:password>
+	</con:monitoringAgentParams>
+	<con:jmxParams>
+		<con:trustStore>likyaKeystore</con:trustStore>
+		<con:keyStore>likyaKeystore</con:keyStore>
+		<con:password>likya1!+</con:password>
+	</con:jmxParams>
+</con:TlosConfigInfo>

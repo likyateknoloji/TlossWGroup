@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_dbconnection_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+           xmlns:dbc="http://www.likyateknoloji.com/XML_dbconnection_types">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+	<xs:element name="dbList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbc:dbProperties" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="connectionNameUniqueKey">
+			<xs:selector xpath="dbc:dbProperties"/>
+			<xs:field xpath="dbc:connectionName"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="dbProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbc:connectionName"/>
+				<xs:element ref="dbc:dbUrl"/>
+				<xs:element ref="dbc:dbType"/>
+				<xs:element ref="dbc:dbVersion"/>
+				<xs:element ref="dbc:driverName"/>
+				<xs:element ref="dbc:dbName"/>
+				<xs:element ref="dbc:hostName"/>
+				<xs:element ref="com:ftpPortNumber"/>
+				<xs:element ref="com:ipAddress"/>
+				<xs:element ref="dbc:jdbcClassName"/>
+				<xs:element ref="dbc:sqlClientAppName" minOccurs="0"/> <!-- free sqlde kullanilmiyor -->
+				<xs:element ref="dbc:sqlClientAppPath" minOccurs="0"/> <!-- free sqlde kullanilmiyor -->
+			</xs:sequence>
+			<xs:attribute name="ID" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="connectionName" type="xs:string"/>
+	<xs:element name="dbUrl" type="xs:string"/>
+	<xs:element name="dbVersion" type="xs:string"/>
+	<xs:element name="jdbcClassName" type="xs:string"/>
+
+	<xs:element name="dbType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="PostgreSQL"/>
+				<xs:enumeration value="Oracle"/>
+				<xs:enumeration value="SQLServer"/>
+				<xs:enumeration value="SAS"/>
+				<xs:enumeration value="MySQL"/>
+				<xs:enumeration value="DB2"/>
+				<xs:enumeration value="Informix"/>
+				<xs:enumeration value="Firebird"/>
+				<xs:enumeration value="Sybase"/>
+				<xs:enumeration value="Teradata"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="deployed" default="no">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="yes"/>
+				<xs:enumeration value="no"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="driverName" type="xs:NCName"/>
+	<xs:element name="dbName" type="xs:string"/>
+	<xs:element name="hostName" type="xs:string"/>
+	<xs:element name="jdbcConnectionPoolParams">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbc:initialCapacity"/>
+				<xs:element ref="dbc:maxCapacity"/>
+				<xs:element ref="dbc:minIdle"/>
+				<xs:element ref="dbc:maxIdle"/>
+				<xs:element ref="dbc:maxWait"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="initialCapacity" type="xs:integer"/>
+	<xs:element name="maxCapacity" type="xs:integer"/>
+	<xs:element name="minIdle" type="xs:integer"/>
+	<xs:element name="maxIdle" type="xs:integer"/>
+	<xs:element name="maxWait" type="xs:integer"/>
+
+	<xs:element name="sqlClientAppName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="sqlplus"/> <!-- oracle -->
+				<xs:enumeration value="psql"/> <!-- postgresql -->
+				<xs:enumeration value="mysql"/> <!-- mysql -->
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="sqlClientAppPath" type="xs:string"/>
+
+	<xs:element name="dbConnectionProfiles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbc:dbConnectionProfile" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="dbConnectionProfile">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbc:dbDefinitionId"/>
+				<xs:element ref="com:userName"/>
+				<xs:element ref="com:userPassword"/>
+				<xs:element ref="dbc:jdbcConnectionPoolParams"/>
+				<xs:element ref="dbc:deployed"/>
+				<xs:element ref="com:active"/>
+			</xs:sequence>
+			<xs:attribute name="ID" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="dbDefinitionId" type="xs:integer"/>
+</xs:schema>

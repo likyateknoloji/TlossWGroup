@@ -1,0 +1,87 @@
+<project name="TlosSW_V1.0_Schema" default="tlosSW_xsd.jar" basedir=".">
+
+	<property file="build.properties"/>
+	<property name="home.dir" value="${basedir}/.." />
+
+	<property name="appname" value="tlosxmlbeans" />
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="build.dir" value="${basedir}/build/classes" />
+	<property name="webapp.dir" value="." />
+	<property name="build.classes.dir" value="${build.dir}" />
+	<property name="app.deploy.dir" value="${basedir}" />
+	<property name="version.num" value="1.0"/>
+
+	<target name="init" depends="init2" unless="minor.number">
+		<property name="minor.number" value="" />
+		<property name="buildchar" value="" />
+	</target>
+	
+	<target name="init2" if="minor.number">
+		<property name="buildchar" value="_b" />
+	</target>
+	
+	<path id="build.path">
+		<pathelement location="${build.classes.dir}" />
+	</path>
+
+	<path id="combined">
+		<path refid="build.path" />
+		<path refid="castor.class.path" />
+	</path>
+
+	<path id="SchemaEnum.path">
+		<path refid="xmlbeans.path" />
+		<fileset dir="build/lib" includes="*.jar" />
+		<pathelement path="build/classes" />
+	</path>
+
+	<target name="cleanUp">
+		<echo>Clearing up temporary directory...</echo>
+		<delete dir="${src.dir}/com"/>
+		<echo>...temporary directory cleared OK</echo>
+		
+		<delete>
+			<fileset dir="." includes="**/*.jar" />
+		</delete>
+	</target>
+
+	<target name="initxmlbeans" depends="cleanUp">
+		<property name="xmlbeans.lib" value="${home.dir}/${sharedlib.dir}/xmlbeans-2.5.0" />
+
+		<!-- check for xbean.jar from binary distribution -->
+		<available property="xmlbeans.lib" value="${xmlbeans.home}/lib" file="${xmlbeans.home}/lib/xbean.jar" />
+
+		<!-- check for xbean.jar compiled from source -->
+		<available property="xmlbeans.lib" value="${xmlbeans.home}/build/lib" file="${xmlbeans.home}/build/lib/xbean.jar" />
+
+		<fail message="Set XMLBEANS_HOME in your enviornment." unless="xmlbeans.lib" />
+
+		<echo message="xmlbeans.lib: ${xmlbeans.lib}" />
+		<path id="xmlbeans.path">
+			<fileset dir="${xmlbeans.lib}" includes="*.jar" />
+		</path>
+
+		<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean" classpathref="xmlbeans.path" />
+	</target>
+
+	<target name="tlosSW_xsd.jar" depends="init,initxmlbeans" unless="">
+		<mkdir dir="build/lib" />
+
+		<xmlbean schema="dbfiles/xsds" destfile="./TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" srcgendir="src/" classpathref="xmlbeans.path" debug="on" download="true"/>
+		
+		<property name="src.jar" value="TlosSW_xsd_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<jar jarfile="${src.jar}">
+			<fileset dir="${src.dir}">
+			</fileset>
+			<fileset dir=".">
+				<include name="lib" />
+				<include name="lib/*.jar" />
+			</fileset>
+		</jar>
+		
+		<mkdir dir="test"/>
+		<copy file="TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" todir="test"/>
+		<move file="test/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" tofile="TlosSW_xsd.jar"/>
+	</target>
+</project>

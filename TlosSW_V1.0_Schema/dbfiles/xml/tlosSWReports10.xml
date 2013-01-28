@@ -1,0 +1,47 @@
+<rep:reportAll xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rep="http://www.likyateknoloji.com/XML_report_types"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_report_types xmldb:exist:///db/TLOSSW/xsds/tlosSWReports_v_1_0.xsd">
+	<rep:stateReport>
+		<rep:report xmlns="http://www.likyateknoloji.com/XML_report_types"
+			id="9" jsId="0" scope="job" LSIDateTime="2012-05-09T19:19:49.765+03:00">
+			<rep:PENDING>
+				<rep:CREATED>0</rep:CREATED>
+				<rep:DEACTIVATED>0</rep:DEACTIVATED>
+				<rep:VALIDATED>0</rep:VALIDATED>
+				<rep:IDLED>
+					<rep:BYTIME>0</rep:BYTIME>
+					<rep:BYUSER>0</rep:BYUSER>
+				</rep:IDLED>
+				<rep:READY>
+					<rep:LOOKFOR-RESOURCE>0</rep:LOOKFOR-RESOURCE>
+					<rep:USER-CHOOSE-RESOURCE>0</rep:USER-CHOOSE-RESOURCE>
+					<rep:USER-WAITING>0</rep:USER-WAITING>
+					<rep:WAITING>0</rep:WAITING>
+					<rep:TRANSFERING>0</rep:TRANSFERING>
+				</rep:READY>
+				<rep:PAUSED>0</rep:PAUSED>
+			</rep:PENDING>
+			<rep:RUNNING>
+				<rep:STAGE-IN>0</rep:STAGE-IN>
+				<rep:MIGRATING>0</rep:MIGRATING>
+				<rep:ON-RESOURCE>
+					<rep:TIME-IN>0</rep:TIME-IN>
+					<rep:TIME-OUT>0</rep:TIME-OUT>
+				</rep:ON-RESOURCE>
+				<rep:HELD>0</rep:HELD>
+				<rep:STAGE-OUT>0</rep:STAGE-OUT>
+			</rep:RUNNING>
+			<rep:FAILED>0</rep:FAILED>
+			<rep:CANCELLED>0</rep:CANCELLED>
+			<rep:FINISHED>
+				<rep:COMPLETED>
+					<rep:SUCCESS>0</rep:SUCCESS>
+					<rep:WARNING>0</rep:WARNING>
+					<rep:FAILED>0</rep:FAILED>
+				</rep:COMPLETED>
+				<rep:SKIPPED>0</rep:SKIPPED>
+				<rep:STOPPED>0</rep:STOPPED>
+			</rep:FINISHED>
+		</rep:report>
+	</rep:stateReport>
+</rep:reportAll>

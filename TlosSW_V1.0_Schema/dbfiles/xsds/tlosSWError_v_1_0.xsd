@@ -1,0 +1,104 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_error_types" xmlns:xs="http://www.w3.org/2001/XMLSchema"  
+		   xmlns:res="http://www.likyateknoloji.com/resource-extension-defs"
+		   targetNamespace="http://www.likyateknoloji.com/XML_error_types" elementFormDefault="qualified">
+		   
+	<xs:import namespace="http://www.likyateknoloji.com/resource-extension-defs" schemaLocation="../xsds/tlosSW-resource-extension-defs.xsd"/>
+
+    <xs:element name="SWErrors">
+        <xs:complexType>
+            <xs:sequence>
+            	<xs:element ref="SWError" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="SWError">
+        <xs:complexType>
+            <xs:sequence>
+            	<xs:element ref="res:Resource"/>
+            	<xs:element ref="agentId"/>
+            	<xs:element ref="errLevel"/> 
+            	<xs:element ref="errType" minOccurs="0"/>
+            	<xs:element ref="errDetail"/>
+            	<xs:element ref="errResult"/>
+            	<xs:element ref="errAction"  minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="LSIDateTime" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="agentId" type="xs:int"/>
+    
+    <xs:element name="errLevel">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            	<xs:enumeration value="taskLevel"/>
+                <xs:enumeration value="applicationLevel"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="errType">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            	<xs:enumeration value="interactionAndNetworkErrors"/>
+                <xs:enumeration value="timingAndNonDeclarationErrors"/>
+                <xs:enumeration value="physicalErrors"/>
+                <xs:enumeration value="answeringErrors"/>
+                <xs:enumeration value="complexErrors"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="errDetail">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            	<xs:enumeration value="network"/>
+                <xs:enumeration value="jmxCommunicationProtocol"/>
+                <xs:enumeration value="security"/>
+                <xs:enumeration value="timing"/>
+                <xs:enumeration value="nonDeclaration"/>
+            	<xs:enumeration value="cpu"/>
+                <xs:enumeration value="disk"/>
+                <xs:enumeration value="memory"/>
+                <xs:enumeration value="damagedMessage"/>
+                <xs:enumeration value="others"/>                
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="errResult">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            	<xs:enumeration value="agentInJmxUnavailable"/>
+                <xs:enumeration value="agentOutJmxUnavailable"/>
+                <xs:enumeration value="agentJmxUnavailable"/>
+                <xs:enumeration value="nrpeUnavailable"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="errAction">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+            	<xs:enumeration value="restart"/>
+                <xs:enumeration value="directingToDifferentResource"/>
+                <xs:enumeration value="taskDoubling"/>
+                <xs:enumeration value="backToControlPoint"/>
+                <xs:enumeration value="setSuccess"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+  
+</xs:schema>

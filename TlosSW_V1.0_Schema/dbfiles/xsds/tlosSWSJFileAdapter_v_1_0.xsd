@@ -1,0 +1,297 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.likyateknoloji.com/XML_file_adapter_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    	<xs:element name="fileAdapterProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="adapterType"/>
+				<xs:element ref="fileProperties"/>
+				<xs:element ref="operation"/>
+				<xs:element ref="filenameAndDirectory"/>
+				<xs:element ref="filterProperties" minOccurs="0"/>
+				<xs:element ref="archiveProperties" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="adapterType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="TEXT FILE PROCESS"/>
+				<xs:enumeration value="BINARY FILE PROCESS"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<!-- operation group ___________________________________________-->
+	<xs:element name="operation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="operationType"/>
+				<!-- operationType icin update, insert ya da delete record secildiyse bu alan doldurulacak -->
+				<xs:element ref="fileContentOperation" minOccurs="0"/>
+				<xs:element ref="processedFilesOperationType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="operationType" default="Read File">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Read File"/>
+				<xs:enumeration value="Write File"/>
+				<xs:enumeration value="List Files"/>
+				<xs:enumeration value="Update Record"/>
+				<xs:enumeration value="Insert Record"/>
+				<xs:enumeration value="Delete Record"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="processedFilesOperationType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="None"/>
+				<xs:enumeration value="Move"/>
+				<xs:enumeration value="Copy"/>
+				<xs:enumeration value="Delete"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="fileContentOperation">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="xmlFilesOperation"/>
+				<xs:element ref="plainTextFilesOperation"/>
+				<xs:element ref="csvFilesOperation"/>
+				<xs:element ref="htmlFilesOperation"/>
+				<xs:element ref="fixedLengthFilesOperation"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="plainTextFilesOperation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="startLineNumber"/>
+				<xs:element ref="endLineNumber"/>
+				<xs:element ref="value" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="csvFilesOperation" type="xs:string"/>
+	<xs:element name="htmlFilesOperation" type="xs:string"/>
+	<xs:element name="fixedLengthFilesOperation" type="xs:string"/>
+	<xs:element name="xmlFilesOperation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="xPath"/>
+				<xs:element ref="nodeValue" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="xPath" type="xs:string"/>
+	<xs:element name="nodeValue" type="xs:string"/>
+	<xs:element name="startLineNumber" type="xs:integer"/>
+	<xs:element name="endLineNumber" type="xs:integer"/>
+
+	<!-- filenameAndDirectory group __________________________________-->
+	<xs:element name="filenameAndDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sourceDirectory" minOccurs="0"/>
+				<xs:element ref="targetDirectory" minOccurs="0"/>
+				<xs:element ref="sourceFileName" minOccurs="0"/>
+				<xs:element ref="targetFileName" minOccurs="0"/>
+				<xs:element ref="includeFiles" minOccurs="0"/>
+				<xs:element ref="includeWildcard" minOccurs="0"/>
+				<xs:element ref="excludeFiles" minOccurs="0"/>
+				<xs:element ref="excludeWildcard" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="targetDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceFileName">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="targetFileName">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceIsRemote" type="xs:boolean"/>
+	<xs:element name="targetIsRemote" type="xs:boolean"/>
+	<xs:element name="includeFiles" type="xs:string"/>
+	<xs:element name="includeWildcard" type="xs:string"/>
+	<xs:element name="excludeFiles" type="xs:string"/>
+	<xs:element name="excludeWildcard" type="xs:string"/>
+
+
+	<!-- fileProperties group _________________________________________-->
+	<xs:element name="fileProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fileSize" minOccurs="0"/>
+				<xs:element ref="fileType"/>
+				<xs:element ref="fileTypeDetail"/>
+				<xs:element ref="recursive" minOccurs="0"/>
+				<xs:element ref="gelGec"/>
+				<xs:element ref="minimumAge" minOccurs="0"/>
+				<xs:element ref="fileModificationTime" minOccurs="0"/>
+				<xs:element ref="modificationTimeFormat" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fileSize" type="xs:integer"/>
+	<xs:element name="fileType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Ascii"/>
+				<xs:enumeration value="Binary"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:simpleType name="textFileDetailOptions">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Plain Text"/>
+			<xs:enumeration value="CSV"/>
+			<xs:enumeration value="XML"/>
+			<xs:enumeration value="HTML"/>
+			<xs:enumeration value="Fixed Length"/>
+			<xs:enumeration value="Other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="binaryFileDetailOptions">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ordinary"/>
+			<xs:enumeration value="Compressed"/>
+			<xs:enumeration value="Image"/>
+			<xs:enumeration value="Other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="fileTypeDetail">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="textFileDetail"/>
+				<xs:element ref="binaryFileDetail"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- xmlAccessType uc farkli deger alabilir:
+		1 : DOM
+		2 : SAX
+		3 : Object
+	-->
+	<xs:element name="textFileDetail">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="textFileDetailOptions">
+					<xs:attribute name="separator" type="xs:string" use="optional"/>
+					<xs:attribute name="xmlAccessType" type="xs:integer" use="optional"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="binaryFileDetail">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="binaryFileDetailOptions">
+					<xs:attribute name="path" type="xs:string" use="optional"/>
+					<xs:attribute name="fileName" type="xs:string" use="optional"/>
+					<xs:attribute name="password" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="recursive" type="xs:boolean" default="false"/>
+	<xs:element name="gelGec" type="xs:boolean" default="true"/>
+	<xs:element name="minimumAge" type="xs:integer"/>
+	<xs:element name="fileModificationTime">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="None"/>
+				<xs:enumeration value="File Name"/>
+				<xs:enumeration value="File System"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="modificationTimeFormat" type="xs:string"/>
+
+
+	<!-- archiveProperties group _______________________________________-->
+	<xs:element name="archiveProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="archive"/>
+				<xs:element ref="archiveDirectory" minOccurs="0"/>
+				<xs:element ref="fileNamingConvention" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="archiveDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="archive" type="xs:boolean"/>
+	<xs:element name="fileNamingConvention" type="xs:string"/>
+
+	<!-- filterProperties group _________________________________________-->
+	<!--bu alan set edilmezse tum dosya okunacak-->
+	<xs:element name="filterProperties">
+		<xs:complexType>
+			<xs:choice>
+				<!-- xml icin-->
+				<xs:element ref="xPath"/>
+				<!-- text icin-->
+				<xs:element ref="lineNumber"/>
+				<xs:element ref="stringSearch"/>
+				<xs:element ref="regex"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="lineNumber">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="number"/>
+				<xs:element ref="from"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="number" type="xs:integer"/>
+	<xs:element name="from">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Start"/>
+				<xs:enumeration value="End"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="stringSearch">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="value"/>
+				<xs:element ref="occurance"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="value" type="xs:string"/>
+	<xs:element name="occurance" type="xs:integer"/>
+	<xs:element name="regex" type="xs:string"/>
+</xs:schema>

@@ -1,0 +1,17 @@
+<!--
+RNS icin ek sema tanimlari. Likya teknoloji
+-->
+<xsd:schema xmlns="http://www.likyateknoloji.com/XML_SWResourceNS_types" xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types" targetNamespace="http://www.likyateknoloji.com/XML_SWResourceNS_types" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xsd:import namespace="http://schemas.ogf.org/rns/2009/12/rns" schemaLocation="rns-schema.xsd"/>
+    <xsd:element name="ResourceList">
+        <xsd:complexType>
+            <xsd:sequence>
+                 <xsd:element name="Resource" maxOccurs="unbounded" type="rns:RNSEntryType"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        <xsd:unique name="newKey">
+            <xsd:selector xpath="lrns:Resource"/>
+            <xsd:field xpath="@entry-name"/>
+        </xsd:unique>
+     </xsd:element>
+</xsd:schema>

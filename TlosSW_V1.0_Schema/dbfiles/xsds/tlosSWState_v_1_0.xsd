@@ -1,0 +1,225 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/state-types" elementFormDefault="qualified">
+    <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
+    <xs:element name="StateName">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="PENDING"/>
+                <xs:enumeration value="RUNNING"/>
+                <xs:enumeration value="CANCELLED"/>
+                <xs:enumeration value="FAILED"/>
+                <xs:enumeration value="FINISHED"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="Code">
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="Desc">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="Name">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="ReturnCode">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:Code"/>
+                <xs:element ref="state-types:Desc"/>
+            </xs:sequence>
+            <xs:attribute name="cdId" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ReturnCodeList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:ReturnCode" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="osType" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="jsdl:OperatingSystemTypeEnumeration"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="rclId" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="StatusName">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="SUCCESS"/>
+                <xs:enumeration value="WARNING"/>
+                <xs:enumeration value="FAILED"/>
+                <xs:enumeration value="LOOKFOR-RESOURCE"/>
+                <xs:enumeration value="WAITING"/>
+                <xs:enumeration value="TRANSFERING"/>
+                <xs:enumeration value="TIME-IN"/>
+                <xs:enumeration value="TIME-OUT"/>
+                <xs:enumeration value="USER-CHOOSE-RESOURCE"/>
+				<xs:enumeration value="USER-WAITING"/>
+                <xs:enumeration value="BYTIME"/>
+                <xs:enumeration value="BYUSER"/>
+                <xs:enumeration value="BYEVENT"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:complexType name="Status">
+        <xs:sequence>
+            <xs:element ref="state-types:StatusName"/>
+            <xs:element ref="state-types:Desc"/>
+            <xs:element ref="state-types:ReturnCodeList" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="stsId" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:element name="SubstateName">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="CREATED"/>
+                <xs:enumeration value="DEACTIVATED"/>
+                <xs:enumeration value="VALIDATED"/>
+                <xs:enumeration value="IDLED"/>
+                <xs:enumeration value="READY"/>
+                <xs:enumeration value="PAUSED"/>
+                <xs:enumeration value="STAGE-IN"/>
+                <xs:enumeration value="STAGE-OUT"/>
+                <xs:enumeration value="MIGRATING"/>
+                <xs:enumeration value="HELD"/>
+                <xs:enumeration value="ON-RESOURCE"/>
+                <xs:enumeration value="COMPLETED"/>
+                <xs:enumeration value="STOPPED"/>
+                <xs:enumeration value="SKIPPED"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="Substate">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:SubstateName"/>
+                <xs:element ref="state-types:Code"/>
+                <xs:element ref="state-types:Desc"/>
+                <xs:element name="SubStateStatuses" type="state-types:Status" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="substId" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="State">
+        <xs:sequence>
+            <xs:element ref="state-types:StateName"/>
+            <xs:element ref="state-types:Code"/>
+            <xs:element ref="state-types:Desc"/>
+            <xs:element ref="state-types:Substate" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="stId" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:element name="jsState">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:StateName" minOccurs="0"/>
+                <xs:element ref="state-types:SubstateName" minOccurs="0"/>
+                <xs:element ref="state-types:StatusName" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jsDependencyRule">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:StateName"/>
+                <xs:element ref="state-types:SubstateName" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="state-types:StatusName" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LiveStateInfo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:StateName"/>
+                <xs:element ref="state-types:SubstateName" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="state-types:StatusName" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="state-types:ReturnCode" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="LSIDateTime" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LiveStateInfos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="state-types:LiveStateInfo" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ScenarioStatusList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ScenarioStatus" type="state-types:Status" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="UniqueScenarioStatus">
+            <xs:selector xpath="state-types:ScenarioStatus"/>
+            <xs:field xpath="state-types:StatusName"/>
+        </xs:unique>
+        <xs:unique name="UniqueScenarioStatusCodes">
+            <xs:selector xpath="state-types:ScenarioStatus/state-types:ReturnCodeList/state-types:ReturnCode"/>
+            <xs:field xpath="state-types:Code"/>
+        </xs:unique>
+    </xs:element>
+    <xs:element name="JobStatusList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="JobStatus" type="state-types:Status" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="UniqueJobStatus">
+            <xs:selector xpath="state-types:JobStatus"/>
+            <xs:field xpath="state-types:StatusName"/>
+        </xs:unique>
+        <xs:unique name="UniqueJobStatusCodes">
+            <xs:selector xpath="state-types:JobStatus/state-types:ReturnCodeList/state-types:ReturnCode"/>
+            <xs:field xpath="state-types:Code"/>
+        </xs:unique>
+    </xs:element>
+    <xs:element name="GlobalStateDefinition">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="GlobalState" type="state-types:State" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="UniqueGlobalState">
+            <xs:selector xpath="state-types:GlobalState"/>
+            <xs:field xpath="state-types:StateName"/>
+            <xs:field xpath="state-types:SubstateName"/>
+        </xs:unique>
+        <xs:unique name="UniqueGlobalSubState">
+            <xs:selector xpath="state-types:GlobalState/state-types:Substate"/>
+            <xs:field xpath="state-types:SubstateName"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>

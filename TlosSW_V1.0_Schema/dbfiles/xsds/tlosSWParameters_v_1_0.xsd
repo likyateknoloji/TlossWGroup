@@ -1,0 +1,103 @@
+
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_parameters_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_parameters_types">
+    <xs:element name="Parameters">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Globals"/>
+                <xs:element maxOccurs="unbounded" ref="person"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Globals">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="parameter"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="person">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="valueInteger">
+        <xs:simpleType>
+            <xs:restriction base="xs:positiveInteger"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="valueString">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="valueDate">
+        <xs:simpleType>
+            <xs:restriction base="xs:date"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="valueTime">
+        <xs:simpleType>
+            <xs:restriction base="xs:time"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="valueDateTime">
+        <xs:simpleType>
+            <xs:restriction base="xs:dateTime"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="valueXPATH">
+        <xs:simpleType>
+            <xs:restriction base="xs:anyURI"/>
+        </xs:simpleType>
+    </xs:element>
+	<!--xs:simpleType name="paramTyp">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="STRING"/>
+			<xs:enumeration value="INTEGER"/>
+			<xs:enumeration value="DATE"/>
+			<xs:enumeration value="TIME"/>
+		</xs:restriction>
+	</xs:simpleType-->
+    <xs:element name="parameter">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="name"/>
+                <xs:choice>
+                    <xs:element ref="valueInteger" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="valueString" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="valueDate" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="valueTime" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="valueDateTime" minOccurs="0" maxOccurs="1"/>
+                    <xs:element ref="valueXPATH" minOccurs="0" maxOccurs="1"/>
+                </xs:choice>
+				<xs:element ref="preValue" minOccurs="0"/>
+                <xs:element ref="desc" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+	<!--xs:element name="name">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:NCName">
+					<xs:attribute name="paramType" type="paramTyp" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element-->
+    <xs:element name="name" type="xs:token"/>
+    <xs:element name="desc" type="xs:string"/>
+    <xs:element name="preValue">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="type" use="required" type="xs:integer"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

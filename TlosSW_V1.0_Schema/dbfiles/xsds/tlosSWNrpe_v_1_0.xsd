@@ -1,0 +1,101 @@
+<!-- Created for the TLOSSW Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_nrpe_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		   targetNamespace="http://www.likyateknoloji.com/XML_nrpe_types" elementFormDefault="qualified">
+	
+    <xs:element name="NrpeData">
+       <xs:complexType>
+           <xs:sequence>
+               <xs:element ref="nrpeCall" minOccurs="0" maxOccurs="unbounded"/>
+           </xs:sequence>
+       </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="nrpeCall">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="message" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="entry-name" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="port" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="os" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="message">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="time" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="id" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- xs:element name="response">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="responseValue"/>
+            </xs:sequence>
+            <xs:attribute name="command" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+   	<xs:simpleType name="responseValue">
+    	<xs:restriction base="xs:string"/>
+	</xs:simpleType-->
+	
+	<xs:element name="response">
+	    <xs:complexType>
+	        <xs:attribute name="command" type="xs:string"/>
+	        <xs:attribute name="value" type="xs:string"/>	        
+	    </xs:complexType>
+	</xs:element>
+
+	<!-- xs:element name="response">
+	    <xs:complexType>
+	        <xs:attribute name="command"
+	                type="xs:string"/>
+	    </xs:complexType>
+	</xs:element-->
+
+	<!-- xs:complexType name="response">
+	  <xs:simpleContent>
+		<xs:extension base="responseValueType">
+		  <xs:attribute name="command">
+			<xs:simpleType>
+			  <xs:restriction base="xs:string"/>
+			</xs:simpleType>
+		  </xs:attribute>
+		</xs:extension>
+	  </xs:simpleContent>
+	</xs:complexType>
+    
+   	<xs:simpleType name="responseValueType">
+    	<xs:restriction base="xs:string"/>
+	</xs:simpleType-->
+	
+</xs:schema>

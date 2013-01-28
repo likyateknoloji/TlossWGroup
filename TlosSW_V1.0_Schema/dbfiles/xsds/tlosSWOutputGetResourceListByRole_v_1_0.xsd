@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema 
+	xmlns="http://www.likyateknoloji.com/XML_userOutput_types" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:usr="http://www.likyateknoloji.com/XML_user_types" 
+	xmlns:per="http://www.likyateknoloji.com/XML_permission_types"
+    targetNamespace="http://www.likyateknoloji.com/XML_userOutput_types" 
+	elementFormDefault="qualified"
+	>
+
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+
+	<xs:import namespace="http://www.likyateknoloji.com/XML_user_types" schemaLocation="tlosSWUser_v_1_0.xsd"/>
+
+	<xs:import namespace="http://www.likyateknoloji.com/XML_permission_types" schemaLocation="tlosSWPermission_v_1_0.xsd"/>
+
+	<xs:element name="UserResourceMap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="usr:person"/>
+				<xs:element ref="resources"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="resources">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="per:resource" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

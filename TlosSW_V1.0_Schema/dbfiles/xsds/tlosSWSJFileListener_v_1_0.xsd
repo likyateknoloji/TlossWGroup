@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_listener_types"	
+		xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"	
+		targetNamespace="http://www.likyateknoloji.com/XML_listener_types" 
+		elementFormDefault="qualified">
+		
+	<!-- fileNameType fullText ise readAndListFileProperties icindeki recursive haricindeki kisimlar kullanilmiyor ve dosya ismi pollingProperties icindeki triggerFile alanina yaziliyor, 
+	fileNameType regex ise readAndListFileProperties kullaniliyor -->
+	
+	<xs:element name="fileListener">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fileNameType"/>
+				<xs:element ref="pollingProperties"/>
+				<xs:element ref="readAndListFileProperties" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="repetationNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="fileNameType" default="fullText">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="fullText" />
+				<xs:enumeration value="regex" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="pollingProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="triggerFile" minOccurs="0" />
+				<xs:element ref="triggerFileDirectory" minOccurs="0" />
+				<xs:element ref="pollingType" minOccurs="0" />
+				<xs:element ref="pollingFrequency" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="triggerFile" type="xs:string" />
+	<xs:element name="triggerFileDirectory" type="xs:string" />
+	
+	<xs:element name="pollingType" default="create">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="create" />
+				<xs:enumeration value="update" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="pollingFrequency" type="xs:integer" default="0" />
+	
+	<xs:element name="readAndListFileProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="recursive" />
+				<xs:element ref="includeFiles" minOccurs="0"/>
+				<xs:element ref="includeWildcard" minOccurs="0" />
+				<xs:element ref="excludeFiles" minOccurs="0" />
+				<xs:element ref="excludeWildcard" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="recursive" type="xs:boolean" default="false"/>
+	<xs:element name="includeFiles" type="xs:string" />
+	<xs:element name="includeWildcard" type="xs:string" />
+	<xs:element name="excludeFiles" type="xs:string" />
+	<xs:element name="excludeWildcard" type="xs:string" />
+	
+	<xs:element name="repetationNumber">
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
+    </xs:element>
+
+</xs:schema>

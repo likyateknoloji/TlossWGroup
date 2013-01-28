@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema 
+   xmlns="http://www.likyateknoloji.com/XML_agentconfig_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+   xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" 
+   targetNamespace="http://www.likyateknoloji.com/XML_agentconfig_types" elementFormDefault="qualified">
+
+   <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+   <xs:import namespace="http://www.likyateknoloji.com/resource-extension-defs" schemaLocation="tlosSW-resource-extension-defs.xsd"/>
+
+	<xs:element name="agentFrequency">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:frequency"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="agent-logs">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="agent-jobs">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="agent-bins">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="threshold">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="high"/>
+				<xs:element ref="low"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="settings">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="machine-info"/>
+				<xs:element ref="server-info"/>
+				<xs:element ref="paths"/>
+				<xs:element ref="isPersistent"/>
+				<xs:element ref="isAuthenticationPersistent"/>				
+				<xs:element ref="logFile"/>
+				<xs:element ref="agentFrequency"/>
+				<xs:element ref="remoteManagerProperties"/>
+				<xs:element ref="jmxTlsPort"/>
+				<xs:element ref="jmxPort"/>					
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="remoteManagerProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:portNumber"/>
+				<xs:element ref="lt:bufferSize"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="jmxTlsPort">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:portNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="jmxPort">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:portNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="performance">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="threshold"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="paths">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="agent-bins"/>
+				<xs:element ref="agent-jobs"/>
+				<xs:element ref="agent-logs"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="machine-info">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:name"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="server-info">
+		<xs:complexType>
+			<xs:sequence>
+			    <xs:element ref="res:Resource"/>
+				<xs:element ref="lt:ipAddress"/>
+				<xs:element ref="lt:portNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="low" default="5">
+		<xs:simpleType>
+			<xs:restriction base="xs:unsignedByte"/>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="high" default="10">
+		<xs:simpleType>
+			<xs:restriction base="xs:unsignedByte">
+				<xs:enumeration value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="logFile">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="isPersistent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:value_boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="isAuthenticationPersistent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:value_boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="company">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:name"/>
+				<xs:element ref="lt:address"/>
+				<xs:element ref="lt:telephone"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="AgentConfigInfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Product-info"/>
+				<xs:element ref="settings"/>
+				<xs:element ref="performance"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Product-info">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:date"/>
+				<xs:element ref="lt:version"/>
+				<xs:element ref="company"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

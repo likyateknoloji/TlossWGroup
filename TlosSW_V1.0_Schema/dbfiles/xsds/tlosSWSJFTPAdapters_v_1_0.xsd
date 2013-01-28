@@ -1,0 +1,343 @@
+
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           targetNamespace="http://www.likyateknoloji.com/XML_ftp_adapter_types" elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+	<xs:element name="ftpAdapterProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="adapterType"/>
+				<xs:element ref="fileProperties"/>
+				<xs:element ref="operation"/>
+				<xs:element ref="filenameAndDirectory"/>
+				<xs:element ref="remoteTransferProperties"/>
+				<xs:element ref="archiveProperties" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="adapterType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="FTP PROCESS"/>
+				<xs:enumeration value="SFTP PROCESS"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="remoteTransferProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ftpPropertiesId"/>
+				<xs:element ref="ftpProperties" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ftpPropertiesId" type="xs:integer"/>
+	<xs:element name="ftpSecure">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="ftpsProperties"/>
+				<xs:element ref="sftpProperties"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- operation group ___________________________________________-->
+	<xs:element name="operation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="operationType"/>
+				<xs:element ref="preOperation" minOccurs="0"/>
+				<xs:element ref="postOperation" minOccurs="0"/>
+				<xs:element ref="compressedFilePassword" minOccurs="0"/>
+				<xs:element ref="processedFilesOperationType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="operationType" default="Read File">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Read File"/>
+				<xs:enumeration value="Write File"/>
+				<xs:enumeration value="List Files"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="preOperation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="compress"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="compress">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="postOperation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="decompress"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="decompress">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="compressedFilePassword">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:userPassword" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="processedFilesOperationType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="None"/>
+				<xs:enumeration value="Move"/>
+				<xs:enumeration value="Copy"/>
+				<xs:enumeration value="Delete"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+
+	<!-- filenameAndDirectory group __________________________________-->
+	<xs:element name="filenameAndDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sourceDirectory"/>
+				<xs:element ref="targetDirectory" minOccurs="0"/>
+				<xs:element ref="sourceIsRemote" minOccurs="0"/>
+				<xs:element ref="targetIsRemote" minOccurs="0"/>
+				<xs:element ref="sourceFileName" minOccurs="0"/>
+				<xs:element ref="targetFileName" minOccurs="0"/>
+				<xs:element ref="includeFiles" minOccurs="0"/>
+				<xs:element ref="includeWildcard" minOccurs="0"/>
+				<xs:element ref="excludeFiles" minOccurs="0"/>
+				<xs:element ref="excludeWildcard" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="targetDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceFileName">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="targetFileName">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:filename"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sourceIsRemote" type="xs:boolean"/>
+	<xs:element name="targetIsRemote" type="xs:boolean"/>
+	<xs:element name="includeFiles" type="xs:string"/>
+	<xs:element name="includeWildcard" type="xs:string"/>
+	<xs:element name="excludeFiles" type="xs:string"/>
+	<xs:element name="excludeWildcard" type="xs:string"/>
+
+	<!-- fileProperties group _________________________________________-->
+	<xs:element name="fileProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="fileSize" minOccurs="0"/>
+				<xs:element ref="fileType"/>
+				<xs:element ref="recursive" minOccurs="0"/>
+				<xs:element ref="gelGec"/>
+				<xs:element ref="minimumAge" minOccurs="0"/>
+				<xs:element ref="fileModificationTime" minOccurs="0"/>
+				<xs:element ref="modificationTimeFormat" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fileSize" type="xs:integer"/>
+	<xs:element name="fileType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Ascii"/>
+				<xs:enumeration value="Binary"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="recursive" type="xs:boolean" default="false"/>
+	<xs:element name="gelGec" type="xs:boolean" default="true"/>
+	<xs:element name="minimumAge" type="xs:integer"/>
+	<xs:element name="fileModificationTime">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="None"/>
+				<xs:enumeration value="File Name"/>
+				<xs:enumeration value="File System"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="modificationTimeFormat" type="xs:string"/>
+
+
+	<!-- archiveProperties group _______________________________________-->
+	<xs:element name="archiveProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="archive"/>
+				<xs:element ref="archiveDirectory" minOccurs="0"/>
+				<xs:element ref="fileNamingConvention" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="archiveDirectory">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="archive" type="xs:boolean"/>
+	<xs:element name="fileNamingConvention" type="xs:string"/>
+
+
+	<!-- ftpProperties group __________________________________________-->
+	<xs:element name="ftpProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:active"/>
+				<xs:element ref="connection"/>
+				<xs:element ref="ftpSecure" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:int"/>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="connection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:connName"/>
+				<xs:element ref="com:userName"/>
+				<xs:element ref="com:userPassword"/>
+				<xs:element ref="com:ftpPortNumber"/>
+				<xs:element ref="com:ipAddress"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<!-- ftpsProperties group __________________________________________-->
+	<xs:element name="ftpsProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="channelMask" minOccurs="0"/>
+				<xs:element ref="securePort" minOccurs="0"/>
+				<xs:element ref="walletLocation" minOccurs="0"/>
+				<xs:element ref="walletPassword" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="channelMask" default="Both">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Control"/>
+				<xs:enumeration value="Data"/>
+				<xs:enumeration value="Both"/>
+				<xs:enumeration value="None"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="securePort">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:ftpPortNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="walletLocation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:path"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="walletPassword">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:userPassword"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<!-- sftpProperties group _________________________________________-->
+	<xs:element name="sftpProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="authenticationType"/>
+				<xs:element ref="transportProvider"/>
+				<xs:element ref="useProxy"/>
+				<xs:element ref="proxyProperties" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="authenticationType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="PASSWORD"/>
+				<xs:enumeration value="PUBLICKEY"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="transportProvider">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Socket"/>
+				<xs:enumeration value="HTTP"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="proxyProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="com:ipAddress"/>
+				<xs:element ref="com:portNumber"/>
+				<xs:element ref="com:userName"/>
+				<xs:element ref="com:userPassword"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="useProxy" type="xs:boolean" default="false"/>
+	
+	<xs:element name="ftpConnections">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ftpProperties" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

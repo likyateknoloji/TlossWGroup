@@ -1,0 +1,11 @@
+<xs:schema xmlns="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/resource-extension-defs" elementFormDefault="qualified">
+    <xs:element name="Resource">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:NCName">
+                    <xs:attribute name="order" use="optional" type="xs:integer"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

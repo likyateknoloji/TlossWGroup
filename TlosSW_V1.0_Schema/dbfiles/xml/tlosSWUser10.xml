@@ -1,0 +1,33 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<usr:user-infos xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_user_types xmldb:exist:///db/TLOSSW/xsds/tlosSWUser_v_1_0.xsd">
+    <usr:userList>
+        <usr:person id="1">
+            <com:name>admin</com:name>
+            <com:surname>admin</com:surname>
+            <com:TelList>
+                <com:tel>9999999999</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>tlos@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>admin</com:userName>
+            <com:userPassword>admin</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="4">
+            <com:name>hakan</com:name>
+            <com:surname>saribiyik</com:surname>
+            <com:TelList>
+                <com:tel>9999999999</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>hakan.saribiyik@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>admin</com:userName>
+            <com:userPassword>admin</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+    </usr:userList>
+</usr:user-infos>

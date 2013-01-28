@@ -1,0 +1,209 @@
+<!-- Created for the TLOSSW Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_nrpe_results" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_nrpe_results" elementFormDefault="qualified">
+    <xs:element name="NrpeData">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="nrpeCall" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="nrpeCall">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="message" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="entry-name" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="port" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="os" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="message">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="response" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="time" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+<!--
+    <xs:element name="response">
+        <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+            <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+-->
+
+	<xs:element name="response">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="cpu" minOccurs="1" maxOccurs="3"/>
+				<xs:element ref="disk" minOccurs="1" maxOccurs="2"/>
+				<xs:element ref="mem" minOccurs="1" maxOccurs="2"/>
+            </xs:choice>
+            <xs:attribute name="command" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="alias_cpu"/>
+					  <xs:enumeration value="alias_disk"/>
+					  <xs:enumeration value="alias_mem"/>
+					  <xs:enumeration value="check_moad"/>
+					  <xs:enumeration value="check_disk"/>
+					  <xs:enumeration value="check_mem"/>			  
+					</xs:restriction>	  
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="cpuKullanimType">
+      <xs:simpleContent>
+       <xs:extension base="xs:nonNegativeInteger">
+            <xs:attribute name="timein" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="1"/>
+					  <xs:enumeration value="5"/>
+					  <xs:enumeration value="15"/>		  
+					</xs:restriction>  
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="birim" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="%"/>
+					  <xs:enumeration value="G"/>
+					  <xs:enumeration value="M"/>
+					  <xs:enumeration value="K"/>
+					  <xs:enumeration value="GB"/>
+					  <xs:enumeration value="MB"/>
+					  <xs:enumeration value="KB"/>
+					  <xs:enumeration value="B"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+       </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:complexType name="memdiskKullanimType">
+      <xs:simpleContent>
+       <xs:extension base="xs:float">
+            <xs:attribute name="for" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="used"/>
+					  <xs:enumeration value="free"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="birim" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="%"/>
+					  <xs:enumeration value="G"/>
+					  <xs:enumeration value="M"/>
+					  <xs:enumeration value="K"/>
+					  <xs:enumeration value="GB"/>
+					  <xs:enumeration value="MB"/>
+					  <xs:enumeration value="KB"/>
+					  <xs:enumeration value="B"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+       </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+    
+    <xs:element name="cpu" type="cpuKullanimType"/>
+    <xs:element name="mem" type="memdiskKullanimType"/>
+    <xs:element name="disk" type="memdiskKullanimType"/>
+<!-- 
+    <xs:element name="cpu">
+        <xs:complexType>
+            <xs:attribute name="timein" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="1"/>
+					  <xs:enumeration value="5"/>
+					  <xs:enumeration value="15"/>		  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="birim" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="%"/>
+					  <xs:enumeration value="G"/>
+					  <xs:enumeration value="M"/>
+					  <xs:enumeration value="K"/>
+					  <xs:enumeration value="B"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="disk">
+        <xs:complexType>
+            <xs:attribute name="for" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="used"/>
+					  <xs:enumeration value="free"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="birim" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="%"/>
+					  <xs:enumeration value="G"/>
+					  <xs:enumeration value="M"/>
+					  <xs:enumeration value="K"/>
+					  <xs:enumeration value="B"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+  <xs:element name="mem">
+        <xs:complexType>
+            <xs:attribute name="for" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="used"/>
+					  <xs:enumeration value="free"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="birim" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+					  <xs:enumeration value="%"/>
+					  <xs:enumeration value="G"/>
+					  <xs:enumeration value="M"/>
+					  <xs:enumeration value="K"/>
+					  <xs:enumeration value="B"/>			  
+					</xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+     -->
+</xs:schema>

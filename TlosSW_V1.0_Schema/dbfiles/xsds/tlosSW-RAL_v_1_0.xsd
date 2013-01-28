@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_ResourceAgent_results" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   targetNamespace="http://www.likyateknoloji.com/XML_ResourceAgent_results" elementFormDefault="qualified">
+
+  <xs:element name="ResourceAgentList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="resource"/>
+      </xs:sequence>
+	  <xs:attribute name="time" use="optional" type="xs:long"/>      
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="resource">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="resourceType">
+          <xs:attribute name="entry-name" use="required" type="xs:NCName"/>
+          <xs:attribute name="agentid" use="required" type="xs:int"/>
+          <xs:attribute name="time" use="optional" type="xs:long"/>          
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+ <xs:simpleType name="resourceType">
+   <xs:restriction base="xs:string">
+     <xs:enumeration value="TRUE"/>
+     <xs:enumeration value="FALSE"/>
+   </xs:restriction>
+ </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,75 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<lrns:ResourceList xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_SWResourceNS_types xmldb:exist:///db/TLOSSW/xsds/tlosSW-rns.xsd              http://schemas.ggf.org/jsdl/2005/11/jsdl xmldb:exist:///db/TLOSSW/xsds/jsdl.2005_11.xsd">
+    <lrns:Resource entry-name="laptop-hakan">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="patarafedora">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Unix</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="TTGBZAUT001D">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="VirtualXP">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="TLOSSW-TEST2">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="murat-laptop">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="test1-laptop">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+    <lrns:Resource entry-name="test-pc">
+        <rns:endpoint>
+            <wsa:Address>http://tempuri.org/example</wsa:Address>
+        </rns:endpoint>
+        <rns:metadata>
+            <rns:supports-rns value="true"/>
+            <jsdl:OperatingSystemName>Unix</jsdl:OperatingSystemName>
+        </rns:metadata>
+    </lrns:Resource>
+</lrns:ResourceList>

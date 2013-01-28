@@ -1,0 +1,39 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_user_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" targetNamespace="http://www.likyateknoloji.com/XML_user_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    <xs:element name="user-infos">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="userList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="userList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="person" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="person">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="lt:name"/>
+                <xs:element ref="lt:surname"/>
+                <xs:element ref="lt:TelList"/>
+				<!--xs:element ref="lt:telephone" maxOccurs="unbounded" /-->
+                <xs:element ref="lt:EmailList"/>
+				<!-- xs:element ref="lt:Email" maxOccurs="unbounded" /-->
+                <xs:element ref="lt:role"/>
+                <xs:element ref="lt:userName"/>
+                <xs:element ref="lt:userPassword"/>
+                <xs:element ref="lt:transformToLocalTime"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

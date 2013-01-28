@@ -1,0 +1,43 @@
+
+<par:Parameters xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.likyateknoloji.com/XML_parameters_types xmldb:exist:///db/TLOSSW/xsds/tlosSWParameters_v_1_0.xsd">
+    <par:Globals>
+        <par:parameter id="1">
+            <par:name>filename</par:name>
+            <par:valueString>parametre.xml</par:valueString>
+            <par:preValue type="2">parametre.xml</par:preValue>
+            <par:desc>tanim parametre.xml</par:desc>
+        </par:parameter>
+        <par:parameter id="2">
+            <par:name>filename2</par:name>
+            <par:valueString>parametre.xml</par:valueString>
+            <par:preValue type="2">parametre.xml</par:preValue>
+            <par:desc>tanim parametre.xml</par:desc>
+        </par:parameter>
+        <par:parameter id="3">
+            <par:name>LOGPATH</par:name>
+            <par:valueString>D:\likya\projeler\tlos\tlos3.0\LOG</par:valueString>
+            <par:preValue type="2">parametre.xml</par:preValue>
+            <par:desc>Log path tanimi</par:desc>
+        </par:parameter>
+    </par:Globals>
+    <par:person id="3">
+        <par:parameter id="4">
+            <par:name>filename</par:name>
+            <par:valueString>parametre.xml</par:valueString>
+            <par:preValue type="2">parametre.xml</par:preValue>
+            <par:desc>tanim parametre.xml</par:desc>
+        </par:parameter>
+        <par:parameter id="5">
+            <par:name>filename2</par:name>
+            <par:valueString>parametre.xml</par:valueString>
+            <par:desc>tanim parametre.xml</par:desc>
+        </par:parameter>
+        <par:parameter id="6">
+            <par:name>LOGPATH</par:name>
+            <par:valueString>D:\likya\projeler\tlos\tlos3.0\LOG</par:valueString>
+            <par:preValue type="2">parametre.xml</par:preValue>
+            <par:desc>Log path tanimi</par:desc>
+        </par:parameter>
+    </par:person>
+</par:Parameters>

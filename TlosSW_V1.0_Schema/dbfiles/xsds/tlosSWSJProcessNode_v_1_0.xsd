@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_process_node" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefault="qualified">
+	<xs:element name="processNodes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="processNode"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="processNode">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="process"/>
+				<xs:choice>
+					<xs:element ref="append"/>
+					<xs:element ref="delete"/>
+					<xs:element ref="filter"/>
+					<xs:element ref="replace"/>
+					<xs:element ref="split"/>
+					<xs:element ref="transform"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="process">
+		<xs:complexType>
+			<xs:attribute name="source" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="text"/>
+						<xs:enumeration value="xml"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="append">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:integer">
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="line"/>
+								<xs:enumeration value="tag"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="delete">
+		<xs:complexType>
+			<xs:attribute name="find" use="required" type="xs:NCName"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="filter">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="regex"/>
+								<xs:enumeration value="stringFunction"/>
+								<xs:enumeration value="xpath"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="replace">
+		<xs:complexType mixed="true">
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="find" use="required" type="xs:NCName"/>
+					<xs:attribute name="type" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="tag"/>
+								<xs:enumeration value="value"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="split">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:integer">
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="word"/>
+								<xs:enumeration value="line"/>
+								<xs:enumeration value="tag"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="transform">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:NCName">
+					<xs:attribute name="with" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="xslt"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

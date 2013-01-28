@@ -1,0 +1,161 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<cal:calendarList xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:cal="http://www.likyateknoloji.com/XML_calendar_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_calendar_types xmldb:exist:///db/TLOSSW/xsds/tlosSWCalendar_v_1_0.xsd">
+    <cal:calendarProperties id="0">
+        <cal:calendarName>kontrol</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>DAILY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:specificDays> <!--plana ek olarak eklenmek istenen gunler var mi? Bugunlerde plana uymasada calis --></cal:specificDays>
+        <cal:exceptionDays> <!--genel kurala uysada bu gunlerde calisma --></cal:exceptionDays>
+        <cal:validFrom>
+            <com:date>2009-01-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2019-12-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="1">
+        <cal:calendarName>gunluk</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>DAILY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:specificDays>
+            <com:date>2009-07-01</com:date>
+            <com:date>2009-09-06</com:date>
+        </cal:specificDays>
+        <cal:exceptionDays>
+            <com:date>2009-09-06</com:date>
+        </cal:exceptionDays>
+        <cal:validFrom>
+            <com:date>2009-01-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2011-12-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="2">
+        <cal:calendarName>aylik</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>LAST</com:daySpecial>
+            <com:dayDef>MONTHLY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:exceptionDays>
+            <com:date>2009-07-01</com:date>
+            <com:date>2009-12-07</com:date>
+        </cal:exceptionDays>
+        <cal:whichOnes>
+            <cal:Name ID="day1">SUNDAY</cal:Name>
+        </cal:whichOnes>
+        <cal:validFrom>
+            <com:date>2009-08-01</com:date>
+            <com:time>05:00:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2011-12-01</com:date>
+            <com:time>10:00:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="3">
+        <cal:calendarName>haftasonlari</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>WEEKLY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:whichOnes>
+            <cal:Name ID="day2">SUNDAY</cal:Name>
+            <cal:Name ID="day1">SATURDAY</cal:Name>
+        </cal:whichOnes>
+        <cal:validFrom>
+            <com:date>2009-08-01</com:date>
+            <com:time>05:00:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2012-11-01</com:date>
+            <com:time>10:00:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="4">
+        <cal:calendarName>haftaici</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>WEEKLY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:whichOnes>
+            <cal:Name ID="day3">WEDNESDAY</cal:Name>
+            <cal:Name ID="day2">TUESDAY</cal:Name>
+            <cal:Name ID="day1">MONDAY</cal:Name>
+            <cal:Name ID="day5">FRIDAY</cal:Name>
+            <cal:Name ID="day4">THURSDAY</cal:Name>
+        </cal:whichOnes>
+        <cal:validFrom>
+            <com:date>2009-09-01</com:date>
+            <com:time>05:00:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2011-12-01</com:date>
+            <com:time>10:00:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="5">
+        <cal:calendarName>isgunleri</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>WEEKLY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:specificDays>
+            <com:date>2009-08-08</com:date>
+            <com:date>2009-08-09</com:date>
+            <com:date>2009-08-10</com:date>
+        </cal:specificDays>
+        <cal:whichOnes>
+            <cal:Name ID="day3">WEDNESDAY</cal:Name>
+            <cal:Name ID="day2">TUESDAY</cal:Name>
+            <cal:Name ID="day1">MONDAY</cal:Name>
+            <cal:Name ID="day5">FRIDAY</cal:Name>
+            <cal:Name ID="day4">THURSDAY</cal:Name>
+        </cal:whichOnes>
+        <cal:validFrom>
+            <com:date>2009-08-01</com:date>
+            <com:time>05:00:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2012-12-01</com:date>
+            <com:time>10:00:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+    <cal:calendarProperties id="6">
+        <cal:calendarName>Gunici15dk</cal:calendarName>
+        <cal:calendarPeriod>
+            <com:daySpecial>ALL</com:daySpecial>
+            <com:dayDef>TIMELY</com:dayDef>
+        </cal:calendarPeriod>
+        <cal:howmanyTimes>2</cal:howmanyTimes>
+        <cal:validFrom>
+            <com:date>2009-01-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validFrom>
+        <cal:validTo>
+            <com:date>2009-12-01</com:date>
+            <com:time>15:02:00</com:time>
+        </cal:validTo>
+        <com:userId>1</com:userId>
+    </cal:calendarProperties>
+</cal:calendarList>

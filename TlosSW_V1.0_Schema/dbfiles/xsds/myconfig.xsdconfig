@@ -1,0 +1,208 @@
+
+	<!--
+		Copyright 2004 The Apache Software Foundation Licensed under the
+		Apache License, Version 2.0 (the "License"); you may not use this file
+		except in compliance with the License. You may obtain a copy of the
+		License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+		by applicable law or agreed to in writing, software distributed under
+		the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+
+
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config"
+	xmlns:ct="http://xmlbeans.apache.org/samples/catalog">
+
+
+	<!--
+		<namespace> element specifies configuration for namespace. Attribute
+		uri contains namespace list. <package> element specifies package name
+		to be used for types generated in this namespace.
+	-->
+
+	<xb:namespace
+		uri="http://xmlbeans.apache.org/samples/catalog http://anotherurihere.org">
+		<xb:package>com.catalog</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_common_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.common</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_userOutput_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.useroutput</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_calendar_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.calendar</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_config_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.config</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_agentconfig_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.agentconfig</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_data_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.data</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_permission_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.permission</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/state-types">
+		<xb:package>com.likya.tlos.model.xmlbeans.state</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_user_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.user</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_trace_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.trace</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_nrpe_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.nrpe</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+		<xb:package>com.likya.tlos.model.xmlbeans.jsdl</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_agent_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.agent</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/resource-extension-defs">
+		<xb:package>com.likya.tlos.model.xmlbeans.resourceextdefs</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_SWResourceNS_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.swresourcens</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_ResourceAgent_results">
+		<xb:package>com.likya.tlos.model.xmlbeans.swresourcenagentresults</xb:package>
+	</xb:namespace>
+
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_error_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.error</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_SLA_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.sla</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_PP_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.programprovision</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_alarm_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.alarm</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_alarm_history">
+		<xb:package>com.likya.tlos.model.xmlbeans.alarmhistory</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_parameters_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.parameters</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_ftp_adapter_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.ftpadapter</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_file_adapter_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.fileadapter</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_listener_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.listener</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_web_service_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.webservice</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_nrpe_results">
+		<xb:package>com.likya.tlos.model.xmlbeans.nrperesults</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_dbconnection_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.dbconnections</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_db_job_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.dbjob</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_process_node">
+		<xb:package>com.likya.tlos.model.xmlbeans.processnode</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_FuncPass_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.functionpass</xb:package>
+	</xb:namespace>
+	
+	<xb:namespace
+		uri="http://www.likyateknoloji.com/XML_report_types">
+		<xb:package>com.likya.tlos.model.xmlbeans.report</xb:package>
+	</xb:namespace>
+
+	<!--
+		##any indicates all URIs. A <prefix> is used to prepend to top-level
+		Java type names generated in this namespace. A <suffix> is used to
+		append to top-level Java types names generated in this namespace. The
+		<prefix> and <suffix> are not used for inner Java type definitions.
+	-->
+
+	<!-- xb:namespace uri="##any">
+		<xb:prefix>Xml</xb:prefix>
+		<xb:suffix>Bean</xb:suffix>
+	</xb:namespace -->
+
+
+	<!--<qname> specifies a Java class name for a Qualified name -->
+	<xb:qname name="ct:forsample" javaname="GoodName" />
+	<xb:qname name="ct:a-very-long-description-element" javaname="XmlShortItemBean" />
+
+
+</xb:config>
