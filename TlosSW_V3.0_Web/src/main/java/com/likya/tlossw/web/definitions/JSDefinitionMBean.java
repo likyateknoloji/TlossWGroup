@@ -1,0 +1,238 @@
+package com.likya.tlossw.web.definitions;
+
+import java.io.Serializable;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.context.RequestContext;
+
+import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlossw.web.TlosSWBaseBean;
+
+@ManagedBean(name = "jsDefinitionMBean")
+@ViewScoped
+public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
+
+	private static final long serialVersionUID = 1393726981346371091L;
+
+	@ManagedProperty(value = "#{batchProcessPanelMBean}")
+	private BatchProcessPanelMBean batchProcessPanelMBean;
+
+	@ManagedProperty(value = "#{webServicePanelMBean}")
+	private WebServicePanelMBean webServicePanelMBean;
+
+	@ManagedProperty(value = "#{ftpPanelMBean}")
+	private FTPPanelMBean ftpPanelMBean;
+
+	private String jobDefCenterPanel = FTP_PAGE;
+
+	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
+	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
+
+	public final static String BATCH_PROCESS_PAGE = "/inc/definitionPanels/batchProcessJobDef.xhtml";
+	public final static String WEB_SERVICE_PAGE = "/inc/definitionPanels/webServiceJobDef.xhtml";
+	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
+	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
+
+	public String draggedTemplateName;
+	public String draggedTemplatePath;
+
+	public String draggedJobNameForDependency;
+	public String draggedJobPathForDependency;
+
+	private JobProperties jobProperties;
+
+	// @PostConstruct
+	// public void init() {
+	// jobDefCenterPanel = BATCH_PROCESS_PAGE;
+	// }
+
+	public void handleDropAction(ActionEvent ae) {
+		jobProperties = getDbOperations().getTemplateJobFromName(JOB_TEMPLATES_DATA, draggedTemplateName);
+
+		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+
+		switch (jobType) {
+
+		case JobCommandType.INT_SYSTEM_COMMAND:
+
+			break;
+
+		case JobCommandType.INT_BATCH_PROCESS:
+			if (jobProperties != null) {
+				getBatchProcessPanelMBean().setJobProperties(jobProperties);
+				getBatchProcessPanelMBean().setJobInsertButton(true);
+				getBatchProcessPanelMBean().fillTabs();
+
+				getBatchProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = BATCH_PROCESS_PAGE;
+
+			// RequestContext context = RequestContext.getCurrentInstance();
+			// context.update("centerLayout");
+			//
+			// ExternalContext externalContext =
+			// FacesContext.getCurrentInstance().getExternalContext();
+
+			break;
+
+		case JobCommandType.INT_SHELL_SCRIPT:
+
+			break;
+
+		case JobCommandType.INT_SAP:
+
+			break;
+
+		case JobCommandType.INT_SAS:
+
+			break;
+
+		case JobCommandType.INT_ETL_TOOL_JOBS:
+
+			break;
+
+		case JobCommandType.INT_FTP:
+			if (jobProperties != null) {
+				getFtpPanelMBean().setJobProperties(jobProperties);
+				getFtpPanelMBean().setJobInsertButton(true);
+				getFtpPanelMBean().fillTabs();
+
+				getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = FTP_PAGE;
+
+			break;
+
+		case JobCommandType.INT_WEB_SERVICE:
+			if (jobProperties != null) {
+				getWebServicePanelMBean().setJobProperties(jobProperties);
+				getWebServicePanelMBean().setJobInsertButton(true);
+				getWebServicePanelMBean().fillTabs();
+
+				getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = WEB_SERVICE_PAGE;
+
+			break;
+
+		case JobCommandType.INT_DB_JOBS:
+
+			break;
+
+		case JobCommandType.INT_FILE_LISTENER:
+
+			break;
+
+		case JobCommandType.INT_PROCESS_NODE:
+
+			break;
+
+		case JobCommandType.INT_FILE_PROCESS:
+
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	public void handleJobDropAction(ActionEvent ae) {
+		if (jobDefCenterPanel.equals(BATCH_PROCESS_PAGE)) {
+			getBatchProcessPanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getBatchProcessPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+
+		} else if (jobDefCenterPanel.equals(WEB_SERVICE_PAGE)) {
+			getWebServicePanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getWebServicePanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+
+		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
+			getFtpPanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getFtpPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+		}
+	}
+
+	public String getJobDefCenterPanel() {
+		return jobDefCenterPanel;
+	}
+
+	public void setJobDefCenterPanel(String jobDefCenterPanel) {
+		this.jobDefCenterPanel = jobDefCenterPanel;
+	}
+
+	public String getDraggedTemplateName() {
+		return draggedTemplateName;
+	}
+
+	public void setDraggedTemplateName(String draggedTemplateName) {
+		this.draggedTemplateName = draggedTemplateName;
+	}
+
+	public JobProperties getJobProperties() {
+		return jobProperties;
+	}
+
+	public void setJobProperties(JobProperties jobProperties) {
+		this.jobProperties = jobProperties;
+	}
+
+	public BatchProcessPanelMBean getBatchProcessPanelMBean() {
+		return batchProcessPanelMBean;
+	}
+
+	public void setBatchProcessPanelMBean(BatchProcessPanelMBean batchProcessPanelMBean) {
+		this.batchProcessPanelMBean = batchProcessPanelMBean;
+	}
+
+	public String getDraggedTemplatePath() {
+		return draggedTemplatePath;
+	}
+
+	public void setDraggedTemplatePath(String draggedTemplatePath) {
+		this.draggedTemplatePath = draggedTemplatePath;
+	}
+
+	public String getDraggedJobNameForDependency() {
+		return draggedJobNameForDependency;
+	}
+
+	public void setDraggedJobNameForDependency(String draggedJobNameForDependency) {
+		this.draggedJobNameForDependency = draggedJobNameForDependency;
+	}
+
+	public String getDraggedJobPathForDependency() {
+		return draggedJobPathForDependency;
+	}
+
+	public void setDraggedJobPathForDependency(String draggedJobPathForDependency) {
+		this.draggedJobPathForDependency = draggedJobPathForDependency;
+	}
+
+	public WebServicePanelMBean getWebServicePanelMBean() {
+		return webServicePanelMBean;
+	}
+
+	public void setWebServicePanelMBean(WebServicePanelMBean webServicePanelMBean) {
+		this.webServicePanelMBean = webServicePanelMBean;
+	}
+
+	public FTPPanelMBean getFtpPanelMBean() {
+		return ftpPanelMBean;
+	}
+
+	public void setFtpPanelMBean(FTPPanelMBean ftpPanelMBean) {
+		this.ftpPanelMBean = ftpPanelMBean;
+	}
+
+}

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - User Management Page" />
+
+	<!-- ui:define name="west">
+
+		<h:form>
+			<p:panelMenu style="width:200px">
+				<p:separator />
+				<p:submenu label="User">
+					<p:menuitem value="New User" url="/inc/managementPanels/userPanel.xhtml" icon="ui-icon-signal" />
+					<p:menuitem value="Search User" url="/inc/managementPanels/userSearchPanel.xhtml" icon="ui-icon-signal" />
+				</p:submenu>
+			</p:panelMenu>
+
+		</h:form>
+	</ui:define-->
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Management" />
+		<ui:param name="title3" value="Users" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/managementPanels/userPanel.xhtml" />
+		<ui:param name="title4link" value="Tlos SW Workload Automation Software v1.0 - User Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+		<h:form id="yeniKullaniciForm">
+			<p:fieldset legend="#{msgs['tlos.management.pannel.newUser.panel']}" widgetVar="regWidget" style="width: 600px;">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
+
+					<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.name']}" />
+					<p:inputText id="firstName" value="#{userPanelMBean.person.name}" required="true" 
+					             requiredMessage="#{msgs['tlos.userPanel.reqMessage.name']}"
+					             validatorMessage="#{msgs['tlos.userPanel.valMessage.name']}" 
+					             label="#{msgs['tlos.management.pannel.userProcesses.name']}">
+						<f:validateLength minimum="2"></f:validateLength>
+
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.surname']}" />
+					<p:inputText id="surName" value="#{userPanelMBean.person.surname}" required="true"
+					             requiredMessage="#{msgs['tlos.userPanel.reqMessage.surname']}"
+					             validatorMessage="#{msgs['tlos.userPanel.valMessage.surname']}"  
+					             label="#{msgs['tlos.management.pannel.userProcesses.surname']}">
+						<f:validateLength minimum="2"></f:validateLength>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.roles']}" />
+					<p:selectOneMenu id="role" required="true" style="width:170px;text-align: center;" 
+					                 value="#{userPanelMBean.role}" 
+					                 label="#{msgs['tlos.management.pannel.userProcesses.roles']}">
+						<f:selectItems value="#{userPanelMBean.roleList}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.user']}" />
+					<p:inputText id="userName" value="#{userPanelMBean.person.userName}" required="true" 
+					             requiredMessage="#{msgs['tlos.userPanel.reqMessage.user']}"
+					             validatorMessage="#{msgs['tlos.userPanel.valMessage.user']}"  					
+					             label="#{msgs['tlos.management.pannel.userProcesses.user']}">
+						<f:validateLength minimum="5"></f:validateLength>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.user.password']}" />
+					<p:password id="password" value="#{userPanelMBean.person.userPassword}"  
+					            feedback="false" match="password2" label="#{msgs['tlos.management.pannel.user.password']}"  
+					            required="true" redisplay="true"
+					            requiredMessage="#{msgs['tlos.userPanel.reqMessage.password']}" >  	
+					<f:validateLength minimum="5"></f:validateLength>
+					</p:password>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.user.password.repeat']}" />
+					<p:password id="password2" value="#{userPanelMBean.userPassword2}" feedback="false" redisplay="true" 
+					            label="#{msgs['tlos.management.pannel.user.password.repeat']}"  >
+					</p:password>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.user.phone']}" />
+					<p:inputText id="phone" value="#{userPanelMBean.telefon}" required="true"
+								requiredMessage="#{msgs['tlos.userPanel.reqMessage.phone']}"
+					            validatorMessage="#{msgs['tlos.userPanel.valMessage.phone']}"   
+					            label="#{msgs['tlos.management.pannel.user.phone']}">
+						<f:validateRegex pattern="^[0-9]+[- ]?[0-9]+|^$" />
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.user.email']}" />
+					<p:inputText id="email" required="true" size="40" value="#{userPanelMBean.mail}" 
+								 requiredMessage="#{msgs['tlos.userPanel.reqMessage.email']}"
+					             validatorMessage="#{msgs['tlos.userPanel.valMessage.email']}"   
+					             label="#{msgs['tlos.management.pannel.user.email']}">
+						<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.user.transformToLocalTime']}" />
+					<p:selectOneMenu id="localTime" style="width:100px;text-align: center;" value="#{userPanelMBean.transformToLocalTime}" >
+						<f:selectItem itemLabel="false" itemValue="false" />
+						<f:selectItem itemLabel="true" itemValue="true" />
+					</p:selectOneMenu>
+
+
+					<h:inputHidden value="#{userPanelMBean.personId}" id="inputHidden_1" />
+
+					<!--<h:outputText value="Passed Value: " />
+					<h:outputText value="#{param.test}" /> -->
+				</p:panelGrid>
+
+
+
+
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton id="userInsertButton" value=" #{msgs['tlos.button.save']} " rendered="#{userPanelMBean.insertButton and security.UserSave}" actionListener="#{userPanelMBean.insertUserAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton id="userUpdateButton" value="#{msgs['tlos.button.update']}" rendered="#{not userPanelMBean.insertButton and security.UserUpdate}" actionListener="#{userPanelMBean.updateUserAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false" immediate="true" rendered="#{security.UserBack}" action="userSearchPanel.xhtml">
+						</p:commandButton>
+					</p:panel>
+				</div>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,181 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - DB Management Page" />
+
+	<ui:define name="north">
+		<h:form>
+			<p:menubar rendered="true" model="#{dynamicMenuItem.initMenu()}" />
+		</h:form>
+		<h:outputText>#{dynamicMenuItem.getSelectedMenuItem.getTitle}</h:outputText>
+
+	</ui:define>
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Management" />
+		<ui:param name="title3" value="DB Connections" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/managementPanels/dbConnectionSearchPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - DB Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchDBConnection" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl"
+				header="#{msgs['tlos.management.pannel.dbDefinition.header']}"
+				styleClass="formSeparator" style="text-align: center;">
+
+				<div class="tablectrl">
+
+					<p:panelGrid columns="4" styleClass="companyHeaderGrid">
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.dbType']}" />
+						<p:selectOneMenu id="dbType" style="text-align: center;"
+							value="#{dbConnectionSearchPanelMBean.dbType}"
+							partialSubmit="true">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{dbConnectionSearchPanelMBean.dbTypeList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.hostName']}" />
+						<p:inputText id="hostName"
+							value="#{dbConnectionSearchPanelMBean.dbProperties.hostName}"
+							partialSubmit="true" />
+
+					</p:panelGrid>
+
+				</div>
+			</p:panel>
+			<br></br>
+
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton id="dbAccessSearchButton"
+						value="#{msgs['tlos.button.search']}" update="dbSearchPanel"
+						rendered="#{security.DBAccessSearch}"
+						actionListener="#{dbConnectionSearchPanelMBean.searchDBConnectionAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}"
+						rendered="#{security.DBAccessClear}" update="searchDBConnection"
+						action="#{dbConnectionSearchPanelMBean.resetDBConnectionAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.addNew']}"
+						rendered="#{security.DBAccessAdd}" update="dbSearchPanel"
+						ajax="false" immediate="false" action="dbConnectionPanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="dbSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight"
+					rendered="#{not empty dbConnectionSearchPanelMBean.searchDBList}">
+					<p:dataTable var="item" rows="10" id="dbSearchDataTable"
+						filteredValue="#{dbConnectionSearchPanelMBean.filteredDBList}"
+						width="100%" value="#{dbConnectionSearchPanelMBean.searchDBList}"
+						binding="#{dbConnectionSearchPanelMBean.searchDBTable}"
+						paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton id="dbEditButton" ajax="false"
+								rendered="#{security.DBAccessEdit}" immediate="false"
+								value="Update" action="dbConnectionPanel.xhtml">
+								<f:param name="selectedDBConnectionID" value="#{item.ID}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton id="userDeleteButton" value="Delete"
+								onclick="confirmation.show()"
+								rendered="#{security.DBAccessDelete}" />
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+								widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this"
+									value="#{msgs['tlos.ask.delete.confirm1']}"
+									update="dbSearchDataTable" onclick="confirmation.hide()"
+									actionListener="#{dbConnectionSearchPanelMBean.deleteDBConnectionAction}" />
+								<p:commandButton id="decline"
+									value="#{msgs['tlos.ask.delete.confirm2']}"
+									onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+						</p:column>
+
+						<p:column id="modelHeader"
+							headerText="#{msgs['tlos.management.pannel.dbAccess.connectionName']}"
+							sortBy="#{item.connectionName}" filterBy="#{item.connectionName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.connectionName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.dbAccess.dbType']}"
+							sortBy="#{item.dbType}" filterBy="#{item.dbType}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.dbType}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.dbAccess.dbVersion']}"
+							sortBy="#{item.dbVersion}" filterBy="#{item.dbVersion}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.dbVersion}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.dbAccess.dbName']}"
+							sortBy="#{item.dbName}" filterBy="#{item.dbName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.dbName}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.dbAccess.hostName']}"
+							sortBy="#{item.hostName}" filterBy="#{item.hostName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.hostName}"
+								style="text-align: center;" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

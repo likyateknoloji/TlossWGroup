@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Tlos SW Workload Automation Software v1.0</title>
+	</f:facet>
+
+	<link type="text/css" rel="stylesheet" href="/themes/default.css" />
+	<link type="text/css" rel="stylesheet" href="/themes/syntaxhighlighter.css" />
+
+	<style type="text/css">
+		.ui-layout-north {
+			z-index: 20 !important;
+			overflow: visible !important;
+		}
+		
+		.ui-layout-north .ui-layout-unit-content {
+			overflow: visible !important;
+		}
+	</style>
+</h:head>
+
+<h:body>
+	<ui:composition template="/templates/common/commonLayout.xhtml">
+
+		<ui:param name="title"
+			value="Tlos SW Workload Automation Software v1.0" />
+
+		<ui:define name="west">
+			<p:accordionPanel>
+				<p:tab title="Calendar">
+					<br />
+					<p:calendar mode="inline" navigator="none" />
+					<br />
+				</p:tab>
+
+				<p:tab title="Shortcuts">
+					<h:outputText value="Menu 2 Content" />
+				</p:tab>
+
+				<p:tab title="Theme">
+					<h:form>
+						<ui:include src="/templates/themeMenu.xhtml" />
+					</h:form>
+				</p:tab>
+			</p:accordionPanel>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

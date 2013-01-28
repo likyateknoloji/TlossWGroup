@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - SLA Management Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Advanced D." />
+		<ui:param name="title4" value="SLAs" />
+		<ui:param name="title5" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="AdvancedDefinitionsLink" />
+		<ui:param name="title4link"
+			value="/inc/definitionPanels/advancedDefinitions/slaPanel.xhtml" />
+		<ui:param name="title5link"
+			value="Tlos SW Workload Automation Software v1.0 - SLA Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+				<p:menuitem value="#{title4}" url="#{title4link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newSLA">
+
+			<p:fieldset legend="#{msgs['tlos.management.pannel.newSla.header']}"
+				widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid columns="4" border="0">
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.slaProcesses.name']}" />
+					<p:inputText value="#{slaPanelMBean.sla.name}" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.name']}">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.description']}" />
+					<p:inputText value="#{slaPanelMBean.sla.desc}" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.desc']}">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.organization']}" />
+					<p:inputText value="#{slaPanelMBean.sla.organization}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.organization']}">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.priority']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="priority" value="#{slaPanelMBean.sla.priority}" />
+						<p:slider for="priority" minValue="1" maxValue="5" />
+					</p:panelGrid>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.slaProcesses.startDate']}" />
+					<p:calendar value="#{slaPanelMBean.startDate}" id="startDate"
+						showOn="focus" required="true" navigator="true"
+						requiredMessage="#{msgs['tlos.validation.sla.startDate']}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</p:calendar>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.slaProcesses.startTime']}" />
+					<p:inputMask value="#{slaPanelMBean.startTime}" mask="99:99:99"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.startTime']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.slaProcesses.endDate']}" />
+					<p:calendar value="#{slaPanelMBean.endDate}" id="endDate"
+						showOn="focus" required="true" navigator="true"
+						requiredMessage="#{msgs['tlos.validation.sla.endDate']}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</p:calendar>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.slaProcesses.endTime']}" />
+					<p:inputMask value="#{slaPanelMBean.endTime}" mask="99:99:99"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.maxTimeInQueue']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="maxtimeInQ"
+							value="#{slaPanelMBean.maxTimeInQueue}" />
+						<p:slider for="maxtimeInQ" minValue="1" />
+					</p:panelGrid>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.newSla.unit']}" />
+					<p:selectOneMenu id="mtiqUnit" style="text-align: center;"
+						value="#{slaPanelMBean.maxTimeInQueueUnit}" partialSubmit="true">
+						<f:selectItem itemLabel="Saniye" itemValue="Sec" />
+						<f:selectItem itemLabel="Dakika" itemValue="Min" />
+						<f:selectItem itemLabel="Saat" itemValue="Hour" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.maxTimeToResolve']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="maxtimeToResolve"
+							value="#{slaPanelMBean.maxTimeToResolve}" />
+						<p:slider for="maxtimeToResolve" minValue="1" />
+					</p:panelGrid>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.newSla.unit']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{slaPanelMBean.maxTimeToResolveUnit}" partialSubmit="true">
+						<f:selectItem itemLabel="Saniye" itemValue="Sec" />
+						<f:selectItem itemLabel="Dakika" itemValue="Min" />
+						<f:selectItem itemLabel="Saat" itemValue="Hour" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.numberOfJobs']}" />
+					<p:inputText id="numberOfJobs"
+						value="#{slaPanelMBean.numberOfJobs}"
+						label="#{msgs['tlos.management.pannel.newSla.numberOfJobs']}"
+						required="true" type="integer"
+						requiredMessage="#{msgs['tlos.validation.sla.numberOfJobs']}">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.jobState']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{slaPanelMBean.jobStatusName}" partialSubmit="true">
+						<f:selectItems value="#{slaPanelMBean.jobStatusNameList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.calendar']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{slaPanelMBean.sla.calendarId}" partialSubmit="true">
+						<f:selectItems value="#{slaPanelMBean.calendarList}" />
+					</p:selectOneMenu>
+
+					<h:inputHidden value="#{slaPanelMBean.sla.ID}" id="slaID" />
+
+				</p:panelGrid>
+
+				<br></br>
+
+				<p:panel header="#{msgs['tlos.management.pannel.newSla.sInterval']}">
+
+					<p:panelGrid columns="4" border="0">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.startTime']}" />
+						<p:inputMask value="#{slaPanelMBean.sIntervalStartTime}"
+							mask="99:99:99" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.sInterval']}" />
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.endTime']}" />
+						<p:inputMask value="#{slaPanelMBean.sIntervalStopTime}"
+							mask="99:99:99" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.sInterval']}" />
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<p:panel header="#{msgs['tlos.management.pannel.newSla.rInterval']}">
+
+					<p:panelGrid columns="4" border="0">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.startTime']}" />
+						<p:inputMask value="#{slaPanelMBean.rIntervalStartTime}"
+							mask="99:99:99" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.rInterval']}" />
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.endTime']}" />
+						<p:inputMask value="#{slaPanelMBean.rIntervalStopTime}"
+							mask="99:99:99" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.rInterval']}" />
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<p:panel
+					header="#{msgs['tlos.management.pannel.newSla.resourcePool']}">
+
+					<p:panelGrid columns="2" border="0">
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.resourceName']}" />
+						<p:selectManyMenu value="#{slaPanelMBean.selectedResourceList}"
+							style="height:100px">
+							<f:selectItems value="#{slaPanelMBean.resourceNameList}" />
+						</p:selectManyMenu>
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<p:panel
+					header="#{msgs['tlos.management.pannel.newSla.hardwareReq']}">
+
+					<p:panelGrid id="resourceBasedDef" 
+						columns="4">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
+						<p:selectBooleanCheckbox value="#{slaPanelMBean.resourceBasedDef}">
+							<p:ajax update="resourceBasedDef" />
+						</p:selectBooleanCheckbox>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.resourceName']}"
+							rendered="#{slaPanelMBean.resourceBasedDef}" />
+						<p:selectOneMenu style="text-align: center;"
+							rendered="#{slaPanelMBean.resourceBasedDef}" required="true"
+							value="#{slaPanelMBean.selectedResourceForHardware}">
+							<f:selectItems value="#{slaPanelMBean.resourceNameList}" />
+							<p:ajax disabled="true"></p:ajax>
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+					<br />
+
+					<p:panelGrid columns="7" border="0">
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
+						<p:selectOneMenu style="text-align: center;"
+							value="#{slaPanelMBean.cpuTimein}" partialSubmit="true">
+							<f:selectItem itemLabel="1" itemValue="1" />
+							<f:selectItem itemLabel="5" itemValue="5" />
+							<f:selectItem itemLabel="15" itemValue="15" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+						<p:selectOneButton value="#{slaPanelMBean.cpuCondition}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.cpuCondition']}">
+							<f:selectItem itemLabel="&lt;" itemValue="lt" />
+							<!-- f:selectItem itemLabel="&lt;=" itemValue="le" /-->
+							<f:selectItem itemLabel="=" itemValue="eq" />
+							<!-- f:selectItem itemLabel="&gt;=" itemValue="ge" /-->
+							<f:selectItem itemLabel="&gt;" itemValue="gt" />
+						</p:selectOneButton>
+
+						<p:panelGrid id="cpuPanel" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
+							<p:panelGrid columns="1">
+								<p:inputText id="cpuValue" value="#{slaPanelMBean.cpuValue}" />
+								<p:slider for="cpuValue" />
+							</p:panelGrid>
+						</p:panelGrid>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
+						<p:selectOneButton value="#{slaPanelMBean.cpuUnit}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.cpuUnit']}">
+							<f:selectItem itemLabel="%" itemValue="%" />
+						</p:selectOneButton>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
+						<p:selectOneMenu style="text-align: center;"
+							value="#{slaPanelMBean.memoryPart}" partialSubmit="true">
+							<f:selectItem
+								itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+								itemValue="used" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+								itemValue="free" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+						<p:selectOneButton value="#{slaPanelMBean.memoryCondition}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.memCondition']}">
+							<f:selectItem itemLabel="&lt;" itemValue="lt" />
+							<f:selectItem itemLabel="=" itemValue="eq" />
+							<f:selectItem itemLabel="&gt;" itemValue="gt" />
+						</p:selectOneButton>
+
+						<p:panelGrid id="memPanel" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.memory']}" />
+							<p:panelGrid columns="1" 
+								rendered="#{slaPanelMBean.memoryUnit eq '%'}">
+								<p:inputText id="memValue" value="#{slaPanelMBean.memoryValue}"
+									immediate="true">
+									<p:ajax partialSubmit="true"></p:ajax>
+								</p:inputText>
+								<p:slider for="memValue" />
+							</p:panelGrid>
+							<p:inputText rendered="#{slaPanelMBean.memoryUnit ne '%'}"
+								value="#{slaPanelMBean.memoryValue}"
+								label="#{msgs['tlos.management.pannel.newSla.memory']}"
+								required="true" type="integer" immediate="true">
+								<p:ajax partialSubmit="true" />
+							</p:inputText>
+						</p:panelGrid>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
+						<p:selectOneButton id="memUnit" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.memUnit']}"
+							value="#{slaPanelMBean.memoryUnit}">
+							<f:selectItem itemLabel="%" itemValue="%" />
+							<f:selectItem itemLabel="G" itemValue="G" />
+							<f:selectItem itemLabel="M" itemValue="M" />
+							<f:selectItem itemLabel="K" itemValue="K" />
+							<f:selectItem itemLabel="B" itemValue="B" />
+							<p:ajax update="memPanel"></p:ajax>
+						</p:selectOneButton>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
+						<p:selectOneMenu style="text-align: center;"
+							value="#{slaPanelMBean.diskPart}" partialSubmit="true">
+							<f:selectItem itemLabel="Kullanilan" itemValue="used" />
+							<f:selectItem itemLabel="Bos" itemValue="free" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+						<p:selectOneButton value="#{slaPanelMBean.diskCondition}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.diskCondition']}">
+							<f:selectItem itemLabel="&lt;" itemValue="lt" />
+							<f:selectItem itemLabel="=" itemValue="eq" />
+							<f:selectItem itemLabel="&gt;" itemValue="gt" />
+						</p:selectOneButton>
+
+						<p:panelGrid id="diskPanel" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.disk']}" />
+							<p:panelGrid columns="1" 
+								rendered="#{slaPanelMBean.diskUnit eq '%'}">
+								<p:inputText id="diskValue" value="#{slaPanelMBean.diskValue}" />
+								<p:slider for="diskValue" />
+							</p:panelGrid>
+							<p:inputText rendered="#{slaPanelMBean.diskUnit ne '%'}"
+								value="#{slaPanelMBean.diskValue}"
+								label="#{msgs['tlos.management.pannel.newSla.disk']}"
+								required="true" type="integer">
+							</p:inputText>
+						</p:panelGrid>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
+						<p:selectOneButton id="diskUnit" value="#{slaPanelMBean.diskUnit}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.diskUnit']}">
+							<f:selectItem itemLabel="%" itemValue="%" />
+							<f:selectItem itemLabel="G" itemValue="G" />
+							<f:selectItem itemLabel="M" itemValue="M" />
+							<f:selectItem itemLabel="K" itemValue="K" />
+							<f:selectItem itemLabel="B" itemValue="B" />
+							<p:ajax update="diskPanel"></p:ajax>
+						</p:selectOneButton>
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<p:panel
+					header="#{msgs['tlos.management.pannel.newSla.softwareReq']}">
+
+					<p:panelGrid columns="2" border="0">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.softwareName']}" />
+						<p:selectManyMenu value="#{slaPanelMBean.selectedSoftwareList}"
+							style="height:100px">
+							<f:selectItems value="#{slaPanelMBean.softwareNameList}" />
+						</p:selectManyMenu>
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton id="slaInsertButton"
+							value=" #{msgs['tlos.button.save']} "
+							rendered="#{slaPanelMBean.insertButton}"
+							actionListener="#{slaPanelMBean.insertSlaAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton id="slaUpdateButton"
+							value="#{msgs['tlos.button.update']}"
+							rendered="#{not slaPanelMBean.insertButton}"
+							actionListener="#{slaPanelMBean.updateSlaAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
+							immediate="true" action="slaSearchPanel.xhtml">
+						</p:commandButton>
+
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

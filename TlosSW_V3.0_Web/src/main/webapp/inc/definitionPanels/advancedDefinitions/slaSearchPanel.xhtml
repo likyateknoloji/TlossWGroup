@@ -1,0 +1,204 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - SLA Management Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Advanced D." />
+		<ui:param name="title4" value="SLAs" />
+		<ui:param name="title5" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="AdvancedDefinitionsLink" />
+		<ui:param name="title4link"
+			value="/inc/definitionPanels/advancedDefinitions/slaSearchPanel.xhtml" />
+		<ui:param name="title5link"
+			value="Tlos SW Workload Automation Software v1.0 - SLA Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+				<p:menuitem value="#{title4}" url="#{title4link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchSLA" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl"
+				header="#{msgs['tlos.management.pannel.slaProcesses.header']}">
+
+				<div class="tablectrl">
+
+					<p:panelGrid columns="4" >
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.name']}" />
+						<p:inputText value="#{slaSearchPanelMBean.sla.name}"
+							partialSubmit="true" />
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.userName']}" />
+						<p:selectOneMenu id="user" style="text-align: center;"
+							value="#{slaSearchPanelMBean.user}" partialSubmit="true">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{slaSearchPanelMBean.userList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.startDate']}" />
+						<p:calendar value="#{slaSearchPanelMBean.startDate}" navigator="true"
+							id="startDate" showOn="button">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.endDate']}" />
+						<p:calendar value="#{slaSearchPanelMBean.endDate}" id="endDate" navigator="true"
+							showOn="button">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.slaProcesses.resource']}" />
+						<p:inputText value="#{slaSearchPanelMBean.resourceName}"
+							partialSubmit="true" />
+
+					</p:panelGrid>
+
+				</div>
+			</p:panel>
+			<br></br>
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton value="#{msgs['tlos.button.search']}"
+						rendered="#{security.SlaSearch}" update="slaSearchPanel"
+						actionListener="#{slaSearchPanelMBean.searchSlaAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}"
+						rendered="#{security.SlaClear}" update="searchSLA"
+						action="#{slaSearchPanelMBean.resetSlaAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.addNew']}"
+						rendered="#{security.SlaAdd}" update="slaSearchPanel" ajax="false"
+						immediate="false" action="slaPanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="slaSearchPanel">
+
+				<p:panel
+					rendered="#{not empty slaSearchPanelMBean.searchSlaList}">
+					<p:dataTable var="item" rows="10" id="slaSearchDataTable"
+						filteredValue="#{slaSearchPanelMBean.filteredSlaList}"
+						width="100%" value="#{slaSearchPanelMBean.searchSlaList}"
+						binding="#{slaSearchPanelMBean.searchSlaTable}" paginator="true"
+						paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton id="slaEditButton" ajax="false"
+								rendered="#{security.SlaEdit}" immediate="false" value="Update"
+								action="slaPanel.xhtml">
+								<f:param name="selectedSlaID" value="#{item.ID}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton id="slaDeleteButton" value="Delete"
+								onclick="confirmation.show()" rendered="#{security.SlaDelete}" />
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+								widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this"
+									value="#{msgs['tlos.ask.delete.confirm1']}"
+									update="slaSearchDataTable" onclick="confirmation.hide()"
+									actionListener="#{slaSearchPanelMBean.deleteSlaAction}" />
+								<p:commandButton id="decline"
+									value="#{msgs['tlos.ask.delete.confirm2']}"
+									onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.name']}"
+							sortBy="#{item.name}" filterBy="#{item.name}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.name}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.startDate']}"
+							sortBy="#{item.startDate}" filterBy="#{item.startDate}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.startDate}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.endDate']}"
+							sortBy="#{item.endDate}" filterBy="#{item.endDate}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.endDate}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.memReq']}"
+							sortBy="#{item.resourceReq.hardware.mem.stringValue}"
+							filterBy="#{item.resourceReq.hardware.mem.stringValue}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{item.resourceReq.hardware.mem}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.cpuReq']}"
+							sortBy="#{item.resourceReq.hardware.cpu.stringValue}"
+							filterBy="#{item.resourceReq.hardware.cpu.stringValue}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{item.resourceReq.hardware.cpu}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.slaProcesses.diskReq']}"
+							sortBy="#{item.resourceReq.hardware.disk.stringValue}"
+							filterBy="#{item.resourceReq.hardware.disk.stringValue}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{item.resourceReq.hardware.disk}"
+								style="text-align: center;" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="jsTreeForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<p:contextMenu for="tree">
+			<p:menuitem value="View" update="messages"
+				actionListener="#{jSTree.displaySelectedSingle}"
+				icon="ui-icon-search" />
+			<p:menuitem value="Delete" update="tree"
+				actionListener="#{jSTree.deleteNode}" icon="ui-icon-close" />
+		</p:contextMenu>
+
+
+		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
+			style="width:350px;height:720px" dynamic="true"
+			selectionMode="single" selection="#{jSTree.selectedJS}">
+
+			<p:ajax event="expand" update=":jsTreeForm:messages"
+				listener="#{jSTree.onNodeExpand}" />
+			<p:ajax event="collapse" update=":jsTreeForm:messages"
+				listener="#{jSTree.onNodeCollapse}" />
+			<p:ajax event="select" update=":jsTreeForm:messages"
+				listener="#{jSTree.onNodeSelect}" />
+			<p:ajax event="unselect" update=":jsTreeForm:messages"
+				listener="#{jSTree.onNodeUnselect}" />
+
+
+			<p:treeNode id="scenarioNode" type="scenario"
+				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node}" id="scenarioName" />
+			</p:treeNode>
+
+			<p:treeNode id="jobNode" type="job" icon="ui-icon-carat-1-e">
+				<h:outputText value="#{node}" id="jobName" />
+			</p:treeNode>
+
+		</p:tree>
+		<!-- p:draggable for="tree" / -->
+		<p:resizable for="tree" />
+
+		<!-- gecici olarak koydum -->
+		<p:commandButton update="jsTreeForm" value="update" />
+
+		<h:inputHidden id="draggedJobName"
+			value="#{jsDefinitionMBean.draggedJobNameForDependency}" />
+
+		<h:inputHidden id="draggedJobPath"
+			value="#{jsDefinitionMBean.draggedJobPathForDependency}" />
+
+		<p:remoteCommand name="callHandleJobDrop"
+			process="@this,draggedJobName,draggedJobPath"
+			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
+
+	</h:form>
+
+</ui:composition>

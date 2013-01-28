@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Program Provision Management Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Advanced D." />
+		<ui:param name="title4" value="Program Provision" />
+		<ui:param name="title5" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="AdvancedDefinitionsLink" />
+		<ui:param name="title4link"
+			value="/inc/definitionPanels/advancedDefinitions/programProvisionPanel.xhtml" />
+		<ui:param name="title5link"
+			value="Tlos SW Workload Automation Software v1.0 - Program Provision Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+				<p:menuitem value="#{title4}" url="#{title4link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newSLA">
+
+			<p:fieldset legend="#{msgs['tlos.management.pannel.newProvision.header']}"
+				widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.name']}" />
+					<p:inputText value="#{ppPanelMBean.license.name}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pp.name']}">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.version']}" />
+					<p:inputText value="#{ppPanelMBean.license.version}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pp.version']}"
+						validatorMessage="#{msgs['tlos.validation.pp.version.regex']}">
+						<f:validateRegex pattern="^(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.startDate']}" />
+					<p:calendar value="#{ppPanelMBean.startDate}" id="startDate" navigator="true"
+						showOn="focus" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.startDate']}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</p:calendar>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.startTime']}" />
+					<p:inputMask value="#{ppPanelMBean.startTime}" mask="99:99:99"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.startTime']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.endDate']}" />
+					<p:calendar value="#{ppPanelMBean.endDate}" id="endDate"
+						showOn="focus" required="true" navigator="true"
+						requiredMessage="#{msgs['tlos.validation.sla.endDate']}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</p:calendar>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.provisionProcesses.endTime']}" />
+					<p:inputMask value="#{ppPanelMBean.endTime}" mask="99:99:99"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
+
+					<h:inputHidden value="#{ppPanelMBean.license.licenseID}" id="slaID" />
+
+				</p:panelGrid>
+
+				<br></br>
+					
+				<p:panel header="#{msgs['tlos.management.pannel.newProvision.licenseProperties']}">
+
+					<p:panelGrid styleClass="companyHeaderGrid" columns="2" border="0">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.provisionProcesses.type']}" />
+						<p:inputText value="#{ppPanelMBean.licenseType}" required="true"
+							requiredMessage="#{msgs['tlos.validation.pp.licenseType']}">
+						</p:inputText>
+						<h:outputText value="#{msgs['tlos.management.pannel.provisionProcesses.type.minUser']}" />
+						<p:inputText value="#{ppPanelMBean.minUser}" />
+						<h:outputText value="#{msgs['tlos.management.pannel.provisionProcesses.type.maxUser']}" />
+						<p:inputText value="#{ppPanelMBean.maxUser}" />
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<p:panel
+					header="#{msgs['tlos.management.pannel.newSla.resourcePool']}">
+
+					<p:panelGrid styleClass="companyHeaderGrid" columns="2" border="0">
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.resourceName']}" />
+						<p:selectManyMenu value="#{ppPanelMBean.selectedResourceList}"
+							style="height:100px">
+							<f:selectItems value="#{ppPanelMBean.resourceNameList}" />
+						</p:selectManyMenu>
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton id="provisionInsertButton"
+							value=" #{msgs['tlos.button.save']} "
+							rendered="#{ppPanelMBean.insertButton}"
+							actionListener="#{ppPanelMBean.insertProvisionAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton id="provisionUpdateButton"
+							value="#{msgs['tlos.button.update']}"
+							rendered="#{not ppPanelMBean.insertButton}"
+							actionListener="#{ppPanelMBean.updateProvisionAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
+							immediate="true" action="programProvisionSearchPanel.xhtml">
+						</p:commandButton>
+
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

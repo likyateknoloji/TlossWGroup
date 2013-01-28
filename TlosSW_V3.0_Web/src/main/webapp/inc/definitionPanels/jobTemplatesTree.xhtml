@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="jobTemplatesForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<p:contextMenu for="templateTree">
+			<p:menuitem value="View" update="messages"
+				actionListener="#{jobTemplatesTree.displaySelectedSingle}"
+				icon="ui-icon-search" />
+			<p:menuitem value="Delete" update="templateTree"
+				actionListener="#{jobTemplatesTree.deleteNode}" icon="ui-icon-close" />
+		</p:contextMenu>
+
+
+		<p:tree value="#{jobTemplatesTree.root}" var="node" id="templateTree" animate="true"
+			style="width:350px;height:720px" dynamic="true"
+			selectionMode="single" selection="#{jobTemplatesTree.selectedJS}">
+
+			<p:ajax event="expand" update=":jobTemplatesForm:messages"
+				listener="#{jobTemplatesTree.onNodeExpand}" />
+			<p:ajax event="collapse" update=":jobTemplatesForm:messages"
+				listener="#{jobTemplatesTree.onNodeCollapse}" />
+			<p:ajax event="select" update=":jobTemplatesForm:messages"
+				listener="#{jobTemplatesTree.onNodeSelect}" />
+			<p:ajax event="unselect" update=":jobTemplatesForm:messages"
+				listener="#{jobTemplatesTree.onNodeUnselect}" />
+
+
+			<p:treeNode id="jobGroupNode" type="jobGroup"
+				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node}" id="jobGroupName" />
+			</p:treeNode>
+
+			<p:treeNode id="jobTemplateNode" type="job" icon="ui-icon-carat-1-e">
+				<h:outputText value="#{node}" id="jobTemplateName" />
+			</p:treeNode>
+
+		</p:tree>
+		<!-- p:draggable for="tree" / -->
+		<p:resizable for="templateTree" />
+
+		<h:inputHidden id="draggedTemplateName" value="#{jsDefinitionMBean.draggedTemplateName}"/>
+
+		<h:inputHidden id="draggedTemplatePath" value="#{jsDefinitionMBean.draggedTemplatePath}"/>
+
+		<p:remoteCommand name="callHandleDrop" process="@this,draggedTemplateName,draggedTemplatePath" 
+	      	actionListener="#{jsDefinitionMBean.handleDropAction}"/>
+		
+	</h:form>
+
+</ui:composition>

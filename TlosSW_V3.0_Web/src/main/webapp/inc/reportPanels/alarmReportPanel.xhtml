@@ -1,0 +1,107 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Alarm Report Page" />
+
+	<ui:define name="center">
+		<h:form id="searchAlarmReports" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl" header="#{msgs['tlos.management.pannel.alarmReport.header']}" styleClass="formSeparator" style="text-align: center;">
+
+				<div class="tablectrl">
+
+					<p:panelGrid columns="4" styleClass="companyHeaderGrid">
+
+						<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.name']}" />
+						<p:selectOneMenu id="alarmNames" style="width:150px;text-align: center;" value="#{alarmReportPanelMBean.alarmName}" partialSubmit="true">
+						    <f:selectItem itemLabel="#{msgs['tlos.combo.all']}" itemValue="-1" />
+							<f:selectItems value="#{alarmReportPanelMBean.alarmNameList}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.management.pannel.newAlarm.alarmSubscriber']}" />
+
+						<p:selectOneMenu id="alarmReportUser" style="width:150px;text-align: center;" value="#{alarmReportPanelMBean.alarmUser}" partialSubmit="true">
+						    <f:selectItem itemLabel="#{msgs['tlos.combo.all']}" itemValue="-1" />
+							<f:selectItems value="#{alarmReportPanelMBean.alarmUserList}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.management.pannel.newAlarm.alarmJob']}" />
+						<p:selectOneMenu id="alarmReportJobs" style="width:150px;text-align: center;" value="#{alarmReportPanelMBean.alarmReportJob}" partialSubmit="true">
+						    <f:selectItem itemLabel="#{msgs['tlos.combo.all']}" itemValue="-1" />
+							<f:selectItems value="#{alarmReportPanelMBean.alarmJobNameList}" />
+						</p:selectOneMenu>
+
+
+						<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.level']}" />
+						<p:selectOneMenu id="alarmLevel" required="true" style="width:250px;text-align: center;" value="#{alarmReportPanelMBean.alarmLevel}" label="#{msgs['tlos.management.pannel.alarmProcesses.alarmLevel']}">
+						    <f:selectItem itemLabel="#{msgs['tlos.combo.all']}" itemValue="-1" />
+							<f:selectItem itemLabel="#{msgs['tlos.management.pannel.alarmLevel.high']}" itemValue="1" />
+							<f:selectItem itemLabel="#{msgs['tlos.management.pannel.alarmLevel.normal']}" itemValue="2" />
+							<f:selectItem itemLabel="#{msgs['tlos.management.pannel.alarmLevel.info']}" itemValue="3" />
+						</p:selectOneMenu>
+
+
+						<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.startDate']}" />
+						<p:calendar value="#{alarmReportPanelMBean.alarmReportStartDate}" id="alarmReportStartDate" showOn="focus">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+
+						<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.endDate']}" />
+						<p:calendar value="#{alarmReportPanelMBean.alarmReportFinishDate}" id="alarmReportFinishDate" showOn="focus">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+
+					</p:panelGrid>
+				</div>
+			</p:panel>
+			<br></br>
+
+			<p:panel>
+				<p:commandButton id="generateAlarmReportButton" update="alarmReportSearchPanel" value="#{msgs['tlos.reports.alarmreport.query']}" rendered="#{security.ReportQuery}" actionListener="#{alarmReportPanelMBean.generateAlarmReportAction}" />
+
+				<p:commandButton value="#{msgs['tlos.button.clear']}" rendered="#{security.AlarmClear}" update="searchAlarmReports" action="#{alarmReportPanelMBean.resetAlarmReportAction}" />
+
+			</p:panel>
+
+			<br></br>
+
+			<p:outputPanel id="alarmReportSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight" style="text-align: center;" header="#{msgs['tlos.management.pannel.alarmSearchDataTable.header']}" rendered="#{not empty alarmReportPanelMBean.alarmReportList}">
+					<p:dataTable var="item" rows="10" id="alarmSearchReportDataTable" resizableColumns="true" filteredValue="#{alarmReportPanelMBean.filteredReportAlarms}" width="100%" value="#{alarmReportPanelMBean.alarmReportList}" binding="#{alarmReportPanelMBean.alarmReportTable}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.name']}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="contains">
+							<h:outputText value="#{item.name}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.desc']}" sortBy="#{item.desc}" filterBy="#{item.desc}" filterMatchMode="contains">
+							<h:outputText value="#{item.desc}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.date']}" sortBy="#{item.creationDate}" filterBy="#{item.creationDate}" filterMatchMode="contains">
+							<h:outputText value="#{item.creationDate}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.level']}" sortBy="#{item.alarmLevel}" filterBy="#{item.alarmLevel}" filterMatchMode="contains">
+							<h:outputText value="#{item.alarmLevel}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.user']}" sortBy="#{item.userName}" filterBy="#{item.userName}" filterMatchMode="contains">
+							<h:outputText value="#{item.userName}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.alarmReport.jobname']}" sortBy="#{item.jsName}" filterBy="#{item.jsName}" filterMatchMode="contains">
+							<h:outputText value="#{item.jsName}" style="text-align: center;" />
+						</p:column>
+
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+

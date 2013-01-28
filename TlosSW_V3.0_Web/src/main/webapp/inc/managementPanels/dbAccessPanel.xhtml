@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - DB Access Profile Management Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Management" />
+		<ui:param name="title3" value="DB Access" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/managementPanels/dbAccessPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - DB Access Profile Management Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newDBAccess">
+
+			<p:fieldset
+				legend="#{msgs['tlos.management.pannel.dbAccess.definition']}"
+				widgetVar="regWidget" style="width: 850px;">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.dbList']}" />
+					<p:selectOneMenu id="dbDef" required="true"
+						style="text-align: center;"
+						value="#{dbAccessPanelMBean.dbConnectionName}"
+						partialSubmit="true" rendered="true"
+						requiredMessage="#{msgs['tlos.validation.db.dbDefinition.regex']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{dbAccessPanelMBean.dbConnectionNameList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.userName']}" />
+					<p:inputText id="userName"
+						value="#{dbAccessPanelMBean.dbConnectionProfile.userName}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.userName']}"
+						validatorMessage="#{msgs['tlos.validation.db.userName.min']}">
+						<f:validateLength minimum="4"></f:validateLength>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.userPassword']}" />
+					<p:password id="password"
+						value="#{dbAccessPanelMBean.dbConnectionProfile.userPassword}"
+						label="#{msgs['tlos.management.pannel.dbAccess.userPassword']}"
+						feedback="false" required="true" redisplay="true"
+						match="repeatPassword"
+						requiredMessage="#{msgs['tlos.validation.db.password']}">
+					</p:password>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.confirmUserPassword']}" />
+					<p:password id="repeatPassword"
+						value="#{dbAccessPanelMBean.confirmUserPassword}"
+						label="#{msgs['tlos.management.pannel.dbAccess.confirmUserPassword']}"
+						feedback="false" required="true" redisplay="true"
+						requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}">
+					</p:password>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.active']}" />
+					<p:selectOneMenu id="active" style="text-align: center;"
+						value="#{dbAccessPanelMBean.active}" partialSubmit="true">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.yes']}"
+							itemValue="yes" />
+						<f:selectItem itemLabel="#{msgs['tlos.combo.no']}" itemValue="no" />
+					</p:selectOneMenu>
+
+					<h:inputHidden value="#{dbAccessPanelMBean.dbConnectionProfile.ID}"
+						id="dbAccessID" />
+
+				</p:panelGrid>
+
+				<br></br>
+
+				<p:panel
+					header="#{msgs['tlos.management.pannel.dbAccess.connectionPoolParams']}">
+
+					<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
+
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.initialCapacity']}" />
+						<p:inputText id="initialCapacity"
+							value="#{dbAccessPanelMBean.dbConnectionProfile.jdbcConnectionPoolParams.initialCapacity}"
+							label="#{msgs['tlos.management.pannel.dbAccess.initialCapacity']}"
+							required="true" type="integer"
+							requiredMessage="#{msgs['tlos.validation.db.initialCapacity']}">
+						</p:inputText>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.maxCapacity']}" />
+						<p:inputText id="maxCapacity"
+							value="#{dbAccessPanelMBean.dbConnectionProfile.jdbcConnectionPoolParams.maxCapacity}"
+							label="#{msgs['tlos.management.pannel.dbAccess.maxCapacity']}"
+							required="true" type="integer"
+							requiredMessage="#{msgs['tlos.validation.db.maxCapacity']}">
+						</p:inputText>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.minIdle']}" />
+						<p:inputText id="minIdle"
+							value="#{dbAccessPanelMBean.dbConnectionProfile.jdbcConnectionPoolParams.minIdle}"
+							label="#{msgs['tlos.management.pannel.dbAccess.minIdle']}"
+							required="true" type="integer"
+							requiredMessage="#{msgs['tlos.validation.db.minIdle']}">
+						</p:inputText>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.maxIdle']}" />
+						<p:inputText id="maxIdle"
+							value="#{dbAccessPanelMBean.dbConnectionProfile.jdbcConnectionPoolParams.maxIdle}"
+							label="#{msgs['tlos.management.pannel.dbAccess.maxIdle']}"
+							required="true" type="integer"
+							requiredMessage="#{msgs['tlos.validation.db.maxIdle']}">
+						</p:inputText>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.maxWait']}" />
+						<p:inputText id="maxWait"
+							value="#{dbAccessPanelMBean.dbConnectionProfile.jdbcConnectionPoolParams.maxWait}"
+							label="#{msgs['tlos.management.pannel.dbAccess.maxWait']}"
+							required="true" type="integer"
+							requiredMessage="#{msgs['tlos.validation.db.maxWait']}">
+						</p:inputText>
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton id="dbInsertButton"
+							value=" #{msgs['tlos.button.save']} "
+							rendered="#{dbAccessPanelMBean.insertButton and security.DBAccessSave}"
+							actionListener="#{dbAccessPanelMBean.insertDBAccessAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton id="dbUpdateButton"
+							value="#{msgs['tlos.button.update']}"
+							rendered="#{not dbAccessPanelMBean.insertButton and security.DBAccessUpdate}"
+							actionListener="#{dbAccessPanelMBean.updateDBAccessAction}" />
+
+						<p:commandButton id="userTestButton"
+							value="#{msgs['tlos.button.test']}"
+							actionListener="#{dbAccessPanelMBean.testDBAccessAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
+							immediate="true" rendered="#{security.DBAccessBack}"
+							action="dbAccessSearchPanel.xhtml">
+						</p:commandButton>
+
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

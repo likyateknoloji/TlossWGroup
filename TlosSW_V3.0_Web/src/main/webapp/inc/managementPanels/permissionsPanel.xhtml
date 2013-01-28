@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Permissions Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Management" />
+		<ui:param name="title3" value="Permissions" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/managementPanels/permissionsPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - Permissions Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="yetkilendirmeForm">
+			<p:fieldset
+				legend="#{msgs['tlos.management.pannel.authorisation.panel']}"
+				widgetVar="regWidget" style="width: 600px;">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panel styleClass="tlosFormBorderHighlight"
+					rendered="#{not empty permissionPanelMBean.searchPermissionList}">
+					<p:dataTable var="item" rows="10" id="permissionsDataTable" resizableColumns="true" 
+						filteredValue="#{permissionPanelMBean.filteredPermissions}"
+						width="100%" value="#{permissionPanelMBean.searchPermissionList}"
+						binding="#{permissionPanelMBean.searchPermissionTable}"
+						paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="10,20,30">
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.authorisation.resourceName']}"
+							sortBy="#{item.resourceName}" filterBy="#{item.resourceName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.resourceName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.authorisation.resourceType']}"
+							sortBy="#{item.resourceType}" filterBy="#{item.resourceType}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.resourceType}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.authorisation.admin']}"
+							sortBy="#{item.admin}">
+							<p:selectBooleanCheckbox id="admin" value="#{item.admin}" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.authorisation.superUser']}"
+							sortBy="#{item.superUser}">
+							<p:selectBooleanCheckbox id="superUser" value="#{item.superUser}" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.authorisation.normalUser']}"
+							sortBy="#{item.normalUser}">
+							<p:selectBooleanCheckbox id="normalUser"
+								value="#{item.normalUser}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:commandButton id="savePermissionListButton"
+						value="#{msgs['tlos.button.save']}"
+						rendered="#{security.TlosPermissionSave}"
+						actionListener="#{permissionPanelMBean.savePermissionListAction}" />
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

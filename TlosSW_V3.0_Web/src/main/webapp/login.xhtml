@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head>
+	<!-- 		<title>#{msgs['tlos.login.definition']}</title> -->
+</h:head>
+
+<h:body>
+
+
+
+	<p:panel id="languagePanel" header="Language Info" style="width:50%">
+
+		<h:panelGrid id="languageGrid" columns="1" width="100%" styleClass="languageEntryInputTable">
+
+			<h:form id="loginForm1">
+
+				<p:selectOneMenu id="currentLang" styleClass="themeSelectOneMenu" value="#{localeBean.currentLanguage}" valueChangeListener="#{localeBean.localeChanged}" partialSubmit="true">
+					<f:selectItems value="#{localeBean.availableLocales}" />
+				</p:selectOneMenu>
+			</h:form>
+
+		</h:panelGrid>
+	
+	</p:panel>
+	
+	<h:form id="loginEntryForm">
+
+		<p:panel id="loginInfoInputPanel" header="Login Info" style="width:50%">
+
+			<h:panelGrid id="inputGrid" columns="1" width="100%" styleClass="loginEntryInputTable">
+
+				<h:panelGrid id="usernameInput" columns="2">
+					<h:outputLabel for="userNameInput" value="#{msgs['tlos.login.username']}" />
+					<p:inputText id="userNameInput" value="#{loginBean.userName}" label="#{msgs['tlos.login.username']}" labelPosition="left" required="true" requiredIndicator="(*)" indicatorPosition="left">
+						<p:ajax render="@this userNameMsg" />
+					</p:inputText>
+				</h:panelGrid>
+
+				<h:panelGrid id="passwordInput" columns="2">
+					<h:outputText value="#{msgs['tlos.login.password']}" />
+					<h:inputSecret value="#{loginBean.userPassword}" redisplay="true" required="true" requiredMessage="Boş olamaz !" validatorMessage="Uzunluk 5 ve 8 arasında olmalı !">
+						<f:validateLength minimum="5" maximum="8" />
+						<p:ajax render="@this passwordInput passwordMsg" />
+					</h:inputSecret>
+				</h:panelGrid>
+
+				<p:commandButton value="Login" id="loginButton" actionListener="#{loginBean.login}" />
+
+			</h:panelGrid>
+			
+		</p:panel>
+
+	</h:form>
+</h:body>
+
+</html>
