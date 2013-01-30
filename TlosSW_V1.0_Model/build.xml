@@ -1,7 +1,7 @@
 <project name="TlosSW_V1.0_Model" default="build-all" basedir=".">
 
 	<property name="appname" value="TlosSW_Model" />
-
+	
 	<property file="build.properties" />
 	
 	<property name="src.dir" value="${basedir}/src" />
