@@ -85,7 +85,7 @@
 			<!--pathelement location="${tlos_client.dir}/TlosSW_AgentClient_V${version.num}${buildchar}${minor.number}.jar" /-->	
 			<pathelement location="${tlos_schemaDefinitions.dir}/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${sharedlib.dir}/javamail/mail.jar" />
-			<pathelement location="${tlos_eval.dir}/eval-0.4.jar" />
+			<pathelement location="${sharedlib.dir}/evalUtils/EvalUtils.jar" />
 			<pathelement location="${sharedlib.dir}/jetty_6.1.14/jetty-6.1.14.jar" />
 			<pathelement location="${sharedlib.dir}/jetty_6.1.14/jetty-util-6.1.14.jar" />
 			<pathelement location="${sharedlib.dir}/eXist_1.4/extensions/fop.jar" />
