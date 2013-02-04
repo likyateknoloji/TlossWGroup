@@ -103,6 +103,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public final static String SERBEST = "serbest";
 
+	public final static String FULLTEXT = "fullText";
+	public final static String REGEX = "regex";
+	public final static String REGEX_WITH_EXCLUDE = "regexWithExclude";
+	public final static String WILDCARD = "wildcard";
+	public final static String WILDCARD_WITH_EXCLUDE = "wildcardWithExclude";
+
 	private String jobPathInScenario;
 
 	// baseJobInfos

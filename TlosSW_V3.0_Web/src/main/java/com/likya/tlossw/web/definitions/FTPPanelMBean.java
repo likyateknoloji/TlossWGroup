@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -13,10 +14,27 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FlowEvent;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
+import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
+import com.likya.tlos.model.xmlbeans.ftpadapter.ArchiveDirectoryDocument.ArchiveDirectory;
+import com.likya.tlos.model.xmlbeans.ftpadapter.ArchivePropertiesDocument.ArchiveProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.CompressDocument.Compress;
+import com.likya.tlos.model.xmlbeans.ftpadapter.CompressedFilePasswordDocument.CompressedFilePassword;
 import com.likya.tlos.model.xmlbeans.ftpadapter.DecompressDocument.Decompress;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FilePropertiesDocument.FileProperties;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FileTypeDocument.FileType;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FilenameAndDirectoryDocument.FilenameAndDirectory;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationDocument.Operation;
+import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument.OperationType;
+import com.likya.tlos.model.xmlbeans.ftpadapter.PostOperationDocument.PostOperation;
+import com.likya.tlos.model.xmlbeans.ftpadapter.PreOperationDocument.PreOperation;
+import com.likya.tlos.model.xmlbeans.ftpadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
+import com.likya.tlos.model.xmlbeans.ftpadapter.SourceDirectoryDocument.SourceDirectory;
+import com.likya.tlos.model.xmlbeans.ftpadapter.SourceFileNameDocument.SourceFileName;
+import com.likya.tlos.model.xmlbeans.ftpadapter.TargetDirectoryDocument.TargetDirectory;
+import com.likya.tlos.model.xmlbeans.ftpadapter.TargetFileNameDocument.TargetFileName;
 import com.likya.tlossw.web.utils.WebJobDefUtils;
 
 @ManagedBean(name = "ftpPanelMBean")
@@ -121,26 +139,100 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getFtpAdapterProperties() != null) {
 			ftpProperties = jobTypeDetails.getSpecialParameters().getFtpAdapterProperties();
 
+			adapterType = ftpProperties.getAdapterType().toString();
+
+			// operation
 			Operation operation = ftpProperties.getOperation();
 			operationType = operation.getOperationType().toString();
 			processedFilesOperationType = operation.getProcessedFilesOperationType().toString();
-			
+
 			if (operation.getPreOperation() != null && operation.getPreOperation().getCompress() != null) {
 				compress = true;
-				compressPassword = operation.getCompressedFilePassword().getUserPassword();
-				confirmCompressPassword = compressPassword;
-				
-				Compress compress = operation.getPreOperation().getCompress(); 
+
+				Compress compress = operation.getPreOperation().getCompress();
 				compressProgramPath = compress.getPath();
 				compressProgramFileName = compress.getFilename();
 			}
-			
-			if (operation.getPostOperation() != null) {
+
+			if (operation.getPostOperation() != null && operation.getPostOperation().getDecompress() != null) {
 				decompress = true;
+
+				Decompress decompress = operation.getPostOperation().getDecompress();
+				decompressProgramPath = decompress.getPath();
+				decompressProgramFileName = decompress.getFilename();
+			}
+
+			if (operation.getCompressedFilePassword() != null) {
 				compressPassword = operation.getCompressedFilePassword().getUserPassword();
 				confirmCompressPassword = compressPassword;
-				
-				
+			}
+
+			// file properties
+			FileProperties fileProperties = ftpProperties.getFileProperties();
+
+			fileType = fileProperties.getFileType().toString();
+			gelGec = fileProperties.getGelGec();
+			recursive = fileProperties.getRecursive();
+
+			if (!operationType.equals(OperationType.LIST_FILES.toString())) {
+				if (fileProperties.getFileSize() != null) {
+					useMaxFileSize = true;
+					maxFileSize = fileProperties.getFileSize().toString();
+				}
+
+				if (fileProperties.getMinimumAge() != null) {
+					useMinAge = true;
+					minAge = fileProperties.getMinimumAge().toString();
+				}
+
+				fileModificationTime = fileProperties.getFileModificationTime().toString();
+				if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
+					modificationTimeFormat = fileProperties.getModificationTimeFormat();
+				}
+			}
+
+			// file name and directory
+			FilenameAndDirectory filenameAndDirectory = ftpProperties.getFilenameAndDirectory();
+			sourceDirectory = filenameAndDirectory.getSourceDirectory().getPath();
+
+			if (filenameAndDirectory.getSourceFileName() != null) {
+				sourceFileNameType = FULLTEXT;
+				sourceFileName = filenameAndDirectory.getSourceFileName().getFilename();
+
+			} else if (filenameAndDirectory.getExcludeFiles() != null) {
+				sourceFileNameType = REGEX_WITH_EXCLUDE;
+				excludeFiles = filenameAndDirectory.getExcludeFiles();
+				includeFiles = filenameAndDirectory.getIncludeFiles();
+
+			} else if (filenameAndDirectory.getIncludeFiles() != null) {
+				sourceFileNameType = REGEX;
+				includeFiles = filenameAndDirectory.getIncludeFiles();
+
+			} else if (filenameAndDirectory.getExcludeWildcard() != null) {
+				sourceFileNameType = WILDCARD_WITH_EXCLUDE;
+				excludeWildcard = filenameAndDirectory.getExcludeWildcard();
+				includeWildcard = filenameAndDirectory.getIncludeWildcard();
+
+			} else if (filenameAndDirectory.getIncludeWildcard() != null) {
+				sourceFileNameType = WILDCARD;
+				includeWildcard = filenameAndDirectory.getIncludeWildcard();
+			}
+
+			if (!operationType.equals(OperationType.LIST_FILES.toString())) {
+				sourceIsRemote = filenameAndDirectory.getSourceIsRemote();
+				targetIsRemote = filenameAndDirectory.getTargetIsRemote();
+
+				targetDirectory = filenameAndDirectory.getTargetDirectory().getPath();
+				targetFileName = filenameAndDirectory.getTargetFileName().getFilename();
+			}
+
+			// archive properties
+			ArchiveProperties archiveProperties = ftpProperties.getArchiveProperties();
+			useArchive = archiveProperties.getArchive();
+
+			if (useArchive) {
+				archiveDirectory = archiveProperties.getArchiveDirectory().getPath();
+				fileNamingConvention = archiveProperties.getFileNamingConvention();
 			}
 		}
 	}
@@ -159,10 +251,146 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 
 	public void insertJobAction(ActionEvent e) {
 		fillJobProperties();
-
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		fillFTPPropertyDetails();
 
 		insertJobDefinition();
+	}
+
+	private void fillFTPPropertyDetails() {
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		SpecialParameters specialParameters;
+
+		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin bu
+		// kontrol yapiliyor
+		if (jobTypeDetails.getSpecialParameters() == null) {
+			specialParameters = SpecialParameters.Factory.newInstance();
+		} else {
+			specialParameters = jobTypeDetails.getSpecialParameters();
+		}
+
+		ftpProperties = FtpAdapterProperties.Factory.newInstance();
+		ftpProperties.setAdapterType(AdapterType.Enum.forString(adapterType));
+
+		// operation
+		Operation operation = Operation.Factory.newInstance();
+		operation.setOperationType(OperationType.Enum.forString(operationType));
+		operation.setProcessedFilesOperationType(ProcessedFilesOperationType.Enum.forString(processedFilesOperationType));
+
+		boolean passwordUsage = false;
+
+		if (compress) {
+			Compress compress = Compress.Factory.newInstance();
+			compress.setPath(compressProgramPath);
+			compress.setFilename(compressProgramFileName);
+
+			PreOperation preOperation = PreOperation.Factory.newInstance();
+			preOperation.setCompress(compress);
+
+			operation.setPreOperation(preOperation);
+
+			passwordUsage = true;
+		}
+
+		if (decompress) {
+			Decompress decompress = Decompress.Factory.newInstance();
+			decompress.setPath(getDecompressProgramPath());
+			decompress.setFilename(getDecompressProgramFileName());
+
+			PostOperation postOperation = PostOperation.Factory.newInstance();
+			postOperation.setDecompress(decompress);
+
+			operation.setPostOperation(postOperation);
+
+			passwordUsage = true;
+		}
+
+		if (passwordUsage) {
+			CompressedFilePassword compressedFilePassword = CompressedFilePassword.Factory.newInstance();
+			compressedFilePassword.setUserPassword(compressPassword);
+			operation.setCompressedFilePassword(compressedFilePassword);
+		}
+
+		ftpProperties.setOperation(operation);
+
+		// file properties
+		FileProperties fileProperties = FileProperties.Factory.newInstance();
+		fileProperties.setFileType(FileType.Enum.forString(fileType));
+		fileProperties.setGelGec(gelGec);
+		fileProperties.setRecursive(recursive);
+
+		if (!operationType.equals(OperationType.LIST_FILES.toString())) {
+
+			if (useMaxFileSize) {
+				fileProperties.setFileSize(new BigInteger(maxFileSize));
+			}
+
+			if (useMinAge) {
+				fileProperties.setMinimumAge(new BigInteger(minAge));
+			}
+
+			fileProperties.setFileModificationTime(FileModificationTime.Enum.forString(fileModificationTime));
+			if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
+				fileProperties.setModificationTimeFormat(modificationTimeFormat);
+			}
+		}
+		ftpProperties.setFileProperties(fileProperties);
+
+		// file name and directory
+		FilenameAndDirectory filenameAndDirectory = FilenameAndDirectory.Factory.newInstance();
+		SourceDirectory sourceDir = SourceDirectory.Factory.newInstance();
+		sourceDir.setPath(sourceDirectory);
+		filenameAndDirectory.setSourceDirectory(sourceDir);
+
+		if (sourceFileNameType.equals(FULLTEXT)) {
+			SourceFileName sourceFile = SourceFileName.Factory.newInstance();
+			sourceFile.setFilename(sourceFileName);
+			filenameAndDirectory.setSourceFileName(sourceFile);
+
+		} else if (sourceFileNameType.equals(REGEX)) {
+			filenameAndDirectory.setIncludeFiles(includeFiles);
+
+		} else if (sourceFileNameType.equals(REGEX_WITH_EXCLUDE)) {
+			filenameAndDirectory.setIncludeFiles(includeFiles);
+			filenameAndDirectory.setExcludeFiles(excludeFiles);
+
+		} else if (sourceFileNameType.equals(WILDCARD)) {
+			filenameAndDirectory.setIncludeWildcard(includeWildcard);
+
+		} else if (sourceFileNameType.equals(WILDCARD_WITH_EXCLUDE)) {
+			filenameAndDirectory.setIncludeWildcard(includeWildcard);
+			filenameAndDirectory.setExcludeWildcard(excludeWildcard);
+		}
+
+		if (!operationType.equals(OperationType.LIST_FILES.toString())) {
+			filenameAndDirectory.setTargetIsRemote(targetIsRemote);
+			filenameAndDirectory.setSourceIsRemote(sourceIsRemote);
+
+			TargetDirectory targetDir = TargetDirectory.Factory.newInstance();
+			targetDir.setPath(targetDirectory);
+			filenameAndDirectory.setTargetDirectory(targetDir);
+
+			TargetFileName targetFile = TargetFileName.Factory.newInstance();
+			targetFile.setFilename(targetFileName);
+			filenameAndDirectory.setTargetFileName(targetFile);
+		} else {
+			filenameAndDirectory.setSourceIsRemote(true);
+		}
+		ftpProperties.setFilenameAndDirectory(filenameAndDirectory);
+
+		// archive properties
+		ArchiveProperties archiveProperties = ArchiveProperties.Factory.newInstance();
+		archiveProperties.setArchive(useArchive);
+
+		if (useArchive) {
+			ArchiveDirectory archiveDir = ArchiveDirectory.Factory.newInstance();
+			archiveDir.setPath(archiveDirectory);
+			archiveProperties.setArchiveDirectory(archiveDir);
+
+			archiveProperties.setFileNamingConvention(fileNamingConvention);
+		}
+		ftpProperties.setArchiveProperties(archiveProperties);
+
+		specialParameters.setFtpAdapterProperties(ftpProperties);
 	}
 
 	private void fillAdapterTypeList() {
