@@ -135,13 +135,14 @@
 						<p:panelGrid id="ftpJobInfos" columns="2">
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
-							<p:selectOneMenu value="#{ftpPanelMBean.ftpProperties.adapterType}">
+							<p:selectOneMenu value="#{ftpPanelMBean.adapterType}">
 								<f:selectItems value="#{ftpPanelMBean.adapterTypeList}" />
 							</p:selectOneMenu>
 
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.ftpConnectionDefinition']}" />
-							<p:selectOneMenu value="#{ftpPanelMBean.ftpProperties.remoteTransferProperties.ftpPropertiesId}"
+							<p:selectOneMenu
+								value="#{ftpPanelMBean.ftpProperties.remoteTransferProperties.ftpPropertiesId}"
 								required="true"
 								requiredMessage="#{msgs['tlos.validation.ftp.connectionDef']}">
 								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
