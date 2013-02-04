@@ -115,22 +115,48 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		fillFileModificationTimeList();
 
 		setFtpConnectionDefinitionList(WebJobDefUtils.fillFtpConnectionDefinitionList(getDbOperations().getFtpConnectionList()));
-
-		// webServiceDefinition = "";
-		// selectedWebService = null;
-
-		// TODO kullanici giris ekrani yapildiktan sonra
-		// giris yapan kullanicinin id'si alinacak
-		// int userId = 1;
-		//
-		// webServiceList =
-		// getDbOperations().getWebServiceListForActiveUser(userId);
-		// setWebServiceDefinitionList(WebJobDefUtils.fillWebServiceDefinitionList(webServiceList));
 	}
 
 	public void fillTabs() {
 		fillJobPanel();
+		resetFTPProperties();
 		fillFTPProperties();
+	}
+
+	private void resetFTPProperties() {
+		operationType = "";
+		processedFilesOperationType = ProcessedFilesOperationType.NONE.toString();
+		sourceDirectory = "";
+		targetDirectory = "";
+		sourceIsRemote = false;
+		targetIsRemote = false;
+		sourceFileNameType = "";
+		sourceFileName = "";
+		includeFiles = "";
+		includeWildcard = "";
+		excludeFiles = "";
+		excludeWildcard = "";
+		targetFileName = "";
+		useMaxFileSize = false;
+		maxFileSize = "";
+		fileType = FileType.ASCII.toString();
+		recursive = false;
+		gelGec = false;
+		useMinAge = false;
+		minAge = "";
+		fileModificationTime = FileModificationTime.NONE.toString();
+		modificationTimeFormat = "";
+		useArchive = false;
+		archiveDirectory = "";
+		fileNamingConvention = "";
+		compress = false;
+		decompress = false;
+		compressProgramPath = "";
+		compressProgramFileName = "";
+		compressPassword = "";
+		confirmCompressPassword = "";
+		decompressProgramPath = "";
+		decompressProgramFileName = "";
 	}
 
 	private void fillFTPProperties() {
@@ -268,7 +294,6 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 			specialParameters = jobTypeDetails.getSpecialParameters();
 		}
 
-		ftpProperties = FtpAdapterProperties.Factory.newInstance();
 		ftpProperties.setAdapterType(AdapterType.Enum.forString(adapterType));
 
 		// operation
@@ -391,6 +416,7 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		ftpProperties.setArchiveProperties(archiveProperties);
 
 		specialParameters.setFtpAdapterProperties(ftpProperties);
+		jobTypeDetails.setSpecialParameters(specialParameters);
 	}
 
 	private void fillAdapterTypeList() {
