@@ -11,7 +11,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.FlowEvent;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
@@ -97,8 +96,6 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 	private String fileNamingConvention;
 
 	private Collection<SelectItem> ftpConnectionDefinitionList = null;
-
-	private boolean skip;
 
 	public void dispose() {
 
@@ -260,18 +257,6 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 				archiveDirectory = archiveProperties.getArchiveDirectory().getPath();
 				fileNamingConvention = archiveProperties.getFileNamingConvention();
 			}
-		}
-	}
-
-	public String onFlowProcess(FlowEvent event) {
-		if (skip) {
-			skip = false;
-			return CONFIRM;
-
-		} else {
-			String newStep = event.getNewStep();
-
-			return newStep;
 		}
 	}
 
@@ -451,14 +436,6 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 
 	public static Logger getLogger() {
 		return logger;
-	}
-
-	public boolean isSkip() {
-		return skip;
-	}
-
-	public void setSkip(boolean skip) {
-		this.skip = skip;
 	}
 
 	public Collection<SelectItem> getAdapterTypeList() {
