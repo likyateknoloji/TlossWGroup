@@ -10,14 +10,11 @@
 
 		<p:fieldset id="batchJobDef"
 			legend="#{msgs['tlos.workspace.pannel.job.batchProcess.wizard']}"
-			style="width: 1120px;">
+			style="width: 96%;">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:wizard backLabel="#{msgs['tlos.wizard.back.label']}"
-				nextLabel="#{msgs['tlos.wizard.next.label']}"
-				id="batchProcessWizard"
-				flowListener="#{batchProcessPanelMBean.onFlowProcess}">
+			<p:tabView effect="blind" effectDuration="normal" id="tabView">
 
 				<p:tab id="baseJobInfosTab"
 					title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
@@ -90,7 +87,7 @@
 							<p:selectOneMenu id="jobBaseType"
 								value="#{batchProcessPanelMBean.jobBaseType}">
 								<f:selectItems value="#{batchProcessPanelMBean.jobBaseTypeList}" />
-								<p:ajax update="batchJobDef"></p:ajax>
+								<p:ajax update=":batchProcessForm:batchJobDef"></p:ajax>
 							</p:selectOneMenu>
 
 							<h:outputText
@@ -276,18 +273,18 @@
 
 							<p:commandButton value="#{msgs['tlos.button.update']}"
 								action="#{batchProcessPanelMBean.editJobDependencyAction}"
-								update="batchProcessForm:dependencyPanel" />
+								update=":batchProcessForm:tabView:dependencyPanel" />
 
 							<p:commandButton value="#{msgs['tlos.button.delete']}"
 								action="#{batchProcessPanelMBean.deleteJobDependencyAction}"
-								update="batchProcessForm:dependencyPanel" />
+								update=":batchProcessForm:tabView:dependencyPanel" />
 
 						</p:panelGrid>
 
 						<p:droppable for="dependencyList" scope="treeScope"
 							tolerance="touch" activeStyleClass="ui-state-highlight">
 							<p:ajax listener="#{batchProcessPanelMBean.dependencyDropAction}"
-								update="batchProcessForm:dependencyPanel" />
+								update=":batchProcessForm:tabView:dependencyPanel" />
 						</p:droppable>
 
 						<p:dialog id="dependencyDialog"
@@ -381,16 +378,16 @@
 								<p:commandButton value="#{msgs['tlos.button.save']}"
 									rendered="#{batchProcessPanelMBean.dependencyInsertButton}"
 									action="#{batchProcessPanelMBean.saveDependencyAction}"
-									update="batchProcessForm:dependencyPanel" />
+									update=":batchProcessForm:tabView:dependencyPanel" />
 
 								<p:commandButton value="#{msgs['tlos.button.update']}"
 									rendered="#{!batchProcessPanelMBean.dependencyInsertButton}"
 									action="#{batchProcessPanelMBean.updateDependencyAction}"
-									update="batchProcessForm:dependencyPanel" />
+									update=":batchProcessForm:tabView:dependencyPanel" />
 
 								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 									action="#{batchProcessPanelMBean.closeDependencyDialogAction}"
-									update="batchProcessForm:dependencyPanel" />
+									update=":batchProcessForm:tabView:dependencyPanel" />
 							</p:panel>
 
 						</p:dialog>
@@ -465,7 +462,7 @@
 							<p:commandButton value="#{msgs['tlos.button.add']}"
 								rendered="#{batchProcessPanelMBean.jobStatusName ne null and batchProcessPanelMBean.jobStatusName ne ''}"
 								actionListener="#{batchProcessPanelMBean.initJobStatusPopup}"
-								update="batchProcessForm:stateInfosPanel"
+								update=":batchProcessForm:tabView:stateInfosPanel"
 								oncomplete="stateDialog.show()" />
 
 						</p:panelGrid>
@@ -524,16 +521,16 @@
 								<p:commandButton value="#{msgs['tlos.button.saveList']}"
 									rendered="#{empty batchProcessPanelMBean.jobStatus.stsId}"
 									action="#{batchProcessPanelMBean.saveJobStatusAction}"
-									update="batchProcessForm:stateInfosPanel" />
+									update=":batchProcessForm:tabView:stateInfosPanel" />
 
 								<p:commandButton value="#{msgs['tlos.button.update']}"
 									rendered="#{not empty batchProcessPanelMBean.jobStatus.stsId}"
 									action="#{batchProcessPanelMBean.updateJobStatusAction}"
-									update="batchProcessForm:stateInfosPanel" />
+									update=":batchProcessForm:tabView:stateInfosPanel" />
 
 								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 									action="#{batchProcessPanelMBean.closeJobStatusDialogAction}"
-									update="batchProcessForm:stateInfosPanel" />
+									update=":batchProcessForm:tabView:stateInfosPanel" />
 
 							</p:panel>
 						</p:dialog>
@@ -553,11 +550,11 @@
 							</p:selectManyMenu>
 
 							<p:commandButton value="#{msgs['tlos.button.update']}"
-								update="batchProcessForm:stateInfosPanel"
+								update=":batchProcessForm:tabView:stateInfosPanel"
 								action="#{batchProcessPanelMBean.jobStatusEditAction}" />
 
 							<p:commandButton value="#{msgs['tlos.button.delete']}"
-								update="batchProcessForm:stateInfosPanel"
+								update=":batchProcessForm:tabView:stateInfosPanel"
 								action="#{batchProcessPanelMBean.deleteJobStatusAction}" />
 						</p:panelGrid>
 
@@ -668,10 +665,10 @@
 							value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
 							rendered="#{!batchProcessPanelMBean.renderUpdateParamButton}"
 							action="#{batchProcessPanelMBean.addInputParameter}"
-							update="batchProcessForm:parametersPanel" />
+							update=":batchProcessForm:tabView:parametersPanel" />
 						<p:commandButton value="#{msgs['tlos.button.update']}"
 							rendered="#{batchProcessPanelMBean.renderUpdateParamButton}"
-							update="batchProcessForm:parametersPanel"
+							update=":batchProcessForm:tabView:parametersPanel"
 							action="#{batchProcessPanelMBean.updateInputParameter}" />
 
 						<br />
@@ -801,7 +798,7 @@
 								value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
 							<p:selectBooleanCheckbox
 								value="#{batchProcessPanelMBean.useResourceReq}">
-								<p:ajax update="batchProcessForm:resourceBasedDef"></p:ajax>
+								<p:ajax update=":batchProcessForm:tabView:resourceBasedDef"></p:ajax>
 							</p:selectBooleanCheckbox>
 						</p:panelGrid>
 
@@ -987,8 +984,7 @@
 					</p:panel>
 				</p:tab>
 
-			</p:wizard>
-
+			</p:tabView>
 		</p:fieldset>
 
 	</h:form>
