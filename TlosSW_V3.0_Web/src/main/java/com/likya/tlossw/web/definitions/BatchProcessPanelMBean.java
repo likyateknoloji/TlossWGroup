@@ -8,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.FlowEvent;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 
@@ -22,8 +21,6 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 
 	private String jobPath;
 	private String jobCommand;
-
-	private boolean skip;
 
 	public void dispose() {
 
@@ -49,18 +46,6 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 		jobCommand = jobTypeDetails.getJobCommand();
 	}
 
-	public String onFlowProcess(FlowEvent event) {
-		if (skip) {
-			skip = false;
-			return CONFIRM;
-
-		} else {
-			String newStep = event.getNewStep();
-
-			return newStep;
-		}
-	}
-
 	public void insertJobAction(ActionEvent e) {
 		fillJobProperties();
 
@@ -73,14 +58,6 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 
 	public static Logger getLogger() {
 		return logger;
-	}
-
-	public boolean isSkip() {
-		return skip;
-	}
-
-	public void setSkip(boolean skip) {
-		this.skip = skip;
 	}
 
 	public String getJobPath() {
