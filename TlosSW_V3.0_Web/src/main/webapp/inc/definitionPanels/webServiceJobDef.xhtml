@@ -10,13 +10,11 @@
 
 		<p:fieldset id="wsJobDef"
 			legend="#{msgs['tlos.workspace.pannel.job.webService.wizard']}"
-			style="width: 1120px;">
+			style="width: 96%;">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:wizard backLabel="#{msgs['tlos.wizard.back.label']}"
-				nextLabel="#{msgs['tlos.wizard.next.label']}" id="webServiceWizard"
-				flowListener="#{webServicePanelMBean.onFlowProcess}">
+			<p:tabView effect="blind" effectDuration="normal" id="tabView">
 
 				<p:tab id="baseJobInfosTab"
 					title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
@@ -89,7 +87,7 @@
 							<p:selectOneMenu id="jobBaseType"
 								value="#{webServicePanelMBean.jobBaseType}">
 								<f:selectItems value="#{webServicePanelMBean.jobBaseTypeList}" />
-								<p:ajax update="wsJobDef"></p:ajax>
+								<p:ajax update=":webServiceForm:wsJobDef"></p:ajax>
 							</p:selectOneMenu>
 
 							<h:outputText
@@ -145,7 +143,8 @@
 									itemValue="" />
 								<f:selectItems
 									value="#{webServicePanelMBean.webServiceDefinitionList}" />
-								<p:ajax event="change" update="webServiceForm:wsJobInfosPanel" />
+								<p:ajax event="change"
+									update=":webServiceForm:tabView:wsJobInfosPanel" />
 							</p:selectOneMenu>
 						</p:panelGrid>
 
@@ -336,18 +335,18 @@
 
 							<p:commandButton value="#{msgs['tlos.button.update']}"
 								action="#{webServicePanelMBean.editJobDependencyAction}"
-								update="webServiceForm:dependencyPanel" />
+								update=":webServiceForm:tabView:dependencyPanel" />
 
 							<p:commandButton value="#{msgs['tlos.button.delete']}"
 								action="#{webServicePanelMBean.deleteJobDependencyAction}"
-								update="webServiceForm:dependencyPanel" />
+								update=":webServiceForm:tabView:dependencyPanel" />
 
 						</p:panelGrid>
 
 						<p:droppable for="dependencyList" scope="treeScope"
 							tolerance="touch" activeStyleClass="ui-state-highlight">
 							<p:ajax listener="#{webServicePanelMBean.dependencyDropAction}"
-								update="webServiceForm:dependencyPanel" />
+								update=":webServiceForm:tabView:dependencyPanel" />
 						</p:droppable>
 
 						<p:dialog id="dependencyDialog"
@@ -439,16 +438,16 @@
 								<p:commandButton value="#{msgs['tlos.button.save']}"
 									rendered="#{webServicePanelMBean.dependencyInsertButton}"
 									action="#{webServicePanelMBean.saveDependencyAction}"
-									update="webServiceForm:dependencyPanel" />
+									update=":webServiceForm:tabView:dependencyPanel" />
 
 								<p:commandButton value="#{msgs['tlos.button.update']}"
 									rendered="#{!webServicePanelMBean.dependencyInsertButton}"
 									action="#{webServicePanelMBean.updateDependencyAction}"
-									update="webServiceForm:dependencyPanel" />
+									update=":webServiceForm:tabView:dependencyPanel" />
 
 								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 									action="#{webServicePanelMBean.closeDependencyDialogAction}"
-									update="webServiceForm:dependencyPanel" />
+									update=":webServiceForm:tabView:dependencyPanel" />
 							</p:panel>
 
 						</p:dialog>
@@ -521,7 +520,7 @@
 							<p:commandButton value="#{msgs['tlos.button.add']}"
 								rendered="#{webServicePanelMBean.jobStatusName ne null and webServicePanelMBean.jobStatusName ne ''}"
 								actionListener="#{webServicePanelMBean.initJobStatusPopup}"
-								update="webServiceForm:stateInfosPanel"
+								update=":webServiceForm:tabView:stateInfosPanel"
 								oncomplete="stateDialog.show()" />
 
 						</p:panelGrid>
@@ -580,16 +579,16 @@
 								<p:commandButton value="#{msgs['tlos.button.saveList']}"
 									rendered="#{empty webServicePanelMBean.jobStatus.stsId}"
 									action="#{webServicePanelMBean.saveJobStatusAction}"
-									update="webServiceForm:stateInfosPanel" />
+									update=":webServiceForm:tabView:stateInfosPanel" />
 
 								<p:commandButton value="#{msgs['tlos.button.update']}"
 									rendered="#{not empty webServicePanelMBean.jobStatus.stsId}"
 									action="#{webServicePanelMBean.updateJobStatusAction}"
-									update="webServiceForm:stateInfosPanel" />
+									update=":webServiceForm:tabView:stateInfosPanel" />
 
 								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 									action="#{webServicePanelMBean.closeJobStatusDialogAction}"
-									update="webServiceForm:stateInfosPanel" />
+									update=":webServiceForm:tabView:stateInfosPanel" />
 
 							</p:panel>
 						</p:dialog>
@@ -608,11 +607,11 @@
 							</p:selectManyMenu>
 
 							<p:commandButton value="#{msgs['tlos.button.update']}"
-								update="webServiceForm:stateInfosPanel"
+								update=":webServiceForm:tabView:stateInfosPanel"
 								action="#{webServicePanelMBean.jobStatusEditAction}" />
 
 							<p:commandButton value="#{msgs['tlos.button.delete']}"
-								update="webServiceForm:stateInfosPanel"
+								update=":webServiceForm:tabView:stateInfosPanel"
 								action="#{webServicePanelMBean.deleteJobStatusAction}" />
 						</p:panelGrid>
 
@@ -723,10 +722,10 @@
 							value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
 							rendered="#{!webServicePanelMBean.renderUpdateParamButton}"
 							action="#{webServicePanelMBean.addInputParameter}"
-							update="webServiceForm:parametersPanel" />
+							update=":webServiceForm:tabView:parametersPanel" />
 						<p:commandButton value="#{msgs['tlos.button.update']}"
 							rendered="#{webServicePanelMBean.renderUpdateParamButton}"
-							update="webServiceForm:parametersPanel"
+							update=":webServiceForm:tabView:parametersPanel"
 							action="#{webServicePanelMBean.updateInputParameter}" />
 
 						<br />
@@ -854,7 +853,7 @@
 								value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
 							<p:selectBooleanCheckbox
 								value="#{webServicePanelMBean.useResourceReq}">
-								<p:ajax update="webServiceForm:resourceBasedDef"></p:ajax>
+								<p:ajax update=":webServiceForm:tabView:resourceBasedDef"></p:ajax>
 							</p:selectBooleanCheckbox>
 						</p:panelGrid>
 
@@ -1037,7 +1036,7 @@
 					</p:panel>
 				</p:tab>
 
-			</p:wizard>
+			</p:tabView>
 
 		</p:fieldset>
 
