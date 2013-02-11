@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="alarmPreferenceTab"
+			title="#{msgs['tlos.workspace.pannel.job.alarmPreference']}">
+			<p:panel>
+				<p:panelGrid id="alarmPreference" columns="2" style="width:100%;">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.alarmList']}" />
+					<p:selectManyMenu
+						value="#{backingBean.selectedAlarmList}"
+						style="width: 400px;">
+						<f:selectItems value="#{backingBean.alarmList}" />
+					</p:selectManyMenu>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel style="height:40px;">
+				<p:commandButton style="float:right;"
+					value="#{msgs['tlos.button.save']}"
+					actionListener="#{backingBean['insertJobAction']}" />
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

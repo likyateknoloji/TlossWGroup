@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="timeManagementTab"
+			title="#{msgs['tlos.workspace.pannel.job.timeManagement']}">
+			<p:panel>
+				<p:panelGrid id="timeManagement" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
+
+					<p:inputMask value="#{backingBean.startTime}"
+						mask="99:99:99">
+						<p:ajax update="buttonPanel"></p:ajax>
+					</p:inputMask>
+
+					<p:panelGrid id="stopTime" columns="4">
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.definePlannedStopTime']}" />
+						<p:selectBooleanCheckbox
+							value="#{backingBean.defineStopTime}">
+							<p:ajax update="stopTime" />
+						</p:selectBooleanCheckbox>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.plannedStopTime']}"
+							rendered="#{backingBean.defineStopTime}" />
+						<p:inputMask value="#{backingBean.stopTime}"
+							rendered="#{backingBean.defineStopTime}"
+							mask="99:99:99" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
+					</p:panelGrid>
+
+				</p:panelGrid>
+
+				<br />
+
+				<p:panelGrid id="timeManagementSecond" columns="4"
+					style="width:80%;">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
+					<p:spinner id="gmt" value="#{backingBean.gmt}" min="-12"
+						max="13" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.dst}">
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
+					<p:selectOneMenu
+						value="#{backingBean.relativeTimeOption}">
+						<f:selectItems
+							value="#{backingBean.relativeTimeOptionList}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="" />
+					<h:outputText value="" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timeOut']}" />
+					<p:inputText value="#{backingBean.jobTimeOutValue}"
+						label="#{msgs['tlos.workspace.pannel.job.timeOut']}"
+						required="true" type="integer">
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.timeOut.Unit']}" />
+					<p:selectOneMenu id="jstimeoutunit"
+						value="#{backingBean.jobTimeOutUnit}">
+						<f:selectItems value="#{backingBean.unitTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.expectedTime']}" />
+					<p:inputText value="#{backingBean.expectedTime}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.timeOut.Unit']}" />
+					<p:selectOneMenu id="jsExpectedTimeUnit"
+						value="#{backingBean.expectedTimeUnit}">
+						<f:selectItems value="#{backingBean.unitTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.tolerancePercentage']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="tolerancePercentage"
+							value="#{backingBean.tolerancePercentage}" />
+						<p:slider for="tolerancePercentage" />
+					</p:panelGrid>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.minPercentage']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="minPercentage"
+							value="#{backingBean.minPercentage}" />
+						<p:slider for="minPercentage" />
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel id="buttonPanel" style="height:40px;">
+				<p:commandButton id="insertJobButton" style="float:right;"
+					rendered="#{backingBean.startTime ne null and backingBean.startTime ne ''}"
+					value="#{msgs['tlos.button.save']}"
+					actionListener="#{backingBean['insertJobAction']}" />
+			</p:panel>
+		</p:tab>
+
+	</ui:composition>
+</h:body>
+</html>

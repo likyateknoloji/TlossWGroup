@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="dependencyDefTab"
+			title="#{msgs['tlos.workspace.pannel.job.dependencyDefinitions']}"
+			rendered="#{backingBean.jobBaseType ne 'PERIODIC'}">
+			<p:panel id="dependencyPanel">
+				<p:panelGrid id="dependencyDef" columns="4">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.dependencies']}" />
+
+					<p:selectManyMenu id="dependencyList"
+						value="#{backingBean.selectedJobDependencyList}"
+						style="width:150px; height:70px;">
+						<f:selectItems
+							value="#{backingBean.manyJobDependencyList}" />
+					</p:selectManyMenu>
+
+
+					<p:commandButton value="#{msgs['tlos.button.update']}"
+						action="#{backingBean['editJobDependencyAction']}"
+						update=":batchProcessForm:tabView:dependencyPanel" />
+
+					<p:commandButton value="#{msgs['tlos.button.delete']}"
+						action="#{backingBean['deleteJobDependencyAction']}"
+						update=":batchProcessForm:tabView:dependencyPanel" />
+
+				</p:panelGrid>
+
+				<p:droppable for="dependencyList" scope="treeScope"
+					tolerance="touch" activeStyleClass="ui-state-highlight">
+					<p:ajax
+						listener="#{backingBean['dependencyDropAction']}"
+						update=":batchProcessForm:tabView:dependencyPanel" />
+				</p:droppable>
+
+				<p:dialog id="dependencyDialog"
+					visible="#{backingBean.dependencyDialogShow}"
+					header="#{msgs['tlos.popup.dependency.panel']}"
+					widgetVar="depDialog" resizable="false" showEffect="show">
+					<p:panel id="dependencyDialogPanel">
+						<h:panelGrid columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
+							<p:inputText
+								value="#{backingBean.dependencyItem.jsName}"
+								disabled="true" />
+
+							<h:outputText
+								value="#{msgs['tlos.popup.dependency.dependencyId']}" />
+							<p:inputText
+								value="#{backingBean.dependencyItem.dependencyID}" />
+
+							<h:outputText value="#{msgs['tlos.popup.dependency.depComment']}" />
+							<p:inputText
+								value="#{backingBean.dependencyItem.comment}"
+								style="width:200px;" />
+						</h:panelGrid>
+
+						<br />
+
+						<p:fieldset
+							legend="#{msgs['tlos.popup.dependency.dependencyRule']}"
+							id="depRule">
+
+							<h:panelGrid columns="2">
+								<h:outputText
+									value="#{msgs['tlos.popup.dependency.selectDepth']}" />
+								<p:selectOneRadio
+									value="#{backingBean.dependencyType}">
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.state']}"
+										itemValue="State" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.substate']}"
+										itemValue="SubState" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.status']}"
+										itemValue="Status" />
+									<p:ajax update="depRule" />
+								</p:selectOneRadio>
+							</h:panelGrid>
+
+							<br />
+
+							<h:panelGrid columns="2">
+								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
+								<p:selectOneMenu value="#{backingBean.depStateName}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
+									<f:selectItems
+										value="#{backingBean.depStateNameList}" />
+								</p:selectOneMenu>
+
+								<h:outputText value="#{msgs['tlos.popup.dependency.substate']}"
+									rendered="#{backingBean.dependencyType ne 'State'}" />
+								<p:selectOneMenu
+									value="#{backingBean.depSubstateName}"
+									rendered="#{backingBean.dependencyType ne 'State'}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
+									<f:selectItems
+										value="#{backingBean.depSubstateNameList}" />
+								</p:selectOneMenu>
+
+								<h:outputText value="#{msgs['tlos.popup.dependency.status']}"
+									rendered="#{backingBean.dependencyType eq 'Status'}" />
+								<p:selectOneMenu value="#{backingBean.depStatusName}"
+									rendered="#{backingBean.dependencyType eq 'Status'}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
+									<f:selectItems
+										value="#{backingBean.jobStatusNameList}" />
+								</p:selectOneMenu>
+							</h:panelGrid>
+
+						</p:fieldset>
+
+						<br />
+
+						<p:commandButton value="#{msgs['tlos.button.save']}"
+							rendered="#{backingBean.dependencyInsertButton}"
+							action="#{backingBean['saveDependencyAction']}"
+							update=":batchProcessForm:tabView:dependencyPanel" />
+
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							rendered="#{!backingBean.dependencyInsertButton}"
+							action="#{backingBean['updateDependencyAction']}"
+							update=":batchProcessForm:tabView:dependencyPanel" />
+
+						<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
+							action="#{backingBean['closeDependencyDialogAction']}"
+							update=":batchProcessForm:tabView:dependencyPanel" />
+					</p:panel>
+
+				</p:dialog>
+
+				<br />
+
+				<p:panelGrid id="depExpression" columns="2"
+					rendered="#{backingBean.dependencyExpression ne null and backingBean.dependencyExpression ne ''}">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.dependencyExpr']}" />
+					<p:inputText value="#{backingBean.dependencyExpression}"
+						disabled="true" style="width:300px;" />
+				</p:panelGrid>
+
+			</p:panel>
+
+			<p:panel style="height:40px;">
+				<p:commandButton style="float:right;"
+					rendered="#{backingBean.startTime ne null and backingBean.startTime ne ''}"
+					value="#{msgs['tlos.button.save']}"
+					actionListener="#{backingBean['insertJobAction']}" />
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

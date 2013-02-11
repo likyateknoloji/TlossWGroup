@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="advancedJobInfosTab"
+			title="#{msgs['tlos.workspace.pannel.job.advancedJobInfos']}">
+			<p:panel>
+				<p:panelGrid id="advancedJobInfosAgentChoice" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
+					<p:selectOneMenu id="agentChoiceMethod"
+						value="#{batchProcessPanelMBean.agentChoiceMethod}">
+						<f:selectItems
+							value="#{batchProcessPanelMBean.agentChoiceMethodList}" />
+						<p:ajax update="advancedJobInfosAgentChoice"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.agentList']}"
+						rendered="#{batchProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+					<p:selectOneMenu
+						rendered="#{batchProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}"
+						value="#{batchProcessPanelMBean.selectedAgent}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{batchProcessPanelMBean.definedAgentList}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<p:panelGrid id="advancedJobInfosSLA" columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.sla']}" />
+					<p:selectOneMenu id="sla" value="#{batchProcessPanelMBean.jobSLA}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.none']}"
+							itemValue="none" />
+						<f:selectItems value="#{batchProcessPanelMBean.jsSLAList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
+					<p:selectBooleanCheckbox
+						value="#{batchProcessPanelMBean.useResourceReq}">
+						<p:ajax update=":batchProcessForm:tabView:resourceBasedDef"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</p:panelGrid>
+
+			</p:panel>
+
+			<p:panel id="resourceBasedDef">
+				<p:panelGrid rendered="#{batchProcessPanelMBean.useResourceReq}"
+					columns="4">
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
+					<p:selectBooleanCheckbox
+						value="#{batchProcessPanelMBean.resourceBasedDef}">
+						<p:ajax update="resourceBasedDef" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.resourceName']}"
+						rendered="#{batchProcessPanelMBean.resourceBasedDef}" />
+					<p:selectOneMenu style="text-align: center;"
+						rendered="#{batchProcessPanelMBean.resourceBasedDef}"
+						required="true"
+						value="#{batchProcessPanelMBean.selectedResourceForHardware}">
+						<f:selectItems value="#{batchProcessPanelMBean.resourceNameList}" />
+						<p:ajax disabled="true"></p:ajax>
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<br />
+
+				<p:panelGrid id="cpuDiskMemory" columns="7"
+					rendered="#{batchProcessPanelMBean.useResourceReq}">
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{batchProcessPanelMBean.cpuTimein}">
+						<f:selectItem itemLabel="1" itemValue="1" />
+						<f:selectItem itemLabel="5" itemValue="5" />
+						<f:selectItem itemLabel="15" itemValue="15" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+					<p:selectOneButton value="#{batchProcessPanelMBean.cpuCondition}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.cpuCondition']}">
+						<f:selectItem itemLabel="&lt;" itemValue="lt" />
+						<!-- f:selectItem itemLabel="&lt;=" itemValue="le" /-->
+						<f:selectItem itemLabel="=" itemValue="eq" />
+						<!-- f:selectItem itemLabel="&gt;=" itemValue="ge" /-->
+						<f:selectItem itemLabel="&gt;" itemValue="gt" />
+					</p:selectOneButton>
+
+					<p:panelGrid id="cpuPanel" columns="2">
+						<h:outputText value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
+						<p:panelGrid columns="1">
+							<p:inputText id="cpuValue"
+								value="#{batchProcessPanelMBean.cpuValue}" />
+							<p:slider for="cpuValue" />
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
+					<p:selectOneButton value="#{batchProcessPanelMBean.cpuUnit}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.cpuUnit']}">
+						<f:selectItem itemLabel="%" itemValue="%" />
+					</p:selectOneButton>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{batchProcessPanelMBean.memoryPart}">
+						<f:selectItem
+							itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+							itemValue="used" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+							itemValue="free" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+					<p:selectOneButton
+						value="#{batchProcessPanelMBean.memoryCondition}" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.memCondition']}">
+						<f:selectItem itemLabel="&lt;" itemValue="lt" />
+						<f:selectItem itemLabel="=" itemValue="eq" />
+						<f:selectItem itemLabel="&gt;" itemValue="gt" />
+					</p:selectOneButton>
+
+					<p:panelGrid id="memPanel" columns="2">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.memory']}" />
+						<p:panelGrid columns="1"
+							rendered="#{batchProcessPanelMBean.memoryUnit eq '%'}">
+							<p:inputText id="memValue"
+								value="#{batchProcessPanelMBean.memoryValue}" immediate="true">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+							<p:slider for="memValue" />
+						</p:panelGrid>
+						<p:inputText
+							rendered="#{batchProcessPanelMBean.memoryUnit ne '%'}"
+							value="#{batchProcessPanelMBean.memoryValue}"
+							label="#{msgs['tlos.management.pannel.newSla.memory']}"
+							required="true" type="integer" immediate="true">
+							<p:ajax partialSubmit="true" />
+						</p:inputText>
+					</p:panelGrid>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
+					<p:selectOneButton id="memUnit" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.memUnit']}"
+						value="#{batchProcessPanelMBean.memoryUnit}">
+						<f:selectItem itemLabel="%" itemValue="%" />
+						<f:selectItem itemLabel="G" itemValue="G" />
+						<f:selectItem itemLabel="M" itemValue="M" />
+						<f:selectItem itemLabel="K" itemValue="K" />
+						<f:selectItem itemLabel="B" itemValue="B" />
+						<p:ajax update="memPanel"></p:ajax>
+					</p:selectOneButton>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
+					<p:selectOneMenu style="text-align: center;"
+						value="#{batchProcessPanelMBean.diskPart}">
+						<f:selectItem itemLabel="Kullanilan" itemValue="used" />
+						<f:selectItem itemLabel="Bos" itemValue="free" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+					<p:selectOneButton value="#{batchProcessPanelMBean.diskCondition}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.diskCondition']}">
+						<f:selectItem itemLabel="&lt;" itemValue="lt" />
+						<f:selectItem itemLabel="=" itemValue="eq" />
+						<f:selectItem itemLabel="&gt;" itemValue="gt" />
+					</p:selectOneButton>
+
+					<p:panelGrid id="diskPanel" columns="2">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.newSla.disk']}" />
+						<p:panelGrid columns="1"
+							rendered="#{batchProcessPanelMBean.diskUnit eq '%'}">
+							<p:inputText id="diskValue"
+								value="#{batchProcessPanelMBean.diskValue}" />
+							<p:slider for="diskValue" />
+						</p:panelGrid>
+						<p:inputText rendered="#{batchProcessPanelMBean.diskUnit ne '%'}"
+							value="#{batchProcessPanelMBean.diskValue}"
+							label="#{msgs['tlos.management.pannel.newSla.disk']}"
+							required="true" type="integer">
+						</p:inputText>
+					</p:panelGrid>
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
+					<p:selectOneButton id="diskUnit"
+						value="#{batchProcessPanelMBean.diskUnit}" required="true"
+						requiredMessage="#{msgs['tlos.validation.sla.diskUnit']}">
+						<f:selectItem itemLabel="%" itemValue="%" />
+						<f:selectItem itemLabel="G" itemValue="G" />
+						<f:selectItem itemLabel="M" itemValue="M" />
+						<f:selectItem itemLabel="K" itemValue="K" />
+						<f:selectItem itemLabel="B" itemValue="B" />
+						<p:ajax update="diskPanel"></p:ajax>
+					</p:selectOneButton>
+
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel style="height:40px;">
+				<p:commandButton style="float:right;"
+					value="#{msgs['tlos.button.save']}"
+					actionListener="#{batchProcessPanelMBean['insertJobAction']}" />
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
