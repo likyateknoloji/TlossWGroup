@@ -31,8 +31,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{ftpPanelMBean}")
 	private FTPPanelMBean ftpPanelMBean;
+	
+	@ManagedProperty(value = "#{fileProcessPanelMBean}")
+	private FileProcessPanelMBean fileProcessPanelMBean;
 
-	private String jobDefCenterPanel = FTP_PAGE;
+	private String jobDefCenterPanel = BATCH_PROCESS_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
@@ -40,6 +43,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String BATCH_PROCESS_PAGE = "/inc/definitionPanels/batchProcessJobDef.xhtml";
 	public final static String WEB_SERVICE_PAGE = "/inc/definitionPanels/webServiceJobDef.xhtml";
 	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
+	public final static String FILE_PROCESS_PAGE = "/inc/definitionPanels/fileProcessJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public String draggedTemplateName;
@@ -140,7 +144,16 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_FILE_PROCESS:
+			if (jobProperties != null) {
+				getFileProcessPanelMBean().setJobProperties(jobProperties);
+				getFileProcessPanelMBean().setJobInsertButton(true);
+				getFileProcessPanelMBean().fillTabs();
 
+				getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = FILE_PROCESS_PAGE;
+			
 			break;
 
 		default:
@@ -233,6 +246,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setFtpPanelMBean(FTPPanelMBean ftpPanelMBean) {
 		this.ftpPanelMBean = ftpPanelMBean;
+	}
+
+	public FileProcessPanelMBean getFileProcessPanelMBean() {
+		return fileProcessPanelMBean;
+	}
+
+	public void setFileProcessPanelMBean(FileProcessPanelMBean fileProcessPanelMBean) {
+		this.fileProcessPanelMBean = fileProcessPanelMBean;
 	}
 
 }
