@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="fpForm">
+
+		<p:fieldset id="fileProcessJobDef"
+			legend="#{msgs['tlos.workspace.pannel.job.fileProcess']}"
+			style="width: 96%;">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:tabView effect="blind" effectDuration="normal" id="tabView">
+
+				<p:tab id="baseJobInfosTab"
+					title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
+					<p:panel>
+						<p:panelGrid id="baseJobInfos" columns="4" style="width:80%;">
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
+							<p:inputText
+								value="#{fileProcessPanelMBean.jobProperties.baseJobInfos.jsName}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.name']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
+							<p:inputText
+								value="#{fileProcessPanelMBean.jobProperties.baseJobInfos.comment}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.comment']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
+							<p:inputText
+								value="#{fileProcessPanelMBean.jobProperties.baseJobInfos.jobLogPath}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.log.path']}">
+								<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" /-->
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
+							<p:inputText
+								value="#{fileProcessPanelMBean.jobProperties.baseJobInfos.jobLogFile}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.log.file']}"
+								validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
+								<f:validateRegex
+									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
+							<p:selectOneMenu id="jsCalendar" style="text-align: center;"
+								value="#{fileProcessPanelMBean.jobCalendar}">
+								<f:selectItems value="#{fileProcessPanelMBean.jsCalendarList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
+							<p:selectOneMenu id="oSystem" style="text-align: center;"
+								value="#{fileProcessPanelMBean.oSystem}">
+								<f:selectItems value="#{fileProcessPanelMBean.oSystemList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobPriority']}" />
+							<p:panelGrid columns="1">
+								<p:inputText id="priority" value="#{fileProcessPanelMBean.jobPriority}" />
+								<p:slider for="priority" minValue="1" maxValue="4" />
+							</p:panelGrid>
+
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
+							<p:selectOneMenu id="jobBaseType"
+								value="#{fileProcessPanelMBean.jobBaseType}">
+								<f:selectItems value="#{fileProcessPanelMBean.jobBaseTypeList}" />
+								<p:ajax update=":fpForm:fileProcessJobDef"></p:ajax>
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
+								rendered="#{fileProcessPanelMBean.jobBaseType eq 'PERIODIC'}" />
+							<p:inputMask value="#{fileProcessPanelMBean.periodTime}"
+								rendered="#{fileProcessPanelMBean.jobBaseType eq 'PERIODIC'}"
+								mask="99:99:99" required="true"
+								requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" />
+
+							<h:outputText value=""
+								rendered="#{fileProcessPanelMBean.jobBaseType ne 'PERIODIC'}" />
+							<h:outputText value=""
+								rendered="#{fileProcessPanelMBean.jobBaseType ne 'PERIODIC'}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
+							<p:selectOneMenu id="jobtype" value="#{fileProcessPanelMBean.jobTypeDef}">
+								<f:selectItems value="#{fileProcessPanelMBean.jobTypeDefList}" />
+								<p:ajax update="baseJobInfos"></p:ajax>
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.eventTypeDef']}"
+								rendered="#{fileProcessPanelMBean.jobTypeDef eq 'EVENT BASED'}" />
+							<p:selectOneMenu id="eventTypeDef"
+								rendered="#{fileProcessPanelMBean.jobTypeDef eq 'EVENT BASED'}"
+								value="#{fileProcessPanelMBean.eventTypeDef}">
+								<f:selectItems value="#{fileProcessPanelMBean.eventTypeDefList}" />
+							</p:selectOneMenu>
+
+							<h:outputText value=""
+								rendered="#{fileProcessPanelMBean.jobTypeDef ne 'EVENT BASED'}" />
+							<h:outputText value=""
+								rendered="#{fileProcessPanelMBean.jobTypeDef ne 'EVENT BASED'}" />
+						</p:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="baseJobInfosFTPTab"
+					title="#{msgs['tlos.workspace.pannel.job.fileProcessProperties']}">
+					<p:panel id="ftpJobInfosPanel">
+						<p:panelGrid id="ftpJobInfos" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.adapterType}">
+								<f:selectItems value="#{fileProcessPanelMBean.adapterTypeList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.ftpConnectionDefinition']}" />
+							<p:selectOneMenu
+								value="#{fileProcessPanelMBean.ftpProperties.remoteTransferProperties.ftpPropertiesId}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.connectionDef']}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItems
+									value="#{fileProcessPanelMBean.ftpConnectionDefinitionList}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+						<br />
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.operations']}" />
+						<p:separator />
+
+						<p:panelGrid id="ftpOperations" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.operationType}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItems value="#{fileProcessPanelMBean.operationTypeList}" />
+								<p:ajax
+									update="ftpOperations :fpForm:tabView:ftpMaxFileSize :fpForm:tabView:ftpMinAge :fpForm:tabView:ftpFileModificationTime :fpForm:tabView:fileDirectory :fpForm:tabView:fileName"
+									partialSubmit="true" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.processedFilesOperationType']}" />
+							<p:selectOneMenu
+								value="#{fileProcessPanelMBean.processedFilesOperationType}">
+								<f:selectItems
+									value="#{fileProcessPanelMBean.processedFilesOperationTypeList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.preOperationCompress']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.compress}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}">
+								<p:ajax update="ftpOperations" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.postOperationDecompress']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.decompress}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}">
+								<p:ajax update="ftpOperations" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.compressProgramPath']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.compress}" />
+							<p:inputText value="#{fileProcessPanelMBean.compressProgramPath}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.compress}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.compressProgramPath']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.compressProgramPath.regex']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.compressProgramFileName']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.compress}" />
+							<p:inputText value="#{fileProcessPanelMBean.compressProgramFileName}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.compress}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.compressProgramFile']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.compressProgramFile.regex']}">
+								<f:validateRegex
+									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.decompressProgramPath']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.decompress}" />
+							<p:inputText value="#{fileProcessPanelMBean.decompressProgramPath}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.decompress}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramPath']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramPath.regex']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.decompressProgramFileName']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.decompress}" />
+							<p:inputText value="#{fileProcessPanelMBean.decompressProgramFileName}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and fileProcessPanelMBean.decompress}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramFile']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramFile.regex']}">
+								<f:validateRegex
+									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and (fileProcessPanelMBean.compress or fileProcessPanelMBean.decompress)}" />
+							<p:password id="password"
+								value="#{fileProcessPanelMBean.compressPassword}"
+								label="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+								feedback="false" required="true" redisplay="true"
+								match="repeatPassword"
+								requiredMessage="#{msgs['tlos.validation.db.password']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and (fileProcessPanelMBean.compress or fileProcessPanelMBean.decompress)}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:password>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and (fileProcessPanelMBean.compress or fileProcessPanelMBean.decompress)}" />
+							<p:password id="repeatPassword"
+								value="#{fileProcessPanelMBean.confirmCompressPassword}"
+								label="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+								feedback="false" required="true" redisplay="true"
+								requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}"
+								rendered="#{(fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File') and (fileProcessPanelMBean.compress or fileProcessPanelMBean.decompress)}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:password>
+						</p:panelGrid>
+
+						<br />
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.fileProperties']}" />
+						<p:separator />
+
+						<p:panelGrid id="ftpFileProperties" columns="6">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.fileType']}" />
+							<p:selectOneMenu id="fileType" value="#{fileProcessPanelMBean.fileType}">
+								<f:selectItems value="#{fileProcessPanelMBean.fileTypeList}" />
+							</p:selectOneMenu>
+
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.gelGec']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.gelGec}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.recursive']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.recursive}" />
+						</p:panelGrid>
+
+						<p:panelGrid id="ftpMaxFileSize" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.useMaxFileSize']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.useMaxFileSize}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}">
+								<p:ajax update="ftpMaxFileSize" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.maxFileSize']}"
+								rendered="#{fileProcessPanelMBean.useMaxFileSize}" />
+							<p:inputText id="maxFileSize"
+								value="#{fileProcessPanelMBean.maxFileSize}"
+								label="#{msgs['tlos.workspace.pannel.job.maxFileSize']}"
+								rendered="#{fileProcessPanelMBean.useMaxFileSize}" required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.maxFileSize']}"
+								type="integer" />
+						</p:panelGrid>
+
+						<p:panelGrid id="ftpMinAge" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.useMinAge']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.useMinAge}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}">
+								<p:ajax update="ftpMinAge" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.minAge']}"
+								rendered="#{fileProcessPanelMBean.useMinAge}" />
+							<p:inputText id="minAge" value="#{fileProcessPanelMBean.minAge}"
+								label="#{msgs['tlos.workspace.pannel.job.minAge']}"
+								rendered="#{fileProcessPanelMBean.useMinAge}" required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.minAge']}"
+								type="integer" />
+						</p:panelGrid>
+
+						<p:panelGrid id="ftpFileModificationTime" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.fileModificationTime']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectOneMenu
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}"
+								value="#{fileProcessPanelMBean.fileModificationTime}">
+								<f:selectItems value="#{fileProcessPanelMBean.fileModificationTimeList}" />
+								<p:ajax update="ftpFileModificationTime" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.modificationTimeFormat']}"
+								rendered="#{fileProcessPanelMBean.fileModificationTime ne 'None' and fileProcessPanelMBean.fileModificationTime ne null}" />
+							<p:inputText value="#{fileProcessPanelMBean.modificationTimeFormat}"
+								rendered="#{fileProcessPanelMBean.fileModificationTime ne 'None' and fileProcessPanelMBean.fileModificationTime ne null}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.modificationTimeFormat']}" />
+						</p:panelGrid>
+
+						<br />
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.filenameAndDirectory']}" />
+						<p:separator />
+
+						<p:panelGrid id="fileDirectory" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.sourceIsRemote']}"
+								rendered="#{fileProcessPanelMBean.operationType ne 'List Files'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.sourceIsRemote}"
+								rendered="#{fileProcessPanelMBean.operationType ne 'List Files'}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.sourceDirectory']}" />
+							<p:inputText value="#{fileProcessPanelMBean.sourceDirectory}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.sourceDirectory']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.targetIsRemote']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.targetIsRemote}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.targetDirectory']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:inputText value="#{fileProcessPanelMBean.targetDirectory}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.targetDirectory']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+							</p:inputText>
+						</p:panelGrid>
+
+						<p:panelGrid id="fileName" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.sourceFileNameType']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.sourceFileNameType}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.sourceFileNameType']}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.workspace.pannel.job.fullTextFileName']}"
+									itemValue="fullText" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileName']}"
+									itemValue="regex" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileNameWithExclude']}"
+									itemValue="regexWithExclude" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileName']}"
+									itemValue="wildcard" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileNameWithExclude']}"
+									itemValue="wildcardWithExclude" />
+								<p:ajax update="fileName"></p:ajax>
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.sourceFileName']}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'fullText'}" />
+							<p:inputText value="#{fileProcessPanelMBean.sourceFileName}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'fullText'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.sourceFileName']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.sourceFileName.regex']}">
+								<f:validateRegex
+									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.includeRegex']}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'regex' or fileProcessPanelMBean.sourceFileNameType eq 'regexWithExclude'}" />
+							<p:inputText value="#{fileProcessPanelMBean.includeFiles}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'regex' or fileProcessPanelMBean.sourceFileNameType eq 'regexWithExclude'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.includeFiles']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.excludeRegex']}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'regexWithExclude'}" />
+							<p:inputText value="#{fileProcessPanelMBean.excludeFiles}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'regexWithExclude'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.excludeFiles']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.includeWildcard']}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'wildcard' or fileProcessPanelMBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+							<p:inputText value="#{fileProcessPanelMBean.includeWildcard}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'wildcard' or fileProcessPanelMBean.sourceFileNameType eq 'wildcardWithExclude'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.includeWildcard']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.excludeWildcard']}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+							<p:inputText value="#{fileProcessPanelMBean.excludeWildcard}"
+								rendered="#{fileProcessPanelMBean.sourceFileNameType eq 'wildcardWithExclude'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.excludeWildcard']}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.targetFileName']}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}" />
+							<p:inputText value="#{fileProcessPanelMBean.targetFileName}"
+								rendered="#{fileProcessPanelMBean.operationType eq 'Read File' or fileProcessPanelMBean.operationType eq 'Write File'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.targetFileName']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.targetFileName.regex']}">
+								<f:validateRegex
+									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+							</p:inputText>
+						</p:panelGrid>
+
+						<br />
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.archiveProperties']}" />
+						<p:separator />
+
+						<p:panelGrid id="ftpArchive" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.useArchive']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.useArchive}">
+								<p:ajax update="ftpArchive" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.archiveDirectory']}"
+								rendered="#{fileProcessPanelMBean.useArchive}" />
+							<p:inputText value="#{fileProcessPanelMBean.archiveDirectory}"
+								rendered="#{fileProcessPanelMBean.useArchive}" required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.archiveDirectory']}"
+								validatorMessage="#{msgs['tlos.validation.ftp.archiveDirectory.regex']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.fileNamingConvention']}"
+								rendered="#{fileProcessPanelMBean.useArchive}" />
+							<p:inputText value="#{fileProcessPanelMBean.fileNamingConvention}"
+								rendered="#{fileProcessPanelMBean.useArchive}" required="true"
+								requiredMessage="#{msgs['tlos.validation.ftp.fileNamingConvention']}" />
+						</p:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="timeManagementTab"
+					title="#{msgs['tlos.workspace.pannel.job.timeManagement']}">
+					<p:panel>
+						<p:panelGrid id="timeManagement" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
+
+							<p:inputMask value="#{fileProcessPanelMBean.startTime}" mask="99:99:99">
+								<p:ajax update="buttonPanel"></p:ajax>
+							</p:inputMask>
+
+							<p:panelGrid id="stopTime" columns="4">
+								<h:outputText
+									value="#{msgs['tlos.workspace.pannel.job.definePlannedStopTime']}" />
+								<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.defineStopTime}">
+									<p:ajax update="stopTime" />
+								</p:selectBooleanCheckbox>
+
+								<h:outputText
+									value="#{msgs['tlos.workspace.pannel.job.plannedStopTime']}"
+									rendered="#{fileProcessPanelMBean.defineStopTime}" />
+								<p:inputMask value="#{fileProcessPanelMBean.stopTime}"
+									rendered="#{fileProcessPanelMBean.defineStopTime}" mask="99:99:99"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
+							</p:panelGrid>
+
+						</p:panelGrid>
+
+						<br />
+
+						<p:panelGrid id="timeManagementSecond" columns="4"
+							style="width:80%;">
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
+							<p:spinner id="gmt" value="#{fileProcessPanelMBean.gmt}" min="-12"
+								max="13" />
+
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.dst}">
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.relativeTimeOption}">
+								<f:selectItems value="#{fileProcessPanelMBean.relativeTimeOptionList}" />
+							</p:selectOneMenu>
+
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.timeOut']}" />
+							<p:inputText value="#{fileProcessPanelMBean.jobTimeOutValue}"
+								label="#{msgs['tlos.workspace.pannel.job.timeOut']}"
+								required="true" type="integer">
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.timeOut.Unit']}" />
+							<p:selectOneMenu id="jstimeoutunit"
+								value="#{fileProcessPanelMBean.jobTimeOutUnit}">
+								<f:selectItems value="#{fileProcessPanelMBean.unitTypeList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.expectedTime']}" />
+							<p:inputText value="#{fileProcessPanelMBean.expectedTime}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.timeOut.Unit']}" />
+							<p:selectOneMenu id="jsExpectedTimeUnit"
+								value="#{fileProcessPanelMBean.expectedTimeUnit}">
+								<f:selectItems value="#{fileProcessPanelMBean.unitTypeList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.tolerancePercentage']}" />
+							<p:panelGrid columns="1">
+								<p:inputText id="tolerancePercentage"
+									value="#{fileProcessPanelMBean.tolerancePercentage}" />
+								<p:slider for="tolerancePercentage" />
+							</p:panelGrid>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.minPercentage']}" />
+							<p:panelGrid columns="1">
+								<p:inputText id="minPercentage"
+									value="#{fileProcessPanelMBean.minPercentage}" />
+								<p:slider for="minPercentage" />
+							</p:panelGrid>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="buttonPanel" style="height:40px;">
+						<p:commandButton id="insertJobButton" style="float:right;"
+							rendered="#{fileProcessPanelMBean.startTime ne null and fileProcessPanelMBean.startTime ne ''}"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="dependencyDefTab"
+					title="#{msgs['tlos.workspace.pannel.job.dependencyDefinitions']}"
+					rendered="#{fileProcessPanelMBean.jobBaseType ne 'PERIODIC'}">
+					<p:panel id="dependencyPanel">
+						<p:panelGrid id="dependencyDef" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.dependencies']}" />
+
+							<p:selectManyMenu id="dependencyList"
+								value="#{fileProcessPanelMBean.selectedJobDependencyList}"
+								style="width:150px; height:70px;">
+								<f:selectItems value="#{fileProcessPanelMBean.manyJobDependencyList}" />
+							</p:selectManyMenu>
+
+
+							<p:commandButton value="#{msgs['tlos.button.update']}"
+								action="#{fileProcessPanelMBean.editJobDependencyAction}"
+								update=":fpForm:tabView:dependencyPanel" />
+
+							<p:commandButton value="#{msgs['tlos.button.delete']}"
+								action="#{fileProcessPanelMBean.deleteJobDependencyAction}"
+								update=":fpForm:tabView:dependencyPanel" />
+
+						</p:panelGrid>
+
+						<p:droppable for="dependencyList" scope="treeScope"
+							tolerance="touch" activeStyleClass="ui-state-highlight">
+							<p:ajax listener="#{fileProcessPanelMBean.dependencyDropAction}"
+								update=":fpForm:tabView:dependencyPanel" />
+						</p:droppable>
+
+						<p:dialog id="dependencyDialog"
+							visible="#{fileProcessPanelMBean.dependencyDialogShow}"
+							header="#{msgs['tlos.popup.dependency.panel']}"
+							widgetVar="depDialog" resizable="false" showEffect="show">
+							<p:panel id="dependencyDialogPanel">
+								<p:panelGrid columns="2">
+									<h:outputText
+										value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
+									<p:inputText value="#{fileProcessPanelMBean.dependencyItem.jsName}"
+										disabled="true" />
+
+									<h:outputText
+										value="#{msgs['tlos.popup.dependency.dependencyId']}" />
+									<p:inputText
+										value="#{fileProcessPanelMBean.dependencyItem.dependencyID}" />
+
+									<h:outputText
+										value="#{msgs['tlos.popup.dependency.depComment']}" />
+									<p:inputText value="#{fileProcessPanelMBean.dependencyItem.comment}"
+										style="width:200px;" />
+								</p:panelGrid>
+
+								<br />
+
+								<p:fieldset
+									legend="#{msgs['tlos.popup.dependency.dependencyRule']}"
+									id="depRule">
+
+									<p:panelGrid columns="2">
+										<h:outputText
+											value="#{msgs['tlos.popup.dependency.selectDepth']}" />
+										<p:selectOneRadio value="#{fileProcessPanelMBean.dependencyType}">
+											<f:selectItem
+												itemLabel="#{msgs['tlos.popup.dependency.state']}"
+												itemValue="State" />
+											<f:selectItem
+												itemLabel="#{msgs['tlos.popup.dependency.substate']}"
+												itemValue="SubState" />
+											<f:selectItem
+												itemLabel="#{msgs['tlos.popup.dependency.status']}"
+												itemValue="Status" />
+											<p:ajax update="depRule" />
+										</p:selectOneRadio>
+									</p:panelGrid>
+
+									<br />
+
+									<p:panelGrid columns="2">
+										<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
+										<p:selectOneMenu value="#{fileProcessPanelMBean.depStateName}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+												itemValue="" />
+											<f:selectItems value="#{fileProcessPanelMBean.depStateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText
+											value="#{msgs['tlos.popup.dependency.substate']}"
+											rendered="#{fileProcessPanelMBean.dependencyType ne 'State'}" />
+										<p:selectOneMenu value="#{fileProcessPanelMBean.depSubstateName}"
+											rendered="#{fileProcessPanelMBean.dependencyType ne 'State'}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+												itemValue="" />
+											<f:selectItems value="#{fileProcessPanelMBean.depSubstateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="#{msgs['tlos.popup.dependency.status']}"
+											rendered="#{fileProcessPanelMBean.dependencyType eq 'Status'}" />
+										<p:selectOneMenu value="#{fileProcessPanelMBean.depStatusName}"
+											rendered="#{fileProcessPanelMBean.dependencyType eq 'Status'}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+												itemValue="" />
+											<f:selectItems value="#{fileProcessPanelMBean.jobStatusNameList}" />
+										</p:selectOneMenu>
+									</p:panelGrid>
+
+								</p:fieldset>
+
+								<br />
+
+								<p:commandButton value="#{msgs['tlos.button.save']}"
+									rendered="#{fileProcessPanelMBean.dependencyInsertButton}"
+									action="#{fileProcessPanelMBean.saveDependencyAction}"
+									update=":fpForm:tabView:dependencyPanel" />
+
+								<p:commandButton value="#{msgs['tlos.button.update']}"
+									rendered="#{!fileProcessPanelMBean.dependencyInsertButton}"
+									action="#{fileProcessPanelMBean.updateDependencyAction}"
+									update=":fpForm:tabView:dependencyPanel" />
+
+								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
+									action="#{fileProcessPanelMBean.closeDependencyDialogAction}"
+									update=":fpForm:tabView:dependencyPanel" />
+							</p:panel>
+
+						</p:dialog>
+
+						<br />
+
+						<p:panelGrid id="depExpression" columns="2"
+							rendered="#{fileProcessPanelMBean.dependencyExpression ne null and fileProcessPanelMBean.dependencyExpression ne ''}">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.dependencyExpr']}" />
+							<p:inputText value="#{fileProcessPanelMBean.dependencyExpression}"
+								disabled="true" style="width:300px;" />
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							rendered="#{fileProcessPanelMBean.startTime ne null and fileProcessPanelMBean.startTime ne ''}"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="cascadingConditionsTab"
+					title="#{msgs['tlos.workspace.pannel.job.cascadingConditions']}">
+					<p:panel>
+						<p:panelGrid id="cascadingConditions" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.runEvenIfFailed']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.runEvenIfFailed}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.safe2restart']}" />
+							<p:selectBooleanCheckbox
+								value="#{fileProcessPanelMBean.jobSafeToRestart}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.autoretry']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.jobAutoRetry}" />
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel style="height:40px;">
+
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="stateInfosTab"
+					title="#{msgs['tlos.workspace.pannel.job.stateInfos']}">
+					<p:panel id="stateInfosPanel"
+						header="#{msgs['tlos.workspace.pannel.job.returnCodeStateDef']}">
+
+						<p:panelGrid id="stateInfos" columns="3">
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.status']}" />
+							<p:selectOneMenu id="jobstatus"
+								value="#{fileProcessPanelMBean.jobStatusName}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItems value="#{fileProcessPanelMBean.jobStatusNameList}" />
+								<p:ajax update="stateInfosPanel"></p:ajax>
+							</p:selectOneMenu>
+
+							<p:commandButton value="#{msgs['tlos.button.add']}"
+								rendered="#{fileProcessPanelMBean.jobStatusName ne null and fileProcessPanelMBean.jobStatusName ne ''}"
+								actionListener="#{fileProcessPanelMBean.initJobStatusPopup}"
+								update=":fpForm:tabView:stateInfosPanel"
+								oncomplete="stateDialog.show()" />
+
+						</p:panelGrid>
+
+						<p:dialog id="dialog" visible="#{fileProcessPanelMBean.statusDialogShow}"
+							header="#{fileProcessPanelMBean.jobStatusName} #{msgs['tlos.popup.status.jobStatus']}"
+							widgetVar="stateDialog" resizable="false" showEffect="show">
+							<p:panel id="returnCodeDialogPanel">
+								<p:panelGrid columns="4">
+									<h:outputText value="#{msgs['tlos.popup.status.osType']}" />
+									<p:selectOneMenu id="osType" value="#{fileProcessPanelMBean.osType}">
+										<f:selectItems value="#{fileProcessPanelMBean.oSystemList}" />
+									</p:selectOneMenu>
+
+									<h:outputText value="#{msgs['tlos.popup.status.statusDesc']}" />
+									<p:inputText value="#{fileProcessPanelMBean.jobStatus.desc}"
+										style="width:200px;" />
+
+									<h:outputText value="#{msgs['tlos.popup.status.returnCode']}" />
+									<p:inputText id="Code" value="#{fileProcessPanelMBean.returnCode.code}"
+										label="#{msgs['tlos.popup.status.returnCode']}" type="integer" />
+
+									<h:outputText value="#{msgs['tlos.popup.status.desc']}" />
+									<p:inputText value="#{fileProcessPanelMBean.returnCode.desc}"
+										style="width:200px;" />
+								</p:panelGrid>
+
+								<br />
+
+								<p:commandButton value="#{msgs['tlos.button.add']}"
+									action="#{fileProcessPanelMBean.addJReturnCodeAction}"
+									update="returnCodeDialogPanel" />
+
+								<br />
+								<br />
+
+								<p:panelGrid columns="3"
+									rendered="#{fileProcessPanelMBean.manyReturnCodeList ne null and fileProcessPanelMBean.manyReturnCodeList[0] ne null}">
+									<h:outputText value="#{msgs['tlos.popup.status.codeList']}" />
+									<p:selectManyMenu style="width: 200px; height: 80px;"
+										value="#{fileProcessPanelMBean.selectedReturnCodeList}">
+										<f:selectItems value="#{fileProcessPanelMBean.manyReturnCodeList}" />
+									</p:selectManyMenu>
+
+									<p:commandButton value="#{msgs['tlos.button.delete']}"
+										action="#{fileProcessPanelMBean.deleteJReturnCodeAction}"
+										update="returnCodeDialogPanel" />
+								</p:panelGrid>
+
+								<br />
+
+								<p:commandButton value="#{msgs['tlos.button.saveList']}"
+									rendered="#{empty fileProcessPanelMBean.jobStatus.stsId}"
+									action="#{fileProcessPanelMBean.saveJobStatusAction}"
+									update=":fpForm:tabView:stateInfosPanel" />
+
+								<p:commandButton value="#{msgs['tlos.button.update']}"
+									rendered="#{not empty fileProcessPanelMBean.jobStatus.stsId}"
+									action="#{fileProcessPanelMBean.updateJobStatusAction}"
+									update=":fpForm:tabView:stateInfosPanel" />
+
+								<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
+									action="#{fileProcessPanelMBean.closeJobStatusDialogAction}"
+									update=":fpForm:tabView:stateInfosPanel" />
+
+							</p:panel>
+						</p:dialog>
+
+						<br />
+
+						<p:panelGrid id="stateInfosList" columns="4"
+							rendered="#{fileProcessPanelMBean.manyJobStatusList ne null}">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.statusList']}" />
+
+							<p:selectManyMenu id="jssuccescodes"
+								value="#{fileProcessPanelMBean.selectedJobStatusList}"
+								style="width:150px;">
+								<f:selectItems value="#{fileProcessPanelMBean.manyJobStatusList}" />
+							</p:selectManyMenu>
+
+							<p:commandButton value="#{msgs['tlos.button.update']}"
+								update=":fpForm:tabView:stateInfosPanel"
+								action="#{fileProcessPanelMBean.jobStatusEditAction}" />
+
+							<p:commandButton value="#{msgs['tlos.button.delete']}"
+								update=":fpForm:tabView:stateInfosPanel"
+								action="#{fileProcessPanelMBean.deleteJobStatusAction}" />
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}"
+						rendered="#{!fileProcessPanelMBean.jobInsertButton}">
+						<p:panelGrid columns="4">
+							<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.stateName}">
+								<f:selectItem itemLabel="PENDING" itemValue="PENDING" />
+							</p:selectOneMenu>
+
+							<h:outputText value="#{msgs['tlos.popup.dependency.substate']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.subStateName}">
+								<f:selectItem itemLabel="CREATED" itemValue="CREATED" />
+								<f:selectItem itemLabel="DEACTIVATED" itemValue="DEACTIVATED" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="concurrencyManagementTab"
+					title="#{msgs['tlos.workspace.pannel.job.concurrencyManagement']}">
+					<p:panel>
+						<p:panelGrid id="concurrencyManagement" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.concurrent']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.concurrent}" />
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="alarmPreferenceTab"
+					title="#{msgs['tlos.workspace.pannel.job.alarmPreference']}">
+					<p:panel>
+						<p:panelGrid id="alarmPreference" columns="2" style="width:100%;">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.alarmList']}" />
+							<p:selectManyMenu value="#{fileProcessPanelMBean.selectedAlarmList}"
+								style="width: 400px;">
+								<f:selectItems value="#{fileProcessPanelMBean.alarmList}" />
+							</p:selectManyMenu>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="localParametersTab"
+					title="#{msgs['tlos.workspace.pannel.job.localParameters']}">
+					<p:panel id="parametersPanel">
+						<p:panelGrid id="localParameters" columns="4" style="width:80%;">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
+							<p:inputText value="#{fileProcessPanelMBean.paramName}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
+							<p:inputText value="#{fileProcessPanelMBean.paramDesc}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
+							<p:selectOneMenu value="#{fileProcessPanelMBean.paramType}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}"
+									itemValue="1" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.string']}"
+									itemValue="2" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.date']}"
+									itemValue="3" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.time']}"
+									itemValue="4" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}"
+									itemValue="5" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
+									itemValue="6" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
+							<p:inputText value="#{fileProcessPanelMBean.paramPreValue}" />
+
+						</p:panelGrid>
+
+						<br />
+
+						<p:commandButton
+							value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
+							rendered="#{!fileProcessPanelMBean.renderUpdateParamButton}"
+							action="#{fileProcessPanelMBean.addInputParameter}"
+							update=":fpForm:tabView:parametersPanel" />
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							rendered="#{fileProcessPanelMBean.renderUpdateParamButton}"
+							update=":fpForm:tabView:parametersPanel"
+							action="#{fileProcessPanelMBean.updateInputParameter}" />
+
+						<br />
+						<br />
+
+						<p:dataTable var="item" rows="10" id="parameterDataTable"
+							rendered="#{not empty fileProcessPanelMBean.parameterList}"
+							value="#{fileProcessPanelMBean.parameterList}"
+							binding="#{fileProcessPanelMBean.parameterTable}" paginator="true"
+							paginatorPosition="bottom"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+
+							<p:column>
+								<p:commandButton value="#{msgs['tlos.button.update']}"
+									actionListener="#{fileProcessPanelMBean.editInputParamAction}">
+								</p:commandButton>
+
+								<p:commandButton value="#{msgs['tlos.button.delete']}"
+									onclick="confirmation.show()" />
+								<p:confirmDialog id="confirmDialog"
+									style="z-index: 999 !important;"
+									message="#{msgs['tlos.ask.delete.confirm']}"
+									appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
+									severity="alert" widgetVar="confirmation">
+									<p:commandButton id="confirm" immediate="true" process="@this"
+										value="#{msgs['tlos.ask.delete.confirm1']}"
+										onclick="confirmation.hide()"
+										actionListener="#{fileProcessPanelMBean.deleteInputParamAction}" />
+									<p:commandButton id="decline"
+										value="#{msgs['tlos.ask.delete.confirm2']}"
+										onclick="confirmation.hide()" type="button" />
+								</p:confirmDialog>
+
+							</p:column>
+
+							<p:column
+								headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
+								sortBy="#{item.name}">
+								<h:outputText value="#{item.name}" style="text-align: center;" />
+							</p:column>
+
+							<p:column
+								headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
+								sortBy="#{item.desc}">
+								<h:outputText value="#{item.desc}" style="text-align: center;" />
+							</p:column>
+
+							<p:column
+								headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
+								sortBy="#{item.preValue.stringValue}">
+								<h:outputText value="#{item.preValue.stringValue}"
+									style="text-align: center;" />
+							</p:column>
+
+							<p:column
+								headerText="#{msgs['tlos.workspace.pannel.job.parameterType']}">
+								<h:outputText value="#{msgs['tlos.combo.integer']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 1}" />
+								<h:outputText value="#{msgs['tlos.combo.string']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 2}" />
+								<h:outputText value="#{msgs['tlos.combo.date']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 3}" />
+								<h:outputText value="#{msgs['tlos.combo.time']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 4}" />
+								<h:outputText value="#{msgs['tlos.combo.dateTime']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 5}" />
+								<h:outputText value="#{msgs['tlos.combo.xPath']}"
+									style="text-align: center;"
+									rendered="#{item.preValue.type eq 6}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="advancedJobInfosTab"
+					title="#{msgs['tlos.workspace.pannel.job.advancedJobInfos']}">
+					<p:panel>
+						<p:panelGrid id="advancedJobInfosAgentChoice" columns="4">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
+							<p:selectOneMenu id="agentChoiceMethod"
+								value="#{fileProcessPanelMBean.agentChoiceMethod}">
+								<f:selectItems value="#{fileProcessPanelMBean.agentChoiceMethodList}" />
+								<p:ajax update="advancedJobInfosAgentChoice"></p:ajax>
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.agentList']}"
+								rendered="#{fileProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+							<p:selectOneMenu
+								rendered="#{fileProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}"
+								value="#{fileProcessPanelMBean.selectedAgent}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItems value="#{fileProcessPanelMBean.definedAgentList}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+						<p:panelGrid id="advancedJobInfosSLA" columns="2">
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.sla']}" />
+							<p:selectOneMenu id="sla" value="#{fileProcessPanelMBean.jobSLA}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.none']}"
+									itemValue="none" />
+								<f:selectItems value="#{fileProcessPanelMBean.jsSLAList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
+							<p:selectBooleanCheckbox value="#{fileProcessPanelMBean.useResourceReq}">
+								<p:ajax update=":fpForm:tabView:resourceBasedDef"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel id="resourceBasedDef">
+						<p:panelGrid rendered="#{fileProcessPanelMBean.useResourceReq}"
+							columns="4">
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
+							<p:selectBooleanCheckbox
+								value="#{fileProcessPanelMBean.resourceBasedDef}">
+								<p:ajax update="resourceBasedDef" />
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.resourceName']}"
+								rendered="#{fileProcessPanelMBean.resourceBasedDef}" />
+							<p:selectOneMenu style="text-align: center;"
+								rendered="#{fileProcessPanelMBean.resourceBasedDef}" required="true"
+								value="#{fileProcessPanelMBean.selectedResourceForHardware}">
+								<f:selectItems value="#{fileProcessPanelMBean.resourceNameList}" />
+								<p:ajax disabled="true"></p:ajax>
+							</p:selectOneMenu>
+						</p:panelGrid>
+
+						<br />
+
+						<p:panelGrid id="cpuDiskMemory" columns="7"
+							rendered="#{fileProcessPanelMBean.useResourceReq}">
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
+							<p:selectOneMenu style="text-align: center;"
+								value="#{fileProcessPanelMBean.cpuTimein}">
+								<f:selectItem itemLabel="1" itemValue="1" />
+								<f:selectItem itemLabel="5" itemValue="5" />
+								<f:selectItem itemLabel="15" itemValue="15" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+							<p:selectOneButton value="#{fileProcessPanelMBean.cpuCondition}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.cpuCondition']}">
+								<f:selectItem itemLabel="&lt;" itemValue="lt" />
+								<!-- f:selectItem itemLabel="&lt;=" itemValue="le" /-->
+								<f:selectItem itemLabel="=" itemValue="eq" />
+								<!-- f:selectItem itemLabel="&gt;=" itemValue="ge" /-->
+								<f:selectItem itemLabel="&gt;" itemValue="gt" />
+							</p:selectOneButton>
+
+							<p:panelGrid id="cpuPanel" columns="2">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
+								<p:panelGrid columns="1">
+									<p:inputText id="cpuValue" value="#{fileProcessPanelMBean.cpuValue}" />
+									<p:slider for="cpuValue" />
+								</p:panelGrid>
+							</p:panelGrid>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
+							<p:selectOneButton value="#{fileProcessPanelMBean.cpuUnit}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.cpuUnit']}">
+								<f:selectItem itemLabel="%" itemValue="%" />
+							</p:selectOneButton>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
+							<p:selectOneMenu style="text-align: center;"
+								value="#{fileProcessPanelMBean.memoryPart}">
+								<f:selectItem
+									itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+									itemValue="used" />
+								<f:selectItem
+									itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+									itemValue="free" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+							<p:selectOneButton value="#{fileProcessPanelMBean.memoryCondition}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.memCondition']}">
+								<f:selectItem itemLabel="&lt;" itemValue="lt" />
+								<f:selectItem itemLabel="=" itemValue="eq" />
+								<f:selectItem itemLabel="&gt;" itemValue="gt" />
+							</p:selectOneButton>
+
+							<p:panelGrid id="memPanel" columns="2">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.memory']}" />
+								<p:panelGrid columns="1"
+									rendered="#{fileProcessPanelMBean.memoryUnit eq '%'}">
+									<p:inputText id="memValue" value="#{fileProcessPanelMBean.memoryValue}"
+										immediate="true">
+										<p:ajax partialSubmit="true"></p:ajax>
+									</p:inputText>
+									<p:slider for="memValue" />
+								</p:panelGrid>
+								<p:inputText rendered="#{fileProcessPanelMBean.memoryUnit ne '%'}"
+									value="#{fileProcessPanelMBean.memoryValue}"
+									label="#{msgs['tlos.management.pannel.newSla.memory']}"
+									required="true" type="integer" immediate="true">
+									<p:ajax partialSubmit="true" />
+								</p:inputText>
+							</p:panelGrid>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
+							<p:selectOneButton id="memUnit" required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.memUnit']}"
+								value="#{fileProcessPanelMBean.memoryUnit}">
+								<f:selectItem itemLabel="%" itemValue="%" />
+								<f:selectItem itemLabel="G" itemValue="G" />
+								<f:selectItem itemLabel="M" itemValue="M" />
+								<f:selectItem itemLabel="K" itemValue="K" />
+								<f:selectItem itemLabel="B" itemValue="B" />
+								<p:ajax update="memPanel"></p:ajax>
+							</p:selectOneButton>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
+							<p:selectOneMenu style="text-align: center;"
+								value="#{fileProcessPanelMBean.diskPart}">
+								<f:selectItem itemLabel="Kullanilan" itemValue="used" />
+								<f:selectItem itemLabel="Bos" itemValue="free" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+							<p:selectOneButton value="#{fileProcessPanelMBean.diskCondition}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.diskCondition']}">
+								<f:selectItem itemLabel="&lt;" itemValue="lt" />
+								<f:selectItem itemLabel="=" itemValue="eq" />
+								<f:selectItem itemLabel="&gt;" itemValue="gt" />
+							</p:selectOneButton>
+
+							<p:panelGrid id="diskPanel" columns="2">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.disk']}" />
+								<p:panelGrid columns="1"
+									rendered="#{fileProcessPanelMBean.diskUnit eq '%'}">
+									<p:inputText id="diskValue" value="#{fileProcessPanelMBean.diskValue}" />
+									<p:slider for="diskValue" />
+								</p:panelGrid>
+								<p:inputText rendered="#{fileProcessPanelMBean.diskUnit ne '%'}"
+									value="#{fileProcessPanelMBean.diskValue}"
+									label="#{msgs['tlos.management.pannel.newSla.disk']}"
+									required="true" type="integer">
+								</p:inputText>
+							</p:panelGrid>
+
+							<h:outputText
+								value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
+							<p:selectOneButton id="diskUnit"
+								value="#{fileProcessPanelMBean.diskUnit}" required="true"
+								requiredMessage="#{msgs['tlos.validation.sla.diskUnit']}">
+								<f:selectItem itemLabel="%" itemValue="%" />
+								<f:selectItem itemLabel="G" itemValue="G" />
+								<f:selectItem itemLabel="M" itemValue="M" />
+								<f:selectItem itemLabel="K" itemValue="K" />
+								<f:selectItem itemLabel="B" itemValue="B" />
+								<p:ajax update="diskPanel"></p:ajax>
+							</p:selectOneButton>
+
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{fileProcessPanelMBean.insertJobAction}" />
+					</p:panel>
+				</p:tab>
+
+			</p:tabView>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>
