@@ -31,15 +31,13 @@
 
 				</p:panelGrid>
 
-				<p:dialog id="dialog"
-					visible="#{backingBean.statusDialogShow}"
+				<p:dialog id="dialog" visible="#{backingBean.statusDialogShow}"
 					header="#{backingBean.jobStatusName} #{msgs['tlos.popup.status.jobStatus']}"
 					widgetVar="stateDialog" resizable="false" showEffect="show">
 					<p:panel id="returnCodeDialogPanel">
 						<h:panelGrid columns="4">
 							<h:outputText value="#{msgs['tlos.popup.status.osType']}" />
-							<p:selectOneMenu id="osType"
-								value="#{backingBean.osType}">
+							<p:selectOneMenu id="osType" value="#{backingBean.osType}">
 								<f:selectItems value="#{backingBean.oSystemList}" />
 							</p:selectOneMenu>
 
@@ -48,8 +46,7 @@
 								style="width:200px;" />
 
 							<h:outputText value="#{msgs['tlos.popup.status.returnCode']}" />
-							<p:inputText id="Code"
-								value="#{backingBean.returnCode.code}"
+							<p:inputText id="Code" value="#{backingBean.returnCode.code}"
 								label="#{msgs['tlos.popup.status.returnCode']}" type="integer" />
 
 							<h:outputText value="#{msgs['tlos.popup.status.desc']}" />
@@ -71,8 +68,7 @@
 							<h:outputText value="#{msgs['tlos.popup.status.codeList']}" />
 							<p:selectManyMenu style="width: 200px; height: 80px;"
 								value="#{backingBean.selectedReturnCodeList}">
-								<f:selectItems
-									value="#{backingBean.manyReturnCodeList}" />
+								<f:selectItems value="#{backingBean.manyReturnCodeList}" />
 							</p:selectManyMenu>
 
 							<p:commandButton value="#{msgs['tlos.button.delete']}"
@@ -107,8 +103,7 @@
 						value="#{msgs['tlos.workspace.pannel.job.statusList']}" />
 
 					<p:selectManyMenu id="jssuccescodes"
-						value="#{backingBean.selectedJobStatusList}"
-						style="width:150px;">
+						value="#{backingBean.selectedJobStatusList}" style="width:150px;">
 						<f:selectItems value="#{backingBean.manyJobStatusList}" />
 					</p:selectManyMenu>
 

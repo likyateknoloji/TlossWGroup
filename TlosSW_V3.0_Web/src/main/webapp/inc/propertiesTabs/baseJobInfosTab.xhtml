@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="baseJobInfosTab"
+			title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
+			<p:panel>
+				<p:panelGrid id="baseJobInfos" columns="4" style="width:80%;">
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.name']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.comment}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.comment']}" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.log.path']}">
+						<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
+								<f:validateRegex
+									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" /-->
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jobLogFile}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.log.file']}"
+						validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
+					<p:selectOneMenu id="jsCalendar" style="text-align: center;"
+						value="#{backingBean.jobCalendar}">
+						<f:selectItems value="#{backingBean.jsCalendarList}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
+					<p:selectOneMenu id="oSystem" style="text-align: center;"
+						value="#{backingBean.oSystem}">
+						<f:selectItems value="#{backingBean.oSystemList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jobPriority']}" />
+					<p:panelGrid columns="1">
+						<p:inputText id="priority"
+							value="#{backingBean.jobPriority}" />
+						<p:slider for="priority" minValue="1" maxValue="4" />
+					</p:panelGrid>
+
+					<h:outputText value="" />
+					<h:outputText value="" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
+					<p:selectOneMenu id="jobBaseType"
+						value="#{backingBean.jobBaseType}">
+						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
+						<p:ajax update=":batchProcessForm:batchJobDef"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}" />
+					<p:inputMask value="#{backingBean.periodTime}"
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"
+						mask="99:99:99" required="true"
+						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" />
+
+					<h:outputText value=""
+						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
+					<h:outputText value=""
+						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
+					<p:selectOneMenu id="jobtype"
+						value="#{backingBean.jobTypeDef}">
+						<f:selectItems value="#{backingBean.jobTypeDefList}" />
+						<p:ajax update="baseJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.eventTypeDef']}"
+						rendered="#{backingBean.jobTypeDef eq 'EVENT BASED'}" />
+					<p:selectOneMenu id="eventTypeDef"
+						rendered="#{backingBean.jobTypeDef eq 'EVENT BASED'}"
+						value="#{backingBean.eventTypeDef}">
+						<f:selectItems value="#{backingBean.eventTypeDefList}" />
+					</p:selectOneMenu>
+
+					<h:outputText value=""
+						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
+					<h:outputText value=""
+						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

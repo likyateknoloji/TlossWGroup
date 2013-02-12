@@ -15,16 +15,14 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
 
-					<p:inputMask value="#{backingBean.startTime}"
-						mask="99:99:99">
+					<p:inputMask value="#{backingBean.startTime}" mask="99:99:99">
 						<p:ajax update="buttonPanel"></p:ajax>
 					</p:inputMask>
 
 					<p:panelGrid id="stopTime" columns="4">
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.definePlannedStopTime']}" />
-						<p:selectBooleanCheckbox
-							value="#{backingBean.defineStopTime}">
+						<p:selectBooleanCheckbox value="#{backingBean.defineStopTime}">
 							<p:ajax update="stopTime" />
 						</p:selectBooleanCheckbox>
 
@@ -32,8 +30,8 @@
 							value="#{msgs['tlos.workspace.pannel.job.plannedStopTime']}"
 							rendered="#{backingBean.defineStopTime}" />
 						<p:inputMask value="#{backingBean.stopTime}"
-							rendered="#{backingBean.defineStopTime}"
-							mask="99:99:99" required="true"
+							rendered="#{backingBean.defineStopTime}" mask="99:99:99"
+							required="true"
 							requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
 					</p:panelGrid>
 
@@ -44,8 +42,7 @@
 				<p:panelGrid id="timeManagementSecond" columns="4"
 					style="width:80%;">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
-					<p:spinner id="gmt" value="#{backingBean.gmt}" min="-12"
-						max="13" />
+					<p:spinner id="gmt" value="#{backingBean.gmt}" min="-12" max="13" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
 					<p:selectBooleanCheckbox value="#{backingBean.dst}">
@@ -53,10 +50,8 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
-					<p:selectOneMenu
-						value="#{backingBean.relativeTimeOption}">
-						<f:selectItems
-							value="#{backingBean.relativeTimeOptionList}" />
+					<p:selectOneMenu value="#{backingBean.relativeTimeOption}">
+						<f:selectItems value="#{backingBean.relativeTimeOptionList}" />
 					</p:selectOneMenu>
 
 					<h:outputText value="" />

@@ -14,8 +14,7 @@
 				<p:panelGrid id="alarmPreference" columns="2" style="width:100%;">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.alarmList']}" />
-					<p:selectManyMenu
-						value="#{backingBean.selectedAlarmList}"
+					<p:selectManyMenu value="#{backingBean.selectedAlarmList}"
 						style="width: 400px;">
 						<f:selectItems value="#{backingBean.alarmList}" />
 					</p:selectManyMenu>

@@ -14,18 +14,15 @@
 				<p:panelGrid id="cascadingConditions" columns="2">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.runEvenIfFailed']}" />
-					<p:selectBooleanCheckbox
-						value="#{backingBean.runEvenIfFailed}" />
+					<p:selectBooleanCheckbox value="#{backingBean.runEvenIfFailed}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.safe2restart']}" />
-					<p:selectBooleanCheckbox
-						value="#{backingBean.jobSafeToRestart}" />
+					<p:selectBooleanCheckbox value="#{backingBean.jobSafeToRestart}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.autoretry']}" />
-					<p:selectBooleanCheckbox
-						value="#{backingBean.jobAutoRetry}" />
+					<p:selectBooleanCheckbox value="#{backingBean.jobAutoRetry}" />
 				</p:panelGrid>
 
 			</p:panel>
