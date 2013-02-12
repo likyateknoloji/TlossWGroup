@@ -36,6 +36,7 @@ import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobIn
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.CascadingConditionsDocument.CascadingConditions;
+import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ExpectedTimeDocument.ExpectedTime;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
@@ -507,6 +508,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		CascadingConditions cascadingConditions = CascadingConditions.Factory.newInstance();
 		jobProperties.setCascadingConditions(cascadingConditions);
+
+		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
+		jobProperties.setConcurrencyManagement(concurrencyManagement);
 
 		jobCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
