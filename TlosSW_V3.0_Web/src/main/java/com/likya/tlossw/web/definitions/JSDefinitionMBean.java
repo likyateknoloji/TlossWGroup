@@ -173,6 +173,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
 			getFtpPanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getFtpPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+		
+		} else if (jobDefCenterPanel.equals(FILE_PROCESS_PAGE)) {
+			getFileProcessPanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getFileProcessPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 		}
 	}
 
