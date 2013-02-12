@@ -956,7 +956,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		return true;
 	}
 
-	public void dependencyDropAction(DragDropEvent ddEvent) {
+	public void dependencyDropAction() {
 		if (!checkDependencyValidation()) {
 			return;
 		}
