@@ -23,18 +23,18 @@
 
 					<p:commandButton value="#{msgs['tlos.button.update']}"
 						action="#{backingBean['editJobDependencyAction']}"
-						update=":batchProcessForm:tabView:dependencyPanel" />
+						update=":jobDefinitionForm:tabView:dependencyPanel" />
 
 					<p:commandButton value="#{msgs['tlos.button.delete']}"
 						action="#{backingBean['deleteJobDependencyAction']}"
-						update=":batchProcessForm:tabView:dependencyPanel" />
+						update=":jobDefinitionForm:tabView:dependencyPanel" />
 
 				</p:panelGrid>
 
 				<p:droppable for="dependencyList" scope="treeScope"
 					tolerance="touch" activeStyleClass="ui-state-highlight">
 					<p:ajax listener="#{backingBean['dependencyDropAction']}"
-						update=":batchProcessForm:tabView:dependencyPanel" />
+						update=":jobDefinitionForm:tabView:dependencyPanel" />
 				</p:droppable>
 
 				<p:dialog id="dependencyDialog"
@@ -116,16 +116,16 @@
 						<p:commandButton value="#{msgs['tlos.button.save']}"
 							rendered="#{backingBean.dependencyInsertButton}"
 							action="#{backingBean['saveDependencyAction']}"
-							update=":batchProcessForm:tabView:dependencyPanel" />
+							update=":jobDefinitionForm:tabView:dependencyPanel" />
 
 						<p:commandButton value="#{msgs['tlos.button.update']}"
 							rendered="#{!backingBean.dependencyInsertButton}"
 							action="#{backingBean['updateDependencyAction']}"
-							update=":batchProcessForm:tabView:dependencyPanel" />
+							update=":jobDefinitionForm:tabView:dependencyPanel" />
 
 						<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 							action="#{backingBean['closeDependencyDialogAction']}"
-							update=":batchProcessForm:tabView:dependencyPanel" />
+							update=":jobDefinitionForm:tabView:dependencyPanel" />
 					</p:panel>
 
 				</p:dialog>

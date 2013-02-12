@@ -74,7 +74,7 @@
 					<p:selectOneMenu id="jobBaseType"
 						value="#{backingBean.jobBaseType}">
 						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
-						<p:ajax update=":batchProcessForm:batchJobDef"></p:ajax>
+						<p:ajax update=":jobDefinitionForm:jobDef"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText

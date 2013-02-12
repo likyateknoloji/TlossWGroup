@@ -49,10 +49,10 @@
 					value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
 					rendered="#{!backingBean.renderUpdateParamButton}"
 					action="#{backingBean['addInputParameter']}"
-					update=":batchProcessForm:tabView:parametersPanel" />
+					update=":jobDefinitionForm:tabView:parametersPanel" />
 				<p:commandButton value="#{msgs['tlos.button.update']}"
 					rendered="#{backingBean.renderUpdateParamButton}"
-					update=":batchProcessForm:tabView:parametersPanel"
+					update=":jobDefinitionForm:tabView:parametersPanel"
 					action="#{backingBean['updateInputParameter']}" />
 
 				<br />

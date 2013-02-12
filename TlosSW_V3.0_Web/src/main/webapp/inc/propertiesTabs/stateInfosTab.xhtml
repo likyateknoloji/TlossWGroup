@@ -26,7 +26,7 @@
 					<p:commandButton value="#{msgs['tlos.button.add']}"
 						rendered="#{backingBean.jobStatusName ne null and backingBean.jobStatusName ne ''}"
 						actionListener="#{backingBean['initJobStatusPopup']}"
-						update=":batchProcessForm:tabView:stateInfosPanel"
+						update=":jobDefinitionForm:tabView:stateInfosPanel"
 						oncomplete="stateDialog.show()" />
 
 				</p:panelGrid>
@@ -81,16 +81,16 @@
 						<p:commandButton value="#{msgs['tlos.button.saveList']}"
 							rendered="#{empty backingBean.jobStatus.stsId}"
 							action="#{backingBean['saveJobStatusAction']}"
-							update=":batchProcessForm:tabView:stateInfosPanel" />
+							update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
 						<p:commandButton value="#{msgs['tlos.button.update']}"
 							rendered="#{not empty backingBean.jobStatus.stsId}"
 							action="#{backingBean['updateJobStatusAction']}"
-							update=":batchProcessForm:tabView:stateInfosPanel" />
+							update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
 						<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
 							action="#{backingBean['closeJobStatusDialogAction']}"
-							update=":batchProcessForm:tabView:stateInfosPanel" />
+							update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
 					</p:panel>
 				</p:dialog>
@@ -108,11 +108,11 @@
 					</p:selectManyMenu>
 
 					<p:commandButton value="#{msgs['tlos.button.update']}"
-						update=":batchProcessForm:tabView:stateInfosPanel"
+						update=":jobDefinitionForm:tabView:stateInfosPanel"
 						action="#{backingBean['jobStatusEditAction']}" />
 
 					<p:commandButton value="#{msgs['tlos.button.delete']}"
-						update=":batchProcessForm:tabView:stateInfosPanel"
+						update=":jobDefinitionForm:tabView:stateInfosPanel"
 						action="#{backingBean['deleteJobStatusAction']}" />
 				</p:panelGrid>
 

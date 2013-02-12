@@ -15,62 +15,62 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
 					<p:selectOneMenu id="agentChoiceMethod"
-						value="#{batchProcessPanelMBean.agentChoiceMethod}">
+						value="#{backingBean.agentChoiceMethod}">
 						<f:selectItems
-							value="#{batchProcessPanelMBean.agentChoiceMethodList}" />
+							value="#{backingBean.agentChoiceMethodList}" />
 						<p:ajax update="advancedJobInfosAgentChoice"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.agentList']}"
-						rendered="#{batchProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+						rendered="#{backingBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
 					<p:selectOneMenu
-						rendered="#{batchProcessPanelMBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+						rendered="#{backingBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}"
-						value="#{batchProcessPanelMBean.selectedAgent}">
+						value="#{backingBean.selectedAgent}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
-						<f:selectItems value="#{batchProcessPanelMBean.definedAgentList}" />
+						<f:selectItems value="#{backingBean.definedAgentList}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
 
 				<p:panelGrid id="advancedJobInfosSLA" columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.sla']}" />
-					<p:selectOneMenu id="sla" value="#{batchProcessPanelMBean.jobSLA}">
+					<p:selectOneMenu id="sla" value="#{backingBean.jobSLA}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.none']}"
 							itemValue="none" />
-						<f:selectItems value="#{batchProcessPanelMBean.jsSLAList}" />
+						<f:selectItems value="#{backingBean.jsSLAList}" />
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
 					<p:selectBooleanCheckbox
-						value="#{batchProcessPanelMBean.useResourceReq}">
-						<p:ajax update=":batchProcessForm:tabView:resourceBasedDef"></p:ajax>
+						value="#{backingBean.useResourceReq}">
+						<p:ajax update=":jobDefinitionForm:tabView:resourceBasedDef"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</p:panelGrid>
 
 			</p:panel>
 
 			<p:panel id="resourceBasedDef">
-				<p:panelGrid rendered="#{batchProcessPanelMBean.useResourceReq}"
+				<p:panelGrid rendered="#{backingBean.useResourceReq}"
 					columns="4">
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
 					<p:selectBooleanCheckbox
-						value="#{batchProcessPanelMBean.resourceBasedDef}">
+						value="#{backingBean.resourceBasedDef}">
 						<p:ajax update="resourceBasedDef" />
 					</p:selectBooleanCheckbox>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.resourceName']}"
-						rendered="#{batchProcessPanelMBean.resourceBasedDef}" />
+						rendered="#{backingBean.resourceBasedDef}" />
 					<p:selectOneMenu style="text-align: center;"
-						rendered="#{batchProcessPanelMBean.resourceBasedDef}"
+						rendered="#{backingBean.resourceBasedDef}"
 						required="true"
-						value="#{batchProcessPanelMBean.selectedResourceForHardware}">
-						<f:selectItems value="#{batchProcessPanelMBean.resourceNameList}" />
+						value="#{backingBean.selectedResourceForHardware}">
+						<f:selectItems value="#{backingBean.resourceNameList}" />
 						<p:ajax disabled="true"></p:ajax>
 					</p:selectOneMenu>
 				</p:panelGrid>
@@ -78,11 +78,11 @@
 				<br />
 
 				<p:panelGrid id="cpuDiskMemory" columns="7"
-					rendered="#{batchProcessPanelMBean.useResourceReq}">
+					rendered="#{backingBean.useResourceReq}">
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
 					<p:selectOneMenu style="text-align: center;"
-						value="#{batchProcessPanelMBean.cpuTimein}">
+						value="#{backingBean.cpuTimein}">
 						<f:selectItem itemLabel="1" itemValue="1" />
 						<f:selectItem itemLabel="5" itemValue="5" />
 						<f:selectItem itemLabel="15" itemValue="15" />
@@ -90,7 +90,7 @@
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
-					<p:selectOneButton value="#{batchProcessPanelMBean.cpuCondition}"
+					<p:selectOneButton value="#{backingBean.cpuCondition}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.cpuCondition']}">
 						<f:selectItem itemLabel="&lt;" itemValue="lt" />
@@ -104,14 +104,14 @@
 						<h:outputText value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
 						<p:panelGrid columns="1">
 							<p:inputText id="cpuValue"
-								value="#{batchProcessPanelMBean.cpuValue}" />
+								value="#{backingBean.cpuValue}" />
 							<p:slider for="cpuValue" />
 						</p:panelGrid>
 					</p:panelGrid>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
-					<p:selectOneButton value="#{batchProcessPanelMBean.cpuUnit}"
+					<p:selectOneButton value="#{backingBean.cpuUnit}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.cpuUnit']}">
 						<f:selectItem itemLabel="%" itemValue="%" />
@@ -120,7 +120,7 @@
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
 					<p:selectOneMenu style="text-align: center;"
-						value="#{batchProcessPanelMBean.memoryPart}">
+						value="#{backingBean.memoryPart}">
 						<f:selectItem
 							itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
 							itemValue="used" />
@@ -132,7 +132,7 @@
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
 					<p:selectOneButton
-						value="#{batchProcessPanelMBean.memoryCondition}" required="true"
+						value="#{backingBean.memoryCondition}" required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.memCondition']}">
 						<f:selectItem itemLabel="&lt;" itemValue="lt" />
 						<f:selectItem itemLabel="=" itemValue="eq" />
@@ -143,16 +143,16 @@
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.newSla.memory']}" />
 						<p:panelGrid columns="1"
-							rendered="#{batchProcessPanelMBean.memoryUnit eq '%'}">
+							rendered="#{backingBean.memoryUnit eq '%'}">
 							<p:inputText id="memValue"
-								value="#{batchProcessPanelMBean.memoryValue}" immediate="true">
+								value="#{backingBean.memoryValue}" immediate="true">
 								<p:ajax partialSubmit="true"></p:ajax>
 							</p:inputText>
 							<p:slider for="memValue" />
 						</p:panelGrid>
 						<p:inputText
-							rendered="#{batchProcessPanelMBean.memoryUnit ne '%'}"
-							value="#{batchProcessPanelMBean.memoryValue}"
+							rendered="#{backingBean.memoryUnit ne '%'}"
+							value="#{backingBean.memoryValue}"
 							label="#{msgs['tlos.management.pannel.newSla.memory']}"
 							required="true" type="integer" immediate="true">
 							<p:ajax partialSubmit="true" />
@@ -163,7 +163,7 @@
 						value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
 					<p:selectOneButton id="memUnit" required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.memUnit']}"
-						value="#{batchProcessPanelMBean.memoryUnit}">
+						value="#{backingBean.memoryUnit}">
 						<f:selectItem itemLabel="%" itemValue="%" />
 						<f:selectItem itemLabel="G" itemValue="G" />
 						<f:selectItem itemLabel="M" itemValue="M" />
@@ -175,14 +175,14 @@
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
 					<p:selectOneMenu style="text-align: center;"
-						value="#{batchProcessPanelMBean.diskPart}">
+						value="#{backingBean.diskPart}">
 						<f:selectItem itemLabel="Kullanilan" itemValue="used" />
 						<f:selectItem itemLabel="Bos" itemValue="free" />
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.condition']}" />
-					<p:selectOneButton value="#{batchProcessPanelMBean.diskCondition}"
+					<p:selectOneButton value="#{backingBean.diskCondition}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.diskCondition']}">
 						<f:selectItem itemLabel="&lt;" itemValue="lt" />
@@ -194,13 +194,13 @@
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.newSla.disk']}" />
 						<p:panelGrid columns="1"
-							rendered="#{batchProcessPanelMBean.diskUnit eq '%'}">
+							rendered="#{backingBean.diskUnit eq '%'}">
 							<p:inputText id="diskValue"
-								value="#{batchProcessPanelMBean.diskValue}" />
+								value="#{backingBean.diskValue}" />
 							<p:slider for="diskValue" />
 						</p:panelGrid>
-						<p:inputText rendered="#{batchProcessPanelMBean.diskUnit ne '%'}"
-							value="#{batchProcessPanelMBean.diskValue}"
+						<p:inputText rendered="#{backingBean.diskUnit ne '%'}"
+							value="#{backingBean.diskValue}"
 							label="#{msgs['tlos.management.pannel.newSla.disk']}"
 							required="true" type="integer">
 						</p:inputText>
@@ -209,7 +209,7 @@
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
 					<p:selectOneButton id="diskUnit"
-						value="#{batchProcessPanelMBean.diskUnit}" required="true"
+						value="#{backingBean.diskUnit}" required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.diskUnit']}">
 						<f:selectItem itemLabel="%" itemValue="%" />
 						<f:selectItem itemLabel="G" itemValue="G" />
@@ -225,7 +225,7 @@
 			<p:panel style="height:40px;">
 				<p:commandButton style="float:right;"
 					value="#{msgs['tlos.button.save']}"
-					actionListener="#{batchProcessPanelMBean['insertJobAction']}" />
+					actionListener="#{backingBean['insertJobAction']}" />
 			</p:panel>
 		</p:tab>
 	</ui:composition>
