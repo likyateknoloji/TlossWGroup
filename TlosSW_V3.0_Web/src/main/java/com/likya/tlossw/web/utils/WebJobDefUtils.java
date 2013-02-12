@@ -17,6 +17,7 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
+import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileTypeDocument;
@@ -319,6 +320,38 @@ public class WebJobDefUtils {
 		return adapterTypeList;
 	}
 
+	public static Collection<SelectItem> fillFileAdapterTypeList() {
+		String fileAdapterType = null;
+
+		Collection<SelectItem> fileAdapterTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < com.likya.tlos.model.xmlbeans.fileadapter.AdapterTypeDocument.AdapterType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			fileAdapterType = com.likya.tlos.model.xmlbeans.fileadapter.AdapterTypeDocument.AdapterType.Enum.table.forInt(i + 1).toString();
+			item.setValue(fileAdapterType);
+			item.setLabel(fileAdapterType);
+			fileAdapterTypeList.add(item);
+		}
+
+		return fileAdapterTypeList;
+	}
+
+	public static Collection<SelectItem> fillTextFileDetailOptions() {
+		String textFileDetail = null;
+
+		Collection<SelectItem> textFileDetailList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < TextFileDetailOptions.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			textFileDetail = TextFileDetailOptions.Enum.table.forInt(i + 1).toString();
+			item.setValue(textFileDetail);
+			item.setLabel(textFileDetail);
+			textFileDetailList.add(item);
+		}
+
+		return textFileDetailList;
+	}
+
 	public static Collection<SelectItem> fillOperationTypeList() {
 		String operationType = null;
 
@@ -394,6 +427,22 @@ public class WebJobDefUtils {
 		}
 
 		return definitionList;
+	}
+
+	public static Collection<SelectItem> fillFileOperationTypeList() {
+		String fileOperationType = null;
+
+		Collection<SelectItem> fileOperationTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			fileOperationType = com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType.Enum.table.forInt(i + 1).toString();
+			item.setValue(fileOperationType);
+			item.setLabel(fileOperationType);
+			fileOperationTypeList.add(item);
+		}
+
+		return fileOperationTypeList;
 	}
 
 }

@@ -35,7 +35,7 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 	private String textFileSeparator;
 
-	private boolean useXmlAccessType;
+	private boolean useXmlAccessType = false;
 	private String xmlAccessType;
 
 	private Collection<SelectItem> binaryFileDetailOptions = null;
@@ -111,8 +111,9 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	public void init() {
 		initJobPanel();
 
-		// fillAdapterTypeList();
-		// fillOperationTypeList();
+		fillFileAdapterTypeList();
+		fillTextFileDetailOptions();
+		fillFileOperationTypeList();
 		fillProcessedFilesOperationTypeList();
 		fillFileTypeList();
 		fillFileModificationTimeList();
@@ -391,14 +392,19 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	 * jobTypeDetails.setSpecialParameters(specialParameters); }
 	 */
 
-	/*
-	 * private void fillAdapterTypeList() { if (adapterTypeList == null) {
-	 * adapterTypeList = WebJobDefUtils.fillAdapterTypeList(); } }
-	 * 
-	 * private void fillOperationTypeList() { if (operationTypeList == null) {
-	 * operationTypeList = WebJobDefUtils.fillOperationTypeList(); } }
-	 */
-
+	
+	private void fillFileAdapterTypeList() {
+		if (fileAdapterTypeList == null) {
+			fileAdapterTypeList = WebJobDefUtils.fillFileAdapterTypeList(); 
+		} 
+	}
+	
+	private void fillTextFileDetailOptions() {
+		if (textFileDetailOptions == null) {
+			textFileDetailOptions = WebJobDefUtils.fillTextFileDetailOptions();
+		}
+	}
+	 
 	private void fillProcessedFilesOperationTypeList() {
 		if (processedFilesOperationTypeList == null) {
 			processedFilesOperationTypeList = WebJobDefUtils.fillProcessedFilesOperationTypeList();
@@ -414,6 +420,12 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	private void fillFileModificationTimeList() {
 		if (fileModificationTimeList == null) {
 			fileModificationTimeList = WebJobDefUtils.fillFileModificationTimeList();
+		}
+	}
+	
+	private void fillFileOperationTypeList() {
+		if (fileOperationTypeList == null) {
+			fileOperationTypeList = WebJobDefUtils.fillFileOperationTypeList();
 		}
 	}
 
