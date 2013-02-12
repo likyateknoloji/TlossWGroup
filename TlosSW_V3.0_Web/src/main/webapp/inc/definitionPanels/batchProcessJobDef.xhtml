@@ -16,116 +16,14 @@
 
 			<p:tabView effect="blind" effectDuration="normal" id="tabView">
 
-				<p:tab id="baseJobInfosTab"
-					title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
+				<ui:include src="/inc/propertiesTabs/baseJobInfosTab.xhtml">
+					<ui:param name="backingBean" value="#{batchProcessPanelMBean}" />
+				</ui:include>
+
+				<p:tab id="batchProcessPropertiesTab"
+					title="#{msgs['tlos.workspace.pannel.job.baseJobInfosBatch']}">
 					<p:panel>
-						<p:panelGrid id="baseJobInfos" columns="4" style="width:80%;">
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
-							<p:inputText
-								value="#{batchProcessPanelMBean.jobProperties.baseJobInfos.jsName}"
-								required="true"
-								requiredMessage="#{msgs['tlos.validation.job.name']}" />
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
-							<p:inputText
-								value="#{batchProcessPanelMBean.jobProperties.baseJobInfos.comment}"
-								required="true"
-								requiredMessage="#{msgs['tlos.validation.job.comment']}" />
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
-							<p:inputText
-								value="#{batchProcessPanelMBean.jobProperties.baseJobInfos.jobLogPath}"
-								required="true"
-								requiredMessage="#{msgs['tlos.validation.job.log.path']}">
-								<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
-								<f:validateRegex
-									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" /-->
-							</p:inputText>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
-							<p:inputText
-								value="#{batchProcessPanelMBean.jobProperties.baseJobInfos.jobLogFile}"
-								required="true"
-								requiredMessage="#{msgs['tlos.validation.job.log.file']}"
-								validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
-								<f:validateRegex
-									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-							</p:inputText>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
-							<p:selectOneMenu id="jsCalendar" style="text-align: center;"
-								value="#{batchProcessPanelMBean.jobCalendar}">
-								<f:selectItems value="#{batchProcessPanelMBean.jsCalendarList}" />
-							</p:selectOneMenu>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
-							<p:selectOneMenu id="oSystem" style="text-align: center;"
-								value="#{batchProcessPanelMBean.oSystem}">
-								<f:selectItems value="#{batchProcessPanelMBean.oSystemList}" />
-							</p:selectOneMenu>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobPriority']}" />
-							<p:panelGrid columns="1">
-								<p:inputText id="priority"
-									value="#{batchProcessPanelMBean.jobPriority}" />
-								<p:slider for="priority" minValue="1" maxValue="4" />
-							</p:panelGrid>
-
-							<h:outputText value="" />
-							<h:outputText value="" />
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
-							<p:selectOneMenu id="jobBaseType"
-								value="#{batchProcessPanelMBean.jobBaseType}">
-								<f:selectItems value="#{batchProcessPanelMBean.jobBaseTypeList}" />
-								<p:ajax update=":batchProcessForm:batchJobDef"></p:ajax>
-							</p:selectOneMenu>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
-								rendered="#{batchProcessPanelMBean.jobBaseType eq 'PERIODIC'}" />
-							<p:inputMask value="#{batchProcessPanelMBean.periodTime}"
-								rendered="#{batchProcessPanelMBean.jobBaseType eq 'PERIODIC'}"
-								mask="99:99:99" required="true"
-								requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" />
-
-							<h:outputText value=""
-								rendered="#{batchProcessPanelMBean.jobBaseType ne 'PERIODIC'}" />
-							<h:outputText value=""
-								rendered="#{batchProcessPanelMBean.jobBaseType ne 'PERIODIC'}" />
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
-							<p:selectOneMenu id="jobtype"
-								value="#{batchProcessPanelMBean.jobTypeDef}">
-								<f:selectItems value="#{batchProcessPanelMBean.jobTypeDefList}" />
-								<p:ajax update="baseJobInfos"></p:ajax>
-							</p:selectOneMenu>
-
-							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.eventTypeDef']}"
-								rendered="#{batchProcessPanelMBean.jobTypeDef eq 'EVENT BASED'}" />
-							<p:selectOneMenu id="eventTypeDef"
-								rendered="#{batchProcessPanelMBean.jobTypeDef eq 'EVENT BASED'}"
-								value="#{batchProcessPanelMBean.eventTypeDef}">
-								<f:selectItems
-									value="#{batchProcessPanelMBean.eventTypeDefList}" />
-							</p:selectOneMenu>
-
-							<h:outputText value=""
-								rendered="#{batchProcessPanelMBean.jobTypeDef ne 'EVENT BASED'}" />
-							<h:outputText value=""
-								rendered="#{batchProcessPanelMBean.jobTypeDef ne 'EVENT BASED'}" />
-
+						<p:panelGrid columns="2">
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.jobPath']}" />
 							<p:inputText value="#{batchProcessPanelMBean.jobPath}"
@@ -145,7 +43,6 @@
 								<f:validateRegex
 									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" /-->
 							</p:inputText>
-
 						</p:panelGrid>
 					</p:panel>
 				</p:tab>
