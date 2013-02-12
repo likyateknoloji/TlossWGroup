@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="ftpPropertiesTab"
+			title="#{msgs['tlos.workspace.pannel.job.ftpProperties']}">
+			<p:panel id="ftpJobInfosPanel">
+				<p:panelGrid id="ftpJobInfos" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
+					<p:selectOneMenu value="#{backingBean.adapterType}">
+						<f:selectItems value="#{backingBean.adapterTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.ftpConnectionDefinition']}" />
+					<p:selectOneMenu
+						value="#{backingBean.ftpProperties.remoteTransferProperties.ftpPropertiesId}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.connectionDef']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.ftpConnectionDefinitionList}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<br />
+				<h:outputText
+					value="#{msgs['tlos.workspace.pannel.job.operations']}" />
+				<p:separator />
+
+				<p:panelGrid id="ftpOperations" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
+					<p:selectOneMenu value="#{backingBean.operationType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.operationTypeList}" />
+						<p:ajax
+							update="ftpOperations :jobDefinitionForm:tabView:ftpMaxFileSize :jobDefinitionForm:tabView:ftpMinAge :jobDefinitionForm:tabView:ftpFileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName"
+							partialSubmit="true" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.processedFilesOperationType']}" />
+					<p:selectOneMenu value="#{backingBean.processedFilesOperationType}">
+						<f:selectItems
+							value="#{backingBean.processedFilesOperationTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.preOperationCompress']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.compress}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}">
+						<p:ajax update="ftpOperations" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.postOperationDecompress']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.decompress}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}">
+						<p:ajax update="ftpOperations" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressProgramPath']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.compress}" />
+					<p:inputText value="#{backingBean.compressProgramPath}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.compress}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramPath']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramPath.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressProgramFileName']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.compress}" />
+					<p:inputText value="#{backingBean.compressProgramFileName}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.compress}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramFile']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramFile.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.decompressProgramPath']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.decompress}" />
+					<p:inputText value="#{backingBean.decompressProgramPath}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.decompress}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramPath']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramPath.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.decompressProgramFileName']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.decompress}" />
+					<p:inputText value="#{backingBean.decompressProgramFileName}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and backingBean.decompress}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramFile']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramFile.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}" />
+					<p:password id="password" value="#{backingBean.compressPassword}"
+						label="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+						feedback="false" required="true" redisplay="true"
+						match="repeatPassword"
+						requiredMessage="#{msgs['tlos.validation.db.password']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:password>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}" />
+					<p:password id="repeatPassword"
+						value="#{backingBean.confirmCompressPassword}"
+						label="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+						feedback="false" required="true" redisplay="true"
+						requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}"
+						rendered="#{(backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:password>
+				</p:panelGrid>
+
+				<br />
+				<h:outputText
+					value="#{msgs['tlos.workspace.pannel.job.fileProperties']}" />
+				<p:separator />
+
+				<p:panelGrid id="ftpFileProperties" columns="6">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.fileType']}" />
+					<p:selectOneMenu id="fileType" value="#{backingBean.fileType}">
+						<f:selectItems value="#{backingBean.fileTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gelGec']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.gelGec}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.recursive']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.recursive}" />
+				</p:panelGrid>
+
+				<p:panelGrid id="ftpMaxFileSize" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.useMaxFileSize']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.useMaxFileSize}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}">
+						<p:ajax update="ftpMaxFileSize" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.maxFileSize']}"
+						rendered="#{backingBean.useMaxFileSize}" />
+					<p:inputText id="maxFileSize" value="#{backingBean.maxFileSize}"
+						label="#{msgs['tlos.workspace.pannel.job.maxFileSize']}"
+						rendered="#{backingBean.useMaxFileSize}" required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.maxFileSize']}"
+						type="integer" />
+				</p:panelGrid>
+
+				<p:panelGrid id="ftpMinAge" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.useMinAge']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.useMinAge}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}">
+						<p:ajax update="ftpMinAge" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.minAge']}"
+						rendered="#{backingBean.useMinAge}" />
+					<p:inputText id="minAge" value="#{backingBean.minAge}"
+						label="#{msgs['tlos.workspace.pannel.job.minAge']}"
+						rendered="#{backingBean.useMinAge}" required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.minAge']}"
+						type="integer" />
+				</p:panelGrid>
+
+				<p:panelGrid id="ftpFileModificationTime" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.fileModificationTime']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectOneMenu
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
+						value="#{backingBean.fileModificationTime}">
+						<f:selectItems value="#{backingBean.fileModificationTimeList}" />
+						<p:ajax update="ftpFileModificationTime" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.modificationTimeFormat']}"
+						rendered="#{backingBean.fileModificationTime ne 'None' and backingBean.fileModificationTime ne null}" />
+					<p:inputText value="#{backingBean.modificationTimeFormat}"
+						rendered="#{backingBean.fileModificationTime ne 'None' and backingBean.fileModificationTime ne null}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.modificationTimeFormat']}" />
+				</p:panelGrid>
+
+				<br />
+				<h:outputText
+					value="#{msgs['tlos.workspace.pannel.job.filenameAndDirectory']}" />
+				<p:separator />
+
+				<p:panelGrid id="fileDirectory" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sourceIsRemote']}"
+						rendered="#{backingBean.operationType ne 'List Files'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.sourceIsRemote}"
+						rendered="#{backingBean.operationType ne 'List Files'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sourceDirectory']}" />
+					<p:inputText value="#{backingBean.sourceDirectory}" required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.sourceDirectory']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.targetIsRemote']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:selectBooleanCheckbox value="#{backingBean.targetIsRemote}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.targetDirectory']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:inputText value="#{backingBean.targetDirectory}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.targetDirectory']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+					</p:inputText>
+				</p:panelGrid>
+
+				<p:panelGrid id="fileName" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sourceFileNameType']}" />
+					<p:selectOneMenu value="#{backingBean.sourceFileNameType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.sourceFileNameType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.fullTextFileName']}"
+							itemValue="fullText" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileName']}"
+							itemValue="regex" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileNameWithExclude']}"
+							itemValue="regexWithExclude" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileName']}"
+							itemValue="wildcard" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileNameWithExclude']}"
+							itemValue="wildcardWithExclude" />
+						<p:ajax update="fileName"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sourceFileName']}"
+						rendered="#{backingBean.sourceFileNameType eq 'fullText'}" />
+					<p:inputText value="#{backingBean.sourceFileName}"
+						rendered="#{backingBean.sourceFileNameType eq 'fullText'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.sourceFileName']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.sourceFileName.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.includeRegex']}"
+						rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}" />
+					<p:inputText value="#{backingBean.includeFiles}"
+						rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.includeFiles']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.excludeRegex']}"
+						rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}" />
+					<p:inputText value="#{backingBean.excludeFiles}"
+						rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.excludeFiles']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.includeWildcard']}"
+						rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+					<p:inputText value="#{backingBean.includeWildcard}"
+						rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.includeWildcard']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.excludeWildcard']}"
+						rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+					<p:inputText value="#{backingBean.excludeWildcard}"
+						rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.excludeWildcard']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.targetFileName']}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+					<p:inputText value="#{backingBean.targetFileName}"
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.targetFileName']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.targetFileName.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
+				</p:panelGrid>
+
+				<br />
+				<h:outputText
+					value="#{msgs['tlos.workspace.pannel.job.archiveProperties']}" />
+				<p:separator />
+
+				<p:panelGrid id="ftpArchive" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.useArchive']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.useArchive}">
+						<p:ajax update="ftpArchive" />
+					</p:selectBooleanCheckbox>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.archiveDirectory']}"
+						rendered="#{backingBean.useArchive}" />
+					<p:inputText value="#{backingBean.archiveDirectory}"
+						rendered="#{backingBean.useArchive}" required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.archiveDirectory']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.archiveDirectory.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.fileNamingConvention']}"
+						rendered="#{backingBean.useArchive}" />
+					<p:inputText value="#{backingBean.fileNamingConvention}"
+						rendered="#{backingBean.useArchive}" required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.fileNamingConvention']}" />
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
