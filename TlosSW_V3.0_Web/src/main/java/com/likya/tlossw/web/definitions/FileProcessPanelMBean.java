@@ -41,7 +41,8 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	private Collection<SelectItem> binaryFileDetailOptions = null;
 	private String binaryFileDetail;
 
-	private Collection<SelectItem> fileOperationTypeList = null;
+	private Collection<SelectItem> textFileOperationTypeList = null;
+	private Collection<SelectItem> binaryFileOperationTypeList = null;
 	private String fileOperationType;
 
 	private Collection<SelectItem> processedFilesOperationTypeList = null;
@@ -113,7 +114,8 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 		fillFileAdapterTypeList();
 		fillTextFileDetailOptions();
-		fillFileOperationTypeList();
+		fillTextFileOperationTypeList();
+		fillBinaryFileOperationTypeList();
 		fillProcessedFilesOperationTypeList();
 		fillFileTypeList();
 		fillFileModificationTimeList();
@@ -392,19 +394,18 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	 * jobTypeDetails.setSpecialParameters(specialParameters); }
 	 */
 
-	
 	private void fillFileAdapterTypeList() {
 		if (fileAdapterTypeList == null) {
-			fileAdapterTypeList = WebJobDefUtils.fillFileAdapterTypeList(); 
-		} 
+			fileAdapterTypeList = WebJobDefUtils.fillFileAdapterTypeList();
+		}
 	}
-	
+
 	private void fillTextFileDetailOptions() {
 		if (textFileDetailOptions == null) {
 			textFileDetailOptions = WebJobDefUtils.fillTextFileDetailOptions();
 		}
 	}
-	 
+
 	private void fillProcessedFilesOperationTypeList() {
 		if (processedFilesOperationTypeList == null) {
 			processedFilesOperationTypeList = WebJobDefUtils.fillProcessedFilesOperationTypeList();
@@ -422,10 +423,16 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 			fileModificationTimeList = WebJobDefUtils.fillFileModificationTimeList();
 		}
 	}
-	
-	private void fillFileOperationTypeList() {
-		if (fileOperationTypeList == null) {
-			fileOperationTypeList = WebJobDefUtils.fillFileOperationTypeList();
+
+	private void fillTextFileOperationTypeList() {
+		if (textFileOperationTypeList == null) {
+			textFileOperationTypeList = WebJobDefUtils.fillTextFileOperationTypeList();
+		}
+	}
+
+	private void fillBinaryFileOperationTypeList() {
+		if (binaryFileOperationTypeList == null) {
+			binaryFileOperationTypeList = WebJobDefUtils.fillBinaryFileOperationTypeList();
 		}
 	}
 
@@ -761,14 +768,6 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 		this.binaryFileDetail = binaryFileDetail;
 	}
 
-	public Collection<SelectItem> getFileOperationTypeList() {
-		return fileOperationTypeList;
-	}
-
-	public void setFileOperationTypeList(Collection<SelectItem> fileOperationTypeList) {
-		this.fileOperationTypeList = fileOperationTypeList;
-	}
-
 	public String getFileOperationType() {
 		return fileOperationType;
 	}
@@ -903,6 +902,22 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 	public void setFileProcessProperties(FileAdapterProperties fileProcessProperties) {
 		this.fileProcessProperties = fileProcessProperties;
+	}
+
+	public Collection<SelectItem> getTextFileOperationTypeList() {
+		return textFileOperationTypeList;
+	}
+
+	public void setTextFileOperationTypeList(Collection<SelectItem> textFileOperationTypeList) {
+		this.textFileOperationTypeList = textFileOperationTypeList;
+	}
+
+	public Collection<SelectItem> getBinaryFileOperationTypeList() {
+		return binaryFileOperationTypeList;
+	}
+
+	public void setBinaryFileOperationTypeList(Collection<SelectItem> binaryFileOperationTypeList) {
+		this.binaryFileOperationTypeList = binaryFileOperationTypeList;
 	}
 
 }
