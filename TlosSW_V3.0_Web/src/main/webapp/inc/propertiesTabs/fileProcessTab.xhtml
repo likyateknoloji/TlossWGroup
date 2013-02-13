@@ -18,7 +18,8 @@
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
 						<f:selectItems value="#{backingBean.fileAdapterTypeList}" />
-						<p:ajax update="ftpJobInfos"></p:ajax>
+						<p:ajax
+							update="ftpJobInfos :jobDefinitionForm:tabView:ftpOperations"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
@@ -26,6 +27,8 @@
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}" />
 					<p:selectOneMenu value="#{backingBean.textFileDetail}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
 						<f:selectItems value="#{backingBean.textFileDetailOptions}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
@@ -35,16 +38,25 @@
 					value="#{msgs['tlos.workspace.pannel.job.operations']}" />
 				<p:separator />
 
-				<p:panelGrid id="ftpOperations" columns="4">
+				<p:panelGrid id="ftpOperations" columns="2">
 					<h:outputText
+						rendered="#{backingBean.fileAdapterType ne '' and backingBean.fileAdapterType ne null}"
 						value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
 					<p:selectOneMenu value="#{backingBean.fileOperationType}"
 						required="true"
+						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}"
 						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
-						<f:selectItems value="#{backingBean.fileOperationTypeList}" />
-
+						<f:selectItems value="#{backingBean.textFileOperationTypeList}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu value="#{backingBean.fileOperationType}"
+						required="true"
+						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}"
+						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.binaryFileOperationTypeList}" />
 					</p:selectOneMenu>
 
 					<h:outputText
@@ -53,100 +65,7 @@
 						<f:selectItems
 							value="#{backingBean.processedFilesOperationTypeList}" />
 					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.preOperationCompress']}"
-						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}" />
-					<p:selectBooleanCheckbox value="#{backingBean.compress}"
-						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}">
-						<p:ajax update="ftpOperations" />
-					</p:selectBooleanCheckbox>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.postOperationDecompress']}"
-						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}" />
-					<p:selectBooleanCheckbox value="#{backingBean.decompress}"
-						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}">
-						<p:ajax update="ftpOperations" />
-					</p:selectBooleanCheckbox>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.compressProgramPath']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.compress}" />
-					<p:inputText value="#{backingBean.compressProgramPath}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.compress}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramPath']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramPath.regex']}">
-						<f:validateRegex
-							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.compressProgramFileName']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.compress}" />
-					<p:inputText value="#{backingBean.compressProgramFileName}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.compress}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramFile']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramFile.regex']}">
-						<f:validateRegex
-							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.decompressProgramPath']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.decompress}" />
-					<p:inputText value="#{backingBean.decompressProgramPath}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.decompress}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramPath']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramPath.regex']}">
-						<f:validateRegex
-							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.decompressProgramFileName']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.decompress}" />
-					<p:inputText value="#{backingBean.decompressProgramFileName}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and backingBean.decompress}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.decompressProgramFile']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.decompressProgramFile.regex']}">
-						<f:validateRegex
-							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}" />
-					<p:password id="password" value="#{backingBean.compressPassword}"
-						label="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
-						feedback="false" required="true" redisplay="true"
-						match="repeatPassword"
-						requiredMessage="#{msgs['tlos.validation.db.password']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}">
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:password>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}" />
-					<p:password id="repeatPassword"
-						value="#{backingBean.confirmCompressPassword}"
-						label="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
-						feedback="false" required="true" redisplay="true"
-						requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}"
-						rendered="#{(backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File') and (backingBean.compress or backingBean.decompress)}">
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:password>
 				</p:panelGrid>
-
 
 				<br />
 				<h:outputText
