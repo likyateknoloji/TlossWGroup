@@ -429,7 +429,7 @@ public class WebJobDefUtils {
 		return definitionList;
 	}
 
-	public static Collection<SelectItem> fillFileOperationTypeList() {
+	public static Collection<SelectItem> fillTextFileOperationTypeList() {
 		String fileOperationType = null;
 
 		Collection<SelectItem> fileOperationTypeList = new ArrayList<SelectItem>();
@@ -440,6 +440,28 @@ public class WebJobDefUtils {
 			item.setValue(fileOperationType);
 			item.setLabel(fileOperationType);
 			fileOperationTypeList.add(item);
+		}
+
+		return fileOperationTypeList;
+	}
+
+	public static Collection<SelectItem> fillBinaryFileOperationTypeList() {
+		String fileOperationType = null;
+
+		Collection<SelectItem> fileOperationTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType.Enum.table.lastInt(); i++) {
+			fileOperationType = com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType.Enum.table.forInt(i + 1).toString();
+
+			// Update Record, Insert Record, Delete Record islemleri sadece
+			// text file islemlerinde var
+			if (!fileOperationType.contains("Record")) {
+				SelectItem item = new SelectItem();
+
+				item.setValue(fileOperationType);
+				item.setLabel(fileOperationType);
+				fileOperationTypeList.add(item);
+			}
 		}
 
 		return fileOperationTypeList;
