@@ -743,6 +743,7 @@
                                         </file:fileTypeDetail>
                                         <file:recursive>false</file:recursive>
                                         <file:gelGec>true</file:gelGec>
+										<file:fileModificationTime>None</file:fileModificationTime>
                                     </file:fileProperties>
                                     <file:operation>
                                         <file:operationType>Read File</file:operationType>
@@ -756,6 +757,9 @@
                                             <com:filename>file.txt</com:filename>
                                         </file:sourceFileName>
                                     </file:filenameAndDirectory>
+									<file:archiveProperties>
+										<file:archive>false</file:archive>
+									</file:archiveProperties>
                                 </file:fileAdapterProperties>
                             </com:specialParameters>
                         </com:jobTypeDetails>
@@ -833,6 +837,7 @@
                                         </file:fileTypeDetail>
                                         <file:recursive>false</file:recursive>
                                         <file:gelGec>true</file:gelGec>
+										<file:fileModificationTime>None</file:fileModificationTime>
                                     </file:fileProperties>
                                     <file:operation>
                                         <file:operationType>Write File</file:operationType>
@@ -846,6 +851,9 @@
                                             <com:filename>file2.txt</com:filename>
                                         </file:targetFileName>
                                     </file:filenameAndDirectory>
+									<file:archiveProperties>
+										<file:archive>false</file:archive>
+									</file:archiveProperties>
                                 </file:fileAdapterProperties>
                             </com:specialParameters>
                         </com:jobTypeDetails>
