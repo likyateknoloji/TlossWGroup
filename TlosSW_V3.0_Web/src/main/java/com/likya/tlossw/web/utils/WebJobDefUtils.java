@@ -17,6 +17,7 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
+import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
@@ -350,6 +351,22 @@ public class WebJobDefUtils {
 		}
 
 		return textFileDetailList;
+	}
+
+	public static Collection<SelectItem> fillBinaryFileDetailOptions() {
+		String binaryFileDetail = null;
+
+		Collection<SelectItem> binaryFileDetailList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < BinaryFileDetailOptions.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			binaryFileDetail = BinaryFileDetailOptions.Enum.table.forInt(i + 1).toString();
+			item.setValue(binaryFileDetail);
+			item.setLabel(binaryFileDetail);
+			binaryFileDetailList.add(item);
+		}
+
+		return binaryFileDetailList;
 	}
 
 	public static Collection<SelectItem> fillOperationTypeList() {
