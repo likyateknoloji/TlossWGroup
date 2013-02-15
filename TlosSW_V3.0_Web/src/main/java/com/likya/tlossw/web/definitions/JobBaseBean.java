@@ -109,6 +109,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public final static String WILDCARD = "wildcard";
 	public final static String WILDCARD_WITH_EXCLUDE = "wildcardWithExclude";
 
+	public final static String DOM = "DOM";
+	public final static String SAX = "SAX";
+	public final static String OBJECT = "Object";
+
 	private String jobPathInScenario;
 
 	// baseJobInfos
@@ -2344,6 +2348,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public void setDependencyTreePath(String dependencyTreePath) {
 		this.dependencyTreePath = dependencyTreePath;
 	}
+
 
 	// public JSTree getjSTree() {
 	// return jSTree;

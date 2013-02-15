@@ -91,7 +91,7 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	private String plainTextUsage;
 	private String plainTextValue;
 
-	private boolean useFilter;
+	private boolean useFilter = false;
 	private String xpathforFileFilter;
 	private String plainTextFilterType;
 	private String lineNumber;
@@ -104,6 +104,9 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	private String archiveDirectory;
 	private String fileNamingConvention;
 
+	public final static String LINE_NUMBER = "lineNumber";
+	public final static String STRING_SEARCH = "stringSearch";
+
 	public void dispose() {
 
 	}
@@ -114,6 +117,7 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 		fillFileAdapterTypeList();
 		fillTextFileDetailOptions();
+		fillBinaryFileDetailOptions();
 		fillTextFileOperationTypeList();
 		fillBinaryFileOperationTypeList();
 		fillProcessedFilesOperationTypeList();
@@ -403,6 +407,12 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	private void fillTextFileDetailOptions() {
 		if (textFileDetailOptions == null) {
 			textFileDetailOptions = WebJobDefUtils.fillTextFileDetailOptions();
+		}
+	}
+
+	private void fillBinaryFileDetailOptions() {
+		if (binaryFileDetailOptions == null) {
+			binaryFileDetailOptions = WebJobDefUtils.fillBinaryFileDetailOptions();
 		}
 	}
 
