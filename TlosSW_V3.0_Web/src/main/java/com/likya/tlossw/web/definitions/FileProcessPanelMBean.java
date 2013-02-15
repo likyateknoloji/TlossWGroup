@@ -11,10 +11,22 @@ import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlos.model.xmlbeans.fileadapter.AdapterTypeDocument.AdapterType;
+import com.likya.tlos.model.xmlbeans.fileadapter.ArchivePropertiesDocument.ArchiveProperties;
+import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailDocument.BinaryFileDetail;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileModificationTimeDocument.FileModificationTime;
+import com.likya.tlos.model.xmlbeans.fileadapter.FilePropertiesDocument.FileProperties;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileTypeDocument.FileType;
+import com.likya.tlos.model.xmlbeans.fileadapter.FilenameAndDirectoryDocument.FilenameAndDirectory;
+import com.likya.tlos.model.xmlbeans.fileadapter.FilterPropertiesDocument.FilterProperties;
+import com.likya.tlos.model.xmlbeans.fileadapter.OperationDocument.Operation;
+import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
+import com.likya.tlos.model.xmlbeans.fileadapter.PlainTextFilesOperationDocument.PlainTextFilesOperation;
 import com.likya.tlos.model.xmlbeans.fileadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
+import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailDocument.TextFileDetail;
+import com.likya.tlos.model.xmlbeans.fileadapter.XmlFilesOperationDocument.XmlFilesOperation;
 import com.likya.tlossw.web.utils.WebJobDefUtils;
 
 @ManagedBean(name = "fileProcessPanelMBean")
@@ -56,8 +68,6 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 	private String sourceDirectory;
 	private String targetDirectory;
-	private boolean sourceIsRemote;
-	private boolean targetIsRemote;
 
 	private String sourceFileNameType;
 	private String sourceFileName;
@@ -136,8 +146,6 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 		processedFilesOperationType = ProcessedFilesOperationType.NONE.toString();
 		sourceDirectory = "";
 		targetDirectory = "";
-		sourceIsRemote = false;
-		targetIsRemote = false;
 		sourceFileNameType = "";
 		sourceFileName = "";
 		includeFiles = "";
@@ -162,107 +170,169 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 		compressProgramFileName = "";
 		compressPassword = "";
 		confirmCompressPassword = "";
+		useFilter = false;
 	}
 
 	private void fillFileProcessProperties() {
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getFileAdapterProperties() != null) {
+			fileProcessProperties = jobTypeDetails.getSpecialParameters().getFileAdapterProperties();
 
+			fileAdapterType = fileProcessProperties.getAdapterType().toString();
+
+			// operation
+			Operation operation = fileProcessProperties.getOperation();
+			fileOperationType = operation.getOperationType().toString();
+
+			if (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.LIST_FILES.toString())) {
+				processedFilesOperationType = operation.getProcessedFilesOperationType().toString();
+			}
+
+			if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())
+					&& (fileOperationType.equals(OperationType.UPDATE_RECORD.toString()) || fileOperationType.equals(OperationType.INSERT_RECORD.toString()) || fileOperationType.equals(OperationType.DELETE_RECORD.toString()))) {
+
+				if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
+					PlainTextFilesOperation plainTextFilesOperation = operation.getFileContentOperation().getPlainTextFilesOperation();
+					startLineNumber = plainTextFilesOperation.getStartLineNumber() + "";
+					endLineNumber = plainTextFilesOperation.getEndLineNumber() + "";
+
+					if (plainTextFilesOperation.getValue() != null && !plainTextFilesOperation.getValue().equals("")) {
+						// plainTextUsage =
+						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						plainTextValue = plainTextFilesOperation.getValue();
+					}
+
+				} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+					XmlFilesOperation xmlFilesOperation = operation.getFileContentOperation().getXmlFilesOperation();
+					xPath = xmlFilesOperation.getXPath();
+
+					if (xmlFilesOperation.getNodeValue() != null && !xmlFilesOperation.getNodeValue().equals("")) {
+						// xmlNodeUsage =
+						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						nodeValue = xmlFilesOperation.getNodeValue();
+					}
+				}
+			}
+
+			// fileProperties
+			FileProperties fileProperties = fileProcessProperties.getFileProperties();
+
+			if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())) {
+				TextFileDetail fileDetail = fileProperties.getFileTypeDetail().getTextFileDetail();
+				textFileDetail = fileDetail.getStringValue();
+
+				if (textFileDetail.equals(TextFileDetail.CSV.toString()) || textFileDetail.equals(TextFileDetail.FIXED_LENGTH.toString())) {
+					textFileSeparator = fileDetail.getSeparator();
+				} else if (textFileDetail.equals(TextFileDetail.XML.toString()) && fileDetail.getXmlAccessType() != null) {
+					useXmlAccessType = true;
+					xmlAccessType = fileDetail.getXmlAccessType() + "";
+				}
+			} else if (fileAdapterType.equals(AdapterType.BINARY_FILE_PROCESS.toString())) {
+				BinaryFileDetail fileDetail = fileProperties.getFileTypeDetail().getBinaryFileDetail();
+				binaryFileDetail = fileDetail.getStringValue();
+
+				if (binaryFileDetail.equals(BinaryFileDetail.COMPRESSED.toString())) {
+					compressProgramPath = fileDetail.getPath();
+					compressProgramFileName = fileDetail.getFileName();
+
+					if (fileDetail.getPassword() != null && !fileDetail.getPassword().equals("")) {
+						compressPassword = fileDetail.getPassword();
+						confirmCompressPassword = fileDetail.getPassword();
+					}
+				}
+			}
+
+			gelGec = fileProperties.getGelGec();
+			recursive = fileProperties.getRecursive();
+
+			if (fileProperties.getFileSize() != null) {
+				useMaxFileSize = true;
+				maxFileSize = fileProperties.getFileSize().toString();
+			}
+
+			if (fileProperties.getMinimumAge() != null) {
+				useMinAge = true;
+				minAge = fileProperties.getMinimumAge().toString();
+			}
+
+			fileModificationTime = fileProperties.getFileModificationTime().toString();
+
+			if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
+				modificationTimeFormat = fileProperties.getModificationTimeFormat();
+			}
+
+			// file name and directory
+			FilenameAndDirectory filenameAndDirectory = fileProcessProperties.getFilenameAndDirectory();
+
+			if (!fileOperationType.equals(OperationType.WRITE_FILE.toString())) {
+				sourceDirectory = filenameAndDirectory.getSourceDirectory().getPath();
+
+				if (filenameAndDirectory.getSourceFileName() != null) {
+					sourceFileNameType = FULLTEXT;
+					sourceFileName = filenameAndDirectory.getSourceFileName().getFilename();
+
+				} else if (filenameAndDirectory.getExcludeFiles() != null) {
+					sourceFileNameType = REGEX_WITH_EXCLUDE;
+					excludeFiles = filenameAndDirectory.getExcludeFiles();
+					includeFiles = filenameAndDirectory.getIncludeFiles();
+
+				} else if (filenameAndDirectory.getIncludeFiles() != null) {
+					sourceFileNameType = REGEX;
+					includeFiles = filenameAndDirectory.getIncludeFiles();
+
+				} else if (filenameAndDirectory.getExcludeWildcard() != null) {
+					sourceFileNameType = WILDCARD_WITH_EXCLUDE;
+					excludeWildcard = filenameAndDirectory.getExcludeWildcard();
+					includeWildcard = filenameAndDirectory.getIncludeWildcard();
+
+				} else if (filenameAndDirectory.getIncludeWildcard() != null) {
+					sourceFileNameType = WILDCARD;
+					includeWildcard = filenameAndDirectory.getIncludeWildcard();
+				}
+			} else {
+				targetDirectory = filenameAndDirectory.getTargetDirectory().getPath();
+				targetFileName = filenameAndDirectory.getTargetFileName().getFilename();
+			}
+
+			// filterProperties
+			if (fileProcessProperties.getFilterProperties() != null && fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString()) && (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.WRITE_FILE.toString()))) {
+
+				FilterProperties filterProperties = fileProcessProperties.getFilterProperties();
+
+				if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
+					useFilter = true;
+
+					if (filterProperties.getLineNumber() != null) {
+						plainTextFilterType = LINE_NUMBER;
+						lineNumber = filterProperties.getLineNumber().getNumber() + "";
+						filterFrom = filterProperties.getLineNumber().getFrom().toString();
+					} else if (filterProperties.getStringSearch() != null) {
+						plainTextFilterType = STRING_SEARCH;
+						stringSearchValue = filterProperties.getStringSearch().getValue();
+						stringSearchOccurance = filterProperties.getStringSearch().getOccurance() + "";
+					} else if (filterProperties.getRegex() != null && !filterProperties.getRegex().equals("")) {
+						plainTextFilterType = REGEX;
+						regexForFileFilter = filterProperties.getRegex();
+					}
+
+				} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+					useFilter = true;
+					xpathforFileFilter = filterProperties.getXPath();
+				} else {
+					useFilter = false;
+				}
+			}
+
+			// archive properties
+			ArchiveProperties archiveProperties = fileProcessProperties.getArchiveProperties();
+			useArchive = archiveProperties.getArchive();
+
+			if (useArchive) {
+				archiveDirectory = archiveProperties.getArchiveDirectory().getPath();
+				fileNamingConvention = archiveProperties.getFileNamingConvention();
+			}
+		}
 	}
-
-	/*
-	 * private void fillFTPProperties() { JobTypeDetails jobTypeDetails =
-	 * getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
-	 * 
-	 * if (jobTypeDetails.getSpecialParameters() != null &&
-	 * jobTypeDetails.getSpecialParameters().getFtpAdapterProperties() != null)
-	 * { ftpProperties =
-	 * jobTypeDetails.getSpecialParameters().getFtpAdapterProperties();
-	 * 
-	 * adapterType = ftpProperties.getAdapterType().toString();
-	 * 
-	 * // operation Operation operation = ftpProperties.getOperation();
-	 * operationType = operation.getOperationType().toString();
-	 * processedFilesOperationType =
-	 * operation.getProcessedFilesOperationType().toString();
-	 * 
-	 * if (operation.getPreOperation() != null &&
-	 * operation.getPreOperation().getCompress() != null) { compress = true;
-	 * 
-	 * Compress compress = operation.getPreOperation().getCompress();
-	 * compressProgramPath = compress.getPath(); compressProgramFileName =
-	 * compress.getFilename(); }
-	 * 
-	 * if (operation.getPostOperation() != null &&
-	 * operation.getPostOperation().getDecompress() != null) { decompress =
-	 * true;
-	 * 
-	 * Decompress decompress = operation.getPostOperation().getDecompress();
-	 * decompressProgramPath = decompress.getPath(); decompressProgramFileName =
-	 * decompress.getFilename(); }
-	 * 
-	 * if (operation.getCompressedFilePassword() != null) { compressPassword =
-	 * operation.getCompressedFilePassword().getUserPassword();
-	 * confirmCompressPassword = compressPassword; }
-	 * 
-	 * // file properties FileProperties fileProperties =
-	 * ftpProperties.getFileProperties();
-	 * 
-	 * fileType = fileProperties.getFileType().toString(); gelGec =
-	 * fileProperties.getGelGec(); recursive = fileProperties.getRecursive();
-	 * 
-	 * if (!operationType.equals(OperationType.LIST_FILES.toString())) { if
-	 * (fileProperties.getFileSize() != null) { useMaxFileSize = true;
-	 * maxFileSize = fileProperties.getFileSize().toString(); }
-	 * 
-	 * if (fileProperties.getMinimumAge() != null) { useMinAge = true; minAge =
-	 * fileProperties.getMinimumAge().toString(); }
-	 * 
-	 * fileModificationTime =
-	 * fileProperties.getFileModificationTime().toString(); if
-	 * (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
-	 * modificationTimeFormat = fileProperties.getModificationTimeFormat(); } }
-	 * 
-	 * // file name and directory FilenameAndDirectory filenameAndDirectory =
-	 * ftpProperties.getFilenameAndDirectory(); sourceDirectory =
-	 * filenameAndDirectory.getSourceDirectory().getPath();
-	 * 
-	 * if (filenameAndDirectory.getSourceFileName() != null) {
-	 * sourceFileNameType = FULLTEXT; sourceFileName =
-	 * filenameAndDirectory.getSourceFileName().getFilename();
-	 * 
-	 * } else if (filenameAndDirectory.getExcludeFiles() != null) {
-	 * sourceFileNameType = REGEX_WITH_EXCLUDE; excludeFiles =
-	 * filenameAndDirectory.getExcludeFiles(); includeFiles =
-	 * filenameAndDirectory.getIncludeFiles();
-	 * 
-	 * } else if (filenameAndDirectory.getIncludeFiles() != null) {
-	 * sourceFileNameType = REGEX; includeFiles =
-	 * filenameAndDirectory.getIncludeFiles();
-	 * 
-	 * } else if (filenameAndDirectory.getExcludeWildcard() != null) {
-	 * sourceFileNameType = WILDCARD_WITH_EXCLUDE; excludeWildcard =
-	 * filenameAndDirectory.getExcludeWildcard(); includeWildcard =
-	 * filenameAndDirectory.getIncludeWildcard();
-	 * 
-	 * } else if (filenameAndDirectory.getIncludeWildcard() != null) {
-	 * sourceFileNameType = WILDCARD; includeWildcard =
-	 * filenameAndDirectory.getIncludeWildcard(); }
-	 * 
-	 * if (!operationType.equals(OperationType.LIST_FILES.toString())) {
-	 * sourceIsRemote = filenameAndDirectory.getSourceIsRemote(); targetIsRemote
-	 * = filenameAndDirectory.getTargetIsRemote();
-	 * 
-	 * targetDirectory = filenameAndDirectory.getTargetDirectory().getPath();
-	 * targetFileName = filenameAndDirectory.getTargetFileName().getFilename();
-	 * }
-	 * 
-	 * // archive properties ArchiveProperties archiveProperties =
-	 * ftpProperties.getArchiveProperties(); useArchive =
-	 * archiveProperties.getArchive();
-	 * 
-	 * if (useArchive) { archiveDirectory =
-	 * archiveProperties.getArchiveDirectory().getPath(); fileNamingConvention =
-	 * archiveProperties.getFileNamingConvention(); } } }
-	 */
 
 	public void insertJobAction(ActionEvent e) {
 		fillJobProperties();
@@ -680,22 +750,6 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 	public void setUseMinAge(boolean useMinAge) {
 		this.useMinAge = useMinAge;
-	}
-
-	public boolean isSourceIsRemote() {
-		return sourceIsRemote;
-	}
-
-	public void setSourceIsRemote(boolean sourceIsRemote) {
-		this.sourceIsRemote = sourceIsRemote;
-	}
-
-	public boolean isTargetIsRemote() {
-		return targetIsRemote;
-	}
-
-	public void setTargetIsRemote(boolean targetIsRemote) {
-		this.targetIsRemote = targetIsRemote;
 	}
 
 	public boolean isUseArchive() {
