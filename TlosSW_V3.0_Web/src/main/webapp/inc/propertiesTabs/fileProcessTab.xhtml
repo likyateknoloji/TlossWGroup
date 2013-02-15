@@ -14,34 +14,41 @@
 				<p:panelGrid id="ftpJobInfos" columns="2">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
-					<p:selectOneMenu value="#{backingBean.fileAdapterType}">
+					<p:selectOneMenu value="#{backingBean.fileAdapterType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.adapterType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
 						<f:selectItems value="#{backingBean.fileAdapterTypeList}" />
 						<p:ajax
-							update="ftpJobInfos :jobDefinitionForm:tabView:ftpOperations :jobDefinitionForm:tabView:textFileProcess :jobDefinitionForm:tabView:filter"></p:ajax>
+							update="ftpJobInfos :jobDefinitionForm:tabView:operations :jobDefinitionForm:tabView:textFileProcess :jobDefinitionForm:tabView:filter"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.textFileDetailOptions']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}" />
 					<p:selectOneMenu value="#{backingBean.textFileDetail}"
-						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}">
+						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.textFileType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
 						<f:selectItems value="#{backingBean.textFileDetailOptions}" />
 						<p:ajax
-							update=":jobDefinitionForm:tabView:ftpOperations :jobDefinitionForm:tabView:textFileProcess :jobDefinitionForm:tabView:filter"></p:ajax>
+							update=":jobDefinitionForm:tabView:operations :jobDefinitionForm:tabView:textFileProcess :jobDefinitionForm:tabView:filter"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.binaryFileDetailOptions']}"
 						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}" />
 					<p:selectOneMenu value="#{backingBean.binaryFileDetail}"
-						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}">
+						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.binaryFileType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
 						<f:selectItems value="#{backingBean.binaryFileDetailOptions}" />
+						<p:ajax update=":jobDefinitionForm:tabView:binaryFileProcess"></p:ajax>
 					</p:selectOneMenu>
 				</p:panelGrid>
 
@@ -50,7 +57,7 @@
 					value="#{msgs['tlos.workspace.pannel.job.operations']}" />
 				<p:separator />
 
-				<p:panelGrid id="ftpOperations" columns="2">
+				<p:panelGrid id="operations" columns="2">
 					<h:outputText
 						rendered="#{backingBean.fileAdapterType ne '' and backingBean.fileAdapterType ne null}"
 						value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
@@ -62,7 +69,7 @@
 							itemValue="" />
 						<f:selectItems value="#{backingBean.textFileOperationTypeList}" />
 						<p:ajax
-							update="ftpOperations :jobDefinitionForm:tabView:maxFileSize :jobDefinitionForm:tabView:minAge :jobDefinitionForm:tabView:fileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName :jobDefinitionForm:tabView:filter"></p:ajax>
+							update="operations :jobDefinitionForm:tabView:maxFileSize :jobDefinitionForm:tabView:minAge :jobDefinitionForm:tabView:fileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName :jobDefinitionForm:tabView:filter"></p:ajax>
 					</p:selectOneMenu>
 					<p:selectOneMenu value="#{backingBean.fileOperationType}"
 						required="true"
@@ -72,7 +79,7 @@
 							itemValue="" />
 						<f:selectItems value="#{backingBean.binaryFileOperationTypeList}" />
 						<p:ajax
-							update="ftpOperations :jobDefinitionForm:tabView:maxFileSize :jobDefinitionForm:tabView:minAge :jobDefinitionForm:tabView:fileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName"></p:ajax>
+							update="operations :jobDefinitionForm:tabView:maxFileSize :jobDefinitionForm:tabView:minAge :jobDefinitionForm:tabView:fileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName :jobDefinitionForm:tabView:binaryFileProcess"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
@@ -87,7 +94,8 @@
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.xpath']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}" />
-					<p:inputText value="#{backingBean.xPath}"
+					<p:inputText value="#{backingBean.xPath}" required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.xpath']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
@@ -96,6 +104,8 @@
 						value="#{msgs['tlos.workspace.pannel.job.xmlNodeUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}" />
 					<p:selectOneMenu value="#{backingBean.xmlNodeUsage}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.xmlNodeUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -105,12 +115,13 @@
 						<f:selectItem
 							itemLabel="#{msgs['tlos.workspace.pannel.job.defineNow']}"
 							itemValue="#{msgs['tlos.workspace.pannel.job.defineNow']}" />
-						<p:ajax update="ftpOperations"></p:ajax>
+						<p:ajax update="operations"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.xmlNode']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML' and backingBean.xmlNodeUsage eq msgs['tlos.workspace.pannel.job.defineNow']}" />
-					<p:inputTextarea value="#{backingBean.nodeValue}"
+					<p:inputTextarea value="#{backingBean.nodeValue}" required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.xmlNode']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML' and backingBean.xmlNodeUsage eq msgs['tlos.workspace.pannel.job.defineNow']}" />
 
 
@@ -118,6 +129,9 @@
 						value="#{msgs['tlos.workspace.pannel.job.startLineNumber']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}" />
 					<p:inputText value="#{backingBean.startLineNumber}"
+						label="#{msgs['tlos.workspace.pannel.job.startLineNumber']}"
+						required="true" type="integer"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.startLineNumber']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
@@ -126,6 +140,9 @@
 						value="#{msgs['tlos.workspace.pannel.job.endLineNumber']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}" />
 					<p:inputText value="#{backingBean.endLineNumber}"
+						label="#{msgs['tlos.workspace.pannel.job.endLineNumber']}"
+						required="true" type="integer"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.endLineNumber']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
@@ -134,6 +151,8 @@
 						value="#{msgs['tlos.workspace.pannel.job.plainTextUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}" />
 					<p:selectOneMenu value="#{backingBean.plainTextUsage}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.plainTextUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text'}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -143,15 +162,15 @@
 						<f:selectItem
 							itemLabel="#{msgs['tlos.workspace.pannel.job.defineNow']}"
 							itemValue="#{msgs['tlos.workspace.pannel.job.defineNow']}" />
-						<p:ajax update="ftpOperations"></p:ajax>
+						<p:ajax update="operations"></p:ajax>
 					</p:selectOneMenu>
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.plainTextValue']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextUsage eq msgs['tlos.workspace.pannel.job.defineNow']}" />
 					<p:inputTextarea autoResize="false"
-						value="#{backingBean.plainTextValue}"
+						value="#{backingBean.plainTextValue}" required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.plainTextValue']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextUsage eq msgs['tlos.workspace.pannel.job.defineNow']}" />
-
 				</p:panelGrid>
 				<br />
 
@@ -170,6 +189,8 @@
 						value="#{msgs['tlos.workspace.pannel.job.textFileSeparator']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.textFileDetail eq 'CSV' or backingBean.textFileDetail eq 'Fixed Length')}" />
 					<p:inputText value="#{backingBean.textFileSeparator}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.textFileSeparator']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.textFileDetail eq 'CSV' or backingBean.textFileDetail eq 'Fixed Length')}" />
 
 					<h:outputText
@@ -186,11 +207,65 @@
 					<p:selectOneMenu
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and backingBean.textFileDetail eq 'XML' and backingBean.useXmlAccessType}"
 						value="#{backingBean.xmlAccessType}">
-						<f:selectItem itemLabel="DOM" itemValue="DOM" />
-						<f:selectItem itemLabel="SAX" itemValue="SAX" />
-						<f:selectItem itemLabel="Object" itemValue="Object" />
+						<f:selectItem itemLabel="DOM" itemValue="1" />
+						<f:selectItem itemLabel="SAX" itemValue="2" />
+						<f:selectItem itemLabel="Object" itemValue="3" />
 					</p:selectOneMenu>
 				</p:panelGrid>
+
+				<p:panelGrid id="binaryFileProcess" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressProgramPath']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or fileOperationType.operationType eq 'Write File')}" />
+					<p:inputText value="#{backingBean.compressProgramPath}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or fileOperationType.operationType eq 'Write File')}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramPath']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramPath.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressProgramFileName']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}" />
+					<p:inputText value="#{backingBean.compressProgramFileName}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.compressProgramFile']}"
+						validatorMessage="#{msgs['tlos.validation.ftp.compressProgramFile.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}" />
+					<p:password id="password" value="#{backingBean.compressPassword}"
+						label="#{msgs['tlos.workspace.pannel.job.compressPassword']}"
+						feedback="false" required="true" redisplay="true"
+						match="repeatPassword"
+						requiredMessage="#{msgs['tlos.validation.db.password']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:password>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}" />
+					<p:password id="repeatPassword"
+						value="#{backingBean.confirmCompressPassword}"
+						label="#{msgs['tlos.workspace.pannel.job.confirmCompressPassword']}"
+						feedback="false" required="true" redisplay="true"
+						requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}"
+						rendered="#{backingBean.binaryFileDetail eq 'Compressed' and (backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File')}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:password>
+				</p:panelGrid>
+
+				<br />
 
 				<p:panelGrid id="fileProperties" columns="4">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gelGec']}" />
@@ -391,12 +466,16 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.xpath']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'XML'}" />
 					<p:inputText value="#{backingBean.xpathforFileFilter}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.xpathForFilter']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'XML'}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.plainTextFilterType']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text'}" />
 					<p:selectOneMenu value="#{backingBean.plainTextFilterType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.plainTextFilterType']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text'}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -416,6 +495,9 @@
 						value="#{msgs['tlos.workspace.pannel.job.lineNumber']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'lineNumber'}" />
 					<p:inputText value="#{backingBean.lineNumber}"
+						label="#{msgs['tlos.workspace.pannel.job.lineNumber']}"
+						type="integer" required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.lineNumber']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'lineNumber'}" />
 
 					<h:outputText
@@ -423,25 +505,36 @@
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'lineNumber'}" />
 					<p:selectOneMenu value="#{backingBean.filterFrom}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'lineNumber'}">
-						<f:selectItem itemLabel="Start" itemValue="Start" />
-						<f:selectItem itemLabel="End" itemValue="End" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.filterFromStart']}"
+							itemValue="#{msgs['tlos.workspace.pannel.job.filterFromStart']}" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.filterFromEnd']}"
+							itemValue="#{msgs['tlos.workspace.pannel.job.filterFromEnd']}" />
 					</p:selectOneMenu>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.pn.findValue']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'stringSearch'}" />
 					<p:inputText value="#{backingBean.stringSearchValue}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.strSearchValue']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'stringSearch'}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.occurance']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'stringSearch'}" />
 					<p:inputText value="#{backingBean.stringSearchOccurance}"
+						label="#{msgs['tlos.workspace.pannel.job.occurance']}"
+						type="integer" required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.occurance']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'stringSearch'}" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.regex']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'regex'}" />
 					<p:inputText value="#{backingBean.regexForFileFilter}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileProcess.regex']}"
 						rendered="#{backingBean.useFilter and backingBean.textFileDetail eq 'Plain Text' and backingBean.plainTextFilterType eq 'regex'}" />
 				</p:panelGrid>
 
