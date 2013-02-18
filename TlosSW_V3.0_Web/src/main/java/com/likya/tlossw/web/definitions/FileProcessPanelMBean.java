@@ -260,8 +260,7 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 					endLineNumber = plainTextFilesOperation.getEndLineNumber() + "";
 
 					if (plainTextFilesOperation.getValue() != null && !plainTextFilesOperation.getValue().equals("")) {
-						// plainTextUsage =
-						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						plainTextUsage = resolveMessage("tlos.workspace.pannel.job.defineNow");
 						plainTextValue = plainTextFilesOperation.getValue();
 					}
 
@@ -270,8 +269,7 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 					xPath = xmlFilesOperation.getXPath();
 
 					if (xmlFilesOperation.getNodeValue() != null && !xmlFilesOperation.getNodeValue().equals("")) {
-						// xmlNodeUsage =
-						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						xmlNodeUsage = resolveMessage("tlos.workspace.pannel.job.defineNow");
 						nodeValue = xmlFilesOperation.getNodeValue();
 					}
 				}
@@ -446,11 +444,9 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 				plainTextFilesOperation.setStartLineNumber(new BigInteger(startLineNumber));
 				plainTextFilesOperation.setEndLineNumber(new BigInteger(endLineNumber));
 
-				// if
-				// (plainTextUsage.equals(ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow")))
-				// {
-				// plainTextFilesOperation.setValue(plainTextValue);
-				// }
+				if (plainTextUsage.equals(resolveMessage("tlos.workspace.pannel.job.defineNow"))) {
+					plainTextFilesOperation.setValue(plainTextValue);
+				}
 
 				FileContentOperation fileContentOperation = FileContentOperation.Factory.newInstance();
 				fileContentOperation.setPlainTextFilesOperation(plainTextFilesOperation);
@@ -460,11 +456,9 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 				XmlFilesOperation xmlFilesOperation = XmlFilesOperation.Factory.newInstance();
 				xmlFilesOperation.setXPath(xPath);
 
-				// if
-				// (xmlNodeUsage.equals(ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow")))
-				// {
-				// xmlFilesOperation.setNodeValue(nodeValue);
-				// }
+				if (xmlNodeUsage.equals(resolveMessage("tlos.workspace.pannel.job.defineNow"))) {
+					xmlFilesOperation.setNodeValue(nodeValue);
+				}
 
 				FileContentOperation fileContentOperation = FileContentOperation.Factory.newInstance();
 				fileContentOperation.setXmlFilesOperation(xmlFilesOperation);
