@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -12,20 +13,33 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.fileadapter.AdapterTypeDocument.AdapterType;
+import com.likya.tlos.model.xmlbeans.fileadapter.ArchiveDirectoryDocument.ArchiveDirectory;
 import com.likya.tlos.model.xmlbeans.fileadapter.ArchivePropertiesDocument.ArchiveProperties;
 import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailDocument.BinaryFileDetail;
+import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
+import com.likya.tlos.model.xmlbeans.fileadapter.FileContentOperationDocument.FileContentOperation;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileModificationTimeDocument.FileModificationTime;
 import com.likya.tlos.model.xmlbeans.fileadapter.FilePropertiesDocument.FileProperties;
+import com.likya.tlos.model.xmlbeans.fileadapter.FileTypeDetailDocument.FileTypeDetail;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileTypeDocument.FileType;
 import com.likya.tlos.model.xmlbeans.fileadapter.FilenameAndDirectoryDocument.FilenameAndDirectory;
 import com.likya.tlos.model.xmlbeans.fileadapter.FilterPropertiesDocument.FilterProperties;
+import com.likya.tlos.model.xmlbeans.fileadapter.FromDocument.From;
+import com.likya.tlos.model.xmlbeans.fileadapter.LineNumberDocument.LineNumber;
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationDocument.Operation;
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.fileadapter.PlainTextFilesOperationDocument.PlainTextFilesOperation;
 import com.likya.tlos.model.xmlbeans.fileadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
+import com.likya.tlos.model.xmlbeans.fileadapter.SourceDirectoryDocument.SourceDirectory;
+import com.likya.tlos.model.xmlbeans.fileadapter.SourceFileNameDocument.SourceFileName;
+import com.likya.tlos.model.xmlbeans.fileadapter.StringSearchDocument.StringSearch;
+import com.likya.tlos.model.xmlbeans.fileadapter.TargetDirectoryDocument.TargetDirectory;
+import com.likya.tlos.model.xmlbeans.fileadapter.TargetFileNameDocument.TargetFileName;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailDocument.TextFileDetail;
+import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.XmlFilesOperationDocument.XmlFilesOperation;
 import com.likya.tlossw.web.utils.WebJobDefUtils;
 
@@ -180,40 +194,6 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 			fileAdapterType = fileProcessProperties.getAdapterType().toString();
 
-			// operation
-			Operation operation = fileProcessProperties.getOperation();
-			fileOperationType = operation.getOperationType().toString();
-
-			if (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.LIST_FILES.toString())) {
-				processedFilesOperationType = operation.getProcessedFilesOperationType().toString();
-			}
-
-			if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())
-					&& (fileOperationType.equals(OperationType.UPDATE_RECORD.toString()) || fileOperationType.equals(OperationType.INSERT_RECORD.toString()) || fileOperationType.equals(OperationType.DELETE_RECORD.toString()))) {
-
-				if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
-					PlainTextFilesOperation plainTextFilesOperation = operation.getFileContentOperation().getPlainTextFilesOperation();
-					startLineNumber = plainTextFilesOperation.getStartLineNumber() + "";
-					endLineNumber = plainTextFilesOperation.getEndLineNumber() + "";
-
-					if (plainTextFilesOperation.getValue() != null && !plainTextFilesOperation.getValue().equals("")) {
-						// plainTextUsage =
-						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
-						plainTextValue = plainTextFilesOperation.getValue();
-					}
-
-				} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
-					XmlFilesOperation xmlFilesOperation = operation.getFileContentOperation().getXmlFilesOperation();
-					xPath = xmlFilesOperation.getXPath();
-
-					if (xmlFilesOperation.getNodeValue() != null && !xmlFilesOperation.getNodeValue().equals("")) {
-						// xmlNodeUsage =
-						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
-						nodeValue = xmlFilesOperation.getNodeValue();
-					}
-				}
-			}
-
 			// fileProperties
 			FileProperties fileProperties = fileProcessProperties.getFileProperties();
 
@@ -255,10 +235,46 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 				minAge = fileProperties.getMinimumAge().toString();
 			}
 
-			fileModificationTime = fileProperties.getFileModificationTime().toString();
+			if (fileProperties.getFileModificationTime() != null) {
+				fileModificationTime = fileProperties.getFileModificationTime().toString();
 
-			if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
-				modificationTimeFormat = fileProperties.getModificationTimeFormat();
+				if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
+					modificationTimeFormat = fileProperties.getModificationTimeFormat();
+				}
+			}
+
+			// operation
+			Operation operation = fileProcessProperties.getOperation();
+			fileOperationType = operation.getOperationType().toString();
+
+			if (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.LIST_FILES.toString())) {
+				processedFilesOperationType = operation.getProcessedFilesOperationType().toString();
+			}
+
+			if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())
+					&& (fileOperationType.equals(OperationType.UPDATE_RECORD.toString()) || fileOperationType.equals(OperationType.INSERT_RECORD.toString()) || fileOperationType.equals(OperationType.DELETE_RECORD.toString()))) {
+
+				if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
+					PlainTextFilesOperation plainTextFilesOperation = operation.getFileContentOperation().getPlainTextFilesOperation();
+					startLineNumber = plainTextFilesOperation.getStartLineNumber() + "";
+					endLineNumber = plainTextFilesOperation.getEndLineNumber() + "";
+
+					if (plainTextFilesOperation.getValue() != null && !plainTextFilesOperation.getValue().equals("")) {
+						// plainTextUsage =
+						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						plainTextValue = plainTextFilesOperation.getValue();
+					}
+
+				} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+					XmlFilesOperation xmlFilesOperation = operation.getFileContentOperation().getXmlFilesOperation();
+					xPath = xmlFilesOperation.getXPath();
+
+					if (xmlFilesOperation.getNodeValue() != null && !xmlFilesOperation.getNodeValue().equals("")) {
+						// xmlNodeUsage =
+						// ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow").toString();
+						nodeValue = xmlFilesOperation.getNodeValue();
+					}
+				}
 			}
 
 			// file name and directory
@@ -342,131 +358,215 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	}
 
 	private void fillFileProcessPropertyDetails() {
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		SpecialParameters specialParameters;
 
+		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin
+		// bu kontrol yapiliyor
+		if (jobTypeDetails.getSpecialParameters() == null) {
+			specialParameters = SpecialParameters.Factory.newInstance();
+		} else {
+			specialParameters = jobTypeDetails.getSpecialParameters();
+		}
+
+		fileProcessProperties.setAdapterType(AdapterType.Enum.forString(fileAdapterType));
+
+		// fileProperties alanlari
+		FileProperties fileProperties = FileProperties.Factory.newInstance();
+		FileTypeDetail fileTypeDetail = FileTypeDetail.Factory.newInstance();
+
+		if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())) {
+			TextFileDetail fileDetail = TextFileDetail.Factory.newInstance();
+			fileDetail.set(TextFileDetailOptions.Enum.forString(textFileDetail));
+
+			if (textFileDetail.equals(TextFileDetail.CSV.toString()) || textFileDetail.equals(TextFileDetail.FIXED_LENGTH.toString())) {
+				fileDetail.setSeparator(textFileSeparator);
+			} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+				if (useXmlAccessType) {
+					fileDetail.setXmlAccessType(new BigInteger(xmlAccessType));
+				}
+			}
+
+			fileTypeDetail.setTextFileDetail(fileDetail);
+
+			fileProperties.setFileType(FileType.ASCII);
+
+		} else if (fileAdapterType.equals(AdapterType.BINARY_FILE_PROCESS.toString())) {
+			BinaryFileDetail fileDetail = BinaryFileDetail.Factory.newInstance();
+			fileDetail.set(BinaryFileDetailOptions.Enum.forString(binaryFileDetail));
+
+			if (binaryFileDetail.equals(BinaryFileDetail.COMPRESSED.toString())) {
+				fileDetail.setPath(compressProgramPath);
+				fileDetail.setFileName(compressProgramFileName);
+
+				if (compressPassword != null && !compressPassword.equals("")) {
+					fileDetail.setPassword(compressPassword);
+				}
+			}
+
+			fileTypeDetail.setBinaryFileDetail(fileDetail);
+
+			fileProperties.setFileType(FileType.BINARY);
+		}
+		fileProperties.setFileTypeDetail(fileTypeDetail);
+
+		fileProperties.setGelGec(gelGec);
+		fileProperties.setRecursive(recursive);
+
+		if (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.WRITE_FILE.toString())) {
+			if (useMaxFileSize) {
+				fileProperties.setFileSize(new BigInteger(maxFileSize));
+			}
+
+			if (useMinAge) {
+				fileProperties.setMinimumAge(new BigInteger(minAge));
+			}
+
+			fileProperties.setFileModificationTime(FileModificationTime.Enum.forString(fileModificationTime));
+			if (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
+				fileProperties.setModificationTimeFormat(modificationTimeFormat);
+			}
+		}
+
+		fileProcessProperties.setFileProperties(fileProperties);
+
+		// operation
+		Operation operation = Operation.Factory.newInstance();
+		operation.setOperationType(OperationType.Enum.forString(fileOperationType));
+
+		if (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.LIST_FILES.toString())) {
+			operation.setProcessedFilesOperationType(ProcessedFilesOperationType.Enum.forString(processedFilesOperationType));
+		}
+
+		if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString())
+				&& (fileOperationType.equals(OperationType.UPDATE_RECORD.toString()) || fileOperationType.equals(OperationType.INSERT_RECORD.toString()) || fileOperationType.equals(OperationType.DELETE_RECORD.toString()))) {
+
+			if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
+				PlainTextFilesOperation plainTextFilesOperation = PlainTextFilesOperation.Factory.newInstance();
+				plainTextFilesOperation.setStartLineNumber(new BigInteger(startLineNumber));
+				plainTextFilesOperation.setEndLineNumber(new BigInteger(endLineNumber));
+
+				// if
+				// (plainTextUsage.equals(ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow")))
+				// {
+				// plainTextFilesOperation.setValue(plainTextValue);
+				// }
+
+				FileContentOperation fileContentOperation = FileContentOperation.Factory.newInstance();
+				fileContentOperation.setPlainTextFilesOperation(plainTextFilesOperation);
+				operation.setFileContentOperation(fileContentOperation);
+
+			} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+				XmlFilesOperation xmlFilesOperation = XmlFilesOperation.Factory.newInstance();
+				xmlFilesOperation.setXPath(xPath);
+
+				// if
+				// (xmlNodeUsage.equals(ManagerMediator.getMessageBundle().getObject("tlos.workspace.pannel.job.defineNow")))
+				// {
+				// xmlFilesOperation.setNodeValue(nodeValue);
+				// }
+
+				FileContentOperation fileContentOperation = FileContentOperation.Factory.newInstance();
+				fileContentOperation.setXmlFilesOperation(xmlFilesOperation);
+				operation.setFileContentOperation(fileContentOperation);
+			}
+		}
+
+		fileProcessProperties.setOperation(operation);
+
+		// file name and directory
+		FilenameAndDirectory filenameAndDirectory = FilenameAndDirectory.Factory.newInstance();
+
+		if (!fileOperationType.equals(OperationType.WRITE_FILE.toString())) {
+			SourceDirectory sourceDir = SourceDirectory.Factory.newInstance();
+			sourceDir.setPath(sourceDirectory);
+			filenameAndDirectory.setSourceDirectory(sourceDir);
+
+			if (sourceFileNameType.equals(FULLTEXT)) {
+				SourceFileName sourceFile = SourceFileName.Factory.newInstance();
+				sourceFile.setFilename(sourceFileName);
+				filenameAndDirectory.setSourceFileName(sourceFile);
+
+			} else if (sourceFileNameType.equals(REGEX)) {
+				filenameAndDirectory.setIncludeFiles(includeFiles);
+
+			} else if (sourceFileNameType.equals(REGEX_WITH_EXCLUDE)) {
+				filenameAndDirectory.setIncludeFiles(includeFiles);
+				filenameAndDirectory.setExcludeFiles(excludeFiles);
+
+			} else if (sourceFileNameType.equals(WILDCARD)) {
+				filenameAndDirectory.setIncludeWildcard(includeWildcard);
+
+			} else if (sourceFileNameType.equals(WILDCARD_WITH_EXCLUDE)) {
+				filenameAndDirectory.setIncludeWildcard(includeWildcard);
+				filenameAndDirectory.setExcludeWildcard(excludeWildcard);
+			}
+		} else {
+			TargetDirectory targetDir = TargetDirectory.Factory.newInstance();
+			targetDir.setPath(targetDirectory);
+			filenameAndDirectory.setTargetDirectory(targetDir);
+
+			TargetFileName targetFile = TargetFileName.Factory.newInstance();
+			targetFile.setFilename(targetFileName);
+			filenameAndDirectory.setTargetFileName(targetFile);
+		}
+
+		fileProcessProperties.setFilenameAndDirectory(filenameAndDirectory);
+
+		// filterProperties
+		if (fileAdapterType.equals(AdapterType.TEXT_FILE_PROCESS.toString()) && (fileOperationType.equals(OperationType.READ_FILE.toString()) || fileOperationType.equals(OperationType.WRITE_FILE.toString()))) {
+
+			if (textFileDetail.equals(TextFileDetail.PLAIN_TEXT.toString())) {
+				if (useFilter) {
+					FilterProperties filterProperties = FilterProperties.Factory.newInstance();
+
+					if (plainTextFilterType.equals(LINE_NUMBER)) {
+						LineNumber lineNumberDef = LineNumber.Factory.newInstance();
+						lineNumberDef.setNumber(new BigInteger(lineNumber));
+						lineNumberDef.setFrom(From.Enum.forString(filterFrom));
+
+						filterProperties.setLineNumber(lineNumberDef);
+
+					} else if (plainTextFilterType.equals(STRING_SEARCH)) {
+						StringSearch stringSearch = StringSearch.Factory.newInstance();
+						stringSearch.setValue(stringSearchValue);
+						stringSearch.setOccurance(new BigInteger(stringSearchOccurance));
+
+						filterProperties.setStringSearch(stringSearch);
+
+					} else if (plainTextFilterType.equals(REGEX)) {
+						filterProperties.setRegex(regexForFileFilter);
+					}
+
+					fileProcessProperties.setFilterProperties(filterProperties);
+				}
+
+			} else if (textFileDetail.equals(TextFileDetail.XML.toString())) {
+				if (useFilter) {
+					FilterProperties filterProperties = FilterProperties.Factory.newInstance();
+					filterProperties.setXPath(xpathforFileFilter);
+
+					fileProcessProperties.setFilterProperties(filterProperties);
+				}
+			}
+		}
+
+		// archive properties
+		ArchiveProperties archiveProperties = ArchiveProperties.Factory.newInstance();
+		archiveProperties.setArchive(useArchive);
+
+		if (useArchive) {
+			ArchiveDirectory archiveDir = ArchiveDirectory.Factory.newInstance();
+			archiveDir.setPath(archiveDirectory);
+			archiveProperties.setArchiveDirectory(archiveDir);
+
+			archiveProperties.setFileNamingConvention(fileNamingConvention);
+		}
+		fileProcessProperties.setArchiveProperties(archiveProperties);
+
+		specialParameters.setFileAdapterProperties(fileProcessProperties);
+		jobTypeDetails.setSpecialParameters(specialParameters);
 	}
-
-	/*
-	 * private void fillFTPPropertyDetails() { JobTypeDetails jobTypeDetails =
-	 * getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
-	 * SpecialParameters specialParameters;
-	 * 
-	 * // periyodik job alanlari doldurulurken bu alan olusturuldugu icin bu //
-	 * kontrol yapiliyor if (jobTypeDetails.getSpecialParameters() == null) {
-	 * specialParameters = SpecialParameters.Factory.newInstance(); } else {
-	 * specialParameters = jobTypeDetails.getSpecialParameters(); }
-	 * 
-	 * ftpProperties.setAdapterType(AdapterType.Enum.forString(adapterType));
-	 * 
-	 * // operation Operation operation = Operation.Factory.newInstance();
-	 * operation.setOperationType(OperationType.Enum.forString(operationType));
-	 * operation
-	 * .setProcessedFilesOperationType(ProcessedFilesOperationType.Enum.
-	 * forString(processedFilesOperationType));
-	 * 
-	 * boolean passwordUsage = false;
-	 * 
-	 * if (compress) { Compress compress = Compress.Factory.newInstance();
-	 * compress.setPath(compressProgramPath);
-	 * compress.setFilename(compressProgramFileName);
-	 * 
-	 * PreOperation preOperation = PreOperation.Factory.newInstance();
-	 * preOperation.setCompress(compress);
-	 * 
-	 * operation.setPreOperation(preOperation);
-	 * 
-	 * passwordUsage = true; }
-	 * 
-	 * if (decompress) { Decompress decompress =
-	 * Decompress.Factory.newInstance();
-	 * decompress.setPath(getDecompressProgramPath());
-	 * decompress.setFilename(getDecompressProgramFileName());
-	 * 
-	 * PostOperation postOperation = PostOperation.Factory.newInstance();
-	 * postOperation.setDecompress(decompress);
-	 * 
-	 * operation.setPostOperation(postOperation);
-	 * 
-	 * passwordUsage = true; }
-	 * 
-	 * if (passwordUsage) { CompressedFilePassword compressedFilePassword =
-	 * CompressedFilePassword.Factory.newInstance();
-	 * compressedFilePassword.setUserPassword(compressPassword);
-	 * operation.setCompressedFilePassword(compressedFilePassword); }
-	 * 
-	 * ftpProperties.setOperation(operation);
-	 * 
-	 * // file properties FileProperties fileProperties =
-	 * FileProperties.Factory.newInstance();
-	 * fileProperties.setFileType(FileType.Enum.forString(fileType));
-	 * fileProperties.setGelGec(gelGec); fileProperties.setRecursive(recursive);
-	 * 
-	 * if (!operationType.equals(OperationType.LIST_FILES.toString())) {
-	 * 
-	 * if (useMaxFileSize) { fileProperties.setFileSize(new
-	 * BigInteger(maxFileSize)); }
-	 * 
-	 * if (useMinAge) { fileProperties.setMinimumAge(new BigInteger(minAge)); }
-	 * 
-	 * fileProperties.setFileModificationTime(FileModificationTime.Enum.forString
-	 * (fileModificationTime)); if
-	 * (!fileModificationTime.equals(FileModificationTime.NONE.toString())) {
-	 * fileProperties.setModificationTimeFormat(modificationTimeFormat); } }
-	 * ftpProperties.setFileProperties(fileProperties);
-	 * 
-	 * // file name and directory FilenameAndDirectory filenameAndDirectory =
-	 * FilenameAndDirectory.Factory.newInstance(); SourceDirectory sourceDir =
-	 * SourceDirectory.Factory.newInstance();
-	 * sourceDir.setPath(sourceDirectory);
-	 * filenameAndDirectory.setSourceDirectory(sourceDir);
-	 * 
-	 * if (sourceFileNameType.equals(FULLTEXT)) { SourceFileName sourceFile =
-	 * SourceFileName.Factory.newInstance();
-	 * sourceFile.setFilename(sourceFileName);
-	 * filenameAndDirectory.setSourceFileName(sourceFile);
-	 * 
-	 * } else if (sourceFileNameType.equals(REGEX)) {
-	 * filenameAndDirectory.setIncludeFiles(includeFiles);
-	 * 
-	 * } else if (sourceFileNameType.equals(REGEX_WITH_EXCLUDE)) {
-	 * filenameAndDirectory.setIncludeFiles(includeFiles);
-	 * filenameAndDirectory.setExcludeFiles(excludeFiles);
-	 * 
-	 * } else if (sourceFileNameType.equals(WILDCARD)) {
-	 * filenameAndDirectory.setIncludeWildcard(includeWildcard);
-	 * 
-	 * } else if (sourceFileNameType.equals(WILDCARD_WITH_EXCLUDE)) {
-	 * filenameAndDirectory.setIncludeWildcard(includeWildcard);
-	 * filenameAndDirectory.setExcludeWildcard(excludeWildcard); }
-	 * 
-	 * if (!operationType.equals(OperationType.LIST_FILES.toString())) {
-	 * filenameAndDirectory.setTargetIsRemote(targetIsRemote);
-	 * filenameAndDirectory.setSourceIsRemote(sourceIsRemote);
-	 * 
-	 * TargetDirectory targetDir = TargetDirectory.Factory.newInstance();
-	 * targetDir.setPath(targetDirectory);
-	 * filenameAndDirectory.setTargetDirectory(targetDir);
-	 * 
-	 * TargetFileName targetFile = TargetFileName.Factory.newInstance();
-	 * targetFile.setFilename(targetFileName);
-	 * filenameAndDirectory.setTargetFileName(targetFile); } else {
-	 * filenameAndDirectory.setSourceIsRemote(true); }
-	 * ftpProperties.setFilenameAndDirectory(filenameAndDirectory);
-	 * 
-	 * // archive properties ArchiveProperties archiveProperties =
-	 * ArchiveProperties.Factory.newInstance();
-	 * archiveProperties.setArchive(useArchive);
-	 * 
-	 * if (useArchive) { ArchiveDirectory archiveDir =
-	 * ArchiveDirectory.Factory.newInstance();
-	 * archiveDir.setPath(archiveDirectory);
-	 * archiveProperties.setArchiveDirectory(archiveDir);
-	 * 
-	 * archiveProperties.setFileNamingConvention(fileNamingConvention); }
-	 * ftpProperties.setArchiveProperties(archiveProperties);
-	 * 
-	 * specialParameters.setFtpAdapterProperties(ftpProperties);
-	 * jobTypeDetails.setSpecialParameters(specialParameters); }
-	 */
 
 	private void fillFileAdapterTypeList() {
 		if (fileAdapterTypeList == null) {
