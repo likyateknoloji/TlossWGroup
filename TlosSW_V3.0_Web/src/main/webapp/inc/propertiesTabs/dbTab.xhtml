@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="dbTab"
+			title="#{msgs['tlos.workspace.pannel.job.dbJobProperties']}">
+			<p:panel id="dbInfosPanel">
+				<p:panelGrid id="dbJobInfos" columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.dbDef']}" />
+					<p:selectOneMenu value="#{backingBean.selectedDbDefinition}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.dbDefinition.regex']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.dbDefinitionList}" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.dbJobType']}" />
+					<p:selectOneMenu value="#{backingBean.selectedDbJobType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.dbJobType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.dbJobTypeList}" />
+						<p:ajax update="dbJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlScriptFileName']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Script'}" />
+					<p:inputText value="#{backingBean.sqlScriptFileName}"
+						rendered="#{backingBean.selectedDbJobType eq 'Script'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.sqlScriptFileName']}"
+						validatorMessage="#{msgs['tlos.validation.db.sqlScriptFileName.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlScriptFilePath']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Script'}" />
+					<p:inputText value="#{backingBean.sqlScriptFilePath}"
+						rendered="#{backingBean.selectedDbJobType eq 'Script'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.sqlScriptFilePath']}"
+						validatorMessage="#{msgs['tlos.validation.db.sqlScriptFilePath.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlStoredProcedureName']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}" />
+					<p:inputText value="#{backingBean.sqlStoredProcedureName}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.StoredProcedureName']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlStoredProcedureSchemaName']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}" />
+					<p:inputText value="#{backingBean.sqlStoredProcedureSchemaName}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.SchemaName']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlStoredProcedurePackageName']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}" />
+					<p:inputText value="#{backingBean.sqlStoredProcedurePackageName}"
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.PackageName']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.sqlSentence']}"
+						rendered="#{backingBean.selectedDbJobType eq 'Free SQL'}" />
+					<p:inputTextarea value="#{backingBean.sqlSentence}"
+						rendered="#{backingBean.selectedDbJobType eq 'Free SQL'}"
+						autoResize="false" required="true"
+						requiredMessage="#{msgs['tlos.validation.db.sqlSentence']}" />
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
