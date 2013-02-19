@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="fileListenerTab"
+			title="#{msgs['tlos.workspace.pannel.job.fileListenerProperties']}">
+			<p:panel id="fileListenerInfosPanel">
+				<p:panelGrid id="listenerJobInfos" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.fileNameType']}" />
+					<p:selectOneMenu value="#{backingBean.fileNameType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileListener.fileNameType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.fullTextFileName']}"
+							itemValue="fullText" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileName']}"
+							itemValue="regex" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileNameWithExclude']}"
+							itemValue="regexWithExclude" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileName']}"
+							itemValue="wildcard" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileNameWithExclude']}"
+							itemValue="wildcardWithExclude" />
+						<p:ajax update="listenerJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.triggerFile']}"
+						rendered="#{backingBean.fileNameType eq 'fullText'}" />
+					<p:inputText value="#{backingBean.triggerFile}"
+						rendered="#{backingBean.fileNameType eq 'fullText'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileListener.fileName']}"
+						validatorMessage="#{msgs['tlos.validation.fileListener.fileName.regex']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.includeRegex']}"
+						rendered="#{backingBean.fileNameType eq 'regex' or backingBean.fileNameType eq 'regexWithExclude'}" />
+					<p:inputText value="#{backingBean.includeFiles}"
+						rendered="#{backingBean.fileNameType eq 'regex' or backingBean.fileNameType eq 'regexWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.includeFiles']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.excludeRegex']}"
+						rendered="#{backingBean.fileNameType eq 'regexWithExclude'}" />
+					<p:inputText value="#{backingBean.excludeFiles}"
+						rendered="#{backingBean.fileNameType eq 'regexWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.excludeFiles']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.includeWildcard']}"
+						rendered="#{backingBean.fileNameType eq 'wildcard' or backingBean.fileNameType eq 'wildcardWithExclude'}" />
+					<p:inputText value="#{backingBean.includeWildcard}"
+						rendered="#{backingBean.fileNameType eq 'wildcard' or backingBean.fileNameType eq 'wildcardWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.includeWildcard']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.excludeWildcard']}"
+						rendered="#{backingBean.fileNameType eq 'wildcardWithExclude'}" />
+					<p:inputText value="#{backingBean.excludeWildcard}"
+						rendered="#{backingBean.fileNameType eq 'wildcardWithExclude'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.ftp.excludeWildcard']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.triggerFileDirectory']}" />
+					<p:inputText value="#{backingBean.triggerFileDirectory}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileListener.fileDirectory']}"
+						validatorMessage="#{msgs['tlos.validation.fileListener.fileDirectory.regex']}">
+						<f:validateRegex
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+					</p:inputText>
+				</p:panelGrid>
+
+				<br />
+				<p:panelGrid id="listenerProperties" columns="4">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pollingType']}" />
+					<p:selectOneMenu value="#{backingBean.pollingType}">
+						<f:selectItems value="#{backingBean.pollingTypeList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pollingFrequency']}" />
+					<p:inputText value="#{backingBean.pollingFrequency}"
+						label="#{msgs['tlos.workspace.pannel.job.pollingFrequency']}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileListener.pollingFrequency']}"
+						type="integer" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.recursive']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.recursive}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.repetationNumber']}" />
+					<p:inputText value="#{backingBean.repetationNumber}"
+						label="#{msgs['tlos.workspace.pannel.job.repetationNumber']}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.fileListener.repetationNumber']}"
+						type="integer" />
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
