@@ -31,11 +31,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{ftpPanelMBean}")
 	private FTPPanelMBean ftpPanelMBean;
-	
+
 	@ManagedProperty(value = "#{fileProcessPanelMBean}")
 	private FileProcessPanelMBean fileProcessPanelMBean;
 
-	private String jobDefCenterPanel = BATCH_PROCESS_PAGE;
+	@ManagedProperty(value = "#{fileListenerPanelMBean}")
+	private FileListenerPanelMBean fileListenerPanelMBean;
+
+	private String jobDefCenterPanel = FILE_LISTENER_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
@@ -44,6 +47,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String WEB_SERVICE_PAGE = "/inc/definitionPanels/webServiceJobDef.xhtml";
 	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
 	public final static String FILE_PROCESS_PAGE = "/inc/definitionPanels/fileProcessJobDef.xhtml";
+	public final static String FILE_LISTENER_PAGE = "/inc/definitionPanels/fileListenerJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public String draggedTemplateName;
@@ -136,6 +140,15 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_FILE_LISTENER:
+			if (jobProperties != null) {
+				getFileListenerPanelMBean().setJobProperties(jobProperties);
+				getFileListenerPanelMBean().setJobInsertButton(true);
+				getFileListenerPanelMBean().fillTabs();
+
+				getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = FILE_LISTENER_PAGE;
 
 			break;
 
@@ -153,7 +166,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			}
 
 			jobDefCenterPanel = FILE_PROCESS_PAGE;
-			
+
 			break;
 
 		default:
@@ -173,10 +186,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
 			getFtpPanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getFtpPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-		
+
 		} else if (jobDefCenterPanel.equals(FILE_PROCESS_PAGE)) {
 			getFileProcessPanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getFileProcessPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+
+		} else if (jobDefCenterPanel.equals(FILE_LISTENER_PAGE)) {
+			getFileListenerPanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getFileListenerPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 		}
 	}
 
@@ -258,6 +275,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setFileProcessPanelMBean(FileProcessPanelMBean fileProcessPanelMBean) {
 		this.fileProcessPanelMBean = fileProcessPanelMBean;
+	}
+
+	public FileListenerPanelMBean getFileListenerPanelMBean() {
+		return fileListenerPanelMBean;
+	}
+
+	public void setFileListenerPanelMBean(FileListenerPanelMBean fileListenerPanelMBean) {
+		this.fileListenerPanelMBean = fileListenerPanelMBean;
 	}
 
 }
