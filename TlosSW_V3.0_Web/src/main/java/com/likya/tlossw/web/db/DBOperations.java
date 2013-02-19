@@ -1941,6 +1941,91 @@ public class DBOperations implements Serializable {
 		return ftpConnectionList;
 	}
 
+	/**
+	 * Veri tabaninda tanimli olan veri tabani tanimlari listesini sorguluyor
+	 * 
+	 * @return veri tabani tanimlari listesini donuyor
+	 */
+	public ArrayList<DbProperties> getDBConnections() {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
+				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
+
+		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				DbProperties dbProperties;
+				try {
+					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
+					dbList.add(dbProperties);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return dbList;
+	}
+
+	/**
+	 * Veri tabaninda tanimli olan veri tabani erisim profilleri listesini
+	 * sorguluyor
+	 * 
+	 * @return veri tabani erisim profilleri listesini donuyor
+	 */
+	public ArrayList<DbConnectionProfile> getDBProfiles() {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
+				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbProfileAll()";
+
+		ArrayList<DbConnectionProfile> dbProfileList = new ArrayList<DbConnectionProfile>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				DbConnectionProfile connectionProfile;
+				try {
+					connectionProfile = DbConnectionProfileDocument.Factory.parse(xmlContent).getDbConnectionProfile();
+					dbProfileList.add(connectionProfile);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return dbProfileList;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}

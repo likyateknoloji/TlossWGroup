@@ -38,7 +38,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{fileListenerPanelMBean}")
 	private FileListenerPanelMBean fileListenerPanelMBean;
 
-	private String jobDefCenterPanel = FILE_LISTENER_PAGE;
+	@ManagedProperty(value = "#{dbJobsPanelMBean}")
+	private DBJobsPanelMBean dbJobsPanelMBean;
+
+	private String jobDefCenterPanel = DB_JOBS_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
@@ -48,6 +51,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
 	public final static String FILE_PROCESS_PAGE = "/inc/definitionPanels/fileProcessJobDef.xhtml";
 	public final static String FILE_LISTENER_PAGE = "/inc/definitionPanels/fileListenerJobDef.xhtml";
+	public final static String DB_JOBS_PAGE = "/inc/definitionPanels/dbJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public String draggedTemplateName;
@@ -136,6 +140,15 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_DB_JOBS:
+			if (jobProperties != null) {
+				getDbJobsPanelMBean().setJobProperties(jobProperties);
+				getDbJobsPanelMBean().setJobInsertButton(true);
+				getDbJobsPanelMBean().fillTabs();
+
+				getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = DB_JOBS_PAGE;
 
 			break;
 
@@ -194,6 +207,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		} else if (jobDefCenterPanel.equals(FILE_LISTENER_PAGE)) {
 			getFileListenerPanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getFileListenerPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+
+		} else if (jobDefCenterPanel.equals(DB_JOBS_PAGE)) {
+			getDbJobsPanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getDbJobsPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 		}
 	}
 
@@ -283,6 +300,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setFileListenerPanelMBean(FileListenerPanelMBean fileListenerPanelMBean) {
 		this.fileListenerPanelMBean = fileListenerPanelMBean;
+	}
+
+	public DBJobsPanelMBean getDbJobsPanelMBean() {
+		return dbJobsPanelMBean;
+	}
+
+	public void setDbJobsPanelMBean(DBJobsPanelMBean dbJobsPanelMBean) {
+		this.dbJobsPanelMBean = dbJobsPanelMBean;
 	}
 
 }

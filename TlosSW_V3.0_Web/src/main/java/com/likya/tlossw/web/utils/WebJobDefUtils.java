@@ -17,6 +17,9 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
+import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
+import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
+import com.likya.tlos.model.xmlbeans.dbjob.DbJobTypeDocument.DbJobType;
 import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
@@ -501,4 +504,42 @@ public class WebJobDefUtils {
 		return pollingTypeList;
 	}
 
+	public static Collection<SelectItem> fillDBJobTypeList() {
+		String dbJobType = null;
+
+		Collection<SelectItem> dbJobTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < DbJobType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			dbJobType = DbJobType.Enum.table.forInt(i + 1).toString();
+			item.setValue(dbJobType);
+			item.setLabel(dbJobType);
+			dbJobTypeList.add(item);
+		}
+
+		return dbJobTypeList;
+	}
+
+	public static Collection<SelectItem> fillDbDefinitionList(ArrayList<DbConnectionProfile> dbAccessProfileList, ArrayList<DbProperties> dbList) {
+		Collection<SelectItem> definitionList = new ArrayList<SelectItem>();
+
+		for (DbConnectionProfile dbProfiles : dbAccessProfileList) {
+			String id = dbProfiles.getDbDefinitionId() + "";
+
+			for (DbProperties dbProperties : dbList) {
+				String dbId = dbProperties.getID() + "";
+
+				if (dbId.equals(id)) {
+					SelectItem item = new SelectItem();
+					item.setValue(dbProfiles.getID());
+					item.setLabel(dbProperties.getConnectionName() + "." + dbProfiles.getUserName());
+					definitionList.add(item);
+
+					break;
+				}
+			}
+		}
+
+		return definitionList;
+	}
 }
