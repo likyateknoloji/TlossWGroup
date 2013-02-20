@@ -29,6 +29,7 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpPropert
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
 import com.likya.tlos.model.xmlbeans.listener.PollingTypeDocument.PollingType;
+import com.likya.tlos.model.xmlbeans.processnode.ProcessDocument.Process.Source;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -541,5 +542,21 @@ public class WebJobDefUtils {
 		}
 
 		return definitionList;
+	}
+
+	public static Collection<SelectItem> fillSourceTypeList() {
+		String sourceType = null;
+
+		Collection<SelectItem> sourceTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < Source.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			sourceType = Source.Enum.forInt(i + 1).toString();
+			item.setValue(sourceType);
+			item.setLabel(sourceType);
+			sourceTypeList.add(item);
+		}
+
+		return sourceTypeList;
 	}
 }

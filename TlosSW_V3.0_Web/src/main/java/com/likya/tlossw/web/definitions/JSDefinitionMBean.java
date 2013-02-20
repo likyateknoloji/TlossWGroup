@@ -41,7 +41,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{dbJobsPanelMBean}")
 	private DBJobsPanelMBean dbJobsPanelMBean;
 
-	private String jobDefCenterPanel = DB_JOBS_PAGE;
+	@ManagedProperty(value = "#{processNodePanelMBean}")
+	private ProcessNodePanelMBean processNodePanelMBean;
+
+	private String jobDefCenterPanel = PROCESS_NODE_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
@@ -52,6 +55,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String FILE_PROCESS_PAGE = "/inc/definitionPanels/fileProcessJobDef.xhtml";
 	public final static String FILE_LISTENER_PAGE = "/inc/definitionPanels/fileListenerJobDef.xhtml";
 	public final static String DB_JOBS_PAGE = "/inc/definitionPanels/dbJobDef.xhtml";
+	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public String draggedTemplateName;
@@ -166,6 +170,15 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_PROCESS_NODE:
+			if (jobProperties != null) {
+				getProcessNodePanelMBean().setJobProperties(jobProperties);
+				getProcessNodePanelMBean().setJobInsertButton(true);
+				getProcessNodePanelMBean().fillTabs();
+
+				getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
+			}
+
+			jobDefCenterPanel = PROCESS_NODE_PAGE;
 
 			break;
 
@@ -211,6 +224,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		} else if (jobDefCenterPanel.equals(DB_JOBS_PAGE)) {
 			getDbJobsPanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getDbJobsPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
+
+		} else if (jobDefCenterPanel.equals(PROCESS_NODE_PAGE)) {
+			getProcessNodePanelMBean().setDraggedJobName(draggedJobNameForDependency);
+			getProcessNodePanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 		}
 	}
 
@@ -308,6 +325,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDbJobsPanelMBean(DBJobsPanelMBean dbJobsPanelMBean) {
 		this.dbJobsPanelMBean = dbJobsPanelMBean;
+	}
+
+	public ProcessNodePanelMBean getProcessNodePanelMBean() {
+		return processNodePanelMBean;
+	}
+
+	public void setProcessNodePanelMBean(ProcessNodePanelMBean processNodePanelMBean) {
+		this.processNodePanelMBean = processNodePanelMBean;
 	}
 
 }
