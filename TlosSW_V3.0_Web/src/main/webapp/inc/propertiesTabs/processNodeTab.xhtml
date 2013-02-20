@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="processNodeTab"
+			title="#{msgs['tlos.workspace.pannel.job.processNodeProperties']}">
+			<p:panel id="processNodeInfosPanel">
+				<p:panelGrid id="processNodeJobInfos" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.sourceType']}" />
+					<p:selectOneMenu value="#{backingBean.sourceType}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.sourceType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItems value="#{backingBean.sourceTypeList}" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.processType']}" />
+					<p:selectOneMenu value="#{backingBean.processType}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.processType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.append']}"
+							itemValue="Append" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.delete']}"
+							itemValue="Delete" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.filter']}"
+							itemValue="Filter" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.replace']}"
+							itemValue="Replace" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.split']}"
+							itemValue="Split" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.transform']}"
+							itemValue="Transform"
+							itemDisabled="#{backingBean.sourceType eq 'text'}" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.line']}"
+						rendered="#{backingBean.processType eq 'Append' and backingBean.sourceType eq 'text'}" />
+					<p:inputText value="#{backingBean.lineOrTagNumber}"
+						rendered="#{backingBean.processType eq 'Append' and backingBean.sourceType eq 'text'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.lineNumber']}"
+						type="integer"
+						label="#{msgs['tlos.workspace.pannel.job.pn.line']}" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.tag']}"
+						rendered="#{backingBean.processType eq 'Append' and backingBean.sourceType eq 'xml'}" />
+					<p:inputText value="#{backingBean.lineOrTagNumber}"
+						rendered="#{backingBean.processType eq 'Append' and backingBean.sourceType eq 'xml'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.tagNumber']}"
+						type="integer" label="#{msgs['tlos.workspace.pannel.job.pn.tag']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.textToDelete']}"
+						rendered="#{backingBean.processType eq 'Delete' and backingBean.sourceType eq 'text'}" />
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.tagToDelete']}"
+						rendered="#{backingBean.processType eq 'Delete' and backingBean.sourceType eq 'xml'}" />
+					<p:inputText value="#{backingBean.textOrTagToDelete}"
+						rendered="#{backingBean.processType eq 'Delete'}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.textToDelete']}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.filterType']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text'}" />
+					<p:selectOneMenu value="#{backingBean.filterType}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text'}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.filterType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem itemLabel="Regex" itemValue="regex" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.stringFunction']}"
+							itemValue="stringFunction" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.regex']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text' and backingBean.filterType eq 'regex'}" />
+					<p:inputText value="#{backingBean.regexToFilter}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.regex']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text' and backingBean.filterType eq 'regex'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.stringFunction']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text' and backingBean.filterType eq 'stringFunction'}" />
+					<p:inputText value="#{backingBean.stringFunctionToFilter}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.stringFunction']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'text' and backingBean.filterType eq 'stringFunction'}" />
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.pn.xpath']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'xml'}" />
+					<p:inputText value="#{backingBean.xpathToFilter}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.xpath']}"
+						rendered="#{backingBean.processType eq 'Filter' and backingBean.sourceType eq 'xml'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.replaceType']}"
+						rendered="#{backingBean.processType eq 'Replace' and backingBean.sourceType eq 'xml'}" />
+					<p:selectOneMenu value="#{backingBean.replaceType}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.replaceType']}"
+						rendered="#{backingBean.processType eq 'Replace' and backingBean.sourceType eq 'xml'}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.tagInList']}"
+							itemValue="tag" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.valueInList']}"
+							itemValue="value" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.findValue']}"
+						rendered="#{backingBean.processType eq 'Replace' and (backingBean.sourceType eq 'text' or backingBean.replaceType eq 'value')}" />
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.findTag']}"
+						rendered="#{backingBean.processType eq 'Replace' and backingBean.sourceType eq 'xml' and backingBean.replaceType eq 'tag'}" />
+					<p:inputText value="#{backingBean.findValueOrTag}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.findValue']}"
+						rendered="#{backingBean.processType eq 'Replace' and (backingBean.sourceType eq 'text' or (backingBean.sourceType eq 'xml' and backingBean.replaceType ne 'Seciniz' and backingBean.replaceType ne null))}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.replaceValue']}"
+						rendered="#{backingBean.processType eq 'Replace' and (backingBean.sourceType eq 'text' or backingBean.replaceType eq 'value')}" />
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.replaceTag']}"
+						rendered="#{backingBean.processType eq 'Replace' and backingBean.sourceType eq 'xml' and backingBean.replaceType eq 'tag'}" />
+					<p:inputText value="#{backingBean.replaceValueOrTag}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.replaceValue']}"
+						rendered="#{backingBean.processType eq 'Replace' and (backingBean.sourceType eq 'text' or (backingBean.sourceType eq 'xml' and backingBean.replaceType ne 'Seciniz' and backingBean.replaceType ne null))}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.splitType']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text'}" />
+					<p:selectOneMenu value="#{backingBean.splitType}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.splitType']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text'}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.wordInList']}"
+							itemValue="word" />
+						<f:selectItem
+							itemLabel="#{msgs['tlos.workspace.pannel.job.pn.lineInList']}"
+							itemValue="line" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.wordToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text' and backingBean.splitType eq 'word'}" />
+					<p:inputText value="#{backingBean.wordToSplit}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.wordToSplit']}"
+						type="integer"
+						label="#{msgs['tlos.workspace.pannel.job.pn.wordToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text' and backingBean.splitType eq 'word'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.lineToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text' and backingBean.splitType eq 'line'}" />
+					<p:inputText value="#{backingBean.lineToSplit}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.lineToSplit']}"
+						type="integer"
+						label="#{msgs['tlos.workspace.pannel.job.pn.lineToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'text' and backingBean.splitType eq 'line'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.tagToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'xml'}" />
+					<p:inputText value="#{backingBean.tagToSplit}" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.tagToSplit']}"
+						type="integer"
+						label="#{msgs['tlos.workspace.pannel.job.pn.tagToSplit']}"
+						rendered="#{backingBean.processType eq 'Split' and backingBean.sourceType eq 'xml'}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.transformType']}"
+						rendered="#{backingBean.sourceType eq 'xml' and backingBean.processType eq 'Transform'}" />
+					<p:selectOneMenu value="#{backingBean.transformType}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.transformType']}"
+						rendered="#{backingBean.sourceType eq 'xml' and backingBean.processType eq 'Transform'}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
+						<f:selectItem itemLabel="XSLT" itemValue="xslt" />
+						<p:ajax update="processNodeJobInfos"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.pn.transformCommand']}"
+						rendered="#{backingBean.processType eq 'Transform' and backingBean.transformType eq 'xslt'}" />
+					<p:inputTextarea value="#{backingBean.transformCommand}"
+						rendered="#{backingBean.processType eq 'Transform' and backingBean.transformType eq 'xslt'}"
+						rows="5" cols="50" autoResize="false" required="true"
+						requiredMessage="#{msgs['tlos.validation.pn.transformCommand']}" />
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
