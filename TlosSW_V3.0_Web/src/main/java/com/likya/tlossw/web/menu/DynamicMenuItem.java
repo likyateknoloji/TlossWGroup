@@ -70,11 +70,11 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Calendars", "#"));
-			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Alarms", "/inc/managementPanels/alarmSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Alarms", "/inc/definitionPanels/alarmSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Advanced D.", "#"));
 
 			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "SLAs", "/inc/definitionPanels/advancedDefinitions/slaSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Agents", "/inc/managementPanels/agentSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Agents", "/inc/definitionPanels/advancedDefinitions/agentSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Resources", "#"));
 			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Program Provision", "/inc/definitionPanels/advancedDefinitions/programProvisionSearchPanel.jsf"));
 
