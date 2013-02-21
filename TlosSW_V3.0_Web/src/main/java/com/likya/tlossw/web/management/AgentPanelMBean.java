@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.management;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,12 +9,13 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
+import org.primefaces.component.datatable.DataTable;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
@@ -21,6 +23,8 @@ import com.likya.tlos.model.xmlbeans.agent.OsTypeDocument.OsType;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
 import com.likya.tlos.model.xmlbeans.jsdl.OperatingSystemTypeEnumeration;
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.resourceextdefs.ResourceDocument.Resource;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -28,7 +32,7 @@ import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "agentPanelMBean")
-@RequestScoped
+@ViewScoped
 public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
@@ -37,13 +41,13 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{sessionMediator}")
 	private SessionMediator sessionMediator;
 
-	@ManagedProperty(value = "#{param.selectedAgentName}")
+//	@ManagedProperty(value = "#{param.selectedAgentName}")
 	private String selectedAgentName;
-
-	@ManagedProperty(value = "#{param.insertCheck}")
+//
+//	@ManagedProperty(value = "#{param.insertCheck}")
 	private String insertCheck;
-
-	@ManagedProperty(value = "#{param.iCheck}")
+//
+//	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
 	
 	private static final long serialVersionUID = 1L;
@@ -70,6 +74,18 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	
 	private boolean insertButton;
 
+	private String paramName;
+	private String paramDesc;
+	private String paramType;
+	private String paramPreValue;
+
+	private String selectedParamName;
+
+	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private transient DataTable parameterTable;
+
+	private boolean renderUpdateParamButton = false;
+	
 	@PostConstruct
 	public void init() {
 
@@ -175,19 +191,11 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 	
 	public void fillAgentTypeList() {
-		if (getAgentTypeList() != null) {
-			setAgentType("Seciniz");
-			return;
-		}
 		String agentType = null;
 		Collection<SelectItem> agentTypeList = new ArrayList<SelectItem>();
-		SelectItem item = new SelectItem();
-		item.setLabel("Seciniz");
-		item.setValue("Seciniz");
-		agentTypeList.add(item);
 
 		for (int i = 0; i < AgentType.Enum.table.lastInt(); i++) {
-			item = new SelectItem();
+			SelectItem item = new SelectItem();
 			agentType = AgentType.Enum.table.forInt(i + 1).toString();
 			item.setValue(agentType);
 			item.setLabel(agentType);
@@ -195,6 +203,36 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 		setAgentTypeList(agentTypeList);
 	}
+	
+	public void addInputParameter() {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
+
+			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
+
+			return;
+		}
+
+		Parameter parameter = Parameter.Factory.newInstance();
+		parameter.setName(paramName);
+		parameter.setDesc(paramDesc);
+
+		PreValue preValue = PreValue.Factory.newInstance();
+		preValue.setStringValue(paramPreValue);
+		preValue.setType(new BigInteger(paramType));
+		parameter.setPreValue(preValue);
+
+		parameterList.add(parameter);
+
+		resetInputParameterFields();
+	}
+	
+	private void resetInputParameterFields() {
+		paramName = "";
+		paramDesc = "";
+		paramPreValue = "";
+		paramType = "";
+	}
+
 
 	public String getResource() {
 		return resource;
@@ -400,6 +438,70 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedAgentName(String selectedAgentName) {
 		this.selectedAgentName = selectedAgentName;
+	}
+
+	public String getParamName() {
+		return paramName;
+	}
+
+	public void setParamName(String paramName) {
+		this.paramName = paramName;
+	}
+
+	public String getParamDesc() {
+		return paramDesc;
+	}
+
+	public void setParamDesc(String paramDesc) {
+		this.paramDesc = paramDesc;
+	}
+
+	public String getParamType() {
+		return paramType;
+	}
+
+	public void setParamType(String paramType) {
+		this.paramType = paramType;
+	}
+
+	public String getParamPreValue() {
+		return paramPreValue;
+	}
+
+	public void setParamPreValue(String paramPreValue) {
+		this.paramPreValue = paramPreValue;
+	}
+
+	public String getSelectedParamName() {
+		return selectedParamName;
+	}
+
+	public void setSelectedParamName(String selectedParamName) {
+		this.selectedParamName = selectedParamName;
+	}
+
+	public ArrayList<Parameter> getParameterList() {
+		return parameterList;
+	}
+
+	public void setParameterList(ArrayList<Parameter> parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	public DataTable getParameterTable() {
+		return parameterTable;
+	}
+
+	public void setParameterTable(DataTable parameterTable) {
+		this.parameterTable = parameterTable;
+	}
+
+	public boolean isRenderUpdateParamButton() {
+		return renderUpdateParamButton;
+	}
+
+	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
+		this.renderUpdateParamButton = renderUpdateParamButton;
 	}
 	 
 }
