@@ -67,7 +67,7 @@
 					<p:commandButton update="agentSearchPanel" ajax="false"
 						immediate="false" value="#{msgs['tlos.button.addNew']}"
 						rendered="#{security.AgentAdd}" action="agentPanel.xhtml">
-						<f:param name="insertCheck" value="insert" />
+						<!--f:param name="insertCheck" value="insert" /-->
 					</p:commandButton>
 
 				</p:panel>
@@ -87,11 +87,11 @@
 						rowsPerPageTemplate="5,10,15">
 						
 				<p:column>
-					<p:commandButton id="agentEditButton" ajax="false" rendered="#{security.AgentEdit}"
+					<!-- p:commandButton id="agentEditButton" ajax="false" rendered="#{security.AgentEdit}"
 					  immediate="false" value="Update" action="agentPanel.xhtml">
 					  <f:param name="selectedAgentName" value="#{item.resource.stringValue}" />
 					  <f:param name="insertCheck" value="update" />
-					</p:commandButton>
+					</p:commandButton-->
 							
 					<p:commandButton id="agentDeleteButton" value="Delete"
 								onclick="confirmation.show()" rendered="#{security.AgentDelete}" />

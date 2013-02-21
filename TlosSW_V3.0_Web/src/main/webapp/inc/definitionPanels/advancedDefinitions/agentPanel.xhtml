@@ -40,11 +40,11 @@
 		<h:form id="yeniKullaniciForm">
 			<p:fieldset
 				legend="#{msgs['tlos.management.pannel.agentProcesses.newAgentPanel']}"
-				widgetVar="regWidget" style="width: 600px;">
+				widgetVar="regWidget" style="width:65%;">
 
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
+				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0" style="width:100%;">
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
@@ -63,7 +63,7 @@
 						style="width:150px;text-align: center;"
 						value="#{agentPanelMBean.osType}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.osType']}">
-						<f:selectItem itemLabel="Seciniz" itemValue="All" />
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="All" />
 						<f:selectItem itemLabel="Unix" itemValue="Unix" />
 						<f:selectItem itemLabel="Windows" itemValue="Windows" />
 					</p:selectOneMenu>
@@ -74,6 +74,8 @@
 						style="width:150px;text-align: center;"
 						value="#{agentPanelMBean.agentType}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.agentType']}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
 						<f:selectItems value="#{agentPanelMBean.agentTypeList}" />
 					</p:selectOneMenu>
 
@@ -149,6 +151,135 @@
 
 				</p:panelGrid>
 
+				<br />
+				<h:outputText
+					value="#{msgs['tlos.management.pannel.agentProcesses.agentParameters']}" />
+				<p:separator />
+
+				<p:panel id="parametersPanel">
+					<p:panelGrid id="localParameters" columns="4">
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
+						<p:inputText value="#{agentPanelMBean.paramName}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
+						<p:inputText value="#{agentPanelMBean.paramDesc}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
+						<p:selectOneMenu value="#{agentPanelMBean.paramType}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.string']}"
+								itemValue="2" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.date']}"
+								itemValue="3" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.time']}"
+								itemValue="4" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}"
+								itemValue="5" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
+								itemValue="6" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
+						<p:inputText value="#{agentPanelMBean.paramPreValue}" />
+
+					</p:panelGrid>
+
+					<br />
+
+					<p:commandButton
+						value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
+						rendered="#{!agentPanelMBean.renderUpdateParamButton}"
+						action="#{agentPanelMBean.addInputParameter}"
+						update=":yeniKullaniciForm:parametersPanel" />
+					<p:commandButton value="#{msgs['tlos.button.update']}"
+						rendered="#{agentPanelMBean.renderUpdateParamButton}"
+						update=":yeniKullaniciForm:parametersPanel"
+						action="#{agentPanelMBean.updateInputParameter}" />
+
+					<br />
+					<br />
+
+					<p:dataTable var="item" rows="10" id="parameterDataTable"
+						rendered="#{not empty agentPanelMBean.parameterList}"
+						value="#{agentPanelMBean.parameterList}"
+						binding="#{agentPanelMBean.parameterTable}" paginator="true"
+						paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton value="#{msgs['tlos.button.update']}"
+								actionListener="#{agentPanelMBean['editInputParamAction']}">
+							</p:commandButton>
+
+							<p:commandButton value="#{msgs['tlos.button.delete']}"
+								onclick="confirmation.show()" />
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+								widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this"
+									value="#{msgs['tlos.ask.delete.confirm1']}"
+									onclick="confirmation.hide()"
+									actionListener="#{agentPanelMBean['deleteInputParamAction']}" />
+								<p:commandButton id="decline"
+									value="#{msgs['tlos.ask.delete.confirm2']}"
+									onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
+							sortBy="#{item.name}">
+							<h:outputText value="#{item.name}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
+							sortBy="#{item.desc}">
+							<h:outputText value="#{item.desc}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
+							sortBy="#{item.preValue.stringValue}">
+							<h:outputText value="#{item.preValue.stringValue}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.pannel.job.parameterType']}">
+							<h:outputText value="#{msgs['tlos.combo.integer']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 1}" />
+							<h:outputText value="#{msgs['tlos.combo.string']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 2}" />
+							<h:outputText value="#{msgs['tlos.combo.date']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 3}" />
+							<h:outputText value="#{msgs['tlos.combo.time']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 4}" />
+							<h:outputText value="#{msgs['tlos.combo.dateTime']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 5}" />
+							<h:outputText value="#{msgs['tlos.combo.xPath']}"
+								style="text-align: center;"
+								rendered="#{item.preValue.type eq 6}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
 
 				<br></br>
 
