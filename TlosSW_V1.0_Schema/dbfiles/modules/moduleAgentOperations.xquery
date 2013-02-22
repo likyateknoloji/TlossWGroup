@@ -108,7 +108,21 @@ declare function lk:insertAgent($agent as element(agnt:SWAgent)) as node()*
 {
     let $XXX := $agent
     let $nextId := sq:getNextId("agentId")	
-
+	let $localParameters := count($XXX/agnt:locals)
+    let $locals := 	for $loc in $XXX/agnt:locals
+	                  return 
+					    <agnt:locals> 
+	                    {
+						for $par in $loc/par:parameter
+						return
+						 <par:parameter  id="{$nextId}">
+                           <par:name>{data($par/par:name)}</par:name>
+                           <par:valueString>{data($par/par:valueString)}</par:valueString>
+                           <par:preValue type="{data($par/par:preValue/@type)}">{data($par/par:preValue)}</par:preValue>
+                           <par:desc>{data($par/par:desc)}</par:desc>
+                         </par:parameter>
+						}
+					    </agnt:locals> 
 	return update insert 
 	  <agnt:SWAgent id="{$nextId}"> 
         <res:Resource>{data($XXX/res:Resource)}</res:Resource>
@@ -128,6 +142,7 @@ declare function lk:insertAgent($agent as element(agnt:SWAgent)) as node()*
         <agnt:lastJobTransfer>{data($XXX/agnt:lastJobTransfer)}</agnt:lastJobTransfer>
         <agnt:jobTransferFailureTime>{data($XXX/agnt:jobTransferFailureTime)}</agnt:jobTransferFailureTime>
         <agnt:workspacePath>{data($XXX/agnt:workspacePath)}</agnt:workspacePath>
+        { $locals }
       </agnt:SWAgent>	
 	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents
 
