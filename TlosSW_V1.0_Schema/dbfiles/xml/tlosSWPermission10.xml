@@ -1146,4 +1146,33 @@
         </per:roles>
         <per:resource type="button">WSAccessDelete</per:resource>
     </per:permission>
+    <per:permission id="161">
+        <per:roles>
+            <per:role>ADMIN</per:role>
+            <per:role>SUPERUSER</per:role>
+            <per:role>NORMALUSER</per:role>
+        </per:roles>
+        <per:resource type="button">ResourceSearch</per:resource>
+    </per:permission>
+    <per:permission id="162">
+        <per:roles>
+            <per:role>ADMIN</per:role>
+            <per:role>SUPERUSER</per:role>
+        </per:roles>
+        <per:resource type="button">ResourceAdd</per:resource>
+    </per:permission>
+    <per:permission id="163">
+        <per:roles>
+            <per:role>ADMIN</per:role>
+            <per:role>SUPERUSER</per:role>
+        </per:roles>
+        <per:resource type="button">ResourceEdit</per:resource>
+    </per:permission>
+    <per:permission id="164">
+        <per:roles>
+            <per:role>ADMIN</per:role>
+            <per:role>SUPERUSER</per:role>
+        </per:roles>
+        <per:resource type="button">ResourceDelete</per:resource>
+    </per:permission>
 </per:permissions>
