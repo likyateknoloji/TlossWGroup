@@ -1,45 +1,53 @@
-package com.likya.tlossw.web.management;
+package com.likya.tlossw.web.definitions.advanced;
 
-import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
+import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlos.model.xmlbeans.agent.OsTypeDocument.OsType;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
 import com.likya.tlos.model.xmlbeans.jsdl.OperatingSystemTypeEnumeration;
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.resourceextdefs.ResourceDocument.Resource;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 
-@ManagedBean(name = "agentSearchPanelMBean")
+@ManagedBean(name = "agentPanelMBean")
 @ViewScoped
-public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializable {
+public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
-	@ManagedProperty(value = "#{sessionMediator}")
-	private SessionMediator sessionMediator;
+//	@ManagedProperty(value = "#{param.selectedAgentName}")
+	private String selectedAgentName;
+//
+//	@ManagedProperty(value = "#{param.insertCheck}")
+	private String insertCheck;
+//
+//	@ManagedProperty(value = "#{param.iCheck}")
+	private String iCheck;
 	
-	private static final long serialVersionUID = -7436267818850177642L;
+	private static final long serialVersionUID = 1L;
 
 	private String osType;
 	private String resource;
@@ -60,20 +68,57 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 	
 	private SWAgent agent;
 	private ArrayList<SWAgent> searchAgentList;
-	private transient DataTable searchAgentTable;
 	
-	private List<SWAgent> filteredAgents; 
-	
-	public void dispose() {
-		resetAgentAction();
-		agent = null;
-		searchAgentTable = null;
-	}
+	private boolean insertButton;
 
+	private String paramName;
+	private String paramDesc;
+	private String paramType;
+	private String paramPreValue;
+
+	private String selectedParamName;
+
+	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private transient DataTable parameterTable;
+
+	private boolean renderUpdateParamButton = false;
+	
 	@PostConstruct
 	public void init() {
-		resetAgentAction();
-	 
+
+		agent = SWAgent.Factory.newInstance();
+		fillAgentTypeList();
+		
+		if (iCheck != null && iCheck.equals("insert")) insertButton = true;
+		
+		if (insertCheck != null) {
+			
+			if (insertCheck.equals("update")) {
+				insertButton = false;
+				agent = SWAgent.Factory.newInstance();
+				
+				try {
+					agent = dbOperations.searchAgentByResource(selectedAgentName);
+				} catch (XMLDBException e) {
+					e.printStackTrace();
+				}
+	
+				if (agent != null) {
+					resource=agent.getResource().getStringValue().toString();
+					
+					osType = agent.getOsType().toString();
+					agentType = agent.getAgentType().toString();
+					jmxPassword2 = agent.getJmxPassword();
+					durationForUnavailability=Integer.toString(agent.getDurationForUnavailability());
+					jobTransferFailureTime =  Long.toString(agent.getJobTransferFailureTime());
+					workspacePath = agent.getWorkspacePath();
+				}
+			}
+			else {
+				insertButton = true;
+				
+			}
+		}
 	}
  
 	public String getAgentXML() {
@@ -84,38 +129,29 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 		return agentXML;
 	}
 	
-	public void searchAgentAction(ActionEvent e) {
-		searchAgentList = dbOperations.searchAgent(getAgentXML());
-		if (searchAgentList == null || searchAgentList.size() == 0) {
-			addMessage("searchAgent", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", null);
+	public void insertAgentAction(ActionEvent e) {
+		
+		if(osType.equals("All")) {
+			agent.setOsType(OsType.OTHER); // Default
 		}
-	}
-	
-	public void editAgentAction(ActionEvent e) {
-		agent = (SWAgent) searchAgentTable.getRowData();
-		resource = agent.getResource().getStringValue().toString();
-		 
-		try {
-			FacesContext.getCurrentInstance().getExternalContext().redirect("agentPanel.xhtml");
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		
+		if (dbOperations.insertAgent(getAgentXML())) {
+			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.insert", null);
+			resetAgentAction();
+		} else {
+			addMessage("yeniAgent",  FacesMessage.SEVERITY_ERROR, "tlos.error.agent.insert", null);
 		}
-			
-	}
-	
-	public void deleteAgentAction(ActionEvent e) {
-		agent = (SWAgent) searchAgentTable.getRowData();
-		resource = agent.getResource().toString();
 
-		 
-			if (dbOperations.deleteAgent(getAgentXML())) {
-				searchAgentList.remove(agent);
-				agent = SWAgent.Factory.newInstance();
-				addMessage("deleteAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.delete", null);
-			} else {
-				addMessage("deleteAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.delete", null);
-			}
-		 
+	}
+
+	public void updateAgentAction(ActionEvent e) {
+
+		if (dbOperations.updateAgent(getAgentXML())) {
+			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.update", null);
+		} else {
+			addMessage("yeniAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.update", null);
+		}
+
 	}
 
 	public void resetAgentAction() {
@@ -152,19 +188,11 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 	}
 	
 	public void fillAgentTypeList() {
-		if (getAgentTypeList() != null) {
-			setAgentType("Seciniz");
-			return;
-		}
 		String agentType = null;
 		Collection<SelectItem> agentTypeList = new ArrayList<SelectItem>();
-		SelectItem item = new SelectItem();
-		item.setLabel("Seciniz");
-		item.setValue("Seciniz");
-		agentTypeList.add(item);
 
 		for (int i = 0; i < AgentType.Enum.table.lastInt(); i++) {
-			item = new SelectItem();
+			SelectItem item = new SelectItem();
 			agentType = AgentType.Enum.table.forInt(i + 1).toString();
 			item.setValue(agentType);
 			item.setLabel(agentType);
@@ -172,6 +200,36 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 		}
 		setAgentTypeList(agentTypeList);
 	}
+	
+	public void addInputParameter() {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
+
+			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
+
+			return;
+		}
+
+		Parameter parameter = Parameter.Factory.newInstance();
+		parameter.setName(paramName);
+		parameter.setDesc(paramDesc);
+
+		PreValue preValue = PreValue.Factory.newInstance();
+		preValue.setStringValue(paramPreValue);
+		preValue.setType(new BigInteger(paramType));
+		parameter.setPreValue(preValue);
+
+		parameterList.add(parameter);
+
+		resetInputParameterFields();
+	}
+	
+	private void resetInputParameterFields() {
+		paramName = "";
+		paramDesc = "";
+		paramPreValue = "";
+		paramType = "";
+	}
+
 
 	public String getResource() {
 		return resource;
@@ -186,6 +244,14 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 			
 			agent.setResource(res);
 		}
+	}
+
+	public boolean isInsertButton() {
+		return insertButton;
+	}
+
+	public void setInsertButton(boolean insertButton) {
+		this.insertButton = insertButton;
 	}
 
 	public void setAgent(SWAgent agent) {
@@ -331,14 +397,6 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 		return workspacePath;
 	}
 
-	public SessionMediator getSessionMediator() {
-		return sessionMediator;
-	}
-
-	public void setSessionMediator(SessionMediator sessionMediator) {
-		this.sessionMediator = sessionMediator;
-	}
-
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
@@ -347,20 +405,92 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 		this.dbOperations = dbOperations;
 	}
 
-	public DataTable getSearchAgentTable() {
-		return searchAgentTable;
+	public String getInsertCheck() {
+		return insertCheck;
 	}
 
-	public void setSearchAgentTable(DataTable searchAgentTable) {
-		this.searchAgentTable = searchAgentTable;
+	public void setInsertCheck(String insertCheck) {
+		this.insertCheck = insertCheck;
 	}
 
-	public List<SWAgent> getFilteredAgents() {
-		return filteredAgents;
+	public String getiCheck() {
+		return iCheck;
 	}
 
-	public void setFilteredAgents(List<SWAgent> filteredAgents) {
-		this.filteredAgents = filteredAgents;
+	public void setiCheck(String iCheck) {
+		this.iCheck = iCheck;
 	}
 
+	public String getSelectedAgentName() {
+		return selectedAgentName;
+	}
+
+	public void setSelectedAgentName(String selectedAgentName) {
+		this.selectedAgentName = selectedAgentName;
+	}
+
+	public String getParamName() {
+		return paramName;
+	}
+
+	public void setParamName(String paramName) {
+		this.paramName = paramName;
+	}
+
+	public String getParamDesc() {
+		return paramDesc;
+	}
+
+	public void setParamDesc(String paramDesc) {
+		this.paramDesc = paramDesc;
+	}
+
+	public String getParamType() {
+		return paramType;
+	}
+
+	public void setParamType(String paramType) {
+		this.paramType = paramType;
+	}
+
+	public String getParamPreValue() {
+		return paramPreValue;
+	}
+
+	public void setParamPreValue(String paramPreValue) {
+		this.paramPreValue = paramPreValue;
+	}
+
+	public String getSelectedParamName() {
+		return selectedParamName;
+	}
+
+	public void setSelectedParamName(String selectedParamName) {
+		this.selectedParamName = selectedParamName;
+	}
+
+	public ArrayList<Parameter> getParameterList() {
+		return parameterList;
+	}
+
+	public void setParameterList(ArrayList<Parameter> parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	public DataTable getParameterTable() {
+		return parameterTable;
+	}
+
+	public void setParameterTable(DataTable parameterTable) {
+		this.parameterTable = parameterTable;
+	}
+
+	public boolean isRenderUpdateParamButton() {
+		return renderUpdateParamButton;
+	}
+
+	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
+		this.renderUpdateParamButton = renderUpdateParamButton;
+	}
+	 
 }
