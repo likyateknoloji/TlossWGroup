@@ -44,7 +44,8 @@
 
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0" style="width:100%;">
+				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0"
+					style="width:100%;">
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
@@ -63,7 +64,8 @@
 						style="width:150px;text-align: center;"
 						value="#{agentPanelMBean.osType}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.osType']}">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="All" />
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="All" />
 						<f:selectItem itemLabel="Unix" itemValue="Unix" />
 						<f:selectItem itemLabel="Windows" itemValue="Windows" />
 					</p:selectOneMenu>
@@ -75,7 +77,7 @@
 						value="#{agentPanelMBean.agentType}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.agentType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-								itemValue="" />
+							itemValue="" />
 						<f:selectItems value="#{agentPanelMBean.agentTypeList}" />
 					</p:selectOneMenu>
 

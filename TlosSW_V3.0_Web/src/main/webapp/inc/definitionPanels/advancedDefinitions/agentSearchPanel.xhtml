@@ -31,26 +31,28 @@
 				<div class="tablectrl">
 
 					<p:panelGrid columns="4" styleClass="companyHeaderGrid">
-					
-					
-						<h:outputText value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
+
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
 						<p:inputText value="#{agentSearchPanelMBean.resource}" />
-				
-						<h:outputText value="#{msgs['tlos.management.pannel.agentProcesses.osType']}" />
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.agentProcesses.osType']}" />
 						<p:selectOneMenu id="osType" style="text-align: center;"
 							value="#{agentSearchPanelMBean.osType}" partialSubmit="true">
 							<f:selectItem itemLabel="All" itemValue="All" />
 							<f:selectItem itemLabel="Unix" itemValue="Unix" />
-	  						<f:selectItem itemLabel="Windows" itemValue="Windows" />
+							<f:selectItem itemLabel="Windows" itemValue="Windows" />
 						</p:selectOneMenu>
 
-				</p:panelGrid>
+					</p:panelGrid>
 
 				</div>
 			</p:panel>
-		
-		<br></br>
-			
+
+			<br></br>
+
 			<div class="tablectrl">
 				<p:panel>
 					<p:commandButton id="agentSearchButton" update="agentSearchPanel"
@@ -58,45 +60,46 @@
 						rendered="#{security.AgentSearch}"
 						actionListener="#{agentSearchPanelMBean.searchAgentAction}" />
 
-					<p:commandButton  
-						value=" #{msgs['tlos.button.clear']} "
-						rendered="#{security.AgentClear}"
-						update = "searchAgent" 
+					<p:commandButton value=" #{msgs['tlos.button.clear']} "
+						rendered="#{security.AgentClear}" update="searchAgent"
 						action="#{agentSearchPanelMBean.resetAgentAction}" />
 
 					<p:commandButton update="agentSearchPanel" ajax="false"
 						immediate="false" value="#{msgs['tlos.button.addNew']}"
 						rendered="#{security.AgentAdd}" action="agentPanel.xhtml">
-						<!--f:param name="insertCheck" value="insert" /-->
+						<f:param name="insertCheck" value="insert" />
 					</p:commandButton>
 
 				</p:panel>
 			</div>
-				
- 		
- 		<p:outputPanel id="agentSearchPanel">	
-		
-		<p:panel styleClass="tlosFormBorderHighlight"
+
+
+			<p:outputPanel id="agentSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty agentSearchPanelMBean.searchAgentList}">
-					<p:dataTable var="item" rows="10" id="agentSearchDataTable" resizableColumns="true"  
-					    filteredValue="#{agentSearchPanelMBean.filteredAgents}"
+					<p:dataTable var="item" rows="10" id="agentSearchDataTable"
+						resizableColumns="true"
+						filteredValue="#{agentSearchPanelMBean.filteredAgents}"
 						width="100%" value="#{agentSearchPanelMBean.searchAgentList}"
 						binding="#{agentSearchPanelMBean.searchAgentTable}"
 						paginator="true" paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15">
-						
-				<p:column>
-					<!-- p:commandButton id="agentEditButton" ajax="false" rendered="#{security.AgentEdit}"
-					  immediate="false" value="Update" action="agentPanel.xhtml">
-					  <f:param name="selectedAgentName" value="#{item.resource.stringValue}" />
-					  <f:param name="insertCheck" value="update" />
-					</p:commandButton-->
-							
-					<p:commandButton id="agentDeleteButton" value="Delete"
+
+						<p:column>
+							<p:commandButton id="agentEditButton" ajax="false"
+								rendered="#{security.AgentEdit}" immediate="false"
+								value="Update" action="agentPanel.xhtml">
+								<f:param name="selectedAgentID" value="#{item.id}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton id="agentDeleteButton" value="Delete"
 								onclick="confirmation.show()" rendered="#{security.AgentDelete}" />
-							<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"  
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
 								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
 								widgetVar="confirmation">
 								<p:commandButton id="confirm" immediate="true" process="@this"
@@ -106,47 +109,54 @@
 								<p:commandButton id="decline"
 									value="#{msgs['tlos.ask.delete.confirm2']}"
 									onclick="confirmation.hide()" type="button" />
-					</p:confirmDialog>
+							</p:confirmDialog>
 
-			   </p:column>
+						</p:column>
 
-				<p:column id="modelHeader"
+						<p:column id="modelHeader"
 							headerText="#{msgs['tlos.management.pannel.agentProcesses.resource']}"
-							sortBy="#{item.resource.stringValue}" filterBy="#{item.resource.stringValue}"
+							sortBy="#{item.resource.stringValue}"
+							filterBy="#{item.resource.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.resource.stringValue}" style="text-align: center;" />
-				</p:column>
+							<h:outputText value="#{item.resource.stringValue}"
+								style="text-align: center;" />
+						</p:column>
 
-				<p:column	headerText="#{msgs['tlos.management.pannel.agentProcesses.osType']}"
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.agentProcesses.osType']}"
 							sortBy="#{item.osType.toString()}" filterBy="#{item.osType}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.osType}"
+							<h:outputText value="#{item.osType}" style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.agentProcesses.agentType']}"
+							sortBy="#{item.agentType.toString()}"
+							filterBy="#{item.agentType}" filterMatchMode="contains">
+							<h:outputText value="#{item.agentType}"
 								style="text-align: center;" />
-				</p:column>
-							
-				<p:column	headerText="#{msgs['tlos.management.pannel.agentProcesses.agentType']}"
-							sortBy="#{item.agentType.toString()}" filterBy="#{item.agentType}"
-							filterMatchMode="contains">
-							<h:outputText value="#{item.agentType}" style="text-align: center;" />
-				</p:column>
-					
-				<p:column	headerText="#{msgs['tlos.management.pannel.agentProcesses.nrpePort']}"
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.agentProcesses.nrpePort']}"
 							sortBy="#{item.nrpePort}" filterBy="#{item.nrpePort}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.nrpePort}" style="text-align: center;" />
-				</p:column>
-						
-				<p:column	headerText="#{msgs['tlos.management.pannel.agentProcesses.jmxPort']}"
+							<h:outputText value="#{item.nrpePort}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.agentProcesses.jmxPort']}"
 							sortBy="#{item.jmxPort}" filterBy="#{item.jmxPort}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.jmxPort}" style="text-align: center;" />
-				</p:column>
-				
+						</p:column>
+
 					</p:dataTable>
 				</p:panel>
 
 			</p:outputPanel>
-			
+
 		</h:form>
 	</ui:define>
 </ui:composition>
