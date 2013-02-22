@@ -39,27 +39,27 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	private String osType;
 	private String resource;
- 
-    private String nrpePort;
-    private String jmxPort;
-    private String jmxUser;
-    private String jmxPassword;
-    private String jmxPassword2;
-    private String durationForUnavailability;
-    private String jobTransferFailureTime;
-    private String workspacePath;
-    
-    private Collection<SelectItem> agentTypeList = null;
-	private String agentType;   
-	
+
+	private String nrpePort;
+	private String jmxPort;
+	private String jmxUser;
+	private String jmxPassword;
+	private String jmxPassword2;
+	private String durationForUnavailability;
+	private String jobTransferFailureTime;
+	private String workspacePath;
+
+	private Collection<SelectItem> agentTypeList = null;
+	private String agentType;
+
 	private String userStopRequest;
-	
+
 	private SWAgent agent;
 	private ArrayList<SWAgent> searchAgentList;
 	private transient DataTable searchAgentTable;
-	
-	private List<SWAgent> filteredAgents; 
-	
+
+	private List<SWAgent> filteredAgents;
+
 	public void dispose() {
 		resetAgentAction();
 		agent = null;
@@ -69,84 +69,83 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 	@PostConstruct
 	public void init() {
 		resetAgentAction();
-	 
+
 	}
- 
+
 	public String getAgentXML() {
-		 
+
 		QName qName = SWAgent.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String agentXML = agent.xmlText(xmlOptions);
 		return agentXML;
 	}
-	
+
 	public void searchAgentAction(ActionEvent e) {
 		searchAgentList = dbOperations.searchAgent(getAgentXML());
 		if (searchAgentList == null || searchAgentList.size() == 0) {
 			addMessage("searchAgent", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", null);
 		}
 	}
-	
+
 	public void editAgentAction(ActionEvent e) {
 		agent = (SWAgent) searchAgentTable.getRowData();
 		resource = agent.getResource().getStringValue().toString();
-		 
+
 		try {
 			FacesContext.getCurrentInstance().getExternalContext().redirect("agentPanel.xhtml");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-			
+
 	}
-	
+
 	public void deleteAgentAction(ActionEvent e) {
 		agent = (SWAgent) searchAgentTable.getRowData();
 		resource = agent.getResource().toString();
 
-		 
-			if (dbOperations.deleteAgent(getAgentXML())) {
-				searchAgentList.remove(agent);
-				agent = SWAgent.Factory.newInstance();
-				addMessage("deleteAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.delete", null);
-			} else {
-				addMessage("deleteAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.delete", null);
-			}
-		 
+		if (dbOperations.deleteAgent(getAgentXML())) {
+			searchAgentList.remove(agent);
+			agent = SWAgent.Factory.newInstance();
+			addMessage("deleteAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.delete", null);
+		} else {
+			addMessage("deleteAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.delete", null);
+		}
+
 	}
 
 	public void resetAgentAction() {
 		resource = null;
 		osType = "All";
-	     
-	    nrpePort=null;
-	    jmxPort=null;
-	    jmxUser=null;
-	    jmxPassword=null;
-	    jmxPassword2=null;
-	    durationForUnavailability=null;
-	    jobTransferFailureTime=null;
-		
+
+		nrpePort = null;
+		jmxPort = null;
+		jmxUser = null;
+		jmxPassword = null;
+		jmxPassword2 = null;
+		durationForUnavailability = null;
+		jobTransferFailureTime = null;
+
 		searchAgentList = null;
-	 
+
 		agent = SWAgent.Factory.newInstance();
-		
+
 		Resource res = Resource.Factory.newInstance();
 		agent.setResource(res);
-		
-		//agent.setAgentType(AgentType.Enum.forString(getAgentType()));
-		
+
+		// agent.setAgentType(AgentType.Enum.forString(getAgentType()));
+
 		agent.setJmxPort(new Short("0"));
 		agent.setNrpePort(new Short("0"));
 		agent.setJmxUser("");
 		agent.setJmxPassword("");
 		agent.setDurationForUnavailability(new Integer(0));
 		agent.setJobTransferFailureTime(new Long("0"));
-		
+
 		agent.setUserStopRequest(UserStopRequest.NULL);
-		
+
 		fillAgentTypeList();
 	}
-	
+
 	public void fillAgentTypeList() {
 		if (getAgentTypeList() != null) {
 			setAgentType("Seciniz");
@@ -175,11 +174,11 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setResource(String resource) {
 		this.resource = resource;
-		
-		if(resource != null && !resource.equals("")) {
+
+		if (resource != null && !resource.equals("")) {
 			Resource res = Resource.Factory.newInstance();
 			res.setStringValue(resource);
-			
+
 			agent.setResource(res);
 		}
 	}
@@ -202,8 +201,8 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setOsType(String osType) {
 		this.osType = osType;
-		
-		if(!osType.equals("All")) {
+
+		if (!osType.equals("All")) {
 			agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
 		} else {
 			agent.setOsType(null); // Default
@@ -216,8 +215,8 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setDurationForUnavailability(String durationForUnavailability) {
 		this.durationForUnavailability = durationForUnavailability;
-		
-		if(durationForUnavailability != null && !durationForUnavailability.equals("")) {
+
+		if (durationForUnavailability != null && !durationForUnavailability.equals("")) {
 			agent.setDurationForUnavailability(Integer.parseInt(durationForUnavailability));
 		}
 	}
@@ -228,8 +227,8 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setJobTransferFailureTime(String jobTransferFailureTime) {
 		this.jobTransferFailureTime = jobTransferFailureTime;
-		
-		if(jobTransferFailureTime != null && !jobTransferFailureTime.equals("")) {
+
+		if (jobTransferFailureTime != null && !jobTransferFailureTime.equals("")) {
 			agent.setJobTransferFailureTime(Long.parseLong(jobTransferFailureTime));
 		}
 	}
@@ -240,7 +239,7 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setAgentType(String agentType) {
 		this.agentType = agentType;
-		
+
 		if (!agentType.equals("Seciniz")) {
 			agent.setAgentType(AgentType.Enum.forString(agentType));
 		} else if (agentType.equals("Seciniz")) {
@@ -254,7 +253,7 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setNrpePort(String nrpePort) {
 		this.nrpePort = nrpePort;
-		if(nrpePort != null && !nrpePort.equals("")) {
+		if (nrpePort != null && !nrpePort.equals("")) {
 			agent.setNrpePort(Short.parseShort(nrpePort));
 		}
 	}
@@ -265,7 +264,7 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setJmxPort(String jmxPort) {
 		this.jmxPort = jmxPort;
-		if(jmxPort != null && !jmxPort.equals("")) {
+		if (jmxPort != null && !jmxPort.equals("")) {
 			agent.setJmxPort(Short.parseShort(jmxPort));
 		}
 	}
@@ -292,7 +291,7 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setJmxPassword2(String jmxPassword2) {
 		this.jmxPassword2 = jmxPassword2;
- 
+
 	}
 
 	public String getJmxPassword2() {
@@ -317,8 +316,8 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setWorkspacePath(String workspacePath) {
 		this.workspacePath = workspacePath;
-		
-		if(workspacePath != null && !workspacePath.equals("")) {
+
+		if (workspacePath != null && !workspacePath.equals("")) {
 			agent.setWorkspacePath(workspacePath);
 		}
 	}

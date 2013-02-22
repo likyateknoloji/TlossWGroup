@@ -10,15 +10,18 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
-import org.xmldb.api.base.XMLDBException;
+import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlos.model.xmlbeans.agent.LocalsDocument.Locals;
 import com.likya.tlos.model.xmlbeans.agent.OsTypeDocument.OsType;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
@@ -37,37 +40,32 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
-//	@ManagedProperty(value = "#{param.selectedAgentName}")
-	private String selectedAgentName;
-//
-//	@ManagedProperty(value = "#{param.insertCheck}")
+	private String selectedAgentID;
 	private String insertCheck;
-//
-//	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private String osType;
 	private String resource;
- 
-    private String nrpePort;
-    private String jmxPort;
-    private String jmxUser;
-    private String jmxPassword;
-    private String jmxPassword2;
-    private String durationForUnavailability;
-    private String jobTransferFailureTime;
-    private String workspacePath;
-    
-    private Collection<SelectItem> agentTypeList = null;
-	private String agentType;   
-	
+
+	private String nrpePort;
+	private String jmxPort;
+	private String jmxUser;
+	private String jmxPassword;
+	private String jmxPassword2;
+	private String durationForUnavailability;
+	private String jobTransferFailureTime;
+	private String workspacePath;
+
+	private Collection<SelectItem> agentTypeList = null;
+	private String agentType;
+
 	private String userStopRequest;
-	
+
 	private SWAgent agent;
 	private ArrayList<SWAgent> searchAgentList;
-	
+
 	private boolean insertButton;
 
 	private String paramName;
@@ -81,111 +79,114 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	private transient DataTable parameterTable;
 
 	private boolean renderUpdateParamButton = false;
-	
+
 	@PostConstruct
 	public void init() {
-
 		agent = SWAgent.Factory.newInstance();
 		fillAgentTypeList();
-		
-		if (iCheck != null && iCheck.equals("insert")) insertButton = true;
-		
+
+		selectedAgentID = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedAgentID"));
+		insertCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck"));
+		iCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iCheck"));
+
+		if (iCheck != null && iCheck.equals("insert"))
+			insertButton = true;
+
 		if (insertCheck != null) {
-			
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 				agent = SWAgent.Factory.newInstance();
-				
-				try {
-					agent = dbOperations.searchAgentByResource(selectedAgentName);
-				} catch (XMLDBException e) {
-					e.printStackTrace();
-				}
-	
+
+				agent = dbOperations.searchAgentById(selectedAgentID);
+
 				if (agent != null) {
-					resource=agent.getResource().getStringValue().toString();
-					
+					resource = agent.getResource().getStringValue().toString();
+
 					osType = agent.getOsType().toString();
 					agentType = agent.getAgentType().toString();
 					jmxPassword2 = agent.getJmxPassword();
-					durationForUnavailability=Integer.toString(agent.getDurationForUnavailability());
-					jobTransferFailureTime =  Long.toString(agent.getJobTransferFailureTime());
+					durationForUnavailability = Integer.toString(agent.getDurationForUnavailability());
+					jobTransferFailureTime = Long.toString(agent.getJobTransferFailureTime());
 					workspacePath = agent.getWorkspacePath();
+
+					if (agent.getLocals() != null && agent.getLocals().sizeOfParameterArray() > 0) {
+						for (Parameter parameter : agent.getLocals().getParameterArray()) {
+							parameterList.add(parameter);
+						}
+					}
 				}
-			}
-			else {
+			} else {
 				insertButton = true;
-				
 			}
 		}
 	}
- 
+
 	public String getAgentXML() {
-		 
 		QName qName = SWAgent.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String agentXML = agent.xmlText(xmlOptions);
 		return agentXML;
 	}
-	
+
 	public void insertAgentAction(ActionEvent e) {
-		
-		if(osType.equals("All")) {
+		if (osType.equals("All")) {
 			agent.setOsType(OsType.OTHER); // Default
 		}
-		
+		setLocalParameters();
+
 		if (dbOperations.insertAgent(getAgentXML())) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.insert", null);
 			resetAgentAction();
 		} else {
-			addMessage("yeniAgent",  FacesMessage.SEVERITY_ERROR, "tlos.error.agent.insert", null);
+			addMessage("yeniAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.insert", null);
 		}
-
 	}
 
 	public void updateAgentAction(ActionEvent e) {
+		setLocalParameters();
 
 		if (dbOperations.updateAgent(getAgentXML())) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.update", null);
 		} else {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_ERROR, "tlos.error.agent.update", null);
 		}
-
 	}
 
 	public void resetAgentAction() {
 		resource = null;
 		osType = "All";
-	     
-	    nrpePort=null;
-	    jmxPort=null;
-	    jmxUser=null;
-	    jmxPassword=null;
-	    jmxPassword2=null;
-	    durationForUnavailability=null;
-	    jobTransferFailureTime=null;
-		
+
+		nrpePort = null;
+		jmxPort = null;
+		jmxUser = null;
+		jmxPassword = null;
+		jmxPassword2 = null;
+		durationForUnavailability = null;
+		jobTransferFailureTime = null;
+
 		searchAgentList = null;
-	 
+
+		parameterList = new ArrayList<Parameter>();
+
 		agent = SWAgent.Factory.newInstance();
-		
+
 		Resource res = Resource.Factory.newInstance();
 		agent.setResource(res);
-		
-		//agent.setAgentType(AgentType.Enum.forString(getAgentType()));
-		
+
+		// agent.setAgentType(AgentType.Enum.forString(getAgentType()));
+
 		agent.setJmxPort(new Short("0"));
 		agent.setNrpePort(new Short("0"));
 		agent.setJmxUser("");
 		agent.setJmxPassword("");
 		agent.setDurationForUnavailability(new Integer(0));
 		agent.setJobTransferFailureTime(new Long("0"));
-		
+
 		agent.setUserStopRequest(UserStopRequest.NULL);
-		
+
 		fillAgentTypeList();
 	}
-	
+
 	public void fillAgentTypeList() {
 		String agentType = null;
 		Collection<SelectItem> agentTypeList = new ArrayList<SelectItem>();
@@ -199,10 +200,25 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 		setAgentTypeList(agentTypeList);
 	}
-	
+
+	private void setLocalParameters() {
+		if (parameterList != null && parameterList.size() > 0) {
+			Locals locals = Locals.Factory.newInstance();
+
+			for (Parameter parameter : parameterList) {
+				Parameter newParam = locals.addNewParameter();
+				newParam.set(parameter);
+			}
+			agent.setLocals(locals);
+			
+		} else if (agent.getLocals() != null) {
+			XmlCursor xmlCursor = agent.getLocals().newCursor();
+			xmlCursor.removeXml();
+		}
+	}
+
 	public void addInputParameter() {
 		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
-
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 
 			return;
@@ -221,7 +237,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		resetInputParameterFields();
 	}
-	
+
 	private void resetInputParameterFields() {
 		paramName = "";
 		paramDesc = "";
@@ -229,6 +245,50 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		paramType = "";
 	}
 
+	public void deleteInputParamAction(ActionEvent e) {
+		int parameterIndex = parameterTable.getRowIndex();
+		parameterList.remove(parameterIndex);
+
+		renderUpdateParamButton = false;
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("yeniKullaniciForm:parametersPanel");
+	}
+
+	public void editInputParamAction(ActionEvent e) {
+		Parameter inParam = (Parameter) parameterTable.getRowData();
+
+		paramName = new String(inParam.getName());
+		paramDesc = new String(inParam.getDesc());
+		paramPreValue = new String(inParam.getPreValue().getStringValue());
+		paramType = new String(inParam.getPreValue().getType().toString());
+
+		selectedParamName = paramName;
+
+		renderUpdateParamButton = true;
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("yeniKullaniciForm:parametersPanel");
+	}
+
+	public void updateInputParameter() {
+		for (int i = 0; i < parameterList.size(); i++) {
+			if (selectedParamName.equals(parameterList.get(i).getName())) {
+				parameterList.get(i).setName(paramName);
+				parameterList.get(i).setDesc(paramDesc);
+
+				PreValue preValue = PreValue.Factory.newInstance();
+				preValue.setStringValue(paramPreValue);
+				preValue.setType(new BigInteger(paramType));
+				parameterList.get(i).setPreValue(preValue);
+
+				break;
+			}
+		}
+		resetInputParameterFields();
+
+		renderUpdateParamButton = false;
+	}
 
 	public String getResource() {
 		return resource;
@@ -236,11 +296,11 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setResource(String resource) {
 		this.resource = resource;
-		
-		if(resource != null && !resource.equals("")) {
+
+		if (resource != null && !resource.equals("")) {
 			Resource res = Resource.Factory.newInstance();
 			res.setStringValue(resource);
-			
+
 			agent.setResource(res);
 		}
 	}
@@ -271,8 +331,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setOsType(String osType) {
 		this.osType = osType;
-		
-		if(!osType.equals("All")) {
+
+		if (!osType.equals("All")) {
 			agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
 		} else {
 			agent.setOsType(null); // Default
@@ -285,8 +345,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDurationForUnavailability(String durationForUnavailability) {
 		this.durationForUnavailability = durationForUnavailability;
-		
-		if(durationForUnavailability != null && !durationForUnavailability.equals("")) {
+
+		if (durationForUnavailability != null && !durationForUnavailability.equals("")) {
 			agent.setDurationForUnavailability(Integer.parseInt(durationForUnavailability));
 		}
 	}
@@ -297,8 +357,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJobTransferFailureTime(String jobTransferFailureTime) {
 		this.jobTransferFailureTime = jobTransferFailureTime;
-		
-		if(jobTransferFailureTime != null && !jobTransferFailureTime.equals("")) {
+
+		if (jobTransferFailureTime != null && !jobTransferFailureTime.equals("")) {
 			agent.setJobTransferFailureTime(Long.parseLong(jobTransferFailureTime));
 		}
 	}
@@ -309,7 +369,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setAgentType(String agentType) {
 		this.agentType = agentType;
-		
+
 		if (!agentType.equals("Seciniz")) {
 			agent.setAgentType(AgentType.Enum.forString(agentType));
 		} else if (agentType.equals("Seciniz")) {
@@ -323,7 +383,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setNrpePort(String nrpePort) {
 		this.nrpePort = nrpePort;
-		if(nrpePort != null && !nrpePort.equals("")) {
+		if (nrpePort != null && !nrpePort.equals("")) {
 			agent.setNrpePort(Short.parseShort(nrpePort));
 		}
 	}
@@ -334,7 +394,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJmxPort(String jmxPort) {
 		this.jmxPort = jmxPort;
-		if(jmxPort != null && !jmxPort.equals("")) {
+		if (jmxPort != null && !jmxPort.equals("")) {
 			agent.setJmxPort(Short.parseShort(jmxPort));
 		}
 	}
@@ -361,7 +421,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJmxPassword2(String jmxPassword2) {
 		this.jmxPassword2 = jmxPassword2;
- 
+
 	}
 
 	public String getJmxPassword2() {
@@ -386,8 +446,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setWorkspacePath(String workspacePath) {
 		this.workspacePath = workspacePath;
-		
-		if(workspacePath != null && !workspacePath.equals("")) {
+
+		if (workspacePath != null && !workspacePath.equals("")) {
 			agent.setWorkspacePath(workspacePath);
 		}
 	}
@@ -418,14 +478,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setiCheck(String iCheck) {
 		this.iCheck = iCheck;
-	}
-
-	public String getSelectedAgentName() {
-		return selectedAgentName;
-	}
-
-	public void setSelectedAgentName(String selectedAgentName) {
-		this.selectedAgentName = selectedAgentName;
 	}
 
 	public String getParamName() {
@@ -491,5 +543,13 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
 		this.renderUpdateParamButton = renderUpdateParamButton;
 	}
-	 
+
+	public String getSelectedAgentID() {
+		return selectedAgentID;
+	}
+
+	public void setSelectedAgentID(String selectedAgentID) {
+		this.selectedAgentID = selectedAgentID;
+	}
+
 }

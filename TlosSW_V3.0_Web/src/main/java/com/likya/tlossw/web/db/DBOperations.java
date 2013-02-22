@@ -221,7 +221,6 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertAgent(String agentXML) {
-
 		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
 				+ "lk:insertAgentLock(" + agentXML + ")";
 
@@ -231,12 +230,7 @@ public class DBOperations implements Serializable {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
 
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			result.getSize();
 		} catch (XMLDBException e) {
@@ -297,6 +291,41 @@ public class DBOperations implements Serializable {
 				return null;
 			}
 		}
+		return agent;
+	}
+
+	public SWAgent searchAgentById(String id) {
+
+		SWAgent agent = null;
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
+				+ "lk:searchAgentByAgentId(" + id + ")";
+
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+		} catch (XMLDBException xmldbException) {
+			xmldbException.printStackTrace();
+		}
+
 		return agent;
 	}
 
