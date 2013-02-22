@@ -2055,6 +2055,137 @@ public class DBOperations implements Serializable {
 		return dbProfileList;
 	}
 
+	public ArrayList<RNSEntryType> searchResource(String resourceXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResources(" + resourceXML + ")";
+
+		ArrayList<RNSEntryType> resourceList = new ArrayList<RNSEntryType>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				RNSEntryType resource;
+				try {
+					resource = RNSEntryType.Factory.parse(xmlContent);
+					resourceList.add(resource);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return resourceList;
+	}
+
+	public boolean deleteResource(String resourceXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:deleteResourceLock(" + resourceXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public RNSEntryType searchResourceByResourceName(String resourceName) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResourcesByResourceName(" + resourceName + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+			RNSEntryType resource = null;
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					resource = RNSEntryType.Factory.parse(xmlContent);
+
+					return resource;
+
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public boolean insertResource(String resourceXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:insertResource(" + resourceXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean updateResource(String resourceXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:updateResourceLock(" + resourceXML + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
