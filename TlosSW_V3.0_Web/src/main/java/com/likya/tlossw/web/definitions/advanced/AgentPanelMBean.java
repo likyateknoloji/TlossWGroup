@@ -28,7 +28,6 @@ import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.resourceextdefs.ResourceDocument.Resource;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "agentPanelMBean")
