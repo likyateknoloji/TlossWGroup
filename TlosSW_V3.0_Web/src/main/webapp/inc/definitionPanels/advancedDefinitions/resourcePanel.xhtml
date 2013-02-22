@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Resource Definition Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Advanced D." />
+		<ui:param name="title4" value="Resources" />
+		<ui:param name="title5" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="AdvancedDefinitionsLink" />
+		<ui:param name="title4link"
+			value="/inc/definitionPanels/advancedDefinitions/resourcePanel.xhtml" />
+		<ui:param name="title5link"
+			value="Tlos SW Workload Automation Software v1.0 - Resource Definition Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+				<p:menuitem value="#{title4}" url="#{title4link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newResource">
+
+			<p:fieldset
+				legend="#{msgs['tlos.management.pannel.resources.defHeader']}"
+				widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid styleClass="companyHeaderGrid" columns="2" border="0">
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.resources.resourceName']}" />
+					<p:inputText value="#{resourcePanelMBean.resourceName}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.resources.endpointAddress']}" />
+					<p:inputText value="#{resourcePanelMBean.endpointAddress}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.resources.rnsSupport']}" />
+					<p:selectBooleanCheckbox value="#{resourcePanelMBean.supportsRns}" />
+
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.resources.os']}" />
+					<p:selectOneMenu value="#{resourcePanelMBean.os}">
+						<f:selectItem itemLabel="Windows" itemValue="Windows" />
+						<f:selectItem itemLabel="Unix" itemValue="Unix" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton value=" #{msgs['tlos.button.save']} "
+							rendered="#{resourcePanelMBean.insertButton}"
+							actionListener="#{resourcePanelMBean.insertResourceAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							rendered="#{not resourcePanelMBean.insertButton}"
+							actionListener="#{resourcePanelMBean.updateResourceAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
+							immediate="true" action="resourceSearchPanel.xhtml">
+						</p:commandButton>
+
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
