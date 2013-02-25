@@ -960,7 +960,7 @@
         </dat:baseScenarioInfos>
         <dat:jobList>
             <dat:jobProperties agentId="0" ID="7">
-                <JobDescription/>
+                <jsdl:JobDescription/>
                 <dat:baseJobInfos>
                     <com:jsName>listener_fulltext</com:jsName>
                     <com:comment>listener</com:comment>
@@ -1035,7 +1035,7 @@
                 </dat:timeManagement>
             </dat:jobProperties>
             <dat:jobProperties agentId="0" ID="8">
-                <JobDescription/>
+                <jsdl:JobDescription/>
                 <dat:baseJobInfos>
                     <com:jsName>listener_regex</com:jsName>
                     <com:comment>listener</com:comment>
