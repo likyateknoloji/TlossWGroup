@@ -1,0 +1,161 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Calendar Definition Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Calendars" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/definitionPanels/calendarSearchPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - Calendar Definition Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchCalendar" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl"
+				header="#{msgs['tlos.workspace.pannel.calendar.header']}">
+
+				<div class="tablectrl">
+					<p:panelGrid columns="2">
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.calendar.calendarName']}" />
+						<p:inputText
+							value="#{calendarSearchPanelMBean.calendar.calendarName}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.calendar.user']}" />
+						<p:selectOneMenu id="user"
+							value="#{calendarSearchPanelMBean.user}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItems value="#{calendarSearchPanelMBean.userList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.calendar.validDate']}" />
+						<p:calendar value="#{calendarSearchPanelMBean.validFrom}"
+							navigator="true" showOn="button">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+					</p:panelGrid>
+
+				</div>
+			</p:panel>
+			<br></br>
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton value="#{msgs['tlos.button.search']}"
+						rendered="#{security.CalendarSearch}" update="calendarSearchPanel"
+						actionListener="#{calendarSearchPanelMBean.searchCalendarAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}"
+						update="searchCalendar"
+						action="#{calendarSearchPanelMBean.resetCalendarAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.addNew']}"
+						rendered="#{security.CalendarAdd}" update="calendarSearchPanel"
+						ajax="false" immediate="false" action="calendarPanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="calendarSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight"
+					rendered="#{not empty calendarSearchPanelMBean.searchCalendarList}">
+					<p:dataTable var="item" rows="10" id="calendarSearchDataTable"
+						filteredValue="#{calendarSearchPanelMBean.filteredCalendarList}"
+						width="100%"
+						value="#{calendarSearchPanelMBean.searchCalendarList}"
+						binding="#{calendarSearchPanelMBean.searchCalendarTable}"
+						paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton id="ppEditButton" ajax="false"
+								rendered="#{security.CalendarEdit}" immediate="false"
+								value="Update" action="calendarPanel.xhtml">
+								<f:param name="selectedCalendarID" value="#{item.id}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton value="Delete" onclick="confirmation.show()"
+								rendered="#{security.CalendarDelete}" />
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+								widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this"
+									value="#{msgs['tlos.ask.delete.confirm1']}"
+									update="calendarSearchDataTable" onclick="confirmation.hide()"
+									actionListener="#{calendarSearchPanelMBean.deleteCalendarAction}" />
+								<p:commandButton id="decline"
+									value="#{msgs['tlos.ask.delete.confirm2']}"
+									onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.pannel.calendar.calendarName']}"
+							sortBy="#{item.calendarName}" filterBy="#{item.calendarName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.calendarName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.calendar.search.validFrom']}"
+							sortBy="#{item.validFrom.time} #{item.validFrom.date}"
+							filterBy="#{item.validFrom.time} #{item.validFrom.date}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{item.validFrom.time} #{item.validFrom.date}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.workspace.calendar.search.validTo']}"
+							sortBy="#{item.validTo.time}.#{item.validTo.date}"
+							filterBy="#{item.validTo.time}.#{item.validTo.date}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.validTo.time}.#{item.validTo.date}"
+								style="text-align: center;" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
