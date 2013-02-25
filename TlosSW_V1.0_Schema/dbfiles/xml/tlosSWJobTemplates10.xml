@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types xmldb:exist:///db/TLOSSW/xsds/tlosSWData_v_1_0.xsd">
+<dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types xmldb:exist:///db/TLOSSW/xsds/tlosSWData_v_1_0.xsd">
     <dat:baseScenarioInfos>
         <com:jsName>Serbest isler</com:jsName>
         <com:comment>Serbest isler burada yer alir</com:comment>
@@ -1425,12 +1425,12 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <append type="tag">22</append>
-	                                </processNode>
-	                            </processNodes>
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:append type="tag">22</pn:append>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
@@ -1479,12 +1479,12 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <delete find="silinecek metin"/>
-	                                </processNode>
-	                            </processNodes>
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:delete find="silinecek metin"/>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
@@ -1533,12 +1533,12 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <filter type="xpath">sadfgh</filter>
-	                                </processNode>
-	                            </processNodes>
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:filter type="xpath">sadfgh</pn:filter>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
@@ -1587,12 +1587,12 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <replace find="find" type="tag">replace</replace>
-	                                </processNode>
-	                            </processNodes>
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:replace find="find" type="tag">replace</pn:replace>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
@@ -1641,12 +1641,12 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <split type="tag">55</split>
-	                                </processNode>
-	                            </processNodes>
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:split type="tag">55</pn:split>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
@@ -1695,10 +1695,10 @@
 	                    <com:jobTypeDetails>
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
-	                            <processNodes>
-	                                <processNode>
-	                                    <process source="xml"/>
-	                                    <transform with="xslt"><![CDATA[<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+	                            <pn:processNodes>
+	                                <pn:processNode>
+	                                    <pn:process source="xml"/>
+	                                    <pn:transform with="xslt"><![CDATA[<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	    <xsl:output method="html" encoding="iso-8859-1" indent="yes"/>
 	    <xsl:template match="/">
 	        <html>
@@ -1732,9 +1732,9 @@
 	            </body>
 	        </html>
 	    </xsl:template>
-	</xsl:stylesheet>]]></transform>
-	                                </processNode>
-	                            </processNodes>
+	</xsl:stylesheet>]]></pn:transform>
+	                                </pn:processNode>
+	                            </pn:processNodes>
 	                        </com:specialParameters>
 	                    </com:jobTypeDetails>
 	                </dat:jobInfos>
