@@ -15,7 +15,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
 					<p:selectOneMenu id="agentChoiceMethod"
-						value="#{backingBean.agentChoiceMethod}">
+						value="#{backingBean.agentChoiceMethod}" style="width: 100pt">
 						<f:selectItems
 							value="#{backingBean.agentChoiceMethodList}" />
 						<p:ajax update="advancedJobInfosAgentChoice"></p:ajax>
@@ -28,7 +28,7 @@
 						rendered="#{backingBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}"
-						value="#{backingBean.selectedAgent}">
+						value="#{backingBean.selectedAgent}" style="width: 100pt">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
 						<f:selectItems value="#{backingBean.definedAgentList}" />
@@ -37,7 +37,7 @@
 
 				<p:panelGrid id="advancedJobInfosSLA" columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.sla']}" />
-					<p:selectOneMenu id="sla" value="#{backingBean.jobSLA}">
+					<p:selectOneMenu id="sla" value="#{backingBean.jobSLA}" style="width: 100pt">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.none']}"
 							itemValue="none" />
 						<f:selectItems value="#{backingBean.jsSLAList}" />
