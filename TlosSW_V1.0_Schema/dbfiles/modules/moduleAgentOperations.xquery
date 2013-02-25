@@ -5,6 +5,7 @@ import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/m
 
 declare namespace agnt = "http://www.likyateknoloji.com/XML_agent_types";
 declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
+declare namespace par = "http://www.likyateknoloji.com/XML_parameters_types";
 
 declare function lk:getAgents() as element()* 
 {
