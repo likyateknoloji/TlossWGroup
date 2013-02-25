@@ -17,7 +17,6 @@ import org.ogf.schemas.rns.x2009.x12.rns.RNSSupportType;
 import org.ogf.schemas.rns.x2009.x12.rns.SupportsRNSType;
 import org.w3.x2005.x08.addressing.AttributedURIType;
 import org.w3.x2005.x08.addressing.EndpointReferenceType;
-import org.w3.x2005.x08.addressing.MetadataType;
 
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -92,7 +91,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		setOs(WINDOWS);
 	}
 
-	public void updateProvisionAction(ActionEvent e) {
+	public void updateResourceAction(ActionEvent e) {
 		if (getDbOperations().updateResource(getResourceXML())) {
 			addMessage("insertResource", FacesMessage.SEVERITY_INFO, "tlos.success.resource.update", null);
 		} else {
