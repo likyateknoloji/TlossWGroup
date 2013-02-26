@@ -1482,7 +1482,7 @@
 	                            <pn:processNodes>
 	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
-	                                    <pn:delete find="silinecek metin"/>
+	                                    <pn:delete find="silinecekmetin"/>
 	                                </pn:processNode>
 	                            </pn:processNodes>
 	                        </com:specialParameters>
