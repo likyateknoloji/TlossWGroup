@@ -100,7 +100,7 @@
 						rowsPerPageTemplate="5,10,15">
 
 						<p:column>
-							<p:commandButton id="ppEditButton" ajax="false"
+							<p:commandButton id="calEditButton" ajax="false"
 								rendered="#{security.CalendarEdit}" immediate="false"
 								value="Update" action="calendarPanel.xhtml">
 								<f:param name="selectedCalendarID" value="#{item.id}" />
@@ -129,6 +129,15 @@
 							sortBy="#{item.calendarName}" filterBy="#{item.calendarName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.calendarName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.workspace.calendar.period']}"
+							sortBy="#{item.calendarPeriod.dayDef} - #{item.calendarPeriod.daySpecial}"
+							filterBy="#{item.calendarPeriod.dayDef} - #{item.calendarPeriod.daySpecial}"
+							filterMatchMode="contains">
+							<h:outputText
+								value="#{item.calendarPeriod.dayDef} - #{item.calendarPeriod.daySpecial}"
 								style="text-align: center;" />
 						</p:column>
 

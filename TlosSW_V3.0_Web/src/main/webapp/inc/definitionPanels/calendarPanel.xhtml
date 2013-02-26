@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Calendar Definition Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Calendars" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/definitionPanels/calendarPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - Calendar Definition Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newCalendar">
+
+			<p:fieldset
+				legend="#{msgs['tlos.workspace.calendar.newCalendar.header']}"
+				widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid columns="4">
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.calendar.calendarName']}" />
+					<p:inputText value="#{calendarPanelMBean.calendar.calendarName}" />
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.calendar.howManyTimes']}" />
+					<p:spinner value="#{calendarPanelMBean.howManyTimes}" min="1" />
+				</p:panelGrid>
+
+				<br></br>
+
+				<p:panel header="#{msgs['tlos.workspace.calendar.period']}">
+					<p:panelGrid columns="2">
+						<h:outputText value="#{msgs['tlos.workspace.calendar.dayDef']}" />
+						<p:selectOneMenu id="daydef" style="text-align: center;"
+							value="#{calendarPanelMBean.dayDef}">
+							<f:selectItems value="#{calendarPanelMBean.dayDefList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.daySpecial']}" />
+						<p:selectOneMenu id="dayspecial" style="text-align: center;"
+							value="#{calendarPanelMBean.daySpecial}">
+							<f:selectItems value="#{calendarPanelMBean.daySpecialList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.specificDaysOfWeek']}" />
+						<p:selectManyMenu
+							value="#{calendarPanelMBean.selectedWhichOnesList}">
+							<f:selectItems value="#{calendarPanelMBean.whichOnesList}" />
+						</p:selectManyMenu>
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton value=" #{msgs['tlos.button.save']} "
+							rendered="#{calendarPanelMBean.insertButton}"
+							actionListener="#{calendarPanelMBean.insertCalendarAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							rendered="#{not calendarPanelMBean.insertButton}"
+							actionListener="#{calendarPanelMBean.updateCalendarAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
+							immediate="true" action="calendarSearchPanel.xhtml">
+						</p:commandButton>
+
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
