@@ -1426,7 +1426,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:append type="tag">22</pn:append>
 	                                </pn:processNode>
@@ -1480,7 +1480,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:delete find="silinecek metin"/>
 	                                </pn:processNode>
@@ -1534,7 +1534,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:filter type="xpath">sadfgh</pn:filter>
 	                                </pn:processNode>
@@ -1588,7 +1588,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:replace find="find" type="tag">replace</pn:replace>
 	                                </pn:processNode>
@@ -1642,7 +1642,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:split type="tag">55</pn:split>
 	                                </pn:processNode>
@@ -1696,7 +1696,7 @@
 	                        <com:jobCommandType>PROCESS NODE</com:jobCommandType>
 	                        <com:specialParameters>
 	                            <pn:processNodes>
-	                                <pn:processNode>
+	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
 	                                    <pn:transform with="xslt"><![CDATA[<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	    <xsl:output method="html" encoding="iso-8859-1" indent="yes"/>
