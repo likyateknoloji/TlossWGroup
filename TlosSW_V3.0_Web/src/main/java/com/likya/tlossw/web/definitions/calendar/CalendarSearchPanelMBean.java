@@ -2,11 +2,13 @@ package com.likya.tlossw.web.definitions.calendar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
@@ -18,6 +20,7 @@ import org.primefaces.component.datatable.DataTable;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
+import com.likya.tlos.model.xmlbeans.calendar.ValidFromDocument.ValidFrom;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -50,6 +53,9 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	@PostConstruct
 	public void init() {
 		calendar = CalendarProperties.Factory.newInstance();
+		ValidFrom valFrom = ValidFrom.Factory.newInstance();
+		calendar.setValidFrom(valFrom);
+		
 		searchCalendarList = new ArrayList<CalendarProperties>();
 		fillUserList();
 	}
@@ -91,22 +97,19 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		} else {
 			calendar.setUserId(-1);
 		}
+		
+		if (validFrom != null && !validFrom.equals("")) {
+			Calendar validDate = Calendar.getInstance();
+			validDate.setTime(validFrom);
+			
+			calendar.getValidFrom().setDate(validDate);
+		}
 
-		// if (validFrom != null && !validFrom.equals("")) {
-		// Calendar calendar = Calendar.getInstance();
-		// calendar.setTime(validFrom);
-		//
-		// calendar.setStartDate(calendar);
-		// } else {
-		// calendar.setStartDate(null);
-		// }
-		//
-		// searchCalendarList =
-		// getDbOperations().searchCalendar(getCalendarPropertiesXML());
-		// if (searchCalendarList == null || searchCalendarList.size() == 0) {
-		// addMessage("searchCalendar", FacesMessage.SEVERITY_INFO,
-		// "tlos.info.search.noRecord", null);
-		// }
+		searchCalendarList = getDbOperations().searchCalendar(getCalendarPropertiesXML());
+		
+		if (searchCalendarList == null || searchCalendarList.size() == 0) {
+			addMessage("searchCalendar", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", null);
+		}
 	}
 
 	public void deleteCalendarAction(ActionEvent e) {
