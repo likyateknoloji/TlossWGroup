@@ -2186,6 +2186,42 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public ArrayList<CalendarProperties> searchCalendar(String calendarPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(" + calendarPropertiesXML + ")";
+
+		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				CalendarProperties calendar;
+				try {
+					calendar = CalendarPropertiesDocument.Factory.parse(xmlContent).getCalendarProperties();
+					calendarList.add(calendar);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return calendarList;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
