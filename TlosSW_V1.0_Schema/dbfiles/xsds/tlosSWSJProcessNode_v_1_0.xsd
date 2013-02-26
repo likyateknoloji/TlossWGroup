@@ -54,7 +54,7 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 	</xs:element>
 	<xs:element name="delete">
 		<xs:complexType>
-			<xs:attribute name="find" use="required" type="xs:NCName"/>
+			<xs:attribute name="find" use="required" type="xs:normalizedString"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="filter">
@@ -111,7 +111,7 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 	<xs:element name="transform">
 		<xs:complexType>
 			<xs:simpleContent>
-				<xs:extension base="xs:NCName">
+				<xs:extension base="xs:string">
 					<xs:attribute name="with" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:token">
