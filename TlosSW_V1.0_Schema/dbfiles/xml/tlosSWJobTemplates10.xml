@@ -1482,7 +1482,7 @@
 	                            <pn:processNodes>
 	                                <pn:processNode id="1">
 	                                    <pn:process source="xml"/>
-	                                    <pn:delete find="silinecekmetin"/>
+	                                    <pn:delete find="silinecek metin"/>
 	                                </pn:processNode>
 	                            </pn:processNodes>
 	                        </com:specialParameters>
@@ -1684,7 +1684,7 @@
 	                </dat:jsTimeOut>
 	            </dat:timeManagement>
 	        </dat:jobProperties>
-	        <!-- dat:jobProperties agentId="0" ID="17">
+	        <dat:jobProperties agentId="0" ID="17">
 	            <jsdl:JobDescription/>
 	            <dat:baseJobInfos>
 	                <com:jsName>processNode_transform</com:jsName>
@@ -1771,7 +1771,7 @@
 	                    <com:unit>HOURS</com:unit>
 	                </dat:jsTimeOut>
 	            </dat:timeManagement>
-	        </dat:jobProperties-->
+	        </dat:jobProperties>
         </dat:jobList>
         <dat:timeManagement>
             <dat:jsPlannedTime>
