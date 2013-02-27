@@ -34,9 +34,17 @@ public class ResourceReader {
 
 	public static ResourceBundle getResourceBundle() {
 
-		Locale thisLocale = Locale.getDefault();
+		/**
+		 * @author serkan taþ
+		 * 25.02.2013
+		 * Aþaðýdaki linke binaen deðiþtirildi.
+		 * http://stackoverflow.com/questions/4659929/how-to-use-utf-8-in-resource-properties-with-resourcebundle
+		 */
+
+		// Locale thisLocale = Locale.getDefault();
+		// 	ResourceBundle resourceBundle = ResourceBundle.getBundle(resourcePath + resourceName, thisLocale);
 		
-		ResourceBundle resourceBundle = ResourceBundle.getBundle(resourcePath + resourceName, thisLocale);
+		ResourceBundle resourceBundle = ResourceBundle.getBundle(resourcePath + resourceName, new UTF8Control());
 
 		return resourceBundle;
 	
