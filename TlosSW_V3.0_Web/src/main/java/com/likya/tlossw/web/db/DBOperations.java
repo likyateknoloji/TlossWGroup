@@ -141,16 +141,14 @@ public class DBOperations implements Serializable {
 		return prsList;
 	}
 
-	public int getNextUserId() {
+	public int getNextId(String component) {
+		Collection collection = existConnectionHolder.getCollection();
 
-		int userId = -1;
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"" + component + "\")";
+
+		int id = -1;
 
 		try {
-
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"userId\")";
-			// + "sq:getNextUserId()";
-
-			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
@@ -159,14 +157,14 @@ public class DBOperations implements Serializable {
 
 			while (i.hasMoreResources()) {
 				Resource r = i.nextResource();
-				userId = Integer.parseInt(r.getContent().toString());
+				id = Integer.parseInt(r.getContent().toString());
 			}
 
 		} catch (XMLDBException xmldbException) {
 			xmldbException.printStackTrace();
 		}
 
-		return userId;
+		return id;
 	}
 
 	public boolean updateAgent(String agentXML) {
@@ -981,31 +979,6 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public int getNextDbConnectionId() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		int dbConnectionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"dbConnectionId\")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				dbConnectionId = Integer.parseInt(r.getContent().toString());
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-
-		return dbConnectionId;
-	}
-
 	public DbProperties searchDBByID(String id) {
 		Collection collection = existConnectionHolder.getCollection();
 
@@ -1215,31 +1188,6 @@ public class DBOperations implements Serializable {
 		}
 
 		return true;
-	}
-
-	public int getNextDbAccessProfileId() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		int dbConnectionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"dbUserId\")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				dbConnectionId = Integer.parseInt(r.getContent().toString());
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-
-		return dbConnectionId;
 	}
 
 	public DbConnectionProfile searchDBAccessByID(String id) {
@@ -1674,33 +1622,6 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public int getNextWSDefinitionId() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		int wsDefinitionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"wsDefinitionId\")";
-
-		XPathQueryService service;
-
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				wsDefinitionId = Integer.parseInt(r.getContent().toString());
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-
-		return wsDefinitionId;
-	}
-
 	public JobProperties getTemplateJobFromName(String documentName, String jobName) {
 		Collection collection = existConnectionHolder.getCollection();
 
@@ -1789,33 +1710,6 @@ public class DBOperations implements Serializable {
 			return null;
 		}
 		return jobProperties;
-	}
-
-	public int getNextJobId() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		int jobId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"jobId\")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				jobId = Integer.parseInt(r.getContent().toString());
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return -1;
-		}
-
-		return jobId;
 	}
 
 	public ArrayList<SWAgent> getAgents() {
@@ -2220,6 +2114,26 @@ public class DBOperations implements Serializable {
 		}
 
 		return calendarList;
+	}
+
+	public boolean insertCalendar(String calendarPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(" + calendarPropertiesXML + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.toString();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
