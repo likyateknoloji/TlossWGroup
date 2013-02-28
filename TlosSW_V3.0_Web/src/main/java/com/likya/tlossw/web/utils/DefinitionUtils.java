@@ -1,10 +1,14 @@
 package com.likya.tlossw.web.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+
+import javax.faces.model.SelectItem;
 
 import com.likya.tlos.model.xmlbeans.alarm.DescDocument;
 import com.likya.tlos.model.xmlbeans.alarm.EndDateDocument;
@@ -267,6 +271,30 @@ public class DefinitionUtils {
 		alarm.setName(alarm.getName());
 
 		return alarm;
+	}
+
+	public static ArrayList<Date> generateDate(List<SelectItem> dateList) {
+		ArrayList<Date> generatedDateList = new ArrayList<Date>();
+
+		for (SelectItem item : dateList) {
+			Date date = Date.Factory.newInstance();
+			String label = item.getLabel();
+
+			StringTokenizer tarihToken = new StringTokenizer(label, ".");
+
+			int day = Integer.parseInt(tarihToken.nextToken());
+			int month = Integer.parseInt(tarihToken.nextToken()) - 1;
+			int year = Integer.parseInt(tarihToken.nextToken());
+
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(year, month, day);
+
+			date.setCalendarValue(calendar);
+
+			generatedDateList.add(date);
+		}
+
+		return generatedDateList;
 	}
 
 }
