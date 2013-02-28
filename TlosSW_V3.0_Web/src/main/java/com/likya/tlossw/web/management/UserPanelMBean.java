@@ -22,6 +22,7 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "userPanelMBean")
 @RequestScoped
@@ -178,7 +179,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	
 	public boolean getUserId() {
-		int userId = dbOperations.getNextUserId();
+		int userId = dbOperations.getNextId(ConstantDefinitions.USER_ID);
 		if (userId < 0) {
 			addSuccessMessage("yeniKullanici", "tlos.info.user.db.getId", "Info");
 			return false;

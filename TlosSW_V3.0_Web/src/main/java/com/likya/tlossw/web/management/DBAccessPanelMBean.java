@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.dbconnections.JdbcConnectionPoolParamsDocum
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.TestUtils;
 
 @ManagedBean(name = "dbAccessPanelMBean")
@@ -142,7 +143,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	// veri tabaninda kayitli siradaki id degerini set ediyor
 	public boolean setDBAccessID() {
-		int id = getDbOperations().getNextDbAccessProfileId();
+		int id = getDbOperations().getNextId(ConstantDefinitions.DBUSER_ID);
 
 		if (id < 0) {
 			addMessage("insertDBConnection", FacesMessage.SEVERITY_INFO, "tlos.info.dbConnectionProfile.getId", null);
