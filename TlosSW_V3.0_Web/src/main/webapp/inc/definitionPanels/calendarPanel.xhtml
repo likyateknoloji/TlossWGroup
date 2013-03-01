@@ -45,11 +45,14 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.calendar.calendarName']}" />
-					<p:inputText value="#{calendarPanelMBean.calendarName}" />
+					<p:inputText value="#{calendarPanelMBean.calendarName}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.calendar.calendarName']}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.calendar.howManyTimes']}" />
-					<p:spinner value="#{calendarPanelMBean.howManyTimes}" min="1" />
+					<p:spinner value="#{calendarPanelMBean.howManyTimes}" min="1"
+						max="127" />
 				</p:panelGrid>
 
 				<br></br>
@@ -151,7 +154,8 @@
 						<h:outputText
 							value="#{msgs['tlos.workspace.calendar.search.validFrom']}" />
 						<p:calendar value="#{calendarPanelMBean.validFrom}"
-							navigator="true" showOn="button">
+							navigator="true" showOn="button" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.startDate']}">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
 
@@ -163,7 +167,8 @@
 						<h:outputText
 							value="#{msgs['tlos.workspace.calendar.search.validTo']}" />
 						<p:calendar value="#{calendarPanelMBean.validTo}" navigator="true"
-							showOn="button">
+							showOn="button" required="true"
+							requiredMessage="#{msgs['tlos.validation.sla.endDate']}">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
 
