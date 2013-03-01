@@ -71,3 +71,10 @@ declare function hs:deleteCalendarLock($calendar as element(cal:calendarProperti
 {
    util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWCalendar10.xml")/cal:calendarList, hs:deleteCalendar($calendar))     
 };
+
+declare function hs:searchCalendarByID($id as xs:integer) as element(cal:calendarProperties)? 
+ {
+	for $calendar in doc("//db/TLOSSW/xmls/tlosSWCalendar10.xml")/cal:calendarList/cal:calendarProperties
+	where $calendar/@id = $id
+	return $calendar
+};
