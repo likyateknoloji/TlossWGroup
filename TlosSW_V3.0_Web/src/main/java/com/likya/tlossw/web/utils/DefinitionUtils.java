@@ -144,6 +144,23 @@ public class DefinitionUtils {
 		return calendar;
 	}
 
+	@SuppressWarnings("deprecation")
+	public static Calendar dateToXmlDateWithoutZone(java.util.Date date) {
+		int day;
+		int month;
+		int year;
+
+		day = date.getDate();
+		month = date.getMonth();
+		year = date.getYear() + 1900;
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month, day);
+		calendar.set(Calendar.ZONE_OFFSET, 0);
+
+		return calendar;
+	}
+
 	public static java.util.Date xmlDateToDate(Date tlosDate) {
 		if (tlosDate == null) {
 			return null;
