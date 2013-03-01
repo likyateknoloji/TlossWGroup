@@ -6,7 +6,7 @@ RNS icin ek sema tanimlari. Likya teknoloji
     <xsd:element name="ResourceList">
         <xsd:complexType>
             <xsd:sequence>
-                 <xsd:element name="Resource" maxOccurs="unbounded" type="rns:RNSEntryType"/>
+                 <xsd:element ref="lrns:Resource" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
         <xsd:unique name="newKey">
@@ -14,4 +14,7 @@ RNS icin ek sema tanimlari. Likya teknoloji
             <xsd:field xpath="@entry-name"/>
         </xsd:unique>
      </xsd:element>
+     
+      <xsd:element name="Resource" type="rns:RNSEntryType"/>
+      
 </xsd:schema>
