@@ -45,7 +45,7 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.calendar.calendarName']}" />
-					<p:inputText value="#{calendarPanelMBean.calendar.calendarName}" />
+					<p:inputText value="#{calendarPanelMBean.calendarName}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.calendar.howManyTimes']}" />
@@ -62,7 +62,7 @@
 								value="#{calendarPanelMBean.dayDef}">
 								<f:selectItems value="#{calendarPanelMBean.dayDefList}" />
 							</p:selectOneMenu>
-	
+
 							<h:outputText
 								value="#{msgs['tlos.workspace.calendar.daySpecial']}" />
 							<p:selectOneMenu id="dayspecial" style="text-align: center;"
@@ -81,24 +81,27 @@
 
 				</p:panel>
 
-				<p:panel id="specificDaysPanel" header="#{msgs['tlos.workspace.calendar.specificDays']}">
+				<p:panel id="specificDaysPanel"
+					header="#{msgs['tlos.workspace.calendar.specificDays']}">
 					<p:panelGrid columns="3">
-						<h:outputText value="#{msgs['tlos.workspace.calendar.selectDate']}" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.selectDate']}" />
 						<p:calendar value="#{calendarPanelMBean.specificDate}"
 							navigator="true" showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
-						
+
 						<p:commandButton value="#{msgs['tlos.button.add']}"
 							action="#{calendarPanelMBean.addSpecificDayAction}"
-							update="specificDaysPanel" process="@this,specificDaysPanel"/>
+							update="specificDaysPanel" process="@this,specificDaysPanel" />
 					</p:panelGrid>
-					
+
 					<br />
 
 					<p:panelGrid columns="3"
 						rendered="#{calendarPanelMBean.specificDayList ne null and calendarPanelMBean.specificDayList[0] ne null}">
-						<h:outputText value="#{msgs['tlos.workspace.calendar.specificDaysList']}" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.specificDaysList']}" />
 						<p:selectManyMenu style="width: 140px; height: 60px;"
 							value="#{calendarPanelMBean.selectedSpecificDayList}">
 							<f:selectItems value="#{calendarPanelMBean.specificDayList}" />
@@ -106,28 +109,31 @@
 
 						<p:commandButton value="#{msgs['tlos.button.delete']}"
 							action="#{calendarPanelMBean.deleteSpecificDaysAction}"
-							update="specificDaysPanel" process="@this,specificDaysPanel"/>
+							update="specificDaysPanel" process="@this,specificDaysPanel" />
 					</p:panelGrid>
 				</p:panel>
 
-				<p:panel id="exceptionDaysPanel" header="#{msgs['tlos.workspace.calendar.exceptionDays']}">
+				<p:panel id="exceptionDaysPanel"
+					header="#{msgs['tlos.workspace.calendar.exceptionDays']}">
 					<p:panelGrid columns="3">
-						<h:outputText value="#{msgs['tlos.workspace.calendar.selectDate']}" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.selectDate']}" />
 						<p:calendar value="#{calendarPanelMBean.exceptionDate}"
 							navigator="true" showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
-						
+
 						<p:commandButton value="#{msgs['tlos.button.add']}"
 							action="#{calendarPanelMBean.addExceptionDayAction}"
-							update="exceptionDaysPanel" process="@this,exceptionDaysPanel"/>
+							update="exceptionDaysPanel" process="@this,exceptionDaysPanel" />
 					</p:panelGrid>
-					
+
 					<br />
 
 					<p:panelGrid columns="3"
 						rendered="#{calendarPanelMBean.exceptionDayList ne null and calendarPanelMBean.exceptionDayList[0] ne null}">
-						<h:outputText value="#{msgs['tlos.workspace.calendar.exceptionDaysList']}" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.exceptionDaysList']}" />
 						<p:selectManyMenu style="width: 140px; height: 60px;"
 							value="#{calendarPanelMBean.selectedExceptionDayList}">
 							<f:selectItems value="#{calendarPanelMBean.exceptionDayList}" />
@@ -135,39 +141,41 @@
 
 						<p:commandButton value="#{msgs['tlos.button.delete']}"
 							action="#{calendarPanelMBean.deleteExceptionDaysAction}"
-							update="exceptionDaysPanel" process="@this,exceptionDaysPanel"/>
+							update="exceptionDaysPanel" process="@this,exceptionDaysPanel" />
 					</p:panelGrid>
 				</p:panel>
 
-				<p:panel id="validIntervalPanel" header="#{msgs['tlos.workspace.calendar.validInterval']}">
+				<p:panel id="validIntervalPanel"
+					header="#{msgs['tlos.workspace.calendar.validInterval']}">
 					<p:panelGrid columns="4">
-						<h:outputText value="#{msgs['tlos.workspace.calendar.search.validFrom']}" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.search.validFrom']}" />
 						<p:calendar value="#{calendarPanelMBean.validFrom}"
 							navigator="true" showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
-						
-						<h:outputText
-							value="#{msgs['tlos.workspace.calendar.startTime']}" />
-						<p:inputMask value="#{calendarPanelMBean.validFromTime}" mask="99:99:99"
-							required="true"
+
+						<h:outputText value="#{msgs['tlos.workspace.calendar.startTime']}" />
+						<p:inputMask value="#{calendarPanelMBean.validFromTime}"
+							mask="99:99:99" required="true"
 							requiredMessage="#{msgs['tlos.validation.sla.startTime']}" />
-	
-						<h:outputText value="#{msgs['tlos.workspace.calendar.search.validTo']}" />
-						<p:calendar value="#{calendarPanelMBean.validTo}"
-							navigator="true" showOn="button">
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.calendar.search.validTo']}" />
+						<p:calendar value="#{calendarPanelMBean.validTo}" navigator="true"
+							showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
-						
-						<h:outputText
-							value="#{msgs['tlos.workspace.calendar.endTime']}" />
-						<p:inputMask value="#{calendarPanelMBean.validToTime}" mask="99:99:99"
-							required="true"
+
+						<h:outputText value="#{msgs['tlos.workspace.calendar.endTime']}" />
+						<p:inputMask value="#{calendarPanelMBean.validToTime}"
+							mask="99:99:99" required="true"
 							requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
-						
+
 						<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
-						<p:spinner id="gmt" value="#{calendarPanelMBean.gmt}" min="-12" max="13" />
-	
+						<p:spinner id="gmt" value="#{calendarPanelMBean.gmt}" min="-12"
+							max="13" />
+
 						<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
 						<p:selectBooleanCheckbox value="#{calendarPanelMBean.dst}">
 						</p:selectBooleanCheckbox>
