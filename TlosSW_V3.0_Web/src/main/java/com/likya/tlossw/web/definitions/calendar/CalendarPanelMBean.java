@@ -2,6 +2,7 @@ package com.likya.tlossw.web.definitions.calendar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPeriodDocument.CalendarPeriod;
@@ -25,6 +25,7 @@ import com.likya.tlos.model.xmlbeans.calendar.DayOfWeek;
 import com.likya.tlos.model.xmlbeans.calendar.ExceptionDaysDocument.ExceptionDays;
 import com.likya.tlos.model.xmlbeans.calendar.NameDocument;
 import com.likya.tlos.model.xmlbeans.calendar.NameDocument.Name;
+import com.likya.tlos.model.xmlbeans.calendar.NameDocument.Name.ID;
 import com.likya.tlos.model.xmlbeans.calendar.SpecificDaysDocument.SpecificDays;
 import com.likya.tlos.model.xmlbeans.calendar.ValidFromDocument.ValidFrom;
 import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
@@ -48,6 +49,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private CalendarProperties calendar;
 
+	private String calendarName;
+
 	private Collection<SelectItem> daySpecialList = null;
 	private String daySpecial;
 	private Collection<SelectItem> dayDefList = null;
@@ -57,8 +60,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private Collection<SelectItem> whichOnesList;
 	private String[] selectedWhichOnesList;
-	
-	private HashMap<String, Name> nameList;
+
+	private HashMap<String, String> dayList = new HashMap<String, String>();
 
 	private Date specificDate;
 
@@ -87,7 +90,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		fillDaySpecialList();
 		fillDayDefList();
-		fillWhichNameList();
+		fillWhichOnesList();
 
 		selectedCalendarID = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedCalendarID"));
 		insertCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck"));
@@ -101,12 +104,11 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 
-				// calendar =
-				// getDbOperations().searchCalendarByID(selectedCalendarID);
-				//
-				// if (calendar != null) {
-				// fillPanelFromCalendar();
-				// }
+				calendar = getDbOperations().searchCalendarByID(selectedCalendarID);
+
+				if (calendar != null) {
+					fillPanelFromCalendar();
+				}
 
 			} else {
 				insertButton = true;
@@ -114,7 +116,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public void fillDaySpecialList() {
+	private void fillDaySpecialList() {
 		String day = null;
 		daySpecialList = new ArrayList<SelectItem>();
 
@@ -127,7 +129,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public void fillDayDefList() {
+	private void fillDayDefList() {
 		String day = null;
 		dayDefList = new ArrayList<SelectItem>();
 
@@ -140,18 +142,23 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public void fillWhichNameList() {
+	private void fillWhichOnesList() {
 		whichOnesList = new ArrayList<SelectItem>();
 
 		for (int i = 1; i <= DayOfWeek.Enum.table.lastInt(); i++) {
+			String dayID = NameDocument.Name.ID.Enum.forInt(i).toString();
+			String dayName = DayOfWeek.Enum.forInt(i).toString();
+
 			SelectItem item = new SelectItem();
-			item.setValue(NameDocument.Name.ID.Enum.forInt(i).toString());
-			item.setLabel(DayOfWeek.Enum.forInt(i).toString());
+			item.setValue(dayID);
+			item.setLabel(dayName);
 			whichOnesList.add(item);
+
+			dayList.put(dayID, dayName);
 		}
 	}
 
-	public String getCalendarPropertiesXML() {
+	private String getCalendarPropertiesXML() {
 		QName qName = CalendarProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String calendarPropertiesXML = calendar.xmlText(xmlOptions);
@@ -160,6 +167,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void resetCalendarAction() {
+		calendarName = "";
+
 		daySpecial = null;
 		dayDef = null;
 		validFrom = null;
@@ -170,8 +179,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		selectedWhichOnesList = null;
 		whichOnesList = new ArrayList<SelectItem>();
-		nameList = new HashMap<String, Name>();
-		
+
 		specificDate = null;
 		selectedSpecificDayList = null;
 		specificDayList = new ArrayList<SelectItem>();
@@ -183,6 +191,10 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		gmt = 2;
 		dst = false;
 
+		resetCalendar();
+	}
+
+	private void resetCalendar() {
 		calendar = CalendarProperties.Factory.newInstance();
 
 		ValidFrom valFrom = ValidFrom.Factory.newInstance();
@@ -196,19 +208,80 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private void fillPanelFromCalendar() {
+		fillWhichDays();
+		fillSpecificDays();
+		fillExceptionDays();
 
+		calendarName = calendar.getCalendarName();
+
+		validFrom = calendar.getValidFrom().getDate().getTime();
+		validTo = calendar.getValidTo().getDate().getTime();
+
+		// validFromTime =
+		// DefinitionUtils.dateToStringTime(calendar.getValidFrom().getTime().getTime());
+		// validToTime =
+		// DefinitionUtils.dateToStringTime(calendar.getValidTo().getTime().getTime());
+
+		Calendar validFromTimeCal = calendar.getValidFrom().getTime();
+		Calendar validToTimeCal = calendar.getValidTo().getTime();
+
+		validFromTime = DefinitionUtils.calendarToStringTimeFormat(validFromTimeCal);
+		validToTime = DefinitionUtils.calendarToStringTimeFormat(validToTimeCal);
+		gmt = DefinitionUtils.calendarToGMT(validToTimeCal);
+
+		if (DefinitionUtils.calendarToDST(validToTimeCal) == 1) {
+			dst = true;
+		}
+
+		daySpecial = calendar.getCalendarPeriod().getDaySpecial().toString();
+		dayDef = calendar.getCalendarPeriod().getDayDef().toString();
+		howManyTimes = calendar.getHowmanyTimes();
+
+		insertButton = false;
+	}
+
+	public void fillWhichDays() {
+		if (calendar.getWhichOnes() != null && calendar.getWhichOnes().getNameArray() != null && calendar.getWhichOnes().getNameArray().length > 0) {
+
+			int length = calendar.getWhichOnes().getNameArray().length;
+			selectedWhichOnesList = new String[length];
+
+			for (int i = 0; i < length; i++) {
+				selectedWhichOnesList[i] = calendar.getWhichOnes().getNameArray(i).getID() + "";
+			}
+		}
+	}
+
+	public void fillSpecificDays() {
+		specificDayList = new ArrayList<SelectItem>();
+		if (calendar.getSpecificDays() != null) {
+
+			for (int i = 0; i < calendar.getSpecificDays().getDateArray().length; i++) {
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime());
+				specificDayList.add(new SelectItem(dateStr, dateStr));
+			}
+		}
+	}
+
+	public void fillExceptionDays() {
+		exceptionDayList = new ArrayList<SelectItem>();
+		if (calendar.getExceptionDays() != null) {
+
+			for (int i = 0; i < calendar.getExceptionDays().getDateArray().length; i++) {
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getExceptionDays().getDateArray(i).getTime());
+				exceptionDayList.add(new SelectItem(dateStr, dateStr));
+			}
+		}
 	}
 
 	public void updateCalendarAction(ActionEvent e) {
 		fillCalendarProperties();
 
-		// if (getDbOperations().updateCalendar(getCalendarPropertiesXML())) {
-		// addMessage("insertCalendar", FacesMessage.SEVERITY_INFO,
-		// "tlos.success.dbAccessDef.update", null);
-		// } else {
-		// addMessage("insertCalendar", FacesMessage.SEVERITY_ERROR,
-		// "tlos.error.dbConnection.update", null);
-		// }
+		if (getDbOperations().updateCalendar(getCalendarPropertiesXML())) {
+			addMessage("insertCalendar", FacesMessage.SEVERITY_INFO, "tlos.success.calendar.update", null);
+		} else {
+			addMessage("insertCalendar", FacesMessage.SEVERITY_ERROR, "tlos.error.calendar.update", null);
+		}
 	}
 
 	public void insertCalendarAction(ActionEvent e) {
@@ -228,8 +301,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean checkCalendarName() {
 		ArrayList<CalendarProperties> searchCalendarList = getDbOperations().getCalendars();
-		for (CalendarProperties calendar : searchCalendarList) {
-			if (calendar.getCalendarName().equals(calendar.getCalendarName())) {
+		for (CalendarProperties calendarProperties : searchCalendarList) {
+			if (calendarProperties.getCalendarName().equals(calendar.getCalendarName())) {
 				addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.validation.calendar.calendarExist", null);
 				return false;
 			}
@@ -249,59 +322,54 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private void fillCalendarProperties() {
-		SpecificDays specDays = SpecificDays.Factory.newInstance();
-		int i = 0;
-		for (com.likya.tlos.model.xmlbeans.common.DateDocument.Date sDay : DefinitionUtils.generateDate(specificDayList)) {
-			specDays.addNewDate();
-			specDays.setDateArray(i, sDay.getCalendarValue());
-			i = i + 1;
-		}
-		calendar.setSpecificDays(specDays);
-		if (calendar.getSpecificDays().getDateArray().length == 0) {
-			XmlCursor xmlCursor = calendar.getSpecificDays().newCursor();
-			xmlCursor.removeXml();
+		int id = -1;
+		if (calendar.getId() > 0) {
+			id = calendar.getId();
 		}
 
-		ExceptionDays exceptDays = ExceptionDays.Factory.newInstance();
-		int j = 0;
-		for (com.likya.tlos.model.xmlbeans.common.DateDocument.Date eDay : DefinitionUtils.generateDate(exceptionDayList)) {
-			exceptDays.addNewDate();
-			exceptDays.setDateArray(j, eDay.getCalendarValue());
-			j = j + 1;
-		}
-		calendar.setExceptionDays(exceptDays);
-		if (calendar.getExceptionDays().getDateArray().length == 0) {
-			XmlCursor xmlCursor = calendar.getExceptionDays().newCursor();
-			xmlCursor.removeXml();
+		resetCalendar();
+		if (id > 0) {
+			calendar.setId(id);
 		}
 
-		if (validFromTime != null) {
-			calendar.getValidFrom().setTime(DefinitionUtils.dateToXmlTime(validFromTime));
+		calendar.setCalendarName(calendarName);
+
+		calendar.getCalendarPeriod().setDaySpecial(DaySpecial.Enum.forString(daySpecial));
+		calendar.getCalendarPeriod().setDayDef(DayDef.Enum.forString(dayDef));
+
+		calendar.setHowmanyTimes(new Byte(howManyTimes + ""));
+
+		if (specificDayList.size() > 0) {
+			SpecificDays specificDays = SpecificDays.Factory.newInstance();
+			for (com.likya.tlos.model.xmlbeans.common.DateDocument.Date specificDay : DefinitionUtils.generateDate(specificDayList)) {
+				com.likya.tlos.model.xmlbeans.common.DateDocument.Date date = specificDays.addNewDate();
+				date.set(specificDay);
+			}
+			calendar.setSpecificDays(specificDays);
 		}
 
-		if (validFrom != null) {
-			calendar.getValidFrom().setDate(DefinitionUtils.dateToXmlDate(validFrom));
+		if (exceptionDayList.size() > 0) {
+			ExceptionDays exceptionDays = ExceptionDays.Factory.newInstance();
+			for (com.likya.tlos.model.xmlbeans.common.DateDocument.Date exceptionDay : DefinitionUtils.generateDate(exceptionDayList)) {
+				com.likya.tlos.model.xmlbeans.common.DateDocument.Date date = exceptionDays.addNewDate();
+				date.set(exceptionDay);
+			}
+			calendar.setExceptionDays(exceptionDays);
 		}
 
-		if (validToTime != null) {
-			calendar.getValidTo().setTime(DefinitionUtils.dateToXmlTime(validToTime));
-		}
+		calendar.getValidFrom().setTime(DefinitionUtils.dateToXmlTime(validFromTime, gmt, dst));
+		calendar.getValidFrom().setDate(DefinitionUtils.dateToXmlDateWithoutZone(validFrom));
+		calendar.getValidTo().setTime(DefinitionUtils.dateToXmlTime(validToTime, gmt, dst));
+		calendar.getValidTo().setDate(DefinitionUtils.dateToXmlDateWithoutZone(validTo));
 
-		if (validTo != null) {
-			calendar.getValidTo().setDate(DefinitionUtils.dateToXmlDate(validTo));
-		}
-
-		WhichOnes whichOnes = WhichOnes.Factory.newInstance();
-		int k = 0;
-		for (Name name : nameList.values()) {
-			whichOnes.addNewName();
-			whichOnes.setNameArray(k, name);
-			k = k + 1;
-		}
-		calendar.setWhichOnes(whichOnes);
-		if (calendar.getWhichOnes().getNameArray().length == 0) {
-			XmlCursor xmlCursor = calendar.getWhichOnes().newCursor();
-			xmlCursor.removeXml();
+		if (selectedWhichOnesList.length > 0) {
+			WhichOnes whichOnes = WhichOnes.Factory.newInstance();
+			for (String dayID : selectedWhichOnesList) {
+				Name name = whichOnes.addNewName();
+				name.setStringValue(dayList.get(dayID));
+				name.setID(ID.Enum.forString(dayID));
+			}
+			calendar.setWhichOnes(whichOnes);
 		}
 
 		// TODO ekranlara login sayfasi eklendikten sonra userId kismina login
@@ -611,12 +679,11 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.dst = dst;
 	}
 
-	public HashMap<String, Name> getNameList() {
-		return nameList;
+	public String getCalendarName() {
+		return calendarName;
 	}
 
-	public void setNameList(HashMap<String, Name> nameList) {
-		this.nameList = nameList;
+	public void setCalendarName(String calendarName) {
+		this.calendarName = calendarName;
 	}
-
 }

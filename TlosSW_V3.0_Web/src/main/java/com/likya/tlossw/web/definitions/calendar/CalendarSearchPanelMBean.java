@@ -55,7 +55,7 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		calendar = CalendarProperties.Factory.newInstance();
 		ValidFrom valFrom = ValidFrom.Factory.newInstance();
 		calendar.setValidFrom(valFrom);
-		
+
 		searchCalendarList = new ArrayList<CalendarProperties>();
 		fillUserList();
 	}
@@ -97,16 +97,16 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		} else {
 			calendar.setUserId(-1);
 		}
-		
+
 		if (validFrom != null && !validFrom.equals("")) {
 			Calendar validDate = Calendar.getInstance();
 			validDate.setTime(validFrom);
-			
+
 			calendar.getValidFrom().setDate(validDate);
 		}
 
 		searchCalendarList = getDbOperations().searchCalendar(getCalendarPropertiesXML());
-		
+
 		if (searchCalendarList == null || searchCalendarList.size() == 0) {
 			addMessage("searchCalendar", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", null);
 		}
@@ -115,16 +115,14 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	public void deleteCalendarAction(ActionEvent e) {
 		calendar = (CalendarProperties) searchCalendarTable.getRowData();
 
-		// if (getDbOperations().deleteCalendar(getCalendarPropertiesXML())) {
-		// searchCalendarList.remove(calendar);
-		// calendar = CalendarProperties.Factory.newInstance();
-		//
-		// addMessage("searchCalendar", FacesMessage.SEVERITY_INFO,
-		// "tlos.success.calendar.delete", null);
-		// } else {
-		// addMessage("searchCalendar", FacesMessage.SEVERITY_ERROR,
-		// "tlos.error.calendar.delete", null);
-		// }
+		if (getDbOperations().deleteCalendar(getCalendarPropertiesXML())) {
+			searchCalendarList.remove(calendar);
+			calendar = CalendarProperties.Factory.newInstance();
+
+			addMessage("searchCalendar", FacesMessage.SEVERITY_INFO, "tlos.success.calendar.delete", null);
+		} else {
+			addMessage("searchCalendar", FacesMessage.SEVERITY_ERROR, "tlos.error.calendar.delete", null);
+		}
 	}
 
 	public Collection<SelectItem> getUserList() {
