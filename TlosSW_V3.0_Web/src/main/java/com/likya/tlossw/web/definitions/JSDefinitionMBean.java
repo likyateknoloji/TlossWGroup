@@ -58,6 +58,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
+	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
+
 	public String draggedTemplateName;
 	public String draggedTemplatePath;
 
