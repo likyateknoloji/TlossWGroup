@@ -18,8 +18,7 @@
 	<dat:jobList />
 	<dat:timeManagement />
 	<dat:advancedScenarioInfos>
-		<com:schedulingAlgorithm>FirstComeFirstServed
-		</com:schedulingAlgorithm>
+		<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 	</dat:advancedScenarioInfos>
 	<dat:concurrencyManagement>
 		<com:concurrent>true</com:concurrent>
@@ -247,8 +246,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -348,8 +346,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -485,8 +482,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -525,8 +521,7 @@
 									</ftp:fileProperties>
 									<ftp:operation>
 										<ftp:operationType>Read File</ftp:operationType>
-										<ftp:processedFilesOperationType>Copy
-										</ftp:processedFilesOperationType>
+										<ftp:processedFilesOperationType>Copy</ftp:processedFilesOperationType>
 									</ftp:operation>
 									<ftp:filenameAndDirectory>
 										<ftp:sourceDirectory>
@@ -624,8 +619,7 @@
 									</ftp:fileProperties>
 									<ftp:operation>
 										<ftp:operationType>Write File</ftp:operationType>
-										<ftp:processedFilesOperationType>Copy
-										</ftp:processedFilesOperationType>
+										<ftp:processedFilesOperationType>Copy</ftp:processedFilesOperationType>
 									</ftp:operation>
 									<ftp:filenameAndDirectory>
 										<ftp:sourceDirectory>
@@ -723,8 +717,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -763,13 +756,11 @@
 									</file:fileProperties>
 									<file:operation>
 										<file:operationType>Read File</file:operationType>
-										<file:processedFilesOperationType>None
-										</file:processedFilesOperationType>
+										<file:processedFilesOperationType>None</file:processedFilesOperationType>
 									</file:operation>
 									<file:filenameAndDirectory>
 										<file:sourceDirectory>
-											<com:path>C:\Users\murat\Desktop\TlosSW\Sunucu\bin\
-											</com:path>
+											<com:path>C:\Users\murat\Desktop\TlosSW\Sunucu\bin\</com:path>
 										</file:sourceDirectory>
 										<file:sourceFileName>
 											<com:filename>file.txt</com:filename>
@@ -860,13 +851,11 @@
 									</file:fileProperties>
 									<file:operation>
 										<file:operationType>Write File</file:operationType>
-										<file:processedFilesOperationType>None
-										</file:processedFilesOperationType>
+										<file:processedFilesOperationType>None</file:processedFilesOperationType>
 									</file:operation>
 									<file:filenameAndDirectory>
 										<file:targetDirectory>
-											<com:path>C:\Users\murat\Desktop\TlosSW\Sunucu\bin\
-											</com:path>
+											<com:path>C:\Users\murat\Desktop\TlosSW\Sunucu\bin\</com:path>
 										</file:targetDirectory>
 										<file:targetFileName>
 											<com:filename>file2.txt</com:filename>
@@ -966,8 +955,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -1161,8 +1149,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -1435,8 +1422,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
@@ -1833,8 +1819,7 @@
 		</dat:timeManagement>
 		<dat:advancedScenarioInfos>
 			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-			<com:schedulingAlgorithm>FirstComeFirstServed
-			</com:schedulingAlgorithm>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
 		</dat:advancedScenarioInfos>
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
