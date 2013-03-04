@@ -89,14 +89,15 @@ $('.jobGroup').hover(
 		var treeContainerClassName = "ui-tree-container";
 		
 		//serbest islerden biriyse path bos donuyor
-		if (node.parentNode.className == treeContainerClassName) {
+		if (node.parentNode.parentNode.parentNode.className == treeContainerClassName) {
+			//alert("serbest");
 			return "";
 		}
 		
 		var scenarioNode = node.parentNode.previousSibling;
 		var jobPath = $(scenarioNode.lastChild).text();
 		
-		while (scenarioNode.parentNode.parentNode.className != treeContainerClassName) {
+		while (scenarioNode.parentNode.parentNode.parentNode.parentNode.className != treeContainerClassName) {
 			scenarioNode = scenarioNode.parentNode.parentNode.previousSibling;
 			
 			jobPath = $(scenarioNode.lastChild).text() + "/" + jobPath;
