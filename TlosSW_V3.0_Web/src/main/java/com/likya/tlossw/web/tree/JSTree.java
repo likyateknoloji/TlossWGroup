@@ -46,8 +46,9 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
 		root = new DefaultTreeNode("Root", null);
-
-		setSelectedTreeNode(root);
+		TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
+		scenarioRootNode.setExpanded(true);
+		setSelectedTreeNode(scenarioRootNode);
 
 		if (tlosProcessData.getJobList() != null) {
 			for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
