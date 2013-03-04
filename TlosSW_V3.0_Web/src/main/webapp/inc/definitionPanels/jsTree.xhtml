@@ -9,14 +9,21 @@
 	<h:form id="jsTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:contextMenu for="tree">
-			<p:menuitem value="View" update="messages"
-				actionListener="#{jSTree.displaySelectedSingle}"
-				icon="ui-icon-search" />
-			<p:menuitem value="Delete" update="tree"
-				actionListener="#{jSTree.deleteNode}" icon="ui-icon-close" />
+		<p:contextMenu for="tree" nodeType="scenario">
+			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
+				actionListener="#{jSTree.viewScenario}" icon="ui-icon-search" />
+			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
+				actionListener="#{jSTree.deleteScenario}" icon="ui-icon-close" />
+			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}" update="tree :jobDefinitionForm"
+				actionListener="#{scenarioDefinitionMBean.addNewScenario}" icon="ui-icon-plus" />
 		</p:contextMenu>
-
+		
+		<p:contextMenu for="tree" nodeType="job">
+			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
+				actionListener="#{jSTree.viewJob}" icon="ui-icon-search" />
+			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
+				actionListener="#{jSTree.deleteJob}" icon="ui-icon-close" />
+		</p:contextMenu>
 
 		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
 			style="width:350px;height:720px" dynamic="true"
