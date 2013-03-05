@@ -46,6 +46,8 @@ import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
@@ -1949,6 +1951,38 @@ public class DBOperations implements Serializable {
 		return dbProfileList;
 	}
 
+	public ResourceListType searchResource(String resourceXML) {
+
+		ResourceListType resourceList = null;
+
+		try {
+
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResources(" + resourceXML + ")";
+
+			Collection collection = existConnectionHolder.getCollection();
+			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException xmldbException) {
+			xmldbException.printStackTrace();
+		}
+		return resourceList;
+	}
+	/*
 	public ArrayList<RNSEntryType> searchResource(String resourceXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
@@ -1984,7 +2018,7 @@ public class DBOperations implements Serializable {
 
 		return resourceList;
 	}
-
+*/
 	public boolean deleteResource(String resourceXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
