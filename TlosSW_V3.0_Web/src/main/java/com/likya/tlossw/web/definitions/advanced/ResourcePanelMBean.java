@@ -18,6 +18,8 @@ import org.ogf.schemas.rns.x2009.x12.rns.SupportsRNSType;
 import org.w3.x2005.x08.addressing.AttributedURIType;
 import org.w3.x2005.x08.addressing.EndpointReferenceType;
 
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -39,6 +41,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	private static final String WINDOWS = "Windows";
 
 	private RNSEntryType resource;
+	private ResourceListType resourceList;
 
 	private String resourceName;
 	private String endpointAddress;
@@ -74,12 +77,14 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		// TODO RNSEntryType taniminda bir problem var sanirim,
 		// burada kullanamadim.
 		// Simdilik qname tanimini boyle yaptim.
-		QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
+		//QName qName = ResourceListType.type.getOuterType().getDocumentElementName();
+		QName qName = RNSEntryType.type.getOuterType().getDocumentElementName();
+
+		//QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
 		// QName qName =
 		// RNSEntryType.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String resourceXML = resource.xmlText(xmlOptions);
-
 		return resourceXML;
 	}
 

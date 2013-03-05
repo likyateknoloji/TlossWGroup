@@ -15,6 +15,7 @@ import org.apache.xmlbeans.XmlOptions;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.primefaces.component.datatable.DataTable;
 
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -46,7 +47,9 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		// TODO RNSEntryType taniminda bir problem var sanirim,
 		// burada kullanamadim.
 		// Simdilik qname tanimini boyle yaptim.
-		QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
+		//QName qName = RNSEntryType.type.getName()OuterType().getDocumentElementName();
+		QName qName = RNSEntryType.type.getName();
+		//QName qName = new QName("http://schemas.ogf.org/rns/2009/12/rns", "RNSEntryType", "rns");
 		// QName qName =
 		// RNSEntryType.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
@@ -67,7 +70,13 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 			resource.setEntryName(resourceName);
 		}
 
-		searchResourceList = getDbOperations().searchResource(getResourceXML());
+		ResourceListType resourceListType = getDbOperations().searchResource(getResourceXML());
+		searchResourceList = new ArrayList<RNSEntryType>();
+
+		for (RNSEntryType rnsEntryType : resourceListType.getResourceArray()) {
+			searchResourceList.add(rnsEntryType);
+		}
+
 		if (searchResourceList == null || searchResourceList.size() == 0) {
 			addMessage("searchResource", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", null);
 		}
