@@ -53,18 +53,18 @@
 
 			<div class="tablectrl">
 				<p:panel>
-					<p:commandButton value="#{msgs['tlos.button.search']}"
-						rendered="#{security.ResourceSearch}" update="resourceSearchPanel"
+					<p:commandButton id="resourceSearchButton" update="resourceSearchPanel"
+					    value="#{msgs['tlos.button.search']}"
+						rendered="#{security.ResourceSearch}"
 						actionListener="#{resourceSearchPanelMBean.searchResourceAction}" />
 
 					<p:commandButton value="#{msgs['tlos.button.clear']}"
-						update="searchResource"
+						rendered="#{security.ResourceClear}" update="searchResource"
 						action="#{resourceSearchPanelMBean.resetResourceAction}" />
 
-					<p:commandButton value="#{msgs['tlos.button.addNew']}"
-						rendered="#{security.ResourceAdd}" update="resourceSearchPanel"
-						ajax="false" immediate="false"
-						action="resourcePanel.xhtml">
+					<p:commandButton update="resourceSearchPanel" ajax="false"
+					    immediate="false" value="#{msgs['tlos.button.addNew']}"
+						rendered="#{security.ResourceAdd}" action="resourcePanel.xhtml">
 						<f:param name="insertCheck" value="insert" />
 					</p:commandButton>
 				</p:panel>
@@ -86,13 +86,13 @@
 						rowsPerPageTemplate="5,10,15">
 
 						<p:column>
-							<p:commandButton ajax="false" rendered="#{security.ResourceEdit}"
+							<p:commandButton id="resourceEditButton" ajax="false" rendered="#{security.ResourceEdit}"
 								immediate="false" value="Update" action="resourcePanel.xhtml">
 								<f:param name="selectedResourceName" value="#{item.entryName}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton value="Delete" onclick="confirmation.show()"
+							<p:commandButton id="resourceDeleteButton" value="Delete" onclick="confirmation.show()"
 								rendered="#{security.ResourceDelete}" />
 							<p:confirmDialog id="confirmDialog"
 								style="z-index: 999 !important;"
@@ -109,20 +109,24 @@
 							</p:confirmDialog>
 						</p:column>
 
-						<p:column
-							headerText="#{msgs['tlos.management.pannel.provisionProcesses.name']}"
+						<p:column id="entryNameId"
+							headerText="#{msgs['tlos.management.pannel.resourceProcesses.name']}"
 							sortBy="#{item.entryName}" filterBy="#{item.entryName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.entryName}"
 								style="text-align: center;" />
+							<h:outputText value="#{item.entryName.stringValue}"
+								style="text-align: center;" />
 						</p:column>
 
-						<p:column
-							headerText="#{msgs['tlos.management.pannel.provisionProcesses.version']}"
+						<p:column id="OSId"
+							headerText="#{msgs['tlos.management.pannel.resourceProcesses.version']}"
 							sortBy="#{item.metadata.operatingSystemName}"
 							filterBy="#{item.metadata.operatingSystemName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.metadata.operatingSystemName}"
+								style="text-align: center;" />
+							<h:outputText value="#{item.metadata.operatingSystemName.stringValue}"
 								style="text-align: center;" />
 						</p:column>
 
