@@ -14,7 +14,57 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
+			<p:tabView effect="blind" effectDuration="normal" id="tabView">
 
+				<p:tab id="baseScenarioInfos"
+					title="#{msgs['tlos.workspace.pannel.scenario.baseScenarioInfos']}">
+					<p:panel>
+						<p:panelGrid columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.scenario.scenarioName']}" />
+							<p:inputText value="#{scenarioDefinitionMBean.scenarioName}" />
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.scenario.explanation']}" />
+							<p:inputText value="#{scenarioDefinitionMBean.comment}" />
+						</p:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/dependencyDefinitionsTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/stateInfosTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/alarmPreferenceTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/localParametersTab.xhtml">
+					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
+				</ui:include>
+
+				<p:tab id="advancedScenarioInfos"
+					title="#{msgs['tlos.workspace.pannel.scenario.advancedScenarioInfos']}">
+					<p:panel>
+						<p:panelGrid columns="2">
+
+						</p:panelGrid>
+					</p:panel>
+				</p:tab>
+
+			</p:tabView>
 
 		</p:fieldset>
 
