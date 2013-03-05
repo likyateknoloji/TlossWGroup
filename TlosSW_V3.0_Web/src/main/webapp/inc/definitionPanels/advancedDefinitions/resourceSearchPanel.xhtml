@@ -110,23 +110,19 @@
 						</p:column>
 
 						<p:column id="entryNameId"
-							headerText="#{msgs['tlos.management.pannel.resourceProcesses.name']}"
+							headerText="#{msgs['tlos.management.pannel.resources.resourceName']}"
 							sortBy="#{item.entryName}" filterBy="#{item.entryName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.entryName}"
 								style="text-align: center;" />
-							<h:outputText value="#{item.entryName.stringValue}"
-								style="text-align: center;" />
 						</p:column>
 
 						<p:column id="OSId"
-							headerText="#{msgs['tlos.management.pannel.resourceProcesses.version']}"
+							headerText="#{msgs['tlos.management.pannel.resources.os']}"
 							sortBy="#{item.metadata.operatingSystemName}"
 							filterBy="#{item.metadata.operatingSystemName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.metadata.operatingSystemName}"
-								style="text-align: center;" />
-							<h:outputText value="#{item.metadata.operatingSystemName.stringValue}"
 								style="text-align: center;" />
 						</p:column>
 
