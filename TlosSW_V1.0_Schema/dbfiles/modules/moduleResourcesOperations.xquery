@@ -10,6 +10,16 @@ declare namespace jsdl = "http://schemas.ggf.org/jsdl/2005/11/jsdl";
 import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
 
 (:fn:empty($prs/com:role):)
+
+declare function rsc:searchResources($searchResource as element(rns:RNSEntryType)) as element(lrns:ResourceList)* 
+ {
+   for $rsc in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
+   let $sonuc := if ((fn:contains(fn:lower-case($rsc/@entry-name), fn:lower-case($searchResource/@entry-name)) or data($searchResource/@entry-name)="" or not(fn:exists($searchResource/@entry-name))))
+                 then $rsc else ()
+   return <lrns:ResourceList> { $sonuc } </lrns:ResourceList>
+};
+
+(: eskisi mart 2013 Hakan
 declare function rsc:searchResources($searchResource as element(lrns:Resource)) as element(lrns:Resource)* 
  {
    for $rsc in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
@@ -18,6 +28,7 @@ declare function rsc:searchResources($searchResource as element(lrns:Resource)) 
    return $sonuc
 };
 
+:)
 (: ornek kullanim rsc:resourcesList(1,2) ilk iki eleman :)
 declare function rsc:resourcesList($firstElement as xs:int, $lastElement as xs:int) as element(lrns:Resource)* 
  {
