@@ -34,6 +34,7 @@ import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobInfos;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
+import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.CascadingConditionsDocument.CascadingConditions;
 import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
@@ -41,6 +42,7 @@ import com.likya.tlos.model.xmlbeans.data.ExpectedTimeDocument.ExpectedTime;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobAutoRetryDocument.JobAutoRetry;
 import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
+import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
@@ -50,6 +52,7 @@ import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.ResourceRequirementDocument.ResourceRequirement;
 import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
@@ -89,6 +92,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	// private JSTree jSTree;
 
 	private JobProperties jobProperties;
+
+	private Scenario scenario;
+	private boolean isScenario = false;
 
 	private boolean jobInsertButton = false;
 
@@ -493,10 +499,32 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
+	public void initScenarioPanel() {
+		fillAllLists();
+
+		scenario = Scenario.Factory.newInstance();
+
+		BaseScenarioInfos baseScenarioInfos = BaseScenarioInfos.Factory.newInstance();
+		scenario.setBaseScenarioInfos(baseScenarioInfos);
+
+		JobList jobList = JobList.Factory.newInstance();
+		scenario.setJobList(jobList);
+
+		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
+		JsTimeOut jobTimeOut = JsTimeOut.Factory.newInstance();
+		timeManagement.setJsTimeOut(jobTimeOut);
+		scenario.setTimeManagement(timeManagement);
+
+		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
+		scenario.setConcurrencyManagement(concurrencyManagement);
+
+		resetPanelInputs();
+	}
+
 	public void initJobPanel() {
 		fillAllLists();
 
-		setJobProperties(JobProperties.Factory.newInstance());
+		jobProperties = JobProperties.Factory.newInstance();
 
 		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
 		JobInfos jobInfos = JobInfos.Factory.newInstance();
@@ -516,6 +544,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
 		jobProperties.setConcurrencyManagement(concurrencyManagement);
 
+		resetPanelInputs();
+	}
+
+	private void resetPanelInputs() {
 		jobCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
 		jobPriority = "1";
@@ -622,8 +654,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		baseJobInfos.setUserId(1);
 	}
 
-	private void fillTimeManagement() {
-		TimeManagement timeManagement = getJobProperties().getTimeManagement();
+	protected void fillTimeManagement() {
+		TimeManagement timeManagement;
+
+		if (isScenario) {
+			timeManagement = scenario.getTimeManagement();
+		} else {
+			timeManagement = jobProperties.getTimeManagement();
+		}
 
 		// ekrandan starttime girildiyse onu set ediyor
 		if (startTime != null && !startTime.equals("")) {
@@ -749,11 +787,15 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
-	private void fillConcurrencyManagement() {
-		jobProperties.getConcurrencyManagement().setConcurrent(concurrent);
+	protected void fillConcurrencyManagement() {
+		if (isScenario) {
+			scenario.getConcurrencyManagement().setConcurrent(concurrent);
+		} else {
+			jobProperties.getConcurrencyManagement().setConcurrent(concurrent);
+		}
 	}
 
-	private void fillAlarmPreference() {
+	protected void fillAlarmPreference() {
 		if (selectedAlarmList != null && selectedAlarmList.length > 0) {
 			AlarmPreference alarmPreference = AlarmPreference.Factory.newInstance();
 
@@ -771,16 +813,26 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 					}
 				}
 			}
-			jobProperties.setAlarmPreference(alarmPreference);
+
+			if (isScenario) {
+				scenario.setAlarmPreference(alarmPreference);
+			} else {
+				jobProperties.setAlarmPreference(alarmPreference);
+			}
 		} else {
-			if (jobProperties.getAlarmPreference() != null) {
-				XmlCursor xmlCursor = getJobProperties().getAlarmPreference().newCursor();
+			if (isScenario) {
+				if (scenario.getAlarmPreference() != null) {
+					XmlCursor xmlCursor = scenario.getAlarmPreference().newCursor();
+					xmlCursor.removeXml();
+				}
+			} else if (jobProperties.getAlarmPreference() != null) {
+				XmlCursor xmlCursor = jobProperties.getAlarmPreference().newCursor();
 				xmlCursor.removeXml();
 			}
 		}
 	}
 
-	private void fillLocalParameters() {
+	protected void fillLocalParameters() {
 		if (parameterList.size() > 0) {
 			LocalParameters localParameters = LocalParameters.Factory.newInstance();
 
@@ -792,11 +844,22 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				parameter.set(parameterList.get(i));
 			}
 
-			jobProperties.setLocalParameters(localParameters);
+			if (isScenario) {
+				scenario.setLocalParameters(localParameters);
+			} else {
+				jobProperties.setLocalParameters(localParameters);
+			}
 
-		} else if (jobProperties.getLocalParameters() != null) {
-			XmlCursor xmlCursor = jobProperties.getLocalParameters().newCursor();
-			xmlCursor.removeXml();
+		} else {
+			if (isScenario) {
+				if (scenario.getLocalParameters() != null) {
+					XmlCursor xmlCursor = scenario.getLocalParameters().newCursor();
+					xmlCursor.removeXml();
+				}
+			} else if (jobProperties.getLocalParameters() != null) {
+				XmlCursor xmlCursor = jobProperties.getLocalParameters().newCursor();
+				xmlCursor.removeXml();
+			}
 		}
 	}
 
@@ -1215,7 +1278,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		renderUpdateParamButton = false;
 
 		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("batchProcessForm:parametersPanel");
+		context.update("jobDefinitionForm:tabView:parametersPanel");
 	}
 
 	public void editInputParamAction(ActionEvent e) {
@@ -1231,7 +1294,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		renderUpdateParamButton = true;
 
 		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("batchProcessForm:parametersPanel");
+		context.update("jobDefinitionForm:tabView:parametersPanel");
 	}
 
 	public void updateInputParameter() {
@@ -2350,6 +2413,21 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.dependencyTreePath = dependencyTreePath;
 	}
 
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+
+	public boolean isScenario() {
+		return isScenario;
+	}
+
+	public void setScenario(boolean isScenario) {
+		this.isScenario = isScenario;
+	}
 
 	// public JSTree getjSTree() {
 	// return jSTree;
