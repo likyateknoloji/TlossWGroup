@@ -19,14 +19,46 @@
 				<p:tab id="baseScenarioInfos"
 					title="#{msgs['tlos.workspace.pannel.scenario.baseScenarioInfos']}">
 					<p:panel>
-						<p:panelGrid columns="2">
+						<p:panelGrid id="baseInfos" columns="2">
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.scenario.scenarioName']}" />
-							<p:inputText value="#{scenarioDefinitionMBean.scenarioName}" />
+							<p:inputText value="#{scenarioDefinitionMBean.scenarioName}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.scenario.name']}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
 
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.scenario.explanation']}" />
-							<p:inputText value="#{scenarioDefinitionMBean.comment}" />
+							<p:inputText value="#{scenarioDefinitionMBean.comment}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.scenario.comment']}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.scenario.jsIsActive']}" />
+							<p:selectBooleanCheckbox
+								value="#{scenarioDefinitionMBean.active}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.scenario.useCalendarDef']}" />
+							<p:selectBooleanCheckbox
+								value="#{scenarioDefinitionMBean.useCalendarDef}">
+								<p:ajax update="baseInfos"></p:ajax>
+							</p:selectBooleanCheckbox>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.calendar']}"
+								rendered="#{scenarioDefinitionMBean.useCalendarDef}" />
+							<p:selectOneMenu
+								rendered="#{scenarioDefinitionMBean.useCalendarDef}"
+								value="#{scenarioDefinitionMBean.jobCalendar}">
+								<f:selectItems value="#{scenarioDefinitionMBean.jsCalendarList}" />
+							</p:selectOneMenu>
+
 						</p:panelGrid>
 					</p:panel>
 				</p:tab>
@@ -59,7 +91,39 @@
 					title="#{msgs['tlos.workspace.pannel.scenario.advancedScenarioInfos']}">
 					<p:panel>
 						<p:panelGrid columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
+							<p:selectOneMenu id="agentChoiceMethod"
+								value="#{scenarioDefinitionMBean.agentChoiceMethod}"
+								style="width: 100pt">
+								<f:selectItems
+									value="#{scenarioDefinitionMBean.agentChoiceMethodList}" />
+								<p:ajax update="advancedScenarioInfos"></p:ajax>
+							</p:selectOneMenu>
 
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.agentList']}"
+								rendered="#{scenarioDefinitionMBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+							<p:selectOneMenu
+								rendered="#{scenarioDefinitionMBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.scenario.advanced.agent']}"
+								value="#{scenarioDefinitionMBean.selectedAgent}"
+								style="width: 100pt">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItems
+									value="#{scenarioDefinitionMBean.definedAgentList}" />
+							</p:selectOneMenu>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.scenario.schedulingAlgorithm']}" />
+							<p:selectOneMenu
+								value="#{scenarioDefinitionMBean.selectedSchedulingAlgorithm}">
+								<f:selectItems
+									value="#{scenarioDefinitionMBean.schedulingAlgorithmList}" />
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:selectOneMenu>
 						</p:panelGrid>
 					</p:panel>
 				</p:tab>
