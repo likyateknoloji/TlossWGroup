@@ -13,10 +13,14 @@ import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/m
 
 declare function rsc:searchResources($searchResource as element(rns:RNSEntryType)) as element(lrns:ResourceList)* 
  {
+   <lrns:ResourceList>
+   {
    for $rsc in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
    let $sonuc := if ((fn:contains(fn:lower-case($rsc/@entry-name), fn:lower-case($searchResource/@entry-name)) or data($searchResource/@entry-name)="" or not(fn:exists($searchResource/@entry-name))))
                  then $rsc else ()
-   return <lrns:ResourceList> { $sonuc } </lrns:ResourceList>
+   return $sonuc
+   }
+   </lrns:ResourceList>
 };
 
 (: eskisi mart 2013 Hakan
