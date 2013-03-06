@@ -44,7 +44,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
 
-	private String jobDefCenterPanel = BATCH_PROCESS_PAGE;
+	private String jobDefCenterPanel = SCENARIO_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
