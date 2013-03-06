@@ -126,6 +126,12 @@
 							</p:selectOneMenu>
 						</p:panelGrid>
 					</p:panel>
+
+					<p:panel style="height:40px;">
+						<p:commandButton style="float:right;"
+							value="#{msgs['tlos.button.save']}"
+							actionListener="#{scenarioDefinitionMBean.insertJobAction}" />
+					</p:panel>
 				</p:tab>
 
 			</p:tabView>
