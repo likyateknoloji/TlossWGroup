@@ -1982,43 +1982,7 @@ public class DBOperations implements Serializable {
 		}
 		return resourceList;
 	}
-	/*
-	public ArrayList<RNSEntryType> searchResource(String resourceXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResources(" + resourceXML + ")";
-
-		ArrayList<RNSEntryType> resourceList = new ArrayList<RNSEntryType>();
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				RNSEntryType resource;
-				try {
-					resource = RNSEntryType.Factory.parse(xmlContent);
-					resourceList.add(resource);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return resourceList;
-	}
-*/
 	public boolean deleteResource(String resourceXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
