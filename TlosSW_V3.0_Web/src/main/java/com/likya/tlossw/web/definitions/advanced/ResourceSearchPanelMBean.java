@@ -44,14 +44,9 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public String getResourceXML() {
-		// TODO RNSEntryType taniminda bir problem var sanirim,
-		// burada kullanamadim.
-		// Simdilik qname tanimini boyle yaptim.
 		//QName qName = RNSEntryType.type.getName()OuterType().getDocumentElementName();
 		QName qName = RNSEntryType.type.getName();
 		//QName qName = new QName("http://schemas.ogf.org/rns/2009/12/rns", "RNSEntryType", "rns");
-		// QName qName =
-		// RNSEntryType.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String resourceXML = resource.xmlText(xmlOptions);
 
