@@ -1,12 +1,24 @@
+
 <!--
 RNS icin ek sema tanimlari. Likya teknoloji
 -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_SWResourceNS_types" xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types" targetNamespace="http://www.likyateknoloji.com/XML_SWResourceNS_types" elementFormDefault="qualified">
-    <xs:import namespace="http://schemas.ogf.org/rns/2009/12/rns" schemaLocation="rns-schema.xsd"/>
-    <xs:complexType name="ResourceListType">
-        <xs:sequence>
-            <xs:element name="Resource" type="rns:RNSEntryType" minOccurs="1" maxOccurs="unbounded" nillable="false"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:element name="ResourceList" type="lrns:ResourceListType"/>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_SWResourceNS_types" xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
+           xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types" targetNamespace="http://www.likyateknoloji.com/XML_SWResourceNS_types" elementFormDefault="qualified">
+	<xs:import namespace="http://schemas.ogf.org/rns/2009/12/rns" schemaLocation="rns-schema.xsd"/>
+    <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
+	<xs:complexType name="ResourceType">
+		<xs:complexContent>
+			<xs:extension base="rns:RNSEntryType">
+				<xs:sequence>
+					<xs:element ref="jsdl:OperatingSystemName"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResourceListType">
+		<xs:sequence>
+			<xs:element name="Resource" type="ResourceType" minOccurs="1" maxOccurs="unbounded" nillable="false"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ResourceList" type="lrns:ResourceListType"/>
 </xs:schema>
