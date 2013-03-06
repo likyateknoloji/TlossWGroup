@@ -119,10 +119,10 @@
 
 						<p:column id="OSId"
 							headerText="#{msgs['tlos.management.pannel.resources.os']}"
-							sortBy="#{item.metadata.operatingSystemName}"
-							filterBy="#{item.metadata.operatingSystemName}"
+							sortBy="#{item.operatingSystemName}"
+							filterBy="#{item.operatingSystemName}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.metadata.operatingSystemName}"
+							<h:outputText value="#{item.operatingSystemName}"
 								style="text-align: center;" />
 						</p:column>
 
