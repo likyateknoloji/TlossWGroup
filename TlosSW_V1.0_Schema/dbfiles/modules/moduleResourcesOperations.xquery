@@ -11,7 +11,7 @@ import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/m
 
 (:fn:empty($prs/com:role):)
 
-declare function rsc:searchResources($searchResource as element(rns:RNSEntryType)) as element(lrns:ResourceList)* 
+declare function rsc:searchResources($searchResource as element(lrns:ResourceType)) as element(lrns:ResourceList)* 
  {
    <lrns:ResourceList>
    {
