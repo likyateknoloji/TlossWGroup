@@ -66,6 +66,7 @@ declare function rsc:insertResource($resource as element(lrns:ResourceType)) as 
      <lrns:Resource xmlns="http://www.likyateknoloji.com/XML_resource_types" entry-name="{data($resource/@entry-name)}"> 
         <rns:endpoint>{$XXX/rns:endpoint/*}</rns:endpoint>
 		<rns:metadata>{$XXX/rns:metadata/*}</rns:metadata>
+		<jsdl:OperatingSystemName>{data($XXX/jsdl:OperatingSystemName)}</jsdl:OperatingSystemName>
      </lrns:Resource>
 	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList
 } ;
