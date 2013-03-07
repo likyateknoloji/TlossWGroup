@@ -71,14 +71,14 @@ declare function rsc:insertResource($resource as element(lrns:ResourceType)) as 
 	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList
 } ;
 
-declare function rsc:updateResource($resource as element(lrns:ResourceType))
+declare function rsc:updateResource($resource as element(lrns:Resource))
 {
 	for $resourcedon in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
 	where $resourcedon/@entry-name = $resource/@entry-name
 	return  update replace $resourcedon with $resource
 };
 
-declare function rsc:updateResourceLock($resource as element(lrns:ResourceType))
+declare function rsc:updateResourceLock($resource as element(lrns:Resource))
 {
    util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource, rsc:updateResource($resource))     
 };
