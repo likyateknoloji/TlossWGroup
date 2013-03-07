@@ -48,6 +48,7 @@ import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceType;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
@@ -2003,10 +2004,10 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public RNSEntryType searchResourceByResourceName(String resourceName) {
+	public ResourceType searchResourceByResourceName(String resourceName) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResourcesByResourceName(" + resourceName + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:searchResourcesByResourceName(\"" + resourceName + "\")";
 
 		XPathQueryService service;
 		try {
@@ -2015,16 +2016,16 @@ public class DBOperations implements Serializable {
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
-			RNSEntryType resource = null;
+			ResourceListType resourceList = null;
 
 			while (i.hasMoreResources()) {
 				Resource r = i.nextResource();
 				String xmlContent = (String) r.getContent();
 
 				try {
-					resource = RNSEntryType.Factory.parse(xmlContent);
+					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
 
-					return resource;
+					return resourceList.getResourceArray(0);
 
 				} catch (XmlException e) {
 					e.printStackTrace();
