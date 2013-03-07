@@ -43,18 +43,22 @@ declare function rsc:resourcesList($firstElement as xs:int, $lastElement as xs:i
 (: ornek kullanim rsc:searchResourcesByResourceName(xs:string('Tlos SW')) :)
 declare function rsc:searchResourcesByResourceName($searchResourceName as xs:string) as element(lrns:Resource)? 
  {
+   <lrns:ResourceList>
+   {
 	for $rsc in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
 	where fn:lower-case($rsc/@entry-name)=fn:lower-case($searchResourceName)
     return $rsc
+   }
+   </lrns:ResourceList>
 };
 
-declare function rsc:insertResourceLock($resource as element(lrns:Resource)) as xs:boolean
+declare function rsc:insertResourceLock($resource as element(lrns:ResourceType)) as xs:boolean
 {
    let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList, rsc:insertResource($resource))     
    return true()
 };
 
-declare function rsc:insertResource($resource as element(lrns:Resource)) as node()*
+declare function rsc:insertResource($resource as element(lrns:ResourceType)) as node()*
 {
     let $XXX := $resource
 
@@ -66,26 +70,26 @@ declare function rsc:insertResource($resource as element(lrns:Resource)) as node
 	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList
 } ;
 
-declare function rsc:updateResource($resource as element(lrns:Resource))
+declare function rsc:updateResource($resource as element(lrns:ResourceType))
 {
 	for $resourcedon in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
 	where $resourcedon/@entry-name = $resource/@entry-name
 	return  update replace $resourcedon with $resource
 };
 
-declare function rsc:updateResourceLock($resource as element(lrns:Resource))
+declare function rsc:updateResourceLock($resource as element(lrns:ResourceType))
 {
    util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource, rsc:updateResource($resource))     
 };
 
-declare function rsc:deleteResource($resource as element(lrns:Resource))
+declare function rsc:deleteResource($resource as element(lrns:ResourceType))
  {
 	for $resourcedon in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource
 	where $resourcedon/@entry-name = $resource/@entry-name
 	return update delete $resourcedon
 };
 
-declare function rsc:deleteResourceLock($resource as element(lrns:Resource))
+declare function rsc:deleteResourceLock($resource as element(lrns:ResourceType))
 {
    util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource, rsc:deleteResource($resource))     
 };
