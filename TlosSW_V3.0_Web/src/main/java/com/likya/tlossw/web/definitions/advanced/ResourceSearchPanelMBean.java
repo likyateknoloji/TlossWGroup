@@ -7,12 +7,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.primefaces.component.datatable.DataTable;
 
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
@@ -21,19 +20,19 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
 @ManagedBean(name = "resourceSearchPanelMBean")
-@RequestScoped
+@ViewScoped
 public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = -8496956003387120301L;
 
-	private RNSEntryType resource;
+	private ResourceType resource;
 
-	private ArrayList<RNSEntryType> searchResourceList;
-	private transient DataTable searchResourceTable;
+	private ArrayList<ResourceType> searchResourceList;
+	private DataTable searchResourceTable;
 
 	private String resourceName;
 
-	private List<RNSEntryType> filteredResourceList;
+	private List<ResourceType> filteredResourceList;
 
 	public void dispose() {
 		resetResourceAction();
@@ -56,8 +55,8 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void resetResourceAction() {
-		resource = RNSEntryType.Factory.newInstance();
-		searchResourceList = new ArrayList<RNSEntryType>();
+		resource = ResourceType.Factory.newInstance();
+		searchResourceList = new ArrayList<ResourceType>();
 		searchResourceList = null;
 		resourceName = "";
 	}
@@ -68,10 +67,10 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		}
 
 		ResourceListType resourceListType = getDbOperations().searchResource(getResourceXML());
-		searchResourceList = new ArrayList<RNSEntryType>();
+		searchResourceList = new ArrayList<ResourceType>();
 
-		for (RNSEntryType rnsEntryType : resourceListType.getResourceArray()) {
-			searchResourceList.add(rnsEntryType);
+		for (ResourceType resourceType : resourceListType.getResourceArray()) {
+			searchResourceList.add(resourceType);
 		}
 
 		if (searchResourceList == null || searchResourceList.size() == 0) {
@@ -80,11 +79,11 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void deleteResourceAction(ActionEvent e) {
-		resource = (RNSEntryType) searchResourceTable.getRowData();
+		resource = (ResourceType) searchResourceTable.getRowData();
 
 		if (getDbOperations().deleteResource(getResourceXML())) {
 			searchResourceList.remove(resource);
-			resource = RNSEntryType.Factory.newInstance();
+			resource = ResourceType.Factory.newInstance();
 
 			addMessage("searchResource", FacesMessage.SEVERITY_INFO, "tlos.success.resource.delete", null);
 		} else {
@@ -100,14 +99,6 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		this.resourceName = resourceName;
 	}
 
-	public RNSEntryType getResource() {
-		return resource;
-	}
-
-	public void setResource(RNSEntryType resource) {
-		this.resource = resource;
-	}
-
 	public DataTable getSearchResourceTable() {
 		return searchResourceTable;
 	}
@@ -116,19 +107,27 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		this.searchResourceTable = searchResourceTable;
 	}
 
-	public ArrayList<RNSEntryType> getSearchResourceList() {
+	public ResourceType getResource() {
+		return resource;
+	}
+
+	public void setResource(ResourceType resource) {
+		this.resource = resource;
+	}
+
+	public ArrayList<ResourceType> getSearchResourceList() {
 		return searchResourceList;
 	}
 
-	public void setSearchResourceList(ArrayList<RNSEntryType> searchResourceList) {
+	public void setSearchResourceList(ArrayList<ResourceType> searchResourceList) {
 		this.searchResourceList = searchResourceList;
 	}
 
-	public List<RNSEntryType> getFilteredResourceList() {
+	public List<ResourceType> getFilteredResourceList() {
 		return filteredResourceList;
 	}
 
-	public void setFilteredResourceList(List<RNSEntryType> filteredResourceList) {
+	public void setFilteredResourceList(List<ResourceType> filteredResourceList) {
 		this.filteredResourceList = filteredResourceList;
 	}
 
