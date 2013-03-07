@@ -20,6 +20,7 @@ import org.w3.x2005.x08.addressing.EndpointReferenceType;
 
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceType;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -75,7 +76,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public String getResourceXML() {
 		//QName qName = ResourceListType.type.getOuterType().getDocumentElementName();
-		QName qName = RNSEntryType.type.getName();
+		QName qName = ResourceType.type.getName();
 		//QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String resourceXML = resource.xmlText(xmlOptions);
