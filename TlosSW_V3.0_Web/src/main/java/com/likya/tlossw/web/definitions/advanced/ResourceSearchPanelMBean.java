@@ -16,6 +16,7 @@ import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.primefaces.component.datatable.DataTable;
 
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
+import com.likya.tlos.model.xmlbeans.swresourcens.ResourceType;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -45,7 +46,8 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public String getResourceXML() {
 		//QName qName = RNSEntryType.type.getName()OuterType().getDocumentElementName();
-		QName qName = RNSEntryType.type.getName();
+		//QName qName = RNSEntryType.type.getName();
+		QName qName = ResourceType.type.getName();
 		//QName qName = new QName("http://schemas.ogf.org/rns/2009/12/rns", "RNSEntryType", "rns");
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String resourceXML = resource.xmlText(xmlOptions);
