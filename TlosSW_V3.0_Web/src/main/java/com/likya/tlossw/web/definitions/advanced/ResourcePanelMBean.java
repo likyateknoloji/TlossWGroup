@@ -11,15 +11,13 @@ import javax.faces.event.ActionEvent;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSMetadataType;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSSupportType;
 import org.ogf.schemas.rns.x2009.x12.rns.SupportsRNSType;
 import org.w3.x2005.x08.addressing.AttributedURIType;
 import org.w3.x2005.x08.addressing.EndpointReferenceType;
 
-import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
-import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
+import com.likya.tlos.model.xmlbeans.jsdl.OperatingSystemTypeEnumeration;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceType;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -41,8 +39,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final String WINDOWS = "Windows";
 
-	private RNSEntryType resource;
-	private ResourceListType resourceList;
+	private ResourceType resource;
 
 	private String resourceName;
 	private String endpointAddress;
@@ -65,7 +62,10 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 
 				resource = getDbOperations().searchResourceByResourceName(selectedResourceName);
 				if (resource != null) {
-					// TODO ekrandaki alanlari guncellenecek kaynak ile doldur
+					resourceName = resource.getEntryName();
+					endpointAddress = resource.getEndpoint().getAddress().getStringValue();
+					supportsRns = Boolean.parseBoolean(resource.getMetadata().getSupportsRns().getValue().toString());
+					os = resource.getOperatingSystemName().toString();
 				}
 
 			} else {
@@ -84,7 +84,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void resetResourceAction() {
-		resource = RNSEntryType.Factory.newInstance();
+		resource = ResourceType.Factory.newInstance();
 		resourceName = "";
 		endpointAddress = "";
 		supportsRns = true;
@@ -92,6 +92,8 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void updateResourceAction(ActionEvent e) {
+		fillResourceProperties();
+
 		if (getDbOperations().updateResource(getResourceXML())) {
 			addMessage("insertResource", FacesMessage.SEVERITY_INFO, "tlos.success.resource.update", null);
 		} else {
@@ -99,7 +101,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public void insertResourceAction(ActionEvent e) {
+	private void fillResourceProperties() {
 		resource.setEntryName(resourceName);
 
 		EndpointReferenceType endpointReferenceType = EndpointReferenceType.Factory.newInstance();
@@ -116,10 +118,13 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 			supportsRNSType.setValue(RNSSupportType.FALSE);
 		}
 		rnsMetadataType.setSupportsRns(supportsRNSType);
-
-		// TODO metadata icindeki isletim sistemini set edemedim, bakacagim.
-
 		resource.setMetadata(rnsMetadataType);
+
+		resource.setOperatingSystemName(OperatingSystemTypeEnumeration.Enum.forString(os));
+	}
+
+	public void insertResourceAction(ActionEvent e) {
+		fillResourceProperties();
 
 		if (getDbOperations().insertResource(getResourceXML())) {
 			addMessage("insertResource", FacesMessage.SEVERITY_INFO, "tlos.success.resource.insert", null);
@@ -161,14 +166,6 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		this.resourceName = resourceName;
 	}
 
-	public RNSEntryType getResource() {
-		return resource;
-	}
-
-	public void setResource(RNSEntryType resource) {
-		this.resource = resource;
-	}
-
 	public String getEndpointAddress() {
 		return endpointAddress;
 	}
@@ -199,6 +196,14 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setOs(String os) {
 		this.os = os;
+	}
+
+	public ResourceType getResource() {
+		return resource;
+	}
+
+	public void setResource(ResourceType resource) {
+		this.resource = resource;
 	}
 
 }
