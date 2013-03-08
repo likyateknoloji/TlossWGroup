@@ -37,8 +37,8 @@ public class SessionMediator implements Serializable {
 	public void demoMethod() {
 		
 		/**
-		 * Geçici olarak gecekondu, login sayfasý ile kalkmalý
-		 * TODO serkan taþ
+		 * Geï¿½ici olarak gecekondu, login sayfasï¿½ ile kalkmalï¿½
+		 * TODO serkan taï¿½
 		 */
 		
 		JmxAppUser jmxAppUser = new JmxAppUser();
@@ -66,7 +66,8 @@ public class SessionMediator implements Serializable {
 			if (locale == null) {
 				locale =  new Locale("tr","TR");
 			}
-			messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages", locale, new UTF8Control());
+			// messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages_" + locale , new UTF8Control());
+			messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages");
 		}
 	}
 	

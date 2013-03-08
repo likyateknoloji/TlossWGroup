@@ -11,5 +11,6 @@ public class ConstantDefinitions {
 	public static final String WSDEFINITION_ID = "wsDefinitionId";
 	public static final String JOB_ID = "jobId";
 	public static final String USER_ID = "userId";
+	public static final String SCENARIO_ID = "scenarioId";
 
 }

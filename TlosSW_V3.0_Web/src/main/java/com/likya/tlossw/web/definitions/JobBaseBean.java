@@ -147,6 +147,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private String periodTime;
 
 	// time management
+	private boolean useTimeManagement = false;
+
 	private String startTime;
 
 	private boolean defineStopTime = false;
@@ -359,12 +361,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private void fillDependencyDefinitionsTab() {
-		dependencyItem = Item.Factory.newInstance();
-		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
-
-		manyJobDependencyList = new ArrayList<SelectItem>();
-		dependencyExpression = "";
-
 		if (jobProperties.getDependencyList() != null && jobProperties.getDependencyList().sizeOfItemArray() > 0) {
 
 			for (Item item : jobProperties.getDependencyList().getItemArray()) {
@@ -579,6 +575,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		cpuUnit = "%";
 		memoryValue = "0";
 		diskValue = "0";
+
+		dependencyItem = Item.Factory.newInstance();
+		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
+
+		manyJobDependencyList = new ArrayList<SelectItem>();
+		dependencyExpression = "";
 	}
 
 	public void fillAllLists() {
@@ -1008,7 +1010,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		return path;
 	}
 
-	private String removeIdFromName(String nameAndId) {
+	public String removeIdFromName(String nameAndId) {
 		StringTokenizer nameTokenizer = new StringTokenizer(nameAndId, "|");
 		String name = nameTokenizer.nextToken().trim();
 
@@ -2427,6 +2429,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setScenario(boolean isScenario) {
 		this.isScenario = isScenario;
+	}
+
+	public boolean isUseTimeManagement() {
+		return useTimeManagement;
+	}
+
+	public void setUseTimeManagement(boolean useTimeManagement) {
+		this.useTimeManagement = useTimeManagement;
 	}
 
 	// public JSTree getjSTree() {

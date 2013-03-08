@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlOptions;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
@@ -20,7 +25,10 @@ import com.likya.tlos.model.xmlbeans.common.SchedulingAlgorithmDocument.Scheduli
 import com.likya.tlos.model.xmlbeans.data.AdvancedScenarioInfosDocument.AdvancedScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
@@ -43,6 +51,8 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	private Collection<SelectItem> schedulingAlgorithmList = null;
 	private String selectedSchedulingAlgorithm;
+
+	private String treePath;
 
 	@PostConstruct
 	public void init() {
@@ -70,6 +80,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	public void addNewScenario() {
 		TreeNode selectedScenario = getJsTree().getSelectedJS();
+		setScenarioTreePath(selectedScenario);
 
 		getJsDefinitionMBean().setJobDefCenterPanel(JSDefinitionMBean.SCENARIO_PAGE);
 
@@ -150,27 +161,71 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	public void insertScenarioDefinition() {
-		// if (!scenarioCheckUp() & getScenarioId()) {
-		// return;
-		// }
-		//
-		// if
-		// (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA,
-		// getJobPropertiesXML(), getTreePath(jobPathInScenario))) {
-		//
-		// // TODO agactaki is yeni ismiyle guncellenecek
-		//
-		// // TreeNode root = jSTree.getRoot();
-		//
-		// RequestContext context = RequestContext.getCurrentInstance();
-		// context.update("jsTreeForm:tree");
-		//
-		// addMessage("jobInsert", FacesMessage.SEVERITY_INFO,
-		// "tlos.success.job.insert", null);
-		// } else {
-		// addMessage("jobInsert", FacesMessage.SEVERITY_ERROR,
-		// "tlos.error.job.insert", null);
-		// }
+		if (!scenarioCheckUp() & getScenarioId()) {
+			return;
+		}
+
+		if (getDbOperations().insertScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, getScenarioXML(), treePath)) {
+			TreeNode scenarioNode = new DefaultTreeNode("scenario", scenarioName + " | " + getScenario().getID(), getJsTree().getSelectedJS());
+			scenarioNode.setExpanded(true);
+
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("jsTreeForm:tree");
+
+			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.insert", null);
+		} else {
+			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.insert", null);
+		}
+	}
+
+	private boolean scenarioCheckUp() {
+		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+
+		Scenario scenarioDefinition = getDbOperations().getScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
+
+		if (scenarioDefinition != null && scenarioDefinition.getBaseScenarioInfos().getJsName().equals(scenarioName)) {
+			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean getScenarioId() {
+		int scenarioId = getDbOperations().getNextId(ConstantDefinitions.SCENARIO_ID);
+
+		if (scenarioId < 0) {
+			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.getId", null);
+			return false;
+		}
+		getScenario().setID(scenarioId + "");
+
+		return true;
+	}
+
+	private String getScenarioXML() {
+		QName qName = Scenario.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+		String scenarioXML = getScenario().xmlText(xmlOptions);
+
+		return scenarioXML;
+	}
+
+	private void setScenarioTreePath(TreeNode scenarioNode) {
+		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root");
+
+		String path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + removeIdFromName(scenarioNode.getData().toString()) + "']/..";
+
+		while (scenarioNode.getParent() != null) {
+			if (scenarioNode.getParent().getData().equals(scenarioRoot)) {
+				path = "/dat:TlosProcessData" + path;
+				break;
+			}
+			scenarioNode = scenarioNode.getParent();
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
+		}
+
+		treePath = path;
 	}
 
 	public JSTree getJsTree() {
