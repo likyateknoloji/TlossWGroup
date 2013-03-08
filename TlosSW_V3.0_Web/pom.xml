@@ -17,7 +17,7 @@
 		<!-- <java-version>1.7</java-version> -->
 		<targetdirectory>/src/main/webapp/WEB-INF/</targetdirectory>
 		<!-- <skipTests>true</skipTests> -->
-		<project.build.sourceEncoding>ISO-8859-9</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
