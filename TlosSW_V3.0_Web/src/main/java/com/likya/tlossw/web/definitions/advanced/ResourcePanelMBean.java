@@ -37,8 +37,6 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
 
-	private static final String WINDOWS = "Windows";
-
 	private ResourceType resource;
 
 	private String resourceName;
@@ -91,7 +89,7 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		resourceName = "";
 		endpointAddress = "";
 		supportsRns = true;
-		setOs(WINDOWS);
+		setOs(OperatingSystemTypeEnumeration.WINDOWS.toString());
 	}
 
 	public void updateResourceAction(ActionEvent e) {
