@@ -10,7 +10,19 @@
 	<ui:composition>
 		<p:tab id="timeManagementTab"
 			title="#{msgs['tlos.workspace.pannel.job.timeManagement']}">
-			<p:panel>
+
+			<p:panel rendered="#{backingBean.scenario}">
+				<p:panelGrid columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.scenario.defineTimeManagement']}" />
+					<p:selectBooleanCheckbox value="#{backingBean.useTimeManagement}">
+						<p:ajax update="timeManagementTab" />
+					</p:selectBooleanCheckbox>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel id="timeManagementPanel"
+				rendered="#{backingBean.useTimeManagement or !backingBean.scenario}">
 				<p:panelGrid id="timeManagement" columns="4">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
@@ -50,7 +62,8 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
-					<p:selectOneMenu value="#{backingBean.relativeTimeOption}" style="width: 100pt">
+					<p:selectOneMenu value="#{backingBean.relativeTimeOption}"
+						style="width: 100pt">
 						<f:selectItems value="#{backingBean.relativeTimeOptionList}" />
 					</p:selectOneMenu>
 
