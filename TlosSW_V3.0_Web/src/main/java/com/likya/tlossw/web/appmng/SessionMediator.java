@@ -67,7 +67,7 @@ public class SessionMediator implements Serializable {
 				locale =  new Locale("tr","TR");
 			}
 			// messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages_" + locale , new UTF8Control());
-			messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages");
+			messageBundle = UTF8ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages", new UTF8ResourceBundle.UTF8Control());
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class SessionMediator implements Serializable {
 	}
 
 	protected void setMessageBundle() {
-		messageBundle = ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages", localeBean.getCurrentLocale(), new UTF8Control());
+		messageBundle = UTF8ResourceBundle.getBundle("com.likya.tlossw.web.resources.messages", localeBean.getCurrentLocale());
 	}
 	
 	public ResourceMapper getResourceMapper() {
