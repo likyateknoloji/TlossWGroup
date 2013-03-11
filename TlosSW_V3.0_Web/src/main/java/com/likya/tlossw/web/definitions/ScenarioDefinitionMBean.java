@@ -85,7 +85,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		getJsDefinitionMBean().setJobDefCenterPanel(JSDefinitionMBean.SCENARIO_PAGE);
 
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// selectedScenario.toString() + " içinde tanýmlanacak", null);
+		// selectedScenario.toString() + " iÃ§inde tanÄ±mlanacak", null);
 	}
 
 	public void insertJobAction(ActionEvent e) {

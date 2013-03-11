@@ -73,6 +73,7 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList.OsType;
+import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -221,6 +222,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private JobStatusList jobStatusList;
 	private Status jobStatus;
 	private ReturnCode returnCode;
+
+	private ScenarioStatusList scenarioStatusList;
 
 	private Collection<SelectItem> osTypeList = null;
 	private String osType;
@@ -1413,10 +1416,19 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				returnCode.set(tmpReturnCode);
 			}
 
-			// hazirlanan job status nesnesi jobstatusList icine koyuluyor
-			for (int i = 0; i < jobStatusList.sizeOfJobStatusArray(); i++) {
-				if (jobStatusList.getJobStatusArray(i).getStatusName().equals(jobStatus.getStatusName())) {
-					jobStatusList.getJobStatusArray(i).set(jobStatus);
+			if (isScenario) {
+				// hazirlanan status nesnesi scenariostatusList icine koyuluyor
+				for (int i = 0; i < scenarioStatusList.sizeOfScenarioStatusArray(); i++) {
+					if (scenarioStatusList.getScenarioStatusArray(i).getStatusName().equals(jobStatus.getStatusName())) {
+						scenarioStatusList.getScenarioStatusArray(i).set(jobStatus);
+					}
+				}
+			} else {
+				// hazirlanan job status nesnesi jobstatusList icine koyuluyor
+				for (int i = 0; i < jobStatusList.sizeOfJobStatusArray(); i++) {
+					if (jobStatusList.getJobStatusArray(i).getStatusName().equals(jobStatus.getStatusName())) {
+						jobStatusList.getJobStatusArray(i).set(jobStatus);
+					}
 				}
 			}
 		}
@@ -1425,14 +1437,23 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			manyReturnCodeList = new ArrayList<SelectItem>();
 		}
 
-		// islem yapilan job icin onceden herhangi bir statu tanýmý yapilmis mi
+		// islem yapilan job icin onceden herhangi bir statu tanimi yapilmis mi
 		// diye kontrol ediyor, yapilmamissa job tanimindaki gerekli bilesenleri
 		// ekliyor
-		if (jobStatusList == null || jobStatusList.sizeOfJobStatusArray() == 0) {
-			jobStatusList = JobStatusList.Factory.newInstance();
+		if (isScenario) {
+			if (scenarioStatusList == null || scenarioStatusList.sizeOfScenarioStatusArray() == 0) {
+				scenarioStatusList = ScenarioStatusList.Factory.newInstance();
 
-			Status status = jobStatusList.addNewJobStatus();
-			status.set(jobStatus);
+				Status status = scenarioStatusList.addNewScenarioStatus();
+				status.set(jobStatus);
+			}
+		} else {
+			if (jobStatusList == null || jobStatusList.sizeOfJobStatusArray() == 0) {
+				jobStatusList = JobStatusList.Factory.newInstance();
+
+				Status status = jobStatusList.addNewJobStatus();
+				status.set(jobStatus);
+			}
 		}
 
 		SelectItem item = new SelectItem();
@@ -1450,6 +1471,25 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 
 		Status tmpJobStatus = WebJobDefUtils.cloneJobStatus(jobStatus);
+
+		if (isScenario) {
+			addToScenarioStatusList(tmpJobStatus);
+		} else {
+			addToJobStatusList(tmpJobStatus);
+		}
+
+		if (manyJobStatusList == null) {
+			manyJobStatusList = new ArrayList<SelectItem>();
+		}
+
+		manyJobStatusList.add(new SelectItem(jobStatusName, jobStatusName));
+
+		addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.add", null);
+
+		statusDialogShow = false;
+	}
+
+	private void addToJobStatusList(Status tmpJobStatus) {
 		JobStatusList jobStatusList = null;
 
 		if (jobProperties.getStateInfos().getJobStatusList() == null || jobProperties.getStateInfos().getJobStatusList().sizeOfJobStatusArray() == 0) {
@@ -1469,16 +1509,28 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		Status newStatus = jobStatusList.addNewJobStatus();
 		newStatus.set(tmpJobStatus);
+	}
 
-		if (manyJobStatusList == null) {
-			manyJobStatusList = new ArrayList<SelectItem>();
+	private void addToScenarioStatusList(Status tmpJobStatus) {
+		ScenarioStatusList scenarioStatusList = null;
+
+		if (scenario.getScenarioStatusList() == null || scenario.getScenarioStatusList().sizeOfScenarioStatusArray() == 0) {
+			scenario.setScenarioStatusList(ScenarioStatusList.Factory.newInstance());
+
+			scenarioStatusList = scenario.getScenarioStatusList();
+
+			tmpJobStatus.setStsId("1");
+		} else {
+			scenarioStatusList = scenario.getScenarioStatusList();
+
+			int lastStatusIndex = scenarioStatusList.sizeOfScenarioStatusArray() - 1;
+			String id = scenarioStatusList.getScenarioStatusArray(lastStatusIndex).getStsId();
+
+			tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
 		}
 
-		manyJobStatusList.add(new SelectItem(jobStatusName, jobStatusName));
-
-		addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.add", null);
-
-		statusDialogShow = false;
+		Status newStatus = scenarioStatusList.addNewScenarioStatus();
+		newStatus.set(tmpJobStatus);
 	}
 
 	public void closeJobStatusDialogAction() {
@@ -1495,7 +1547,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			for (int j = 0; j < manyReturnCodeList.size(); j++) {
 				if (manyReturnCodeList.get(j).getValue().toString().equals(selectedReturnCodeList[i])) {
 
-					// TODO job tanimi icinden silme isi burada yapilacak,
+					// TODO job tanimi ya da senaryo tanimi icinden silme isi
+					// burada yapilacak,
 					// asagida sadece goruntu olarak ekrandaki listeden siliyor
 
 					manyReturnCodeList.remove(j);
@@ -2437,6 +2490,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setUseTimeManagement(boolean useTimeManagement) {
 		this.useTimeManagement = useTimeManagement;
+	}
+
+	public ScenarioStatusList getScenarioStatusList() {
+		return scenarioStatusList;
+	}
+
+	public void setScenarioStatusList(ScenarioStatusList scenarioStatusList) {
+		this.scenarioStatusList = scenarioStatusList;
 	}
 
 	// public JSTree getjSTree() {
