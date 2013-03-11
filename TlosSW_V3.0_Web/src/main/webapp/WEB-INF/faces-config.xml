@@ -7,13 +7,12 @@
 
 	<application>
 		<locale-config>
-			<default-locale>tr_TR</default-locale>
+			<default-locale>tr</default-locale>
 			<supported-locale>en</supported-locale>
 			<supported-locale>de</supported-locale>
 			<supported-locale>fr</supported-locale>
 		</locale-config>
 		<resource-bundle>
-			<!-- base-name>com.likya.tlossw.web.resources.messages</base-name-->
 			<base-name>com.likya.tlossw.web.appmng.UTF8ResourceBundle</base-name>
 			<var>msgs</var>
 		</resource-bundle>
