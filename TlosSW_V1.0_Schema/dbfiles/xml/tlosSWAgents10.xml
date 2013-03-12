@@ -1,9 +1,6 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<agnt:SWAgents xmlns:res="http://www.likyateknoloji.com/resource-extension-defs"
-	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
-	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAgent_v_1_0.xsd">
-	<agnt:SWAgent id="1">
+<agnt:SWAgents xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAgent_v_1_0.xsd">
+    <agnt:SWAgent id="1">
         <res:Resource>laptop-hakan</res:Resource>
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
@@ -22,22 +19,8 @@
         <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
         <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
-		<agnt:locals>
-			<par:parameter id="1">
-				<par:name>filename</par:name>
-				<par:valueString>parametre.xml</par:valueString>
-				<par:preValue type="2">parametre.xml</par:preValue>
-				<par:desc>tanim parametre.xml</par:desc>
-			</par:parameter>
-			<par:parameter id="2">
-				<par:name>LOGPATH</par:name>
-				<par:valueString>D:\likya\projeler\tlos\tlos3.0\LOG</par:valueString>
-				<par:preValue type="2">parametre.xml</par:preValue>
-				<par:desc>Log path tanimi</par:desc>
-			</par:parameter>
-		</agnt:locals>
-	</agnt:SWAgent>
-	<agnt:SWAgent id="2">
+    </agnt:SWAgent>
+    <agnt:SWAgent id="2">
         <res:Resource>patarafedora</res:Resource>
         <agnt:osType>Unix</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
@@ -56,16 +39,8 @@
         <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
         <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
-	</agnt:SWAgent>
-	<!-- <agnt:SWAgent id="3"> <res:Resource>sahin-laptop</res:Resource> <agnt:osType>Windows</agnt:osType> 
-		<agnt:agentType>agent</agnt:agentType> <agnt:nrpePort>5666</agnt:nrpePort> 
-		<agnt:jmxPort>5557</agnt:jmxPort> <agnt:jmxUser>jmxuser2</agnt:jmxUser> <agnt:jmxPassword>jmxpass2</agnt:jmxPassword> 
-		<agnt:inJmxAvailable>true</agnt:inJmxAvailable> <agnt:outJmxAvailable>true</agnt:outJmxAvailable> 
-		<agnt:jmxAvailable>true</agnt:jmxAvailable> <agnt:nrpeAvailable>false</agnt:nrpeAvailable> 
-		<agnt:lastHeartBeatTime>0</agnt:lastHeartBeatTime> <agnt:durationForUnavailability>900</agnt:durationForUnavailability> 
-		<agnt:lastJobTransfer>true</agnt:lastJobTransfer> <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime> 
-		</agnt:SWAgent -->
-	<agnt:SWAgent id="11">
+    </agnt:SWAgent>
+    <agnt:SWAgent id="11">
         <res:Resource>laptop-hakan</res:Resource>
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>server</agnt:agentType>
@@ -84,7 +59,15 @@
         <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
         <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
-	</agnt:SWAgent>
+        <agnt:locals>
+            <par:parameter id="91">
+                <par:name>JAVAPATH</par:name>
+                <par:valueString>C:\Program Files (x86)\Java\jdk1.6.0_21\bin\</par:valueString>
+                <par:preValue type="2">C:\Program Files (x86)\Java\jdk1.6.0_21\bin\</par:preValue>
+                <par:desc>JAVA PATH</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
     <agnt:SWAgent id="14">
         <res:Resource>nurkan-laptop</res:Resource>
         <agnt:osType>Windows</agnt:osType>
@@ -104,5 +87,149 @@
         <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
         <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
+        <agnt:locals>
+            <par:parameter id="91">
+                <par:name>JAVAPATH</par:name>
+                <par:valueString>D:\dev\Java\jdk1.6.0_24\bin\</par:valueString>
+                <par:preValue type="2">D:\dev\Java\jdk1.6.0_24\bin\</par:preValue>
+                <par:desc>JAVA PATH</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
+    <agnt:SWAgent id="15">
+        <res:Resource>tlossw-test1</res:Resource>
+        <agnt:osType>Windows</agnt:osType>
+        <agnt:agentType>agent</agnt:agentType>
+        <agnt:nrpePort>5666</agnt:nrpePort>
+        <agnt:jmxPort>5557</agnt:jmxPort>
+        <agnt:jmxUser>jmxuser</agnt:jmxUser>
+        <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
+        <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
+        <agnt:outJmxAvailable>false</agnt:outJmxAvailable>
+        <agnt:jmxAvailable>false</agnt:jmxAvailable>
+        <agnt:userStopRequest>null</agnt:userStopRequest>
+        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+        <agnt:lastHeartBeatTime>0</agnt:lastHeartBeatTime>
+        <agnt:durationForUnavailability>180</agnt:durationForUnavailability>
+        <agnt:lastJobTransfer>true</agnt:lastJobTransfer>
+        <agnt:isPermitted>true</agnt:isPermitted>
+        <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
+        <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
+        <agnt:locals>
+            <par:parameter id="91">
+                <par:name>JAVAPATH</par:name>
+                <par:valueString>D:\dev\Java\jdk1.6.0_21\bin\</par:valueString>
+                <par:preValue type="2">D:\dev\Java\jdk1.6.0_21\bin\</par:preValue>
+                <par:desc>JAVA PATH</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
+    <agnt:SWAgent id="16">
+        <res:Resource>tlossw-test2</res:Resource>
+        <agnt:osType>Windows</agnt:osType>
+        <agnt:agentType>agent</agnt:agentType>
+        <agnt:nrpePort>5666</agnt:nrpePort>
+        <agnt:jmxPort>3001</agnt:jmxPort>
+        <agnt:jmxUser>jmxuser</agnt:jmxUser>
+        <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
+        <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
+        <agnt:outJmxAvailable>false</agnt:outJmxAvailable>
+        <agnt:jmxAvailable>false</agnt:jmxAvailable>
+        <agnt:userStopRequest>null</agnt:userStopRequest>
+        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+        <agnt:lastHeartBeatTime>0</agnt:lastHeartBeatTime>
+        <agnt:durationForUnavailability>180</agnt:durationForUnavailability>
+        <agnt:lastJobTransfer>true</agnt:lastJobTransfer>
+        <agnt:isPermitted>true</agnt:isPermitted>
+        <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
+        <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
+        <agnt:locals>
+            <par:parameter id="91">
+                <par:name>JAVAPATH</par:name>
+                <par:valueString>D:\dev\Java\jdk1.6.0_21\bin\</par:valueString>
+                <par:preValue type="2">D:\dev\Java\jdk1.6.0_21\bin\</par:preValue>
+                <par:desc>JAVA PATH</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
+    <agnt:SWAgent id="17">
+        <res:Resource>merve-laptop</res:Resource>
+        <agnt:osType>Windows</agnt:osType>
+        <agnt:agentType>agent</agnt:agentType>
+        <agnt:nrpePort>5666</agnt:nrpePort>
+        <agnt:jmxPort>3001</agnt:jmxPort>
+        <agnt:jmxUser>jmxuser</agnt:jmxUser>
+        <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
+        <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
+        <agnt:outJmxAvailable>false</agnt:outJmxAvailable>
+        <agnt:jmxAvailable>false</agnt:jmxAvailable>
+        <agnt:userStopRequest>null</agnt:userStopRequest>
+        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+        <agnt:lastHeartBeatTime>0</agnt:lastHeartBeatTime>
+        <agnt:durationForUnavailability>180</agnt:durationForUnavailability>
+        <agnt:lastJobTransfer>true</agnt:lastJobTransfer>
+        <agnt:isPermitted>true</agnt:isPermitted>
+        <agnt:jobTransferFailureTime>0</agnt:jobTransferFailureTime>
+        <agnt:workspacePath>D:\user\hakan\TlosSW</agnt:workspacePath>
+        <agnt:locals>
+            <par:parameter id="91">
+                <par:name>JAVAPATH</par:name>
+                <par:valueString>D:\dev\Java\jdk1.6.0_33\bin\</par:valueString>
+                <par:preValue type="2">D:\dev\Java\jdk1.6.0_33\bin\</par:preValue>
+                <par:desc>JAVA PATH</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
+    <agnt:SWAgent id="15">
+        <res:Resource>deneme3</res:Resource>
+        <agnt:osType>Unix</agnt:osType>
+        <agnt:agentType>agent</agnt:agentType>
+        <agnt:nrpePort>1111</agnt:nrpePort>
+        <agnt:jmxPort>2222</agnt:jmxPort>
+        <agnt:jmxUser>22222</agnt:jmxUser>
+        <agnt:jmxPassword>22222</agnt:jmxPassword>
+        <agnt:inJmxAvailable/>
+        <agnt:outJmxAvailable/>
+        <agnt:jmxAvailable/>
+        <agnt:userStopRequest>null</agnt:userStopRequest>
+        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+        <agnt:lastHeartBeatTime/>
+        <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
+        <agnt:lastJobTransfer/>
+        <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
+        <agnt:workspacePath>11</agnt:workspacePath>
+        <agnt:locals>
+            <par:parameter id="15">
+                <par:name>22</par:name>
+                <par:valueString/>
+                <par:preValue type="3">111</par:preValue>
+                <par:desc>22</par:desc>
+            </par:parameter>
+            <par:parameter id="15">
+                <par:name>33</par:name>
+                <par:valueString/>
+                <par:preValue type="2">111</par:preValue>
+                <par:desc>aaa</par:desc>
+            </par:parameter>
+        </agnt:locals>
+    </agnt:SWAgent>
+    <agnt:SWAgent id="16">
+        <res:Resource>deneme3</res:Resource>
+        <agnt:osType>Unix</agnt:osType>
+        <agnt:agentType>agent</agnt:agentType>
+        <agnt:nrpePort>1111</agnt:nrpePort>
+        <agnt:jmxPort>2222</agnt:jmxPort>
+        <agnt:jmxUser>22222</agnt:jmxUser>
+        <agnt:jmxPassword>22222</agnt:jmxPassword>
+        <agnt:inJmxAvailable/>
+        <agnt:outJmxAvailable/>
+        <agnt:jmxAvailable/>
+        <agnt:userStopRequest>null</agnt:userStopRequest>
+        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
+        <agnt:lastHeartBeatTime/>
+        <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
+        <agnt:lastJobTransfer/>
+        <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
+        <agnt:workspacePath>11</agnt:workspacePath>
     </agnt:SWAgent>
 </agnt:SWAgents>
