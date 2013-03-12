@@ -58,10 +58,15 @@ declare function lk:insertNrpe($nrpeCall as element(nrp:nrpeCall))
 
 declare function lk:stringToDateTime($t1 as xs:string)
 {
-	let $t2 := substring($t1, 1, 22)
-	let $t3 := substring($t1, 23, 24)
-	let $t7 := concat($t2, ':', $t3)
-	let $t8 := xs:dateTime($t7)
+    (: Degisik tarih formatlari icin dusunuldu. 2011-10-13T15:08:31+0300 veya 2011-10-13T15:08:31.91+0300 veya 2011-10-13T15:08:31.897+0300 :)
+    let $uzunluk := string-length($t1)
+    let $baslangic := if($uzunluk eq 24) then 19 else if($uzunluk eq 27) then 22 else if($uzunluk eq 28) then 23 else ()
+    
+    let $t2 := substring($t1, 1, $baslangic)
+    let $t3 := substring($t1, $baslangic+2, 2)
+    let $t7 := concat($t2, '+', $t3, ':00')
+    let $t8 := xs:dateTime($t7)
+    
 	return $t8
 };
 
