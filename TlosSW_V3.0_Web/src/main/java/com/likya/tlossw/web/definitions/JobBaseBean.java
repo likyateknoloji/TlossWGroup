@@ -1578,6 +1578,26 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
+	public void deleteScenarioStatusAction() {
+		for (int i = 0; i < selectedJobStatusList.length; i++) {
+			for (int j = 0; j < manyJobStatusList.size(); j++) {
+				if (manyJobStatusList.get(j).getValue().equals(selectedJobStatusList[i])) {
+
+					ScenarioStatusList scenarioStatusList = scenario.getScenarioStatusList();
+
+					for (int k = 0; k < scenarioStatusList.sizeOfScenarioStatusArray(); k++) {
+						if (manyJobStatusList.get(j).getValue().equals(scenarioStatusList.getScenarioStatusArray(k).getStatusName().toString())) {
+							scenarioStatusList.removeScenarioStatus(k);
+							k = scenarioStatusList.sizeOfScenarioStatusArray();
+						}
+					}
+					manyJobStatusList.remove(j);
+					j = manyJobStatusList.size();
+				}
+			}
+		}
+	}
+
 	public void jobStatusEditAction() {
 		if (selectedJobStatusList == null || selectedJobStatusList.length == 0) {
 			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose", null);
@@ -1587,7 +1607,15 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			return;
 		}
 
-		for (Status jStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
+		Status[] statusArray = null;
+
+		if (isScenario) {
+			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
+		} else {
+			statusArray = jobProperties.getStateInfos().getJobStatusList().getJobStatusArray();
+		}
+
+		for (Status jStatus : statusArray) {
 			if (jStatus.getStatusName().toString().equals(selectedJobStatusList[0])) {
 				jobStatus = WebJobDefUtils.cloneJobStatus(jStatus);
 				jobStatusName = selectedJobStatusList[0];
@@ -1619,7 +1647,15 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void updateJobStatusAction() {
-		for (Status jStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
+		Status[] statusArray = null;
+
+		if (isScenario) {
+			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
+		} else {
+			statusArray = jobProperties.getStateInfos().getJobStatusList().getJobStatusArray();
+		}
+
+		for (Status jStatus : statusArray) {
 			if (jobStatus.getStatusName().toString().equals(jStatus.getStatusName().toString())) {
 				jStatus = WebJobDefUtils.cloneJobStatus(jobStatus);
 
