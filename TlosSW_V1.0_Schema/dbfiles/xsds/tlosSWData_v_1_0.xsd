@@ -96,6 +96,7 @@
                 <xs:element ref="jobLogPath"/>
                 <xs:element ref="oSystem"/>
                 <xs:element ref="jobPriority"/>
+                <xs:element ref="jsIsActive"/>
                 <xs:element ref="lt:userId"/>
             </xs:sequence>
         </xs:complexType>
