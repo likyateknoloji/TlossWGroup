@@ -14,10 +14,12 @@
 				actionListener="#{jSTree.viewScenario}" icon="ui-icon-search" />
 			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
 				actionListener="#{jSTree.deleteScenario}" icon="ui-icon-close" />
-			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}" update="tree :jobDefinitionForm"
-				actionListener="#{scenarioDefinitionMBean.addNewScenario}" icon="ui-icon-plus" />
+			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
+				update="tree :jobDefinitionForm"
+				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
+				icon="ui-icon-plus" />
 		</p:contextMenu>
-		
+
 		<p:contextMenu for="tree" nodeType="job">
 			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
 				actionListener="#{jSTree.viewJob}" icon="ui-icon-search" />
@@ -41,7 +43,8 @@
 
 			<p:treeNode id="scenarioNode" type="scenario"
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
-				<h:outputText value="#{node}" id="scenarioName" />
+				<h:outputText value="#{node}" id="scenarioName"
+					style="font-weight: bold;" />
 			</p:treeNode>
 
 			<p:treeNode id="jobNode" type="job" icon="ui-icon-carat-1-e">
