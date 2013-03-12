@@ -200,6 +200,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		default:
 			break;
 		}
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm");
 	}
 
 	public void handleJobDropAction(ActionEvent ae) {
