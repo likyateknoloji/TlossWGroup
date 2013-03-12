@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
@@ -17,13 +18,20 @@ import org.primefaces.model.DefaultDashboardColumn;
 import org.primefaces.model.DefaultDashboardModel;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.PieChartModel;
 import org.primefaces.model.chart.MeterGaugeChartModel;
+import org.primefaces.model.chart.PieChartModel;
+import org.xmldb.api.base.XMLDBException;
+
+import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
+import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "dashboardPanelMBean")
 @ViewScoped
 public class DashboardPanelMBean implements Serializable {
-
+	
+	@ManagedProperty(value = "#{dbOperations}")
+	private DBOperations dbOperations;
+	
 	private static final long serialVersionUID = 2570957528954820036L;
 	private static final Logger logger = Logger.getLogger(AlarmReportPanelMBean.class);
 	private PieChartModel pieDashboardModel;
@@ -33,6 +41,8 @@ public class DashboardPanelMBean implements Serializable {
 	private CartesianChartModel prevDurationModel;
 	private CartesianChartModel denseModel;
 
+	private JobArray jobReturnArray;
+	
 	private MeterGaugeChartModel meterGaugeModel;
 
 	@PostConstruct
@@ -61,6 +71,8 @@ public class DashboardPanelMBean implements Serializable {
 		createPieModel();
 		createPieModel7();
 
+		
+		
 		createCurCategoryModel();
 		createPrevCategoryModel();
 		createDenseModel();
@@ -77,7 +89,11 @@ public class DashboardPanelMBean implements Serializable {
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
 
 	}
-
+	
+	public String getDatatipFormat(){
+		   return "<span style=\"display:none;\">%s</span><span>%s</span>";
+		}
+	
 	public void refreshDashboardChart() {
 
 		createPieModel();
@@ -164,23 +180,34 @@ public class DashboardPanelMBean implements Serializable {
 	}
 
 	private void createCurCategoryModel() {
+		
+		
+		try {
+			jobReturnArray = getDbOperations().getJobArrayReport(1, "ascending", 10);
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+		 
+		
 		curDurationModel = new CartesianChartModel();
 
 		ChartSeries jobs = new ChartSeries();
 		jobs.setLabel("Jobs");
 
-		jobs.set("job1", 20);
-		jobs.set("job2", 50);
-		jobs.set("job3", 64);
-		jobs.set("job4", 90);
-		jobs.set("job5", 125);
-		jobs.set("job6", 130);
-		jobs.set("job7", 140);
-		jobs.set("job8", 150);
-		jobs.set("job9", 155);
-		jobs.set("job10", 180);
+	 
+		jobs.set(jobReturnArray.getJobArray(0).getJname(), jobReturnArray.getJobArray(0).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(1).getJname(), jobReturnArray.getJobArray(1).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(2).getJname(), jobReturnArray.getJobArray(2).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(3).getJname(), jobReturnArray.getJobArray(3).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(4).getJname(), jobReturnArray.getJobArray(4).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(5).getJname(), jobReturnArray.getJobArray(5).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(6).getJname(), jobReturnArray.getJobArray(6).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(7).getJname(), jobReturnArray.getJobArray(7).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(8).getJname(), jobReturnArray.getJobArray(8).getBigDecimalValue());
+		jobs.set(jobReturnArray.getJobArray(9).getJname(), jobReturnArray.getJobArray(9).getBigDecimalValue());
 
 		curDurationModel.addSeries(jobs);
+		
 
 	}
 
@@ -255,6 +282,22 @@ public class DashboardPanelMBean implements Serializable {
 
 	public void setPieDashboardModel7(PieChartModel pieDashboardModel7) {
 		this.pieDashboardModel7 = pieDashboardModel7;
+	}
+
+	public JobArray getJobReturnArray() {
+		return jobReturnArray;
+	}
+
+	public void setJobReturnArray(JobArray jobReturnArray) {
+		this.jobReturnArray = jobReturnArray;
+	}
+
+	public DBOperations getDbOperations() {
+		return dbOperations;
+	}
+
+	public void setDbOperations(DBOperations dbOperations) {
+		this.dbOperations = dbOperations;
 	}
 
 }
