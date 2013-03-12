@@ -7,7 +7,62 @@ declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
-declare namespace fn="http://www.w3.org/2005/xpath-functions";
+
+
+declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
+ {
+
+    let $runIdFound := if ($runId != 0 ) 
+	                   then $runId 
+	                   else sq:getId("runId")
+
+    let $posUpper := max(for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
+	                 where $runx[@id = $runIdFound] or not($refRunIdBolean)
+	                 return $pos)
+
+    let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
+
+    let $sonuc := for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
+		  where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
+		  order by $runx/@id descending
+                  return $runx
+    return $sonuc
+};
+
+declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfListedJobs) as node()*
+{
+  let $resultArrayAsc := <jobArray> {
+    for $job in $n//dat:jobProperties[@agentId!="0"]
+     let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else current-date()
+     let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else current-time()
+     let $stopdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date else "N/A"
+     let $stoptime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time else "N/A"
+
+     let $startdatetime := (fn:dateTime($startdate,$starttime) - xs:dateTime("1970-01-01T00:00:00-00:00"))
+     let $stopdatetime := if(compare($stopdate,"N/A") ne 0) 
+	                      then fn:dateTime($stopdate,$stoptime) - xs:dateTime("1970-01-01T00:00:00-00:00") 
+						  else xs:dateTime("1970-01-01T00:00:00-00:00") - xs:dateTime("1970-01-01T00:00:00-00:01")
+     let $startTimeFormatted := concat(substring($startdate, 1, 10), 'T', $starttime) 
+     let $stopTimeFormatted := if(compare($stopdate,"N/A") ne 0) 
+	                           then concat(substring($stopdate, 1, 10), 'T', $stoptime) 
+							   else "N/A"
+    let $diffInTime := if(compare($stopdate,"N/A") ne 0) then $stopdatetime - $startdatetime else xs:dayTimeDuration('-PT1S')
+    order by ($stopdatetime - $startdatetime)
+    return <job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { (($diffInTime) div xs:dayTimeDuration('PT1S')) }</job>
+    } </jobArray>
+
+  let $numberOfJobs := count($resultArrayAsc/job) 
+  let $numberOfScenarios := count($n//dat:scenario) 
+  let $minStartDateTime := min(for $min in $resultArrayAsc/job return if(compare($min/@startTime,"N/A") ne 0) then xs:dateTime($min/@startTime) else current-dateTime())
+  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/job return if(compare($max/@stopTime,"N/A") ne 0) then xs:dateTime($max/@stopTime)  else xs:dateTime("1970-01-01T00:00:00-00:01"))
+  let $totalDuration := $maxStopDateTime - $minStartDateTime
+  let $totalDurationInSec := fn:days-from-duration($totalDuration)*24*60*60+fn:hours-from-duration($totalDuration)*60*60+fn:minutes-from-duration($totalDuration)*60+fn:seconds-from-duration($totalDuration)
+
+  return
+    if(compare($order, "ascending") eq 0) then <jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/job[position()<=$maxNumOfListedJobs]} </jobArray>
+    else if(compare($order, "descending") eq 0) then <jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/job)[position()<=$maxNumOfListedJobs] } </jobArray> 
+    else <jobArray>-1</jobArray>   
+};
 
 (: jobProperties icinde gelen baslangic ve bitis tarih araligindaki o jobin calisma bilgilerini donuyor :)
 declare function hs:getJobs($jobProperty as element(dat:jobProperties), $jobPath) as element(dat:jobProperties)*
@@ -25,15 +80,6 @@ declare function hs:getJobs($jobProperty as element(dat:jobProperties), $jobPath
 	return  $jobs
 };
 
-(:
-Kullanim:
-let $kacEleman := 1
-let $jobId := 0 (: Eger belirli bir jobId girilirse o job ile ilgili sonuclar, sifir girilirse butun joblar ile ilgili sonuclar:)
-let $runId := 0 (: Eger belirli bir runId girilirse oradan geriye, sifir girilirse en son runId den geriye:)
-let $refRunIdBolean := true()  (: Eger true secilirse bu runId yi referans kabul et anlamina gelir. false ise runId yi dikkate almaz.:)
-
-return hs:jobStateListbyRunId($kacEleman, $runId, $jobId, $refRunIdBolean)
-:)
 declare function hs:jobStateListbyRunId($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
  {
 
@@ -61,20 +107,11 @@ declare function hs:jobStateListbyRunId($numberOfElement as xs:int, $runId as xs
 declare function hs:jobStateReport($n as element(dat:TlosProcessData), $jobId as xs:int, $nextId as xs:int) as node()*
 {
    (: Son state leri belirleme kismi :)
-   let $propertiesList := $n//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
    let $stateList :=
-         for $donbaba in fn:distinct-values($propertiesList//dat:jobProperties/@ID)
-         let $jobsInGroup := $propertiesList//dat:jobProperties[@ID = $donbaba]
-         return
-             let $kacdefa := count($jobsInGroup)
-             let $list := if ($kacdefa = 1) then $jobsInGroup[@agentId="0"]/dat:stateInfos/state-types:LiveStateInfos
-                          else $jobsInGroup[@agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
-	     return hs:jobStateReportFromLiveStateInfo($list, $jobId, $nextId)
- (:  let $stateList :=
          for $donbaba in $n//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
 	     order by $donbaba descending
 	     return hs:jobStateReportFromLiveStateInfo($donbaba, $jobId, $nextId)
-:)
+
 	let $sonuc2 := for $runx at $pos in $stateList/state-types:LiveStateInfo
                    order by $runx/@LSIDateTime descending
 	               return $runx
@@ -145,7 +182,6 @@ declare function hs:insertBlankStateReport($jsId as xs:int, $nextId as xs:int) a
 				<rep:IDLED>
 					<rep:BYTIME>0</rep:BYTIME>
 					<rep:BYUSER>0</rep:BYUSER>
-                    <rep:BYEVENT>0</rep:BYEVENT>
 				</rep:IDLED>
 				<rep:READY>
 					<rep:LOOKFOR-RESOURCE>0</rep:LOOKFOR-RESOURCE>
