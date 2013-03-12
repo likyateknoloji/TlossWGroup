@@ -124,4 +124,31 @@
     <xs:element name="SKIPPED" type="xs:integer"/>
     <xs:element name="STOPPED" type="xs:integer"/>
     <xs:element name="FAILED" type="xs:integer"/>
+    
+  <xs:element name="jobArray">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="job"/>
+      </xs:sequence>
+      <xs:attribute name="maxNumOfListedJobs" use="required" type="xs:integer"/>
+      <xs:attribute name="numberOfJobs" use="required" type="xs:integer"/>
+      <xs:attribute name="numberOfScenarios" use="required" type="xs:integer"/>
+      <xs:attribute name="overallStart" use="required" type="xs:dateTime"/>
+      <xs:attribute name="overallStop" use="required" type="xs:dateTime"/>
+      <xs:attribute name="totalDurationInSec" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="job">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:decimal">
+          <xs:attribute name="id" use="required" type="xs:integer"/>
+          <xs:attribute name="jname" use="required" type="xs:string"/>
+          <xs:attribute name="startTime" use="required" type="xs:dateTime"/>
+          <xs:attribute name="stopTime" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+    
 </xs:schema>
