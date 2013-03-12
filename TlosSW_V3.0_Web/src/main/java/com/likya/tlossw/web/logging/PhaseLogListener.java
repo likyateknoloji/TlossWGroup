@@ -31,50 +31,63 @@ import javax.faces.event.PhaseListener;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * 
  * @author John Yeary <jyeary@bluelotussoftware.com>
  * @version 1.1
  */
 public class PhaseLogListener implements PhaseListener {
 
-    private static final Logger logger = Logger.getLogger("global");
-    private static final long serialVersionUID = 3131268230269004403L;
+	private static final Logger logger = Logger.getLogger("global");
+	private static final long serialVersionUID = 3131268230269004403L;
 
-    private long startTime;
-    
-    @Override
-    public void beforePhase(PhaseEvent event) {
-    	startTime = System.currentTimeMillis();
-//    	System.out.println(String.format("[Start time : %1$tm.%1$td.%1$tY %1$tH:%1$tM:%1$tS]", startTime));
-    	
-        if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
-            logger.info("Processing new request!" + " Start : " + startTime + " ms"); 
-        }
-        logger.info("Before - " + event.getPhaseId().toString() + " Start : " + startTime + " ms");
-//        System.out.println("Before - " + event.getPhaseId().toString() + " Start : " + startTime + " ms");
-    }
+	private long startTime;
+	private boolean debug = false;
 
-    @Override
-    public PhaseId getPhaseId() {
-        return PhaseId.ANY_PHASE;
-    }
+	@Override
+	public void beforePhase(PhaseEvent event) {
+		startTime = System.currentTimeMillis();
 
-    @Override
-    public void afterPhase(PhaseEvent event) {
-    	
-    	long endTime = System.currentTimeMillis();
-    	long duration = endTime - startTime;
-//    	System.out.println(String.format("[End Time : %1$tm.%1$td.%1$tY %1$tH:%1$tM:%1$tS]", endTime));
-    	String durationLabel = String.format("%d ms", duration);
-    	
-        logger.info("After - " + event.getPhaseId().toString() + " Duration : " + durationLabel + " ms");
-//        System.out.println("After - " + event.getPhaseId().toString() + " Duration : " + durationLabel + " ms");
-//        System.out.println("Done with request!" + " Duration : " + durationLabel + " ms");
-        
-        if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
-            logger.info("Done with request!" + " Duration : " + durationLabel + " ms");
-        }
-       
-    }
+		if (debug) {
+			System.out.println(String.format("[Start time : %1$tm.%1$td.%1$tY %1$tH:%1$tM:%1$tS]", startTime));
+		}
+
+		if (event.getPhaseId() == PhaseId.RESTORE_VIEW) {
+			logger.info("Processing new request!" + " Start : " + startTime + " ms");
+		}
+		logger.info("Before - " + event.getPhaseId().toString() + " Start : " + startTime + " ms");
+
+		if (debug) {
+			System.out.println("Before - " + event.getPhaseId().toString() + " Start : " + startTime + " ms");
+		}
+	}
+
+	@Override
+	public PhaseId getPhaseId() {
+		return PhaseId.ANY_PHASE;
+	}
+
+	@Override
+	public void afterPhase(PhaseEvent event) {
+
+		long endTime = System.currentTimeMillis();
+		long duration = endTime - startTime;
+
+		if (debug) {
+			System.out.println(String.format("[End Time : %1$tm.%1$td.%1$tY %1$tH:%1$tM:%1$tS]", endTime));
+		}
+		String durationLabel = String.format("%d ms", duration);
+
+		logger.info("After - " + event.getPhaseId().toString() + " Duration : " + durationLabel + " ms");
+
+		if (debug) {
+			System.out.println("After - " + event.getPhaseId().toString() + " Duration : " + durationLabel + " ms");
+			System.out.println("Done with request!" + " Duration : " + durationLabel + " ms");
+		}
+
+		if (event.getPhaseId() == PhaseId.RENDER_RESPONSE) {
+			logger.info("Done with request!" + " Duration : " + durationLabel + " ms");
+		}
+
+	}
 
 }
