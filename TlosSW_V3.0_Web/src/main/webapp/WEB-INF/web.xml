@@ -55,6 +55,17 @@
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>resources.application</param-value>
 	</context-param>
+	<!-- 
+	<context-param>
+        <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    -->
+    <!-- http://balusc.blogspot.com/2011/09/communication-in-jsf-20.html#ViewScopedFailsInTagHandlers ye göre aşağıdaki kısım eklendi -->
+    <context-param>
+        <param-name>javax.faces.FULL_STATE_SAVING_VIEW_IDS</param-name>
+        <param-value>/test.xhtml,/inc/definitionPanels/jobsDef.xhtml</param-value>
+    </context-param>
 	<listener>
 		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
 	</listener>
