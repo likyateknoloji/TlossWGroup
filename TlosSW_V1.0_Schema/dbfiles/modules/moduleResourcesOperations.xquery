@@ -36,8 +36,12 @@ declare function rsc:searchResources($searchResource as element(lrns:Resource)) 
 (: ornek kullanim rsc:resourcesList(1,2) ilk iki eleman :)
 declare function rsc:resourcesList($firstElement as xs:int, $lastElement as xs:int) as element(lrns:Resource)* 
  {
+   <lrns:ResourceList>
+   {
 	for $rsc in doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList/lrns:Resource[position() = ($firstElement to $lastElement)]
 	return  $rsc
+   }
+   </lrns:ResourceList>
 };
 
 (: ornek kullanim rsc:searchResourcesByResourceName(xs:string('Tlos SW')) :)
