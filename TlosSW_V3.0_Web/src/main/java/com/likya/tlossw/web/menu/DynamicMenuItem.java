@@ -97,7 +97,7 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "Resources ", "#"));
 			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "Program Provision ", "#"));
 
-			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Jobs & Scenarios  ", "#"));
+			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Jobs & Scenarios  ", "/inc/reportPanels/dashboardPanel.jsf"));
 			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Alarms  ", "#"));
 			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Advanced R.", "#"));
 
