@@ -7,7 +7,7 @@ declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
-
+declare namespace fn="http://www.w3.org/2005/xpath-functions";
 
 (:
 Programmed by : Hakan Saribiyik
@@ -110,6 +110,15 @@ declare function hs:getJobs($jobProperty as element(dat:jobProperties), $jobPath
 	return  $jobs
 };
 
+(:
+Kullanim:
+let $kacEleman := 1
+let $jobId := 0 (: Eger belirli bir jobId girilirse o job ile ilgili sonuclar, sifir girilirse butun joblar ile ilgili sonuclar:)
+let $runId := 0 (: Eger belirli bir runId girilirse oradan geriye, sifir girilirse en son runId den geriye:)
+let $refRunIdBolean := true()  (: Eger true secilirse bu runId yi referans kabul et anlamina gelir. false ise runId yi dikkate almaz.:)
+
+return hs:jobStateListbyRunId($kacEleman, $runId, $jobId, $refRunIdBolean)
+:)
 declare function hs:jobStateListbyRunId($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
  {
 
@@ -137,11 +146,20 @@ declare function hs:jobStateListbyRunId($numberOfElement as xs:int, $runId as xs
 declare function hs:jobStateReport($n as element(dat:TlosProcessData), $jobId as xs:int, $nextId as xs:int) as node()*
 {
    (: Son state leri belirleme kismi :)
+   let $propertiesList := $n//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
    let $stateList :=
+         for $donbaba in fn:distinct-values($propertiesList//dat:jobProperties/@ID)
+         let $jobsInGroup := $propertiesList//dat:jobProperties[@ID = $donbaba]
+         return
+             let $kacdefa := count($jobsInGroup)
+             let $list := if ($kacdefa = 1) then $jobsInGroup[@agentId="0"]/dat:stateInfos/state-types:LiveStateInfos
+                          else $jobsInGroup[@agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
+	     return hs:jobStateReportFromLiveStateInfo($list, $jobId, $nextId)
+ (:  let $stateList :=
          for $donbaba in $n//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
 	     order by $donbaba descending
 	     return hs:jobStateReportFromLiveStateInfo($donbaba, $jobId, $nextId)
-
+:)
 	let $sonuc2 := for $runx at $pos in $stateList/state-types:LiveStateInfo
                    order by $runx/@LSIDateTime descending
 	               return $runx
@@ -212,6 +230,7 @@ declare function hs:insertBlankStateReport($jsId as xs:int, $nextId as xs:int) a
 				<rep:IDLED>
 					<rep:BYTIME>0</rep:BYTIME>
 					<rep:BYUSER>0</rep:BYUSER>
+                    <rep:BYEVENT>0</rep:BYEVENT>
 				</rep:IDLED>
 				<rep:READY>
 					<rep:LOOKFOR-RESOURCE>0</rep:LOOKFOR-RESOURCE>
