@@ -9,6 +9,31 @@ declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
 
 
+(:
+Programmed by : Hakan Saribiyik
+Version : 0.1
+First Release Date : 2 Jan 2013
+UpdateDate :
+Purpose : Reporting of jobs and their duration and other time related things.
+Usage : First step, get related Jobs with getJobsReport(
+                 Number of runs that dealt with for the report, 
+                 Run Id for which we are focusing and take a referans point, if its value is 0 then it means we are focusing the last run,
+				 Job Id if we focusing just a job, or enter 0 for all job related with the second argument,
+				 true() if we choose the run id as a referance point, false() otherwise
+				 ) function
+example;
+				 let $run := local:getJobsReport(1,1792,0, true())
+
+Second step, get job array with requested data with getJobArray(
+                 output of the getJonsReport function,
+				 "ascending|descending" for ascending or descending ordered jons based on real work time,
+				 number of maksimum jobs in the array
+                 ) function
+example;
+return local:getJobArray($run, "ascending", 15)
+
+:)
+
 declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
  {
 
@@ -28,6 +53,11 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
                   return $runx
     return $sonuc
 };
+
+(: Special DateTime format; source : http://www.w3.org/TR/xpath-functions/#dt-dayTimeDuration
+   format PnDTnHnMnS, where nD represents the number of days, T is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. 
+   For example, to indicate a duration of 3 days, 10 hours and 30 minutes, one would write: P3DT10H30M.
+:)
 
 declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfListedJobs) as node()*
 {
