@@ -176,8 +176,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		jmxPassword = null;
 		jmxPassword2 = null;
 
-		setDurationForUnavailability(900);
-		setJobTransferFailureTime(0);
+		durationForUnavailability = 0;
+		jobTransferFailureTime = 0;
 
 		searchAgentList = null;
 
@@ -185,21 +185,19 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		agent = SWAgent.Factory.newInstance();
 
-		Resource res = Resource.Factory.newInstance();
-		agent.setResource(res);
-
-		// agent.setAgentType(AgentType.Enum.forString(getAgentType()));
-
-		agent.setJmxPort(new Short("0"));
-		agent.setNrpePort(new Short("0"));
-		agent.setJmxUser("");
-		agent.setJmxPassword("");
-		agent.setDurationForUnavailability(new Integer(0));
-		agent.setJobTransferFailureTime(new Long("0"));
-
-		agent.setUserStopRequest(UserStopRequest.NULL);
-
-		fillAgentTypeList();
+//		Resource res = Resource.Factory.newInstance();
+//		agent.setResource(res);
+//
+//		agent.setJmxPort(new Short("0"));
+//		agent.setNrpePort(new Short("0"));
+//		agent.setJmxUser("");
+//		agent.setJmxPassword("");
+//		agent.setDurationForUnavailability(new Integer(0));
+//		agent.setJobTransferFailureTime(new Long("0"));
+//
+//		agent.setUserStopRequest(UserStopRequest.NULL);
+//
+//		fillAgentTypeList();
 	}
 
 	public void fillAgentTypeList() {
