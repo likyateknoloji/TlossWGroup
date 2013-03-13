@@ -27,9 +27,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
 
-					<p:inputMask value="#{backingBean.startTime}" mask="99:99:99">
-						<p:ajax update="buttonPanel"></p:ajax>
-					</p:inputMask>
+					<p:inputMask value="#{backingBean.startTime}" mask="99:99:99" />
 
 					<p:panelGrid id="stopTime" columns="4">
 						<h:outputText
@@ -111,15 +109,7 @@
 					</p:panelGrid>
 				</p:panelGrid>
 			</p:panel>
-
-			<p:panel id="buttonPanel" style="height:40px;">
-				<p:commandButton id="insertJobButton" style="float:right;"
-					rendered="#{backingBean.startTime ne null and backingBean.startTime ne ''}"
-					value="#{msgs['tlos.button.save']}"
-					actionListener="#{backingBean['insertJobAction']}" />
-			</p:panel>
 		</p:tab>
-
 	</ui:composition>
 </h:body>
 </html>
