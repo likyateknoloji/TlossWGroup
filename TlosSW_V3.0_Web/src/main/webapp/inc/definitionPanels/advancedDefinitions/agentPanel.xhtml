@@ -51,7 +51,7 @@
 						value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
 					<p:inputText id="resourceName" value="#{agentPanelMBean.resource}"
 						required="true"
-						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.name']}"
+						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.resource']}"
 						validatorMessage="#{msgs['tlos.agentPanel.valMessage.resource']}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.resource']}">
 						<f:validateLength minimum="2"></f:validateLength>
@@ -136,13 +136,16 @@
 						value="#{msgs['tlos.management.pannel.agentProcesses.durationForUnavailability']}" />
 					<p:inputText id="durationForUnavailability"
 						value="#{agentPanelMBean.durationForUnavailability}"
+						required="true"
+						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.timeOut']}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.durationForUnavailability']}">
 					</p:inputText>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.jobTransferFailureTime']}" />
 					<p:inputText id="jobTransferFailureTime"
-						value="#{agentPanelMBean.jobTransferFailureTime}"
+						value="#{agentPanelMBean.jobTransferFailureTime}" required="true"
+						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jobTransferFailureTime']}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.jobTransferFailureTime']}">
 					</p:inputText>
 
@@ -150,6 +153,8 @@
 						value="#{msgs['tlos.management.pannel.agentProcesses.workspacePath']}" />
 					<p:inputText id="workspacePath"
 						value="#{agentPanelMBean.workspacePath}" style="width:250px;"
+						required="true"
+						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.workspacePath']}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.workspacePath']}">
 					</p:inputText>
 
