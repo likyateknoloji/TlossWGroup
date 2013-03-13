@@ -63,16 +63,21 @@ $('.jobGroup').hover(
 		this.className = 'ui-treenode ui-treenode-leaf job';
 		//this.classList.add('over');
 		e.dataTransfer.dropEffect = 'copy'; // See the section on the DataTransfer object.
+	    //console.log('handleDragOver');
 		return false;
 	}
 
 	function handleDragEnter(e) {
 		this.className = 'ui-treenode ui-treenode-leaf job';
+	    //console.log('handleDragEnter');
+		if (e.preventDefault)
+			e.preventDefault(); // allows us to drop
 		//this.classList.add('over');
 		return false;
 	}
 
 	function handleDragLeave(e) {
+		//console.log('handleDragLeave');
 		this.className = 'ui-treenode ui-treenode-leaf job';
 		//this.classList.remove('over');  // this / e.target is previous target element.
 	}
@@ -158,8 +163,9 @@ $('.jobGroup').hover(
 		console.log("-------ss" + elw.getAttribute("data-rowkey"));
 		elw.setAttribute("data-rowkey", newUniqueId);
 		console.log("-------ss2" + elw.getAttribute("data-rowkey"));
-		this.parentNode.appendChild(elw.cloneNode(true));
-
+		//this.appendChild(elw.cloneNode(true));
+		(this.querySelector('.ui-treenode-children')).appendChild(elw.cloneNode(true));
+		
 		//-------------------------------------------------------------
 		//TODO icteki attr lari degistirme problemli. uzerinde calisilacak. Hakan
 		var jobNameId = document.querySelectorAll(escapedId);
@@ -244,7 +250,7 @@ $('.jobGroup').hover(
     console.log(scenario);
     
 	for ( var i = 0; i < scenario.length; i++) {
-		sen = scenario[i].firstChild;
+		sen = scenario[i];
 		console.log(sen);
 
 		// Events
