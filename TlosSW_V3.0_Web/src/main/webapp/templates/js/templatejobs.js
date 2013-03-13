@@ -89,8 +89,30 @@ $('.jobGroup').hover(
 		var treeContainerClassName = "ui-tree-container";
 		
 		//serbest islerden biriyse path bos donuyor
+		if (node.parentNode.parentNode.className == treeContainerClassName) {
+			return "";
+		}
+		
+		var scenarioNode = node;
+		var jobPath = $(scenarioNode.lastChild).text();
+		
+		while (scenarioNode.parentNode.parentNode.parentNode.parentNode.className != treeContainerClassName) {
+			scenarioNode = scenarioNode.parentNode.parentNode.previousSibling;
+			
+			jobPath = $(scenarioNode.lastChild).text() + "/" + jobPath;
+		}
+		
+		console.log("jobPath : " + jobPath);
+		
+		return jobPath;
+	}
+	
+	//jobin senaryo agacindan alindigi pathi buluyor
+	function getJobPathForDependency(node) {
+		var treeContainerClassName = "ui-tree-container";
+		
+		//serbest islerden biriyse path bos donuyor
 		if (node.parentNode.parentNode.parentNode.className == treeContainerClassName) {
-			//alert("serbest");
 			return "";
 		}
 		
@@ -198,14 +220,32 @@ $('.jobGroup').hover(
 	}
 
 	console.log("Already defined jobs");
-	var scenario = document.querySelectorAll('.scenario .job'), sen = null;
+	var jobDef = document.querySelectorAll('.scenario .job'), job = null;
+    console.log(jobDef);
+    
+	for ( var i = 0; i < jobDef.length; i++) {
+		job = jobDef[i];
+		console.log(job);
+		job.setAttribute('draggable', 'true');
+
+		// Events
+//		job.addEventListener('dragstart', handleDragStart, false);
+//		job.addEventListener('dragover', handleDragOver, false);
+
+		// to get IE to work
+//		job.addEventListener('dragenter', handleDragEnter, false);
+
+//		job.addEventListener('dragleave', handleDragLeave, false);
+//		job.addEventListener('drop', handleDrop, false);
+	}
+	
+	console.log("Already defined scenarios");
+	var scenario = document.querySelectorAll('.scenario'), sen = null;
     console.log(scenario);
     
 	for ( var i = 0; i < scenario.length; i++) {
-		sen = scenario[i];
-		console.log("KAK!!");
+		sen = scenario[i].firstChild;
 		console.log(sen);
-		sen.setAttribute('draggable', 'true');
 
 		// Events
 		sen.addEventListener('dragstart', handleDragStart, false);
@@ -230,7 +270,7 @@ $('.jobGroup').hover(
              var jobName = $(this.firstChild.lastChild).text();
              document.getElementById('jsTreeForm:draggedJobName').value = jobName;
              
-             var jobPath = getJobPath(this);
+             var jobPath = getJobPathForDependency(this);
              document.getElementById('jsTreeForm:draggedJobPath').value = jobPath;
              
              callHandleJobDrop();
