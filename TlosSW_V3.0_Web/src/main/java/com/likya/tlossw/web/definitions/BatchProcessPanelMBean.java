@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
@@ -47,7 +45,7 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 		jobCommand = jobTypeDetails.getJobCommand();
 	}
 
-	public void insertJobAction(ActionEvent e) {
+	public void insertJobAction() {
 		fillJobProperties();
 
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();

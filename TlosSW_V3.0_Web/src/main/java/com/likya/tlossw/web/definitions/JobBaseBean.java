@@ -46,6 +46,7 @@ import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
+import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
@@ -122,6 +123,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public final static String OBJECT = "3";
 
 	private String jobPathInScenario;
+
+	private boolean jsActiveDialogShow = false;
+	private boolean jsActive = false;
 
 	// baseJobInfos
 	private Collection<SelectItem> jsCalendarList = null;
@@ -305,6 +309,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
 			eventTypeDef = baseJobInfos.getJobInfos().getJobTypeDetails().getEventTypeDef().toString();
+		}
+
+		if (baseJobInfos.getJsIsActive().equals(JsIsActive.YES)) {
+			jsActive = true;
+		} else {
+			jsActive = false;
 		}
 	}
 
@@ -624,6 +634,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		baseJobInfos.setCalendarId(Integer.parseInt(jobCalendar));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
+
+		if (jsActive) {
+			baseJobInfos.setJsIsActive(JsIsActive.YES);
+		} else {
+			baseJobInfos.setJsIsActive(JsIsActive.NO);
+		}
 
 		JobInfos jobInfos = baseJobInfos.getJobInfos();
 		jobInfos.setJobBaseType(JobBaseType.Enum.forString(jobBaseType));
@@ -953,6 +969,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		} else {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.insert", null);
 		}
+
+		jsActiveDialogShow = false;
 	}
 
 	private boolean getJobId() {
@@ -1666,6 +1684,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 
 		statusDialogShow = false;
+	}
+
+	public void openJSDialogAction(ActionEvent e) {
+		jsActiveDialogShow = true;
 	}
 
 	public String getJobPropertiesXML() {
@@ -2534,6 +2556,22 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setScenarioStatusList(ScenarioStatusList scenarioStatusList) {
 		this.scenarioStatusList = scenarioStatusList;
+	}
+
+	public boolean isJsActiveDialogShow() {
+		return jsActiveDialogShow;
+	}
+
+	public void setJsActiveDialogShow(boolean jsActiveDialogShow) {
+		this.jsActiveDialogShow = jsActiveDialogShow;
+	}
+
+	public boolean isJsActive() {
+		return jsActive;
+	}
+
+	public void setJsActive(boolean jsActive) {
+		this.jsActive = jsActive;
 	}
 
 	// public JSTree getjSTree() {
