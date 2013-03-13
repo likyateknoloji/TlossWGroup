@@ -21,11 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 @ManagedBean
 @SessionScoped
@@ -63,8 +62,8 @@ public class ThemeSwitcherBean implements Serializable {
     @PostConstruct
     public void init() {
     	
-        FacesContext.getCurrentInstance().addMessage(null, 
-                new FacesMessage("Test Message from @PostConstruct"));
+//        FacesContext.getCurrentInstance().addMessage(null, 
+//                new FacesMessage("Test Message from @PostConstruct"));
         
     	if (gp == null) gp = new GuestPreferences();
     	
