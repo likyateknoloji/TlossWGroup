@@ -65,9 +65,11 @@
 						value="#{agentPanelMBean.osType}"
 						label="#{msgs['tlos.management.pannel.agentProcesses.osType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-							itemValue="All" />
+							itemValue="" />
 						<f:selectItem itemLabel="Unix" itemValue="Unix" />
 						<f:selectItem itemLabel="Windows" itemValue="Windows" />
+						<f:selectItem itemLabel="#{msgs['tlos.combo.other']}"
+							itemValue="Other" />
 					</p:selectOneMenu>
 
 					<h:outputText
