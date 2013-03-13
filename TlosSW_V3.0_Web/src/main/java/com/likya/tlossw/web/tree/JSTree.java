@@ -40,7 +40,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		constructJSTree(tlosProcessData);
 
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, "Job Tree olusturuldu !", null);
+//		addMessage("jobTree", FacesMessage.SEVERITY_INFO, "Job Tree olusturuldu !", null);
 		System.out.println("Job Tree olusturuldu !");
 	}
 

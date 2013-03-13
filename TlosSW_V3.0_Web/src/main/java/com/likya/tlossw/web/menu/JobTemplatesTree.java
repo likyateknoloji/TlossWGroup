@@ -46,7 +46,7 @@ public class JobTemplatesTree implements Serializable {
 
 		constructJSTree(tlosProcessData);
 
-		addMessage("Job Template Tree olusturuldu !");
+//		addMessage("Job Template Tree olusturuldu !");
 		System.out.println("Job Template Tree olusturuldu !");
 	}
 
