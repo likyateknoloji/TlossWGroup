@@ -96,24 +96,12 @@ public class WebJobDefUtils {
 	public static Collection<SelectItem> fillResourceNameList(ArrayList<RNSEntryType> resources) {
 		Collection<SelectItem> resourceNameList = new ArrayList<SelectItem>();
 
-		// TODO resource.getEntryName() ile makine adlari null geliyor, gecici
-		// olarak elle iki makine adi doldurdum
-		// for (RNSEntryType resource : resources) {
-		// SelectItem item = new SelectItem();
-		// item.setValue(resource.getEntryName());
-		// item.setLabel(resource.getEntryName());
-		// resourceNameList.add(item);
-		// }
-
-		SelectItem item = new SelectItem();
-		item.setValue("laptop1");
-		item.setLabel("laptop1");
-		resourceNameList.add(item);
-
-		item = new SelectItem();
-		item.setValue("laptop2");
-		item.setLabel("laptop2");
-		resourceNameList.add(item);
+		for (RNSEntryType resource : resources) {
+			SelectItem item = new SelectItem();
+			item.setValue(resource.getEntryName());
+			item.setLabel(resource.getEntryName());
+			resourceNameList.add(item);
+		}
 
 		return resourceNameList;
 	}

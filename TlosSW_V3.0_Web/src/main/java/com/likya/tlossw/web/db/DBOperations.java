@@ -727,16 +727,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<RNSEntryType> getResources() {
+		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
+		ResourceListType resourceList = null;
 
 		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(1,10)";
 
 		Collection collection = existConnectionHolder.getCollection();
 
-		ArrayList<RNSEntryType> resourceList = new ArrayList<RNSEntryType>();
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+
+			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
 			ResourceSet result = service.query(xQueryStr);
@@ -746,22 +746,22 @@ public class DBOperations implements Serializable {
 				Resource r = i.nextResource();
 				String xmlContent = (String) r.getContent();
 
-				RNSEntryType resource;
 				try {
-					resource = RNSEntryType.Factory.parse(xmlContent);
-					resourceList.add(resource);
-
+					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
 				} catch (XmlException e) {
 					e.printStackTrace();
 					return null;
 				}
 			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		} catch (XMLDBException xmldbException) {
+			xmldbException.printStackTrace();
 		}
 
-		return resourceList;
+		for (RNSEntryType resource : resourceList.getResourceArray()) {
+			resources.add(resource);
+		}
+
+		return resources;
 	}
 
 	public ArrayList<Alarm> searchAlarm(String alarmXML) throws XMLDBException {
@@ -2269,9 +2269,10 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public JobArray getJobArrayReport (int derinlik, String orderType, int jobCount) throws XMLDBException {
+	public JobArray getJobArrayReport(int derinlik, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:getJobArray(hs:getJobsReport("+derinlik+",0,0, true()),\"" + orderType + "\"," + jobCount + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:getJobArray(hs:getJobsReport(" + derinlik + ",0,0, true()),\"" + orderType + "\"," + jobCount
+				+ ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -2279,21 +2280,20 @@ public class DBOperations implements Serializable {
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
-		
+
 		JobArray jobArray = null;
-        
-		
+
 		while (i.hasMoreResources()) {
 			Resource r = i.nextResource();
 			String xmlContent = (String) r.getContent();
 
 			try {
-				XmlOptions xmlOption = new XmlOptions(); 
-				Map <String,String> map=new HashMap<String,String>(); 
-				map.put("","http://www.likyateknoloji.com/XML_report_types");   
-				xmlOption.setLoadSubstituteNamespaces(map); 
-				
-				jobArray = JobArrayDocument.Factory.parse(xmlContent,xmlOption).getJobArray1();
+				XmlOptions xmlOption = new XmlOptions();
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("", "http://www.likyateknoloji.com/XML_report_types");
+				xmlOption.setLoadSubstituteNamespaces(map);
+
+				jobArray = JobArrayDocument.Factory.parse(xmlContent, xmlOption).getJobArray1();
 			} catch (XmlException e) {
 				e.printStackTrace();
 				return null;
@@ -2301,7 +2301,7 @@ public class DBOperations implements Serializable {
 		}
 		return jobArray;
 	}
-	
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}

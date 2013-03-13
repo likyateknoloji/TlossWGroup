@@ -22,7 +22,6 @@ import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
 import com.likya.tlos.model.xmlbeans.agent.LocalsDocument.Locals;
-import com.likya.tlos.model.xmlbeans.agent.OsTypeDocument.OsType;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
 import com.likya.tlos.model.xmlbeans.jsdl.OperatingSystemTypeEnumeration;
@@ -49,13 +48,13 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	private String osType;
 	private String resource;
 
-	private String nrpePort;
-	private String jmxPort;
+	private short nrpePort;
+	private short jmxPort;
 	private String jmxUser;
 	private String jmxPassword;
 	private String jmxPassword2;
-	private String durationForUnavailability;
-	private String jobTransferFailureTime;
+	private int durationForUnavailability;
+	private long jobTransferFailureTime;
 	private String workspacePath;
 
 	private Collection<SelectItem> agentTypeList = null;
@@ -105,8 +104,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 					osType = agent.getOsType().toString();
 					agentType = agent.getAgentType().toString();
 					jmxPassword2 = agent.getJmxPassword();
-					durationForUnavailability = Integer.toString(agent.getDurationForUnavailability());
-					jobTransferFailureTime = Long.toString(agent.getJobTransferFailureTime());
+					setDurationForUnavailability(agent.getDurationForUnavailability());
+					setJobTransferFailureTime(agent.getJobTransferFailureTime());
 					workspacePath = agent.getWorkspacePath();
 
 					if (agent.getLocals() != null && agent.getLocals().sizeOfParameterArray() > 0) {
@@ -129,10 +128,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void insertAgentAction(ActionEvent e) {
-		if (osType.equals("All")) {
-			agent.setOsType(OsType.OTHER); // Default
-		}
-		setLocalParameters();
+		fillAgentProperties();
 
 		if (dbOperations.insertAgent(getAgentXML())) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.insert", null);
@@ -143,7 +139,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void updateAgentAction(ActionEvent e) {
-		setLocalParameters();
+		fillAgentProperties();
 
 		if (dbOperations.updateAgent(getAgentXML())) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_INFO, "tlos.success.agent.update", null);
@@ -152,17 +148,36 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
+	private void fillAgentProperties() {
+		Resource resourceDef = Resource.Factory.newInstance();
+		resourceDef.setStringValue(resource);
+		agent.setResource(resourceDef);
+
+		agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
+		agent.setAgentType(AgentType.Enum.forString(agentType));
+		agent.setNrpePort(nrpePort);
+		agent.setJmxPort(jmxPort);
+		agent.setJmxUser(jmxUser);
+		agent.setJmxPassword(jmxPassword);
+		agent.setDurationForUnavailability(durationForUnavailability);
+		agent.setJobTransferFailureTime(jobTransferFailureTime);
+		agent.setWorkspacePath(workspacePath);
+
+		setLocalParameters();
+	}
+
 	public void resetAgentAction() {
 		resource = null;
 		osType = "All";
 
-		nrpePort = null;
-		jmxPort = null;
+		nrpePort = new Short("");
+		jmxPort = new Short("");
 		jmxUser = null;
 		jmxPassword = null;
 		jmxPassword2 = null;
-		durationForUnavailability = null;
-		jobTransferFailureTime = null;
+
+		setDurationForUnavailability(900);
+		setJobTransferFailureTime(0);
 
 		searchAgentList = null;
 
@@ -210,7 +225,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 				newParam.set(parameter);
 			}
 			agent.setLocals(locals);
-			
+
 		} else if (agent.getLocals() != null) {
 			XmlCursor xmlCursor = agent.getLocals().newCursor();
 			xmlCursor.removeXml();
@@ -296,13 +311,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setResource(String resource) {
 		this.resource = resource;
-
-		if (resource != null && !resource.equals("")) {
-			Resource res = Resource.Factory.newInstance();
-			res.setStringValue(resource);
-
-			agent.setResource(res);
-		}
 	}
 
 	public boolean isInsertButton() {
@@ -331,76 +339,14 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setOsType(String osType) {
 		this.osType = osType;
-
-		if (!osType.equals("All")) {
-			agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
-		} else {
-			agent.setOsType(null); // Default
-		}
 	}
 
 	public String getOsType() {
 		return osType;
 	}
 
-	public void setDurationForUnavailability(String durationForUnavailability) {
-		this.durationForUnavailability = durationForUnavailability;
-
-		if (durationForUnavailability != null && !durationForUnavailability.equals("")) {
-			agent.setDurationForUnavailability(Integer.parseInt(durationForUnavailability));
-		}
-	}
-
-	public String getDurationForUnavailability() {
-		return durationForUnavailability;
-	}
-
-	public void setJobTransferFailureTime(String jobTransferFailureTime) {
-		this.jobTransferFailureTime = jobTransferFailureTime;
-
-		if (jobTransferFailureTime != null && !jobTransferFailureTime.equals("")) {
-			agent.setJobTransferFailureTime(Long.parseLong(jobTransferFailureTime));
-		}
-	}
-
-	public String getJobTransferFailureTime() {
-		return jobTransferFailureTime;
-	}
-
-	public void setAgentType(String agentType) {
-		this.agentType = agentType;
-
-		if (!agentType.equals("Seciniz")) {
-			agent.setAgentType(AgentType.Enum.forString(agentType));
-		} else if (agentType.equals("Seciniz")) {
-			agent.setAgentType(AgentType.AGENT); // default
-		}
-	}
-
 	public String getAgentType() {
 		return agentType;
-	}
-
-	public void setNrpePort(String nrpePort) {
-		this.nrpePort = nrpePort;
-		if (nrpePort != null && !nrpePort.equals("")) {
-			agent.setNrpePort(Short.parseShort(nrpePort));
-		}
-	}
-
-	public String getNrpePort() {
-		return nrpePort;
-	}
-
-	public void setJmxPort(String jmxPort) {
-		this.jmxPort = jmxPort;
-		if (jmxPort != null && !jmxPort.equals("")) {
-			agent.setJmxPort(Short.parseShort(jmxPort));
-		}
-	}
-
-	public String getJmxPort() {
-		return jmxPort;
 	}
 
 	public void setJmxUser(String jmxUser) {
@@ -446,10 +392,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setWorkspacePath(String workspacePath) {
 		this.workspacePath = workspacePath;
-
-		if (workspacePath != null && !workspacePath.equals("")) {
-			agent.setWorkspacePath(workspacePath);
-		}
 	}
 
 	public String getWorkspacePath() {
@@ -550,6 +492,42 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedAgentID(String selectedAgentID) {
 		this.selectedAgentID = selectedAgentID;
+	}
+
+	public int getDurationForUnavailability() {
+		return durationForUnavailability;
+	}
+
+	public void setDurationForUnavailability(int durationForUnavailability) {
+		this.durationForUnavailability = durationForUnavailability;
+	}
+
+	public long getJobTransferFailureTime() {
+		return jobTransferFailureTime;
+	}
+
+	public void setJobTransferFailureTime(long jobTransferFailureTime) {
+		this.jobTransferFailureTime = jobTransferFailureTime;
+	}
+
+	public short getNrpePort() {
+		return nrpePort;
+	}
+
+	public void setNrpePort(short nrpePort) {
+		this.nrpePort = nrpePort;
+	}
+
+	public short getJmxPort() {
+		return jmxPort;
+	}
+
+	public void setJmxPort(short jmxPort) {
+		this.jmxPort = jmxPort;
+	}
+
+	public void setAgentType(String agentType) {
+		this.agentType = agentType;
 	}
 
 }
