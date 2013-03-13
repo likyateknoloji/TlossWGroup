@@ -34,6 +34,7 @@ public class XMLNameSpaceMappings {
 		xmlNameSpaceMapping.put("saxon", "http://saxon.sf.net/");
 		xmlNameSpaceMapping.put("ws", "http://www.likyateknoloji.com/XML_web_service_types");
 		xmlNameSpaceMapping.put("pn", "http://www.likyateknoloji.com/XML_process_node");
+		xmlNameSpaceMapping.put("rep", "http://www.likyateknoloji.com/XML_report_types");
 		
 		return xmlNameSpaceMapping;
 	}
@@ -68,6 +69,7 @@ public class XMLNameSpaceMappings {
 		xmlNameSpaceMapping.put("http://saxon.sf.net/", "saxon");
 		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_web_service_types", "ws");
 		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_process_node", "pn");
+		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_report_types", "rep");
 		
 		return xmlNameSpaceMapping;
 	}
