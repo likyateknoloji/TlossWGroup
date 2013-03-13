@@ -58,6 +58,11 @@
 
 			</p:tabView>
 
+			<br />
+
+			<ui:include src="/inc/propertiesTabs/saveJSPanel.xhtml">
+				<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
+			</ui:include>
 		</p:fieldset>
 
 	</h:form>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -19,8 +18,8 @@
 		</p:contextMenu>
 
 
-		<p:tree value="#{jobTemplatesTree.root}" var="node" id="templateTree" animate="true"
-			style="width:350px;height:720px" dynamic="true"
+		<p:tree value="#{jobTemplatesTree.root}" var="node" id="templateTree"
+			animate="true" style="width:350px;height:720px" dynamic="true"
 			selectionMode="single" selection="#{jobTemplatesTree.selectedJS}">
 
 			<p:ajax event="expand" update=":jobTemplatesForm:messages"
@@ -35,7 +34,8 @@
 
 			<p:treeNode id="jobGroupNode" type="jobGroup"
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
-				<h:outputText value="#{node}" id="jobGroupName" />
+				<h:outputText value="#{node}" id="jobGroupName"
+					style="font-weight: bold;font-size: 115%;" />
 			</p:treeNode>
 
 			<p:treeNode id="jobTemplateNode" type="job" icon="ui-icon-carat-1-e">
@@ -46,13 +46,16 @@
 		<!-- p:draggable for="tree" / -->
 		<p:resizable for="templateTree" />
 
-		<h:inputHidden id="draggedTemplateName" value="#{jsDefinitionMBean.draggedTemplateName}"/>
+		<h:inputHidden id="draggedTemplateName"
+			value="#{jsDefinitionMBean.draggedTemplateName}" />
 
-		<h:inputHidden id="draggedTemplatePath" value="#{jsDefinitionMBean.draggedTemplatePath}"/>
+		<h:inputHidden id="draggedTemplatePath"
+			value="#{jsDefinitionMBean.draggedTemplatePath}" />
 
-		<p:remoteCommand name="callHandleDrop" process="@this,draggedTemplateName,draggedTemplatePath" 
-	      	actionListener="#{jsDefinitionMBean.handleDropAction}"/>
-		
+		<p:remoteCommand name="callHandleDrop"
+			process="@this,draggedTemplateName,draggedTemplatePath"
+			actionListener="#{jsDefinitionMBean.handleDropAction}" />
+
 	</h:form>
 
 </ui:composition>
