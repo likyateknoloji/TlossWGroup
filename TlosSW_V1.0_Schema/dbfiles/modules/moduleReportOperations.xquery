@@ -25,8 +25,8 @@ example;
 				 let $run := local:getJobsReport(1,1792,0, true())
 
 Second step, get job array with requested data with getJobArray(
-                 output of the getJonsReport function,
-				 "ascending|descending" for ascending or descending ordered jons based on real work time,
+                 output of the getJobsReport function,
+				 "ascending|descending" for ascending or descending ordered jobs based on real work time,
 				 number of maksimum jobs in the array
                  ) function
 example;
@@ -61,7 +61,7 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
 
 declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfListedJobs) as node()*
 {
-  let $resultArrayAsc := <jobArray> {
+  let $resultArrayAsc := <rep:jobArray> {
     for $job in $n//dat:jobProperties[@agentId!="0"]
      let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else current-date()
      let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else current-time()
@@ -78,20 +78,20 @@ declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfList
 							   else "N/A"
     let $diffInTime := if(compare($stopdate,"N/A") ne 0) then $stopdatetime - $startdatetime else xs:dayTimeDuration('-PT1S')
     order by ($stopdatetime - $startdatetime)
-    return <job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { (($diffInTime) div xs:dayTimeDuration('PT1S')) }</job>
-    } </jobArray>
+    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { (($diffInTime) div xs:dayTimeDuration('PT1S')) }</rep:job>
+    } </rep:jobArray>
 
-  let $numberOfJobs := count($resultArrayAsc/job) 
+  let $numberOfJobs := count($resultArrayAsc/rep:job) 
   let $numberOfScenarios := count($n//dat:scenario) 
-  let $minStartDateTime := min(for $min in $resultArrayAsc/job return if(compare($min/@startTime,"N/A") ne 0) then xs:dateTime($min/@startTime) else current-dateTime())
-  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/job return if(compare($max/@stopTime,"N/A") ne 0) then xs:dateTime($max/@stopTime)  else xs:dateTime("1970-01-01T00:00:00-00:01"))
+  let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if(compare($min/@startTime,"N/A") ne 0) then xs:dateTime($min/@startTime) else current-dateTime())
+  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if(compare($max/@stopTime,"N/A") ne 0) then xs:dateTime($max/@stopTime)  else xs:dateTime("1970-01-01T00:00:00-00:01"))
   let $totalDuration := $maxStopDateTime - $minStartDateTime
   let $totalDurationInSec := fn:days-from-duration($totalDuration)*24*60*60+fn:hours-from-duration($totalDuration)*60*60+fn:minutes-from-duration($totalDuration)*60+fn:seconds-from-duration($totalDuration)
 
   return
-    if(compare($order, "ascending") eq 0) then <jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/job[position()<=$maxNumOfListedJobs]} </jobArray>
-    else if(compare($order, "descending") eq 0) then <jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/job)[position()<=$maxNumOfListedJobs] } </jobArray> 
-    else <jobArray>-1</jobArray>   
+    if(compare($order, "ascending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
+    else if(compare($order, "descending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
+    else <rep:jobArray>-1</rep:jobArray>   
 };
 
 (: jobProperties icinde gelen baslangic ve bitis tarih araligindaki o jobin calisma bilgilerini donuyor :)
