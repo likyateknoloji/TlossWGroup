@@ -3,7 +3,6 @@ package com.likya.tlossw.web.tree;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -40,15 +39,16 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		constructJSTree(tlosProcessData);
 
-//		addMessage("jobTree", FacesMessage.SEVERITY_INFO, "Job Tree olusturuldu !", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// "Job Tree olusturuldu !", null);
 		System.out.println("Job Tree olusturuldu !");
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
-		
+
 		String testString = resolveMessage("tlos.workspace.pannel.job.timeManagement");
 		System.out.println(testString);
-		
+
 		root = new DefaultTreeNode("Root", null);
 		TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
 		scenarioRootNode.setExpanded(true);
@@ -64,7 +64,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
 		@SuppressWarnings("unused")
-		TreeNode jobNode = new DefaultTreeNode("job", jobProperties.getBaseJobInfos().getJsName()+" | "+jobProperties.getID(), selectedNode);
+		TreeNode jobNode = new DefaultTreeNode("job", jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
 	}
 
 	public void constructTree(Scenario[] scenario) {
@@ -81,7 +81,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public TreeNode addScenario(Scenario scenario) {
-		TreeNode scenarioNode = new DefaultTreeNode("scenario", scenario.getBaseScenarioInfos().getJsName()+" | "+scenario.getID(), selectedTreeNode);
+		TreeNode scenarioNode = new DefaultTreeNode("scenario", scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID(), selectedTreeNode);
 
 		scenarioNode.setExpanded(true);
 
@@ -111,19 +111,23 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void onNodeExpand(NodeExpandEvent event) {
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " expanded", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// event.getTreeNode().toString() + " expanded", null);
 	}
 
 	public void onNodeCollapse(NodeCollapseEvent event) {
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " collapsed", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// event.getTreeNode().toString() + " collapsed", null);
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// event.getTreeNode().toString() + " selected", null);
 	}
 
 	public void onNodeUnselect(NodeUnselectEvent event) {
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " unselected", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// event.getTreeNode().toString() + " unselected", null);
 	}
 
 	public TreeNode getSelectedTreeNode() {
