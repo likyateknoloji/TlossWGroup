@@ -116,6 +116,7 @@
 		<dat:jobLogPath>C:\Hakan\v1.7.0\jobs\logs</dat:jobLogPath>
 		<dat:oSystem>Windows</dat:oSystem>
 		<dat:jobPriority>1</dat:jobPriority>
+		<dat:jsIsActive>YES</dat:jsIsActive>
 		<com:userId>4</com:userId>
 	</dat:baseJobInfos>
 	<!--dependencyList -->
