@@ -38,7 +38,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 
-public class WebJobDefUtils {
+public class WebInputUtils {
 
 	public static Collection<SelectItem> fillCalendarList(ArrayList<CalendarProperties> calendarList) {
 		Collection<SelectItem> jsCalendarList = new ArrayList<SelectItem>();
