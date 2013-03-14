@@ -33,7 +33,7 @@ declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:int
     return $checkUser 
 };
 
-declare function lk:searchAgent($host as element(res:Resource), $jmxport as element(agnt:jmxPort))  as element(agnt:SWAgent)? 
+declare function lk:searchAgent($host as xs:string, $jmxport as xs:short)  as element(agnt:SWAgent)? 
 {
    doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxPort = $jmxport]
 };
