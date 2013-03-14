@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -2268,10 +2266,11 @@ public class DBOperations implements Serializable {
 
 		return true;
 	}
-	
-	public JobArray getJobArrayReport (int derinlik, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:getJobArray(hs:getJobsReport("+derinlik+",0,0, true()),\"" + orderType + "\"," + jobCount + ")";
+	public JobArray getJobArrayReport(int derinlik, String orderType, int jobCount) throws XMLDBException {
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
+				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + ",0,0, true()),\"" + orderType + "\"," + jobCount + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -2279,20 +2278,20 @@ public class DBOperations implements Serializable {
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
-		
+
 		JobArray jobArray = null;
-        
-		
+
 		while (i.hasMoreResources()) {
 			Resource r = i.nextResource();
 			String xmlContent = (String) r.getContent();
 
 			try {
-				/*XmlOptions xmlOption = new XmlOptions(); 
-				Map <String,String> map=new HashMap<String,String>(); 
-				map.put("","http://www.likyateknoloji.com/XML_report_types");   
-				xmlOption.setLoadSubstituteNamespaces(map); 
-				*/
+				/*
+				 * XmlOptions xmlOption = new XmlOptions(); Map <String,String>
+				 * map=new HashMap<String,String>();
+				 * map.put("","http://www.likyateknoloji.com/XML_report_types");
+				 * xmlOption.setLoadSubstituteNamespaces(map);
+				 */
 				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
 			} catch (XmlException e) {
 				e.printStackTrace();
@@ -2300,6 +2299,39 @@ public class DBOperations implements Serializable {
 			}
 		}
 		return jobArray;
+	}
+
+	public SWAgent checkAgent(String resource, short jmxPort) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
+				+ "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(" + "xs:string(\"" + resource + "\")," + jmxPort + ")";
+
+		SWAgent agent = null;
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+		return agent;
 	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
