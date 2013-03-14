@@ -78,7 +78,7 @@
 							<p:commandButton id="alarmDeleteButton" value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" rendered="#{security.AlarmDelete}">
 								<!-- <h:graphicImage value="../../images/delete2.png" /> -->
 								<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
-									<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update="alarmSearchDataTable" onclick="confirmation.hide()" actionListener="#{alarmSearchPanelMBean.deleteAlarmAction}" />
+									<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchAlarm:alarmSearchPanel" onclick="confirmation.hide()" actionListener="#{alarmSearchPanelMBean.deleteAlarmAction}" />
 									<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
 								</p:confirmDialog>
 							</p:commandButton>
