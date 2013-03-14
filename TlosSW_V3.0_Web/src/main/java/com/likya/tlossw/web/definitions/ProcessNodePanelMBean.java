@@ -25,7 +25,7 @@ import com.likya.tlos.model.xmlbeans.processnode.ReplaceDocument.Replace.Type;
 import com.likya.tlos.model.xmlbeans.processnode.SplitDocument.Split;
 import com.likya.tlos.model.xmlbeans.processnode.TransformDocument.Transform;
 import com.likya.tlos.model.xmlbeans.processnode.TransformDocument.Transform.With;
-import com.likya.tlossw.web.utils.WebJobDefUtils;
+import com.likya.tlossw.web.utils.WebListDefinitionUtils;
 
 @ManagedBean(name = "processNodePanelMBean")
 @ViewScoped
@@ -304,7 +304,7 @@ public class ProcessNodePanelMBean extends JobBaseBean implements Serializable {
 
 	private void fillSourceTypeList() {
 		if (sourceTypeList == null) {
-			sourceTypeList = WebJobDefUtils.fillSourceTypeList();
+			sourceTypeList = WebListDefinitionUtils.fillSourceTypeList();
 		}
 	}
 

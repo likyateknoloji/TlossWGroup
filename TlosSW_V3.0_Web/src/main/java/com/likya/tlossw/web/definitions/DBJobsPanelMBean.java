@@ -23,7 +23,7 @@ import com.likya.tlos.model.xmlbeans.dbjob.DbJobTypeDocument.DbJobType;
 import com.likya.tlos.model.xmlbeans.dbjob.FreeSQLPropertiesDocument.FreeSQLProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.ScriptPropertiesDocument.ScriptProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.StoreProcedurePropertiesDocument.StoreProcedureProperties;
-import com.likya.tlossw.web.utils.WebJobDefUtils;
+import com.likya.tlossw.web.utils.WebListDefinitionUtils;
 
 @ManagedBean(name = "dbJobsPanelMBean")
 @ViewScoped
@@ -64,7 +64,7 @@ public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
 
 		dbAccessProfileList = getDbOperations().getDBProfiles();
 		ArrayList<DbProperties> dbConnections = getDbOperations().getDBConnections();
-		setDbDefinitionList(WebJobDefUtils.fillDbDefinitionList(dbAccessProfileList, dbConnections));
+		setDbDefinitionList(WebListDefinitionUtils.fillDbDefinitionList(dbAccessProfileList, dbConnections));
 	}
 
 	public void fillTabs() {
@@ -175,7 +175,7 @@ public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
 
 	private void fillDBJobTypeList() {
 		if (dbJobTypeList == null) {
-			dbJobTypeList = WebJobDefUtils.fillDBJobTypeList();
+			dbJobTypeList = WebListDefinitionUtils.fillDBJobTypeList();
 		}
 	}
 
