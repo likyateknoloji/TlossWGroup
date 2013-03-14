@@ -31,6 +31,7 @@ import com.likya.tlos.model.xmlbeans.resourceextdefs.ResourceDocument.Resource;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "agentPanelMBean")
 @ViewScoped
@@ -46,12 +47,10 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String osType;
-	private String resource;
 
-	private short nrpePort;
-	private short jmxPort;
-	private String jmxUser;
-	private String jmxPassword;
+	private String resource;
+	private Collection<SelectItem> resourceList = null;
+
 	private String jmxPassword2;
 	private int durationForUnavailability;
 	private long jobTransferFailureTime;
@@ -60,10 +59,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	private Collection<SelectItem> agentTypeList = null;
 	private String agentType;
 
-	private String userStopRequest;
-
 	private SWAgent agent;
-	private ArrayList<SWAgent> searchAgentList;
 
 	private boolean insertButton;
 
@@ -81,8 +77,10 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		agent = SWAgent.Factory.newInstance();
+		resetAgentAction();
 		fillAgentTypeList();
+
+		setResourceList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		selectedAgentID = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedAgentID"));
 		insertCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck"));
@@ -155,49 +153,35 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
 		agent.setAgentType(AgentType.Enum.forString(agentType));
-		agent.setNrpePort(nrpePort);
-		agent.setJmxPort(jmxPort);
-		agent.setJmxUser(jmxUser);
-		agent.setJmxPassword(jmxPassword);
 		agent.setDurationForUnavailability(durationForUnavailability);
 		agent.setJobTransferFailureTime(jobTransferFailureTime);
 		agent.setWorkspacePath(workspacePath);
 
 		setLocalParameters();
+
+		// bu alanlar ekrandan doldurulmuyor
+		// bos olarak kaydedilmesin diye bu sekilde doldurdum
+		agent.setInJmxAvailable(false);
+		agent.setOutJmxAvailable(false);
+		agent.setJmxAvailable(false);
+		agent.setUserStopRequest(UserStopRequest.NULL);
+		agent.setNrpeAvailable(false);
+		agent.setLastHeartBeatTime(0);
+		agent.setLastJobTransfer(false);
 	}
 
 	public void resetAgentAction() {
 		resource = null;
-		osType = "All";
+		osType = "";
 
-		nrpePort = new Short("");
-		jmxPort = new Short("");
-		jmxUser = null;
-		jmxPassword = null;
 		jmxPassword2 = null;
 
-		durationForUnavailability = 0;
+		durationForUnavailability = 900;
 		jobTransferFailureTime = 0;
-
-		searchAgentList = null;
 
 		parameterList = new ArrayList<Parameter>();
 
 		agent = SWAgent.Factory.newInstance();
-
-//		Resource res = Resource.Factory.newInstance();
-//		agent.setResource(res);
-//
-//		agent.setJmxPort(new Short("0"));
-//		agent.setNrpePort(new Short("0"));
-//		agent.setJmxUser("");
-//		agent.setJmxPassword("");
-//		agent.setDurationForUnavailability(new Integer(0));
-//		agent.setJobTransferFailureTime(new Long("0"));
-//
-//		agent.setUserStopRequest(UserStopRequest.NULL);
-//
-//		fillAgentTypeList();
 	}
 
 	public void fillAgentTypeList() {
@@ -327,14 +311,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		return agent;
 	}
 
-	public void setSearchAgentList(ArrayList<SWAgent> searchAgentList) {
-		this.searchAgentList = searchAgentList;
-	}
-
-	public ArrayList<SWAgent> getSearchAgentList() {
-		return searchAgentList;
-	}
-
 	public void setOsType(String osType) {
 		this.osType = osType;
 	}
@@ -345,22 +321,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public String getAgentType() {
 		return agentType;
-	}
-
-	public void setJmxUser(String jmxUser) {
-		this.jmxUser = jmxUser;
-	}
-
-	public String getJmxUser() {
-		return jmxUser;
-	}
-
-	public void setJmxPassword(String jmxPassword) {
-		this.jmxPassword = jmxPassword;
-	}
-
-	public String getJmxPassword() {
-		return jmxPassword;
 	}
 
 	public void setJmxPassword2(String jmxPassword2) {
@@ -378,14 +338,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public Collection<SelectItem> getAgentTypeList() {
 		return agentTypeList;
-	}
-
-	public void setUserStopRequest(String userStopRequest) {
-		this.userStopRequest = userStopRequest;
-	}
-
-	public String getUserStopRequest() {
-		return userStopRequest;
 	}
 
 	public void setWorkspacePath(String workspacePath) {
@@ -508,24 +460,16 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.jobTransferFailureTime = jobTransferFailureTime;
 	}
 
-	public short getNrpePort() {
-		return nrpePort;
-	}
-
-	public void setNrpePort(short nrpePort) {
-		this.nrpePort = nrpePort;
-	}
-
-	public short getJmxPort() {
-		return jmxPort;
-	}
-
-	public void setJmxPort(short jmxPort) {
-		this.jmxPort = jmxPort;
-	}
-
 	public void setAgentType(String agentType) {
 		this.agentType = agentType;
+	}
+
+	public Collection<SelectItem> getResourceList() {
+		return resourceList;
+	}
+
+	public void setResourceList(Collection<SelectItem> resourceList) {
+		this.resourceList = resourceList;
 	}
 
 }
