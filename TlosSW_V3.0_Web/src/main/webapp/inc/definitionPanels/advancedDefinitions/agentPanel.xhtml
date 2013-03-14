@@ -36,7 +36,6 @@
 
 		<br></br>
 
-
 		<h:form id="yeniKullaniciForm">
 			<p:fieldset
 				legend="#{msgs['tlos.management.pannel.agentProcesses.newAgentPanel']}"
@@ -81,22 +80,20 @@
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.nrpePort']}" />
-					<p:inputText id="nrpePort"
-						value="#{agentPanelMBean.agent.nrpePort}" required="true"
+					<p:inputText id="nrpePort" value="#{agentPanelMBean.nrpePort}"
+						required="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.nrpePort']}"
-						validatorMessage="#{msgs['tlos.agentPanel.valMessage.nrpePort']}"
-						label="#{msgs['tlos.management.pannel.agentProcesses.nrpePort']}">
-						<f:validateLength minimum="4"></f:validateLength>
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.nrpePort.regex']}">
+						<f:validateRegex pattern="[1-9][0-9]{3}" />
 					</p:inputText>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.jmxPort']}" />
-					<p:inputText id="jmxPort" value="#{agentPanelMBean.agent.jmxPort}"
+					<p:inputText id="jmxPort" value="#{agentPanelMBean.jmxPort}"
 						required="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jmxPort']}"
-						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxPort']}"
-						label="#{msgs['tlos.management.pannel.agentProcesses.jmxPort']}">
-						<f:validateLength minimum="4"></f:validateLength>
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxPort.regex']}">
+						<f:validateRegex pattern="[1-9][0-9]{3}" />
 					</p:inputText>
 
 					<h:outputText
@@ -104,9 +101,8 @@
 					<p:inputText id="jmxUser" value="#{agentPanelMBean.agent.jmxUser}"
 						required="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jmxUser']}"
-						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxUser']}"
-						label="#{msgs['tlos.management.pannel.agentProcesses.jmxUser']}">
-						<f:validateLength minimum="5"></f:validateLength>
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxUser.regex']}">
+						<f:validateRegex pattern="([0-9a-zA-Z])+" />
 					</p:inputText>
 
 					<h:outputText
@@ -118,16 +114,17 @@
 						label="#{msgs['tlos.management.pannel.agentProcesses.jmxPassword']}"
 						required="true" redisplay="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.password']}">
-						<f:validateLength minimum="5"></f:validateLength>
+						<f:validateLength minimum="4" maximum="8"></f:validateLength>
 					</p:password>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.jmxPassword.repeat']}" />
 					<p:password id="password2" value="#{agentPanelMBean.jmxPassword2}"
 						feedback="false" redisplay="true"
-						label="#{msgs['tlos.management.pannel.agentProcesses.jmxPassword.repeat']}">
+						label="#{msgs['tlos.management.pannel.agentProcesses.jmxPassword.repeat']}"
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.password']}">
+						<f:validateLength minimum="4" maximum="8"></f:validateLength>
 					</p:password>
-
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.agentProcesses.durationForUnavailability']}" />
@@ -135,7 +132,9 @@
 						value="#{agentPanelMBean.durationForUnavailability}"
 						required="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.timeOut']}"
-						label="#{msgs['tlos.management.pannel.agentProcesses.durationForUnavailability']}">
+						label="#{msgs['tlos.management.pannel.agentProcesses.durationForUnavailability']}"
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.timeOut']}">
+						<f:validateDoubleRange minimum="1"></f:validateDoubleRange>
 					</p:inputText>
 
 					<h:outputText
@@ -143,7 +142,9 @@
 					<p:inputText id="jobTransferFailureTime"
 						value="#{agentPanelMBean.jobTransferFailureTime}" required="true"
 						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jobTransferFailureTime']}"
-						label="#{msgs['tlos.management.pannel.agentProcesses.jobTransferFailureTime']}">
+						label="#{msgs['tlos.management.pannel.agentProcesses.jobTransferFailureTime']}"
+						validatorMessage="#{msgs['tlos.agentPanel.reqMessage.jtft.regex']}">
+						<f:validateDoubleRange minimum="0"></f:validateDoubleRange>
 					</p:inputText>
 
 					<h:outputText

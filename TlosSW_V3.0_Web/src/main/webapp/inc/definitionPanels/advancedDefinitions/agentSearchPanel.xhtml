@@ -109,7 +109,7 @@
 								widgetVar="confirmation">
 								<p:commandButton id="confirm" immediate="true" process="@this"
 									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update="agentSearchDataTable" onclick="confirmation.hide()"
+									update=":searchAgent:agentSearchPanel" onclick="confirmation.hide()"
 									actionListener="#{agentSearchPanelMBean.deleteAgentAction}" />
 								<p:commandButton id="decline"
 									value="#{msgs['tlos.ask.delete.confirm2']}"
