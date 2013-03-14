@@ -41,7 +41,7 @@ import com.likya.tlos.model.xmlbeans.fileadapter.TargetFileNameDocument.TargetFi
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailDocument.TextFileDetail;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.XmlFilesOperationDocument.XmlFilesOperation;
-import com.likya.tlossw.web.utils.WebListDefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "fileProcessPanelMBean")
 @ViewScoped
@@ -564,49 +564,49 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 
 	private void fillFileAdapterTypeList() {
 		if (fileAdapterTypeList == null) {
-			fileAdapterTypeList = WebListDefinitionUtils.fillFileAdapterTypeList();
+			fileAdapterTypeList = WebInputUtils.fillFileAdapterTypeList();
 		}
 	}
 
 	private void fillTextFileDetailOptions() {
 		if (textFileDetailOptions == null) {
-			textFileDetailOptions = WebListDefinitionUtils.fillTextFileDetailOptions();
+			textFileDetailOptions = WebInputUtils.fillTextFileDetailOptions();
 		}
 	}
 
 	private void fillBinaryFileDetailOptions() {
 		if (binaryFileDetailOptions == null) {
-			binaryFileDetailOptions = WebListDefinitionUtils.fillBinaryFileDetailOptions();
+			binaryFileDetailOptions = WebInputUtils.fillBinaryFileDetailOptions();
 		}
 	}
 
 	private void fillProcessedFilesOperationTypeList() {
 		if (processedFilesOperationTypeList == null) {
-			processedFilesOperationTypeList = WebListDefinitionUtils.fillProcessedFilesOperationTypeList();
+			processedFilesOperationTypeList = WebInputUtils.fillProcessedFilesOperationTypeList();
 		}
 	}
 
 	private void fillFileTypeList() {
 		if (fileTypeList == null) {
-			fileTypeList = WebListDefinitionUtils.fillFileTypeList();
+			fileTypeList = WebInputUtils.fillFileTypeList();
 		}
 	}
 
 	private void fillFileModificationTimeList() {
 		if (fileModificationTimeList == null) {
-			fileModificationTimeList = WebListDefinitionUtils.fillFileModificationTimeList();
+			fileModificationTimeList = WebInputUtils.fillFileModificationTimeList();
 		}
 	}
 
 	private void fillTextFileOperationTypeList() {
 		if (textFileOperationTypeList == null) {
-			textFileOperationTypeList = WebListDefinitionUtils.fillTextFileOperationTypeList();
+			textFileOperationTypeList = WebInputUtils.fillTextFileOperationTypeList();
 		}
 	}
 
 	private void fillBinaryFileOperationTypeList() {
 		if (binaryFileOperationTypeList == null) {
-			binaryFileOperationTypeList = WebListDefinitionUtils.fillBinaryFileOperationTypeList();
+			binaryFileOperationTypeList = WebInputUtils.fillBinaryFileOperationTypeList();
 		}
 	}
 

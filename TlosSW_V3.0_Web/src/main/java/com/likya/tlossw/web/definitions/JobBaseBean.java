@@ -84,7 +84,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
-import com.likya.tlossw.web.utils.WebJobDefUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable {
 
@@ -608,11 +608,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		fillJobStateList();
 		fillJobSubtateList();
 
-		setJsCalendarList(WebJobDefUtils.fillCalendarList(getDbOperations().getCalendars()));
-		setAlarmList(WebJobDefUtils.fillAlarmList(getDbOperations().getAlarms()));
-		setDefinedAgentList(WebJobDefUtils.fillAgentList(getDbOperations().getAgents()));
-		setJsSLAList(WebJobDefUtils.fillSLAList(getDbOperations().getSlaList()));
-		setResourceNameList(WebJobDefUtils.fillResourceNameList(getDbOperations().getResources()));
+		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
+		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
+		setDefinedAgentList(WebInputUtils.fillAgentList(getDbOperations().getAgents()));
+		setJsSLAList(WebInputUtils.fillSLAList(getDbOperations().getSlaList()));
+		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 	}
 
 	// ekrandan girilen degerler jobProperties icine dolduruluyor
@@ -1385,7 +1385,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		jobStatus.setStatusName(StatusName.Enum.forString(jobStatusName));
 
-		ReturnCode tmpReturnCode = WebJobDefUtils.cloneReturnCode(returnCode);
+		ReturnCode tmpReturnCode = WebInputUtils.cloneReturnCode(returnCode);
 
 		// girilen statu icin onceden kayit yapilmamissa gerekli bilesenler
 		// olusturuluyor
@@ -1488,7 +1488,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			return;
 		}
 
-		Status tmpJobStatus = WebJobDefUtils.cloneJobStatus(jobStatus);
+		Status tmpJobStatus = WebInputUtils.cloneJobStatus(jobStatus);
 
 		if (isScenario) {
 			addToScenarioStatusList(tmpJobStatus);
@@ -1635,7 +1635,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		for (Status jStatus : statusArray) {
 			if (jStatus.getStatusName().toString().equals(selectedJobStatusList[0])) {
-				jobStatus = WebJobDefUtils.cloneJobStatus(jStatus);
+				jobStatus = WebInputUtils.cloneJobStatus(jStatus);
 				jobStatusName = selectedJobStatusList[0];
 
 				break;
@@ -1675,7 +1675,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		for (Status jStatus : statusArray) {
 			if (jobStatus.getStatusName().toString().equals(jStatus.getStatusName().toString())) {
-				jStatus = WebJobDefUtils.cloneJobStatus(jobStatus);
+				jStatus = WebInputUtils.cloneJobStatus(jobStatus);
 
 				addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.update", null);
 
@@ -1700,61 +1700,61 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void fillAgentChoiceMethodList() {
 		if (getAgentChoiceMethodList() == null) {
-			setAgentChoiceMethodList(WebJobDefUtils.fillAgentChoiceMethodList());
+			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
 		}
 	}
 
 	public void fillJobTypeDefList() {
 		if (getJobTypeDefList() == null) {
-			setJobTypeDefList(WebJobDefUtils.fillJobTypeDefList());
+			setJobTypeDefList(WebInputUtils.fillJobTypeDefList());
 		}
 	}
 
 	public void fillJobBaseTypeList() {
 		if (getJobBaseTypeList() == null) {
-			setJobBaseTypeList(WebJobDefUtils.fillJobBaseTypeList());
+			setJobBaseTypeList(WebInputUtils.fillJobBaseTypeList());
 		}
 	}
 
 	public void fillEventTypeDefList() {
 		if (getEventTypeDefList() == null) {
-			setEventTypeDefList(WebJobDefUtils.fillEventTypeDefList());
+			setEventTypeDefList(WebInputUtils.fillEventTypeDefList());
 		}
 	}
 
 	public void fillOSystemList() {
 		if (getoSystemList() == null) {
-			setoSystemList(WebJobDefUtils.fillOSystemList());
+			setoSystemList(WebInputUtils.fillOSystemList());
 		}
 	}
 
 	public void fillRelativeTimeOptionList() {
 		if (getRelativeTimeOptionList() == null) {
-			setRelativeTimeOptionList(WebJobDefUtils.fillRelativeTimeOptionList());
+			setRelativeTimeOptionList(WebInputUtils.fillRelativeTimeOptionList());
 		}
 	}
 
 	public void fillUnitTypeList() {
 		if (getUnitTypeList() == null) {
-			setUnitTypeList(WebJobDefUtils.fillUnitTypeList());
+			setUnitTypeList(WebInputUtils.fillUnitTypeList());
 		}
 	}
 
 	public void fillJobStateList() {
 		if (getDepStateNameList() == null) {
-			setDepStateNameList(WebJobDefUtils.fillJobStateList());
+			setDepStateNameList(WebInputUtils.fillJobStateList());
 		}
 	}
 
 	public void fillJobSubtateList() {
 		if (getDepSubstateNameList() == null) {
-			setDepSubstateNameList(WebJobDefUtils.fillJobSubstateList());
+			setDepSubstateNameList(WebInputUtils.fillJobSubstateList());
 		}
 	}
 
 	public void fillJobStatusList() {
 		if (getJobStatusNameList() == null) {
-			setJobStatusNameList(WebJobDefUtils.fillJobStatusList());
+			setJobStatusNameList(WebInputUtils.fillJobStatusList());
 		}
 	}
 

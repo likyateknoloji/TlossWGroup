@@ -19,7 +19,7 @@ import com.likya.tlos.model.xmlbeans.listener.FileNameTypeDocument.FileNameType;
 import com.likya.tlos.model.xmlbeans.listener.PollingPropertiesDocument.PollingProperties;
 import com.likya.tlos.model.xmlbeans.listener.PollingTypeDocument.PollingType;
 import com.likya.tlos.model.xmlbeans.listener.ReadAndListFilePropertiesDocument.ReadAndListFileProperties;
-import com.likya.tlossw.web.utils.WebListDefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "fileListenerPanelMBean")
 @ViewScoped
@@ -180,7 +180,7 @@ public class FileListenerPanelMBean extends JobBaseBean implements Serializable 
 
 	private void fillPollingTypeList() {
 		if (pollingTypeList == null) {
-			pollingTypeList = WebListDefinitionUtils.fillPollingTypeList();
+			pollingTypeList = WebInputUtils.fillPollingTypeList();
 		}
 	}
 

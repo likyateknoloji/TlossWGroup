@@ -34,7 +34,7 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.SourceDirectoryDocument.SourceDi
 import com.likya.tlos.model.xmlbeans.ftpadapter.SourceFileNameDocument.SourceFileName;
 import com.likya.tlos.model.xmlbeans.ftpadapter.TargetDirectoryDocument.TargetDirectory;
 import com.likya.tlos.model.xmlbeans.ftpadapter.TargetFileNameDocument.TargetFileName;
-import com.likya.tlossw.web.utils.WebListDefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "ftpPanelMBean")
 @ViewScoped
@@ -111,7 +111,7 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		fillFileTypeList();
 		fillFileModificationTimeList();
 
-		setFtpConnectionDefinitionList(WebListDefinitionUtils.fillFtpConnectionDefinitionList(getDbOperations().getFtpConnectionList()));
+		setFtpConnectionDefinitionList(WebInputUtils.fillFtpConnectionDefinitionList(getDbOperations().getFtpConnectionList()));
 	}
 
 	public void fillTabs() {
@@ -406,31 +406,31 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 
 	private void fillAdapterTypeList() {
 		if (adapterTypeList == null) {
-			adapterTypeList = WebListDefinitionUtils.fillAdapterTypeList();
+			adapterTypeList = WebInputUtils.fillAdapterTypeList();
 		}
 	}
 
 	private void fillOperationTypeList() {
 		if (operationTypeList == null) {
-			operationTypeList = WebListDefinitionUtils.fillOperationTypeList();
+			operationTypeList = WebInputUtils.fillOperationTypeList();
 		}
 	}
 
 	private void fillProcessedFilesOperationTypeList() {
 		if (processedFilesOperationTypeList == null) {
-			processedFilesOperationTypeList = WebListDefinitionUtils.fillProcessedFilesOperationTypeList();
+			processedFilesOperationTypeList = WebInputUtils.fillProcessedFilesOperationTypeList();
 		}
 	}
 
 	private void fillFileTypeList() {
 		if (fileTypeList == null) {
-			fileTypeList = WebListDefinitionUtils.fillFileTypeList();
+			fileTypeList = WebInputUtils.fillFileTypeList();
 		}
 	}
 
 	private void fillFileModificationTimeList() {
 		if (fileModificationTimeList == null) {
-			fileModificationTimeList = WebListDefinitionUtils.fillFileModificationTimeList();
+			fileModificationTimeList = WebInputUtils.fillFileModificationTimeList();
 		}
 	}
 

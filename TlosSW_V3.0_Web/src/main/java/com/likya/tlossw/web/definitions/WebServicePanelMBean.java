@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
-import com.likya.tlossw.web.utils.WebListDefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean
 @ViewScoped
@@ -48,7 +48,7 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 		int userId = 1;
 
 		webServiceList = getDbOperations().getWebServiceListForActiveUser(userId);
-		setWebServiceDefinitionList(WebListDefinitionUtils.fillWebServiceDefinitionList(webServiceList));
+		setWebServiceDefinitionList(WebInputUtils.fillWebServiceDefinitionList(webServiceList));
 	}
 
 	public void fillTabs() {
