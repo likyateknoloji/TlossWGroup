@@ -35,13 +35,18 @@
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
-						<p:inputText value="#{agentSearchPanelMBean.resource}" />
+						<p:selectOneMenu value="#{agentSearchPanelMBean.resource}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItems value="#{agentSearchPanelMBean.resourceList}" />
+						</p:selectOneMenu>
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.agentProcesses.osType']}" />
-						<p:selectOneMenu id="osType" style="text-align: center;"
-							value="#{agentSearchPanelMBean.osType}" partialSubmit="true">
-							<f:selectItem itemLabel="All" itemValue="All" />
+						<p:selectOneMenu id="osType"
+							value="#{agentSearchPanelMBean.osType}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
 							<f:selectItem itemLabel="Unix" itemValue="Unix" />
 							<f:selectItem itemLabel="Windows" itemValue="Windows" />
 						</p:selectOneMenu>
