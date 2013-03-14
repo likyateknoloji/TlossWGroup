@@ -37,9 +37,9 @@ return local:getJobArray($run, "ascending", 15)
 declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
  {
 
-    let $runIdFound := if ($runId != 0 ) 
-	                   then $runId 
-	                   else sq:getId("runId")
+    let $runIdFound := if ($runId = 0) then sq:getId("runId")
+                       else if ($runId = -1) then sq:getId("runId")-1
+	                   else $runId 
 
     let $posUpper := max(for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
 	                 where $runx[@id = $runIdFound] or not($refRunIdBolean)
