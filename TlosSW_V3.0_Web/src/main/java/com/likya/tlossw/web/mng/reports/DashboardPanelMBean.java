@@ -22,7 +22,7 @@ import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.primefaces.model.chart.PieChartModel;
 import org.xmldb.api.base.XMLDBException;
 
-import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
+import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "dashboardPanelMBean")
@@ -41,7 +41,9 @@ public class DashboardPanelMBean implements Serializable {
 	private CartesianChartModel prevDurationModel;
 	private CartesianChartModel denseModel;
 
-	private JobArray jobReturnArray;
+	private ArrayList<Job> jobsArray;
+	
+//	private JobArray jobReturnArray;
 	
 	private MeterGaugeChartModel meterGaugeModel;
 
@@ -88,6 +90,12 @@ public class DashboardPanelMBean implements Serializable {
 		message.setSummary("Reordered: " + event.getWidgetId());
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
 
+	}
+	
+	public void resetJobReportAction() {
+ 
+		jobsArray = new ArrayList<Job>();
+		 
 	}
 	
 	public String getDatatipFormat(){
@@ -180,55 +188,47 @@ public class DashboardPanelMBean implements Serializable {
 	}
 
 	private void createCurCategoryModel() {
-		
+
+		curDurationModel = new CartesianChartModel();
+
+		resetJobReportAction();
 		
 		try {
-			jobReturnArray = getDbOperations().getJobArrayReport(1, "ascending", 10);
+			jobsArray = getDbOperations().getJobArrayReport(1, 0, "ascending", 10);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-		 
-		
-		curDurationModel = new CartesianChartModel();
 
 		ChartSeries jobs = new ChartSeries();
 		jobs.setLabel("Jobs");
 
-	 
-		jobs.set(jobReturnArray.getJobArray(0).getJname(), jobReturnArray.getJobArray(0).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(1).getJname(), jobReturnArray.getJobArray(1).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(2).getJname(), jobReturnArray.getJobArray(2).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(3).getJname(), jobReturnArray.getJobArray(3).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(4).getJname(), jobReturnArray.getJobArray(4).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(5).getJname(), jobReturnArray.getJobArray(5).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(6).getJname(), jobReturnArray.getJobArray(6).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(7).getJname(), jobReturnArray.getJobArray(7).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(8).getJname(), jobReturnArray.getJobArray(8).getBigDecimalValue());
-		jobs.set(jobReturnArray.getJobArray(9).getJname(), jobReturnArray.getJobArray(9).getBigDecimalValue());
-
-		curDurationModel.addSeries(jobs);
+		for (Job job : jobsArray) {
+			jobs.set(job.getJname(), job.getBigDecimalValue());
+		}
 		
+		curDurationModel.addSeries(jobs);
 
 	}
 
 	private void createPrevCategoryModel() {
 		prevDurationModel = new CartesianChartModel();
 
-		ChartSeries jobs = new ChartSeries();
-		jobs.setLabel("Jobs");
+	    resetJobReportAction();
+		
+		try {
+			jobsArray = getDbOperations().getJobArrayReport(1, -1, "ascending", 10);
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+		
+		ChartSeries prevJobs = new ChartSeries();
+		prevJobs.setLabel("Jobs");
 
-		jobs.set("job17", 20);
-		jobs.set("job2", 50);
-		jobs.set("job1", 64);
-		jobs.set("job4", 90);
-		jobs.set("job5", 125);
-		jobs.set("job11", 130);
-		jobs.set("job7", 140);
-		jobs.set("job14", 150);
-		jobs.set("job9", 155);
-		jobs.set("job6", 180);
-
-		prevDurationModel.addSeries(jobs);
+		for (Job job : jobsArray) {
+			prevJobs.set(job.getJname(), job.getBigDecimalValue());
+		}
+		
+		prevDurationModel.addSeries(prevJobs);
 
 	}
 
@@ -284,20 +284,20 @@ public class DashboardPanelMBean implements Serializable {
 		this.pieDashboardModel7 = pieDashboardModel7;
 	}
 
-	public JobArray getJobReturnArray() {
-		return jobReturnArray;
-	}
-
-	public void setJobReturnArray(JobArray jobReturnArray) {
-		this.jobReturnArray = jobReturnArray;
-	}
-
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
 
 	public void setDbOperations(DBOperations dbOperations) {
 		this.dbOperations = dbOperations;
+	}
+
+	public ArrayList<Job> getJobsArray() {
+		return jobsArray;
+	}
+
+	public void setJobsArray(ArrayList<Job> jobsArray) {
+		this.jobsArray = jobsArray;
 	}
 
 }
