@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
@@ -88,7 +87,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		// selectedScenario.toString() + " içinde tanımlanacak", null);
 	}
 
-	public void insertJobAction(ActionEvent e) {
+	public void insertJobAction() {
 		fillScenarioProperties();
 		insertScenarioDefinition();
 	}
