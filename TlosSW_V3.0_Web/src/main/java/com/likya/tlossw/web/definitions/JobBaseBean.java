@@ -990,6 +990,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		StringTokenizer pathTokenizer = new StringTokenizer(treePath, "/");
 
+		// ilk gelen isim senaryo agacinin koku oldugu icin onu cikariyoruz
+		if (pathTokenizer.hasMoreTokens()) {
+			pathTokenizer.nextToken();
+		}
+
 		while (pathTokenizer.hasMoreTokens()) {
 			String scenarioName = pathTokenizer.nextToken();
 
