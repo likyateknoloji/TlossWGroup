@@ -39,6 +39,9 @@ public class UTF8ResourceBundle extends ResourceBundle {
 			// implementation.
 			// Only the PropertyResourceBundle line is changed to read the file
 			// as UTF-8.
+
+			locale = new Locale(Locale.getDefault().getLanguage());
+
 			String bundleName = toBundleName(baseName, locale);
 			String resourceName = toResourceName(bundleName, BUNDLE_EXTENSION);
 			ResourceBundle bundle = null;
