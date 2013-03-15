@@ -41,20 +41,13 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-
-
 			<p:panel id="searchPnl"
 				header="#{msgs['tlos.management.pannel.userProcesses.header']}"
 				styleClass="formSeparator" style="text-align: center;">
 
-
 				<div class="tablectrl">
 
-
-
 					<p:panelGrid columns="4" styleClass="companyHeaderGrid">
-
-		
 		
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.userProcesses.user']}" />
@@ -80,7 +73,6 @@
 			</p:panel>
 			<br></br>
 
-
 			<div class="tablectrl">
 				<p:panel>
 					<p:commandButton id="userSearchButton" update="userSearchPanel"
@@ -105,10 +97,7 @@
 
 			<br></br>
 
-
 			<p:outputPanel id="userSearchPanel">
-
-
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty userSearchPanelMBean.searchUserList}">
@@ -119,8 +108,6 @@
 						paginator="true" paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15">
-
-
 
 						<p:column>
 							<p:commandButton id="userEditButton" ajax="false" rendered="#{security.UserEdit}"
@@ -137,15 +124,13 @@
 								widgetVar="confirmation">
 								<p:commandButton id="confirm" immediate="true" process="@this"
 									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update="userSearchDataTable" onclick="confirmation.hide()"
+									update=":searchUser:userSearchPanel" onclick="confirmation.hide()"
 									actionListener="#{userSearchPanelMBean.deleteUserAction}" />
 								<p:commandButton id="decline"
 									value="#{msgs['tlos.ask.delete.confirm2']}"
 									onclick="confirmation.hide()" type="button" />
 							</p:confirmDialog>
 					
-
-
 						</p:column>
 
 						<p:column id="modelHeader"
@@ -176,7 +161,6 @@
 							filterMatchMode="contains">
 							<h:outputText value="#{item.surname}" style="text-align: center;" />
 						</p:column>
-
 
 					</p:dataTable>
 				</p:panel>
