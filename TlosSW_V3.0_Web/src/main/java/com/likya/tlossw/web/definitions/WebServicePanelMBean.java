@@ -81,7 +81,7 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 		}
 	}
 
-	public void insertJobAction(ActionEvent e) {
+	public void insertJobAction() {
 		fillJobProperties();
 
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();

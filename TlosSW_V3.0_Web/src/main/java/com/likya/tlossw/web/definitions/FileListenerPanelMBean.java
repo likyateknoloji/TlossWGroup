@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
@@ -119,7 +118,7 @@ public class FileListenerPanelMBean extends JobBaseBean implements Serializable 
 		}
 	}
 
-	public void insertJobAction(ActionEvent e) {
+	public void insertJobAction() {
 		fillJobProperties();
 		fillFileListenerPropertyDetails();
 
