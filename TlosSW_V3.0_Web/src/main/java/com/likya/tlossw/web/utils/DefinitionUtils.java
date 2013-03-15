@@ -177,11 +177,22 @@ public class DefinitionUtils {
 		return timeValue;
 	}
 
+	/**
+	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini
+	 * karsilastiriyor.
+	 * 
+	 * @param validTo gecerliligin bittigi zaman
+	 * @param validFrom gecerliligin basladigi zaman
+	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true,
+	 *         ayni ya da once ise false donuyor
+	 */
 	public static boolean dateComparer(ValidTo validTo, ValidFrom validFrom) {
 		if (validTo.getDate().after(validFrom.getDate())) {
 			return true;
-		} else if (validTo.getTime().after(validFrom.getTime())) {
-			return true;
+		} else if (validTo.getDate().equals(validFrom.getDate())) {
+			if (validTo.getTime().after(validFrom.getTime())) {
+				return true;
+			}
 		}
 		return false;
 	}
