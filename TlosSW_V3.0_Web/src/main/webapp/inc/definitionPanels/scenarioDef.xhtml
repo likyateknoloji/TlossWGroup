@@ -92,7 +92,7 @@
 				<p:tab id="advancedScenarioInfos"
 					title="#{msgs['tlos.workspace.pannel.scenario.advancedScenarioInfos']}">
 					<p:panel>
-						<p:panelGrid columns="2">
+						<p:panelGrid columns="2" id="advancedInfos">
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
 							<p:selectOneMenu id="agentChoiceMethod"
@@ -100,7 +100,7 @@
 								style="width: 100pt">
 								<f:selectItems
 									value="#{scenarioDefinitionMBean.agentChoiceMethodList}" />
-								<p:ajax update="advancedScenarioInfos"></p:ajax>
+								<p:ajax update="advancedInfos"></p:ajax>
 							</p:selectOneMenu>
 
 							<h:outputText
@@ -129,11 +129,6 @@
 						</p:panelGrid>
 					</p:panel>
 
-					<p:panel style="height:40px;">
-						<p:commandButton style="float:right;"
-							value="#{msgs['tlos.button.save']}"
-							actionListener="#{scenarioDefinitionMBean.insertJobAction}" />
-					</p:panel>
 				</p:tab>
 
 			</p:tabView>

@@ -16,14 +16,14 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.scenario.defineTimeManagement']}" />
 					<p:selectBooleanCheckbox value="#{backingBean.useTimeManagement}">
-						<p:ajax update="timeManagementTab" />
+						<p:ajax update=":jobDefinitionForm:tabView:timeManagementPanel" />
 					</p:selectBooleanCheckbox>
 				</p:panelGrid>
 			</p:panel>
 
 			<p:panel id="timeManagementPanel"
-				rendered="#{backingBean.useTimeManagement or !backingBean.scenario}">
-				<p:panelGrid id="timeManagement" columns="4">
+				>
+				<p:panelGrid id="timeManagement" columns="4" rendered="#{backingBean.useTimeManagement or !backingBean.scenario}">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
 
@@ -49,7 +49,7 @@
 
 				<br />
 
-				<p:panelGrid id="timeManagementSecond" columns="4"
+				<p:panelGrid id="timeManagementSecond" columns="4" rendered="#{backingBean.useTimeManagement or !backingBean.scenario}"
 					style="width:80%;">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
 					<p:spinner id="gmt" value="#{backingBean.gmt}" min="-12" max="13" />
