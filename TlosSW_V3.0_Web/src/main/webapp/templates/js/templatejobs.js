@@ -36,19 +36,6 @@ $('.jobGroup').hover(
 		return fixedPart + date.getSeconds() + date.getMilliseconds();
 	}
 
-	var dragIcon = document.createElement('img');
-
-	dragIcon.src = 'likya_logok.jpg';
-	dragIcon.width = 75;
-
-	var dragSrcEl = null;
-
-	var yum = document.createElement('p');
-	var eat = [ 'yum!', 'gulp', 'burp!', 'nom' ];
-	var msie = /*@cc_on!@*/0;
-
-	yum.style.opacity = 1;
-
 	console.log("All Template jobs");
     
 	function handleDragStart(e) {
@@ -60,7 +47,7 @@ $('.jobGroup').hover(
 	function handleDragOver(e) {
 		if (e.preventDefault)
 			e.preventDefault(); // allows us to drop
-		this.className = 'ui-treenode ui-treenode-leaf job';
+		//this.className = 'ui-treenode ui-treenode-leaf job';
 		//this.classList.add('over');
 		e.dataTransfer.dropEffect = 'copy'; // See the section on the DataTransfer object.
 	    //console.log('handleDragOver');
@@ -68,7 +55,7 @@ $('.jobGroup').hover(
 	}
 
 	function handleDragEnter(e) {
-		this.className = 'ui-treenode ui-treenode-leaf job';
+		//this.className = 'ui-treenode ui-treenode-leaf job';
 	    //console.log('handleDragEnter');
 		if (e.preventDefault)
 			e.preventDefault(); // allows us to drop
@@ -78,7 +65,7 @@ $('.jobGroup').hover(
 
 	function handleDragLeave(e) {
 		//console.log('handleDragLeave');
-		this.className = 'ui-treenode ui-treenode-leaf job';
+		//this.className = 'ui-treenode ui-treenode-leaf job';
 		//this.classList.remove('over');  // this / e.target is previous target element.
 	}
 
@@ -90,24 +77,36 @@ $('.jobGroup').hover(
 	}
 	
 	//jobin senaryo agacinda birakildigi pathi buluyor
-	function getJobPath(node) {
+	function getJobPath(myEl) {
 		var treeContainerClassName = "ui-tree-container";
 		
+ 	    var jobPath = "";
+ 	    var first = 1;
+		while( myEl.className != treeContainerClassName )
+		{
+		    if(myEl.className == "ui-treenode ui-treenode-parent scenario") {
+		       if(first == 1 ) { 
+		    	   jobPath = $.trim( myEl.querySelector('li span span span').childNodes[0].nodeValue );
+		    	   first = 0;
+		       } else {
+		    	   jobPath = $.trim( myEl.querySelector('li span span span').childNodes[0].nodeValue )+ "/" + jobPath;
+		       }
+		    }
+		       
+		    myEl = myEl.parentNode;
+		}
+
+		console.log("********* Birakilan isin senaryo path i *************************");
+		//console.log("root parentNode = " + myEl);
+		console.log("scenarioPath = " + jobPath);
+		
+		var rootOfScenarios = myEl;
+		//console.log("rootOfScenarios " + rootOfScenarios);
+
 		//serbest islerden biriyse path bos donuyor
-		if (node.parentNode.parentNode.className == treeContainerClassName) {
-			return "";
-		}
-		
-		var scenarioNode = node;
-		var jobPath = $(scenarioNode.lastChild).text();
-		
-		while (scenarioNode.parentNode.parentNode.parentNode.parentNode.className != treeContainerClassName) {
-			scenarioNode = scenarioNode.parentNode.parentNode.previousSibling;
-			
-			jobPath = $(scenarioNode.lastChild).text() + "/" + jobPath;
-		}
-		
-		console.log("jobPath : " + jobPath);
+		//if (rootOfScenarios.className == treeContainerClassName) {
+		//	return "";
+		//}
 		
 		return jobPath;
 	}
@@ -156,22 +155,22 @@ $('.jobGroup').hover(
 		str = str + newUniqueId; //+ " span:eq(3)";
 		var escapedId = escapeStr(str + ' >span>span>span');
 
-		console.log("-------str:" + str);
-		console.log("-------ss3:" + escapedId);
+		//console.log("-------str:" + str);
+		//console.log("-------ss3:" + escapedId);
 
 		//var jobNameId = elw.getElementsByTagName("id");
-		console.log("-------ss" + elw.getAttribute("data-rowkey"));
+		//console.log("-------ss" + elw.getAttribute("data-rowkey"));
 		elw.setAttribute("data-rowkey", newUniqueId);
-		console.log("-------ss2" + elw.getAttribute("data-rowkey"));
+		//console.log("-------ss2" + elw.getAttribute("data-rowkey"));
 		//this.appendChild(elw.cloneNode(true));
 		(this.querySelector('.ui-treenode-children')).appendChild(elw.cloneNode(true));
 		
 		//-------------------------------------------------------------
 		//TODO icteki attr lari degistirme problemli. uzerinde calisilacak. Hakan
-		var jobNameId = document.querySelectorAll(escapedId);
-		console.log("jobNameId" + jobNameId);
+		//var jobNameId = document.querySelectorAll(escapedId);
+		//console.log("jobNameId" + jobNameId);
 
-		console.log("sonuc" + elw.firstChild);
+		//console.log("sonuc" + elw.firstChild);
 		
 		//-------------------------------------------------------------
 		
@@ -180,26 +179,9 @@ $('.jobGroup').hover(
 		console.log("jobName : " + jobName);
 
 		var jobPath = getJobPath(this);
+		console.log("Full jobPath : " + jobPath + '/' + jobName);
 		
 		callHandleDropByName(jobName,jobPath);
-		
-		yum.innerHTML = eat[parseInt(Math.random() * eat.length)];
-
-		var y = yum.cloneNode(true);
-
-		setTimeout(function() {
-			var t = setInterval(function() {
-			
-				if (y.style.opacity <= 0) {
-					if (msie) { 
-						y.style.display = 'none';
-					}
-					clearInterval(t);
-				} else {
-					y.style.opacity -= 0.1;
-				}
-			}, 50);
-		}, 250);
 
 		return false;
 	}
