@@ -170,11 +170,15 @@
 					<p:panelGrid id="localParameters" columns="4">
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
-						<p:inputText value="#{agentPanelMBean.paramName}" />
+						<p:inputText value="#{agentPanelMBean.paramName}">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputText>
 
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-						<p:inputText value="#{agentPanelMBean.paramDesc}" />
+						<p:inputText value="#{agentPanelMBean.paramDesc}">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputText>
 
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
@@ -193,11 +197,32 @@
 								itemValue="5" />
 							<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
 								itemValue="6" />
+							<p:ajax update="localParameters"></p:ajax>
 						</p:selectOneMenu>
 
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
-						<p:inputText value="#{agentPanelMBean.paramPreValue}" />
+						<p:inputText value="#{agentPanelMBean.paramPreValue}"
+							rendered="#{agentPanelMBean.paramType eq '2' or agentPanelMBean.paramType eq '6'}" />
+
+						<p:inputText value="#{agentPanelMBean.paramPreValue}"
+							rendered="#{agentPanelMBean.paramType eq '1'}" type="integer"
+							validatorMessage="#{msgs['tlos.agentPanel.valMessage.intParam']}">
+							<f:validateLongRange minimum="-2147483648" maximum="2147483647"></f:validateLongRange>
+						</p:inputText>
+
+						<p:panelGrid columns="2"
+							rendered="#{agentPanelMBean.paramType eq '3' or agentPanelMBean.paramType eq '4' or agentPanelMBean.paramType eq '5'}">
+							<p:calendar value="#{agentPanelMBean.paramPreValue}"
+								rendered="#{agentPanelMBean.paramType eq '3' or agentPanelMBean.paramType eq '5'}"
+								showOn="focus" required="true" navigator="true">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</p:calendar>
+
+							<p:inputMask value="#{agentPanelMBean.paramPreValueTime}"
+								mask="99:99:99"
+								rendered="#{agentPanelMBean.paramType eq '4' or agentPanelMBean.paramType eq '5'}" />
+						</p:panelGrid>
 
 					</p:panelGrid>
 
