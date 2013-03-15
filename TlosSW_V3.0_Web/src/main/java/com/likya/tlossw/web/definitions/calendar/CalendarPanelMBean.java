@@ -287,7 +287,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	public void insertCalendarAction(ActionEvent e) {
 		fillCalendarProperties();
 
-		if (!(checkCalendarName() && getCalendarId())) {
+		if (!(checkValidInterval() && checkCalendarName() && getCalendarId())) {
 			return;
 		}
 
@@ -297,6 +297,15 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		} else {
 			addMessage("insertCalendar", FacesMessage.SEVERITY_ERROR, "tlos.error.calendar.insert", null);
 		}
+	}
+
+	private boolean checkValidInterval() {
+		boolean valid = DefinitionUtils.dateComparer(calendar.getValidTo(), calendar.getValidFrom());
+		if (!valid) {
+			addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.validation.calendar.timeInterval", null);
+		}
+
+		return valid;
 	}
 
 	private boolean checkCalendarName() {
