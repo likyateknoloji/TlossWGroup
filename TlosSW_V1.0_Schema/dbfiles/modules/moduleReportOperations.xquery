@@ -38,7 +38,7 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
  {
 
     let $runIdFound := if ($runId = 0) then sq:getId("runId")
-                       else if ($runId = -1) then sq:getId("runId")-1
+                       else if ($runId < 0) then sq:getId("runId") + $runId
 	                   else $runId 
 
     let $posUpper := max(for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
@@ -59,7 +59,7 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
    For example, to indicate a duration of 3 days, 10 hours and 30 minutes, one would write: P3DT10H30M.
 :)
 
-declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfListedJobs) as node()*
+declare function hs:getJobArray($n as node()?, $order as xs:string, $maxNumOfListedJobs) as node()*
 {
   let $resultArrayAsc := <rep:jobArray> {
     for $job in $n//dat:jobProperties[@agentId!="0"]
@@ -89,7 +89,8 @@ declare function hs:getJobArray($n as node(), $order as xs:string, $maxNumOfList
   let $totalDurationInSec := fn:days-from-duration($totalDuration)*24*60*60+fn:hours-from-duration($totalDuration)*60*60+fn:minutes-from-duration($totalDuration)*60+fn:seconds-from-duration($totalDuration)
 
   return
-    if(compare($order, "ascending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
+    if(not(exists($n))) then <rep:jobArray totalDurationInSec = "0" overallStart="N/A" overallStop="N/A" numberOfJobs="0" maxNumOfListedJobs="0" numberOfScenarios="0">  </rep:jobArray> 
+    else if(compare($order, "ascending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
     else if(compare($order, "descending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
     else <rep:jobArray>-1</rep:jobArray>   
 };
