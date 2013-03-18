@@ -196,6 +196,7 @@
         <agnt:lastHeartBeatTime/>
         <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
         <agnt:lastJobTransfer/>
+        <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
         <agnt:workspacePath>11</agnt:workspacePath>
         <agnt:locals>
@@ -229,6 +230,7 @@
         <agnt:lastHeartBeatTime/>
         <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
         <agnt:lastJobTransfer/>
+        <agnt:isPermitted>true</agnt:isPermitted>
         <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
         <agnt:workspacePath>11</agnt:workspacePath>
     </agnt:SWAgent>
