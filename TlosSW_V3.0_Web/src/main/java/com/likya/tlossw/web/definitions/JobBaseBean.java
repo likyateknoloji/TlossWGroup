@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
@@ -82,6 +83,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -90,8 +92,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	private static final long serialVersionUID = -3792738737288576190L;
 
-	// @ManagedProperty(value = "#{jSTree}")
-	// private JSTree jSTree;
+	@ManagedProperty(value = "#{jSTree}")
+	private JSTree jSTree;
 
 	private JobProperties jobProperties;
 
@@ -957,16 +959,16 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 
 		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), getTreePath(jobPathInScenario))) {
-
-			// TODO agactaki is yeni ismiyle guncellenecek
-
-			// TreeNode root = jSTree.getRoot();
-
-			RequestContext context = RequestContext.getCurrentInstance();
-			context.update("jsTreeForm:tree");
+			// senaryoya yeni dugumu ekliyor
+			jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
 		} else {
+			// surukle birak ile getirilen isin agactan kalidrilmasi icin agaci
+			// guncelliyor
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("jsTreeForm:tree");
+
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.insert", null);
 		}
 
@@ -2579,12 +2581,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.jsActive = jsActive;
 	}
 
-	// public JSTree getjSTree() {
-	// return jSTree;
-	// }
-	//
-	// public void setjSTree(JSTree jSTree) {
-	// this.jSTree = jSTree;
-	// }
+	public JSTree getjSTree() {
+		return jSTree;
+	}
+
+	public void setjSTree(JSTree jSTree) {
+		this.jSTree = jSTree;
+	}
 
 }

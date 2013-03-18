@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.tree;
 
 import java.io.Serializable;
+import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -65,6 +66,26 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
 		@SuppressWarnings("unused")
 		TreeNode jobNode = new DefaultTreeNode("job", jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
+	}
+
+	// Yeni tanimlanan isi agacta ilgili kisma ekliyor
+	public void addJobNodeToScenarioPath(JobProperties jobProperties, String jobPathInScenario) {
+		TreeNode selectedNode = root;
+
+		StringTokenizer pathTokenizer = new StringTokenizer(jobPathInScenario, "/");
+
+		while (pathTokenizer.hasMoreTokens()) {
+			String scenarioName = pathTokenizer.nextToken();
+
+			for (TreeNode node : selectedNode.getChildren()) {
+				if (node.getData().equals(scenarioName)) {
+					selectedNode = node;
+					break;
+				}
+			}
+		}
+
+		addJobNode(jobProperties, selectedNode);
 	}
 
 	public void constructTree(Scenario[] scenario) {

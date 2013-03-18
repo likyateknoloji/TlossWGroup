@@ -2,13 +2,9 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.context.RequestContext;
@@ -68,11 +64,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private JobProperties jobProperties;
 
-	// @PostConstruct
-	// public void init() {
-	// jobDefCenterPanel = BATCH_PROCESS_PAGE;
-	// }
-
 	public void handleDropAction(ActionEvent ae) {
 		jobProperties = getDbOperations().getTemplateJobFromName(JOB_TEMPLATES_DATA, draggedTemplateName);
 
@@ -94,12 +85,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			}
 
 			jobDefCenterPanel = BATCH_PROCESS_PAGE;
-
-			// RequestContext context = RequestContext.getCurrentInstance();
-			// context.update("centerLayout");
-			//
-			// ExternalContext externalContext =
-			// FacesContext.getCurrentInstance().getExternalContext();
 
 			break;
 
