@@ -55,8 +55,12 @@
 		<!-- p:draggable for="tree" / -->
 		<p:resizable for="tree" />
 
-		<!-- gecici olarak koydum -->
-		<p:commandButton update="jsTreeForm" value="update" />
+		<!-- p:commandButton update="jsTreeForm" value="update"/-->
+		<p:outputPanel autoUpdate="true">
+			<h:outputScript id="applyDrapDrop">
+               applyDrapDrop();
+            </h:outputScript>
+		</p:outputPanel>
 
 		<h:inputHidden id="draggedJobName"
 			value="#{jsDefinitionMBean.draggedJobNameForDependency}" />
