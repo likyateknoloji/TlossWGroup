@@ -55,13 +55,6 @@
 		<!-- p:draggable for="tree" / -->
 		<p:resizable for="tree" />
 
-		<!-- p:commandButton update="jsTreeForm" value="update"/-->
-		<p:outputPanel autoUpdate="true">
-			<h:outputScript id="applyDragDrop">
-               applyDrapDrop();
-            </h:outputScript>
-		</p:outputPanel>
-
 		<h:inputHidden id="draggedJobName"
 			value="#{jsDefinitionMBean.draggedJobNameForDependency}" />
 
@@ -72,6 +65,11 @@
 			process="@this,draggedJobName,draggedJobPath"
 			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
 
+		<p:outputPanel autoUpdate="true">
+			<h:outputScript id="applyDragDrop">
+               applyDragDrop();
+            </h:outputScript>
+		</p:outputPanel>
 	</h:form>
 
 </ui:composition>
