@@ -1,6 +1,9 @@
 function applyDragDrop() {
 					
 	                var jobs_ = document.querySelectorAll('.jobGroup .job');
+	                var debug = false;
+	                
+	                console.log('#####################################');
 	                
                     // .hover( handlerIn(eventObject), handlerOut(eventObject) ) Bind two handlers to the matched elements, to be executed when the mouse pointer enters and leaves the elements.
 					$('.jobGroup, .scenario, .job').hover(
@@ -48,12 +51,12 @@ function applyDragDrop() {
 							e.preventDefault(); // allows us to drop
 
 						e.dataTransfer.dropEffect = 'copy'; // See the section on the DataTransfer object.
-						console.log('handleDragOver');
+						if (debug) console.log('handleDragOver');
 						return false;
 					}
 
 					function handleDragEnter(e) {
-						console.log('handleDragEnter');
+						if (debug) console.log('handleDragEnter');
 						//this.addClassName('over');
 						this.classList.add('over');
 						return false;
@@ -63,7 +66,7 @@ function applyDragDrop() {
 						// this/e.target is previous target element.
 						//this.removeClassName('over');
 						this.classList.remove('over'); // this / e.target is previous target element.
-					    console.log('handleDragLeave');
+						if (debug) console.log('handleDragLeave');
 					}
 
 					function handleDrop(e) {
@@ -111,7 +114,7 @@ function applyDragDrop() {
 						// sunucuya gonderiyor
 						var jobName = $(elw.firstChild.lastChild).text();
 						console.log("jobName : " + jobName);
-
+						console.log("jobPath => " + $(this.firstChild).text());
 						var jobPath = getJobPath(this);
 						console.log("Full jobPath : " + jobPath + '/'+ jobName);
 
@@ -123,7 +126,8 @@ function applyDragDrop() {
 				    function handleDragEnd(e) {
 	                      // this/e.target is the source node.
 	                      this.style.opacity = '1';
-
+	                      if (debug) console.log('handleDragEnd');
+	                      
 	                      [ ].forEach.call(jobs_, function (job) {
 	                        //job.removeClassName('over');
 	                        job.classList.remove('over');
@@ -142,29 +146,24 @@ function applyDragDrop() {
 					// jobin senaryo agacinda birakildigi pathi buluyor
 					function getJobPath(myEl) {
 						var treeContainerClassName = "ui-tree-container";
-
+						
 						var jobPath = "";
 						var first = 1;
 						while (myEl.className != treeContainerClassName) {
-							if (myEl.className == "ui-treenode ui-treenode-parent scenario") {
+							if (myEl.className == "ui-treenode ui-treenode-parent scenario" || myEl.className == "ui-treenode ui-treenode-leaf scenario") {
 								if (first == 1) {
-									jobPath = $
-											.trim(myEl
-													.querySelector('li span span span').childNodes[0].nodeValue);
+									jobPath = $.trim(myEl.querySelector('li span span span').childNodes[0].nodeValue);
 									first = 0;
 								} else {
-									jobPath = $
-											.trim(myEl
-													.querySelector('li span span span').childNodes[0].nodeValue)
-											+ "/" + jobPath;
+									jobPath = $.trim(myEl.querySelector('li span span span').childNodes[0].nodeValue)+ "/" + jobPath;
 								}
+								console.log("getJobPath => " + jobPath);
 							}
 
 							myEl = myEl.parentNode;
 						}
 
-						console
-								.log("********* Birakilan isin senaryo path i *************************");
+						console.log("********* Birakilan isin senaryo path i *************************");
 						// console.log("root parentNode = " + myEl);
 						console.log("scenarioPath = " + jobPath);
 
@@ -207,7 +206,7 @@ function applyDragDrop() {
 
 
 					console.log("Template Jobs and Groups");
-					var jobs_ = document.querySelectorAll('.jobGroup .job');
+					//var jobs_ = document.querySelectorAll('.jobGroup .job');
 					
 	                   [ ].forEach.call(jobs_, function (job) {
 		                 console.log(job);
@@ -221,7 +220,7 @@ function applyDragDrop() {
 	                   });
 
 						//center layouttaki tree icindeki islere drop ozelligi ekleniyor (template tree west layoutta)				   
-						console.log("Already defined Jobs and Groups");
+						console.log("Already defined Scenarios : #centerWest .scenario");
 						var alreadyDefinedjobDef = document.querySelectorAll('#centerWest .scenario'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
 
 	                   [ ].forEach.call(alreadyDefinedjobDef, function (job) {
@@ -237,7 +236,7 @@ function applyDragDrop() {
 	                   
 						//bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
 						//center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)				   
-						console.log("Already defined Jobs and Groups");
+						console.log("Already defined Jobs : #centerWest .scenario .job");
 						var alreadyDefinedjobDef = document.querySelectorAll('#centerWest .scenario .job'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
 
 	                   [ ].forEach.call(alreadyDefinedjobDef, function (job) {
@@ -281,6 +280,6 @@ function applyDragDrop() {
 
 				}
 
-$(document).ready(function(){
-	applyDragDrop();
-});
+//$(document).ready(function(){
+//	applyDragDrop();
+//});
