@@ -97,8 +97,11 @@ function applyDragDrop() {
 						var escapedId = escapeStr(str + ' >span>span>span');
 
 						elw.setAttribute("data-rowkey", newUniqueId);
-
-						(this.querySelector('.ui-treenode-children')).appendChild(elw.cloneNode(true));
+						
+						var node=elw.cloneNode(true);
+						var list=this.querySelector('.ui-treenode-children');
+						list.insertBefore(node,list.childNodes[0]);
+						//(this.querySelector('.ui-treenode-children')).appendChild(elw.cloneNode(true));
 
 						// -------------------------------------------------------------
 						// TODO icteki attr lari degistirme problemli. uzerinde
