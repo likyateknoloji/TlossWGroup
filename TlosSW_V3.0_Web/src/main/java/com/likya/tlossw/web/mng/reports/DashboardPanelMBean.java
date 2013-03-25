@@ -56,20 +56,27 @@ public class DashboardPanelMBean implements Serializable {
 		DashboardColumn column1 = new DefaultDashboardColumn();
 		DashboardColumn column2 = new DefaultDashboardColumn();
 		DashboardColumn column3 = new DefaultDashboardColumn();
+		DashboardColumn column4 = new DefaultDashboardColumn();
 
 		
 		column1.addWidget("top10");
 		column1.addWidget("gauge");
 		column2.addWidget("topPrev10");
 		column2.addWidget("density");
-		column3.addWidget("status");
 		column3.addWidget("status7");
-		column3.addWidget("info");
+		column1.addWidget("info");
+		column2.addWidget("info2");
+		column1.addWidget("info3");
+		column2.addWidget("info4");
 		
 		model.addColumn(column1);
 		model.addColumn(column2);
 		model.addColumn(column3);
+		model.addColumn(column4);
 
+		column3.addWidget("status");
+
+		
 		createPieModel();
 		createPieModel7();
 
@@ -97,6 +104,10 @@ public class DashboardPanelMBean implements Serializable {
 		jobsArray = new ArrayList<Job>();
 		 
 	}
+	
+	public String getChartSeriesColors() {
+        return "red, blue, 0x18e0b1, 0xd5e018";
+    }
 	
 	public String getDatatipFormat(){
 		   return "<span style=\"display:none;\">%s</span><span>%s</span>";
