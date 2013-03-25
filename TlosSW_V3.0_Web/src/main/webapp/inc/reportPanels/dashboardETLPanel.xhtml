@@ -12,18 +12,13 @@
             <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
 			<p:dashboard id="board" model="#{dashboardPanelMBean.model}">
 				<p:ajax event="reorder" listener="#{dashboardPanelMBean.handleReorder}" update="messages" />
+ 	
 
  
-								
 
-				<p:panel id="top10" header="Top 10 Job Durations in Last Run">
-					<p:barChart id="curHorizontal" value="#{dashboardPanelMBean.curDurationModel}" seriesColors="F73C84" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshCurDurationChart}" />
-				</p:panel>
-
-				<p:panel id="topPrev10" header="Top 10 Job Durations in Previous Run">
-					<p:barChart id="prevHorizontal" value="#{dashboardPanelMBean.prevDurationModel}" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshPrevDurationChart}" />
+				<p:panel id="density" header="ETL Density">
+					<p:lineChart id="category" value="#{dashboardPanelMBean.denseModel}"  seriesColors="F73C84" animate="true" legendPosition="e" style="width:600px;height:300px;margin-top:20px" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDenseChart}" />
 				</p:panel>
  
 

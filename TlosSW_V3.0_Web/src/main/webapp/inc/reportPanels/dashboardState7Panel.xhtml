@@ -1,0 +1,59 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+
+	<ui:define name="center">
+	
+	
+		<h:form id="dashboardReports" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+            <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
+			<p:dashboard id="board" model="#{dashboardPanelMBean.model}">
+				<p:ajax event="reorder" listener="#{dashboardPanelMBean.handleReorder}" update="messages" />
+
+ 
+				<p:panel id="info" header="Jobs in Executing State"  style="width:200px;height:230px"  >
+                     <h:outputText value="0" style="font-weight:bold;color: #31B404; font-size: 10em"/> 
+                     <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
+
+				</p:panel>
+
+				<p:panel id="info2" header="Jobs in Failed State" style="width:200px;height:230px">
+                     <h:outputText value="0" style="font-weight:bold;color: red; font-size: 10em"/> 
+                     <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
+
+				</p:panel>
+ 
+				<p:panel id="info3" header="Jobs in Ready State" style="width:200px;height:230px">
+                     <h:outputText value="0" style="font-weight:bold;color: #00BFFF; font-size: 10em"/> 
+                     <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
+
+				</p:panel>
+
+                <p:panel id="info4" header="Jobs in Pending State" style="width:200px;height:230px">
+                     <h:outputText value="0" style="font-weight:bold;color: #FFBF00; font-size: 10em"/> 
+                     <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
+
+				</p:panel>
+            		 
+            		 
+				<p:panel id="status7" header="The Dashboard of the Job States in last 7 Runs">
+					<p:pieChart id="dashboardC7" value="#{dashboardPanelMBean.pieDashboardModel7}"  legendPosition="e" sliceMargin="5" showDataLabels="true"  
+					style="width:600px;height:400px;font-weight: bold;color : F8FBEF; font-size:2em" seriesColors="31B404, FF0000, 00BFFF, FFBF00" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDashboardChart7}" />
+				</p:panel>            		 
+				
+
+								
+ 
+			</p:dashboard>
+			</p:fieldset>
+
+		</h:form>
+	</ui:define>
+    <ui:define name="west">
+		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
+	</ui:define>
+</ui:composition>

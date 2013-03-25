@@ -1,0 +1,65 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+
+	<ui:define name="center">
+	
+	
+		<h:form id="dashboardReports" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+            <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
+			<p:dashboard id="board" model="#{dashboardPanelMBean.model}">
+				<p:ajax event="reorder" listener="#{dashboardPanelMBean.handleReorder}" update="messages" />
+
+				<p:panel id="status" header="Current Job Status Dashboard">
+					<p:pieChart id="dashboardC" value="#{dashboardPanelMBean.pieDashboardModel}"  legendPosition="e" sliceMargin="5" showDataLabels="true" style="width:400px;height:300px" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDashboardChart}" />
+				</p:panel>
+				
+				<p:panel id="status7" header="Last 7 Days Job Status Dashboard">
+					<p:pieChart id="dashboardC7" value="#{dashboardPanelMBean.pieDashboardModel7}"  seriesColors="F8172E,3CC643,F9F50E,0A8AFA,A51AE0,F79C0B,0FF2E6,F526E1" legendPosition="e" sliceMargin="5" showDataLabels="true" style="width:400px;height:300px" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDashboardChart7}" />
+				</p:panel>
+								
+
+				<p:panel id="top10" header="Top 10 Job Durations in Last Run">
+					<p:barChart id="curHorizontal" value="#{dashboardPanelMBean.curDurationModel}" seriesColors="F73C84" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshCurDurationChart}" />
+				</p:panel>
+
+				<p:panel id="topPrev10" header="Top 10 Job Durations in Previous Run">
+					<p:barChart id="prevHorizontal" value="#{dashboardPanelMBean.prevDurationModel}" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshPrevDurationChart}" />
+				</p:panel>
+
+				<p:panel id="density" header="ETL Density">
+					<p:lineChart id="category" value="#{dashboardPanelMBean.denseModel}"  seriesColors="F73C84" animate="true" legendPosition="e" style="width:600px;height:300px;margin-top:20px" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDenseChart}" />
+				</p:panel>
+
+				<p:panel id="gauge" header="Current ETL Duration Dashboard">
+					<p:meterGaugeChart id="custom" value="#{dashboardPanelMBean.meterGaugeModel}" showTickLabels="true" labelHeightAdjust="110"  seriesColors="66cc66, 93b75f, E7E658, cc6666" style="width:400px;height:300px" label="ETL Total Duration (h)" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshGaugeChart}" />
+				</p:panel>
+
+				<p:panel id="info" header="Information">
+                     <p:panelGrid columns="2" styleClass="companyHeaderGrid" style="width:400px">
+                     <h:outputText value="Gundonumu:" />  <h:outputText value="31.12.2012 00:00" /> 
+                     <h:outputText value="Job Sayisi:" />  <h:outputText value="40" />
+                     <h:outputText value="Senaryo Sayisi:" />  <h:outputText value="3" />
+                     
+                     </p:panelGrid>
+
+				</p:panel>
+
+			</p:dashboard>
+			</p:fieldset>
+
+		</h:form>
+	</ui:define>
+    <ui:define name="west">
+		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
+	</ui:define>
+</ui:composition>
