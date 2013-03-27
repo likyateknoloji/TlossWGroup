@@ -6,39 +6,39 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:form id="jsTreeForm">
+	<h:form id="jsLiveTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
 		<p:contextMenu for="tree" nodeType="scenario">
 			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
-				actionListener="#{jSTree.viewScenario}" icon="ui-icon-search" />
+				actionListener="#{jSLiveTree.viewScenario}" icon="ui-icon-search" />
 			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
-				actionListener="#{jSTree.deleteScenario}" icon="ui-icon-close" />
-			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
+				actionListener="#{jSLiveTree.deleteScenario}" icon="ui-icon-close" />
+			<!-- p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
 				update="tree :jobDefinitionForm"
 				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
-				icon="ui-icon-plus" />
+				icon="ui-icon-plus" / -->
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">
 			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
-				actionListener="#{jSTree.viewJob}" icon="ui-icon-search" />
+				actionListener="#{jSLiveTree.viewJob}" icon="ui-icon-search" />
 			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
-				actionListener="#{jSTree.deleteJob}" icon="ui-icon-close" />
+				actionListener="#{jSLiveTree.deleteJob}" icon="ui-icon-close" />
 		</p:contextMenu>
 
-		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
+		<p:tree value="#{jSLiveTree.root}" var="node" id="tree" animate="true"
 			style="width:350px;height:720px" dynamic="true"
-			selectionMode="single" selection="#{jSTree.selectedJS}">
+			selectionMode="single" selection="#{jSLiveTree.selectedJS}">
 
-			<p:ajax event="expand" update=":jsTreeForm:messages"
-				listener="#{jSTree.onNodeExpand}" />
-			<p:ajax event="collapse" update=":jsTreeForm:messages"
-				listener="#{jSTree.onNodeCollapse}" />
-			<p:ajax event="select" update=":jsTreeForm:messages"
-				listener="#{jSTree.onNodeSelect}" />
-			<p:ajax event="unselect" update=":jsTreeForm:messages"
-				listener="#{jSTree.onNodeUnselect}" />
+			<p:ajax event="expand" update=":jsLiveTreeForm:messages"
+				listener="#{jSLiveTree.onNodeExpand}" />
+			<p:ajax event="collapse" update=":jsLiveTreeForm:messages"
+				listener="#{jSLiveTree.onNodeCollapse}" />
+			<p:ajax event="select" update=":jsLiveTreeForm:messages"
+				listener="#{jSLiveTree.onNodeSelect}" />
+			<p:ajax event="unselect" update=":jsLiveTreeForm:messages"
+				listener="#{jSLiveTree.onNodeUnselect}" />
 
 
 			<p:treeNode id="scenarioNode" type="scenario"
@@ -52,21 +52,6 @@
 			</p:treeNode>
 
 		</p:tree>
-		<!-- p:draggable for="tree" / -->
-		<p:resizable for="tree" />
-
-		<!-- gecici olarak koydum -->
-		<p:commandButton update="jsTreeForm" value="update" />
-
-		<h:inputHidden id="draggedJobName"
-			value="#{jsDefinitionMBean.draggedJobNameForDependency}" />
-
-		<h:inputHidden id="draggedJobPath"
-			value="#{jsDefinitionMBean.draggedJobPathForDependency}" />
-
-		<p:remoteCommand name="callHandleJobDrop"
-			process="@this,draggedJobName,draggedJobPath"
-			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
 
 	</h:form>
 
