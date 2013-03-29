@@ -28,7 +28,7 @@
 		</p:contextMenu>
 
 		<p:tree value="#{jSLiveTree.root}" var="node" id="tree" animate="true"
-			style="width:350px;height:720px" dynamic="true"
+			style="width:350px;height:720px" dynamic="true" cache="false"
 			selectionMode="single" selection="#{jSLiveTree.selectedJS}">
 
 			<p:ajax event="expand" update=":jsLiveTreeForm:messages"
@@ -43,12 +43,31 @@
 
 			<p:treeNode id="scenarioNode" type="scenario"
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
-				<h:outputText value="#{node}" id="scenarioName"
+				<h:outputText value="#{node.scenarioId}" id="scenarioName"
 					style="font-weight: bold;font-size: 115%;" />
 			</p:treeNode>
 
 			<p:treeNode id="jobNode" type="job" icon="ui-icon-carat-1-e">
 				<h:outputText value="#{node}" id="jobName" />
+			</p:treeNode>
+
+			<p:treeNode id="dummy" type="dummy">
+			</p:treeNode>
+			
+			<p:treeNode id="defaultNode" type="default"
+				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="job 1111" id="defaultName"
+					style="font-weight: bold;font-size: 115%;" />
+			</p:treeNode>
+			
+			<p:treeNode type="calisanisler" expandedIcon="images/tlos/ana.jpg" 
+				collapsedIcon="images/tlos/ana.jpg">
+				<h:outputText value="#{node}" />
+			</p:treeNode>
+			
+			<p:treeNode type="instance" expandedIcon="images/tlos/ana.jpg"
+				collapsedIcon="images/tlos/ana.jpg">
+				<h:outputText value="#{node.instanceId}" />
 			</p:treeNode>
 
 		</p:tree>
