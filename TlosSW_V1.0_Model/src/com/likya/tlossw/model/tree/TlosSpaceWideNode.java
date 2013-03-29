@@ -14,7 +14,7 @@ public class TlosSpaceWideNode implements Serializable {
 	private static final long serialVersionUID = -4454200145733482653L;
 
 	private GunlukIslerNode gunlukIslerNode;
-	private NavigationNode navigationNode;
+//	private NavigationNode navigationNode;
 
 	public GunlukIslerNode GunlukIslerNode() {
 		return gunlukIslerNode;
@@ -28,12 +28,12 @@ public class TlosSpaceWideNode implements Serializable {
 		return gunlukIslerNode;
 	}
 
-	public NavigationNode getNavigationNode() {
-		return navigationNode;
-	}
-
-	public void setNavigationNode(NavigationNode navigationNode) {
-		this.navigationNode = navigationNode;
-	}
+//	public NavigationNode getNavigationNode() {
+//		return navigationNode;
+//	}
+//
+//	public void setNavigationNode(NavigationNode navigationNode) {
+//		this.navigationNode = navigationNode;
+//	}
 	
 }
