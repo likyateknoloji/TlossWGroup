@@ -2308,7 +2308,50 @@ public class DBOperations implements Serializable {
 
 		return jobs;
 	}
+/*
+	public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
+		
+		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
+		
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
+				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
 
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		service.setProperty("indent", "yes");
+
+		ResourceSet result = service.query(xQueryStr);
+		ResourceIterator i = result.getIterator();
+
+        ArrayList<Job> jobs = new ArrayList<Job>();
+		JobArray jobArray = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+			
+//				 XmlOptions xmlOption = new XmlOptions(); 
+//				 Map <String,String> map=new HashMap<String,String>();
+//				 map.put("","http://www.likyateknoloji.com/XML_report_types");
+//				 xmlOption.setLoadSubstituteNamespaces(map);
+				  
+				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
+			} catch (XmlException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+        for (Job job : jobArray.getJobArray()) {
+            jobs.add(job);
+      }
+
+		return jobs;
+	}
+	*/
 	public SWAgent checkAgent(String resource, short jmxPort) {
 		Collection collection = existConnectionHolder.getCollection();
 
