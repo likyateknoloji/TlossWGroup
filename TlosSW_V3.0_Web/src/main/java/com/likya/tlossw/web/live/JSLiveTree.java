@@ -335,6 +335,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			scenarioNodeTree.setExpanded(false);
 			
 			if (serverScenarioNodes.get(scenarioId).getScenarioNodes().size() > 0 || serverScenarioNodes.get(scenarioId).getJobNodes().size() > 0) {
+				scenarioNodeTree.getChildren().clear();
 				scenarioNodeTree.setExpanded(true);
 				renderLiveTreeRecursive(scenarioNodeTree, serverScenarioNodes.get(scenarioId));
 			}
