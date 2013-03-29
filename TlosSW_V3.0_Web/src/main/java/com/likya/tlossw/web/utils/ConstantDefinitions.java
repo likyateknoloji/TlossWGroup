@@ -2,7 +2,16 @@ package com.likya.tlossw.web.utils;
 
 public class ConstantDefinitions {
 
-	/*
+	/**
+	 * Ağaç yapısında kullanılan tanımlamalar */
+	public static final String TREE_ROOT = "root";
+	public static final String TREE_CALISANISLER = "calisanisler";
+	public static final String TREE_INSTANCE = "instance";
+	public static final String TREE_SCENARIO = "scenario";
+	public static final String TREE_JOB = "job";
+	public static final String TREE_DUMMY = "dummy";
+	
+	/**
 	 * eXist'teki sequenceData.xml'den sorgu icin kullanilan sabitler
 	 */
 	public static final String CALENDAR_ID = "calendarId";
