@@ -560,7 +560,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		}
 		return null;
 	}
-
+	
 	public static TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode) {
 
 		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
@@ -579,7 +579,6 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		}
 		return null;
 	}
-	
 	/**
 	 * Management Functions
 	 */
