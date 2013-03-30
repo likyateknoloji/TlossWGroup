@@ -47,14 +47,14 @@ public final class LikyaDayKeeper implements Runnable {
 	public void run() {
 
 		boolean restartAllScenarios = false;
-
+		int i = 0;
 		while (executePermission) {
 
 			Date currentTime = Calendar.getInstance().getTime();
-
+            
 			restartAllScenarios = spaceWideRegistry.isRestartAllScenarios();
-					
-			if (solsticeTime.before(currentTime) || restartAllScenarios) {
+			i++;
+			if (solsticeTime.before(currentTime) || restartAllScenarios || ( i < 2 ? true : false) ) {
 				
 				spaceWideRegistry.setRestartAllScenarios(false);
 				
