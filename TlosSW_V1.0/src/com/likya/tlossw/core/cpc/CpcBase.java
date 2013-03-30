@@ -429,12 +429,11 @@ public abstract class CpcBase implements Runnable {
 			scpLookupTable.put(scenarioId, spcInfoType);
 
 			if (!getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
-				if (!spc.initScenarioInfo() || spc.getJobQueue().size() == 0) {
+				if (!spc.initScenarioInfo() /*|| spc.getJobQueue().size() == 0*/) {
 					myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
 					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
 
-					return null;
-					// System.exit(-1);
+					System.exit(-1);
 				}
 			}
 
