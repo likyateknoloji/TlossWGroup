@@ -2,6 +2,7 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -69,6 +70,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	private JobProperties jobProperties;
 
 	public void onNodeSelect(NodeSelectEvent event) {
+		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
+		
 //		jobProperties = JobProperties.Factory.newInstance();
 //		
 //		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
