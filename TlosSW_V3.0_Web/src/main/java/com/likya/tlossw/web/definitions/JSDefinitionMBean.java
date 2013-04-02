@@ -8,8 +8,12 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
+import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
+import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -64,6 +68,29 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private JobProperties jobProperties;
 
+	public void onNodeSelect(NodeSelectEvent event) {
+//		jobProperties = JobProperties.Factory.newInstance();
+//		
+//		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
+//		baseJobInfos.setJsName("hakan");
+//		
+//		JobInfos jobInfos = JobInfos.Factory.newInstance();
+//		JobTypeDetails jobTypeDetails = JobTypeDetails.Factory.newInstance();
+//		jobInfos.setJobTypeDetails(jobTypeDetails);
+//		baseJobInfos.setJobInfos(jobInfos);
+//		jobProperties.setBaseJobInfos(baseJobInfos);
+		
+		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData/dat:jobList", "template2");
+		
+		getBatchProcessPanelMBean().setJobProperties(jobProperties);
+		getBatchProcessPanelMBean().setJobInsertButton(true);
+		getBatchProcessPanelMBean().fillTabs();
+		jobDefCenterPanel = BATCH_PROCESS_PAGE;
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm");
+	}
+	
 	public void handleDropAction(ActionEvent ae) {
 		jobProperties = getDbOperations().getTemplateJobFromName(JOB_TEMPLATES_DATA, draggedTemplateName);
 
