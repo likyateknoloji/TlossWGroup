@@ -7,7 +7,10 @@ public class CacheBase implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	class CacheItem {
+	class CacheItem implements Serializable {
+		
+		private static final long serialVersionUID = 1L;
+		
 		private long insertTime;
 		private Object cacheObject;
 		
