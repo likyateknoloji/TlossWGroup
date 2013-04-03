@@ -382,6 +382,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setJobName(jobInfoTypeClient.getJobKey());
+			if(jobInfoTypeClient.getLiveStateInfo() == null) {
+				System.out.println("jobInfoTypeClient.getLiveStateInfo() == null");
+			}
 			jobNode.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setJobPath(jobInfoTypeClient.getTreePath());
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, scenarioNode);
