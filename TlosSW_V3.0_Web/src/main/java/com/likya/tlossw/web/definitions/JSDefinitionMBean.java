@@ -83,7 +83,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 //		baseJobInfos.setJobInfos(jobInfos);
 //		jobProperties.setBaseJobInfos(baseJobInfos);
 		
-		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData/dat:jobList", "template2");
+		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData", "job2.bat");
 		
 		getBatchProcessPanelMBean().setJobProperties(jobProperties);
 		getBatchProcessPanelMBean().setJobInsertButton(true);
