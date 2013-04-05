@@ -47,39 +47,39 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 	private static final long serialVersionUID = 2287729115524041857L;
 
 	private TreeNode root;
-	
-	//private TreeNode calisanIsler;
-	
+
+	// private TreeNode calisanIsler;
+
 	private TreeNode selectedJS;
 
 	private TreeNode selectedTreeNode;
 
 	private TlosSpaceWideNode tlosSpaceWideNode = null;
-	
+
 	private CacheBase liveTreeCache = null;
-	
+
 	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, null);
-	
+
 	@ManagedProperty(value = "#{security}")
 	private Security security;
-	
+
 	@PostConstruct
 	public void initJSLiveTree() {
-		
-//		tlosSpaceWideNode = new TlosSpaceWideNode();
-//		tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(tlosSpaceWideNode);
-//		//tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(key);
-//		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("tlosSWData10.xml");
-//		System.out.println("Tree has been loaded !!");
-//
-//		System.out.println("Job Tree olusturuluyor ..");
-//
+
+		// tlosSpaceWideNode = new TlosSpaceWideNode();
+		// tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(tlosSpaceWideNode);
+		// //tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(key);
+		// TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("tlosSWData10.xml");
+		// System.out.println("Tree has been loaded !!");
+		//
+		// System.out.println("Job Tree olusturuluyor ..");
+		//
 		constructJSTree();
-//
-//		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-//		// "Job Tree olusturuldu !", null);
-//		System.out.println("Job Tree olusturuldu !");
-		
+		//
+		// // addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+		// // "Job Tree olusturuldu !", null);
+		// System.out.println("Job Tree olusturuldu !");
+
 	}
 
 	public void constructJSTree() {
@@ -89,38 +89,37 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, resolveMessage("root"), null);
 		DefaultTreeNode calisanIsler = new DefaultTreeNode(ConstantDefinitions.TREE_CALISANISLER, resolveMessage("likya.agac.calisan.isler"), root);
-		
+
 		calisanIsler.getChildren().add(dummyNode);
-		
-//		TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
-//		scenarioRootNode.setExpanded(true);
-//		setSelectedTreeNode(scenarioRootNode);
-//
-//		if (tlosProcessData.getJobList() != null) {
-//			for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
-//				addJobNode(jobProperties, selectedTreeNode);
-//			}
-//		}
 
-		
-		//constructTree(tlosProcessData.getScenarioArray());
-		
+		// TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
+		// scenarioRootNode.setExpanded(true);
+		// setSelectedTreeNode(scenarioRootNode);
+		//
+		// if (tlosProcessData.getJobList() != null) {
+		// for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
+		// addJobNode(jobProperties, selectedTreeNode);
+		// }
+		// }
+
+		// constructTree(tlosProcessData.getScenarioArray());
+
 		constructInstanceNodes();
-		
-	}
-	
-	private void constructInstanceNodes() {
-		//if (security.get("Instance").equals(Boolean.TRUE)) {
-			
-			//ArrayList<String> instanceIds = TEJmxMpClient.retrieveInstanceIds(new JmxUser());
 
-			//constructInstanceNodes(new HashSet<String>(instanceIds));
-			
-			liveTreeCache = new CacheBase();
-			tlosSpaceWideNode = new TlosSpaceWideNode();
-		//}
 	}
-	
+
+	private void constructInstanceNodes() {
+		// if (security.get("Instance").equals(Boolean.TRUE)) {
+
+		// ArrayList<String> instanceIds = TEJmxMpClient.retrieveInstanceIds(new JmxUser());
+
+		// constructInstanceNodes(new HashSet<String>(instanceIds));
+
+		liveTreeCache = new CacheBase();
+		tlosSpaceWideNode = new TlosSpaceWideNode();
+		// }
+	}
+
 	private void constructInstanceNodes(Set<String> instanceIds) {
 
 		Iterator<String> keyIterator = instanceIds.iterator();
@@ -130,7 +129,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			addInstance(instanceId);
 		}
 	}
-	
+
 	public void addInstance(String instanceId) {
 		DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
 		DefaultTreeNode instanceNode = new DefaultTreeNode(ConstantDefinitions.TREE_INSTANCE, new InstanceNode(instanceId), calisanIsler);
@@ -138,66 +137,71 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		instanceNode.setExpanded(false);
 	}
 
-
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
 		@SuppressWarnings("unused")
 		TreeNode jobNode = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
 	}
 
-//	public void constructTree(Scenario[] scenario) {
-//		for (Scenario children : scenario) {
-//			TreeNode scenarioNode = addScenario(children);
-//
-//			if (children.getScenarioArray().length > 0) {
-//				selectedTreeNode = scenarioNode;
-//				constructTree(children.getScenarioArray());
-//			}
-//		}
-//
-//		selectedTreeNode = selectedTreeNode.getParent();
-//	}
-//
-//	public TreeNode addScenario(Scenario scenario) {
-//		TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID(), selectedTreeNode);
-//
-//		scenarioNode.setExpanded(true);
-//
-//		if (scenario.getJobList() != null) {
-//			for (JobProperties jobProperties : scenario.getJobList().getJobPropertiesArray()) {
-//				addJobNode(jobProperties, scenarioNode);
-//			}
-//		} else {
-//			scenarioNode.getChildren().add(dummyNode);
-//		}
-//
-//		return scenarioNode;
-//	}
+	// public void constructTree(Scenario[] scenario) {
+	// for (Scenario children : scenario) {
+	// TreeNode scenarioNode = addScenario(children);
+	//
+	// if (children.getScenarioArray().length > 0) {
+	// selectedTreeNode = scenarioNode;
+	// constructTree(children.getScenarioArray());
+	// }
+	// }
+	//
+	// selectedTreeNode = selectedTreeNode.getParent();
+	// }
+	//
+	// public TreeNode addScenario(Scenario scenario) {
+	// TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID(), selectedTreeNode);
+	//
+	// scenarioNode.setExpanded(true);
+	//
+	// if (scenario.getJobList() != null) {
+	// for (JobProperties jobProperties : scenario.getJobList().getJobPropertiesArray()) {
+	// addJobNode(jobProperties, scenarioNode);
+	// }
+	// } else {
+	// scenarioNode.getChildren().add(dummyNode);
+	// }
+	//
+	// return scenarioNode;
+	// }
 
 	public void treeAction(AjaxBehaviorEvent event) {
-		//log.info("LiveNavigationTree2 : treeAction  Begin :" + Utils.getCurrentTimeWithMilliseconds());
+		// log.info("LiveNavigationTree2 : treeAction  Begin :" + Utils.getCurrentTimeWithMilliseconds());
 		renderLiveTree();
-		//log.info("LiveNavigationTree2 : treeAction  End :" + Utils.getCurrentTimeWithMilliseconds());
+		// log.info("LiveNavigationTree2 : treeAction  End :" + Utils.getCurrentTimeWithMilliseconds());
 	}
-	
+
 	public void renderLiveTree() {
-		
-		//log.debug("LiveNavigationTree2 : renderLiveTree  Begin :" + Utils.getCurrentTimeWithMilliseconds());
+
+		// log.debug("LiveNavigationTree2 : renderLiveTree  Begin :" + Utils.getCurrentTimeWithMilliseconds());
 		Object liveTree = null;
-		
+
 		if (liveTreeCache != null && tlosSpaceWideNode != null) {
 			liveTree = liveTreeCache.get(((Object) tlosSpaceWideNode).hashCode());
 		}
 
 		if (liveTree != null) {
 			tlosSpaceWideNode = (TlosSpaceWideNode) liveTree;
-			//log.debug("LiveNavigationTree2 : renderLiveTree  CacheData :" + Utils.getCurrentTimeWithMilliseconds());
+			// log.debug("LiveNavigationTree2 : renderLiveTree  CacheData :" + Utils.getCurrentTimeWithMilliseconds());
 		} else {
 			if (root.getChildCount() > 0) {
 				DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
 				TlosSpaceWideNode tlosSpaceWideInputNode = preparePreRenderLiveTreeData(calisanIsler);
 				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(new JmxUser(), tlosSpaceWideInputNode);
+				if (tlosSpaceWideNode == null) {
+					System.out.println("tlosSpaceWideNode == null");
+				}
+				if (liveTreeCache == null) {
+					System.out.println("liveTreeCache == null");
+				}
 				liveTreeCache.put(((Object) tlosSpaceWideNode).hashCode(), tlosSpaceWideNode);
-				//log.debug("LiveNavigationTree2 : renderLiveTree  EngineData :" + Utils.getCurrentTimeWithMilliseconds());
+				// log.debug("LiveNavigationTree2 : renderLiveTree  EngineData :" + Utils.getCurrentTimeWithMilliseconds());
 			}
 		}
 
@@ -205,11 +209,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
 			prepareRenderLiveTree(calisanIsler, tlosSpaceWideNode);
 		}
-		
+
 	}
-	
+
 	private TlosSpaceWideNode preparePreRenderLiveTreeData(TreeNode calisanIslerNode) {
-		
+
 		TlosSpaceWideNode tlosSpaceWideNode = new TlosSpaceWideNode();
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 		tlosSpaceWideNode.setGunlukIslerNode(gunlukIslerNode);
@@ -218,7 +222,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		// Gunluk Isler expanded
 		if (calisanIslerNode.isExpanded()) {
-			
+
 			// Bunlar instance listesi
 			int size = calisanIslerNode.getChildCount();
 
@@ -226,21 +230,21 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 				// instance aliniyor
 				TreeNode tmpInstanceFolder = calisanIslerNode.getChildren().get(i);
-				
+
 				tmpInstanceFolder.getChildren().remove(dummyNode);
-				
+
 				if (tmpInstanceFolder.isExpanded()) {
-					
+
 					String instanceId = ((InstanceNode) tmpInstanceFolder.getData()).getInstanceId();
 					InstanceNode instanceNode = new InstanceNode(instanceId);
 
 					// instance icindeki senaryo sayisina bakiyoruz
 					int numberOfScenariosInInstance = tmpInstanceFolder.getChildCount();
-					
+
 					for (int j = 0; j < numberOfScenariosInInstance; j++) {
 
 						// Her bir senaryoyu aliyoruz
-						TreeNode tmpScenario =  tmpInstanceFolder.getChildren().get(j);
+						TreeNode tmpScenario = tmpInstanceFolder.getChildren().get(j);
 						ScenarioNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
 
 						if (expendedNode != null) {
@@ -254,15 +258,15 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		}
 		return tlosSpaceWideNode;
 	}
-	
+
 	private ScenarioNode preRenderLiveTreeRecursive(TreeNode scenarioNode) {
-		
+
 		ScenarioNode myScenarioNode = null;
 
 		if (scenarioNode.isExpanded()) {
 			myScenarioNode = new ScenarioNode();
-			myScenarioNode.setSpcInfoTypeClient(((ScenarioNode)scenarioNode.getData()).getSpcInfoTypeClient());
-			
+			myScenarioNode.setSpcInfoTypeClient(((ScenarioNode) scenarioNode.getData()).getSpcInfoTypeClient());
+
 			for (int i = 0; i < scenarioNode.getChildCount(); i++) {
 				DefaultTreeNode tmpScenario = (DefaultTreeNode) scenarioNode.getChildren().get(i);
 				if (!(scenarioNode.getData() instanceof ScenarioNode)) {
@@ -277,11 +281,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		return myScenarioNode;
 	}
-	
+
 	private TreeNode prepareRenderLiveTree(TreeNode calisanIsler, TlosSpaceWideNode tlosSpaceWideNode) {
-		
-		if(calisanIsler.getChildCount() > 0) {
-			//treeRendered = true;
+
+		if (calisanIsler.getChildCount() > 0) {
+			// treeRendered = true;
 		}
 
 		GunlukIslerNode serverGunlukIslerNode = tlosSpaceWideNode.getGunlukIslerNode();
@@ -290,54 +294,54 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		calisanIsler.getChildren().clear();
 		constructInstanceNodes(serverGunlukIslerNode.getInstanceNodes().keySet());
 
-		if(calisanIsler.getChildren().size() == 0) {
+		if (calisanIsler.getChildren().size() == 0) {
 			calisanIsler.getChildren().add(dummyNode);
 		} else {
 			Iterator<TreeNode> gunlukIslerIterator = calisanIsler.getChildren().iterator();
-	
+
 			while (gunlukIslerIterator.hasNext()) {
 				DefaultTreeNode instanceTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
-	
+
 				String instanceId = ((InstanceNode) instanceTreeNode.getData()).getInstanceId();
 				if (serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
 					constructLiveTree(instanceTreeNode, serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap());
 					instanceTreeNode.setExpanded(true);
 				}
 			}
-			//System.out.println("prepareRenderLiveTree . Gunluk isler hascode-->" + gunlukIsler.hashCode());
+			// System.out.println("prepareRenderLiveTree . Gunluk isler hascode-->" + gunlukIsler.hashCode());
 		}
 		return calisanIsler;
 	}
-	
+
 	private void constructLiveTree(TreeNode instanceNode, HashMap<String, ScenarioNode> serverScenarioNodes) {
-		
+
 		instanceNode.getChildren().clear();
-		
+
 		Iterator<String> keyIterator = serverScenarioNodes.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
-			
+
 			String scenarioId = keyIterator.next();
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(serverScenarioNodes.get(scenarioId).getSpcInfoTypeClient());
 
 			ScenarioNode scenarioNode = new ScenarioNode();
-			
+
 			scenarioNode.setScenarioId(spcInfoTypeClient.getJsName());
-			
-			if(spcInfoTypeClient.isSerbestFolder()) {
+
+			if (spcInfoTypeClient.isSerbestFolder()) {
 				scenarioNode.setScenarioId(resolveMessage("tlos.live.tree.free"));
 			}
 			if (spcInfoTypeClient.getJsName() == null) {
 				scenarioNode.setScenarioId(spcInfoTypeClient.getSpcId());
 			}
 
-			scenarioNode.setInstanceId(((InstanceNode)instanceNode.getData()).getInstanceId());
+			scenarioNode.setInstanceId(((InstanceNode) instanceNode.getData()).getInstanceId());
 			scenarioNode.setSpcInfoTypeClient(spcInfoTypeClient);
-			
+
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, instanceNode);
 			scenarioNodeTree.getChildren().add(dummyNode);
 			scenarioNodeTree.setExpanded(false);
-			
+
 			if (serverScenarioNodes.get(scenarioId).getScenarioNodes().size() > 0 || serverScenarioNodes.get(scenarioId).getJobNodes().size() > 0) {
 				scenarioNodeTree.getChildren().clear();
 				scenarioNodeTree.setExpanded(true);
@@ -345,9 +349,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			}
 		}
 	}
-	
+
 	private void renderLiveTreeRecursive(TreeNode scenarioNode, ScenarioNode serverScenarioNode) {
-		
+
 		constructJobNodes(scenarioNode, serverScenarioNode.getJobNodes());
 
 		for (ScenarioNode tmpScenarioNode : serverScenarioNode.getScenarioNodes()) {
@@ -362,103 +366,106 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			}
 
 			renderLiveTreeRecursive(scenarioNode, tmpScenarioNode);
-			
+
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioText, scenarioNode);
 			scenarioNodeTree.setExpanded(false);
 		}
-		
+
 	}
-	
+
 	public void constructJobNodes(TreeNode scenarioNode, ArrayList<JobNode> jobNodes) {
-		
+
 		Iterator<JobNode> jobNodeIterator = jobNodes.iterator();
 
 		while (jobNodeIterator.hasNext()) {
-			
+
 			JobInfoTypeClient jobInfoTypeClient = jobNodeIterator.next().getJobInfoTypeClient();
 
 			String jobText = jobInfoTypeClient.getJobKey();
 			JobNode jobNode = new JobNode();
-			
+
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setJobName(jobInfoTypeClient.getJobKey());
-			if(jobInfoTypeClient.getLiveStateInfo() == null) {
+			if (jobInfoTypeClient.getLiveStateInfo() == null) {
 				System.out.println("jobInfoTypeClient.getLiveStateInfo() == null");
 			}
 			jobNode.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setJobPath(jobInfoTypeClient.getTreePath());
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, scenarioNode);
 			scenarioNodeTree.setExpanded(false);
-			
+
 		}
 
 	}
-	
-	//yeni state yapisina gore duzenleme yaptim, onceden burada olmayan substatelere varolan ikonlardan koydum gecici olarak.
-	//burada ihtiyac olmayan substateler varsa kaldirilabilir. merve
+
+	// yeni state yapisina gore duzenleme yaptim, onceden burada olmayan substatelere varolan ikonlardan koydum gecici olarak.
+	// burada ihtiyac olmayan substateler varsa kaldirilabilir. merve
 	// http://jquery-ui.googlecode.com/svn/tags/1.6rc5/tests/static/icons.html
 	private String jobImageSetter(LiveStateInfo jobState) {
 		String imagePath = null;
 
-		if (jobState.getSubstateName() != null) {
-			switch (jobState.getSubstateName().intValue()) {
-			case SubstateName.INT_CREATED:
-				imagePath = "ui-icon-gear";
-				break;
-			case SubstateName.INT_VALIDATED:
-				imagePath = "ui-icon-lightbulb";
-				break;
-			case SubstateName.INT_IDLED:
-				imagePath = "ui-icon-power";
-				break;
-			case SubstateName.INT_READY:
-				imagePath = "ui-icon-clock";
-				break;
-			case SubstateName.INT_PAUSED:
-				imagePath = "ui-icon-info";
-				break;
-			case SubstateName.INT_STAGE_IN:
-				imagePath = "ui-icon-arrowrefresh-1-s";
-				break;
-			case SubstateName.INT_MIGRATING:
-				imagePath = "ui-icon-extlink";
-				break;
-			case SubstateName.INT_ON_RESOURCE:
-				if(jobState.getStatusName() != null) {
-					if(jobState.getStatusName().equals(StatusName.TIME_IN)) {
-						imagePath = "ui-icon-play";
+		if (jobState == null) {
+			imagePath = "ui-icon-help";
+		} else {
+			if (jobState.getSubstateName() != null) {
+				switch (jobState.getSubstateName().intValue()) {
+				case SubstateName.INT_CREATED:
+					imagePath = "ui-icon-gear";
+					break;
+				case SubstateName.INT_VALIDATED:
+					imagePath = "ui-icon-lightbulb";
+					break;
+				case SubstateName.INT_IDLED:
+					imagePath = "ui-icon-power";
+					break;
+				case SubstateName.INT_READY:
+					imagePath = "ui-icon-clock";
+					break;
+				case SubstateName.INT_PAUSED:
+					imagePath = "ui-icon-info";
+					break;
+				case SubstateName.INT_STAGE_IN:
+					imagePath = "ui-icon-arrowrefresh-1-s";
+					break;
+				case SubstateName.INT_MIGRATING:
+					imagePath = "ui-icon-extlink";
+					break;
+				case SubstateName.INT_ON_RESOURCE:
+					if (jobState.getStatusName() != null) {
+						if (jobState.getStatusName().equals(StatusName.TIME_IN)) {
+							imagePath = "ui-icon-play";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.TIME_OUT)) {
+							imagePath = "ui-icon-notice";
+							break;
+						}
+					}
+				case SubstateName.INT_HELD:
+					imagePath = "ui-icon-pause";
+					break;
+				case SubstateName.INT_STAGE_OUT:
+					imagePath = "ui-icon-arrowrefresh-1-n";
+					break;
+				case SubstateName.INT_COMPLETED:
+					if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.SUCCESS))) {
+						imagePath = "ui-icon-check";
 						break;
-					} else if(jobState.getStatusName().equals(StatusName.TIME_OUT)) {
-						imagePath = "ui-icon-notice";
+					} else if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.FAILED))) {
+						imagePath = "ui-icon-alert";
 						break;
 					}
-				} 
-			case SubstateName.INT_HELD:
-				imagePath = "ui-icon-pause";
-				break;
-			case SubstateName.INT_STAGE_OUT:
-				imagePath = "ui-icon-arrowrefresh-1-n";
-				break;
-			case SubstateName.INT_COMPLETED:
-				if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.SUCCESS))) {
-					imagePath = "ui-icon-check";
+				case SubstateName.INT_SKIPPED:
+					imagePath = "ui-icon-seek-next";
 					break;
-				} else if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.FAILED))) {
-					imagePath = "ui-icon-alert";
+				case SubstateName.INT_STOPPED:
+					imagePath = "ui-icon-cancel";
 					break;
 				}
-			case SubstateName.INT_SKIPPED:
-				imagePath = "ui-icon-seek-next";
-				break;
-			case SubstateName.INT_STOPPED:
-				imagePath = "ui-icon-cancel";
-				break;
 			}
 		}
-
 		return imagePath;
 	}
-	
+
 	public TreeNode getRoot() {
 		return root;
 	}
