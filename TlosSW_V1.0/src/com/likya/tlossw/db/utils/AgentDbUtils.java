@@ -175,20 +175,18 @@ public class AgentDbUtils {
 */	
 	public static boolean updateAgentJmxValue(int agentId, boolean jmxValue, String islem){
 		boolean returnValue = false;
-		String dbJmxValue = "";
+		String dbJmxValue = "false()";
 		
 		if(jmxValue) {
 			dbJmxValue = "true()";
-		}else {
-			dbJmxValue = "false()";
 		}
-		
+
 		String xQueryStr = "xquery version \"1.0\";" +
 					       "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" 
 					       + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";  "
 					       + "declare namespace res = \"http://www.likyateknoloji.com/resource-extension-defs\"; "
 					       + "lk:updateJmxValueLock("+ agentId + "," + dbJmxValue + ",\"" + islem + "\")";
-
+		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
