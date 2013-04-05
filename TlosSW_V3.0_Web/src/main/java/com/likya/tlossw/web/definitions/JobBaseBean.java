@@ -384,8 +384,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(item.getJsName());
 				selectItem.setValue(depPathAndName);
-
-				manyJobDependencyList.add(selectItem);
+				boolean var = false;
+				for (SelectItem temp : manyJobDependencyList) {
+					if(temp.getLabel().equals(selectItem.getLabel())) var = true;
+				}
+				if(!var) manyJobDependencyList.add(selectItem);
 			}
 
 			dependencyExpression = jobProperties.getDependencyList().getDependencyExpression();
