@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -49,6 +47,8 @@ import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
+import com.likya.tlos.model.xmlbeans.report.ReportDocument;
+import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
@@ -64,6 +64,7 @@ import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.utils.XmlBeansTransformer;
+import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
 
 @ManagedBean(name = "dbOperations")
@@ -2385,6 +2386,60 @@ public class DBOperations implements Serializable {
 		return agent;
 	}
 
+	
+	public Report getDashboardReport(int derinlik) throws XMLDBException {
+
+ 
+		long startTime = System.currentTimeMillis();
+
+		String xQueryStr1 = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,fn:boolean(0))";
+
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		service.setProperty("indent", "yes");
+		
+		service.query(xQueryStr1);
+ 
+		
+		// System.err.println(" dashboardReport1 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		// Latest Report Id
+		int reportId = -1;
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getReportId()";
+
+		ResourceSet result = service.query(xQueryStr);
+		ResourceIterator i1 = result.getIterator();
+
+		while (i1.hasMoreResources()) {
+			Resource r = i1.nextResource();
+			reportId = Integer.parseInt(r.getContent().toString());
+		}
+		System.err.println(" dashboardReport2 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		// get Report
+		String xQueryStr2 = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:searchStateReportById(" + reportId + ")";
+
+		ResourceSet result2 = service.query(xQueryStr2);
+
+		ResourceIterator i = result2.getIterator();
+		Report report = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+				report = ReportDocument.Factory.parse(xmlContent).getReport();
+			} catch (XmlException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+		}
+		System.err.println(" dashboardReport3 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		return report;
+	}
+		
+		
+ 
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
