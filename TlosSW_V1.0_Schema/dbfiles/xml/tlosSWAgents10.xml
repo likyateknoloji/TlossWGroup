@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<agnt:SWAgents xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAgent_v_1_0.xsd">
+<agnt:SWAgents xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAgent_v_1_0.xsd">
     <agnt:SWAgent id="1">
         <res:Resource>laptop-hakan</res:Resource>
         <agnt:osType>Windows</agnt:osType>
@@ -179,59 +179,5 @@
                 <par:desc>JAVA PATH</par:desc>
             </par:parameter>
         </agnt:locals>
-    </agnt:SWAgent>
-    <agnt:SWAgent id="15">
-        <res:Resource>deneme3</res:Resource>
-        <agnt:osType>Unix</agnt:osType>
-        <agnt:agentType>agent</agnt:agentType>
-        <agnt:nrpePort>1111</agnt:nrpePort>
-        <agnt:jmxPort>2222</agnt:jmxPort>
-        <agnt:jmxUser>22222</agnt:jmxUser>
-        <agnt:jmxPassword>22222</agnt:jmxPassword>
-        <agnt:inJmxAvailable/>
-        <agnt:outJmxAvailable/>
-        <agnt:jmxAvailable/>
-        <agnt:userStopRequest>null</agnt:userStopRequest>
-        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
-        <agnt:lastHeartBeatTime/>
-        <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
-        <agnt:lastJobTransfer/>
-        <agnt:isPermitted>true</agnt:isPermitted>
-        <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
-        <agnt:workspacePath>11</agnt:workspacePath>
-        <agnt:locals>
-            <par:parameter id="15">
-                <par:name>22</par:name>
-                <par:valueString/>
-                <par:preValue type="3">111</par:preValue>
-                <par:desc>22</par:desc>
-            </par:parameter>
-            <par:parameter id="15">
-                <par:name>33</par:name>
-                <par:valueString/>
-                <par:preValue type="2">111</par:preValue>
-                <par:desc>aaa</par:desc>
-            </par:parameter>
-        </agnt:locals>
-    </agnt:SWAgent>
-    <agnt:SWAgent id="16">
-        <res:Resource>deneme3</res:Resource>
-        <agnt:osType>Unix</agnt:osType>
-        <agnt:agentType>agent</agnt:agentType>
-        <agnt:nrpePort>1111</agnt:nrpePort>
-        <agnt:jmxPort>2222</agnt:jmxPort>
-        <agnt:jmxUser>22222</agnt:jmxUser>
-        <agnt:jmxPassword>22222</agnt:jmxPassword>
-        <agnt:inJmxAvailable/>
-        <agnt:outJmxAvailable/>
-        <agnt:jmxAvailable/>
-        <agnt:userStopRequest>null</agnt:userStopRequest>
-        <agnt:nrpeAvailable>false</agnt:nrpeAvailable>
-        <agnt:lastHeartBeatTime/>
-        <agnt:durationForUnavailability>22</agnt:durationForUnavailability>
-        <agnt:lastJobTransfer/>
-        <agnt:isPermitted>true</agnt:isPermitted>
-        <agnt:jobTransferFailureTime>22</agnt:jobTransferFailureTime>
-        <agnt:workspacePath>11</agnt:workspacePath>
     </agnt:SWAgent>
 </agnt:SWAgents>
