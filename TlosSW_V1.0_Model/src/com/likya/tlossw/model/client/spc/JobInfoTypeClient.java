@@ -13,11 +13,15 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 
 public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
-	private static final long serialVersionUID = 1L;
 
 	// Paramaters from JobPropertiesType
 	
-    private String jobCommandType;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6027037594587545575L;
+	
+	private String jobCommandType;
     private ArrayList<String> jobDependencyList;
     private String jobAutoRetry;
     private ArrayList<Integer> jobReturnCodeIgnoreList;
