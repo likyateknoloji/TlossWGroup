@@ -3,6 +3,7 @@
 	<name>TlosSW_V3.0_Web</name>
 	<comment></comment>
 	<projects>
+		<project>TlosSW_V3.0_WebClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
