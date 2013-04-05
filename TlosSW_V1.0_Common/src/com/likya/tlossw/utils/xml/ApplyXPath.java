@@ -122,15 +122,15 @@ public class ApplyXPath {
 
 			// Use the JAXP 1.3 XPath API to apply the xpath expression to the
 			// doc.
-			System.out.println("");
-			System.out.println("==================== QUERYING JOB ====================");
-			System.out.println(xmlDoc.toString());
-			System.out.println("=====================================================");
-			System.out.println("");
-			System.out.println("======================== USING =======================");
-			System.out.println(xpathExpressionStr);
-			System.out.println("=====================================================");
-			System.out.println("");
+//			System.out.println("");
+//			System.out.println("==================== QUERYING JOB ====================");
+//			System.out.println(xmlDoc.toString());
+//			System.out.println("=====================================================");
+//			System.out.println("");
+//			System.out.println("======================== USING =======================");
+//			System.out.println(xpathExpressionStr);
+//			System.out.println("=====================================================");
+//			System.out.println("");
 
 			// XPathFactory xPathFactory =
 			// RemoteDBOperator.getXPathFactory("saxon", objectModel);
@@ -353,15 +353,15 @@ public class ApplyXPath {
 
 			// Use the JAXP 1.3 XPath API to apply the xpath expression to the
 			// doc.
-			System.out.println("");
-			System.out.println("==================== QUERYING JOB ====================");
-			System.out.println(xmlDoc.toString());
-			System.out.println("=====================================================");
-			System.out.println("");
-			System.out.println("======================== USING =======================");
-			System.out.println(xpathExpressionStr);
-			System.out.println("=====================================================");
-			System.out.println("");
+//			System.out.println("");
+//			System.out.println("==================== QUERYING JOB ====================");
+//			System.out.println(xmlDoc.toString());
+//			System.out.println("=====================================================");
+//			System.out.println("");
+//			System.out.println("======================== USING =======================");
+//			System.out.println(xpathExpressionStr);
+//			System.out.println("=====================================================");
+//			System.out.println("");
 
 			XPathFactory xPathFactory = TransformUtils.getXPathFactory("saxon");
 

@@ -129,16 +129,16 @@ public class ApplyXslt {
 
 			transformer.transform(inputXML2, outputXHTML);
 			// transformer.transform(inputXML2, outputXHTML2);
-			System.out.println("");
-			System.out.println("==================== ORJINAL JOB ====================");
-			System.out.println(jobPropertiesXML);
-			System.out.println("=====================================================");
-			// String xmlString = outputXHTML.getWriter().toString();
-			System.out.println("");
-			System.out.println("==================== DEGISEN JOB ====================");
-			System.out.println("Dosyaya yazildi !!" + outputXHTML.getWriter().toString());
-			System.out.println("=====================================================");
-			System.out.println("");
+//			System.out.println("");
+//			System.out.println("==================== ORJINAL JOB ====================");
+//			System.out.println(jobPropertiesXML);
+//			System.out.println("=====================================================");
+//			// String xmlString = outputXHTML.getWriter().toString();
+//			System.out.println("");
+//			System.out.println("==================== DEGISEN JOB ====================");
+//			System.out.println("Dosyaya yazildi !!" + outputXHTML.getWriter().toString());
+//			System.out.println("=====================================================");
+//			System.out.println("");
 			String xmlContent = (String) outputXHTML.getWriter().toString();
 
 			// String xmlContent2 = job.xmlText(xmlOptions);
@@ -210,16 +210,16 @@ public class ApplyXslt {
 
 			transformer.transform(inputXML2, outputXHTML);
 			// transformer.transform(inputXML2, outputXHTML2);
-			System.out.println("");
-			System.out.println("==================== ORJINAL XML ====================");
-			System.out.println(thisXMLDoc);
-			System.out.println("=====================================================");
-			// String xmlString = outputXHTML.getWriter().toString();
-			System.out.println("");
-			System.out.println("==================== DEGISEN XML ====================");
-			System.out.println("Dosyaya yazildi !!" + outputXHTML.getWriter().toString());
-			System.out.println("=====================================================");
-			System.out.println("");
+//			System.out.println("");
+//			System.out.println("==================== ORJINAL XML ====================");
+//			System.out.println(thisXMLDoc);
+//			System.out.println("=====================================================");
+//			// String xmlString = outputXHTML.getWriter().toString();
+//			System.out.println("");
+//			System.out.println("==================== DEGISEN XML ====================");
+//			System.out.println("Dosyaya yazildi !!" + outputXHTML.getWriter().toString());
+//			System.out.println("=====================================================");
+//			System.out.println("");
 			xmlContent = (String) outputXHTML.getWriter().toString();
 
 			/*
