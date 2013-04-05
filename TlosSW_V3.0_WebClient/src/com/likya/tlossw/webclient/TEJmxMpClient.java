@@ -567,16 +567,19 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		Object[] paramList = { jmxUser, tlosSpaceWideNode};
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "com.likya.tlossw.model.tree.TlosSpaceWideNode"};
-		Object o;
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getLiveTreeInfo", paramList, signature);
+			Object o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getLiveTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
-			return (TlosSpaceWideNode) o;
+			
+			TlosSpaceWideNode tmp = (TlosSpaceWideNode) o;
+			
+			return tmp;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("NULL olmamali !!");
 		return null;
 	}
 	/**
