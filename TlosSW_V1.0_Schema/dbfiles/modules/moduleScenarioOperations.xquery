@@ -195,7 +195,8 @@ declare function hs:updateScenarioLock($documentName as xs:string, $scenarioPath
 declare function hs:getJob($documentName as xs:string, $jobPath ,$jobName as xs:string) as element(dat:jobProperties)?
 {	
 	let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
-	for $job in $doc//$jobPath/dat:jobProperties
+
+	for $job in $doc/$jobPath//dat:jobProperties
         where $job/dat:baseJobInfos/com:jsName = $jobName
         return $job
 };
