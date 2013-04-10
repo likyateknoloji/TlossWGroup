@@ -302,214 +302,252 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private void fillBaseInfosTab() {
-		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
-		jobCalendar = baseJobInfos.getCalendarId() + "";
-		oSystem = baseJobInfos.getOSystem().toString();
-		jobPriority = baseJobInfos.getJobPriority().toString();
-		jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
-		jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
+		if (jobProperties != null) {
+			BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
+			jobCalendar = baseJobInfos.getCalendarId() + "";
+			oSystem = baseJobInfos.getOSystem().toString();
+			jobPriority = baseJobInfos.getJobPriority().toString();
+			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
+			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
 
-		if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
-			eventTypeDef = baseJobInfos.getJobInfos().getJobTypeDetails().getEventTypeDef().toString();
-		}
+			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
+				eventTypeDef = baseJobInfos.getJobInfos().getJobTypeDetails().getEventTypeDef().toString();
+			}
 
-		if (baseJobInfos.getJsIsActive().equals(JsIsActive.YES)) {
-			jsActive = true;
+			if (baseJobInfos.getJsIsActive().equals(JsIsActive.YES)) {
+				jsActive = true;
+			} else {
+				jsActive = false;
+			}
 		} else {
-			jsActive = false;
+			System.out.println("jobProperties is NULL in fillBaseInfosTab !!");
 		}
 	}
 
 	private void fillTimeManagementTab() {
-		TimeManagement timeManagement = jobProperties.getTimeManagement();
-		if (timeManagement.getJsPlannedTime() != null && timeManagement.getJsPlannedTime().getStartTime() != null) {
-			Calendar jobCalendar = timeManagement.getJsPlannedTime().getStartTime().getTime();
+		if (jobProperties != null) {
+			TimeManagement timeManagement = jobProperties.getTimeManagement();
+			if (timeManagement.getJsPlannedTime() != null && timeManagement.getJsPlannedTime().getStartTime() != null) {
+				Calendar jobCalendar = timeManagement.getJsPlannedTime().getStartTime().getTime();
 
-			startTime = DefinitionUtils.calendarToStringTimeFormat(jobCalendar);
-			gmt = DefinitionUtils.calendarToGMT(jobCalendar);
+				startTime = DefinitionUtils.calendarToStringTimeFormat(jobCalendar);
+				gmt = DefinitionUtils.calendarToGMT(jobCalendar);
 
-			if (DefinitionUtils.calendarToDST(jobCalendar) == 1) {
-				dst = true;
+				if (DefinitionUtils.calendarToDST(jobCalendar) == 1) {
+					dst = true;
+				}
+
+				if (timeManagement.getJsPlannedTime().getStopTime() != null) {
+					defineStopTime = true;
+					stopTime = DefinitionUtils.calendarToStringTimeFormat(timeManagement.getJsPlannedTime().getStopTime().getTime());
+				}
 			}
 
-			if (timeManagement.getJsPlannedTime().getStopTime() != null) {
-				defineStopTime = true;
-				stopTime = DefinitionUtils.calendarToStringTimeFormat(timeManagement.getJsPlannedTime().getStopTime().getTime());
+			if (timeManagement.getJsRelativeTimeOption() != null) {
+				relativeTimeOption = timeManagement.getJsRelativeTimeOption().toString();
 			}
-		}
 
-		if (timeManagement.getJsRelativeTimeOption() != null) {
-			relativeTimeOption = timeManagement.getJsRelativeTimeOption().toString();
-		}
+			if (timeManagement.getJsTimeOut() != null) {
+				JsTimeOut timeOut = timeManagement.getJsTimeOut();
 
-		if (timeManagement.getJsTimeOut() != null) {
-			JsTimeOut timeOut = timeManagement.getJsTimeOut();
-
-			if (timeOut.getValueInteger() != null) {
-				jobTimeOutValue = timeOut.getValueInteger() + "";
+				if (timeOut.getValueInteger() != null) {
+					jobTimeOutValue = timeOut.getValueInteger() + "";
+				}
+				if (timeOut.getUnit() != null) {
+					jobTimeOutUnit = timeOut.getUnit().toString();
+				}
 			}
-			if (timeOut.getUnit() != null) {
-				jobTimeOutUnit = timeOut.getUnit().toString();
+
+			if (timeManagement.getExpectedTime() != null) {
+				ExpectedTime jobExpectedTime = timeManagement.getExpectedTime();
+
+				if (jobExpectedTime.getValueInteger() != null) {
+					expectedTime = jobExpectedTime.getValueInteger() + "";
+				}
+				if (jobExpectedTime.getUnit() != null) {
+					expectedTimeUnit = jobExpectedTime.getUnit().toString();
+				}
 			}
-		}
 
-		if (timeManagement.getExpectedTime() != null) {
-			ExpectedTime jobExpectedTime = timeManagement.getExpectedTime();
-
-			if (jobExpectedTime.getValueInteger() != null) {
-				expectedTime = jobExpectedTime.getValueInteger() + "";
+			// job taniminda bu alan yoksa degeri sifir geliyor
+			if (timeManagement.getTolerancePercentage() > 0) {
+				tolerancePercentage = timeManagement.getTolerancePercentage() + "";
 			}
-			if (jobExpectedTime.getUnit() != null) {
-				expectedTimeUnit = jobExpectedTime.getUnit().toString();
+
+			// job taniminda bu alan yoksa degeri sifir geliyor
+			if (timeManagement.getMinPercentage() > 0) {
+				minPercentage = timeManagement.getMinPercentage() + "";
 			}
-		}
-
-		// job taniminda bu alan yoksa degeri sifir geliyor
-		if (timeManagement.getTolerancePercentage() > 0) {
-			tolerancePercentage = timeManagement.getTolerancePercentage() + "";
-		}
-
-		// job taniminda bu alan yoksa degeri sifir geliyor
-		if (timeManagement.getMinPercentage() > 0) {
-			minPercentage = timeManagement.getMinPercentage() + "";
+		} else {
+			System.out.println("jobProperties is NULL in fillTimeManagementTab !!");
 		}
 	}
 
 	private void fillDependencyDefinitionsTab() {
-		if (jobProperties.getDependencyList() != null && jobProperties.getDependencyList().sizeOfItemArray() > 0) {
+		if (jobProperties != null) {
+			if (jobProperties.getDependencyList() != null && jobProperties.getDependencyList().sizeOfItemArray() > 0) {
 
-			for (Item item : jobProperties.getDependencyList().getItemArray()) {
-				String depPathAndName = item.getJsPath() + "." + item.getJsName();
+				for (Item item : jobProperties.getDependencyList().getItemArray()) {
+					String depPathAndName = item.getJsPath() + "." + item.getJsName();
 
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(item.getJsName());
-				selectItem.setValue(depPathAndName);
-				boolean var = false;
-				for (SelectItem temp : manyJobDependencyList) {
-					if(temp.getLabel().equals(selectItem.getLabel())) var = true;
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(item.getJsName());
+					selectItem.setValue(depPathAndName);
+					boolean var = false;
+					for (SelectItem temp : manyJobDependencyList) {
+						if (temp.getLabel().equals(selectItem.getLabel()))
+							var = true;
+					}
+					if (!var)
+						manyJobDependencyList.add(selectItem);
 				}
-				if(!var) manyJobDependencyList.add(selectItem);
-			}
 
-			dependencyExpression = jobProperties.getDependencyList().getDependencyExpression();
+				dependencyExpression = jobProperties.getDependencyList().getDependencyExpression();
+			}
+		} else {
+			System.out.println("jobProperties is NULL in fillDependencyDefinitionsTab !!");
 		}
 	}
 
 	private void fillCascadingConditionsTab() {
-		CascadingConditions cascadingConditions = jobProperties.getCascadingConditions();
+		if (jobProperties != null) {
+			CascadingConditions cascadingConditions = jobProperties.getCascadingConditions();
 
-		if (cascadingConditions.getJobAutoRetry().equals(JobAutoRetry.YES)) {
-			jobAutoRetry = true;
-		} else {
-			jobAutoRetry = false;
-		}
+			if (cascadingConditions.getJobAutoRetry().equals(JobAutoRetry.YES)) {
+				jobAutoRetry = true;
+			} else {
+				jobAutoRetry = false;
+			}
 
-		if (cascadingConditions.getJobSafeToRestart().equals(JobSafeToRestart.YES)) {
-			jobSafeToRestart = true;
-		} else {
-			jobSafeToRestart = false;
-		}
+			if (cascadingConditions.getJobSafeToRestart().equals(JobSafeToRestart.YES)) {
+				jobSafeToRestart = true;
+			} else {
+				jobSafeToRestart = false;
+			}
 
-		if (cascadingConditions.getRunEvenIfFailed().equals(RunEvenIfFailed.YES)) {
-			runEvenIfFailed = true;
+			if (cascadingConditions.getRunEvenIfFailed().equals(RunEvenIfFailed.YES)) {
+				runEvenIfFailed = true;
+			} else {
+				runEvenIfFailed = false;
+			}
 		} else {
-			runEvenIfFailed = false;
+			System.out.println("jobProperties is NULL in fillCascadingConditionsTab !!");
 		}
 	}
 
 	private void fillStateInfosTab() {
-		if (!jobInsertButton) {
-			stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().toString();
-			subStateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
-		}
-
-		// durum tanimi yapildiysa alanlari dolduruyor
-		if (jobProperties.getStateInfos() != null && jobProperties.getStateInfos().getJobStatusList() != null) {
-
-			manyJobStatusList = new ArrayList<SelectItem>();
-			for (Status jobStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
-				String statusName = jobStatus.getStatusName().toString();
-				manyJobStatusList.add(new SelectItem(statusName, statusName));
+		if (jobProperties != null) {
+			if (!jobInsertButton) {
+				stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().toString();
+				subStateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
 			}
+
+			// durum tanimi yapildiysa alanlari dolduruyor
+			if (jobProperties.getStateInfos() != null && jobProperties.getStateInfos().getJobStatusList() != null) {
+
+				manyJobStatusList = new ArrayList<SelectItem>();
+				for (Status jobStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
+					String statusName = jobStatus.getStatusName().toString();
+					manyJobStatusList.add(new SelectItem(statusName, statusName));
+				}
+			}
+		} else {
+			System.out.println("jobProperties is NULL in fillStateInfosTab !!");
 		}
 	}
 
 	private void fillConcurrencyManagementTab() {
-		concurrent = jobProperties.getConcurrencyManagement().getConcurrent();
+		if (jobProperties != null) {
+			concurrent = jobProperties.getConcurrencyManagement().getConcurrent();
+		} else {
+			System.out.println("jobProperties is NULL in fillConcurrencyManagementTab !!");
+		}
 	}
 
 	private void fillAlarmPreferenceTab() {
-		if (jobProperties.getAlarmPreference() != null && jobProperties.getAlarmPreference().getAlarmIdArray() != null && jobProperties.getAlarmPreference().getAlarmIdArray().length > 0) {
+		if (jobProperties != null) {
+			if (jobProperties.getAlarmPreference() != null && jobProperties.getAlarmPreference().getAlarmIdArray() != null && jobProperties.getAlarmPreference().getAlarmIdArray().length > 0) {
 
-			int length = jobProperties.getAlarmPreference().getAlarmIdArray().length;
-			selectedAlarmList = new String[length];
+				int length = jobProperties.getAlarmPreference().getAlarmIdArray().length;
+				selectedAlarmList = new String[length];
 
-			for (int i = 0; i < length; i++) {
-				selectedAlarmList[i] = jobProperties.getAlarmPreference().getAlarmIdArray(i) + "";
+				for (int i = 0; i < length; i++) {
+					selectedAlarmList[i] = jobProperties.getAlarmPreference().getAlarmIdArray(i) + "";
+				}
 			}
+		} else {
+			System.out.println("jobProperties is NULL in fillAlarmPreferenceTab !!");
 		}
 	}
 
 	private void fillLocalParametersTab() {
-		if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
-			InParam inParam = jobProperties.getLocalParameters().getInParam();
+		if (jobProperties != null) {
+			if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
+				InParam inParam = jobProperties.getLocalParameters().getInParam();
 
-			for (Parameter parameter : inParam.getParameterArray()) {
-				parameterList.add(parameter);
+				for (Parameter parameter : inParam.getParameterArray()) {
+					parameterList.add(parameter);
+				}
+			} else {
+				parameterList = new ArrayList<Parameter>();
 			}
 		} else {
-			parameterList = new ArrayList<Parameter>();
+			System.out.println("jobProperties is NULL in fillLocalParametersTab !!");
 		}
 	}
 
 	private void fillAdvancedJobInfosTab() {
-		if (jobProperties.getAdvancedJobInfos() == null) {
-			return;
-		}
-
-		AdvancedJobInfos advancedJobInfos = jobProperties.getAdvancedJobInfos();
-
-		// sla tanimi
-		if (advancedJobInfos.getSLAId() > 0) {
-			jobSLA = advancedJobInfos.getSLAId() + "";
-		}
-
-		// agent secme metodu
-		if (advancedJobInfos.getAgentChoiceMethod() != null) {
-			agentChoiceMethod = advancedJobInfos.getAgentChoiceMethod().getStringValue();
-
-			if (agentChoiceMethod.equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
-				selectedAgent = advancedJobInfos.getAgentChoiceMethod().getAgentId();
-			}
-		}
-
-		// kaynak gereksinimi tanimi
-		if (advancedJobInfos.getResourceRequirement() != null) {
-			useResourceReq = true;
-
-			Hardware hardware = advancedJobInfos.getResourceRequirement().getHardware();
-
-			if (hardware.getEntryName() != null) {
-				selectedResourceForHardware = hardware.getEntryName();
+		if (jobProperties != null) {
+			if (jobProperties.getAdvancedJobInfos() == null) {
+				return;
 			}
 
-			Cpu cpu = hardware.getCpu();
-			cpuTimein = cpu.getTimein().toString();
-			cpuCondition = cpu.getCondition().toString();
-			cpuValue = cpu.getStringValue();
-			cpuUnit = cpu.getBirim().toString();
+			AdvancedJobInfos advancedJobInfos = jobProperties.getAdvancedJobInfos();
 
-			Mem mem = hardware.getMem();
-			memoryPart = mem.getFor().toString();
-			memoryCondition = mem.getCondition().toString();
-			memoryValue = mem.getStringValue();
-			memoryUnit = mem.getBirim().toString();
+			// sla tanimi
+			if (advancedJobInfos.getSLAId() > 0) {
+				jobSLA = advancedJobInfos.getSLAId() + "";
+			}
 
-			Disk disk = hardware.getDisk();
-			diskPart = disk.getFor().toString();
-			diskCondition = disk.getCondition().toString();
-			diskValue = disk.getStringValue();
-			diskUnit = disk.getBirim().toString();
+			// agent secme metodu
+			if (advancedJobInfos.getAgentChoiceMethod() != null) {
+				agentChoiceMethod = advancedJobInfos.getAgentChoiceMethod().getStringValue();
+
+				if (agentChoiceMethod.equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
+					selectedAgent = advancedJobInfos.getAgentChoiceMethod().getAgentId();
+				}
+			}
+
+			// kaynak gereksinimi tanimi
+			if (advancedJobInfos.getResourceRequirement() != null) {
+				useResourceReq = true;
+
+				Hardware hardware = advancedJobInfos.getResourceRequirement().getHardware();
+
+				if (hardware.getEntryName() != null) {
+					selectedResourceForHardware = hardware.getEntryName();
+				}
+
+				Cpu cpu = hardware.getCpu();
+				cpuTimein = cpu.getTimein().toString();
+				cpuCondition = cpu.getCondition().toString();
+				cpuValue = cpu.getStringValue();
+				cpuUnit = cpu.getBirim().toString();
+
+				Mem mem = hardware.getMem();
+				memoryPart = mem.getFor().toString();
+				memoryCondition = mem.getCondition().toString();
+				memoryValue = mem.getStringValue();
+				memoryUnit = mem.getBirim().toString();
+
+				Disk disk = hardware.getDisk();
+				diskPart = disk.getFor().toString();
+				diskCondition = disk.getCondition().toString();
+				diskValue = disk.getStringValue();
+				diskUnit = disk.getBirim().toString();
+			}
+		} else {
+			System.out.println("jobProperties is NULL in fillAdvancedJobInfosTab !!");
 		}
 	}
 
