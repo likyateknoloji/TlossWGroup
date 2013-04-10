@@ -39,10 +39,14 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 	}
 
 	private void fillBatchProcessProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		if (getJobProperties() != null) {
+			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 
-		jobPath = jobTypeDetails.getJobPath();
-		jobCommand = jobTypeDetails.getJobCommand();
+			jobPath = jobTypeDetails.getJobPath();
+			jobCommand = jobTypeDetails.getJobCommand();
+		} else {
+			System.out.println("getJobProperties() is NULL in fillBatchProcessProperties !!");
+		}
 	}
 
 	public void insertJobAction() {
