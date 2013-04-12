@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.DashboardReorderEvent;
@@ -29,7 +31,7 @@ import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "dashboardPanelMBean")
-@ViewScoped
+@ViewScoped 
 public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable {
 	
 	@ManagedProperty(value = "#{dbOperations}")
@@ -46,6 +48,7 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 
 	private int derinlik;
 	private Report reportBaseList;
+	private Report reportBaseList7;
 	
 	private int pieRunningCount;
 	private int pieFailedCount;
@@ -53,6 +56,13 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 	private int pieWaitingCount;
 	private int pieSuccessCount;
 	private int pieLook4RCount;
+	
+	private int pieRunningCount7;
+	private int pieFailedCount7;
+	private int pieReadyCount7;
+	private int pieWaitingCount7;
+	private int pieSuccessCount7;
+	private int pieLook4RCount7;
 	
 	private String pieColorList;
 	
@@ -66,9 +76,12 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 	public void init() {
 
 		logger.info("begin : init");
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		String parameter_value = (String) facesContext.getExternalContext().getRequestParameterMap().get("id");
+
+		System.out.println(parameter_value);
 		
-
-
 		model = new DefaultDashboardModel();
 		DashboardColumn column1 = new DefaultDashboardColumn();
 		DashboardColumn column2 = new DefaultDashboardColumn();
@@ -93,7 +106,7 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 		model.addColumn(column3);
 		model.addColumn(column4);
 
-		column3.addWidget("status");
+		column3.addWidget("statePanel");
 
 		
 		createPieModel();
@@ -217,10 +230,10 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 	 
 		pieDashboardModel = new PieChartModel();
  
-		pieRunningCount=reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().intValue();
-		pieFailedCount=reportBaseList.getFINISHED().getCOMPLETED().getFAILED().intValue();
-		pieReadyCount=reportBaseList.getPENDING().getIDLED().getBYTIME().intValue();
-		pieWaitingCount=reportBaseList.getPENDING().getREADY().getWAITING().intValue();
+		setPieRunningCount(reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().intValue());
+		setPieFailedCount(reportBaseList.getFINISHED().getCOMPLETED().getFAILED().intValue());
+		setPieReadyCount(reportBaseList.getPENDING().getIDLED().getBYTIME().intValue());
+		setPieWaitingCount(reportBaseList.getPENDING().getREADY().getWAITING().intValue());
 		setPieSuccessCount(reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().intValue());
 		setPieLook4RCount(reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().intValue());
 		
@@ -285,12 +298,90 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 	}
 	
 	private void createPieModel7() {
+//		pieDashboardModel7 = new PieChartModel();
+//
+//		pieDashboardModel7.set("Success", 540);
+//		pieDashboardModel7.set("Failed", 325);
+//		pieDashboardModel7.set("Ready", 702);
+//		pieDashboardModel7.set("Pending", 421);
+		
+		derinlik = 7;
+		pieColorList="";
+		
+		pieRunningCount7=0;
+		pieFailedCount7=0;
+		pieReadyCount7=0;
+		pieWaitingCount7=0;
+		
+		try {
+			reportBaseList7 = getDbOperations().getDashboardReport(derinlik);
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+	 
 		pieDashboardModel7 = new PieChartModel();
-
-		pieDashboardModel7.set("Success", 540);
-		pieDashboardModel7.set("Failed", 325);
-		pieDashboardModel7.set("Ready", 702);
-		pieDashboardModel7.set("Pending", 421);
+ 
+		setPieRunningCount7(reportBaseList7.getRUNNING().getONRESOURCE().getTIMEIN().intValue());
+		setPieFailedCount7(reportBaseList7.getFINISHED().getCOMPLETED().getFAILED().intValue());
+		setPieReadyCount7(reportBaseList7.getPENDING().getIDLED().getBYTIME().intValue());
+		setPieWaitingCount7(reportBaseList7.getPENDING().getREADY().getWAITING().intValue());
+		setPieSuccessCount7(reportBaseList7.getFINISHED().getCOMPLETED().getSUCCESS().intValue());
+		setPieLook4RCount7(reportBaseList7.getPENDING().getREADY().getLOOKFORRESOURCE().intValue());
+		
+		int i=0;
+		
+		if ((reportBaseList7.getRUNNING().getONRESOURCE().getTIMEIN() != null) && (reportBaseList7.getRUNNING().getONRESOURCE().getTIMEIN().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Running"), reportBaseList7.getRUNNING().getONRESOURCE().getTIMEIN().doubleValue());
+			pieColorList=pieColorList+"4962EE"; 
+			i++;
+		}
+		
+		if ((reportBaseList7.getPENDING().getREADY().getWAITING() != null) && (reportBaseList7.getPENDING().getREADY().getWAITING().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Waiting"), reportBaseList7.getPENDING().getREADY().getWAITING().doubleValue());
+			if (i>0) pieColorList=pieColorList+", FFBF00";
+			else pieColorList=pieColorList+"FFBF00";
+			i++;
+		}
+		
+		if ((reportBaseList7.getPENDING().getIDLED().getBYTIME() != null) && (reportBaseList7.getPENDING().getIDLED().getBYTIME().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Ready"), reportBaseList7.getPENDING().getIDLED().getBYTIME().doubleValue());
+			if (i>0) pieColorList=pieColorList+", DAC9D7";
+			else pieColorList=pieColorList+"DAC9D7";
+			i++;
+		}
+		
+		if ((reportBaseList7.getPENDING().getREADY().getLOOKFORRESOURCE() != null) && (reportBaseList7.getPENDING().getREADY().getLOOKFORRESOURCE().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Look"), reportBaseList7.getPENDING().getREADY().getLOOKFORRESOURCE().doubleValue());
+			if (i>0) pieColorList=pieColorList+", F65FE2";
+			else pieColorList=pieColorList+"F65FE2";
+			i++;
+		}
+		if ((reportBaseList7.getPENDING().getREADY().getUSERCHOOSERESOURCE() != null) && (reportBaseList7.getPENDING().getREADY().getUSERCHOOSERESOURCE().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.LookUR"), reportBaseList7.getPENDING().getREADY().getUSERCHOOSERESOURCE().doubleValue());
+		}
+		
+		if ((reportBaseList7.getPENDING().getREADY().getUSERWAITING() != null) && (reportBaseList7.getPENDING().getREADY().getUSERWAITING().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.LookUW"), reportBaseList7.getPENDING().getREADY().getUSERWAITING().doubleValue());
+		}
+		if ((reportBaseList7.getFINISHED().getCOMPLETED().getSUCCESS() != null) && (reportBaseList7.getFINISHED().getCOMPLETED().getSUCCESS().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Success"), reportBaseList7.getFINISHED().getCOMPLETED().getSUCCESS().doubleValue());
+			if (i>0) pieColorList=pieColorList+", 31B404";
+			else pieColorList=pieColorList+"31B404";
+			i++;
+		}
+		if ((reportBaseList7.getFINISHED().getCOMPLETED().getFAILED() != null) && (reportBaseList7.getFINISHED().getCOMPLETED().getFAILED().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Failed"), reportBaseList7.getFINISHED().getCOMPLETED().getFAILED().doubleValue());
+			if (i>0) pieColorList=pieColorList+", FA1B0B";
+			else pieColorList=pieColorList+"FA1B0B";
+			i++;
+		}
+		if ((reportBaseList7.getCANCELLED() != null) && (reportBaseList7.getCANCELLED().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.Cancelled"), reportBaseList7.getCANCELLED().doubleValue());
+		}
+		if ((reportBaseList7.getRUNNING().getONRESOURCE().getTIMEOUT() != null) && (reportBaseList7.getRUNNING().getONRESOURCE().getTIMEOUT().compareTo(BigInteger.valueOf(0))) != 0) {
+			pieDashboardModel7.set(resolveMessage("tlos.reports.chart.TimeOut"), reportBaseList7.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
+		}
+		
 	}
 
 	private void createCurCategoryModel() {
@@ -309,7 +400,7 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 		jobs.setLabel("Jobs");
 
 		for (Job job : jobsArray) {
-			jobs.set(job.getJname(), job.getBigDecimalValue());
+			jobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
 		}
 		
 		curDurationModel.addSeries(jobs);
@@ -331,7 +422,7 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 		prevJobs.setLabel("Jobs");
 
 		for (Job job : jobsArray) {
-			prevJobs.set(job.getJname(), job.getBigDecimalValue());
+			prevJobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
 		}
 		
 		prevDurationModel.addSeries(prevJobs);
@@ -477,5 +568,63 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 	public void setPieColorList(String pieColorList) {
 		this.pieColorList = pieColorList;
 	}
+
+	public int getPieLook4RCount7() {
+		return pieLook4RCount7;
+	}
+
+	public void setPieLook4RCount7(int pieLook4RCount7) {
+		this.pieLook4RCount7 = pieLook4RCount7;
+	}
+
+	public int getPieSuccessCount7() {
+		return pieSuccessCount7;
+	}
+
+	public void setPieSuccessCount7(int pieSuccessCount7) {
+		this.pieSuccessCount7 = pieSuccessCount7;
+	}
+
+	public int getPieWaitingCount7() {
+		return pieWaitingCount7;
+	}
+
+	public void setPieWaitingCount7(int pieWaitingCount7) {
+		this.pieWaitingCount7 = pieWaitingCount7;
+	}
+
+	public int getPieReadyCount7() {
+		return pieReadyCount7;
+	}
+
+	public void setPieReadyCount7(int pieReadyCount7) {
+		this.pieReadyCount7 = pieReadyCount7;
+	}
+
+	public int getPieFailedCount7() {
+		return pieFailedCount7;
+	}
+
+	public void setPieFailedCount7(int pieFailedCount7) {
+		this.pieFailedCount7 = pieFailedCount7;
+	}
+
+	public int getPieRunningCount7() {
+		return pieRunningCount7;
+	}
+
+	public void setPieRunningCount7(int pieRunningCount7) {
+		this.pieRunningCount7 = pieRunningCount7;
+	}
+
+	public Report getReportBaseList7() {
+		return reportBaseList7;
+	}
+
+	public void setReportBaseList7(Report reportBaseList7) {
+		this.reportBaseList7 = reportBaseList7;
+	}
+
+ 
 
 }
