@@ -10,51 +10,49 @@
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
             <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
-			<p:dashboard id="board" model="#{dashboardPanelMBean.model}">
-				<p:ajax event="reorder" listener="#{dashboardPanelMBean.handleReorder}" update="messages" />
- 
-
+			<p:dashboard id="board" model="#{dashboardPanelMBean2.model}">
+				<p:ajax event="reorder" listener="#{dashboardPanelMBean2.handleReorder}" update="messages" />
  
 				<p:panel id="info" header="#{msgs['tlos.reports.chartState.Running']}"  style="width:230px;height:230px"  >
-                     <h:outputText value="#{dashboardPanelMBean.pieRunningCount}" style="font-weight:bold;color: #4962EE; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieRunningCount}" style="font-weight:bold;color: #4962EE; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
 
 				<p:panel id="info2" header="#{msgs['tlos.reports.chartState.Failed']}" style="width:230px;height:230px">
-                     <h:outputText value="#{dashboardPanelMBean.pieFailedCount}" style="font-weight:bold;color: red; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieFailedCount}" style="font-weight:bold;color: red; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
  
 				<p:panel id="info3" header="#{msgs['tlos.reports.chartState.Ready']}" style="width:230px;height:230px">
-                     <h:outputText value="#{dashboardPanelMBean.pieReadyCount}" style="font-weight:bold;color: #DAC9D7; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieReadyCount}" style="font-weight:bold;color: #DAC9D7; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
 
                 <p:panel id="info4" header="#{msgs['tlos.reports.chartState.Waiting']}" style="width:230px;height:230px">
-                     <h:outputText value="#{dashboardPanelMBean.pieWaitingCount}" style="font-weight:bold;color: #FFBF00; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieWaitingCount}" style="font-weight:bold;color: #FFBF00; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
             		 
                 <p:panel id="info5" header="#{msgs['tlos.reports.chartState.Success']}" style="width:230px;height:230px">
-                     <h:outputText value="#{dashboardPanelMBean.pieSuccessCount}" style="font-weight:bold;color: #31B404; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieSuccessCount}" style="font-weight:bold;color: #31B404; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
 				
                 <p:panel id="info6" header="#{msgs['tlos.reports.chartState.Look4Resource']}" style="width:230px;height:230px">
-                     <h:outputText value="#{dashboardPanelMBean.pieLook4RCount}" style="font-weight:bold;color: #F65FE2; font-size: 10em"/> 
+                     <h:outputText value="#{dashboardPanelMBean2.pieLook4RCount}" style="font-weight:bold;color: #F65FE2; font-size: 10em"/> 
                      <h:outputText value="Jobs " style="font-weight:bold;color: black; font-size: 1em"/> 
 
 				</p:panel>
 								            		 
-				<p:panel id="status" header="#{msgs['tlos.reports.pie1.header']}">
-					<p:pieChart id="dashboardC" value="#{dashboardPanelMBean.pieDashboardModel}"  legendPosition="e" sliceMargin="5" showDataLabels="true" 
-					style="width:600px;height:400px;font-weight: bold;color : F8FBEF; font-size:2em" seriesColors="#{dashboardPanelMBean.pieColorList}" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshDashboardChart}" />
+				<p:panel id="statePanel" header="#{msgs['tlos.reports.pie1.header']}">
+					<p:pieChart id="dashboardC" value="#{dashboardPanelMBean2.pieDashboardModel}"  legendPosition="e" sliceMargin="5" showDataLabels="true" 
+					style="width:600px;height:400px;font-weight: bold;color : F8FBEF; font-size:2em" seriesColors="#{dashboardPanelMBean2.pieColorList}" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean2.refreshDashboardChart}" />
 				</p:panel>            		 
  
 			

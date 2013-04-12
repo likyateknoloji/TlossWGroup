@@ -15,7 +15,7 @@
 
  
  
-				<p:panel id="gauge" header="Current ETL Duration Dashboard">
+				<p:panel id="gauge" header="Overall Job Execution Report">
 					<p:meterGaugeChart id="custom" value="#{dashboardPanelMBean.meterGaugeModel}" showTickLabels="true" labelHeightAdjust="110"  seriesColors="66cc66, 93b75f, E7E658, cc6666" style="width:400px;height:300px" label="ETL Total Duration (h)" />
 					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshGaugeChart}" />
 				</p:panel>
