@@ -10,21 +10,26 @@
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
             <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
-			<p:dashboard id="board" model="#{dashboardPanelMBean.model}">
-				<p:ajax event="reorder" listener="#{dashboardPanelMBean.handleReorder}" update="messages" />
+			<p:dashboard id="board" model="#{dashboardPanelMBean5.model}">
+				<p:ajax event="reorder" listener="#{dashboardPanelMBean5.handleReorder}" update="messages" />
 
  
  
 				<p:panel id="gauge" header="Overall Job Execution Report">
-					<p:meterGaugeChart id="custom" value="#{dashboardPanelMBean.meterGaugeModel}" showTickLabels="true" labelHeightAdjust="110"  seriesColors="66cc66, 93b75f, E7E658, cc6666" style="width:400px;height:300px" label="ETL Total Duration (h)" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean.refreshGaugeChart}" />
+					<p:meterGaugeChart id="custom" value="#{dashboardPanelMBean5.meterGaugeModel}" showTickLabels="true" labelHeightAdjust="160"
+					intervalOuterRadius="160"  
+					seriesColors="66cc66, 93b75f, E7E658, cc6666"  style="width:600px;height:400px;font-weight: bold;color : F8FBEF; font-size:2em" 
+					label="ETL Total Duration (h)" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean5.refreshGaugeChart}" />
 				</p:panel>
 
 				<p:panel id="info" header="Information">
-                     <p:panelGrid columns="2" styleClass="companyHeaderGrid" style="width:400px">
-                     <h:outputText value="Gundonumu:" />  <h:outputText value="31.12.2012 00:00" /> 
-                     <h:outputText value="Job Sayisi:" />  <h:outputText value="40" />
-                     <h:outputText value="Senaryo Sayisi:" />  <h:outputText value="3" />
+                     <p:panelGrid columns="2" styleClass="companyHeaderGrid" style="width:600px">
+                     <h:outputText value="#{msgs['tlos.report.general.overall']}" />  <h:outputText value="#{dashboardPanelMBean5.overallDuration}" /> 
+                     <h:outputText value="#{msgs['tlos.report.general.jobCount']}" />  <h:outputText value="#{dashboardPanelMBean5.jobCount}" />
+                     <h:outputText value="#{msgs['tlos.report.general.scenarioCount']}" />  <h:outputText value="#{dashboardPanelMBean5.scenarioCount}" />
+                     <h:outputText value="#{msgs['tlos.report.general.overallStartTime']}" />  <h:outputText value="#{dashboardPanelMBean5.overallStartTime}" />
+                     <h:outputText value="#{msgs['tlos.report.general.overallEndTime']}" />  <h:outputText value="#{dashboardPanelMBean5.overallEndTime}" />
                      
                      </p:panelGrid>
 
