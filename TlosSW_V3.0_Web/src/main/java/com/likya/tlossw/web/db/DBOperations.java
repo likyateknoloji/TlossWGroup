@@ -2271,6 +2271,38 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public JobArray getOverallReport(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
+				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
+
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		service.setProperty("indent", "yes");
+
+		ResourceSet result = service.query(xQueryStr);
+		ResourceIterator i = result.getIterator();
+
+		JobArray jobArray = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+ 				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
+			} catch (XmlException e) {
+				e.printStackTrace();
+				return null;
+			}
+	 
+      }
+
+		return jobArray;
+	}
+/*
+ * 	
+ */
 	public ArrayList<Job> getJobArrayReport(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
 
 		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"

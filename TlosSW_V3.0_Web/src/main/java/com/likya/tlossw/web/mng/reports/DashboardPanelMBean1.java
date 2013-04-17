@@ -59,12 +59,7 @@ public class DashboardPanelMBean1 extends TlosSWBaseBean implements Serializable
 		
 		column1.addWidget("top10");
 		column2.addWidget("topPrev10");
-		column1.addWidget("info");
-		column2.addWidget("info2");
-		column1.addWidget("info3");
-		column2.addWidget("info4");
-		column1.addWidget("info5");
-		column2.addWidget("info6");
+ 
 		
 		model.addColumn(column1);
 		model.addColumn(column2);
