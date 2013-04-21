@@ -1,7 +1,7 @@
 /*
  * TlosFaz2
  * com.likya.tlos.core.spc.helpers : ValidPlatforms.java
- * @author Serkan Taş
+ * @author Serkan TaÅŸ
  * Tarih : 09.Kas.2008 23:40:05
  */
 
@@ -20,20 +20,20 @@ public class ValidPlatforms {
 	}
 
 		/**
-	 * Windows'da bulunan farklı davranış biçimi nedeni ile, aşağıdaki davranış matrisi
-	 * geçerlidir.
+	 * Windows'da bulunan farklÄ± davranÄ±ÅŸ biÃ§imi nedeni ile, aÅŸaÄŸÄ±daki davranÄ±ÅŸ matrisi
+	 * geÃ§erlidir.
 	 * 
-	 *  Windows için komut davranış matrisi
+	 *  Windows iÃ§in komut davranÄ±ÅŸ matrisi
 	 *  
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
-	 *  *						|	Hatalı Jar	|	Hatalı İşleri Durdurma	| Hatasız İşleri Durdurma	|	İşin bitişini anlama	*
+	 *  *						|	HatalÄ± Jar	|	HatalÄ± Ä°ÅŸleri Durdurma	| HatasÄ±z Ä°ÅŸleri Durdurma	|	Ä°ÅŸin bitiÅŸini anlama	*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 *  *	[0] = cmd			|				|							|							*
-	 *  *	[1] = /c			|	Başarılı	|			Başarılı		|		Başarısız			*							*
+	 *  *	[1] = /c			|	BaÅŸarÄ±lÄ±	|			BaÅŸarÄ±lÄ±		|		BaÅŸarÄ±sÄ±z			*							*
 	 *  *	[2] = jobCommand	|				|							|							*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 *  *	[1] = "cmd"			|				|							|							*
-	 *  *	[2] = ""			|	Başarısız	|			Başarılı		|		Başarılı			*		Başarısız			*
+	 *  *	[2] = ""			|	BaÅŸarÄ±sÄ±z	|			BaÅŸarÄ±lÄ±		|		BaÅŸarÄ±lÄ±			*		BaÅŸarÄ±sÄ±z			*
 	 *  *	[3] = jobCommand	|				|							|							*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 *  *	[1] = "cmd"			|				|							|							*
@@ -41,35 +41,35 @@ public class ValidPlatforms {
 	 *  *	[3] = ""			|				|							|							*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 *  *	[0] = jobCommand	|				|							|							*
-	 *  *	[1] = ""			|	Başarılı	|			Başarılı		|		Başarısız			*							*
+	 *  *	[1] = ""			|	BaÅŸarÄ±lÄ±	|			BaÅŸarÄ±lÄ±		|		BaÅŸarÄ±sÄ±z			*							*
 	 *  *	[2] = ""			|				|							|							*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 *  *	[0] = cmd			|				|							|							*
-	 *  *	[1] = /k			|	Başarısız	|			Başarılı		|		Başarısız			*							*
+	 *  *	[1] = /k			|	BaÅŸarÄ±sÄ±z	|			BaÅŸarÄ±lÄ±		|		BaÅŸarÄ±sÄ±z			*							*
 	 *  *	[2] = jobCommand	|				|							|							*
 	 *  *-----------------------------------------------------------------------------------------------*---------------------------*
 	 */
 
 	/**
-	 * Windows'da bulunan farklı davranış biçimi nedeni ile, aşağıdaki
-	 * davranış matrisi geçerlidir.
+	 * Windows'da bulunan farklÄ± davranÄ±ÅŸ biÃ§imi nedeni ile, aÅŸaÄŸÄ±daki
+	 * davranÄ±ÅŸ matrisi geÃ§erlidir.
 	 * 
-	 * Windows için komut davranış matrisi
+	 * Windows iÃ§in komut davranÄ±ÅŸ matrisi
 	 * 
 	 * *----------------------------------------------------------------
 	 * -------------------------------*---------------------------* * |
-	 * Hatalı Jar | Hatalı İşleri Durdurma | Hatasız İşleri Durdurma |
-	 * İşin bitişini anlama *
+	 * HatalÄ± Jar | HatalÄ± Ä°ÅŸleri Durdurma | HatasÄ±z Ä°ÅŸleri Durdurma |
+	 * Ä°ÅŸin bitiÅŸini anlama *
 	 * *------------------------------------------
 	 * ------------------------
 	 * -----------------------------*---------------------------* * [0]
-	 * = cmd | | | * * [1] = /c | Başarılı | Başarılı | Başarısız * * *
+	 * = cmd | | | * * [1] = /c | BaÅŸarÄ±lÄ± | BaÅŸarÄ±lÄ± | BaÅŸarÄ±sÄ±z * * *
 	 * [2] = jobCommand | | | *
 	 * *----------------------------------------
 	 * --------------------------
 	 * -----------------------------*---------------------------* * [1]
-	 * = "cmd" | | | * * [2] = "" | Başarısız | Başarılı | Başarılı *
-	 * Başarısız * * [3] = jobCommand | | | *
+	 * = "cmd" | | | * * [2] = "" | BaÅŸarÄ±sÄ±z | BaÅŸarÄ±lÄ± | BaÅŸarÄ±lÄ± *
+	 * BaÅŸarÄ±sÄ±z * * [3] = jobCommand | | | *
 	 * *--------------------------
 	 * ----------------------------------------
 	 * -----------------------------*---------------------------* * [1]
@@ -77,22 +77,22 @@ public class ValidPlatforms {
 	 * *--
 	 * ----------------------------------------------------------------
 	 * -----------------------------*---------------------------* * [0]
-	 * = jobCommand | | | * * [1] = "" | Başarılı | Başarılı | Başarısız
+	 * = jobCommand | | | * * [1] = "" | BaÅŸarÄ±lÄ± | BaÅŸarÄ±lÄ± | BaÅŸarÄ±sÄ±z
 	 * * * * [2] = "" | | | *
 	 * *------------------------------------------
 	 * ------------------------
 	 * -----------------------------*---------------------------* * [0]
-	 * = cmd | | | * * [1] = /k | Başarısız | Başarılı | Başarısız * * *
+	 * = cmd | | | * * [1] = /k | BaÅŸarÄ±sÄ±z | BaÅŸarÄ±lÄ± | BaÅŸarÄ±sÄ±z * * *
 	 * [2] = jobCommand | | | *
 	 * *----------------------------------------
 	 * --------------------------
 	 * -----------------------------*---------------------------*
 	 */
 	
-	// TODO Bu kısım değişmeli!
+	// TODO Bu kÄ±sÄ±m deÄŸiÅŸmeli!
 	/**
-	 * Aslında aşağıdaki gibi bir liste olmamalı. Sadece deploy edilecek sisteme
-	 * ait lisans olmalı
+	 * AslÄ±nda aÅŸaÄŸÄ±daki gibi bir liste olmamalÄ±. Sadece deploy edilecek sisteme
+	 * ait lisans olmalÄ±
 	 */
 	public static String[] getCommand(String jobCommand) {
 

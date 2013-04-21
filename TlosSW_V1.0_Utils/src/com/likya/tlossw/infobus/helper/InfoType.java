@@ -1,7 +1,7 @@
 /*
  * TlosFaz2
  * com.likya.tlos.core.spc.helpers : JobInfoType.java
- * @author Serkan Taþ
+ * @author Serkan TaÅŸ
  * Tarih : 09.Kas.2008 23:27:45
  */
 

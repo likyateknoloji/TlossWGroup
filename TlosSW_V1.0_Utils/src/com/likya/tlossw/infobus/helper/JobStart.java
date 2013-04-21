@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.infobus.helper : ScenarioStart.java
- * @author Serkan Taþ
+ * @author Serkan TaÅŸ
  * Tarih : Nov 28, 2008 4:13:46 PM
  */
 

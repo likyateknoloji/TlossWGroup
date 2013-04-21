@@ -29,7 +29,7 @@ public class XmlBeansTransformer {
 		appUser.setUsername(person.getUserName());
 		appUser.setPassword(person.getUserPassword());
 		appUser.setName(person.getName());
-		// TODO Burada şimdilik ilkini aldık ama bakılması lazım.
+		// TODO Burada ÅŸimdilik ilkini aldÄ±k ama bakÄ±lmasÄ± lazÄ±m.
 		appUser.setEmail(person.getEmailList().getEmailArray(0));
 		appUser.setSurname(person.getSurname());
 

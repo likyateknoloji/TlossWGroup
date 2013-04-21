@@ -1,6 +1,6 @@
 /*
  * com.likya.tlos.utils : FileUtils.java
- * @author Serkan Taş
+ * @author Serkan TaÅŸ
  * Tarih : Feb 1, 2009 2:04:40 AM
  */
 

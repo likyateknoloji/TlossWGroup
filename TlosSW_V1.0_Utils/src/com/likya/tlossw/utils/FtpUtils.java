@@ -20,7 +20,7 @@ public class FtpUtils {
 	/**
 	 * Ftp kullanarak verilen dizindeki dosya ve klasorleri listeliyor
 	 * 
-	 * @param ftpClient	Ftp islemlerini yapmak için kullanilan ftp istemcisi
+	 * @param ftpClient	Ftp islemlerini yapmak iï¿½in kullanilan ftp istemcisi
 	 * @param directory	Dosya ve klasorleri listelenen dizin
 	 * @return listelenen dosya ve klasorler donuyor ya da null donuyor
 	 * @see org.apache.commons.net.ftp.FTPClient
@@ -65,7 +65,7 @@ public class FtpUtils {
 	/**
 	 * Ftp kullanarak uzak dizindeki dosyayi siliyor
 	 * 
-	 * @param ftpClient Ftp islemlerini yapmak için kullanilan ftp istemcisi
+	 * @param ftpClient Ftp islemlerini yapmak iï¿½in kullanilan ftp istemcisi
 	 * @param sourceFile Silinecek kaynak dosyanin bulundugu dizinle birlikte ismi
 	 * @return islem gerceklestirilirse true, gerceklestirilemezse false donuyor
 	 */
@@ -108,7 +108,7 @@ public class FtpUtils {
 	/**
 	 * Ftp kullanarak yerel dizindeki dosyayi uzak dizine kopyaliyor (put islemi)
 	 * 
-	 * @param ftpClient Ftp islemlerini yapmak için kullanilan ftp istemcisi
+	 * @param ftpClient Ftp islemlerini yapmak iï¿½in kullanilan ftp istemcisi
 	 * @param sourceFile Kopyalanacak kaynak dosyanin bulundugu dizinle birlikte ismi
 	 * @param targetFile Dosyanin kopyalanacagi dizinle birlikte ismi
 	 * @return islem gerceklestirilirse true, gerceklestirilemezse false donuyor
@@ -172,7 +172,7 @@ public class FtpUtils {
 	/**
 	 * Ftp kullanarak uzak dizindeki dosyayi yerel dizine kopyaliyor (get islemi)
 	 * 
-	 * @param ftpClient Ftp islemlerini yapmak için kullanilan ftp istemcisi
+	 * @param ftpClient Ftp islemlerini yapmak iÃ§in kullanilan ftp istemcisi
 	 * @param sourceFile Kopyalanacak kaynak dosyanin bulundugu dizinle birlikte ismi
 	 * @param targetFile Dosyanin kopyalanacagi dizinle birlikte ismi
 	 * @return islem gerceklestirilirse true, gerceklestirilemezse false donuyor
