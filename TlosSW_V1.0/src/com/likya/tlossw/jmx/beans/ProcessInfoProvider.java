@@ -1,7 +1,7 @@
 /*
- * TlosFaz_V2.0
+  * TlosFaz_V2.0
  * com.likya.tlos.jmx.mp.helper : ProcessInfoProvider.java
- * @author Serkan Taþ
+ * @author Serkan TaÅŸ
  * Tarih : Apr 6, 2009 2:19:17 PM
  */
 
@@ -31,6 +31,7 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProper
 import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.agents.AgentOperations;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
@@ -133,7 +134,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
 
-		// TODO Geçici olarak tip dönüþümü yaptým.
+		// TODO Geï¿½ici olarak tip dï¿½nï¿½ï¿½ï¿½mï¿½ yaptï¿½m.
 		jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
 		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime(), true, false));
@@ -166,7 +167,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
 		jobInfoTypeClient.setJobAutoRetry(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobAutoRetry().toString());
-		// TODO geçici olarak dönüþüm yaptým ama xsd de problem var ????
+		// TODO geï¿½ici olarak dï¿½nï¿½ï¿½ï¿½m yaptï¿½m ama xsd de problem var ????
 		jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 		jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
@@ -234,7 +235,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
 
-			// TODO Geçici olarak tip dönüþümü yaptým.
+			// TODO Geï¿½ici olarak tip dï¿½nï¿½ï¿½ï¿½mï¿½ yaptï¿½m.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
 			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
@@ -263,7 +264,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-			// TODO geçici olarak dönüþüm yaptým ama xsd de problem var ????
+			// TODO geï¿½ici olarak dï¿½nï¿½ï¿½ï¿½m yaptï¿½m ama xsd de problem var ????
 			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
@@ -515,7 +516,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
 					JobStatusSummary jobStatus = new JobStatusSummary();
 					jobStatus.setJobId(sortType.getJobKey());
-					// TODO Serkan : Burasý kontrol edilecek !!!!!!
+					// TODO Serkan : Burasï¿½ kontrol edilecek !!!!!!
 					// jobStatus.setJobStatus(scheduledJob.getJobRuntimeProperties().getJobProperties().getLiveStateInfo().getSubstateName().intValue());
 
 					// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
@@ -620,7 +621,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
 
 				InstanceNode currentServerInstance = tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes().get(instanceId);
-				// Okudugumuz instance'in altýndaki senaryolari alip yeni TD'ye
+				// Okudugumuz instance'in altï¿½ndaki senaryolari alip yeni TD'ye
 				// ekliyoruz
 
 				// InstanceInfoType instanceInfoType = TlosEnterprise.getEnterpriseRegistery().getInstanceLookupTable().get(instanceId);
@@ -734,7 +735,74 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	/**
 	 * web ekranindaki kaynak listesinin oldugu agac render edilmeden once bu metodu cagirip guncel kaynak bilgilerini aliyor
 	 */
-	public TlosSWResourceNode getLiveResourceTreeInfo(JmxUser jmxUser, TlosSWResourceNode tlosSWResourceNode) {
+	public TlosSWResourceNode getLiveResourceTreeInfo(JmxUser jmxUser, TlosSWResourceNode requestResourceNode) {
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
+		
+		TlosSWResourceNode responseResourceNode = new TlosSWResourceNode();
+
+		ResourceListNode resourceListNode = new ResourceListNode();
+		
+		HashMap<String, ResourceNode> resourceList = AgentOperations.getResources(TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache());
+		
+		// ekranda ilgili makinenin dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, yoksa icinde makine gelmedigi icin girmiyor
+		// bunun amaci acilan dugumlerin agent bilgilerini de tlosSpaceWideServerNode'daki kaynak listesindeki ilgili kaynaklara eklemek
+		
+		Iterator<ResourceNode> resourceIterator = requestResourceNode.getResourceListNode().getResourceNodes().iterator();
+		
+		while(resourceIterator.hasNext()) {
+			
+			String resourceName = resourceIterator.next().getResourceInfoTypeClient().getResourceName();
+			
+			if(resourceList.containsKey(resourceName)) {
+				
+				ResourceNode tmpResourceNode = resourceList.get(resourceName);
+				
+				// makinenin altindaki tum agentlarin (hem tlos hem nagios) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
+				AgentLookUpTableTypeClient agentLookUpTableTypeClient = retrieveAgentLookupTable(resourceName);
+
+				// tlos agentlarini aliyor
+				HashMap<Integer, TlosAgentInfoTypeClient> tlosAgentInfoTypeClientList = agentLookUpTableTypeClient.getTAgentInfoTypeClientList();
+				
+				// Her bir tlosAgentNodu da makinenin TlosAgentNodes listesine atiyor
+				for (Integer agentId : tlosAgentInfoTypeClientList.keySet()) {
+
+					TlosAgentInfoTypeClient tlosAgentInfoTypeClient = tlosAgentInfoTypeClientList.get(agentId);
+
+					TlosAgentNode tlosAgentNode = new TlosAgentNode();
+					tlosAgentNode.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
+
+					tmpResourceNode.getTlosAgentNodes().put(agentId, tlosAgentNode);
+				}
+				
+				// makinedeki nagios agent kullanilir durumdaysa ozelliklerini set ediyor
+				if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
+					NagiosAgentNode nagiosAgentNode = new NagiosAgentNode();
+					nagiosAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
+
+					tmpResourceNode.setNagiosAgentNode(nagiosAgentNode);
+				}
+				
+			} else {
+				// TODO Ekranlardan gelen ile motorda bulunan kaynak listesi arasï¿½nda veri tutarsï¿½zlï¿½ï¿½ï¿½ var ??????
+				System.out.println("Ekranlardan gelen ile motorda bulunan kaynak listesi arasï¿½nda veri tutarsï¿½zlï¿½ï¿½ï¿½ var ??????");
+			}
+		}
+		
+		resourceListNode.setResourceNodes(new ArrayList<ResourceNode>(resourceList.values()));
+
+		// iclerinde sadece makine bilgileri olan ama agent bilgileri olmayan resourceListNode, tlosSpaceWideServerNode'un kaynak listesine set ediliyor
+		responseResourceNode.setResourceListNode(resourceListNode);
+		
+		return responseResourceNode;
+	}
+
+	
+	/**
+	 * web ekranindaki kaynak listesinin oldugu agac render edilmeden once bu metodu cagirip guncel kaynak bilgilerini aliyor
+	 */
+	public TlosSWResourceNode getLiveResourceTreeInfoEski(JmxUser jmxUser, TlosSWResourceNode tlosSWResourceNode) {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
@@ -1020,7 +1088,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-			// TODO geçici olarak dönüþüm yaptým ama xsd de problem var ????
+			// TODO geï¿½ici olarak dï¿½nï¿½ï¿½ï¿½m yaptï¿½m ama xsd de problem var ????
 			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
