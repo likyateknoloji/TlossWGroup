@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<!-- 		<title>#{msgs['tlos.login.definition']}</title> -->
+</h:head>
+
+<h:body>
+
+	<h:form id="form">
+
+		<p:tree value="#{treeBean.root}" var="node" dynamic="true" cache="true" id="tree">
+			<p:treeNode>
+				<h:outputText value="Node 2" />
+			</p:treeNode>
+		</p:tree>
+
+		<p:tree value="#{resourceLiveTree.root}" var="node" dynamic="true" cache="false" id="resourceTree">
+
+			<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
+			<p:ajax event="collapse" listener="#{resourceLiveTree.onNodeCollapse}" />
+			<p:ajax event="select" listener="#{resourceLiveTree.onNodeSelect}" />
+			<p:ajax event="unselect" listener="#{resourceLiveTree.onNodeUnselect}" />
+
+			<p:treeNode type="kaynaklistesi">
+				<h:outputText value="#{node}" />
+			</p:treeNode>
+			
+			<p:treeNode type="kaynak" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node.resourceInfoTypeClient.resourceName}" />
+			</p:treeNode>
+			
+			<p:treeNode type="tlosagent" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node.labelText}" />
+			</p:treeNode>
+			
+			<p:treeNode type="monitoragent" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node.labelText}" />
+			</p:treeNode>
+
+			<p:treeNode type="default">
+				<h:outputText value="#{node}" />
+			</p:treeNode>
+		</p:tree>
+
+	</h:form>
+</h:body>
+</html>
