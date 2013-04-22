@@ -189,7 +189,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 							MonitorAgentNode expandedNode = preRenderLiveNagiosAgentTree(tmpAgent);
 
 							if (expandedNode != null) {
-								resourceNode.setNagiosAgentNode(expandedNode);
+								resourceNode.setMonitorAgentNode(expandedNode);
 							}
 						} else {
 							TlosAgentNode expandedNode = preRenderLiveTlosAgentTree(tmpAgent);
@@ -350,7 +350,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			tlosAgentNodeTree.setExpanded(false);
 		}
 		
-		MonitorAgentNode monitorAgentNode = serverResourceNode.getNagiosAgentNode();
+		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
 		//gelen makine icinde nagios agent var mı diye kontrol ediliyor
 		if(monitorAgentNode.getNagiosAgentInfoTypeClient().isNrpeAvailable()) {
 			
