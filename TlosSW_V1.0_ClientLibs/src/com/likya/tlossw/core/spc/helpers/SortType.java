@@ -1,7 +1,7 @@
 /*
  * TlosFaz2
  * com.likya.tlos.core.spc.helpers : SortType.java
- * @author Serkan Taþ
+ * @author Serkan TaÅŸ
  * Tarih : 12.Kas.2008 23:12:41
  */
 
@@ -19,8 +19,8 @@ public class SortType implements Comparable<SortType>,Serializable {
 	int priortiyLevel = -1;
 	
 	/**
-	 * Bu bölüm, sýralama yapýlabilmesi amacý ile eklendi
-	 * Örnek : Collections.sort(arrayList);
+	 * Bu bï¿½lï¿½m, sï¿½ralama yapï¿½labilmesi amacï¿½ ile eklendi
+	 * ï¿½rnek : Collections.sort(arrayList);
 	 * @param jobRuntimeProperties
 	 * @return
 	 */

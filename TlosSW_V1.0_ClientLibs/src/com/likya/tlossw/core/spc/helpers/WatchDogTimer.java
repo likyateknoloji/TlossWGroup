@@ -22,7 +22,7 @@ public class WatchDogTimer extends Thread {
 		super(name);
 		this.ownerOfTimer = ownerOfTimer;
 		this.timeout = timeout;
-		// Not 1 den dolayý gerek kalmadý
+		// Not 1 den dolayÄ± gerek kalmadÄ±
 		this.job = job;
 		myLogger = logger;
 	}
@@ -36,7 +36,7 @@ public class WatchDogTimer extends Thread {
 					System.out.println("WARNING : TIME-OUT is negative setting it to deafault " + timeout);
 				}
 				Thread.sleep(timeout);
-				// TODO Hoþuma gitmedi ama tip dönüþümü yapmak zorunda kaldým
+				// TODO HoÅŸuma gitmedi ama tip dÃ¶nÃ¼ÅŸÃ¼mÃ¼ yapmak zorunda kaldÄ±m
 				if (!Boolean.parseBoolean(job.getJobRuntimeProperties().getJobProperties().getCascadingConditions().getJobAutoRetry().toString())) {
 					if (counter < 1) {
 						LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties().getJobProperties(), StateName.RUNNING, SubstateName.ON_RESOURCE, StatusName.TIME_OUT);

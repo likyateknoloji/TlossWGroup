@@ -1,8 +1,8 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.core.spc.helpers : StateUtils.java
- * @author Serkan Taþ
- * Tarih : 10.Þub.2010 12:40:09
+ * @author Serkan TaÅŸ
+ * Tarih : 10.Åžub.2010 12:40:09
  */
 
 package com.likya.tlossw.core.spc.helpers;
@@ -22,9 +22,9 @@ public class StateUtils {
 	
 	
 	/**
-	 * Bu foksiyon, yerel tanýmlar için düþünüldüðünde 
+	 * Bu foksiyon, yerel tanï¿½mlar iï¿½in dï¿½ï¿½ï¿½nï¿½ldï¿½ï¿½ï¿½nde 
 	 * sadece ve sadece StateNameType.FINISHED ve SubstateNameType.COMPLETED 
-	 * olarak kabul edilerek statu tanýmý yapýlmasýna müsade ediyor.
+	 * olarak kabul edilerek statu tanï¿½mï¿½ yapï¿½lmasï¿½na mï¿½sade ediyor.
 	 * @param mySubstateNameType
 	 * @param jobStatusList
 	 * @param returnCode

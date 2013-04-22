@@ -35,9 +35,9 @@ public class StreamGrabber extends Thread {
 			String bufferString = null;
 
 			/*
-			 * Not 1 : Eðer, bufferedReader.ready() olmadan
+			 * Not 1 : EÄŸer, bufferedReader.ready() olmadan
 			 * bufferedReader.readLine() yapacak olur isek, thread okuma
-			 * satýrýnda takýldýðýnda, terminate etmek iþe yaramýyor.
+			 * satÄ±rÄ±nda takÄ±ldÄ±ÄŸÄ±nda, terminate etmek iÅŸe yaramÄ±yor.
 			 */
 			while (!bufferedReader.ready()) {
 				if(!live) {
