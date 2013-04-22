@@ -12,7 +12,7 @@
 
 		<p:tree value="#{treeBean.root}" var="node" dynamic="true" cache="true" id="tree">
 			<p:treeNode>
-				<h:outputText value="Node 2" />
+				<h:outputText value="#{node}" />
 			</p:treeNode>
 		</p:tree>
 
@@ -27,15 +27,15 @@
 				<h:outputText value="#{node}" />
 			</p:treeNode>
 			
-			<p:treeNode type="kaynak" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+			<p:treeNode type="kaynak" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
 				<h:outputText value="#{node.resourceInfoTypeClient.resourceName}" />
 			</p:treeNode>
 			
-			<p:treeNode type="tlosagent" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+			<p:treeNode type="tlosagent" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
 				<h:outputText value="#{node.labelText}" />
 			</p:treeNode>
 			
-			<p:treeNode type="monitoragent" expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+			<p:treeNode type="monitoragent" expandedIcon="ui-icon-image" collapsedIcon="ui-icon-image">
 				<h:outputText value="#{node.labelText}" />
 			</p:treeNode>
 
