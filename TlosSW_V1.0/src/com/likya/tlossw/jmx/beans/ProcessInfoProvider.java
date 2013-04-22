@@ -46,7 +46,7 @@ import com.likya.tlossw.model.JobStatusSummary;
 import com.likya.tlossw.model.ScenarioStatus;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.client.resource.AgentLookUpTableTypeClient;
-import com.likya.tlossw.model.client.resource.NagiosAgentInfoTypeClient;
+import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
 import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.model.client.spc.InfoTypeClient;
@@ -62,7 +62,7 @@ import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
-import com.likya.tlossw.model.tree.resource.NagiosAgentNode;
+import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
@@ -134,7 +134,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
 
-		// TODO Ge�ici olarak tip d�n���m� yapt�m.
+		// TODO Geçici olarak tip dönüşümü yaptım.
 		jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
 		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime(), true, false));
@@ -167,7 +167,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
 		jobInfoTypeClient.setJobAutoRetry(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobAutoRetry().toString());
-		// TODO ge�ici olarak d�n���m yapt�m ama xsd de problem var ????
+		// TODO geçici olarak dönüşüm yaptım ama xsd de problem var ????
 		jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 		jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
@@ -235,7 +235,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
 
-			// TODO Ge�ici olarak tip d�n���m� yapt�m.
+			// TODO Geçici olarak tip dönüşümü yaptım.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
 			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
@@ -264,7 +264,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-			// TODO ge�ici olarak d�n���m yapt�m ama xsd de problem var ????
+			// TODO geçici olarak döüşüm yaptım ama xsd de problem var ????
 			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
@@ -516,7 +516,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
 					JobStatusSummary jobStatus = new JobStatusSummary();
 					jobStatus.setJobId(sortType.getJobKey());
-					// TODO Serkan : Buras� kontrol edilecek !!!!!!
+					// TODO Serkan : Burası kontrol edilecek !!!!!!
 					// jobStatus.setJobStatus(scheduledJob.getJobRuntimeProperties().getJobProperties().getLiveStateInfo().getSubstateName().intValue());
 
 					// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
@@ -621,7 +621,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
 
 				InstanceNode currentServerInstance = tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes().get(instanceId);
-				// Okudugumuz instance'in alt�ndaki senaryolari alip yeni TD'ye
+				// Okudugumuz instance'in altındaki senaryolari alip yeni TD'ye
 				// ekliyoruz
 
 				// InstanceInfoType instanceInfoType = TlosEnterprise.getEnterpriseRegistery().getInstanceLookupTable().get(instanceId);
@@ -759,7 +759,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				
 				ResourceNode tmpResourceNode = resourceList.get(resourceName);
 				
-				// makinenin altindaki tum agentlarin (hem tlos hem nagios) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
+				// makinenin altindaki tum agentlarin (hem tlos hem monitor) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
 				AgentLookUpTableTypeClient agentLookUpTableTypeClient = retrieveAgentLookupTable(resourceName);
 
 				// tlos agentlarini aliyor
@@ -776,17 +776,17 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					tmpResourceNode.getTlosAgentNodes().put(agentId, tlosAgentNode);
 				}
 				
-				// makinedeki nagios agent kullanilir durumdaysa ozelliklerini set ediyor
+				// makinedeki monitor agent kullanilir durumdaysa ozelliklerini set ediyor
 				if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
-					NagiosAgentNode nagiosAgentNode = new NagiosAgentNode();
-					nagiosAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
+					MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
+					monitorAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
 
-					tmpResourceNode.setNagiosAgentNode(nagiosAgentNode);
+					tmpResourceNode.setMonitorAgentNode(monitorAgentNode);
 				}
 				
 			} else {
-				// TODO Ekranlardan gelen ile motorda bulunan kaynak listesi aras�nda veri tutars�zl��� var ??????
-				System.out.println("Ekranlardan gelen ile motorda bulunan kaynak listesi aras�nda veri tutars�zl��� var ??????");
+				// TODO Ekranlardan gelen ile motorda bulunan kaynak listesi arasında veri tutarsızlığı var ??????
+				System.out.println("Ekranlardan gelen ile motorda bulunan kaynak listesi arasında veri tutarsızlığı var ??????");
 			}
 		}
 		
@@ -855,7 +855,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				}
 			}
 
-			// makinenin altindaki tum agentlarin (hem tlos hem nagios) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
+			// makinenin altindaki tum agentlarin (hem tlos hem monitor) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
 			AgentLookUpTableTypeClient agentLookUpTableTypeClient = retrieveAgentLookupTable(resourceName);
 
 			// tlos agentlarini aliyor
@@ -872,19 +872,19 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				currentServerResource.getTlosAgentNodes().put(agentId, tlosAgentNode);
 			}
 
-			// makinedeki nagios agent kullanilir durumdaysa ozelliklerini set ediyor
+			// makinedeki monitor agent kullanilir durumdaysa ozelliklerini set ediyor
 			if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
-				NagiosAgentNode nagiosAgentNode = new NagiosAgentNode();
-				nagiosAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
+				MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
+				monitorAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
 
-				currentServerResource.setNagiosAgentNode(nagiosAgentNode);
+				currentServerResource.setMonitorAgentNode(monitorAgentNode);
 			}
 
 			// tlosSpaceWideServerNode icindeki kaynak listesindeki ilgili kaynagin altina agentlari set ediliyor
 			for (int j = 0; j < tlosSpaceWideServerNode.getResourceListNode().getResourceNodes().size(); j++) {
 				if (tlosSpaceWideServerNode.getResourceListNode().getResourceNodes().get(j).getResourceInfoTypeClient().getResourceName().equals(resourceName)) {
 					tlosSpaceWideServerNode.getResourceListNode().getResourceNodes().get(j).setTlosAgentNodes(currentServerResource.getTlosAgentNodes());
-					tlosSpaceWideServerNode.getResourceListNode().getResourceNodes().get(j).setNagiosAgentNode(currentServerResource.getNagiosAgentNode());
+					tlosSpaceWideServerNode.getResourceListNode().getResourceNodes().get(j).setMonitorAgentNode(currentServerResource.getMonitorAgentNode());
 					break;
 				}
 			}
@@ -916,7 +916,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 				// nrpe agent calisir durumdaysa parametreleri set ediliyor
 				if (tAgent.getNrpeAvailable()) {
-					NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient = new NagiosAgentInfoTypeClient();
+					MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient = new MonitorAgentInfoTypeClient();
 					nagiosAgentInfoTypeClient.setNrpeAvailable(true);
 					nagiosAgentInfoTypeClient.setNrpePort(tAgent.getNrpePort());
 					nagiosAgentInfoTypeClient.setResourceName(tAgent.getResource().getStringValue());
@@ -1088,7 +1088,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-			// TODO ge�ici olarak d�n���m yapt�m ama xsd de problem var ????
+			// TODO geçici olarak dönüşüm yaptım ama xsd de problem var ????
 			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
