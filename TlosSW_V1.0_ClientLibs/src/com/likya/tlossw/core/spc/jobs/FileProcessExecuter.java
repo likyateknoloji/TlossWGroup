@@ -47,7 +47,7 @@ public abstract class FileProcessExecuter extends FileJob {
 			ex.printStackTrace();
 		}
 		
-		// TODO Merve Özbey 01.08.2012
+		// TODO Merve Ã–zbey 01.08.2012
 		// log dosyasinin ismine zaman damgasi verildigi icin bu ismi
 		// dailyScenarios.xml'de guncellemek gerekiyor
 		// DBUtils.insertLogFileNameForJob(jobProperties, jobPath, logFileName);

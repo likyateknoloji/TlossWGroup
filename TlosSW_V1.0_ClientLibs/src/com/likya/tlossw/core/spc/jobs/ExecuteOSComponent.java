@@ -125,9 +125,9 @@ public abstract class ExecuteOSComponent extends Job {
 
 			// Stop the process from running
 			myLogger.warn(" >>" + logLabel + ">> " + logClassName + " : Job timed-out terminating " + jobProperties.getBaseJobInfos().getJsName());
-			// TODO Windows process kill etmek için yazýlan JNI kodu
-			// buraya konmalý
-			// Serkan Taþ 13.08.2012
+			// TODO Windows process kill etmek iï¿½in yazÄ±lan JNI kodu
+			// buraya konmalÄ±
+			// Serkan TaÅŸ 13.08.2012
 			process.destroy();
 
 		}

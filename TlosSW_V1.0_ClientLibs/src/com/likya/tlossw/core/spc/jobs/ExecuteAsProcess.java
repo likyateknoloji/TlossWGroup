@@ -41,8 +41,8 @@ public class ExecuteAsProcess extends ExecuteOSComponent {
 
 				sendStatusChangeInfo();
 
-				// TODO Burasý eksik kaldý, 3. parametre tamamlanmalý
-				// Serkan Taþ 13.08.2012
+				// TODO BurasÄ± eksik kaldÄ±, 3. parametre tamamlanmalÄ±
+				// Serkan TaÅŸ 13.08.2012
 				// Map<String, String> env = new HashMap<String, String>();
 				// env.put("PGPASSWORD", password);
 

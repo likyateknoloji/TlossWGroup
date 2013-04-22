@@ -283,7 +283,7 @@ public abstract class Job implements Runnable, Serializable {
 
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
-		// TODO Burayý incelememiz gerekiyor 01.08.2012 Serkan Taþ
+		// TODO Burayï¿½ incelememiz gerekiyor 01.08.2012 Serkan Taï¿½
 		sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
@@ -474,7 +474,7 @@ public abstract class Job implements Runnable, Serializable {
 
 		} else {
 
-			// TODO Hoþuma gitmedi ama tip dönüþümü yaptým
+			// TODO HoÅŸuma gitmedi ama tip dÃ¶nÃ¼ÅŸÃ¼mÃ¼ yaptÄ±m
 			if (Boolean.parseBoolean(jobProperties.getCascadingConditions().getJobAutoRetry().toString()) && retryFlag) {
 
 				myLogger.info(" >> " + "ExecuteInShell : Job Failed ! Restarting " + getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());

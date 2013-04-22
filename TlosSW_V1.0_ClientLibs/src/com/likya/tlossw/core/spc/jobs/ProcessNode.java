@@ -252,11 +252,11 @@ public class ProcessNode extends Job {
 							// String xpath = processNode.getFilter().getStringValue();
 							// TODO XPath i normal xml icin yapmamisiz. Gerceklestirelim. hs.
 							// inputs = ApplyXPath.queryXmlWithXPath(fileContent, xpath);
-							System.out.println("Filtreleme için XPATH yerine XSLT kullanýn !!");
+							System.out.println("Filtreleme iï¿½in XPATH yerine XSLT kullanï¿½n !!");
 							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 							sendStatusChangeInfo();
 						} else if (processNode.getTransform() != null && processNode.getTransform().getWith().toString().equalsIgnoreCase("xpath")) {
-							System.out.println("Transformasyon için XPATH kullanmýyoruz. XSLT kullanýn !!");
+							System.out.println("Transformasyon iï¿½in XPATH kullanmï¿½yoruz. XSLT kullanï¿½n !!");
 							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 							sendStatusChangeInfo();
 						}
@@ -266,7 +266,7 @@ public class ProcessNode extends Job {
 							// String inputs[] = null;
 							// String filterString = processNode.getFilter().getStringValue();
 
-							System.out.println("Filtreleme için XPATH yerine XSLT kullanýn !!");
+							System.out.println("Filtreleme iÃ§in XPATH yerine XSLT kullanÄ±n !!");
 							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 						} else if (processNode.getReplace() != null && processNode.getReplace().getFind() != null && !processNode.getReplace().getFind().toString().isEmpty()) {
 							String replaceThis = processNode.getReplace().getFind().toString();
@@ -274,7 +274,7 @@ public class ProcessNode extends Job {
 							transformedXML = fileContent.replace(replaceThis, withThis);
 						}
 					} else {
-						System.out.println("XML ve TEXT Doc dýþýnda döküman iþleyemiyoruz henüz.");
+						System.out.println("XML ve TEXT Doc dÄ±ÅŸÄ±nda dokÃ¼man iÅŸleyemiyoruz henÃ¼z.");
 						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 						sendStatusChangeInfo();
 					}
