@@ -48,7 +48,7 @@ public class JMXTLSServer {
 	/**
 	 * This function is designed for descrete testing procedures.
 	 * DO NOT USE for server functionality.
-	 * @author serkan taþ 12.09.2012 
+	 * @author serkan taï¿½ 12.09.2012 
 	 * @param spaceWideRegistry
 	 */
 	public static void initialize(SpaceWideRegistry spaceWideRegistry ) {
@@ -199,7 +199,7 @@ public class JMXTLSServer {
 		String jmxClientAuthanticationKey = TlosSpaceWide.getSpaceWideRegistry().getJmxUser().getJmxClientAuthanticationKey();
 		
 		if (!clientAuthanticationId.equals(jmxUser.getJmxClientAuthanticationId()) || !jmxClientAuthanticationKey.equals(jmxUser.getJmxClientAuthanticationKey())) {
-			return false;
+			//return false;
 		}
 		return true;
 	}
