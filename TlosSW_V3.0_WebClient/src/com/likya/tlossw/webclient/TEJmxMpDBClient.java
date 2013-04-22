@@ -28,7 +28,7 @@ import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAc
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
-import com.likya.tlossw.model.client.resource.NagiosAgentInfoTypeClient;
+import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxAppUser;
@@ -937,7 +937,7 @@ public class TEJmxMpDBClient extends TEJmxMpClientBase {
 		return false;
 	}
 
-	// Web ekranindaki kaynak listesi agacinda herhangi bir Nagios Agent secildiginde buraya gelip makine bilgilerini aliyor
+	// Web ekranindaki kaynak listesi agacinda herhangi bir Monitor Agent secildiginde buraya gelip makine bilgilerini aliyor
 	/**
 	 * Sunucudan makinenin kullanim bilgilerini istiyor
 	 * 
@@ -947,17 +947,17 @@ public class TEJmxMpDBClient extends TEJmxMpClientBase {
 	 *            Bilgileri istenen Tlos Agent'in id numarasi
 	 * @return Sunucudan aldigi islemci, disk ve bellek bilgilerini donuyor
 	 */
-	public static NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient) {
+	public static NrpeDataInfoTypeClient retrieveMonitorAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient monitorAgentInfoTypeClient) {
 
 		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
 
-		Object[] paramList = { jmxUser, nagiosAgentInfoTypeClient };
-		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "com.likya.tlossw.model.client.resource.NagiosAgentInfoTypeClient" };
+		Object[] paramList = { jmxUser, monitorAgentInfoTypeClient };
+		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient" };
 		Object o;
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=4"), "retrieveNagiosAgentInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=4"), "retrieveMonitorAgentInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (NrpeDataInfoTypeClient) o;
 		} catch (Exception e) {
