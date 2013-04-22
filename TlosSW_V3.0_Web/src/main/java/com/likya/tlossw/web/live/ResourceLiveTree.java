@@ -284,12 +284,11 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 //			ResourceFolderBean resourceFolder = new ResourceFolderBean();
 			
 //			resource.setNavigationSelection(navigationBean);
-//			if(newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
-//				resource.setText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
-//				resourceFolder.setServer(true);
-//			} else {
-//				resource.setText(newResourceNode.getResourceInfoTypeClient().getResourceName());
-//			}
+			if(newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
+				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
+			} else {
+				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName());
+			}
 //			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
 //			resource.setTemplateName("resourceViewPanel");
 //			resource.setPageContent(true);
@@ -348,7 +347,12 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 			TreeNode tlosAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_TLOSAGENT, tlosAgentNode, resourceNode);
 			tlosAgentNodeTree.setExpanded(false);
+			
+//			if (tlosAgentNodeTree.getChildren().size() == 0) {
+//				tlosAgentNodeTree.getChildren().add(dummyNode);
+//			}
 		}
+		
 		
 		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
 		//gelen makine icinde nagios agent var mı diye kontrol ediliyor
@@ -384,6 +388,10 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			
 			TreeNode monitorAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_MONITORAGENT, monitorAgentNode, resourceNode);
 			monitorAgentNodeTree.setExpanded(false);
+			
+//			if (monitorAgentNodeTree.getChildren().size() == 0) {
+//				monitorAgentNodeTree.getChildren().add(dummyNode);
+//			}
 		}
 	}
 
