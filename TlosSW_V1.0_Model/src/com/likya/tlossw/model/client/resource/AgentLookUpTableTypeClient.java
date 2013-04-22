@@ -16,11 +16,11 @@ public class AgentLookUpTableTypeClient implements Serializable {
 
 	private HashMap<Integer, TlosAgentInfoTypeClient> tAgentInfoTypeClientList;
 
-	private NagiosAgentInfoTypeClient nAgentInfoTypeClient;
+	private MonitorAgentInfoTypeClient nAgentInfoTypeClient;
 	
 	public AgentLookUpTableTypeClient() {
 		this.tAgentInfoTypeClientList = new HashMap<Integer, TlosAgentInfoTypeClient>();
-		this.nAgentInfoTypeClient = new NagiosAgentInfoTypeClient();
+		this.nAgentInfoTypeClient = new MonitorAgentInfoTypeClient();
 	}
 
 	public void setTAgentInfoTypeClientList(HashMap<Integer, TlosAgentInfoTypeClient> tAgentInfoTypeClientList) {
@@ -31,11 +31,11 @@ public class AgentLookUpTableTypeClient implements Serializable {
 		return tAgentInfoTypeClientList;
 	}
 
-	public void setNAgentInfoTypeClient(NagiosAgentInfoTypeClient nAgentInfoTypeClient) {
+	public void setNAgentInfoTypeClient(MonitorAgentInfoTypeClient nAgentInfoTypeClient) {
 		this.nAgentInfoTypeClient = nAgentInfoTypeClient;
 	}
 
-	public NagiosAgentInfoTypeClient getNAgentInfoTypeClient() {
+	public MonitorAgentInfoTypeClient getNAgentInfoTypeClient() {
 		return nAgentInfoTypeClient;
 	}
 
