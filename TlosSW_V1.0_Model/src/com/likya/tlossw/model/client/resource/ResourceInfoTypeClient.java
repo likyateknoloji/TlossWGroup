@@ -18,7 +18,7 @@ public class ResourceInfoTypeClient implements Serializable {
 	private String osType;
 	private boolean includesServer = false;
 	
-	private boolean active;
+	private boolean active = false;
 	
 	public ResourceInfoTypeClient() {
 		super();
