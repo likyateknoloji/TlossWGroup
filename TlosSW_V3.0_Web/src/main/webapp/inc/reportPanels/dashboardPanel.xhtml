@@ -1,38 +1,73 @@
-<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
 
 	<ui:define name="center">
-	
-	
+
+
 		<h:form id="dashboardReports" prependId="false">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-            <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
-			<p:dashboard id="board" model="#{dashboardPanelMBean1.model}">
-				<p:ajax event="reorder" listener="#{dashboardPanelMBean1.handleReorder}" update="messages" />
+			<p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget"
+				style="width: 1500px;">
+				<p:dashboard id="board" model="#{dashboardPanelMBean1.model}">
+					<p:ajax event="reorder"
+						listener="#{dashboardPanelMBean1.handleReorder}" update="messages" />
 
- 
-								
 
-				<p:panel id="top10" header="The Top 10 most time-consuming jobs of the Latest Run">
-					<p:barChart id="curHorizontal" min="0" value="#{dashboardPanelMBean1.curDurationModel}" seriesColors="F73C84" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean1.refreshCurDurationChart}" />
-				</p:panel>
 
-				<p:panel id="topPrev10" header="The Top 10 most time-consuming jobs of the Previous Run">
-					<p:barChart id="prevHorizontal"  min="0" value="#{dashboardPanelMBean1.prevDurationModel}" animate="true" legendPosition="se" style="width:400px;height:400px" orientation="horizontal" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{dashboardPanelMBean1.refreshPrevDurationChart}" />
-				</p:panel>
- 
 
-			</p:dashboard>
+					<p:panel id="top10"
+						header="The Top 10 most time-consuming jobs of the Latest Run">
+						<p:barChart id="curHorizontal" min="0"
+							value="#{dashboardPanelMBean1.curDurationModel}"
+							seriesColors="F73C84" animate="true" zoom="true"
+							legendPosition="se" style="width:400px;height:400px"
+							orientation="horizontal" widgetVar="top10Widget"/>
+						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
+							action="#{dashboardPanelMBean1.refreshCurDurationChart}" />
+					</p:panel>
+
+					<p:panel id="topPrev10"
+						header="The Top 10 most time-consuming jobs of the Previous Run">
+						<p:barChart id="prevHorizontal" min="0"
+							value="#{dashboardPanelMBean1.prevDurationModel}" animate="true"
+							zoom="true" legendPosition="se" style="width:400px;height:400px"
+							orientation="horizontal" widgetVar="topPrev10Widget"/>
+
+						<p:commandButton type="button" value="Export"
+							icon="ui-icon-extlink" onclick="exportChart()" />
+
+						<p:dialog widgetVar="dlg" showEffect="fade" modal="true"
+							header="Chart as an Image">
+							<p:outputPanel id="output" layout="block"
+								style="width:400px;height:400px" />
+						</p:dialog>
+					</p:panel>
+
+
+				</p:dashboard>
 			</p:fieldset>
 
 		</h:form>
+		<script type="text/javascript">
+			function exportChart() {
+				//export image  
+				$('#output').empty().append(topPrev10Widget.exportAsImage());
+
+				//show the dialog  
+				dlg.show();
+			}
+		</script>
 	</ui:define>
-    <ui:define name="west">
+	<ui:define name="west">
 		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
 	</ui:define>
 </ui:composition>
