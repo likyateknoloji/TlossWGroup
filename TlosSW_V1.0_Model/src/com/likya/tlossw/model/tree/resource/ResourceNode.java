@@ -19,9 +19,9 @@ public class ResourceNode implements Serializable {
 	//makinenin kendi parametreleri
 	private ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient();
 	
-	//o makinedeki tlos ve nagios agentlar (tlos agent birden fazla olabilir)
+	//o makinedeki tlos ve monitor agentlar (tlos agent birden fazla olabilir)
 	private HashMap<Integer, TlosAgentNode> tlosAgentNodes = new HashMap<Integer, TlosAgentNode>();
-	private NagiosAgentNode nagiosAgentNode = new NagiosAgentNode();
+	private MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
 
 	public void setTlosAgentNodes(HashMap<Integer, TlosAgentNode> tlosAgentNodes) {
 		this.tlosAgentNodes = tlosAgentNodes;
@@ -31,12 +31,12 @@ public class ResourceNode implements Serializable {
 		return tlosAgentNodes;
 	}
 
-	public void setNagiosAgentNode(NagiosAgentNode nagiosAgentNode) {
-		this.nagiosAgentNode = nagiosAgentNode;
+	public void setMonitorAgentNode(MonitorAgentNode monitorAgentNode) {
+		this.monitorAgentNode = monitorAgentNode;
 	}
 
-	public NagiosAgentNode getNagiosAgentNode() {
-		return nagiosAgentNode;
+	public MonitorAgentNode getMonitorAgentNode() {
+		return monitorAgentNode;
 	}
 
 	public void setResourceInfoTypeClient(ResourceInfoTypeClient resourceInfoTypeClient) {

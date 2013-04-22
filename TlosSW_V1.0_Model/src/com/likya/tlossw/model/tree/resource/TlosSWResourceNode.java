@@ -13,16 +13,7 @@ public class TlosSWResourceNode implements Serializable {
 	
 	private static final long serialVersionUID = -4454200145733482653L;
 
-	private NavigationNode navigationNode;
 	private ResourceListNode resourceListNode;
-
-	public NavigationNode getNavigationNode() {
-		return navigationNode;
-	}
-
-	public void setNavigationNode(NavigationNode navigationNode) {
-		this.navigationNode = navigationNode;
-	}
 
 	public void setResourceListNode(ResourceListNode resourceListNode) {
 		this.resourceListNode = resourceListNode;

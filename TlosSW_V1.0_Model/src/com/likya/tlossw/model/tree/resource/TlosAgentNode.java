@@ -15,6 +15,16 @@ public class TlosAgentNode implements Serializable {
 
 	private static final long serialVersionUID = 3493229044094671923L;
 	
+	private String labelText;
+	
+	public String getLabelText() {
+		return labelText;
+	}
+
+	public void setLabelText(String labelText) {
+		this.labelText = labelText;
+	}
+
 	private TlosAgentInfoTypeClient tlosAgentInfoTypeClient = new TlosAgentInfoTypeClient();
 
 	public void setTlosAgentInfoTypeClient(TlosAgentInfoTypeClient tlosAgentInfoTypeClient) {
