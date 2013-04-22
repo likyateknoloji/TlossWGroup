@@ -16,6 +16,16 @@ public class ResourceNode implements Serializable {
 
 	private static final long serialVersionUID = 1676608004368003714L;
 
+	private String labelText;
+	
+	public String getLabelText() {
+		return labelText;
+	}
+
+	public void setLabelText(String labelText) {
+		this.labelText = labelText;
+	}
+	
 	//makinenin kendi parametreleri
 	private ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient();
 	
