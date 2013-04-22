@@ -1,7 +1,7 @@
 /*
  * TlosSW_V1.0
  * com.likya.tlos.jmx.mp.helper : RemoteDBOperator.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Apr 6, 2009 4:30:25 PM
  */
 
@@ -104,7 +104,7 @@ import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.client.resource.CpuInfoTypeClient;
 import com.likya.tlossw.model.client.resource.DiskInfoTypeClient;
 import com.likya.tlossw.model.client.resource.MemoryInfoTypeClient;
-import com.likya.tlossw.model.client.resource.NagiosAgentInfoTypeClient;
+import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxAppUser;
@@ -1507,7 +1507,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 	}
 
 	// Web ekranindaki kaynak listesi agacinda herhangi bir Nagios Agent secildiginde buraya geliyor, sunucu da o agentin calistigi makinenin kullanim bilgisini donuyor
-	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient) {
+	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
@@ -2692,7 +2692,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		jobInfoTypeClient.setJobLogName(jobProperties.getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 
-		// TODO Geçici olarak tip dönüþümü yaptým.
+		// TODO Geï¿½ici olarak tip dï¿½nï¿½ï¿½ï¿½mï¿½ yaptï¿½m.
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
 		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
@@ -2723,7 +2723,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
 		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
-		// TODO geçici olarak dönüþüm yaptým ama xsd de problem var ????
+		// TODO geï¿½ici olarak dï¿½nï¿½ï¿½ï¿½m yaptï¿½m ama xsd de problem var ????
 		jobInfoTypeClient.setSafeRestart(jobProperties.getCascadingConditions().getJobSafeToRestart().toString());
 
 		if (jobProperties.getDependencyList() != null) {
