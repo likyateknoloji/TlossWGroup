@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="resourceLiveTreeForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<p:tree value="#{resourceLiveTree.root}" var="node" style="width:350px;height:720px" dynamic="true" cache="false" id="resourceTree" animate="true">
+
+			<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
+			<p:ajax event="collapse" listener="#{resourceLiveTree.onNodeCollapse}" />
+			<p:ajax event="select" listener="#{resourceLiveTree.onNodeSelect}" />
+			<p:ajax event="unselect" listener="#{resourceLiveTree.onNodeUnselect}" />
+
+			<p:treeNode type="kaynaklistesi">
+				<h:outputText value="#{node}" id="resourceList" />
+			</p:treeNode>
+			
+			<p:treeNode type="kaynak" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
+				<h:outputText value="#{node.resourceInfoTypeClient.resourceName}" id="resorceName" style="font-weight: bold;font-size: 115%;" />
+			</p:treeNode>
+			
+			<p:treeNode type="tlosagent" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
+				<h:outputText value="#{node.labelText}" id="agentName" />
+			</p:treeNode>
+			
+			<p:treeNode type="monitoragent" expandedIcon="ui-icon-image" collapsedIcon="ui-icon-image">
+				<h:outputText value="#{node.labelText}" id="monitoringName"/>
+			</p:treeNode>
+
+			<p:treeNode type="default">
+				<h:outputText value="#{node}" />
+			</p:treeNode>
+		</p:tree>
+
+			
+	</h:form>
+
+</ui:composition>
