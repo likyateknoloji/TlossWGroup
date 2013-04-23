@@ -43,6 +43,8 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	
 //	private int dependJobNumber;
 	
+	private String instanceId;
+	
 	public String getPlannedExecutionDate() {
 		return plannedExecutionDate;
 	}
@@ -163,6 +165,13 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 //		return statusStr;
 //	}
 	
+	public String getInstanceId() {
+		return instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
+	}
 	
 
 }
