@@ -1,7 +1,7 @@
 /*
  * Tlos SW 1.0
  * com.likya.tlos.utils : DBUtils.java
- * @author Serkan Taş
+ * @author Serkan TaÅŸ
  * Tarih : 02.Nis.2010 16:00:06
  */
 
@@ -106,10 +106,10 @@ public class DBUtils {
 
 		TlosProcessData tlosProcessData = getTlosSolsticeDataXml();
 		/**
-		 * Aşağıdaki kontroller, aslında bir nevi validasyon işlevi görüyor.
-		 * Bağımlılık kuralını alıp, kural içinde tanımlı joblar, bağımlılık
-		 * listesinde var mı yok mu kotrol ediliyor. Eğer yok ise, hata verilip,
-		 * uygulama sonlandırılıyor.
+		 * AÅŸaÄŸÄ±daki kontroller, aslÄ±nda bir nevi validasyon iÅŸlevi gÃ¶rÃ¼yor.
+		 * BaÄŸÄ±mlÄ±lÄ±k kuralÄ±nÄ± alÄ±p, kural iÃ§inde tanÄ±mlÄ± joblar, baÄŸÄ±mlÄ±lÄ±k
+		 * listesinde var mÄ± yok mu kotrol ediliyor. EÄŸer yok ise, hata verilip,
+		 * uygulama sonlandÄ±rÄ±lÄ±yor.
 		 */
 		tlosProcessData.validate();
 
@@ -124,11 +124,11 @@ public class DBUtils {
 					ArrayIterator dependentJobListIterator = new ArrayIterator(dependentJobList.getItemArray());
 					while (dependentJobListIterator.hasNext()) {
 						Item item = (Item) dependentJobListIterator.next();
-						// Eğer, expression içinde bu job yok ise, tanımda hata
-						// vardır !
+						// EÄŸer, expression iÃ§inde bu job yok ise, tanÄ±mda hata
+						// vardÄ±r !
 						if (dependencyExpression.indexOf(item.getDependencyID()) < 0) {
-							SpaceWideRegistry.getGlobalLogger().error("[" + item.getJsName() + "], bağımlılık kuralı olan [" + dependencyExpression + "] içinde bulunamadı !");
-							SpaceWideRegistry.getGlobalLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
+							SpaceWideRegistry.getGlobalLogger().error("[" + item.getJsName() + "], baÄŸÄ±mlÄ±lÄ±k kuralÄ± olan [" + dependencyExpression + "] iÃ§inde bulunamadÄ± !");
+							SpaceWideRegistry.getGlobalLogger().error("HatalÄ± tanÄ±mlama ! Uygulama sona eriyor !");
 							throw new TlosFatalException();
 						}
 					}
@@ -259,10 +259,10 @@ public class DBUtils {
 		TlosProcessData tlosProcessData = getTlosDailyDataXml();
 
 		/**
-		 * Aşağıdaki kontroller, aslında bir nevi validasyon işlevi görüyor.
-		 * Bağımlılık kuralını alıp, kural içinde tanımlı joblar, bağımlılık
-		 * listesinde var mı yok mu kontrol ediliyor. Eğer yok ise, hata verilip,
-		 * uygulama sonlandırılıyor.
+		 * AÅŸaÄŸÄ±daki kontroller, aslÄ±nda bir nevi validasyon iÅŸlevi gÃ¶rÃ¼yor.
+		 * BaÄŸÄ±mlÄ±lÄ±k kuralÄ±nÄ± alÄ±p, kural iÃ§inde tanÄ±mlÄ± joblar, baÄŸÄ±mlÄ±lÄ±k
+		 * listesinde var mÄ± yok mu kontrol ediliyor. EÄŸer yok ise, hata verilip,
+		 * uygulama sonlandÄ±rÄ±lÄ±yor.
 		 */
 
 		tlosProcessData.validate();
@@ -278,11 +278,11 @@ public class DBUtils {
 					ArrayIterator dependentJobListIterator = new ArrayIterator(dependentJobList.getItemArray());
 					while (dependentJobListIterator.hasNext()) {
 						Item item = (Item) dependentJobListIterator.next();
-						// Eğer, expression içinde bu job yok ise, tanımda hata
-						// vardır !
+						// EÄŸer, expression iÃ§inde bu job yok ise, tanÄ±mda hata
+						// vardÄ±r !
 						if (dependencyExpression.indexOf(item.getDependencyID()) < 0) {
-							SpaceWideRegistry.getGlobalLogger().error("[" + item.getJsName() + "], bağımlılık kuralı olan [" + dependencyExpression + "] içinde bulunamadı !");
-							SpaceWideRegistry.getGlobalLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
+							SpaceWideRegistry.getGlobalLogger().error("[" + item.getJsName() + "], baÄŸÄ±mlÄ±lÄ±k kuralÄ± olan [" + dependencyExpression + "] iÃ§inde bulunamadÄ± !");
+							SpaceWideRegistry.getGlobalLogger().error("HatalÄ± tanÄ±mlama ! Uygulama sona eriyor !");
 							throw new TlosFatalException();
 						}
 					}
@@ -296,8 +296,8 @@ public class DBUtils {
 						if (startTime != null) {
 							jsPlannedTime.setStartTime(startTime);
 						} else {
-							SpaceWideRegistry.getGlobalLogger().error("[" + jobPropertiesType.getBaseJobInfos().getJsName() + "] içinde ve bağlı olduğu işlerde planlanan başlagıç zamanı bilgisi bulunamadı !");
-							SpaceWideRegistry.getGlobalLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
+							SpaceWideRegistry.getGlobalLogger().error("[" + jobPropertiesType.getBaseJobInfos().getJsName() + "] iÃ§inde ve baÄŸlÄ± olduÄŸu iÅŸlerde planlanan baÅŸlagÄ±Ã§ zamanÄ± bilgisi bulunamadÄ± !");
+							SpaceWideRegistry.getGlobalLogger().error("HatalÄ± tanÄ±mlama ! Uygulama sona eriyor !");
 							throw new TlosFatalException();
 						}
 
@@ -380,7 +380,7 @@ public class DBUtils {
 	}
 
 	/**
-	 * Eskiden kullanılıyordu. Tüm senaryoyu okuyordu. Sahin Kekevi
+	 * Eskiden kullanÄ±lÄ±yordu. TÃ¼m senaryoyu okuyordu. Sahin Kekevi
 	 */
 
 	public static TlosProcessData getTlosDataXml(String documentName) {
