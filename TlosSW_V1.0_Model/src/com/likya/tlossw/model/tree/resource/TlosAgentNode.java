@@ -8,8 +8,10 @@
 package com.likya.tlossw.model.tree.resource;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 
 public class TlosAgentNode implements Serializable {
 
@@ -17,6 +19,12 @@ public class TlosAgentNode implements Serializable {
 	
 	private String labelText;
 	
+	private ArrayList<JobInfoTypeClient> jobInfoTypeClientList = new ArrayList<JobInfoTypeClient>();
+	
+	public ArrayList<JobInfoTypeClient> getJobInfoTypeClientList() {
+		return jobInfoTypeClientList;
+	}
+
 	public String getLabelText() {
 		return labelText;
 	}
