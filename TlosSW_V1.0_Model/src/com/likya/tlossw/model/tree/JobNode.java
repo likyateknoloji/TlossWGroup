@@ -20,6 +20,16 @@ public class JobNode implements Serializable {
 	private String jobPath;
 	private String jobName;
 	
+	private String labelText;
+	
+	public String getLabelText() {
+		return labelText;
+	}
+
+	public void setLabelText(String labelText) {
+		this.labelText = labelText;
+	}
+	
 	public JobInfoTypeClient getJobInfoTypeClient() {
 		return jobInfoTypeClient;
 	}
