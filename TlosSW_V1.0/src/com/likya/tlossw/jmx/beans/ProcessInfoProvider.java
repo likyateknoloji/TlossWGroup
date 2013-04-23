@@ -753,7 +753,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		
 		while(resourceIterator.hasNext()) {
 			
-			String resourceName = resourceIterator.next().getResourceInfoTypeClient().getResourceName();
+			ResourceNode currentResourceNode = resourceIterator.next();
+			String resourceName = currentResourceNode.getResourceInfoTypeClient().getResourceName();
 			
 			if(resourceList.containsKey(resourceName)) {
 				
@@ -773,6 +774,11 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					TlosAgentNode tlosAgentNode = new TlosAgentNode();
 					tlosAgentNode.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
 
+					// Eğer serverdan gelen listede herhangi bir agent açılmış ise, ilgili agent'ın job listesi de alınmalı 
+					if(currentResourceNode.getTlosAgentNodes().size() > 0 && currentResourceNode.getTlosAgentNodes().containsKey(agentId)) {
+						tlosAgentNode.getJobInfoTypeClientList().addAll(getAgentsJobList(jmxUser, agentId, false));
+					}
+					
 					tmpResourceNode.getTlosAgentNodes().put(agentId, tlosAgentNode);
 				}
 				
