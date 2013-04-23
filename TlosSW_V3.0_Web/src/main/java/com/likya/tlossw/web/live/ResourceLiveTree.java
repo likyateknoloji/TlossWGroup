@@ -18,7 +18,9 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
@@ -27,6 +29,7 @@ import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.common.Security;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.web.utils.DecorationUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "resourceLiveTree")
@@ -156,12 +159,12 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		TlosSWResourceNode tlosSWResourceNode = new TlosSWResourceNode();
 		ResourceListNode resourceListNode = new ResourceListNode();
 		tlosSWResourceNode.setResourceListNode(resourceListNode);
-		
+
 		// Kaynak Listesi dugumu ekranda acilmissa buraya giriyor
 		if (kaynakListesiNode.isExpanded()) {
 
 			kaynakListesiNode.getChildren().remove(dummyNode);
-			
+
 			// Kaynak Listesi dugumunun altinda kac tane kaynak oldugu
 			int size = kaynakListesiNode.getChildCount();
 
@@ -185,7 +188,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 						DefaultTreeNode tmpAgent = (DefaultTreeNode) resourceTreeNode.getChildren().get(j);
 
 						//tlos/nagios ayrimina gore agentlar duzenleniyor
-						if (tmpAgent.toString().equals(NAGIOS_AGENT_NAME)) {
+						if (tmpAgent.getData() instanceof MonitorAgentNode) {
+							// if (tmpAgent.getData().toString().equals(NAGIOS_AGENT_NAME)) {
 							MonitorAgentNode expandedNode = preRenderLiveNagiosAgentTree(tmpAgent);
 
 							if (expandedNode != null) {
@@ -207,29 +211,65 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		return tlosSWResourceNode;
 
 	}
-	
+
 	private MonitorAgentNode preRenderLiveNagiosAgentTree(DefaultTreeNode nagiosAgentNode) {
 
-		MonitorAgentNode myNagiosAgentNode = null;
+		MonitorAgentNode myNagiosAgentNode = (MonitorAgentNode) nagiosAgentNode.getData();
+
+		//nagios agentin altina simdilik bir sey eklemedigimiz icin bu kismi duzenlemedim.
+		//		if (tmpTree.isExpanded()) {
+		//			myTlosAgentNode = new TlosAgentNode();
+		//			myTlosAgentNode.setSpcInfoTypeClient(tmpTree.getScenarioFolder().getSpcInfoTypeClient());
+		//			for (int i = 0; i < tlosAgentNode.getChildCount(); i++) {
+		//				DefaultMutableTreeNode tmpScenario = (DefaultMutableTreeNode) tlosAgentNode.getChildAt(i);
+		//				if (!((LiveNavigationContentBean) tmpScenario.getUserObject()).getScenarioFolder().isSenaryo()) {
+		//					continue;
+		//				}
+		//				TlosAgentNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
+		//				if (expendedNode != null) {
+		//					myTlosAgentNode.getScenarioNodes().add(expendedNode);
+		//				}
+		//			}
+		//		}
 
 		return myNagiosAgentNode;
 	}
-	
+
+	public void constructJobNodes(TreeNode treeNode, ArrayList<JobInfoTypeClient> jobInfoTypeClientList) {
+
+		Iterator<JobInfoTypeClient> jobNodeIterator = jobInfoTypeClientList.iterator();
+
+		while (jobNodeIterator.hasNext()) {
+
+			JobInfoTypeClient jobInfoTypeClient = jobNodeIterator.next();
+
+			JobNode jobNode = new JobNode();
+
+			jobNode.setLabelText(jobInfoTypeClient.getJobKey());
+			jobNode.setLeafIcon(DecorationUtils.jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
+			jobNode.setJobPath(jobInfoTypeClient.getTreePath());
+
+			TreeNode jobNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, treeNode);
+			jobNodeTree.setExpanded(false);
+		}
+
+	}
+
 	private TlosAgentNode preRenderLiveTlosAgentTree(DefaultTreeNode tlosAgentNode) {
 
-		TlosAgentNode myTlosAgentNode = null;
-		
+		TlosAgentNode myTlosAgentNode = (TlosAgentNode) tlosAgentNode.getData();;
+
 		return myTlosAgentNode;
 	}
 
 	private TreeNode prepareRenderLiveTree(TreeNode kaynakListesi, TlosSWResourceNode tlosSWResourceNode) {
-		
-		if(kaynakListesi.getChildCount() > 0) {
+
+		if (kaynakListesi.getChildCount() > 0) {
 			// treeRendered = true;
 		}
 
 		ResourceListNode serverResourceListNode = tlosSWResourceNode.getResourceListNode();
-		
+
 		// 1. asama: kaynak listesine tanimli makineler ekleniyor
 		kaynakListesi.getChildren().clear();
 		constructResourceNodes(kaynakListesi, serverResourceListNode.getResourceNodes());
@@ -237,23 +277,23 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		if (kaynakListesi.getChildren().size() == 0) {
 			kaynakListesi.getChildren().add(dummyNode);
 		} else {
-			
+
 			Iterator<TreeNode> localResourceListIterator = kaynakListesi.getChildren().iterator();
 
 			while (localResourceListIterator.hasNext()) {
-				
+
 				DefaultTreeNode resourceTreeNode = (DefaultTreeNode) localResourceListIterator.next();
-				
+
 				ResourceNode resourceNode = ((ResourceNode) resourceTreeNode.getData());
-				
+
 				String resourceName = resourceNode.getResourceInfoTypeClient().getResourceName();
-				
+
 				//ilgili makinenin agent nodelarini ekleyip agaci tamamliyor
-				for(int i = 0; i < serverResourceListNode.getResourceNodes().size(); i++) {
-					
+				for (int i = 0; i < serverResourceListNode.getResourceNodes().size(); i++) {
+
 					if (serverResourceListNode.getResourceNodes().get(i).getResourceInfoTypeClient().getResourceName().equals(resourceName)) {
-						
-						if(serverResourceListNode.getResourceNodes().get(i).getTlosAgentNodes().size() > 0) {
+
+						if (serverResourceListNode.getResourceNodes().get(i).getTlosAgentNodes().size() > 0) {
 							constructLiveResourceTree(resourceTreeNode, serverResourceListNode.getResourceNodes().get(i));
 							resourceTreeNode.setExpanded(true);
 						} else {
@@ -264,48 +304,45 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 				}
 			}
 		}
-		
+
 		return kaynakListesi;
 	}
-	
+
 	//sunucudan gelen makine bilgileri ekranda gosterilmek uzere set ediliyor
 	private void constructResourceNodes(TreeNode localResourceList, ArrayList<ResourceNode> resourceNodeList) {
 
 		Iterator<ResourceNode> resourceNodeIterator = resourceNodeList.iterator();
 
 		while (resourceNodeIterator.hasNext()) {
-			
+
 			ResourceNode newResourceNode = resourceNodeIterator.next();
 
-//			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
-			
-//			LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
-			
-//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
-			
-//			resource.setNavigationSelection(navigationBean);
-			if(newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
+			//			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
+
+			//			LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
+
+			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
+
+			//			resource.setNavigationSelection(navigationBean);
+			if (newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
 				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
 			} else {
 				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName());
 			}
-//			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
-//			resource.setTemplateName("resourceViewPanel");
-//			resource.setPageContent(true);
-//			resource.setExpanded(false);
-			
+			//			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
+			//			resource.setTemplateName("resourceViewPanel");
+			//			resource.setPageContent(true);
+			//			resource.setExpanded(false);
+
 			/*
-			if (!resourceInfoTypeClient.isActive()) {
-				resource.setBranchContractedIcon("images/navigation_tree/tree_folder_closed_passive.gif");
-				resource.setBranchExpandedIcon("images/navigation_tree/tree_folder_open_passive.gif");
-			}
-			*/
-				
-//			resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
-//			resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
-//			resourceFolder.setResource(true);
-//			resource.setResourceFolder(resourceFolder);
-			
+			 * if (!resourceInfoTypeClient.isActive()) { resource.setBranchContractedIcon("images/navigation_tree/tree_folder_closed_passive.gif"); resource.setBranchExpandedIcon("images/navigation_tree/tree_folder_open_passive.gif"); }
+			 */
+
+			//			resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
+			//			resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
+			//			resourceFolder.setResource(true);
+			//			resource.setResourceFolder(resourceFolder);
+
 			TreeNode resourceNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAK, newResourceNode, localResourceList);
 			resourceNodeTree.setExpanded(false);
 		}
@@ -319,79 +356,68 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 		while (keyIterator.hasNext()) {
 			Integer tlosAgentId = keyIterator.next();
-			
+
 			TlosAgentNode tlosAgentNode = serverResourceNode.getTlosAgentNodes().get(tlosAgentId);
-			
-			if(tlosAgentNode.getTlosAgentInfoTypeClient().getAgentType().toLowerCase().equals(AgentType.SERVER.toString().toLowerCase())) {
+
+			if (tlosAgentNode.getTlosAgentInfoTypeClient().getAgentType().toLowerCase().equals(AgentType.SERVER.toString().toLowerCase())) {
 				tlosAgentNode.setLabelText("Sunucu");
 			} else {
 				tlosAgentNode.setLabelText("Agent" + serverResourceNode.getTlosAgentNodes().get(tlosAgentId).getTlosAgentInfoTypeClient().getAgentId());
 			}
-			
-//			tlosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");
-//			tlosAgent.setTemplateName("tlosAgentViewPanel");
-//			tlosAgent.setPageContent(true);
-//			tlosAgent.setExpanded(false);
-//			tlosAgent.setLeaf(true);
-			
-//			if (!tlosAgentInfoTypeClient.isOutJmxAvailable()) {
-//				tlosAgent.setLeafIcon("images/navigation_tree/tree_node.gif");
-//			}
 
-//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
-//			resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName());
-//			resourceFolder.setResource(true);
-//			resourceFolder.setTlosAgent(true);
-//			resourceFolder.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
-//			tlosAgent.setResourceFolder(resourceFolder);
+			//			tlosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");
+			//			tlosAgent.setTemplateName("tlosAgentViewPanel");
+			//			tlosAgent.setPageContent(true);
+			//			tlosAgent.setExpanded(false);
+			//			tlosAgent.setLeaf(true);
+
+			//			if (!tlosAgentInfoTypeClient.isOutJmxAvailable()) {
+			//				tlosAgent.setLeafIcon("images/navigation_tree/tree_node.gif");
+			//			}
+
+			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
+			//			resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName());
+			//			resourceFolder.setResource(true);
+			//			resourceFolder.setTlosAgent(true);
+			//			resourceFolder.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
+			//			tlosAgent.setResourceFolder(resourceFolder);
 
 			TreeNode tlosAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_TLOSAGENT, tlosAgentNode, resourceNode);
 			tlosAgentNodeTree.setExpanded(false);
+
+			constructJobNodes(tlosAgentNodeTree, tlosAgentNode.getJobInfoTypeClientList());
 			
-//			if (tlosAgentNodeTree.getChildren().size() == 0) {
-//				tlosAgentNodeTree.getChildren().add(dummyNode);
-//			}
+			if (tlosAgentNodeTree.getChildren().size() == 0) {
+				tlosAgentNodeTree.getChildren().add(dummyNode);
+			}
 		}
-		
-		
+
 		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
 		//gelen makine icinde nagios agent var mı diye kontrol ediliyor
-		if(monitorAgentNode.getNagiosAgentInfoTypeClient().isNrpeAvailable()) {
-			
-//			NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient = new NagiosAgentInfoTypeClient(serverResourceNode.getNagiosAgentNode().getNagiosAgentInfoTypeClient());
-			
+		if (monitorAgentNode.getNagiosAgentInfoTypeClient().isNrpeAvailable()) {
+
+			//			NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient = new NagiosAgentInfoTypeClient(serverResourceNode.getNagiosAgentNode().getNagiosAgentInfoTypeClient());
+
 			//Nagios agenti agaca ekleyecek
-			
+
 			monitorAgentNode.setLabelText(NAGIOS_AGENT_NAME);
-			
+
 			/*
-			LiveResourceNavigationContentBean nagiosAgent = new LiveResourceNavigationContentBean();
-			nagiosAgent.setNavigationSelection(navigationBean);
-			
-			nagiosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");
-			nagiosAgent.setTemplateName("nagiosAgentViewPanel");
-			nagiosAgent.setPageContent(true);
-			nagiosAgent.setExpanded(false);
-			nagiosAgent.setLeaf(true);
-			
-			if (!nagiosAgentInfoTypeClient.isNrpeAvailable()) {
-				nagiosAgent.setLeafIcon("images/navigation_tree/tree_node.gif");
-			}
-			
-			ResourceFolderBean resourceFolder = new ResourceFolderBean();
-			resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName());
-//			resourceFolder.setResource(true);
-			resourceFolder.setNagiosAgent(true);
-			resourceFolder.setNagiosAgentInfoTypeClient(nagiosAgentInfoTypeClient);
-			nagiosAgent.setResourceFolder(resourceFolder);
-			*/
-			
+			 * LiveResourceNavigationContentBean nagiosAgent = new LiveResourceNavigationContentBean(); nagiosAgent.setNavigationSelection(navigationBean);
+			 * 
+			 * nagiosAgent.setMenuContentTitle("webmail.navigation.rootNode.title"); nagiosAgent.setTemplateName("nagiosAgentViewPanel"); nagiosAgent.setPageContent(true); nagiosAgent.setExpanded(false); nagiosAgent.setLeaf(true);
+			 * 
+			 * if (!nagiosAgentInfoTypeClient.isNrpeAvailable()) { nagiosAgent.setLeafIcon("images/navigation_tree/tree_node.gif"); }
+			 * 
+			 * ResourceFolderBean resourceFolder = new ResourceFolderBean(); resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName()); // resourceFolder.setResource(true); resourceFolder.setNagiosAgent(true); resourceFolder.setNagiosAgentInfoTypeClient(nagiosAgentInfoTypeClient); nagiosAgent.setResourceFolder(resourceFolder);
+			 */
+
 			TreeNode monitorAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_MONITORAGENT, monitorAgentNode, resourceNode);
 			monitorAgentNodeTree.setExpanded(false);
-			
-//			if (monitorAgentNodeTree.getChildren().size() == 0) {
-//				monitorAgentNodeTree.getChildren().add(dummyNode);
-//			}
+
+			if (monitorAgentNodeTree.getChildren().size() == 0) {
+				monitorAgentNodeTree.getChildren().add(dummyNode);
+			}
 		}
 	}
 
