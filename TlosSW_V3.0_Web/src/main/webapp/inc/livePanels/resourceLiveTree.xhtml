@@ -35,6 +35,11 @@
 			<p:treeNode type="default">
 				<h:outputText value="#{node}" />
 			</p:treeNode>
+			
+			<p:treeNode id="jobNode" type="job" icon="ui-icon #{node.leafIcon}">
+				<h:outputText value="#{node.labelText}" id="jobName" />
+			</p:treeNode>
+			
 		</p:tree>
 
 			
