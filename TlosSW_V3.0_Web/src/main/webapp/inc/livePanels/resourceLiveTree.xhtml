@@ -41,7 +41,8 @@
 			</p:treeNode>
 			
 		</p:tree>
-
+       
+        <p:poll interval="100" listener="#{resourceLiveTree.renderLiveTree}" update=":resourceLiveTreeForm:resourceTree" />
 			
 	</h:form>
 
