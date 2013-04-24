@@ -190,6 +190,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			if (root.getChildCount() > 0) {
 				DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
 				TlosSpaceWideNode tlosSpaceWideInputNode = preparePreRenderLiveTreeData(calisanIsler);
+				
+				//sunucudan guncel is listelerini aliyor
 				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(new JmxUser(), tlosSpaceWideInputNode);
 				if (tlosSpaceWideNode == null) {
 					System.out.println("tlosSpaceWideNode == null");
@@ -209,6 +211,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	}
 
+	//agacin datasi alinip render icin hazirlaniyor
 	private TlosSpaceWideNode preparePreRenderLiveTreeData(TreeNode calisanIslerNode) {
 
 		TlosSpaceWideNode tlosSpaceWideNode = new TlosSpaceWideNode();
