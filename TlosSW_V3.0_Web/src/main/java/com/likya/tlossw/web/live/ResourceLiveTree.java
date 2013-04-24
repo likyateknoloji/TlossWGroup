@@ -3,8 +3,10 @@ package com.likya.tlossw.web.live;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -18,9 +20,12 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
+import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
@@ -78,13 +83,86 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 		kaynakListesi.getChildren().add(dummyNode);
 
-		liveTreeCache = new CacheBase();
-		tlosSWResourceNode = new TlosSWResourceNode();
+		constructResourceNodes();
 
 		// }
 
 	}
 
+	private void constructResourceNodes() {
+		// if (security.get("Resource").equals(Boolean.TRUE)) {
+
+		// ArrayList<String> resourceIds = TEJmxMpClient.retrieveResourceIds(new JmxUser());
+
+		// constructResourceNodes(new HashSet<String>(resourceIds));
+
+		liveTreeCache = new CacheBase();
+		tlosSWResourceNode = new TlosSWResourceNode();
+		// }
+	}
+	
+//	private void constructResourceNodes(ArrayList<ResourceNode> resourceNodeList) {
+//
+//		Iterator<ResourceNode> resourceNodeIterator = resourceNodeList.iterator();
+//
+//		while (keyIterator.hasNext()) {
+//			ResourceNode newResourceNode = resourceNodeIterator.next();
+//			addResource(newResourceNode);
+//		}
+//	}
+	
+	//sunucudan gelen makine bilgileri ekranda gosterilmek uzere set ediliyor
+	private void constructResourceNodes(TreeNode localResourceList, ArrayList<ResourceNode> resourceNodeList) {
+
+		Iterator<ResourceNode> resourceNodeIterator = resourceNodeList.iterator();
+
+		while (resourceNodeIterator.hasNext()) {
+
+			ResourceNode newResourceNode = resourceNodeIterator.next();
+
+			//			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
+
+			//			LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
+
+			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
+
+			//			resource.setNavigationSelection(navigationBean);
+			if (newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
+				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
+			} else {
+				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName());
+			}
+			//			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
+			//			resource.setTemplateName("resourceViewPanel");
+			//			resource.setPageContent(true);
+			//			resource.setExpanded(false);
+
+			/*
+			 * if (!resourceInfoTypeClient.isActive()) { resource.setBranchContractedIcon("images/navigation_tree/tree_folder_closed_passive.gif"); resource.setBranchExpandedIcon("images/navigation_tree/tree_folder_open_passive.gif"); }
+			 */
+
+			//			resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
+			//			resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
+			//			resourceFolder.setResource(true);
+			//			resource.setResourceFolder(resourceFolder);
+
+			TreeNode resourceNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAK, newResourceNode, localResourceList);
+			resourceNodeTree.setExpanded(false);
+		}
+	}
+	
+	public void addResource(String resourceId) {
+		DefaultTreeNode kaynakListesi = (DefaultTreeNode) root.getChildren().get(0);
+		DefaultTreeNode resourceNode = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI, new InstanceNode(resourceId), kaynakListesi);
+		resourceNode.getChildren().add(dummyNode);
+		resourceNode.setExpanded(false);
+	}
+	
+//	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
+//		@SuppressWarnings("unused")
+//		TreeNode jobNode = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
+//	}
+	
 	// public void constructTree(Scenario[] scenario) {
 	// for (Scenario children : scenario) {
 	// TreeNode scenarioNode = addScenario(children);
@@ -129,6 +207,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 	public void renderLiveTree() {
 
 		Object liveTree = null;
+		
 		if (liveTreeCache != null && tlosSWResourceNode != null) {
 			liveTree = liveTreeCache.get(((Object) tlosSWResourceNode).hashCode());
 		}
@@ -142,6 +221,12 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 				//sunucudan guncel makine listesini ve o makinelerdeki agent listelerini aliyor
 				tlosSWResourceNode = TEJmxMpClient.getLiveResourceTreeInfo(new JmxUser(), tlosSpaceWideInputNode);
+				if (tlosSWResourceNode == null) {
+					System.out.println("tlosSpaceWideNode == null");
+				}
+				if (liveTreeCache == null) {
+					System.out.println("liveTreeCache == null");
+				}
 				liveTreeCache.put(((Object) tlosSWResourceNode).hashCode(), tlosSWResourceNode);
 			}
 		}
@@ -300,52 +385,13 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 							resourceTreeNode.getChildren().add(dummyNode);
 							resourceTreeNode.setExpanded(false);
 						}
+						break;
 					}
 				}
 			}
 		}
 
 		return kaynakListesi;
-	}
-
-	//sunucudan gelen makine bilgileri ekranda gosterilmek uzere set ediliyor
-	private void constructResourceNodes(TreeNode localResourceList, ArrayList<ResourceNode> resourceNodeList) {
-
-		Iterator<ResourceNode> resourceNodeIterator = resourceNodeList.iterator();
-
-		while (resourceNodeIterator.hasNext()) {
-
-			ResourceNode newResourceNode = resourceNodeIterator.next();
-
-			//			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
-
-			//			LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
-
-			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
-
-			//			resource.setNavigationSelection(navigationBean);
-			if (newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
-				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
-			} else {
-				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName());
-			}
-			//			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
-			//			resource.setTemplateName("resourceViewPanel");
-			//			resource.setPageContent(true);
-			//			resource.setExpanded(false);
-
-			/*
-			 * if (!resourceInfoTypeClient.isActive()) { resource.setBranchContractedIcon("images/navigation_tree/tree_folder_closed_passive.gif"); resource.setBranchExpandedIcon("images/navigation_tree/tree_folder_open_passive.gif"); }
-			 */
-
-			//			resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
-			//			resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
-			//			resourceFolder.setResource(true);
-			//			resource.setResourceFolder(resourceFolder);
-
-			TreeNode resourceNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAK, newResourceNode, localResourceList);
-			resourceNodeTree.setExpanded(false);
-		}
 	}
 
 	//sunucudan alinan her makine icin bu metot cagiriliyor, lokaldeki agactaki ilgili makinenin altina sunucudan gelen agentlar ekleniyor
@@ -452,8 +498,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// event.getTreeNode().toString() + " selected", null);
+		addMessage("resourceTree", FacesMessage.SEVERITY_INFO,
+		  event.getTreeNode().toString() + " selected", null);
 	}
 
 	public void onNodeUnselect(NodeUnselectEvent event) {
