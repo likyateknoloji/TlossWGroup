@@ -229,7 +229,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		startJmxTLSServer();
 
 		/** Start HTTP server */
-		startWebSystem();
+		//startWebSystem();
 
 		/** Baslatma Yoneticisi : Start Central Process Controller (CPC) */
 		logger.info("");
