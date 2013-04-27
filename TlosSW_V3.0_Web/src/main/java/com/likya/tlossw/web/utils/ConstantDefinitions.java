@@ -13,7 +13,7 @@ public class ConstantDefinitions {
 	public static final String TREE_INSTANCE = "instance";
 	public static final String TREE_SCENARIO = "scenario";
 	public static final String TREE_JOB = "job";
-	public static final String TREE_DUMMY = "dummy";
+	public static final String TREE_DUMMY = "empty";
 	
 	/**
 	 * eXist'teki sequenceData.xml'den sorgu icin kullanilan sabitler
