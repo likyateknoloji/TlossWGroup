@@ -1,6 +1,6 @@
 /*
  * TlosSW_V1.0_Model
- * com.likya.tlossw.model.tree.resource : NagiosAgentNode.java
+ * com.likya.tlossw.model.tree.resource : MonitorAgentNode.java
  * @author Merve Ozbey
  * Tarih : 17.Sub.2012 14:37:08
  */
@@ -25,13 +25,13 @@ public class MonitorAgentNode implements Serializable {
 		this.labelText = labelText;
 	}
 
-	private MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient = new MonitorAgentInfoTypeClient();
+	private MonitorAgentInfoTypeClient monitorAgentInfoTypeClient = new MonitorAgentInfoTypeClient();
 
-	public void setNagiosAgentInfoTypeClient(MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient) {
-		this.nagiosAgentInfoTypeClient = nagiosAgentInfoTypeClient;
+	public void setMonitorAgentInfoTypeClient(MonitorAgentInfoTypeClient monitorAgentInfoTypeClient) {
+		this.monitorAgentInfoTypeClient = monitorAgentInfoTypeClient;
 	}
 
-	public MonitorAgentInfoTypeClient getNagiosAgentInfoTypeClient() {
-		return nagiosAgentInfoTypeClient;
+	public MonitorAgentInfoTypeClient getMonitorAgentInfoTypeClient() {
+		return monitorAgentInfoTypeClient;
 	}
 }
