@@ -146,7 +146,8 @@ public class AgentManager implements Runnable {
 		boolean isServer = false;
 
 		SWAgent swAgent = swAgentsCache.get(agentId + "");
-		if (swAgent.getAgentType().toString().toUpperCase().equals(AgentType.SERVER.toString().toUpperCase())) {
+		// if (swAgent.getAgentType().toString().toUpperCase().equals(AgentType.SERVER.toString().toUpperCase())) {
+		if (swAgent.getAgentType().intValue() == AgentType.SERVER.intValue()) {
 			isServer = true;
 		}
 
