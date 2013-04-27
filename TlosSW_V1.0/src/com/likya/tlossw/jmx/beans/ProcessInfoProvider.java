@@ -772,10 +772,11 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					TlosAgentInfoTypeClient tlosAgentInfoTypeClient = tlosAgentInfoTypeClientList.get(agentId);
 
 					TlosAgentNode tlosAgentNode = new TlosAgentNode();
+					tlosAgentNode.setLabelText("Agent_" + agentId);
 					tlosAgentNode.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
 
-					// Eğer serverdan gelen listede herhangi bir agent açılmış ise, ilgili agent'ın job listesi de alınmalı 
-					if(currentResourceNode.getTlosAgentNodes().size() > 0 && currentResourceNode.getTlosAgentNodes().containsKey(agentId)) {
+					//
+					if(currentResourceNode.getTlosAgentNodes().containsKey(agentId)) {
 						tlosAgentNode.getJobInfoTypeClientList().addAll(getAgentsJobList(jmxUser, agentId, false));
 					}
 					
@@ -785,7 +786,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				// makinedeki monitor agent kullanilir durumdaysa ozelliklerini set ediyor
 				if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
 					MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
-					monitorAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
+					monitorAgentNode.setMonitorAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
 
 					tmpResourceNode.setMonitorAgentNode(monitorAgentNode);
 				}
@@ -881,7 +882,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			// makinedeki monitor agent kullanilir durumdaysa ozelliklerini set ediyor
 			if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
 				MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
-				monitorAgentNode.setNagiosAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
+				monitorAgentNode.setMonitorAgentInfoTypeClient(agentLookUpTableTypeClient.getNAgentInfoTypeClient());
 
 				currentServerResource.setMonitorAgentNode(monitorAgentNode);
 			}
