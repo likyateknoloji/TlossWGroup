@@ -36,6 +36,10 @@ public class AgentOperations {
 			
 			String resourceName = swAgent.getResource().getStringValue();
 			
+			if (swAgent.getAgentType().toString().equals(ConstantDefinitions.AGENT_ON_SERVER)) {
+				resourceMap.get(resourceName).getResourceInfoTypeClient().setIncludesServer(true);
+			}
+			
 			if(resourceMap.containsKey(resourceName)) {
 				continue;
 			}
@@ -45,10 +49,6 @@ public class AgentOperations {
 			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient();
 			resourceInfoTypeClient.setResourceName(swAgent.getResource().getStringValue());
 			resourceInfoTypeClient.setOsType(swAgent.getOsType().toString());
-
-			if (swAgent.getAgentType().toString().equals(ConstantDefinitions.AGENT_ON_SERVER)) {
-				resourceInfoTypeClient.setIncludesServer(true);
-			}
 
 			if (swAgent.getOutJmxAvailable()) {
 				resourceInfoTypeClient.setActive(true);
