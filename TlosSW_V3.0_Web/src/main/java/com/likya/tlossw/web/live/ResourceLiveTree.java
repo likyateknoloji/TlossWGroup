@@ -57,6 +57,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, null);
 
+	private String scenarioId;
+	
 	@ManagedProperty(value = "#{security}")
 	private Security security;
 
@@ -467,6 +469,14 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public void setSecurity(Security security) {
 		this.security = security;
+	}
+
+	public String getScenarioId() {
+		return scenarioId;
+	}
+
+	public void setScenarioId(String scenarioId) {
+		this.scenarioId = scenarioId;
 	}
 
 }
