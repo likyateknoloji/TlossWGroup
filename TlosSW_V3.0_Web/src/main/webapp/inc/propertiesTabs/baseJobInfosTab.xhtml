@@ -14,66 +14,43 @@
 				<p:panelGrid id="baseJobInfos" columns="4" style="width:80%;">
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
-
-					<p:inplace id="jobName">
-						<p:inputText
-							value="#{backingBean.jobProperties.baseJobInfos.jsName}"
-							required="true"
-							requiredMessage="#{msgs['tlos.validation.job.name']}" />
-					</p:inplace>
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.name']}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
-					<p:inplace id="jobComment">
-						<p:inputText
-							value="#{backingBean.jobProperties.baseJobInfos.comment}"
-							required="true"
-							requiredMessage="#{msgs['tlos.validation.job.comment']}" />
-					</p:inplace>
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.comment}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.comment']}" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
-					<p:inplace id="logPath">
-						<p:inputText
-							value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
-							required="true"
-							requiredMessage="#{msgs['tlos.validation.job.log.path']}">
-							<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.log.path']}">
+						<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
 								<f:validateRegex
 									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" /-->
-						</p:inputText>
-					</p:inplace>
+					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
-					<p:inplace id="logFile">
-						<p:inputText
-							value="#{backingBean.jobProperties.baseJobInfos.jobLogFile}"
-							required="true"
-							requiredMessage="#{msgs['tlos.validation.job.log.file']}"
-							validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
-							<f:validateRegex
-								pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-						</p:inputText>
-					</p:inplace>
+					<p:inputText
+						value="#{backingBean.jobProperties.baseJobInfos.jobLogFile}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.job.log.file']}"
+						validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
+						<f:validateRegex
+							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
-
 					<p:selectOneMenu id="jsCalendar" style="text-align: center;"
 						value="#{backingBean.jobCalendar}">
 						<f:selectItems value="#{backingBean.jsCalendarList}" />
 					</p:selectOneMenu>
-
-					<p:inplace id="jsCalendarNew"
-					  value="#{backingBean.jobCalendar}"
-						effectSpeed="fast" event="dblclick">
-						<h:selectOneMenu id="jsCalendarSelect"
-							value="#{backingBean.jobCalendar}">
-							<f:selectItems value="#{backingBean.jsCalendarList}" 
-							    var="n"
-								itemValue="#{n}" 
-								itemLabel="#{n}"
-								/>
-						</h:selectOneMenu>
-					</p:inplace>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 					<p:selectOneMenu id="oSystem" style="text-align: center;"
@@ -84,7 +61,8 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jobPriority']}" />
 					<p:panelGrid columns="1">
-						<p:inputText id="priority" value="#{backingBean.jobPriority}" />
+						<p:inputText id="priority"
+							value="#{backingBean.jobPriority}" />
 						<p:slider for="priority" minValue="1" maxValue="4" />
 					</p:panelGrid>
 
@@ -113,7 +91,8 @@
 						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
-					<p:selectOneMenu id="jobtype" value="#{backingBean.jobTypeDef}">
+					<p:selectOneMenu id="jobtype"
+						value="#{backingBean.jobTypeDef}">
 						<f:selectItems value="#{backingBean.jobTypeDefList}" />
 						<p:ajax update="baseJobInfos"></p:ajax>
 					</p:selectOneMenu>
