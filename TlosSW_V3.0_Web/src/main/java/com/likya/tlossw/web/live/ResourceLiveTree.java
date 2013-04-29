@@ -386,7 +386,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
 		//gelen makine icinde nagios agent var mı diye kontrol ediliyor
-		if (monitorAgentNode.getNagiosAgentInfoTypeClient().isNrpeAvailable()) {
+		if (monitorAgentNode.getMonitorAgentInfoTypeClient().isNrpeAvailable()) {
 
 			//			NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient = new NagiosAgentInfoTypeClient(serverResourceNode.getNagiosAgentNode().getNagiosAgentInfoTypeClient());
 
