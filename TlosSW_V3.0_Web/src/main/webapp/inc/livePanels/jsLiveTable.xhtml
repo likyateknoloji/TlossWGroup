@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="jobMonitoringForm">
+		<p:fieldset id="jobDef" legend="Live Monitoring" style="width: 96%;">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:treeTable value="#{resourceLiveTree.root}" var="node"
+				selection="#{resourceLiveTree.selectedJS}" selectionMode="single"
+				style="width:350px;height:720px" dynamic="true" cache="false"
+				id="resourceTree" animate="true">
+
+				<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
+				<p:ajax event="collapse"
+					listener="#{resourceLiveTree.onNodeCollapse}" />
+				<p:ajax event="select" listener="#{resourceLiveTree.onNodeSelect}" />
+				<p:ajax event="unselect"
+					listener="#{resourceLiveTree.onNodeUnselect}" />
+
+
+				<f:facet name="header">  
+            Single Selection  
+        </f:facet>
+
+				<p:column style="width:250px">
+					<f:facet name="header">  
+                Job Name  
+            </f:facet>
+					<h:outputText value="#{node}" />
+				</p:column>
+
+				<p:column style="width:100px">
+					<f:facet name="header">  	
+                State  
+            </f:facet>
+					<h:outputText value="xx" />
+				</p:column>
+
+				<p:column style="width:100px">
+					<f:facet name="header">  
+                      Agent Name  
+                    </f:facet>
+					<h:outputText value="yy" />
+					<p:treeNode id="scenarioNode" type="scenario">
+						<h:outputText value="#{node}" id="scenarioName"
+							style="font-weight: bold;font-size: 115%;" />
+					</p:treeNode>
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton id="singleBtn" value="View" icon="ui-icon-search"
+						update=":jobMonitoringForm:documentPanel"
+						oncomplete="documentDialog.show()" />
+				</f:facet>
+			</p:treeTable>
+		</p:fieldset>
+
+
+
+		<p:dialog id="dialog" header="Document Detail" showEffect="fade"
+			widgetVar="documentDialog" modal="true">
+			<p:outputPanel id="documentPanel">
+				<h:panelGrid columns="2" cellpadding="5"
+					rendered="#{not empty resourceLiveTree.selectedJS}">
+					<h:outputLabel for="name" value="Name: " />
+					<h:outputText id="name"
+						value="#{resourceLiveTree.selectedJS.data.name}"
+						style="font-weight:bold" />
+
+					<h:outputLabel for="size" value="Size: " />
+					<h:outputText id="size"
+						value="#{resourceLiveTree.selectedJS.data.size}"
+						style="font-weight:bold" />
+
+					<h:outputLabel for="type" value="Type " />
+					<h:outputText id="type"
+						value="#{resourceLiveTree.selectedJS.data.type}"
+						style="font-weight:bold" />
+				</h:panelGrid>
+			</p:outputPanel>
+		</p:dialog>
+
+
+	</h:form>
+
+
+</ui:composition>
