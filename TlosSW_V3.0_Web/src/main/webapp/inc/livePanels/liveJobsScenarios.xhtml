@@ -42,13 +42,26 @@
 			<p:layoutUnit position="center" id="centerLayout">
 				<h:panelGroup id="commonPanel">
 
-					<!-- ui:include src="#{jsDefinitionMBean.jobDefCenterPanel}">
-					</ui:include -->
+					<ui:include src="/inc/livePanels/jsLiveTable.xhtml">
+					</ui:include>
 
 				</h:panelGroup>
 
-			</p:layoutUnit>
 
+				<!-- 
+				<p:inputText id="input" value="#{jsDefinitionMBean.jobDefCenterPanel}">
+					<p:ajax event="keyup" update=":commonPanel input"/>
+				</p:inputText>
+				
+				<p:commandButton update=":commonPanel" value="update" />  
+				 -->
+
+				<!-- h:form>
+					<p:poll interval="1" update=":commonPanel" /> 
+				</h:form-->
+
+			</p:layoutUnit>
+			
 		</p:layout>
 
 	</ui:define>
