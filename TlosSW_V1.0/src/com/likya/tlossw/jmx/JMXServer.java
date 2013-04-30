@@ -42,7 +42,22 @@ public class JMXServer {
 			// Create a JMXMP connector server
 			//
 			System.out.print("Create a JMXMP connector server...");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5554);
+			// hardcoded ip : localhost port : 5554
+			int port = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getJmxParams().getJmxPort().getPortNumber();
+			if(port <= 0) {
+				port = 5554;
+			}
+			
+			System.out.println("Using port number : " + port);
+			
+			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIpAddress();
+			if(ipAddress == null || ipAddress.equals("")) {
+				ipAddress = null;
+			}
+			
+			System.out.println("Using ip address : " + ipAddress);
+			
+			JMXServiceURL url = new JMXServiceURL("jmxmp", ipAddress, port);
 			jConnectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbeanServer);
 			System.out.println("Created !");
 			System.out.println(url.toString() + "Created !");
@@ -54,8 +69,9 @@ public class JMXServer {
 			System.out.println("Waiting for incoming connections...");
 
 			// TODO bu sleepin bir amaci var mi?
+			// Buradaki sleep random sayı üretiminde farklı sayılar oluşsun diye kondu.
 			// String jmxUserName = "" + new Random(new Long(Calendar.getInstance().getTimeInMillis())).nextLong();
-			Thread.sleep(10);
+			// Thread.sleep(10);
 			// String jmxPassWord = "" + new Random(new Long(Calendar.getInstance().getTimeInMillis())).nextLong();
 			//
 			// JmxUser jmxUser = new JmxUser(jmxUserName, jmxPassWord);
