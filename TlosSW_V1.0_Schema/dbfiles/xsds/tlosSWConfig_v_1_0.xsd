@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema 
-   xmlns="http://www.likyateknoloji.com/XML_config_types" 
-   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-   xmlns:lt="http://www.likyateknoloji.com/XML_common_types" 
-   xmlns:state-types="http://www.likyateknoloji.com/state-types"
-   targetNamespace="http://www.likyateknoloji.com/XML_config_types" 
-   elementFormDefault="qualified"
-   >
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_config_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	targetNamespace="http://www.likyateknoloji.com/XML_config_types"
+	elementFormDefault="qualified">
 
-   <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" 
-	  schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
-               
-    <xs:import namespace="http://www.likyateknoloji.com/state-types"
-               schemaLocation="tlosSWState_v_1_0.xsd"/>
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
 
-	<xs:element name="useSms" type="xs:boolean"/>
+	<xs:import namespace="http://www.likyateknoloji.com/state-types"
+		schemaLocation="tlosSWState_v_1_0.xsd" />
+
+	<xs:element name="useSms" type="xs:boolean" />
 
 	<xs:element name="useMail">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:value_boolean"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:value_boolean" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -29,8 +26,8 @@
 	<xs:element name="tlosFrequency">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:frequency"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:frequency" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -38,7 +35,7 @@
 	<xs:element name="tlos-logs">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:path"/> -->
 		</xs:simpleType>
@@ -47,7 +44,7 @@
 	<xs:element name="tlos-jobs">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:path"/> -->
 		</xs:simpleType>
@@ -56,7 +53,7 @@
 	<xs:element name="tlos-bins">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:path"/> -->
 		</xs:simpleType>
@@ -65,8 +62,8 @@
 	<xs:element name="threshold">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="high"/>
-				<xs:element ref="low"/>
+				<xs:element ref="high" />
+				<xs:element ref="low" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -74,32 +71,25 @@
 	<xs:element name="statusListForMail">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="state-types:StatusName" maxOccurs="unbounded"/>
+				<xs:element ref="state-types:StatusName" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-<!-- 
+	<!-- <xs:element name="smtpServerUserName"> <xs:complexType> <xs:sequence> 
+		<xs:element ref="lt:Email"/> </xs:sequence> </xs:complexType> </xs:element> -->
 	<xs:element name="smtpServerUserName">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="lt:Email"/>
-			</xs:sequence>
+			<xs:simpleContent>
+				<xs:extension base="lt:ST_Email">
+				</xs:extension>
+			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
- -->
-    <xs:element name="smtpServerUserName">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="lt:ST_Email">
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
-    
+
 	<xs:element name="smsOptions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="useSms"/>
+				<xs:element ref="useSms" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -107,20 +97,21 @@
 	<xs:element name="settings">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="machine-info"/>
-				<xs:element ref="paths"/>
-				<xs:element ref="isPersistent"/>
-				<xs:element ref="solstice"/>
-				<xs:element ref="period"/>
-				<xs:element ref="mailOptions"/>
-				<xs:element ref="smsOptions"/>
-				<xs:element ref="logFile"/>
-				<xs:element ref="tlosFrequency"/>
-				<xs:element ref="remoteManagerProperties"/>
-				<xs:element ref="httpManagerProperties"/>
-				<xs:element ref="agentOptions"/>
-				<xs:element ref="infoBusOptions"/>
-				<xs:element ref="debugMode"/>			
+				<xs:element ref="lt:ipAddress"/>
+				<xs:element ref="machine-info" />
+				<xs:element ref="paths" />
+				<xs:element ref="isPersistent" />
+				<xs:element ref="solstice" />
+				<xs:element ref="period" />
+				<xs:element ref="mailOptions" />
+				<xs:element ref="smsOptions" />
+				<xs:element ref="logFile" />
+				<xs:element ref="tlosFrequency" />
+				<xs:element ref="remoteManagerProperties" />
+				<xs:element ref="httpManagerProperties" />
+				<xs:element ref="agentOptions" />
+				<xs:element ref="infoBusOptions" />
+				<xs:element ref="debugMode" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -128,7 +119,8 @@
 	<xs:element name="scenario-file-name">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+				<xs:pattern
+					value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:filename"/> -->
 		</xs:simpleType>
@@ -137,7 +129,7 @@
 	<xs:element name="scenario-all">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="scenario" maxOccurs="unbounded"/>
+				<xs:element ref="scenario" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -145,7 +137,7 @@
 	<xs:element name="scenario-path">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*"/>
+				<xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:path"/> -->
 		</xs:simpleType>
@@ -154,17 +146,18 @@
 	<xs:element name="scenario">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="scenario-path"/>
-				<xs:element ref="scenario-file-name"/>
-				<xs:element ref="lt:normalization"/>
+				<xs:element ref="scenario-path" />
+				<xs:element ref="scenario-file-name" />
+				<xs:element ref="lt:normalization" />
 			</xs:sequence>
 			<xs:attribute name="name" use="required">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
-			</xs:restriction>
-			<!-- <xs:restriction base="lt:filename"/> -->
-		</xs:simpleType>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern
+							value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+					</xs:restriction>
+					<!-- <xs:restriction base="lt:filename"/> -->
+				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
@@ -172,9 +165,9 @@
 	<xs:element name="remoteManagerProperties">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
-				<xs:element ref="lt:bufferSize"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:portNumber" />
+				<xs:element ref="lt:bufferSize" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -182,7 +175,7 @@
 	<xs:element name="performance">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="threshold"/>
+				<xs:element ref="threshold" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -190,10 +183,10 @@
 	<xs:element name="paths">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="tlos-bins"/>
-				<xs:element ref="tlos-jobs"/>
-				<xs:element ref="tlos-logs"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="tlos-bins" />
+				<xs:element ref="tlos-jobs" />
+				<xs:element ref="tlos-logs" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -201,38 +194,38 @@
 	<xs:element name="mailOptions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="useMail"/>
-				<xs:element ref="smtpServerUserName"/>
-				<xs:element ref="lt:smtpServerPassword"/>
-				<xs:element ref="lt:smtpServerAddress"/>
-				<xs:element ref="lt:smtpServerPort"/>
-				<xs:element ref="statusListForMail"/>
+				<xs:element ref="useMail" />
+				<xs:element ref="smtpServerUserName" />
+				<xs:element ref="lt:smtpServerPassword" />
+				<xs:element ref="lt:smtpServerAddress" />
+				<xs:element ref="lt:smtpServerPort" />
+				<xs:element ref="statusListForMail" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="infoBusOptions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="period"/>
+				<xs:element ref="period" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="debugMode">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:value_boolean"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:value_boolean" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="agentOptions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="InOutJmxDurationForUnavailability"/>
-				<xs:element ref="resourceListDuration"/>				
+				<xs:element ref="InOutJmxDurationForUnavailability" />
+				<xs:element ref="resourceListDuration" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -240,22 +233,22 @@
 	<xs:element name="machine-info">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:name"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:name" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
 	<xs:element name="low" default="5">
 		<xs:simpleType>
-			<xs:restriction base="xs:unsignedByte"/>
+			<xs:restriction base="xs:unsignedByte" />
 		</xs:simpleType>
 	</xs:element>
 
 	<xs:element name="high" default="10">
 		<xs:simpleType>
 			<xs:restriction base="xs:unsignedByte">
-				<xs:enumeration value="10"/>
+				<xs:enumeration value="10" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -263,7 +256,8 @@
 	<xs:element name="logFile">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+				<xs:pattern
+					value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 			</xs:restriction>
 			<!-- <xs:restriction base="lt:filename"/> -->
 		</xs:simpleType>
@@ -272,8 +266,8 @@
 	<xs:element name="isPersistent">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:value_boolean"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:value_boolean" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -281,8 +275,8 @@
 	<xs:element name="httpManagerProperties">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:ipAddress"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element ref="lt:ipAddress" />
+				<xs:element ref="lt:portNumber" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -290,9 +284,9 @@
 	<xs:element name="company">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:name"/>
-				<xs:element ref="lt:address"/>
-				<xs:element ref="lt:telephone"/>
+				<xs:element ref="lt:name" />
+				<xs:element ref="lt:address" />
+				<xs:element ref="lt:telephone" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -300,13 +294,13 @@
 	<xs:element name="TlosConfigInfo">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="Product-info"/>
-				<xs:element ref="settings"/>
-				<xs:element ref="scenario-all"/>
-				<xs:element ref="performance"/>
-				<xs:element ref="dbparams"/>
-				<xs:element ref="monitoringAgentParams"/>
-				<xs:element ref="jmxParams"/>
+				<xs:element ref="Product-info" />
+				<xs:element ref="settings" />
+				<xs:element ref="scenario-all" />
+				<xs:element ref="performance" />
+				<xs:element ref="dbparams" />
+				<xs:element ref="monitoringAgentParams" />
+				<xs:element ref="jmxParams" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -314,57 +308,57 @@
 	<xs:element name="Product-info">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:date"/>
-				<xs:element ref="lt:version"/>
-				<xs:element ref="company"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:date" />
+				<xs:element ref="lt:version" />
+				<xs:element ref="company" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="solstice">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:time"/>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:time" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="period">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element name="periodValue" type="xs:integer"/>
+				<xs:element ref="lt:comment" />
+				<xs:element name="periodValue" type="xs:integer" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="InOutJmxDurationForUnavailability">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element name="durationValue" type="xs:long"/>
+				<xs:element ref="lt:comment" />
+				<xs:element name="durationValue" type="xs:long" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="resourceListDuration">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
-				<xs:element name="durationValue" type="xs:long"/>
+				<xs:element ref="lt:comment" />
+				<xs:element name="durationValue" type="xs:long" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="dbparams">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="connectionUrl" type="xs:string"/>
-				<xs:element name="username" type="xs:string"/>
-				<xs:element name="password" type="xs:string"/>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="connectionUrl" type="xs:string" />
+				<xs:element name="username" type="xs:string" />
+				<xs:element name="password" type="xs:string" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -372,23 +366,43 @@
 	<xs:element name="monitoringAgentParams">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="frequency" type="xs:integer"/>
-				<xs:element name="cleanUpTimer" type="xs:integer"/>
-				<xs:element name="username" type="xs:string"/>
-				<xs:element name="password" type="xs:string"/>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="frequency" type="xs:integer" />
+				<xs:element name="cleanUpTimer" type="xs:integer" />
+				<xs:element name="username" type="xs:string" />
+				<xs:element name="password" type="xs:string" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="jmxParams">
+	<xs:element name="jmxTlsPort">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="trustStore" type="xs:string"/>
-				<xs:element name="keyStore" type="xs:string"/>
-				<xs:element name="password" type="xs:string"/>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:portNumber"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	
+	<xs:element name="jmxPort">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:portNumber"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="jmxParams">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="jmxTlsPort" />
+				<xs:element ref="jmxPort" />
+				<xs:element name="trustStore" type="xs:string" />
+				<xs:element name="keyStore" type="xs:string" />
+				<xs:element name="password" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 </xs:schema>
