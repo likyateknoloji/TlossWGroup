@@ -15,6 +15,7 @@
 		</con:company>
 	</con:Product-info>
 	<con:settings>
+		<com:ipAddress>10.0.0.11</com:ipAddress>
 		<con:machine-info>
 			<com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
 			<com:name>SUN</com:name>
@@ -32,7 +33,7 @@
 		</con:isPersistent>
 		<con:solstice>
 			<com:comment>gundonumu</com:comment>
-			<com:time>18:00:00</com:time>
+			<com:time>23:55:40</com:time>
 		</con:solstice>
 		<con:period>
 			<com:comment>period</com:comment>
@@ -124,6 +125,14 @@
 		<con:password>admin</con:password>
 	</con:monitoringAgentParams>
 	<con:jmxParams>
+		<con:jmxTlsPort>
+            <com:comment>jmxTlsPort</com:comment>
+            <com:portNumber>3001</com:portNumber>
+        </con:jmxTlsPort>
+        <con:jmxPort>
+            <com:comment>jmxPort</com:comment>
+            <com:portNumber>5554</com:portNumber>
+        </con:jmxPort>
 		<con:trustStore>likyaKeystore</con:trustStore>
 		<con:keyStore>likyaKeystore</con:keyStore>
 		<con:password>likya1!+</con:password>
