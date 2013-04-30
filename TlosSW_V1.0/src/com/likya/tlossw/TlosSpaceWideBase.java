@@ -91,23 +91,7 @@ public class TlosSpaceWideBase {
 			col.setProperty(OutputKeys.INDENT, "no");
 			getSpaceWideRegistry().setEXistColllection(col);
 
-		} catch (XMLDBException xException) {
-			xException.printStackTrace();
-			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-			System.exit(-1);
-		} catch (RuntimeException runtimeException) {
-			runtimeException.printStackTrace();
-			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-			System.exit(-1);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-			System.exit(-1);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-			System.exit(-1);
-		} catch (IllegalAccessException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 			System.exit(-1);
