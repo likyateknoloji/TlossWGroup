@@ -48,7 +48,7 @@ public class JMXTLSServer {
 	/**
 	 * This function is designed for descrete testing procedures.
 	 * DO NOT USE for server functionality.
-	 * @author serkan ta� 12.09.2012 
+	 * @author Serkan Taş 12.09.2012 
 	 * @param spaceWideRegistry
 	 */
 	public static void initialize(SpaceWideRegistry spaceWideRegistry ) {
@@ -86,7 +86,23 @@ public class JMXTLSServer {
 			// Create a JMXMP-TLS connector server
 			//
 			logger.info("Create a JMXMP-TLS connector server... > ");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5555);
+			
+			// hardcoded ip : localhost port : 5555
+			int port = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getJmxParams().getJmxTlsPort().getPortNumber();
+			if (port <= 0) {
+				port = 5555;
+			}
+
+			logger.info("Using port number : " + port);
+
+			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIpAddress();
+			if (ipAddress == null || ipAddress.equals("")) {
+				ipAddress = null;
+			}
+
+			logger.info("Using ip address : " + ipAddress);		
+			
+			JMXServiceURL url = new JMXServiceURL("jmxmp", ipAddress, port);
 			jConnectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, env, mbeanServer);
 
 			logger.info("Created !");
