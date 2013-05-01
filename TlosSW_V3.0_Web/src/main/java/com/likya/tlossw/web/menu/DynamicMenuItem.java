@@ -55,48 +55,52 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 		if (menuitems.isEmpty()) {
 
 			menuitems.add(new MenuItems(null, "ui-icon-home", " ", "#"));
-			menuitems.add(new MenuItems(null, "ui-icon-document", "Tlos SW", "#"));
+//			menuitems.add(new MenuItems(null, "ui-icon-document", "Tlos SW", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Definitions", "#"));
-			menuitems.add(new MenuItems(null, "ui-icon-document", "View", "#"));
-			menuitems.add(new MenuItems(null, "ui-icon-document", "Monitoring", "#"));
+//			menuitems.add(new MenuItems(null, "ui-icon-document", "View", "#"));
+			menuitems.add(new MenuItems(null, "ui-icon-document", "Planning", "#"));
+			menuitems.add(new MenuItems(null, "ui-icon-document", "WorkSpace", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Reporting", "#"));
-			menuitems.add(new MenuItems(null, "ui-icon-document", "Management", "#"));
+			menuitems.add(new MenuItems(null, "ui-icon-document", "Administration", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Preferences", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Help", "#"));
 
 			menuitems.add(new MenuItems(" ", "ui-icon-home", "Home", "/"));
 
-			menuitems.add(new MenuItems("Tlos SW", "ui-icon-document", "File", "#"));
+//			menuitems.add(new MenuItems("Tlos SW", "ui-icon-document", "File", "#"));
 
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Calendars", "/inc/definitionPanels/calendarSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Alarms", "/inc/definitionPanels/alarmSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Agents", "/inc/definitionPanels/advancedDefinitions/agentSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Resources", "/inc/definitionPanels/advancedDefinitions/resourceSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Advanced D.", "#"));
 
 			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "SLAs", "/inc/definitionPanels/advancedDefinitions/slaSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Agents", "/inc/definitionPanels/advancedDefinitions/agentSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Resources", "/inc/definitionPanels/advancedDefinitions/resourceSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Advanced D.", "ui-icon-document", "Program Provision", "/inc/definitionPanels/advancedDefinitions/programProvisionSearchPanel.jsf"));
 
-			menuitems.add(new MenuItems("View", "ui-icon-document", "Logs", "#"));
+//			menuitems.add(new MenuItems("View", "ui-icon-document", "Logs", "#"));
+//
+//			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Jobs", "#"));
+//			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Scenarios", "#"));
+//			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Trace", "#"));
+//			menuitems.add(new MenuItems("Logs", "ui-icon-document", "HeartBeat", "#"));
+//
+//			menuitems.add(new MenuItems("View", "ui-icon-document", "Plans", "#"));
+//			menuitems.add(new MenuItems("View", "ui-icon-document", "Past Runs", "#"));
+			
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Available Resources ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "SLA Solution ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Hardware Usage ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Program Provision ", "#"));
+			
+			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Jobs & Scenarios", "/inc/livePanels/liveJobsScenarios.jsf"));
+			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Agents ", "/inc/livePanels/liveAgents.jsf"));
+			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Resources ", "/inc/livePanels/liveResources.jsf"));
+			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Alarms", "#"));
+			
 
-			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Jobs", "#"));
-			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Scenarios", "#"));
-			menuitems.add(new MenuItems("Logs", "ui-icon-document", "Trace", "#"));
-			menuitems.add(new MenuItems("Logs", "ui-icon-document", "HeartBeat", "#"));
-
-			menuitems.add(new MenuItems("View", "ui-icon-document", "Plans", "#"));
-			menuitems.add(new MenuItems("View", "ui-icon-document", "Past Runs", "#"));
-
-			menuitems.add(new MenuItems("Monitoring", "ui-icon-document", "Jobs & Scenarios", "/inc/livePanels/liveJobsScenarios.jsf"));
-			menuitems.add(new MenuItems("Monitoring", "ui-icon-document", "Alarms", "#"));
-			menuitems.add(new MenuItems("Monitoring", "ui-icon-document", "Advanced M.", "#"));
-
-			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "SLAs ", "#"));
-			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "Agents ", "/inc/livePanels/rscLiveTree.jsf"));
-			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "Resources ", "/inc/livePanels/rscLiveTree.jsf"));
-			menuitems.add(new MenuItems("Advanced M.", "ui-icon-document", "Program Provision ", "#"));
-
+			
 			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Jobs & Scenarios  ", "/inc/reportPanels/dashboardPanel.jsf"));
 			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Alarms  ", "#"));
 			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Advanced R.", "#"));
@@ -104,15 +108,15 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "SLA Violotions", "#"));
 			menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "Audit", "#"));
 
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Users", "/inc/managementPanels/userSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Permissions", "/inc/managementPanels/permissionsPanel.jsf"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Performance", "#"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "BackUps", "#"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Audits", "#"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "DB Connections", "/inc/managementPanels/dbConnectionSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "DB Access", "/inc/managementPanels/dbAccessSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Web Service Analysis", "/inc/managementPanels/webServiceWizardPanel.jsf"));
-			menuitems.add(new MenuItems("Management", "ui-icon-document", "Web Service Access", "#"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Users", "/inc/managementPanels/userSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Permissions", "/inc/managementPanels/permissionsPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Performance", "#"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "BackUps", "#"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Audits", "#"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Connections", "/inc/managementPanels/dbConnectionSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Access", "/inc/managementPanels/dbAccessSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Analysis", "/inc/managementPanels/webServiceWizardPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Access", "#"));
 
 			menuitems.add(new MenuItems("Preferences", "ui-icon-document", "Theme", "#"));
 
