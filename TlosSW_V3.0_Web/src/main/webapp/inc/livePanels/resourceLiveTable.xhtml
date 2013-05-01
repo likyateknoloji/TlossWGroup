@@ -11,18 +11,18 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:treeTable value="#{jSLiveTree.root}" var="node"
-				selection="#{jSLiveTree.selectedJS}" selectionMode="single"
+			<p:treeTable value="#{resourceLiveTree.root}" var="node"
+				selection="#{resourceLiveTree.selectedJS}" selectionMode="single"
 				 dynamic="true" cache="false"
 				id="treetable" animate="true" scrollable="true"   
                  scrollHeight="300">
 
-				<p:ajax event="expand" listener="#{jSLiveTree.onNodeExpand}" />
+				<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
 				<p:ajax event="collapse"
-					listener="#{jSLiveTree.onNodeCollapse}" />
-				<p:ajax event="select" listener="#{jSLiveTree.onNodeSelect}" />
+					listener="#{resourceLiveTree.onNodeCollapse}" />
+				<p:ajax event="select" listener="#{resourceLiveTree.onNodeSelect}" />
 				<p:ajax event="unselect"
-					listener="#{jSLiveTree.onNodeUnselect}" />
+					listener="#{resourceLiveTree.onNodeUnselect}" />
 
 
 				<f:facet name="header">  
@@ -68,20 +68,20 @@
 			widgetVar="documentDialog" modal="true">
 			<p:outputPanel id="documentPanel">
 				<h:panelGrid columns="2" cellpadding="5"
-					rendered="#{not empty jSLiveTree.selectedJS}">
+					rendered="#{not empty resourceLiveTree.selectedJS}">
 					<h:outputLabel for="name" value="Name: " />
 					<h:outputText id="name"
-						value="#{jSLiveTree.selectedJS.data.name}"
+						value="#{resourceLiveTree.selectedJS.data.name}"
 						style="font-weight:bold" />
 
 					<h:outputLabel for="size" value="Size: " />
 					<h:outputText id="size"
-						value="#{jSLiveTree.selectedJS.data.size}"
+						value="#{resourceLiveTree.selectedJS.data.size}"
 						style="font-weight:bold" />
 
 					<h:outputLabel for="type" value="Type " />
 					<h:outputText id="type"
-						value="#{jSLiveTree.selectedJS.data.type}"
+						value="#{resourceLiveTree.selectedJS.data.type}"
 						style="font-weight:bold" />
 				</h:panelGrid>
 			</p:outputPanel>

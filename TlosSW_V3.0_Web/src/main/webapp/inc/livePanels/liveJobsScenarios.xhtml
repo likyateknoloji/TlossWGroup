@@ -10,42 +10,21 @@
 	<ui:param name="title"
 		value="Tlos SW Workload Automation Software v1.0 - Job Monitoring Page - LIVE ! " />
 
+	<ui:define name="west">
+		<ui:include src="/inc/livePanels/jsLiveTree.xhtml" />
+	</ui:define>
+	
 	<ui:define name="center">
 
 		<p:layout style="min-width:400px;min-height:200px;" id="layout">
 
-			<p:layoutUnit position="north" resizable="true" size="35">
-				<ui:param name="title1" value="Main Menu" />
-				<ui:param name="title2" value="Monitoring" />
-				<ui:param name="title3" value="Jobs  &amp;  Scenarios" />
-				<ui:param name="title4" value="" />
-
-				<ui:param name="title1link" value="/" />
-				<ui:param name="title2link" value="MonitoringLink" />
-				<ui:param name="title3link" value="JobsScenariosLink" />
-				<ui:param name="title4link"
-					value="Tlos SW Workload Automation Software v1.0 - Job Monitoring Page - LIVE ! " />
-				<h:form>
-					<p:breadCrumb>
-						<p:menuitem value="#{title1}" url="#{title1link}" />
-						<p:menuitem value="#{title2}" url="#{title2link}" />
-						<p:menuitem value="#{title3}" url="#{title3link}" />
-					</p:breadCrumb>
-				</h:form>
-			</p:layoutUnit>
-
-			<p:layoutUnit id="centerWest" position="west" resizable="true"
-				size="300" minSize="200" maxSize="400">
-				<ui:include src="/inc/livePanels/jsLiveTree.xhtml" />
-			</p:layoutUnit>
-
 			<p:layoutUnit position="center" id="centerLayout">
-				<h:panelGroup id="commonPanel">
+				<!-- h:panelGroup id="commonPanel">
 
 					<ui:include src="/inc/livePanels/jsLiveTable.xhtml">
 					</ui:include>
 
-				</h:panelGroup>
+				</h:panelGroup -->
 
 
 				<!-- 
@@ -61,13 +40,9 @@
 				</h:form-->
 
 			</p:layoutUnit>
-			
+
 		</p:layout>
 
-	</ui:define>
-
-	<ui:define name="west">
-		<ui:include src="/inc/livePanels/resourceLiveTree.xhtml" />
 	</ui:define>
 
 </ui:composition>

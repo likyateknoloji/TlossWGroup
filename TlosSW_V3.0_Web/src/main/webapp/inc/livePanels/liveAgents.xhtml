@@ -8,7 +8,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="title"
-		value="Tlos SW Workload Automation Software v1.0 - Resource Monitoring Page - LIVE ! " />
+		value="Tlos SW Workload Automation Software v1.0 - Agents Monitoring Page - LIVE ! " />
 
 	<ui:define name="center">
 
@@ -34,18 +34,26 @@
 				</h:form>
 			</p:layoutUnit>
 
-			<p:layoutUnit id="centerWest" position="west" resizable="true"
-				size="300" minSize="200" maxSize="400">
-				<ui:include src="/inc/livePanels/resourceLiveTree.xhtml" />
-			</p:layoutUnit>
-
 			<p:layoutUnit position="center" id="centerLayout">
 				<h:panelGroup id="commonPanel">
 
-					<!-- ui:include src="#{jsDefinitionMBean.jobDefCenterPanel}">
-					</ui:include -->
+					<ui:include src="/inc/livePanels/resourceLiveTable.xhtml">
+					</ui:include>
 
 				</h:panelGroup>
+
+
+				<!-- 
+				<p:inputText id="input" value="#{jsDefinitionMBean.jobDefCenterPanel}">
+					<p:ajax event="keyup" update=":commonPanel input"/>
+				</p:inputText>
+				
+				<p:commandButton update=":commonPanel" value="update" />  
+				 -->
+
+				<!-- h:form>
+					<p:poll interval="1" update=":commonPanel" /> 
+				</h:form-->
 
 			</p:layoutUnit>
 
@@ -54,7 +62,7 @@
 	</ui:define>
 
 	<ui:define name="west">
-		<ui:include src="/inc/definitionPanels/jobTemplatesTree.xhtml" />
+		<ui:include src="/inc/livePanels/resourceLiveTree.xhtml" />
 	</ui:define>
 
 </ui:composition>
