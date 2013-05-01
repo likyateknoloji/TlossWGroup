@@ -55,7 +55,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public static final String NAGIOS_AGENT_NAME = "Kullanim Bilgisi";
 
-	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, null);
+	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, new ResourceNode(ConstantDefinitions.TREE_DUMMY), null);
 
 	private String scenarioId;
 	
@@ -75,8 +75,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		// if (rootTreeNode != null &&
 		// mediator.authorizeResource("AvailableResources")) {
 
-		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, resolveMessage("root"), null);
-		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI, resolveMessage("likya.agac.kaynaklistesi"), root);
+		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, new ResourceNode(resolveMessage("root")), null);
+		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI,  new ResourceNode(resolveMessage("likya.agac.kaynaklistesi")), root);
 
 		kaynakListesi.getChildren().add(dummyNode);
 
