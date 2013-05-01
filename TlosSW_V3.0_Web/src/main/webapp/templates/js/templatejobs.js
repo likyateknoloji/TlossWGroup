@@ -1,12 +1,12 @@
 function applyDragDrop() {
 					
-	                var jobs_ = document.querySelectorAll('.jobGroup .job');
+	                var jobs_ = document.querySelectorAll('[data-nodetype="jobGroup"] [data-nodetype="job"]');
 	                var debug = false;
 	                
 	                console.log('#####################################');
 	                
                     // .hover( handlerIn(eventObject), handlerOut(eventObject) ) Bind two handlers to the matched elements, to be executed when the mouse pointer enters and leaves the elements.
-					$('.jobGroup, .scenario, .job').hover(
+					$( '[data-nodetype="job"], [data-nodetype="scenario"], .jobGroup, .scenario, .job').hover(
 							function() {
 						      $(this).addClass('active');
 					        }, 
@@ -153,7 +153,7 @@ function applyDragDrop() {
 						var jobPath = "";
 						var first = 1;
 						while (myEl.className != treeContainerClassName) {
-							if (myEl.className == "ui-treenode ui-treenode-parent scenario" || myEl.className == "ui-treenode ui-treenode-leaf scenario") {
+							if (myEl.getAttribute("data-nodetype") == "scenario"){
 								if (first == 1) {
 									jobPath = $.trim(myEl.querySelector('li span span span').childNodes[0].nodeValue);
 									first = 0;
@@ -224,7 +224,7 @@ function applyDragDrop() {
 
 						//center layouttaki tree icindeki islere drop ozelligi ekleniyor (template tree west layoutta)				   
 						console.log("Already defined Scenarios : #centerWest .scenario");
-						var alreadyDefinedjobDef = document.querySelectorAll('#centerWest .scenario'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
+						var alreadyDefinedjobDef = document.querySelectorAll('[data-nodetype=scenario], #centerWest .scenario'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
 
 	                   [ ].forEach.call(alreadyDefinedjobDef, function (job) {
 		                 console.log(job);
@@ -240,7 +240,7 @@ function applyDragDrop() {
 						//bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
 						//center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)				   
 						console.log("Already defined Jobs : #centerWest .scenario .job");
-						var alreadyDefinedjobDef = document.querySelectorAll('#centerWest .scenario .job'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
+						var alreadyDefinedjobDef = document.querySelectorAll('[data-nodetype=scenario] [data-nodetype=jobs], #centerWest .scenario .job'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
 
 	                   [ ].forEach.call(alreadyDefinedjobDef, function (job) {
 		                 console.log(job);
@@ -256,7 +256,7 @@ function applyDragDrop() {
 
 					//bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
 					//center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)
-					$('#centerWest .scenario .job')
+					$('[data-nodetype=scenario] [data-nodetype=jobs], #centerWest .scenario .job')
 							.draggable(
 									{
 										helper : 'clone',
