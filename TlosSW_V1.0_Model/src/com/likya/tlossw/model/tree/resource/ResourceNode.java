@@ -18,6 +18,16 @@ public class ResourceNode implements Serializable {
 
 	private String labelText;
 	
+	public ResourceNode(String labelText) {
+		super();
+		this.labelText = labelText;
+	}
+
+
+	public ResourceNode() {
+		super();
+	}
+	
 	public String getLabelText() {
 		return labelText;
 	}
