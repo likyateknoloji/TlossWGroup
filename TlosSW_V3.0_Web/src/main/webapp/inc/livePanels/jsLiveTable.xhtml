@@ -11,11 +11,13 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:treeTable value="#{resourceLiveTree.root}" var="node"
+			<!-- p:treeTable value="#{resourceLiveTree.root}" var="serkan"
 				selection="#{resourceLiveTree.selectedJS}" selectionMode="single"
-				style="width:350px;height:720px" dynamic="true" cache="false"
-				id="resourceTree" animate="true">
+				 dynamic="true" cache="false"
+				id="resourceTree" animate="true" scrollable="true"   
+                 scrollHeight="150"-->
 
+			<p:treeTable id="treetable" value="#{resourceLiveTree.root}" var="serkan"> 
 				<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
 				<p:ajax event="collapse"
 					listener="#{resourceLiveTree.onNodeCollapse}" />
@@ -32,7 +34,7 @@
 					<f:facet name="header">  
                 Job Name  
             </f:facet>
-					<h:outputText value="#{node}" />
+					<h:outputText value="#{serkan.labelText}" />
 				</p:column>
 
 				<p:column style="width:100px">
@@ -86,6 +88,27 @@
 			</p:outputPanel>
 		</p:dialog>
 
+		<p:panel id="jobListPanel" styleClass="tlosFormBorderHighlight"
+					rendered="#{not empty filteredJobListMBean.jobInfoList}">
+			<p:dataTable var="item" rows="10" id="jobListDataTable" resizableColumns="true"  
+					    filteredValue="#{filteredJobListMBean.filteredJobs}"
+						width="100%" value="#{filteredJobListMBean.jobInfoList}"
+						binding="#{filteredJobListMBean.jobDataTable}"
+						paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+
+				<p:column
+					headerText="#{msgs['tlos.live.pannel.job.jobName']}"
+					sortBy="#{item.jobKey}" filterBy="#{item.jobKey}"
+					filterMatchMode="contains">
+					<h:outputText value="#{item.jobKey}" style="text-align: center;" />
+				</p:column>
+
+
+
+			</p:dataTable>
+		</p:panel>
 
 	</h:form>
 
