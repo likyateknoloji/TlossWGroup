@@ -15,10 +15,11 @@
 	</ui:define>
 	
 	<ui:define name="center">
+		<ui:include src="#{liveMBean.liveJSTable}"/>
 
-		<p:layout style="min-width:400px;min-height:200px;" id="layout">
+		<!-- p:layout style="min-width:400px;min-height:200px;" id="layout">
 
-			<p:layoutUnit position="center" id="centerLayout">
+			<p:layoutUnit position="center" id="centerLayout"-->
 				<!-- h:panelGroup id="commonPanel">
 
 					<ui:include src="/inc/livePanels/jsLiveTable.xhtml">
@@ -38,10 +39,11 @@
 				<!-- h:form>
 					<p:poll interval="1" update=":commonPanel" /> 
 				</h:form-->
-
+			<!-- 
 			</p:layoutUnit>
 
 		</p:layout>
+		-->
 
 	</ui:define>
 
