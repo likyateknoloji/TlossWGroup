@@ -5,7 +5,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+<style>
 
+.failed
+{
+color: red;
+background-color: black;
+font-weight:bold;
+}
+</style>
 	<h:form id="scenarioLiveTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
@@ -17,7 +25,10 @@
 
 			<p:dataTable id="jobListDataTable" var="item" 
 				value="#{scenarioMBean.jobInfoList}"
+				rowStyleClass="#{item.liveStateInfo.statusName eq 'FAILED' ? 'failed' : null}"
 				widgetVar="itemsTable"
+				resizableColumns="true"
+				draggableColumns="true"
 				binding="#{scenarioMBean.jobDataTable}"
 				filteredValue="#{scenarioMBean.filteredJobs}"
 				emptyMessage="No records found with given criteria"
