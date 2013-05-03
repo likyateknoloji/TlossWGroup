@@ -104,6 +104,5 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 	public void setOsSelectItem(SelectItem[] oSSelectItem) {
 		this.oSSelectItem = oSSelectItem;
 	}  
-  
 	
 }
