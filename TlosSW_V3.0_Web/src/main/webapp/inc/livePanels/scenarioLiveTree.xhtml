@@ -9,27 +9,31 @@
 	<h:form id="scenarioLiveTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:panel>
-			<h2>
-				<h:outputText
-					value="#{msgs['tlos.live.pannel.scenario.header']} - #{scenarioMBean.spcInfoTypeClient.jsName}" />
-			</h2>
-		</p:panel>
-
 		<br></br>
 
 		<p:fieldset id="jobList"
-			legend="#{msgs['tlos.live.pannel.scenario.header']}"
+			legend="#{msgs['tlos.live.pannel.scenario.header']} - #{scenarioMBean.spcInfoTypeClient.jsName}"
 			style="width: 96%;">
 
-			<p:dataTable var="item" rows="10" id="jobListDataTable"
-				filteredValue="#{scenarioMBean.filteredJobs}"
-				width="100%" value="#{scenarioMBean.jobInfoList}"
+			<p:dataTable id="jobListDataTable" var="item" 
+				value="#{scenarioMBean.jobInfoList}"
+				widgetVar="itemsTable"
 				binding="#{scenarioMBean.jobDataTable}"
-				paginator="true" paginatorPosition="bottom"
+				filteredValue="#{scenarioMBean.filteredJobs}"
+				emptyMessage="No records found with given criteria"
+				sortMode="multiple"
+				width="100%" 
+				paginator="true" rows="10" paginatorPosition="bottom"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15">
 
+        <f:facet name="header">  
+            <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="width:150px" />  
+            </p:outputPanel>   
+        </f:facet> 
+        
 				<p:column
 					headerText="#{msgs['tlos.live.pannel.job.jobName']}"
 					sortBy="#{item.jobKey}" filterBy="#{item.jobKey}"
@@ -89,8 +93,9 @@
 				
 				<p:column
 					headerText="#{msgs['tlos.workspace.pannel.job.oSystem']}"
-					sortBy="#{item.oSystem}" filterBy="#{item.oSystem}"
-					filterMatchMode="contains">
+					sortBy="#{item.oSystem}" 
+                    filterOptions="#{scenarioMBean.osSelectItem}"
+                    filterMatchMode="exact"> 
 					<h:outputText value="#{item.oSystem}"
 						style="text-align: center;" />
 				</p:column>
