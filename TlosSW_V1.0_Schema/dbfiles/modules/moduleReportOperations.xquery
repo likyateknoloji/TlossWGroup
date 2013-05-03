@@ -62,29 +62,48 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
 declare function hs:getJobArray($n as node()?, $order as xs:string, $maxNumOfListedJobs) as node()*
 {
   let $resultArrayAsc := <rep:jobArray> {
-    for $job in $n//dat:jobProperties[@agentId!="0"]
-     let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else current-date()
-     let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else current-time()
-     let $stopdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date else "N/A"
-     let $stoptime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time else "N/A"
+    for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
+	(: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
+     let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime)))
+     let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime)))
+     let $stopdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date else xs:string("N/A")
+     let $stoptime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time else xs:string("N/A")
 
-     let $startdatetime := (fn:dateTime($startdate,$starttime) - xs:dateTime("1970-01-01T00:00:00-00:00"))
-     let $stopdatetime := if(compare($stopdate,"N/A") ne 0) 
-	                      then fn:dateTime($stopdate,$stoptime) - xs:dateTime("1970-01-01T00:00:00-00:00") 
-						  else xs:dateTime("1970-01-01T00:00:00-00:00") - xs:dateTime("1970-01-01T00:00:00-00:01")
+     let $startdatetime := fn:dateTime(xs:date($startdate),xs:time($starttime)) - xs:dateTime("1970-01-01T00:00:00-00:00")
+     let $stopdatetime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime) ) 
+	                      then xs:dateTime("1970-01-01T00:00:00-00:00") - xs:dateTime("1970-01-01T00:00:00-00:01")
+						  else fn:dateTime($stopdate,$stoptime) - xs:dateTime("1970-01-01T00:00:00-00:00") 
+
+     let $startdatetimeDTD := xs:dayTimeDuration($startdatetime) div xs:dayTimeDuration('PT1S')
+     let $stopdatetimeDTD  := xs:dayTimeDuration($stopdatetime) div xs:dayTimeDuration('PT1S') 
+	 let $datetimeDTD := $stopdatetimeDTD - $startdatetimeDTD
+
+	 let $ordertime := if( hs:nACheck($startdatetime) or hs:nACheck($stopdatetime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
+
      let $startTimeFormatted := concat(substring($startdate, 1, 10), 'T', $starttime) 
-     let $stopTimeFormatted := if(compare($stopdate,"N/A") ne 0) 
-	                           then concat(substring($stopdate, 1, 10), 'T', $stoptime) 
-							   else "N/A"
-    let $diffInTime := if(compare($stopdate,"N/A") ne 0) then $stopdatetime - $startdatetime else xs:dayTimeDuration('-PT1S')
-    order by ($stopdatetime - $startdatetime)
-    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { (($diffInTime) div xs:dayTimeDuration('PT1S')) }</rep:job>
+     let $stopTimeFormatted := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
+	                           then xs:string("N/A")
+							   else concat(substring($stopdate, 1, 10), 'T', $stoptime) 
+
+
+
+
+     let $diffInTime := if( hs:nACheck($stopdate) ) 
+	                    then xs:dayTimeDuration('-PT1S') 
+					    else $datetimeDTD
+    order by $ordertime
+    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { $diffInTime }</rep:job>
     } </rep:jobArray>
 
   let $numberOfJobs := count($resultArrayAsc/rep:job) 
   let $numberOfScenarios := count($n//dat:scenario) 
-  let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if(compare($min/@startTime,"N/A") ne 0) then xs:dateTime($min/@startTime) else current-dateTime())
-  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if(compare($max/@stopTime,"N/A") ne 0) then xs:dateTime($max/@stopTime)  else xs:dateTime("1970-01-01T00:00:00-00:01"))
+  let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if( hs:nACheck($min/@startTime) ) then current-dateTime() else xs:dateTime($min/@startTime))
+  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if( hs:nACheck($max/@stopTime) ) then xs:dateTime("1970-01-01T00:00:00-00:01") else xs:dateTime($max/@stopTime))
+  (:
+     let $maxStopDateTimeDTD := xs:dayTimeDuration($maxStopDateTime) div xs:dayTimeDuration('PT1S')
+     let $minStartDateTimeDTD  := xs:dayTimeDuration($minStartDateTime) div xs:dayTimeDuration('PT1S') 
+	 let $totalDurationInSec := $maxStopDateTimeDTD - $minStartDateTimeDTD
+  :)
   let $totalDuration := $maxStopDateTime - $minStartDateTime
   let $totalDurationInSec := fn:days-from-duration($totalDuration)*24*60*60+fn:hours-from-duration($totalDuration)*60*60+fn:minutes-from-duration($totalDuration)*60+fn:seconds-from-duration($totalDuration)
 
@@ -94,6 +113,93 @@ declare function hs:getJobArray($n as node()?, $order as xs:string, $maxNumOfLis
     else if(compare($order, "descending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
     else <rep:jobArray>-1</rep:jobArray>   
 };
+
+declare function hs:getJobArrayXX($n as node()?, $order as xs:string, $maxNumOfListedJobs) as node()*
+{
+  let $resultArrayAsc := <rep:jobArray> {
+    for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
+	(: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
+     let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime)))
+     let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime)))
+     let $stopdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date else xs:string("N/A")
+     let $stoptime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time else xs:string("N/A")
+
+     let $startdatetime := fn:dateTime(xs:date($startdate),xs:time($starttime)) - xs:dateTime("1970-01-01T00:00:00-00:00")
+     let $stopdatetime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime) ) 
+	                      then xs:dateTime("1970-01-01T00:00:00-00:00") - xs:dateTime("1970-01-01T00:00:00-00:01")
+						  else fn:dateTime($stopdate,$stoptime) - xs:dateTime("1970-01-01T00:00:00-00:00") 
+
+     let $startdatetimeDTD := xs:dayTimeDuration($startdatetime) div xs:dayTimeDuration('PT1S')
+     let $stopdatetimeDTD  := xs:dayTimeDuration($stopdatetime) div xs:dayTimeDuration('PT1S') 
+	 let $datetimeDTD := $stopdatetimeDTD - $startdatetimeDTD
+
+	 let $ordertime := if( hs:nACheck($startdatetime) or hs:nACheck($stopdatetime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
+
+     let $startTimeFormatted := concat(substring($startdate, 1, 10), 'T', $starttime) 
+     let $stopTimeFormatted := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
+	                           then xs:string("N/A")
+							   else concat(substring($stopdate, 1, 10), 'T', $stoptime) 
+
+
+
+
+     let $diffInTime := if( hs:nACheck($stopdate) ) 
+	                    then xs:dayTimeDuration('-PT1S') 
+					    else $datetimeDTD
+    order by $ordertime
+    return <rep:job id="{$startdatetime}" jname="{$stopdatetime}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { $diffInTime }</rep:job>
+    } </rep:jobArray>
+
+  let $numberOfJobs := count($resultArrayAsc/rep:job) 
+  let $numberOfScenarios := count($n//dat:scenario) 
+  let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if( hs:nACheck($min/@startTime) ) then current-dateTime() else xs:dateTime($min/@startTime))
+  let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if( hs:nACheck($max/@stopTime) ) then xs:dateTime("1970-01-01T00:00:00-00:01") else xs:dateTime($max/@stopTime))
+  (:
+     let $maxStopDateTimeDTD := xs:dayTimeDuration($maxStopDateTime) div xs:dayTimeDuration('PT1S')
+     let $minStartDateTimeDTD  := xs:dayTimeDuration($minStartDateTime) div xs:dayTimeDuration('PT1S') 
+	 let $totalDurationInSec := $maxStopDateTimeDTD - $minStartDateTimeDTD
+  :)
+  let $totalDuration := $maxStopDateTime - $minStartDateTime
+  let $totalDurationInSec := fn:days-from-duration($totalDuration)*24*60*60+fn:hours-from-duration($totalDuration)*60*60+fn:minutes-from-duration($totalDuration)*60+fn:seconds-from-duration($totalDuration)
+
+  return
+    if(not(exists($n))) then <rep:jobArray totalDurationInSec = "0" overallStart="N/A" overallStop="N/A" numberOfJobs="0" maxNumOfListedJobs="0" numberOfScenarios="0">  </rep:jobArray> 
+    else if(compare($order, "ascending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
+    else if(compare($order, "descending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
+    else <rep:jobArray>-1</rep:jobArray>   
+};
+
+declare function hs:stringToDateTime($t1 as xs:string)
+{
+    (: Degisik tarih formatlari icin dusunuldu. 2011-10-13T15:08:31+0300 veya 2011-10-13T15:08:31.91+0300 veya 2011-10-13T15:08:31.897+0300 :)
+    let $uzunluk := string-length($t1)
+    let $baslangic := if($uzunluk eq 24) then 19 else if($uzunluk eq 27) then 22 else if($uzunluk eq 28) then 23 else ()
+    
+    let $t2 := substring($t1, 1, $baslangic)
+    let $t3 := substring($t1, $baslangic+2, 2)
+    let $t7 := concat($t2, '+', $t3, ':00')
+    let $t8 := xs:dateTime($t7)
+    
+	return $t8
+};
+
+declare function hs:nACheck($x as xs:anyAtomicType) as xs:boolean
+{
+  let $result := if (compare(xs:string($x),xs:string("N/A")) eq 0) 
+				 then true() 
+				 else false()
+
+  return $result
+} ;
+
+declare function hs:stringCheck($x as xs:anyAtomicType) as xs:boolean
+{
+typeswitch ($x)
+
+case xs:string return true()
+default
+return false()
+} ;
 
 (: jobProperties icinde gelen baslangic ve bitis tarih araligindaki o jobin calisma bilgilerini donuyor :)
 declare function hs:getJobs($jobProperty as element(dat:jobProperties), $jobPath) as element(dat:jobProperties)*
