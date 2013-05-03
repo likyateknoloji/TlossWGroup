@@ -25,10 +25,11 @@ font-weight:bold;
 
 			<p:dataTable id="jobListDataTable" var="item" 
 				value="#{scenarioMBean.jobInfoList}"
+
 				rowStyleClass="#{item.liveStateInfo.statusName eq 'FAILED' ? 'failed' : null}"
 				widgetVar="itemsTable"
 				resizableColumns="true"
-				draggableColumns="true"
+
 				binding="#{scenarioMBean.jobDataTable}"
 				filteredValue="#{scenarioMBean.filteredJobs}"
 				emptyMessage="No records found with given criteria"
