@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.primefaces.component.datatable.DataTable;
 
@@ -28,6 +29,10 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 	private transient DataTable jobDataTable;
 	private List<JobInfoTypeClient> filteredJobs;  
 	
+	ArrayList<String> oSList = new ArrayList<String>(); 
+
+	private SelectItem[] oSSelectItem;
+	
 	public void getJobList(String scenarioId, boolean transformToLocalTime) {
 		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(new JmxUser(), scenarioId);
 
@@ -43,6 +48,10 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 
 		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(new JmxUser(), getSpcInfoTypeClient().getSpcId(), transformToLocalTime);
 		System.out.println("");
+		oSList.add("Windows");
+		oSList.add("Unix");
+		oSSelectItem = createFilterOptions(oSList);
+
 	}
 	
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
@@ -77,5 +86,24 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 		this.spcInfoTypeClient = spcInfoTypeClient;
 	}
 	
+    private SelectItem[] createFilterOptions(ArrayList<String> data)  {  
+        SelectItem[] options = new SelectItem[data.size() + 1];  
+  
+        options[0] = new SelectItem("", "Select");  
+        for(int i = 0; i < data.size(); i++) {  
+            options[i + 1] = new SelectItem(data.get(i), data.get(i));  
+        }  
+  
+        return options;  
+    }
+
+	public SelectItem[] getOsSelectItem() {
+		return oSSelectItem;
+	}
+
+	public void setOsSelectItem(SelectItem[] oSSelectItem) {
+		this.oSSelectItem = oSSelectItem;
+	}  
+  
 	
 }
