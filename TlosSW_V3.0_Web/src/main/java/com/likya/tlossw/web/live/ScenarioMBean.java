@@ -28,6 +28,8 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 
 	private transient DataTable jobDataTable;
 	private List<JobInfoTypeClient> filteredJobs;  
+	private JobInfoTypeClient selectedRow; 
+	private JobInfoTypeClient[] selectedRows;
 	
 	ArrayList<String> oSList = new ArrayList<String>(); 
 
@@ -103,6 +105,14 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 
 	public void setOsSelectItem(SelectItem[] oSSelectItem) {
 		this.oSSelectItem = oSSelectItem;
-	}  
+	}
+
+	public JobInfoTypeClient getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(JobInfoTypeClient selectedRow) {
+		this.selectedRow = selectedRow;
+	} 
 	
 }
