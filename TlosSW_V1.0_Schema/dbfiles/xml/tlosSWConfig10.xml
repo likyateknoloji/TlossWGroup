@@ -15,7 +15,7 @@
 		</con:company>
 	</con:Product-info>
 	<con:settings>
-		<com:ipAddress>10.0.0.11</com:ipAddress>
+		<com:ipAddress>127.0.0.1</com:ipAddress>
 		<con:machine-info>
 			<com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
 			<com:name>SUN</com:name>
