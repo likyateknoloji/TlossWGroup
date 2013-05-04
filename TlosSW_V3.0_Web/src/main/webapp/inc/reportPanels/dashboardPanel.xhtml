@@ -17,31 +17,26 @@
 
 			<p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget"
 				style="width: 1500px;">
-				<p:dashboard id="board" model="#{dashboardPanelMBean1.model}">
-					<p:ajax event="reorder"
-						listener="#{dashboardPanelMBean1.handleReorder}" update="messages" />
 
 
-
+                    <p:poll interval="15" update="top10" />
 
 					<p:panel id="top10"
-						header="The Top 10 most time-consuming jobs of the Latest Run">
-						<p:barChart id="curHorizontal" min="0"
-							value="#{dashboardPanelMBean1.curDurationModel}"
-							seriesColors="F73C84" animate="true" zoom="true"
-							legendPosition="se" style="width:400px;height:400px"
-							orientation="horizontal" widgetVar="top10Widget"/>
+						header="The Top 10 longest duration jobs finished in last 1 hour">
+						<p:barChart id="curHorizontal" 
+						    min="0"
+							value="#{mostLongestJobsReportMBean.curDurationModel}"
+							seriesColors="F73C84" 
+							animate="true" 
+							zoom="true"
+							legendPosition="ne" 
+							style="width:1200px;height:600px"
+							orientation="vertical" 
+							widgetVar="top10Widget"/>
+							
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-							action="#{dashboardPanelMBean1.refreshCurDurationChart}" />
-					</p:panel>
-
-					<p:panel id="topPrev10"
-						header="The Top 10 most time-consuming jobs of the Previous Run">
-						<p:barChart id="prevHorizontal" min="0"
-							value="#{dashboardPanelMBean1.prevDurationModel}" animate="true"
-							zoom="true" legendPosition="se" style="width:400px;height:400px"
-							orientation="horizontal" widgetVar="topPrev10Widget"/>
-
+							action="#{mostLongestJobsReportMBean.refreshCurDurationChart}" />
+							
 						<p:commandButton type="button" value="Export"
 							icon="ui-icon-extlink" onclick="exportChart()" />
 
@@ -53,14 +48,14 @@
 					</p:panel>
 
 
-				</p:dashboard>
+
 			</p:fieldset>
 
 		</h:form>
 		<script type="text/javascript">
 			function exportChart() {
 				//export image  
-				$('#output').empty().append(topPrev10Widget.exportAsImage());
+				$('#output').empty().append(top10Widget.exportAsImage());
 
 				//show the dialog  
 				dlg.show();
