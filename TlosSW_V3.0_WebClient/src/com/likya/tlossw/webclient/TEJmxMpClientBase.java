@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import javax.naming.NamingException;
 import javax.print.DocFlavor.URL;
 
 import org.apache.log4j.Logger;
@@ -21,30 +22,48 @@ public class TEJmxMpClientBase {
 
 	public static boolean tryReconnect = true;
 
+	public static boolean isEnvRead = false;
+
 	public static JMXConnector getJMXConnection() {
 
+		String jmxIpEnv = null;
+		Integer jmxPortEnv = null;
+
+		if (!isEnvRead) {
+			javax.naming.Context ctx;
+			try {
+				ctx = new javax.naming.InitialContext();
+				jmxIpEnv = (String) ctx.lookup("java:comp/env/jmxIp");
+				jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxPort");
+				// jmxPort = (String) ctx.lookup("java:comp/env/jmxTlsPort"); // jmxtls icin
+			} catch (NamingException e1) {
+				e1.printStackTrace();
+			}
+			isEnvRead = true;
+		}
+
 		JMXConnector jmxConnector = null;
-		String host = "localhost";
-		int port = 5554; //jmxtls icin 5555
+		String host = jmxIpEnv;
+		int port = jmxPortEnv.intValue(); // jmx için 5554; //jmxtls icin 5555
 
 		try {
 
 			logger.debug("Creating JMXMP connector client on " + host + " at  " + port + " and connecting JMXMP server...");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, port);
+			JMXServiceURL url = new JMXServiceURL("jmxmp", host, port);
 
 			int attemptCount = 0;
 
 			while (tryReconnect) {
-				
+
 				try {
-					
-//					jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+
+					// jmxConnector = JMXConnectorFactory.connect(url, getEnv());
 					jmxConnector = JMXConnectorFactory.connect(url);
 					jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
 					logger.info(">> JMXMP Connection successfully established to " + url);
-					
+
 					break;
-					
+
 				} catch (UnknownHostException uhe) {
 					System.err.println("UnknownHostException : " + uhe.getLocalizedMessage());
 				} catch (ConnectException ce) {
@@ -100,6 +119,25 @@ public class TEJmxMpClientBase {
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// }
+	}
+
+	protected static void disconnectJmx(JMXConnector jmxConnector) {
+		try {
+			// Close MBeanServer connection
+			//
+			// long startTime = System.currentTimeMillis();
+			Logger.getLogger(TEJmxMpClientBase.class).debug("Close the connection to the server...");
+			// System.err.println(" TEJmxMpDBClient.disconnect :1 " +
+			// dateDiffWithNow(startTime) + "ms");
+			jmxConnector.close();
+			// System.err.println(" TEJmxMpDBClient.disconnect :2 " +
+			// dateDiffWithNow(startTime) + "ms");
+			// selfInstance = null;
+			Logger.getLogger(TEJmxMpClientBase.class).debug("Closed !");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected static Map<String, String> getEnv() {
