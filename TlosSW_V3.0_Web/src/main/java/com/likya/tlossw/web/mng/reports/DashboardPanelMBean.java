@@ -114,8 +114,8 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 
 		
 		
-		createCurCategoryModel();
-		createPrevCategoryModel();
+//		createCurCategoryModel();
+//		createPrevCategoryModel();
 		createDenseModel();
 		createMeterGaugeModel();
 
@@ -155,15 +155,15 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 		createPieModel7();
 	}
 
-	public void refreshCurDurationChart() {
-
-		createCurCategoryModel();
-	}
-
-	public void refreshPrevDurationChart() {
-
-		createPrevCategoryModel();
-	}
+//	public void refreshCurDurationChart() {
+//
+//		createCurCategoryModel();
+//	}
+//
+//	public void refreshPrevDurationChart() {
+//
+//		createPrevCategoryModel();
+//	}
 
 	public void refresDenseChart() {
 		createDenseModel();
@@ -384,50 +384,50 @@ public class DashboardPanelMBean extends TlosSWBaseBean implements Serializable 
 		
 	}
 
-	private void createCurCategoryModel() {
-
-		curDurationModel = new CartesianChartModel();
-
-		resetJobReportAction();
-		
-		try {
-			jobsArray = getDbOperations().getJobArrayReport(1, 0, "descending", 10);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-
-		ChartSeries jobs = new ChartSeries();
-		jobs.setLabel("Jobs");
-
-		for (Job job : jobsArray) {
-			jobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
-		}
-		
-		curDurationModel.addSeries(jobs);
-
-	}
-
-	private void createPrevCategoryModel() {
-		prevDurationModel = new CartesianChartModel();
-
-	    resetJobReportAction();
-		
-		try {
-			jobsArray = getDbOperations().getJobArrayReport(1, -1, "descending", 10);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-		
-		ChartSeries prevJobs = new ChartSeries();
-		prevJobs.setLabel("Jobs");
-
-		for (Job job : jobsArray) {
-			prevJobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
-		}
-		
-		prevDurationModel.addSeries(prevJobs);
-
-	}
+//	private void createCurCategoryModel() {
+//
+//		curDurationModel = new CartesianChartModel();
+//
+//		resetJobReportAction();
+//		
+//		try {
+//			jobsArray = getDbOperations().getJobArrayReport(1, 0, "descending", 10);
+//		} catch (XMLDBException e) {
+//			e.printStackTrace();
+//		}
+//
+//		ChartSeries jobs = new ChartSeries();
+//		jobs.setLabel("Jobs");
+//
+//		for (Job job : jobsArray) {
+//			jobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
+//		}
+//		
+//		curDurationModel.addSeries(jobs);
+//
+//	}
+//
+//	private void createPrevCategoryModel() {
+//		prevDurationModel = new CartesianChartModel();
+//
+//	    resetJobReportAction();
+//		
+//		try {
+//			jobsArray = getDbOperations().getJobArrayReport(1, -1, "descending", 10);
+//		} catch (XMLDBException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		ChartSeries prevJobs = new ChartSeries();
+//		prevJobs.setLabel("Jobs");
+//
+//		for (Job job : jobsArray) {
+//			prevJobs.set(job.getJname(), job.getBigDecimalValue().divide(new BigDecimal("60"), 0));
+//		}
+//		
+//		prevDurationModel.addSeries(prevJobs);
+//
+//	}
 
 	public PieChartModel getPieDashboardModel() {
 		return pieDashboardModel;
