@@ -1,8 +1,8 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.core.spc.helpers : StateUtils.java
- * @author Serkan TaÅŸ
- * Tarih : 10.Åžub.2010 12:40:09
+ * @author Serkan Taþ
+ * Tarih : 10.Þub.2010 12:40:09
  */
 
 package com.likya.tlossw.core.spc.helpers;
