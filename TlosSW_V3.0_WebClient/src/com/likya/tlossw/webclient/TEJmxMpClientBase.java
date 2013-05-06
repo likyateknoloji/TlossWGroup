@@ -23,11 +23,10 @@ public class TEJmxMpClientBase {
 	public static boolean tryReconnect = true;
 
 	public static boolean isEnvRead = false;
+	public static String jmxIpEnv = null;
+	public static Integer jmxPortEnv = null;
 
 	public static JMXConnector getJMXConnection() {
-
-		String jmxIpEnv = null;
-		Integer jmxPortEnv = null;
 
 		if (!isEnvRead) {
 			javax.naming.Context ctx;
