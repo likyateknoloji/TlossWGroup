@@ -64,7 +64,7 @@
     <!-- http://balusc.blogspot.com/2011/09/communication-in-jsf-20.html#ViewScopedFailsInTagHandlers ye göre aşağıdaki kısım eklendi -->
     <context-param>
         <param-name>javax.faces.FULL_STATE_SAVING_VIEW_IDS</param-name>
-        <param-value>/test.xhtml,/inc/definitionPanels/jobsDef.xhtml</param-value>
+        <param-value>/inc/definitionPanels/jobsDef.xhtml,/inc/livePanels/liveJobsScenarios.xhtml</param-value>
     </context-param>
 	<listener>
 		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
