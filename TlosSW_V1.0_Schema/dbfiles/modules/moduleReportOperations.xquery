@@ -48,10 +48,16 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
     let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
 
     let $sonuc := for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
-		  where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
+		  where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
 		  order by $runx/@id descending
                   return $runx
-    return $sonuc
+				  
+    let $sonuc2 := for $runx in $sonuc//dat:jobProperties
+		  where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and not(@agentId='0'))]
+		  order by $runx/@id descending
+                  return $runx
+				  
+    return <all> { $sonuc2 } </all>
 };
 
 (: Special DateTime format; source : http://www.w3.org/TR/xpath-functions/#dt-dayTimeDuration
@@ -59,7 +65,7 @@ declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, 
    For example, to indicate a duration of 3 days, 10 hours and 30 minutes, one would write: P3DT10H30M.
 :)
 
-declare function hs:getJobArray($n as node()?, $order as xs:string, $maxNumOfListedJobs) as node()*
+declare function hs:getJobArray($n as node()*, $order as xs:string, $maxNumOfListedJobs) as node()*
 {
   let $resultArrayAsc := <rep:jobArray> {
     for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
