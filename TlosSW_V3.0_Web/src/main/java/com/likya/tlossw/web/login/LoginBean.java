@@ -19,7 +19,6 @@ import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 import com.likya.tlossw.webclient.TEJmxMpDBClient;
 
@@ -33,25 +32,14 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 	private static final Logger logger = Logger.getLogger(LoginBean.class);
 
 
-	public static final String LOGIN_SUCCESS = "loginSuccess";
-	public static final String LOGIN_FAILURE = "loginFailure";
-	public static final String LOGIN_ENGINE_DIRECTOR = "loginEngineDirector";
+	public static final String LOGIN_SUCCESS = "index.jsf";
+	public static final String LOGIN_FAILURE = "login.jsf";
+	public static final String LOGIN_ENGINE_DIRECTOR = "index.jsf";
 	
 	protected Person loggedUser;
 	
 	private String userName;
 	private String userPassword;
-
-	@ManagedProperty(value = "#{sessionMediator}")
-	public SessionMediator sessionMediator;
-	
-	public SessionMediator getSessionMediator() {
-		return sessionMediator;
-	}
-
-	public void setSessionMediator(SessionMediator sessionMediator) {
-		this.sessionMediator = sessionMediator;
-	}
 
 	@ManagedProperty(value = "#{jmxConnectionHolder.jmxConnector}")
 	public JMXConnector jmxConnector;
@@ -65,7 +53,7 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 
 		String validated = verifyUserBean();
 
-		WebSpaceWideRegistery webSpaceWideRegistery = sessionMediator.getWebSpaceWideRegistery();
+		WebSpaceWideRegistery webSpaceWideRegistery = getSessionMediator().getWebSpaceWideRegistery();
 
 		if (LOGIN_FAILURE.equals(validated)) {
 			returnValue = LOGIN_FAILURE;
@@ -119,13 +107,13 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 
 			}
 
-			sessionMediator.setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
+			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
 			loggedUser = Person.Factory.newInstance();
 			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
 			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
 
 			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxConnector, jmxAppUser);
-			sessionMediator.setWebSpaceWideRegistery(webSpaceWideRegistery);
+			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
 			
 			return LOGIN_SUCCESS;
 
@@ -133,7 +121,7 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 
 		logger.info("setting login error message ");
 
-		addMessage(null, FacesMessage.SEVERITY_ERROR, "Kullanýcý adý ya da þifresi hatalý !", "Kullanýcý adý ya da þifresi hatalý !");
+		addMessage(null, FacesMessage.SEVERITY_ERROR, "KullanÄ±cÄ± adÄ± ya da ÅŸifresi hatalÄ± !", "KullanÄ±cÄ± adÄ± ya da ÅŸifresi hatalÄ± !");
 
 		return LOGIN_FAILURE;
 
