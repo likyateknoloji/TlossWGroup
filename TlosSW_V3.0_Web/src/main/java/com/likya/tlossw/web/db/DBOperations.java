@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.xmlbeans.XmlException;
+import org.exist.xquery.functions.session.GetID;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -60,6 +61,7 @@ import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
+import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.jmx.JmxAppUser;
@@ -2423,10 +2425,8 @@ public class DBOperations implements Serializable {
 		return agent;
 	}
 
-	
 	public Report getDashboardReport(int derinlik) throws XMLDBException {
 
- 
 		long startTime = System.currentTimeMillis();
 
 		String xQueryStr1 = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,fn:boolean(0))";
@@ -2474,8 +2474,159 @@ public class DBOperations implements Serializable {
 		System.err.println(" dashboardReport3 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		return report;
 	}
+	
+	public ArrayList<AlarmInfoTypeClient> getJobAlarmHistory(String jobId, Boolean transformToLocalTime) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		// verilen isin son 5 rundaki alarmini runid'den bagimsiz olarak
+		// getiriyor
+		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";"
+				+ "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
+
+		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
+
+		XPathQueryService service;
+		try { 
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm;
+				try {
+					alarm = com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Factory.parse(xmlContent).getAlarm();
+
+					alarmList.add(fillAlarmInfoTypeClient(service, alarm, jobId, transformToLocalTime));
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return alarmList;
+	}
+	
+	private AlarmInfoTypeClient fillAlarmInfoTypeClient(XPathQueryService service, com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm, String jobId, Boolean transformToLocalTime) throws XMLDBException {
+
+		AlarmInfoTypeClient alarmInfoTypeClient = new AlarmInfoTypeClient();
+		alarmInfoTypeClient.setAlarmId(alarm.getAlarmId() + "");
+		alarmInfoTypeClient.setAlarmHistoryId(alarm.getAHistoryId() + "");
+		alarmInfoTypeClient.setCreationDate(DateUtils.calendarToString(alarm.getCreationDate(), transformToLocalTime));
+		alarmInfoTypeClient.setLevel(alarm.getLevel() + "");
+
+		String xQueryStr;
+		ResourceSet result;
+		ResourceIterator i;
+		/*
+		// alarmin gerceklestigi kaynak ve agant id'sini set ediyor
+		xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgentByAgentId(" + alarm.getAgentId() + ")";
+
+		result = service.query(xQueryStr);
+		i = result.getIterator();
+		SWAgent agent = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+				agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
+				break;
+			} catch (XmlException e) {
+				e.printStackTrace();
+			}
+		}
+		alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());*/
 		
-		
+		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
+
+		// bu is icin kullanilan warnBy degerini set ediyor
+
+		String warnByStr = "";
+		for (int j = 0; j < alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray().length; j++) {
+
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(1)) == 0)
+				warnByStr = warnByStr + "e-mail;";
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(2)) == 0)
+				warnByStr = warnByStr + "SMS;";
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(3)) == 0)
+				warnByStr = warnByStr + "GUI;";
+		}
+
+		alarmInfoTypeClient.setWarnBy(warnByStr);
+
+		// alarm tipini set ediyor
+		if (alarm.getCaseManagement().getStateManagement() != null) {
+			alarmInfoTypeClient.setAlarmType("State");
+		} else if (alarm.getCaseManagement().getSLAManagement() != null) {
+			alarmInfoTypeClient.setAlarmType("SLA");
+		} else if (alarm.getCaseManagement().getTimeManagement() != null) {
+			alarmInfoTypeClient.setAlarmType("Time");
+		} else if (alarm.getCaseManagement().getSystemManagement() != null) {
+			alarmInfoTypeClient.setAlarmType("System");
+		}
+
+		if (alarm.getSubscriber().getRole() != null) {
+			alarmInfoTypeClient.setSubscriber(alarm.getSubscriber().getRole().toString());
+		} else {
+			// personid'ye gore kullanici adini db'den sorguluyor
+			xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleUserOperations.xquery\";" + "hs:searchUserByUserId(" + alarm.getSubscriber().getPerson().getId() + ")";
+
+			result = service.query(xQueryStr);
+			i = result.getIterator();
+			Person user = null;
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					user = PersonDocument.Factory.parse(xmlContent).getPerson();
+					break;
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (user != null) {
+				alarmInfoTypeClient.setSubscriber(user.getUserName());
+			} else {
+				alarmInfoTypeClient.setSubscriber("-");
+			}
+		}
+
+		// alarm id'ye gore alarmi dbden sorguluyor
+		xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(" + alarm.getAlarmId() + ")";
+
+		result = service.query(xQueryStr);
+		i = result.getIterator();
+		Alarm alarmDefinition = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+				alarmDefinition = AlarmDocument.Factory.parse(xmlContent).getAlarm();
+
+				alarmInfoTypeClient.setAlarmName(alarmDefinition.getName());
+				alarmInfoTypeClient.setDescription(alarmDefinition.getDesc());
+
+				break;
+			} catch (XmlException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return alarmInfoTypeClient;
+	}
  
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
