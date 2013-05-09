@@ -58,7 +58,6 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 			getScenarioMBean().getJobList(spcId);
 			
 			liveJSTable = SCENARIO_PAGE;
-			context.update("scenarioLiveTreeForm");
 		} else if (event.getTreeNode().getType().equals(ConstantDefinitions.TREE_JOB)) {
 			JobNode jobNode =(JobNode)event.getTreeNode().getData();
 			String jobId = jobNode.getJobInfoTypeClient().getJobId();
@@ -66,12 +65,9 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 			getJobMBean().setJobInfo(groupId, jobId);
 			
 			liveJSTable = JOB_PAGE;
-			context.update("jobLiveTreeForm");
 		}
 		
-		
-		
-		
+		context.update("liveForm");
 	}
 	
 	public void pauseJobAction(ActionEvent e) {
