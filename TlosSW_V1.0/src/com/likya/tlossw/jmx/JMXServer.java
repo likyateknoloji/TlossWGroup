@@ -29,8 +29,8 @@ public class JMXServer {
 			JMRuntimeException("HATA : XXX");
 			System.out.println("Created !");
 
-			String MBeanArray[] = { "AgentOperator", "ProcessInfoProvider", "WebServiceOperator" };
-			String MBeanTypeArray[] = { "0", "1", "2" };
+			String MBeanArray[] = { "LocalManager", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator" };
+			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6" };
 
 			for (int i = 0; i < MBeanArray.length; i++) {
 				ObjectName mbeanName = new ObjectName("MBeans:type=" + MBeanTypeArray[i]);
