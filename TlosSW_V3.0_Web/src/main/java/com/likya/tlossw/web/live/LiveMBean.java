@@ -80,14 +80,14 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 	
 	public void pauseJob(JobInfoTypeClient job) {
 		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	//user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) getScenarioMBean().getJobDataTable().getRowData();
 		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 		
 		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
 				"tlos.trace.live.job.start");*/
@@ -103,7 +103,7 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 	
 	public void startJob(JobInfoTypeClient job) {
 		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	public void retryJobAction(ActionEvent e) {
@@ -116,7 +116,7 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 	
 	public void retryJob(JobInfoTypeClient job) {
 		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	public void doSuccessJobAction(ActionEvent e) {
@@ -129,52 +129,59 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 	
 	public void doSuccessJob(JobInfoTypeClient job) {
 		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	public void skipJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) getScenarioMBean().getJobDataTable().getRowData();
 		skipJob(job);
 		
-		TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.skip");
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.skip");*/
 	}
 	
 	public void skipJob(JobInfoTypeClient job) {
 		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	public void stopJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) getScenarioMBean().getJobDataTable().getRowData();
 		stopJob(job);
 		
-		TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.stop");
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.stop");*/
 	}
 	
 	public void stopJob(JobInfoTypeClient job) {
 		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	public void resumeJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) getScenarioMBean().getJobDataTable().getRowData();
 		resumeJob(job);
 		
-		TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.resume");
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.resume");*/
 	}
 	
 	public void resumeJob(JobInfoTypeClient job) {
 		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(job));
-		getScenarioMBean().getJobList(job.getTreePath());
+		refreshLivePanel(job.getTreePath());
 	}
 	
 	//job taniminda agentChoiceMethod: userInteractionPreference ise ekrandan agent listesini goruntule deyince buraya geliyor
 	public void showAvailableResourcesForJob(ActionEvent e) {
 		//TODO merve : eskisinde ayrı bir panele geçiyordu (agentSelectionPanel.xhtml),
 		// şimdiki duruma göre eklenecek
+	}
+	
+	private void refreshLivePanel(String scenarioPath) {
+		getScenarioMBean().getJobList(scenarioPath);
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("liveForm");
 	}
 	
 	public String getLiveJSTable() {
