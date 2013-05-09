@@ -158,42 +158,42 @@
 					<p:commandButton id="retryJobButton"
 						value="#{msgs['tlos.button.retry']}"
 						rendered="#{item.retriable and security.RetryJob}"
-						actionListener="#{liveMBean.retryJobAction}" />
+						actionListener="#{scenarioMBean.retryJobAction}" />
 
 					<p:commandButton id="doSuccessJobButton"
 						value="#{msgs['tlos.button.setSuccess']}"
 						rendered="#{item.successable and security.SetSuccessJob}"
-						actionListener="#{liveMBean.doSuccessJobAction}" />
+						actionListener="#{scenarioMBean.doSuccessJobAction}" />
 
 					<p:commandButton id="skipJobButton"
 						value="#{msgs['tlos.button.skip']}"
 						rendered="#{item.skippable and security.SkipJob}"
-						actionListener="#{liveMBean.skipJobAction}" />
+						actionListener="#{scenarioMBean.skipJobAction}" />
 
 					<p:commandButton id="stopJobButton"
 						value="#{msgs['tlos.button.stop']}"
 						rendered="#{item.stopable and security.StopJob}"
-						actionListener="#{liveMBean.stopJobAction}" />
+						actionListener="#{scenarioMBean.stopJobAction}" />
 
 					<p:commandButton id="pauseJobButton"
 						value="#{msgs['tlos.button.pause']}"
 						rendered="#{item.pausable and security.PauseJob and item.liveStateInfo.statusName ne 'USER-WAITING' and item.liveStateInfo.statusName ne 'USER-CHOOSE-RESOURCE'}"
-						actionListener="#{liveMBean.pauseJobAction}" />
+						actionListener="#{scenarioMBean.pauseJobAction}" />
 
 					<p:commandButton id="resumeJobButton"
 						value="#{msgs['tlos.button.resume']}"
 						rendered="#{item.resumable and security.ResumeJob}"
-						actionListener="#{liveMBean.resumeJobAction}" />
+						actionListener="#{scenarioMBean.resumeJobAction}" />
 
 					<p:commandButton id="startJobButton"
 						value="#{msgs['tlos.button.start']}"
 						rendered="#{item.startable and security.StartJob}"
-						actionListener="#{liveMBean.startJobAction}" />
+						actionListener="#{scenarioMBean.startJobAction}" />
 
 					<p:commandButton id="startUserBasedJobButton"
 						value="#{msgs['tlos.button.start']}"
 						rendered="#{item.liveStateInfo.statusName eq 'USER-WAITING' and security.StartUserBasedJob}"
-						actionListener="#{liveMBean.startUserBasedJobAction}" />
+						actionListener="#{scenarioMBean.startUserBasedJobAction}" />
 
 					<p:commandButton id="selectResourceButton"
 						value="#{msgs['tlos.button.showAvailableResources']}"
