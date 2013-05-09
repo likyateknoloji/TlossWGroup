@@ -17,38 +17,11 @@ public class TEJmxMpWSClient extends TEJmxMpClientBase {
 	/**
 	 * Verilen wsdl adresindeki web servisin operasyon listesini sunucudan istiyor
 	 * 
-	 * @param wsdlAddress wsdl adresi
-	 * @return operasyon listesi
-	 */
-	public static WebService getWsOperationList(String wsdlAddress) {
-
-		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
-
-		Object[] paramList = { wsdlAddress };
-		String[] signature = { "java.lang.String"};
-		Object o;
-		try {
-			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "getWsOperationList", paramList, signature);
-			
-			// jmx tls icin type=6
-			// o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=6"), "getWsOperationList", paramList, signature);
-			TEJmxMpClient.disconnect(jmxConnector);
-			return (WebService) o;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * Verilen wsdl adresindeki web servisin operasyon listesini sunucudan istiyor
-	 * 
 	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
 	 * @param wsdlAddress wsdl adresi
 	 * @return operasyon listesi
 	 */
-	public static WebService getWsOperationList_old(JmxUser jmxUser, String wsdlAddress) {
+	public static WebService getWsOperationList(JmxUser jmxUser, String wsdlAddress) {
 
 		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
 
@@ -69,37 +42,12 @@ public class TEJmxMpWSClient extends TEJmxMpClientBase {
 	/**
 	 * Verilen wsdl fonksiyonunun sonucunu sunucudan istiyor
 	 * 
-	 * @param wsdlAddress wsdl adresi
-	 * @param function icinde fonksiyon ismi, parametre isimleri, tipleri ve degerlerinin oldugu fonksiyon nesnesi
-	 * @return fonksiyonun sonucunu donuyor
-	 */
-	public static String callOperation(String wsdlAddress, Function function) {
-
-		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
-
-		Object[] paramList = { wsdlAddress, function };
-		String[] signature = { "java.lang.String", "com.likya.tlossw.model.webservice.Function"};
-		Object o;
-		try {
-			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "callOperation", paramList, signature);
-			TEJmxMpClient.disconnect(jmxConnector);
-			return o.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	/**
-	 * Verilen wsdl fonksiyonunun sonucunu sunucudan istiyor
-	 * 
 	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
 	 * @param wsdlAddress wsdl adresi
 	 * @param function icinde fonksiyon ismi, parametre isimleri, tipleri ve degerlerinin oldugu fonksiyon nesnesi
 	 * @return fonksiyonun sonucunu donuyor
 	 */
-	public static String callOperation_old(JmxUser jmxUser, String wsdlAddress, Function function) {
+	public static String callOperation(JmxUser jmxUser, String wsdlAddress, Function function) {
 
 		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
 
