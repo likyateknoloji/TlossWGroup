@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.jmx.mp.helper : ProcessInfoProvider.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Apr 6, 2009 2:19:17 PM
  */
 
@@ -105,8 +105,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 		logger.info("[stopJob] command received for job : " + jobId);
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
@@ -136,8 +136,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -174,8 +174,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -206,8 +206,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -238,8 +238,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -269,8 +269,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -325,14 +325,14 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			if (myJob.getJobRuntimeProperties().isStartable()) {
 				Calendar myCalendar = Calendar.getInstance();
 				updateStartConditions(jobQueue, jobId, myCalendar);
-				// TODO Ýlk elemaný aldýk ama pek içime sinmedi
+				// TODO ï¿½lk elemanï¿½ aldï¿½k ama pek iï¿½ime sinmedi
 				JsPlannedTime jobPlannedTime = myJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
 
-				// TODO Artýk date yok, gün var.
+				// TODO Artï¿½k date yok, gï¿½n var.
 				// jobPlanTime.setDate(new
 				// org.exolab.castor.types.Date(myCalendar.getTime()));
 
-				// TODO Tekrar deðiþti ama çalýþýr mý bilmiyorum :(
+				// TODO Tekrar deï¿½iï¿½ti ama ï¿½alï¿½ï¿½ï¿½r mï¿½ bilmiyorum :(
 				// short[] timeArray = {(short)
 				// myCalendar.get(Calendar.HOUR_OF_DAY), (short)
 				// myCalendar.get(Calendar.MINUTE), (short)
@@ -355,8 +355,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -391,8 +391,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		ArrayList<Resource> resourceList = new ArrayList<Resource>();
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 
@@ -416,8 +416,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return false;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
+		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -490,14 +490,14 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			if ((tempJobList != null) && (tempJobList.size() > 0)) {
 				updateStartConditions(jobQueue, tmpJobKey, myCalendar);
 			}
-			// TODO ilk elemaný alýyoruz ama emin deðilim
+			// TODO ilk elemanï¿½ alï¿½yoruz ama emin deï¿½ilim
 			JsPlannedTime jobPlannedTime = scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
 
-			// TODO Artýk date yok, gün var.
+			// TODO Artï¿½k date yok, gï¿½n var.
 			// jobPlanTime.setDate(new
 			// org.exolab.castor.types.Date(myCalendar.getTime()));
 
-			// / TODO Tekrar deðiþti ama çalýþýr mý bilmiyorum :(
+			// / TODO Tekrar deï¿½iï¿½ti ama ï¿½alï¿½ï¿½ï¿½r mï¿½ bilmiyorum :(
 			// short[] timeArray = {(short)
 			// myCalendar.get(Calendar.HOUR_OF_DAY), (short)
 			// myCalendar.get(Calendar.MINUTE), (short)
@@ -648,8 +648,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				TlosSpaceWide.getSpaceWideRegistry().setJmxUser(jmxUser);
 				TlosSpaceWide.getSpaceWideRegistry().setRecovered(true);
 			} else {
-				logger.error(" > isPersist = true olduðu halde recover iþlemi baþarýsýz oldu !");
-				logger.error(" > devam etmek için tempo dizini temizleyin ya da isPersist = false yapýp uygulamayý tekrar baþlatýn !");
+				logger.error(" > isPersist = true olduï¿½u halde recover iï¿½lemi baï¿½arï¿½sï¿½z oldu !");
+				logger.error(" > devam etmek iï¿½in tempo dizini temizleyin ya da isPersist = false yapï¿½p uygulamayï¿½ tekrar baï¿½latï¿½n !");
 				System.exit(-1);
 			}
 			
@@ -668,7 +668,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				}
 			}
 		} else {
-			logger.warn("isPersisten = false olduðu halde recover talebi istenemez !");
+			logger.warn("isPersisten = false olduï¿½u halde recover talebi istenemez !");
 		}
 	}
 
