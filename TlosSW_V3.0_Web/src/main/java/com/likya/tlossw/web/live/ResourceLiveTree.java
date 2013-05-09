@@ -193,7 +193,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 						DefaultTreeNode tmpAgent = (DefaultTreeNode) resourceTreeNode.getChildren().get(j);
 
 						if (tmpAgent.isExpanded()) {
-							//tlos/nagios ayrimina gore agentlar duzenleniyor
+							//tlos/monitor ayrimina gore agentlar duzenleniyor
 							if (tmpAgent.getData() instanceof MonitorAgentNode) {
 								MonitorAgentNode currentNode = (MonitorAgentNode) tmpAgent.getData();
 								if (currentNode != null) {
@@ -217,13 +217,13 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	/*
-	 * private MonitorAgentNode beforeServerRenderLiveNagiosAgentTree(DefaultTreeNode nagiosAgentNode) {
+	 * private MonitorAgentNode beforeServerRenderLivemonitorAgentTree(DefaultTreeNode monitorAgentNode) {
 	 * 
-	 * MonitorAgentNode myNagiosAgentNode = (MonitorAgentNode) nagiosAgentNode.getData();
+	 * MonitorAgentNode mymonitorAgentNode = (MonitorAgentNode) monitorAgentNode.getData();
 	 * 
-	 * //nagios agentin altina simdilik bir sey eklemedigimiz icin bu kismi duzenlemedim. // if (tmpTree.isExpanded()) { // myTlosAgentNode = new TlosAgentNode(); // myTlosAgentNode.setSpcInfoTypeClient(tmpTree.getScenarioFolder().getSpcInfoTypeClient()); // for (int i = 0; i < tlosAgentNode.getChildCount(); i++) { // DefaultMutableTreeNode tmpScenario = (DefaultMutableTreeNode) tlosAgentNode.getChildAt(i); // if (!((LiveNavigationContentBean) tmpScenario.getUserObject()).getScenarioFolder().isSenaryo()) { // continue; // } // TlosAgentNode expendedNode = preRenderLiveTreeRecursive(tmpScenario); // if (expendedNode != null) { // myTlosAgentNode.getScenarioNodes().add(expendedNode); // } // } // }
+	 * //monitor agentin altina simdilik bir sey eklemedigimiz icin bu kismi duzenlemedim. // if (tmpTree.isExpanded()) { // myTlosAgentNode = new TlosAgentNode(); // myTlosAgentNode.setSpcInfoTypeClient(tmpTree.getScenarioFolder().getSpcInfoTypeClient()); // for (int i = 0; i < tlosAgentNode.getChildCount(); i++) { // DefaultMutableTreeNode tmpScenario = (DefaultMutableTreeNode) tlosAgentNode.getChildAt(i); // if (!((LiveNavigationContentBean) tmpScenario.getUserObject()).getScenarioFolder().isSenaryo()) { // continue; // } // TlosAgentNode expendedNode = preRenderLiveTreeRecursive(tmpScenario); // if (expendedNode != null) { // myTlosAgentNode.getScenarioNodes().add(expendedNode); // } // } // }
 	 * 
-	 * return myNagiosAgentNode; }
+	 * return mymonitorAgentNode; }
 	 */
 	public void constructJobNodes(TreeNode treeNode, ArrayList<JobInfoTypeClient> jobInfoTypeClientList) {
 
@@ -387,23 +387,23 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		}
 
 		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
-		//gelen makine icinde nagios agent var mı diye kontrol ediliyor
+		//gelen makine icinde monitor agent var mı diye kontrol ediliyor
 		if (monitorAgentNode.getMonitorAgentInfoTypeClient().isNrpeAvailable()) {
 
-			//			NagiosAgentInfoTypeClient nagiosAgentInfoTypeClient = new NagiosAgentInfoTypeClient(serverResourceNode.getNagiosAgentNode().getNagiosAgentInfoTypeClient());
+			//			monitorAgentInfoTypeClient monitorAgentInfoTypeClient = new monitorAgentInfoTypeClient(serverResourceNode.getmonitorAgentNode().getmonitorAgentInfoTypeClient());
 
-			//Nagios agenti agaca ekleyecek
+			//monitor agenti agaca ekleyecek
 
 			monitorAgentNode.setLabelText(MONITOR_AGENT_NAME);
 
 			/*
-			 * LiveResourceNavigationContentBean nagiosAgent = new LiveResourceNavigationContentBean(); nagiosAgent.setNavigationSelection(navigationBean);
+			 * LiveResourceNavigationContentBean monitorAgent = new LiveResourceNavigationContentBean(); monitorAgent.setNavigationSelection(navigationBean);
 			 * 
-			 * nagiosAgent.setMenuContentTitle("webmail.navigation.rootNode.title"); nagiosAgent.setTemplateName("nagiosAgentViewPanel"); nagiosAgent.setPageContent(true); nagiosAgent.setExpanded(false); nagiosAgent.setLeaf(true);
+			 * monitorAgent.setMenuContentTitle("webmail.navigation.rootNode.title"); monitorAgent.setTemplateName("monitorAgentViewPanel"); monitorAgent.setPageContent(true); monitorAgent.setExpanded(false); monitorAgent.setLeaf(true);
 			 * 
-			 * if (!nagiosAgentInfoTypeClient.isNrpeAvailable()) { nagiosAgent.setLeafIcon("images/navigation_tree/tree_node.gif"); }
+			 * if (!monitorAgentInfoTypeClient.isNrpeAvailable()) { monitorAgent.setLeafIcon("images/navigation_tree/tree_node.gif"); }
 			 * 
-			 * ResourceFolderBean resourceFolder = new ResourceFolderBean(); resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName()); // resourceFolder.setResource(true); resourceFolder.setNagiosAgent(true); resourceFolder.setNagiosAgentInfoTypeClient(nagiosAgentInfoTypeClient); nagiosAgent.setResourceFolder(resourceFolder);
+			 * ResourceFolderBean resourceFolder = new ResourceFolderBean(); resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName()); // resourceFolder.setResource(true); resourceFolder.setmonitorAgent(true); resourceFolder.setmonitorAgentInfoTypeClient(monitorAgentInfoTypeClient); monitorAgent.setResourceFolder(resourceFolder);
 			 */
 
 			TreeNode monitorAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_MONITORAGENT, monitorAgentNode, resourceNode);
