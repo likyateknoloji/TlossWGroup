@@ -10,6 +10,7 @@
 
 package com.likya.tlossw.jmx.beans;
 
+import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.webservice.Function;
 import com.likya.tlossw.model.webservice.WebService;
 
@@ -63,8 +64,8 @@ public interface WebServiceOperatorMBean {
      * 
      */
     
-    public WebService getWsOperationList(String wsdlAddress);
+    public WebService getWsOperationList(JmxUser jmxUser, String wsdlAddress);
     
-    public String callOperation(String wsdlAddress, Function function);
+    public String callOperation(JmxUser jmxUser, String wsdlAddress, Function function);
 
 }

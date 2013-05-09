@@ -32,6 +32,8 @@ import com.ibm.wsdl.extensions.http.HTTPBindingImpl;
 import com.ibm.wsdl.extensions.soap.SOAPBindingImpl;
 import com.ibm.wsdl.extensions.soap12.SOAP12BindingImpl;
 import com.likya.tlossw.cxf.CXFUtils;
+import com.likya.tlossw.jmx.JMXTLSServer;
+import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.webservice.Function;
 import com.likya.tlossw.model.webservice.Parameter;
 import com.likya.tlossw.model.webservice.WebService;
@@ -63,7 +65,11 @@ public class WebServiceOperator implements WebServiceOperatorMBean {
 	}
 
 	@Override
-	public WebService getWsOperationList(String wsdlAddress) {
+	public WebService getWsOperationList(JmxUser jmxUser, String wsdlAddress) {
+		
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
 		
 		WebService webService = new WebService();
 		
@@ -211,11 +217,11 @@ public class WebServiceOperator implements WebServiceOperatorMBean {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String callOperation(String wsdlAddress, Function function) {
+	public String callOperation(JmxUser jmxUser, String wsdlAddress, Function function) {
 		
-//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-//			return null;
-//		}
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
 		
 		JaxWsDynamicClientFactory jaxWsDynamicClientFactory = JaxWsDynamicClientFactory.newInstance();
 		
@@ -385,7 +391,7 @@ public class WebServiceOperator implements WebServiceOperatorMBean {
 			}
 		}
 		
-		return "boþ";
+		return "boï¿½";
 	}
 	
 	public static String resolveResult(Object result, String resultStr, String methodName) {
