@@ -37,8 +37,8 @@ public class SessionMediator implements Serializable {
 	public void demoMethod() {
 		
 		/**
-		 * Ge�ici olarak gecekondu, login sayfas� ile kalkmal�
-		 * TODO serkan ta�
+		 * Geçici olarak gecekondu, login sayfası ile kalkmalı
+		 * TODO serkan taş
 		 */
 		
 		JmxAppUser jmxAppUser = new JmxAppUser();
@@ -72,7 +72,7 @@ public class SessionMediator implements Serializable {
 	}
 	
 	public boolean authorizeResource(String resourceId) {
-		demoMethod();
+		// demoMethod();
 		
 		Resource myResource = (Resource) resourceMapper.get(resourceId);
 		if (myResource == null) {
