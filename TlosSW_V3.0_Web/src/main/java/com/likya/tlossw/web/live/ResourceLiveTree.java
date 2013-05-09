@@ -53,7 +53,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 	private CacheBase liveTreeCache = null;
 
-	public static final String NAGIOS_AGENT_NAME = "Kullanim Bilgisi";
+	public static final String MONITOR_AGENT_NAME = "Kullanim Bilgisi";
 
 	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, new ResourceNode(ConstantDefinitions.TREE_DUMMY), null);
 
@@ -394,7 +394,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 			//Nagios agenti agaca ekleyecek
 
-			monitorAgentNode.setLabelText(NAGIOS_AGENT_NAME);
+			monitorAgentNode.setLabelText(MONITOR_AGENT_NAME);
 
 			/*
 			 * LiveResourceNavigationContentBean nagiosAgent = new LiveResourceNavigationContentBean(); nagiosAgent.setNavigationSelection(navigationBean);
