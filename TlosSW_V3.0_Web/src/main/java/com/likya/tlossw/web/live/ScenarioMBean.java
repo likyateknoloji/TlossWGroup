@@ -10,11 +10,13 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
 
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "scenarioMBean")
@@ -107,6 +109,86 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 	public void viewScenarioTree() {
 		//TODO merve : eskisinde ayrı bir panele geçiyordu (scenarioTreePanel.xhtml),
 		// şimdiki duruma göre eklenecek
+	}
+	
+	public void pauseJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.pause");*/
+	}
+	
+	//user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
+	public void startUserBasedJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.start");*/
+	}
+		
+	public void startJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.start");*/
+	}
+	
+	public void retryJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.retry");*/
+	}
+	
+	public void doSuccessJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.doSuccess");*/
+	}
+	
+	public void skipJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.skip");*/
+	}
+	
+	public void stopJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.stop");*/
+	}
+	
+	public void resumeJobAction(ActionEvent e) {
+		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
+		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(job));
+		refreshLivePanel(job.getTreePath());
+		
+		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
+				"tlos.trace.live.job.resume");*/
+	}
+	
+	private void refreshLivePanel(String scenarioPath) {
+		getJobList(scenarioPath);
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("liveForm");
 	}
 	
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
