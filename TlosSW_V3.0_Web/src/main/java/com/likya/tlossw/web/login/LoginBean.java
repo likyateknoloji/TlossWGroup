@@ -6,9 +6,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.management.remote.JMXConnector;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -18,13 +15,11 @@ import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.webclient.TEJmxMpClient;
-import com.likya.tlossw.webclient.TEJmxMpDBClient;
+import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = LoginBean.BEAN_NAME)
 @ViewScoped
-public class LoginBean extends TlosSWBaseBean implements Serializable {
+public class LoginBean extends LoginBase implements Serializable {
 
 	public static final String BEAN_NAME = "loginBean";
 	private static final long serialVersionUID = -5124116113489857945L;
@@ -32,30 +27,35 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 	private static final Logger logger = Logger.getLogger(LoginBean.class);
 
 
-	public static final String LOGIN_SUCCESS = "index.jsf";
-	public static final String LOGIN_FAILURE = "login.jsf";
-	public static final String LOGIN_ENGINE_DIRECTOR = "index.jsf";
+	public static final String LOGIN_SUCCESS = "/inc/index.jsf?faces-redirect=true";
+	public static final String LOGIN_FAILURE = "/login.jsf?faces-redirect=true";
+	public static final String LOGIN_ENGINE_DIRECTOR = "/inc/index.jsf?faces-redirect=true";
 	
 	protected Person loggedUser;
 	
 	private String userName;
 	private String userPassword;
 
+	@ManagedProperty(value = "#{dbOperations}")
+	private DBOperations dbOperations;
+	
+	/**
 	@ManagedProperty(value = "#{jmxConnectionHolder.jmxConnector}")
 	public JMXConnector jmxConnector;
-
+	**/
 	
 	public String login() {
 
 		logger.info("start : MyLoginBean : login");
 
-		String returnValue;
+		String returnValue = null;
 
-		String validated = verifyUserBean();
+		String validated = verifyUserDB();
 
 		WebSpaceWideRegistery webSpaceWideRegistery = getSessionMediator().getWebSpaceWideRegistery();
 
-		if (LOGIN_FAILURE.equals(validated)) {
+		
+		/*if (LOGIN_FAILURE.equals(validated)) {
 			returnValue = LOGIN_FAILURE;
 		} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
 			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.authorization", null);
@@ -64,20 +64,71 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.waitMode", null);
 			returnValue = LOGIN_ENGINE_DIRECTOR;
 		} else if (!webSpaceWideRegistery.getWaitConfirmOfGUI() && LOGIN_SUCCESS.equals(validated)) {
-			addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
+		*/	addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
 			returnValue = LOGIN_SUCCESS;
-		} else {
+		/*} else {
 			addMessage("loginForm", "errorMessage", "invalid Mode", null);
 			returnValue = LOGIN_FAILURE;
-		}
-
+		}*/
+		 
 		logger.info("end : RegisteredLoginBean : login");
 
+		setSessionLoginParam(true);
+		
 		return returnValue;
 
 	}
 	
-	public String verifyUserBean() {
+	public String verifyUserDB() {
+
+		// ManagerMediator mm = (ManagerMediator)
+		// FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("managerMediator");
+		// ServletContext webAppContext = (ServletContext)
+		// FacesContext.getCurrentInstance().getExternalContext().getContext();
+		// JmxUser jmxUserApp = (JmxUser) webAppContext.getAttribute("JmxUser");
+		
+		JmxAppUser jmxAppUser = new JmxAppUser();
+		AppUser appUser = new AppUser();
+		appUser.setUsername(userName);
+		appUser.setPassword(userPassword);
+
+		jmxAppUser.setAppUser(appUser);
+
+		Object o = dbOperations.checkUser(jmxAppUser);
+		jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
+
+		if (o instanceof JmxUser) {
+
+			setSessionLoginParam(true);
+			jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
+
+			if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
+				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
+				return LOGIN_FAILURE;
+			}
+
+			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
+			loggedUser = Person.Factory.newInstance();
+			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
+			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
+
+			// WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxConnector, jmxAppUser);
+			// getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+			
+			return LOGIN_SUCCESS;
+
+		}
+
+		logger.info("setting login error message ");
+
+		addMessage(null, FacesMessage.SEVERITY_ERROR, "Kullanıcı adı ya da şifresi hatalı !", "Kullanıcı adı ya da şifresi hatalı !");
+
+		return LOGIN_FAILURE;
+
+	}
+
+	/*
+	public String verifyUserJmx() {
 
 		// ManagerMediator mm = (ManagerMediator)
 		// FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("managerMediator");
@@ -126,20 +177,8 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 		return LOGIN_FAILURE;
 
 	}
+	*/
 	
-	private void setSessionLoginParam(boolean isLoggedIn) {
-		HttpSession httpSession = null;
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-
-		if (facesContext != null) {
-			httpSession = (HttpSession) facesContext.getExternalContext().getSession(false);
-		}
-
-		if (httpSession != null) {
-			httpSession.setAttribute("LoggedIn", Boolean.toString(isLoggedIn));
-		}
-	}
-
 	public static void copyAppUserToPerson(AppUser appUser, Person person) {
 		person.setId(appUser.getId());
 		person.setName(appUser.getName());
@@ -165,13 +204,22 @@ public class LoginBean extends TlosSWBaseBean implements Serializable {
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
-
+	/*
 	public JMXConnector getJmxConnector() {
 		return jmxConnector;
 	}
 
 	public void setJmxConnector(JMXConnector jmxConnector) {
 		this.jmxConnector = jmxConnector;
+	}
+	*/
+
+	public DBOperations getDbOperations() {
+		return dbOperations;
+	}
+
+	public void setDbOperations(DBOperations dbOperations) {
+		this.dbOperations = dbOperations;
 	}
 
 }
