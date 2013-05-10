@@ -106,7 +106,7 @@ public class HPOVManager implements Runnable {
 							 * bitis zamanlarinin
 							 */
 
-							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+							DBUtils.updateJob("", jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
 							// DBUtils.updateJob(jobProperties,
 							// ParsingUtils.getJobXPath(jobAllInfo.getSpcId()));
 							logger.info("  > ");
@@ -119,7 +119,7 @@ public class HPOVManager implements Runnable {
 						synchronized (this) {
 							JobInfo jobInfo = (JobInfo) infoType;
 							LiveStateInfo liveStateInfo = jobInfo.getLiveLiveStateInfo();
-							DBUtils.insertJobState(spaceWideRegistry.getEXistColllection(), liveStateInfo, jobInfo.getTreePath());
+							DBUtils.insertJobState(spaceWideRegistry.getEXistColllection(), "", liveStateInfo, jobInfo.getTreePath());
 							DssDbUtils.swFindAlarms(jobInfo.getJobID(), jobInfo.getUserID(), jobInfo.getAgentID(), liveStateInfo);
 
 							logger.info("  > ");
