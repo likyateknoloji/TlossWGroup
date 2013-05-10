@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
-import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "sessionMediator")
 @SessionScoped
@@ -28,9 +27,6 @@ public class SessionMediator implements Serializable {
 	
 	@ManagedProperty(value = "#{localeBean}")
 	private LocaleBean localeBean;
-	
-	@ManagedProperty(value = "#{dbOperations}")
-	private DBOperations dbOperations;
 	
 	public ResourceBundle getMessageBundle() {
 		initMessageBundle();
@@ -83,14 +79,6 @@ public class SessionMediator implements Serializable {
 
 	public void setLocaleBean(LocaleBean localeBean) {
 		this.localeBean = localeBean;
-	}
-
-	public DBOperations getDbOperations() {
-		return dbOperations;
-	}
-
-	public void setDbOperations(DBOperations dbOperations) {
-		this.dbOperations = dbOperations;
 	}
 
 }
