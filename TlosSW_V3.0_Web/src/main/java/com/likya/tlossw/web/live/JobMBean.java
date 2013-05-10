@@ -37,7 +37,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	
 	private boolean jobLogExist = false;
 	private String jobLog = "";
-	private boolean jobLogPopup = false;
 	
 	private String jobDependencyListStr;
 	
@@ -46,13 +45,13 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	
 	private boolean transformToLocalTime;
 	
-	public void setJobInfo(String groupId, String jobName) {
-		jobInTyClSetter(groupId, jobName);
+	public void fillJobLivePanel(String groupId, String jobName) {
+		setJobInfo(groupId, jobName);
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
 	
-	public void jobInTyClSetter(String groupId, String jobName) {
+	public void setJobInfo(String groupId, String jobName) {
 		jobInTyCl = new JobInfoTypeClient();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(new JmxUser(), groupId, jobName, transformToLocalTime);
 		
@@ -79,7 +78,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	
 	public void openJobLogAction() {
 		jobLog = TEJmxMpClient.readFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName())).toString();
-		jobLogPopup = true;
 	}
 	
 	public void fillJobReportGrid() {
@@ -249,14 +247,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 
 	public void setJobLog(String jobLog) {
 		this.jobLog = jobLog;
-	}
-
-	public boolean isJobLogPopup() {
-		return jobLogPopup;
-	}
-
-	public void setJobLogPopup(boolean jobLogPopup) {
-		this.jobLogPopup = jobLogPopup;
 	}
 
 }
