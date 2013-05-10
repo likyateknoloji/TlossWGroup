@@ -104,7 +104,7 @@ public class DashboardPanelMBean1 extends TlosSWBaseBean implements Serializable
 		resetJobReportAction();
 		
 		try {
-			jobsArray = getDbOperations().getJobArrayReport(1, 0, "ascending", 10);
+			jobsArray = getDbOperations().getJobArrayReport(1, 0, 5, "ascending", "", 10);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -126,7 +126,7 @@ public class DashboardPanelMBean1 extends TlosSWBaseBean implements Serializable
 	    resetJobReportAction();
 		
 		try {
-			jobsArray = getDbOperations().getJobArrayReport(1, -1, "ascending", 10);
+			jobsArray = getDbOperations().getJobArrayReport(1, 1, -1, "ascending", "", 10);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
