@@ -10,10 +10,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import com.likya.tlossw.model.WebSpaceWideRegistery;
-import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
-import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean(name = "sessionMediator")
@@ -34,27 +32,6 @@ public class SessionMediator implements Serializable {
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 	
-	public void demoMethod() {
-		
-		/**
-		 * Geçici olarak gecekondu, login sayfası ile kalkmalı
-		 * TODO serkan taş
-		 */
-		
-		JmxAppUser jmxAppUser = new JmxAppUser();
-		AppUser appUser = new AppUser();
-		appUser.setUsername("admin");
-		appUser.setPassword("admin");
-
-		jmxAppUser.setAppUser(appUser);
-
-		Object o = dbOperations.checkUser(jmxAppUser);
-		
-		jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
-		
-		resourceMapper = jmxAppUser.getAppUser().getResourceMapper();
-	}
-	
 	public ResourceBundle getMessageBundle() {
 		initMessageBundle();
 		return messageBundle;
@@ -72,7 +49,6 @@ public class SessionMediator implements Serializable {
 	}
 	
 	public boolean authorizeResource(String resourceId) {
-		// demoMethod();
 		
 		Resource myResource = (Resource) resourceMapper.get(resourceId);
 		if (myResource == null) {
