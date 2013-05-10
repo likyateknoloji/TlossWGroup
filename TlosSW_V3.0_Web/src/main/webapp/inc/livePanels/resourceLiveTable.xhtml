@@ -62,8 +62,6 @@
 			</p:treeTable>
 		</p:fieldset>
 
-
-
 		<p:dialog id="dialog" header="Document Detail" showEffect="fade"
 			widgetVar="documentDialog" modal="true">
 			<p:outputPanel id="documentPanel">
@@ -87,29 +85,6 @@
 			</p:outputPanel>
 		</p:dialog>
 
-		<p:panel id="jobListPanel" styleClass="tlosFormBorderHighlight"
-					rendered="#{not empty filteredJobListMBean.jobInfoList}">
-			<p:dataTable var="item" rows="10" id="jobListDataTable" resizableColumns="true"  
-					    filteredValue="#{filteredJobListMBean.filteredJobs}"
-						width="100%" value="#{filteredJobListMBean.jobInfoList}"
-						binding="#{filteredJobListMBean.jobDataTable}"
-						paginator="true" paginatorPosition="bottom"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15">
-
-				<p:column
-					headerText="#{msgs['tlos.live.pannel.job.jobName']}"
-					sortBy="#{item.jobKey}" filterBy="#{item.jobKey}"
-					filterMatchMode="contains">
-					<h:outputText value="#{item.jobKey}" style="text-align: center;" />
-				</p:column>
-
-
-
-			</p:dataTable>
-		</p:panel>
-
 	</h:form>
-
 
 </ui:composition>
