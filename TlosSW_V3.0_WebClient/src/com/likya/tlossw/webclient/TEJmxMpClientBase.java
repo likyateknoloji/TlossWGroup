@@ -56,7 +56,7 @@ public class TEJmxMpClientBase {
 
 				try {
 
-					// jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+					// jmxConnector = JMXConnectorFactory.connect(url, getEnv()); // TLS için
 					jmxConnector = JMXConnectorFactory.connect(url);
 					jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
 					logger.info(">> JMXMP Connection successfully established to " + url);
@@ -102,20 +102,20 @@ public class TEJmxMpClientBase {
 	}
 
 	protected static void disconnect(JMXConnector jmxConnector) {
-		try {
-			// Close MBeanServer connection
-			//
-			long startTime = System.currentTimeMillis();
-			Logger.getLogger(TEJmxMpClientBase.class).debug("Close the connection to the server...");
-			System.err.println(" TEJmxMpDBClient.disconnect :1 " + dateDiffWithNow(startTime) + "ms");
-			jmxConnector.close();
-			System.err.println(" TEJmxMpDBClient.disconnect :2 " + dateDiffWithNow(startTime) + "ms");
-			//selfInstance = null;
-			Logger.getLogger(TEJmxMpClientBase.class).debug("Closed !");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			// Close MBeanServer connection
+//			//
+//			long startTime = System.currentTimeMillis();
+//			Logger.getLogger(TEJmxMpClientBase.class).debug("Close the connection to the server...");
+//			System.err.println(" TEJmxMpDBClient.disconnect :1 " + dateDiffWithNow(startTime) + "ms");
+//			jmxConnector.close();
+//			System.err.println(" TEJmxMpDBClient.disconnect :2 " + dateDiffWithNow(startTime) + "ms");
+//			//selfInstance = null;
+//			Logger.getLogger(TEJmxMpClientBase.class).debug("Closed !");
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	protected static void disconnectJmx(JMXConnector jmxConnector) {
