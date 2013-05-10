@@ -18,7 +18,7 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "liveMBean")
 @ViewScoped
-public class LiveMBean extends TlosSWBaseBean implements Serializable{
+public class LiveMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = -72513231786102609L;
 
@@ -45,8 +45,6 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 		//addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().getType() + " selected", null);
 		//String selectedNode = event.getTreeNode().toString();
 		
-		RequestContext context = RequestContext.getCurrentInstance();
-		
 		if (event.getTreeNode().getType().equals(ConstantDefinitions.TREE_SCENARIO)) {
 			ScenarioNode scenarioNode = (ScenarioNode)event.getTreeNode().getData();
 			String spcId = scenarioNode.getSpcInfoTypeClient().getSpcId();
@@ -62,7 +60,6 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable{
 			liveJSTable = JOB_PAGE;
 		}
 		
-		context.update("liveForm");
 	}
 	
 	//job taniminda agentChoiceMethod: userInteractionPreference ise ekrandan agent listesini goruntule deyince buraya geliyor
