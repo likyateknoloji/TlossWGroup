@@ -71,7 +71,7 @@
 					<h:outputText value="#{msgs['tlos.live.pannel.job.logContent']}" />
 					<p:commandButton value="#{msgs['tlos.button.open']}"
 						rendered="#{jobMBean.jobLogExist}"
-						action="#{jobMBean.openJobLogAction}" update=":liveForm:dialogPanel" oncomplete="jobLogDialog.show();" />
+						action="#{jobMBean.openJobLogAction}" update=":liveForm:dialogPanel" oncomplete="jobLogDialog.show()" />
 					<p:inputText value="#{msgs['tlos.live.pannel.job.fileNotFound']}"
 						rendered="#{!jobMBean.jobLogExist}" disabled="true"
 						maxlength="500" style="width: 150px;" />
@@ -240,8 +240,8 @@
 				</p:panel>
 			</p:dialog>
 	
-			<p:dialog id="logDialog" header="#{msgs['tlos.popup.jobLog.panel']}" visible="#{jobMBean.jobLogPopup}"
-				widgetVar="joblogDialog" resizable="true" showEffect="show">
+			<p:dialog id="logDialog" header="#{msgs['tlos.popup.jobLog.panel']}"
+				widgetVar="jobLogDialog" resizable="true" showEffect="show">
 				<p:panel>
 					<h:outputText value="#{jobMBean.jobLog}" />
 				</p:panel>
