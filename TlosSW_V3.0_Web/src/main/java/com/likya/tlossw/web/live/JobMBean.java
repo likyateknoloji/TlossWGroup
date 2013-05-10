@@ -19,10 +19,11 @@ import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
+import com.likya.tlossw.webclient.TEJmxMpDBClient;
 
 @ManagedBean(name = "jobMBean")
 @ViewScoped
-public class JobMBean extends TlosSWBaseBean implements Serializable  {
+public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = -5989673026009812612L;
 
@@ -42,6 +43,9 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	
 	private ArrayList<AlarmInfoTypeClient> jobAlarmList;
 	private transient DataTable jobAlarmTable;
+	
+	private ArrayList<JobInfoTypeClient> jobBaseReportList;
+	private transient DataTable jobBaseReportTable;
 	
 	private boolean transformToLocalTime;
 	
@@ -82,7 +86,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	
 	public void fillJobReportGrid() {
 //		son 5 rundaki calisma listesini istiyor
-		//setJobBaseReportList(TEJmxMpDBClient.getJobResultList(ManagerMediator.getJmxUser(), jobInTyCl.getJobId(), 5, transformToLocalTime));
+		//jobBaseReportList = getDbOperations().getJobResultList(jobInTyCl.getJobId(), 5, transformToLocalTime);
 	}
 	
 	public void fillJobAlarmGrid() {
@@ -155,7 +159,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 	}
 	
 	private void refreshLivePanel() {
-		setJobInfo(jobInTyCl.getTreePath(), jobInTyCl.getJobId());
+		fillJobLivePanel(jobInTyCl.getTreePath(), jobInTyCl.getJobId());
 		
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
@@ -247,6 +251,22 @@ public class JobMBean extends TlosSWBaseBean implements Serializable  {
 
 	public void setJobLog(String jobLog) {
 		this.jobLog = jobLog;
+	}
+
+	public ArrayList<JobInfoTypeClient> getJobBaseReportList() {
+		return jobBaseReportList;
+	}
+
+	public void setJobBaseReportList(ArrayList<JobInfoTypeClient> jobBaseReportList) {
+		this.jobBaseReportList = jobBaseReportList;
+	}
+
+	public DataTable getJobBaseReportTable() {
+		return jobBaseReportTable;
+	}
+
+	public void setJobBaseReportTable(DataTable jobBaseReportTable) {
+		this.jobBaseReportTable = jobBaseReportTable;
 	}
 
 }
