@@ -17,9 +17,9 @@ import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
-import com.likya.tlossw.webclient.TEJmxMpDBClient;
 
 @ManagedBean(name = "jobMBean")
 @ViewScoped
@@ -29,66 +29,66 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
-	
+
 	private JobInfoTypeClient jobInTyCl;
 	private JobProperties job;
-	
+
 	private boolean jobCommandExist = false;
 	private String jobCommandStr;
-	
+
 	private boolean jobLogExist = false;
 	private String jobLog = "";
-	
+
 	private String jobDependencyListStr;
-	
+
 	private ArrayList<AlarmInfoTypeClient> jobAlarmList;
 	private transient DataTable jobAlarmTable;
-	
+
 	private ArrayList<JobInfoTypeClient> jobBaseReportList;
 	private transient DataTable jobBaseReportTable;
-	
+
 	private boolean transformToLocalTime;
-	
+
 	public void fillJobLivePanel(String groupId, String jobName) {
 		setJobInfo(groupId, jobName);
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
-	
+
 	public void setJobInfo(String groupId, String jobName) {
 		jobInTyCl = new JobInfoTypeClient();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(new JmxUser(), groupId, jobName, transformToLocalTime);
-		
-		//her isin komut dosyasi yok
-		if(jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
+
+		// her isin komut dosyasi yok
+		if (jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
 			jobCommandExist = TEJmxMpClient.checkFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
 		}
-		
+
 		jobLogExist = TEJmxMpClient.checkFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName()));
-		
+
 		jobDependencyListStr = "";
-		if(jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
-			for(String depJobName: jobInTyCl.getJobDependencyList()) {
+		if (jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
+			for (String depJobName : jobInTyCl.getJobDependencyList()) {
 				jobDependencyListStr += depJobName + ",";
 			}
 			jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
 		}
 	}
-	
+
 	public void openJobCommandAction() {
 		String jcmdStr = LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath().toString(), jobInTyCl.getJobCommand().toString());
 		jobCommandStr = TEJmxMpClient.readFile(new JmxUser(), jcmdStr).toString();
 	}
-	
+
 	public void openJobLogAction() {
 		jobLog = TEJmxMpClient.readFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName())).toString();
 	}
-	
+
 	public void fillJobReportGrid() {
-//		son 5 rundaki calisma listesini istiyor
-		//jobBaseReportList = getDbOperations().getJobResultList(jobInTyCl.getJobId(), 5, transformToLocalTime);
+		// son 5 rundaki calisma listesini istiyor
+		jobBaseReportList = getDbOperations().getJobResultList(ConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 5, transformToLocalTime);
 	}
-	
+
 	public void fillJobAlarmGrid() {
 		jobAlarmList = getDbOperations().getJobAlarmHistory(jobInTyCl.getJobId(), transformToLocalTime);
 	}
@@ -96,75 +96,83 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	public void pauseJobAction(ActionEvent e) {
 		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.pause");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.pause");
+		 */
 	}
-	
+
 	public void startJobAction(ActionEvent e) {
 		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.start");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
+		 */
 	}
-	
-	//user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
+
+	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
 		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.start");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
+		 */
 	}
-	
+
 	public void stopJobAction(ActionEvent e) {
 		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.stop");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.stop");
+		 */
 	}
 
 	public void retryJobAction(ActionEvent e) {
 		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.retry");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.retry");
+		 */
 	}
-	
+
 	public void doSuccessJobAction(ActionEvent e) {
 		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.doSuccess");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.doSuccess");
+		 */
 	}
 
 	public void skipJobAction(ActionEvent e) {
 		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.skip");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.skip");
+		 */
 	}
-	
+
 	public void resumeJobAction(ActionEvent e) {
 		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.resume");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + jobInTyCl.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.resume");
+		 */
 	}
-	
+
 	private void refreshLivePanel() {
 		fillJobLivePanel(jobInTyCl.getTreePath(), jobInTyCl.getJobId());
-		
+
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
 	}
-	
+
 	public boolean isTransformToLocalTime() {
 		return transformToLocalTime;
 	}

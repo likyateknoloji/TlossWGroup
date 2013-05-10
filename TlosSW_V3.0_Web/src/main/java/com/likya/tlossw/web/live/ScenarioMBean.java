@@ -21,7 +21,7 @@ import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "scenarioMBean")
 @ViewScoped
-public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
+public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 4922375731088848331L;
 
@@ -30,16 +30,16 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 	private ArrayList<JobInfoTypeClient> jobInfoList;
 
 	private transient DataTable jobDataTable;
-	private List<JobInfoTypeClient> filteredJobs;  
-	private JobInfoTypeClient selectedRow; 
+	private List<JobInfoTypeClient> filteredJobs;
+	private JobInfoTypeClient selectedRow;
 	private JobInfoTypeClient[] selectedRows;
 
-	ArrayList<String> oSList = new ArrayList<String>(); 
+	ArrayList<String> oSList = new ArrayList<String>();
 
 	private SelectItem[] oSSelectItem;
 
 	private boolean transformToLocalTime;
-	
+
 	public void getJobList(String scenarioId) {
 		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(new JmxUser(), scenarioId);
 
@@ -61,136 +61,149 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable{
 
 	}
 
-	private SelectItem[] createFilterOptions(ArrayList<String> data)  {  
-		SelectItem[] options = new SelectItem[data.size() + 1];  
+	private SelectItem[] createFilterOptions(ArrayList<String> data) {
+		SelectItem[] options = new SelectItem[data.size() + 1];
 
-		options[0] = new SelectItem("", "Select");  
-		for(int i = 0; i < data.size(); i++) {  
-			options[i + 1] = new SelectItem(data.get(i), data.get(i));  
-		}  
+		options[0] = new SelectItem("", "Select");
+		for (int i = 0; i < data.size(); i++) {
+			options[i + 1] = new SelectItem(data.get(i), data.get(i));
+		}
 
-		return options;  
+		return options;
 	}
 
 	public void stopScenarioNormalAction(ActionEvent e) {
 		TEJmxMpClient.stopScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId(), false);
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), 
-				"tlos.trace.live.scenario.stop.normal");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.normal");
+		 */
 	}
 
 	public void stopScenarioForcedAction(ActionEvent e) {
 		TEJmxMpClient.stopScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId(), true);
 		getJobList(getSpcInfoTypeClient().getSpcId());
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), 
-				"tlos.trace.live.scenario.stop.force");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.force");
+		 */
 	}
 
 	public void pauseScenarioAction(ActionEvent e) {
 		TEJmxMpClient.suspendScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), 
-				"tlos.trace.live.scenario.pause");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.pause");
+		 */
 	}
 
 	public void resumeScenarioAction(ActionEvent e) {
 		TEJmxMpClient.resumeScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), 
-				"tlos.trace.live.scenario.resume");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.resume");
+		 */
 	}
 
 	public void startScenarioAction(ActionEvent e) {
 		TEJmxMpClient.restartScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), 
-				"tlos.trace.live.scenario.start");*/
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.start");
+		 */
 	}
 
 	public void viewScenarioTree() {
-		//TODO merve : eskisinde ayrı bir panele geçiyordu (scenarioTreePanel.xhtml),
+		// TODO merve : eskisinde ayrı bir panele geçiyordu (scenarioTreePanel.xhtml),
 		// şimdiki duruma göre eklenecek
 	}
-	
+
 	public void pauseJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.pause");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.pause");
+		 */
 	}
-	
-	//user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
+
+	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.start");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
+		 */
 	}
-		
+
 	public void startJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.start");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
+		 */
 	}
-	
+
 	public void retryJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.retry");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.retry");
+		 */
 	}
-	
+
 	public void doSuccessJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.doSuccess");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.doSuccess");
+		 */
 	}
-	
+
 	public void skipJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.skip");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.skip");
+		 */
 	}
-	
+
 	public void stopJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.stop");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.stop");
+		 */
 	}
-	
+
 	public void resumeJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
 		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
-		
-		/*TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), 
-				"tlos.trace.live.job.resume");*/
+
+		/*
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.resume");
+		 */
 	}
-	
+
 	private void refreshLivePanel(String scenarioPath) {
 		getJobList(scenarioPath);
-		
+
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
 	}
-	
+
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
 		return jobInfoList;
 	}

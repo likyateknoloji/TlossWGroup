@@ -3,14 +3,16 @@ package com.likya.tlossw.web.db;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.xmlbeans.XmlException;
-import org.exist.xquery.functions.session.GetID;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -29,6 +31,7 @@ import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument.AlarmReport;
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
+import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument;
@@ -52,6 +55,7 @@ import com.likya.tlos.model.xmlbeans.report.ReportDocument;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
+import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListDocument;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceListType;
 import com.likya.tlos.model.xmlbeans.swresourcens.ResourceType;
@@ -64,6 +68,7 @@ import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.Web
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
@@ -84,8 +89,7 @@ public class DBOperations implements Serializable {
 
 		try {
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-					+ "lk:searchAgent(" + agentXML + ")";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgent(" + agentXML + ")";
 
 			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -180,8 +184,7 @@ public class DBOperations implements Serializable {
 
 	public boolean updateAgent(String agentXML) {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "lk:updateAgentLock(" + agentXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:updateAgentLock(" + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -230,8 +233,7 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertAgent(String agentXML) {
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "lk:insertAgentLock(" + agentXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:insertAgentLock(" + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -279,8 +281,7 @@ public class DBOperations implements Serializable {
 	public SWAgent searchAgentByResource(String resourcename) throws XMLDBException {
 
 		SWAgent agent = null;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "lk:searchAgentByResource(" + "\"" + resourcename + "\"" + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgentByResource(" + "\"" + resourcename + "\"" + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -306,8 +307,7 @@ public class DBOperations implements Serializable {
 	public SWAgent searchAgentById(String id) {
 
 		SWAgent agent = null;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "lk:searchAgentByAgentId(" + id + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgentByAgentId(" + id + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -376,8 +376,7 @@ public class DBOperations implements Serializable {
 
 	public boolean deleteAgent(String agentXML) {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "lk:deleteAgentLock(" + agentXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:deleteAgentLock(" + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -484,8 +483,7 @@ public class DBOperations implements Serializable {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-					+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:getTlosDataXml(xs:string(\"" + documentName + "\"))";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:getTlosDataXml(xs:string(\"" + documentName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -546,8 +544,7 @@ public class DBOperations implements Serializable {
 	public boolean updatePermissions(String permissionsXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/modulePermissionOperations.xquery\";" + "declare namespace per = \"http://www.likyateknoloji.com/XML_permission_types\";  "
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "hs:updatePermissionsLock(" + permissionsXML + " )";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/modulePermissionOperations.xquery\";" + "declare namespace per = \"http://www.likyateknoloji.com/XML_permission_types\";  " + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "hs:updatePermissionsLock(" + permissionsXML + " )";
 
 		XPathQueryService service = null;
 		try {
@@ -569,8 +566,7 @@ public class DBOperations implements Serializable {
 
 		ArrayList<DbProperties> dbConnectionList = new ArrayList<DbProperties>();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:searchDbConnection(" + dbConnectionXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:searchDbConnection(" + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -823,8 +819,7 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<AlarmReport> getAlarmReportList(String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:getAlarms(\"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName
-				+ "\", \"" + alarmUser + "\")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:getAlarms(\"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -904,8 +899,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:deleteDbConnection(" + dbConnectionXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:deleteDbConnection(" + dbConnectionXML + ")";
 
 		XPathQueryService service;
 
@@ -926,8 +920,7 @@ public class DBOperations implements Serializable {
 	public boolean insertDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:insertDbConnection(" + dbConnectionXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:insertDbConnection(" + dbConnectionXML + ")";
 
 		XPathQueryService service;
 
@@ -948,8 +941,7 @@ public class DBOperations implements Serializable {
 	public boolean updateDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:updateDbConnectionLock(" + dbConnectionXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:updateDbConnectionLock(" + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -969,8 +961,7 @@ public class DBOperations implements Serializable {
 	public boolean checkDBConnectionName(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:checkDbConnectionName(" + dbConnectionXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:checkDbConnectionName(" + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -999,8 +990,7 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-					+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnection(" + id + ")";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnection(" + id + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1030,8 +1020,7 @@ public class DBOperations implements Serializable {
 
 		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
 
 		try {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -1064,8 +1053,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<DBAccessInfoTypeClient> searchDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
 
 		HashMap<BigInteger, DbProperties> dbDefinitionList = new HashMap<BigInteger, DbProperties>();
 
@@ -1097,8 +1085,7 @@ public class DBOperations implements Serializable {
 			return null;
 		}
 
-		xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:searchDbAccessProfile(" + dbAccessProfileXML + ")";
+		xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:searchDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		ArrayList<DBAccessInfoTypeClient> dbAccessInfoTypeClients = new ArrayList<DBAccessInfoTypeClient>();
 
@@ -1139,8 +1126,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:deleteDbAccessProfile(" + dbAccessProfileXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:deleteDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -1161,8 +1147,7 @@ public class DBOperations implements Serializable {
 	public boolean insertDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:insertDbAccessProfile(" + dbAccessProfileXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:insertDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -1183,8 +1168,7 @@ public class DBOperations implements Serializable {
 	public boolean updateDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:updateDbAccessProfileLock(" + dbAccessProfileXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:updateDbAccessProfileLock(" + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -1210,8 +1194,7 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-					+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbCP(" + id + ")";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbCP(" + id + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1614,8 +1597,7 @@ public class DBOperations implements Serializable {
 	public boolean insertWSDefinition(String wsPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:insertWSDefinition(" + wsPropertiesXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:insertWSDefinition(" + wsPropertiesXML + ")";
 
 		XPathQueryService service;
 
@@ -1638,8 +1620,7 @@ public class DBOperations implements Serializable {
 
 		JobProperties jobProperties = JobProperties.Factory.newInstance();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-				+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:getJobFromJobName(" + "xs:string(\"" + documentName + "\")" + ", \"" + jobName + "\")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:getJobFromJobName(" + "xs:string(\"" + documentName + "\")" + ", \"" + jobName + "\")";
 
 		XPathQueryService service;
 		try {
@@ -1669,8 +1650,7 @@ public class DBOperations implements Serializable {
 	public boolean insertJob(String documentName, String jobPropertiesXML, String jobPath) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-				+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		XPathQueryService service;
 		try {
@@ -1698,8 +1678,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-					+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJob(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJob(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1803,8 +1782,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<WebServiceDefinition> getWebServiceListForActiveUser(int userId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSDefinitionListForActiveUser(" + userId + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSDefinitionListForActiveUser(" + userId + ")";
 
 		ArrayList<WebServiceDefinition> webServiceList = new ArrayList<WebServiceDefinition>();
 
@@ -1883,8 +1861,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<DbProperties> getDBConnections() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnectionAll()";
 
 		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
 
@@ -1918,16 +1895,14 @@ public class DBOperations implements Serializable {
 	}
 
 	/**
-	 * Veri tabaninda tanimli olan veri tabani erisim profilleri listesini
-	 * sorguluyor
+	 * Veri tabaninda tanimli olan veri tabani erisim profilleri listesini sorguluyor
 	 * 
 	 * @return veri tabani erisim profilleri listesini donuyor
 	 */
 	public ArrayList<DbConnectionProfile> getDBProfiles() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";"
-				+ "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbProfileAll()";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbProfileAll()";
 
 		ArrayList<DbConnectionProfile> dbProfileList = new ArrayList<DbConnectionProfile>();
 
@@ -2220,8 +2195,7 @@ public class DBOperations implements Serializable {
 	public Scenario getScenario(String documentName, String scenarioPath, String scenarioName) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-				+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getScenario(" + "xs:string(\"" + documentName + "\")" + "," + scenarioPath + ", \"" + scenarioName + "\" )";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getScenario(" + "xs:string(\"" + documentName + "\")" + "," + scenarioPath + ", \"" + scenarioName + "\" )";
 
 		Scenario scenario = null;
 
@@ -2255,8 +2229,7 @@ public class DBOperations implements Serializable {
 	public boolean insertScenario(String documentName, String scenarioXML, String scenarioPath) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "
-				+ "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		XPathQueryService service;
 		try {
@@ -2275,8 +2248,7 @@ public class DBOperations implements Serializable {
 
 	public JobArray getOverallReport(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
-				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -2292,23 +2264,23 @@ public class DBOperations implements Serializable {
 			String xmlContent = (String) r.getContent();
 
 			try {
- 				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
+				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
 			} catch (XmlException e) {
 				e.printStackTrace();
 				return null;
 			}
-	 
-      }
+
+		}
 
 		return jobArray;
 	}
-/*
+
+	/*
  * 	
  */
-	public ArrayList<Job> getJobArrayReport(int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount) throws XMLDBException {
+	public ArrayList<Job> getJobArrayReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
-				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + "," + jobId + "," + refPoint + "()),\"" + orderType + "\"," + jobCount + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + "," + jobId + "," + refPoint + "()),\"" + orderType + "\"," + jobCount + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -2324,79 +2296,60 @@ public class DBOperations implements Serializable {
 			String xmlContent = (String) r.getContent();
 
 			try {
-			
-//				 XmlOptions xmlOption = new XmlOptions(); 
-//				 Map <String,String> map=new HashMap<String,String>();
-//				 map.put("","http://www.likyateknoloji.com/XML_report_types");
-//				 xmlOption.setLoadSubstituteNamespaces(map);
-				  
+
+				// XmlOptions xmlOption = new XmlOptions();
+				// Map <String,String> map=new HashMap<String,String>();
+				// map.put("","http://www.likyateknoloji.com/XML_report_types");
+				// xmlOption.setLoadSubstituteNamespaces(map);
+
 				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
 			} catch (XmlException e) {
 				e.printStackTrace();
 				return null;
 			}
 		}
-		int numberOfJobs = (jobArray.getNumberOfJobs().intValue() > jobCount ) ? jobCount : jobArray.getNumberOfJobs().intValue();
+		int numberOfJobs = (jobArray.getNumberOfJobs().intValue() > jobCount) ? jobCount : jobArray.getNumberOfJobs().intValue();
 
-//        for (Job job : jobArray.getJobArray()) {
-//            jobs.add(job);
-//      }
+		// for (Job job : jobArray.getJobArray()) {
+		// jobs.add(job);
+		// }
 		ArrayList<Job> jobs = new ArrayList<Job>();
-        for (int k=0; k < numberOfJobs; k++ ) {
-            jobs.add(jobArray.getJobArray(k));
-      }
-
-		return jobs;
-	}
-/*
-	public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
-		
-		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
-		
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";"
-				+ "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-        ArrayList<Job> jobs = new ArrayList<Job>();
-		JobArray jobArray = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-			
-//				 XmlOptions xmlOption = new XmlOptions(); 
-//				 Map <String,String> map=new HashMap<String,String>();
-//				 map.put("","http://www.likyateknoloji.com/XML_report_types");
-//				 xmlOption.setLoadSubstituteNamespaces(map);
-				  
-				jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1();
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		for (int k = 0; k < numberOfJobs; k++) {
+			jobs.add(jobArray.getJobArray(k));
 		}
-        for (Job job : jobArray.getJobArray()) {
-            jobs.add(job);
-      }
 
 		return jobs;
 	}
-	*/
+
+	/*
+	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
+	 * 
+	 * TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
+	 * 
+	 * SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+	 * 
+	 * String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
+	 * 
+	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0"); service.setProperty("indent", "yes");
+	 * 
+	 * ResourceSet result = service.query(xQueryStr); ResourceIterator i = result.getIterator();
+	 * 
+	 * ArrayList<Job> jobs = new ArrayList<Job>(); JobArray jobArray = null;
+	 * 
+	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+	 * 
+	 * try {
+	 * 
+	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); // xmlOption.setLoadSubstituteNamespaces(map);
+	 * 
+	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) { jobs.add(job); }
+	 * 
+	 * return jobs; }
+	 */
 	public SWAgent checkAgent(String resource, short jmxPort) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";"
-				+ "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(" + "xs:string(\"" + resource + "\")," + jmxPort + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(" + "xs:string(\"" + resource + "\")," + jmxPort + ")";
 
 		SWAgent agent = null;
 
@@ -2434,10 +2387,9 @@ public class DBOperations implements Serializable {
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
-		
+
 		service.query(xQueryStr1);
- 
-		
+
 		// System.err.println(" dashboardReport1 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		// Latest Report Id
 		int reportId = -1;
@@ -2474,19 +2426,18 @@ public class DBOperations implements Serializable {
 		System.err.println(" dashboardReport3 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		return report;
 	}
-	
+
 	public ArrayList<AlarmInfoTypeClient> getJobAlarmHistory(String jobId, Boolean transformToLocalTime) {
 		Collection collection = existConnectionHolder.getCollection();
 
 		// verilen isin son 5 rundaki alarmini runid'den bagimsiz olarak
 		// getiriyor
-		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";"
-				+ "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
+		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
 
 		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
 
 		XPathQueryService service;
-		try { 
+		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
@@ -2512,7 +2463,7 @@ public class DBOperations implements Serializable {
 
 		return alarmList;
 	}
-	
+
 	private AlarmInfoTypeClient fillAlarmInfoTypeClient(XPathQueryService service, com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm, String jobId, Boolean transformToLocalTime) throws XMLDBException {
 
 		AlarmInfoTypeClient alarmInfoTypeClient = new AlarmInfoTypeClient();
@@ -2525,26 +2476,15 @@ public class DBOperations implements Serializable {
 		ResourceSet result;
 		ResourceIterator i;
 		/*
-		// alarmin gerceklestigi kaynak ve agant id'sini set ediyor
-		xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgentByAgentId(" + alarm.getAgentId() + ")";
+		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";" + "lk:searchAgentByAgentId(" + alarm.getAgentId() + ")";
+		 * 
+		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
+		 * 
+		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+		 * 
+		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch (XmlException e) { e.printStackTrace(); } } alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());
+		 */
 
-		result = service.query(xQueryStr);
-		i = result.getIterator();
-		SWAgent agent = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
-				break;
-			} catch (XmlException e) {
-				e.printStackTrace();
-			}
-		}
-		alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());*/
-		
 		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
 
 		// bu is icin kullanilan warnBy degerini set ediyor
@@ -2627,7 +2567,112 @@ public class DBOperations implements Serializable {
 
 		return alarmInfoTypeClient;
 	}
- 
+
+	public ArrayList<JobInfoTypeClient> getJobResultList(String documentName, String jobId, int runNumber, Boolean transformToLocalTime) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs = \"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
+
+		ArrayList<JobInfoTypeClient> jobs = new ArrayList<JobInfoTypeClient>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			JobProperties jobProperties = null;
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
+					jobs.add(fillJobInfoTypeClient(jobProperties, jobs.size(), transformToLocalTime));
+
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return jobs;
+	}
+
+	private JobInfoTypeClient fillJobInfoTypeClient(JobProperties jobProperties, int jobListSize, Boolean transformToLocalTime) {
+
+		JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
+
+		jobInfoTypeClient.setLSIDateTime(jobProperties.getLSIDateTime());
+		jobInfoTypeClient.setJobId(jobProperties.getID());
+		jobInfoTypeClient.setJobKey(jobProperties.getBaseJobInfos().getJsName());
+		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
+		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
+		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
+		jobInfoTypeClient.setJobLogPath(jobProperties.getBaseJobInfos().getJobLogPath());
+		jobInfoTypeClient.setJobLogName(jobProperties.getBaseJobInfos().getJobLogFile());
+		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
+		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
+
+		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
+		jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), false, transformToLocalTime));
+		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
+
+		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
+			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+
+			// is bitmisse
+			if (jobProperties.getTimeManagement().getJsRealTime().getStopTime() != null) {
+				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+			} else {
+				jobInfoTypeClient.setCompletionDate("?");
+			}
+
+			// o gunku calisma mi yoksa eski calisma mi oldugunu kontrol ediyor
+			boolean pastExecution = true;
+			if (jobListSize == 0) {
+				pastExecution = false;
+			}
+
+			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobProperties.getTimeManagement().getJsRealTime(), pastExecution));
+		}
+
+		// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
+		jobInfoTypeClient.setOver(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
+		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
+
+		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
+		jobInfoTypeClient.setSafeRestart(jobProperties.getCascadingConditions().getJobSafeToRestart().toString());
+
+		if (jobProperties.getDependencyList() != null) {
+			List<Item> myList = Arrays.asList(jobProperties.getDependencyList().getItemArray());
+			ArrayList<Item> dependencyList = new ArrayList<Item>(myList);
+			Iterator<Item> dependencyListIterator = dependencyList.iterator();
+			ArrayList<String> depenArrayList = new ArrayList<String>();
+			while (dependencyListIterator.hasNext()) {
+				depenArrayList.add(dependencyListIterator.next().getJsName());
+			}
+			jobInfoTypeClient.setJobDependencyList(depenArrayList);
+		}
+
+		jobInfoTypeClient.setAgentId(jobProperties.getAgentId());
+
+		/*
+		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
+		 * 
+		 * jobInfoTypeClient.setResourceName(agent.getResource().getStringValue()); }
+		 */
+
+		return jobInfoTypeClient;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
