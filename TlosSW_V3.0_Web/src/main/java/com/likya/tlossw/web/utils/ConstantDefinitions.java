@@ -26,4 +26,9 @@ public class ConstantDefinitions {
 	public static final String USER_ID = "userId";
 	public static final String SCENARIO_ID = "scenarioId";
 
+	/**
+	 * eXist'teki xml dosyalari
+	 */
+	public static final String DAILY_SCENARIOS_DATA = "tlosSWDailyScenarios10.xml";
+	
 }
