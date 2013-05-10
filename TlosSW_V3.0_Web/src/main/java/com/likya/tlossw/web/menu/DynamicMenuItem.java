@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
 import javax.faces.application.FacesMessage;
@@ -64,6 +65,10 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Administration", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Preferences", "#"));
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Help", "#"));
+			
+			MenuItems logoutMenuItem = new MenuItems(null, "ui-icon-document", "Logout", "#");
+			logoutMenuItem.setValueExpression("#{loginBean.logout}");
+			menuitems.add(logoutMenuItem);
 
 			menuitems.add(new MenuItems(" ", "ui-icon-home", "Home", "/"));
 
@@ -163,12 +168,23 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 				parent = whoIsNext.getParent().toString();
 
 			if (parent == null) {
-				// First submenu
-				Submenu submenu = new Submenu();
-				submenu.setLabel(whoIsNext.getName());
-				submenu.setId(uiViewRoot.createUniqueId());
+				
+				if(whoIsNext.getValueExpression() != null) {
+					// Logout için özel
+					MenuItem item = new MenuItem();
+					item.setActionExpression(createMethodExpression(whoIsNext.getValueExpression()));
+					item.setValue(whoIsNext.getName());
+					item.setId(uiViewRoot.createUniqueId());
+					contents.add(item);
+				} else {
+					// First submenu
+					Submenu submenu = new Submenu();
+					submenu.setLabel(whoIsNext.getName());
+					submenu.setId(uiViewRoot.createUniqueId());
+					contents.add(submenu);
+				}
 				// submenu.getAttributes().put("submenu", whoIsNext);
-				contents.add(submenu);
+				
 //				System.out.println("ParentId = NULL <" + name + "> item i <KOK> altina yerlestirildi.");
 			} else {
 				String parentId = searchInMenuByName(contents, parent);
@@ -186,7 +202,9 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 					item.setId(uiViewRoot.createUniqueId());
 					item.setAjax(false);
 					item.getAttributes().put("menuitem", whoIsNext);
+					
 					item.addActionListener(createMethodActionListener());
+					
 					UIComponent submenuItem = searchInMenuById(contents, parentId);
 
 					if (submenuItem instanceof Submenu)
@@ -297,11 +315,23 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 	    addMessage("MESAJ VAR !!" + getSelectedMenuItem());
 	}
 	
+	protected MethodExpression createMethodExpression(String elValue) {
+		
+		FacesContext facesCtx = FacesContext.getCurrentInstance();
+		ELContext elCtx = facesCtx.getELContext();
+		ExpressionFactory expFact = facesCtx.getApplication().getExpressionFactory();
+		
+		return expFact.createMethodExpression(elCtx, elValue, String.class, new Class[0]);
+	}
+	
 	protected MethodExpressionActionListener createMethodActionListener() {
+	
+		valueExpression = "#{dynamicMenuItem.actionListener}";
+		
 		MethodExpressionActionListener actionListener = null;
 		Class<?> valueType = Void.TYPE;
 		Class<?>[] expectedParamTypes = new Class[] { ActionEvent.class };
-		valueExpression = "#{dynamicMenuItem.actionListener}";
+		
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 			ExpressionFactory factory = FacesContext.getCurrentInstance().getApplication().getExpressionFactory();

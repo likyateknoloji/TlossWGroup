@@ -20,6 +20,8 @@ public class MenuItems implements Serializable {
 	private String name;
 	private String link;
 
+	private String valueExpression = null;
+	
 	public int getId() {
 		return id;
 	}
@@ -130,5 +132,13 @@ public class MenuItems implements Serializable {
 
 	public void setParent(String parent) {
 		this.parent = parent;
+	}
+
+	public String getValueExpression() {
+		return valueExpression;
+	}
+
+	public void setValueExpression(String valueExpression) {
+		this.valueExpression = valueExpression;
 	}
 }
