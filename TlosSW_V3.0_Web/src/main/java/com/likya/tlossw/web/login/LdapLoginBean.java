@@ -6,11 +6,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.management.remote.JMXConnector;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
@@ -18,13 +16,12 @@ import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.AppUser;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.utils.LdapClient;
 
 @ManagedBean(name = LdapLoginBean.BEAN_NAME)
 @ViewScoped
-public class LdapLoginBean extends TlosSWBaseBean implements Serializable {
+public class LdapLoginBean extends LoginBase implements Serializable {
 
 	private static final long serialVersionUID = 2692803198850093936L;
 
@@ -132,19 +129,6 @@ public class LdapLoginBean extends TlosSWBaseBean implements Serializable {
 
 		return LOGIN_FAILURE;
 
-	}
-
-	private void setSessionLoginParam(boolean isLoggedIn) {
-		HttpSession httpSession = null;
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-
-		if (facesContext != null) {
-			httpSession = (HttpSession) facesContext.getExternalContext().getSession(false);
-		}
-
-		if (httpSession != null) {
-			httpSession.setAttribute("LoggedIn", Boolean.toString(isLoggedIn));
-		}
 	}
 
 	public static void copyAppUserToPerson(AppUser appUser, Person person) {
