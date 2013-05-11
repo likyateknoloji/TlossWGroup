@@ -248,11 +248,13 @@ declare function hs:jobStateListbyRunId($numberOfElement as xs:int, $runId as xs
     let $nextId := sq:getNextId("reportId")
     let $createBlankReport := hs:insertStateReportLock($jobId, $nextId)
 
-	let $sonuc := for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
+	let $arasonuc := for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN
 					 where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
 					 order by $runx/@id descending
 	                 return hs:jobStateReport($runx/dat:TlosProcessData, $jobId, $nextId)
-
+    let $sonuc := if(exists($arasonuc)) 
+	              then hs:searchStateReportById(sq:getReportId())
+	              else ()
 	return $sonuc
 };
 
@@ -261,22 +263,18 @@ declare function hs:jobStateReport($n as element(dat:TlosProcessData), $jobId as
    (: Son state leri belirleme kismi :)
    let $propertiesList := $n//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
    let $stateList :=
-         for $donbaba in fn:distinct-values($propertiesList//dat:jobProperties/@ID)
-         let $jobsInGroup := $propertiesList//dat:jobProperties[@ID = $donbaba]
+         for $donbaba in fn:distinct-values($propertiesList/@ID)
+         let $jobsInGroup := $propertiesList[@ID = $donbaba]
          return
              let $kacdefa := count($jobsInGroup)
              let $list := if ($kacdefa = 1) then $jobsInGroup[@agentId="0"]/dat:stateInfos/state-types:LiveStateInfos
-                          else $jobsInGroup[@agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
-	     return hs:jobStateReportFromLiveStateInfo($list, $jobId, $nextId)
- (:  let $stateList :=
-         for $donbaba in $n//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]/dat:stateInfos/state-types:LiveStateInfos
-	     order by $donbaba descending
-	     return hs:jobStateReportFromLiveStateInfo($donbaba, $jobId, $nextId)
-:)
-	let $sonuc2 := for $runx at $pos in $stateList/state-types:LiveStateInfo
+                          else $jobsInGroup[@agentId!="0"][1]/dat:stateInfos/state-types:LiveStateInfos
+         return hs:jobStateReportFromLiveStateInfo($list, $jobId, $nextId)
+
+    let $sonuc2 := for $runx at $pos in $stateList/state-types:LiveStateInfo
                    order by $runx/@LSIDateTime descending
 	               return $runx
-	return $n
+	return $sonuc2
  };
 
 declare function hs:jobStateReportFromLiveStateInfo($stateList as element(state-types:LiveStateInfos), $jobId as xs:int, $nextId as xs:int) as node()*
