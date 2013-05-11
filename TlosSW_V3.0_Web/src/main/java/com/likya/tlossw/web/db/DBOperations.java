@@ -2382,33 +2382,15 @@ public class DBOperations implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr1 = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,fn:boolean(0))";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,true())";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		service.query(xQueryStr1);
-
-		// System.err.println(" dashboardReport1 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-		// Latest Report Id
-		int reportId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getReportId()";
-
 		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i1 = result.getIterator();
 
-		while (i1.hasMoreResources()) {
-			Resource r = i1.nextResource();
-			reportId = Integer.parseInt(r.getContent().toString());
-		}
-		System.err.println(" dashboardReport2 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-		// get Report
-		String xQueryStr2 = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\";" + "hs:searchStateReportById(" + reportId + ")";
-
-		ResourceSet result2 = service.query(xQueryStr2);
-
-		ResourceIterator i = result2.getIterator();
+		ResourceIterator i = result.getIterator();
 		Report report = null;
 
 		while (i.hasMoreResources()) {
@@ -2423,7 +2405,7 @@ public class DBOperations implements Serializable {
 			}
 
 		}
-		System.err.println(" dashboardReport3 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		System.err.println(" dashboardReport : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		return report;
 	}
 
