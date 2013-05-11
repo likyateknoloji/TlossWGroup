@@ -127,7 +127,7 @@
 	<con:jmxParams>
 		<con:jmxTlsPort>
             <com:comment>jmxTlsPort</com:comment>
-            <com:portNumber>3001</com:portNumber>
+            <com:portNumber>5555</com:portNumber>
         </con:jmxTlsPort>
         <con:jmxPort>
             <com:comment>jmxPort</com:comment>
