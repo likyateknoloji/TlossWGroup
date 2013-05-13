@@ -53,6 +53,8 @@ import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
+import com.likya.tlos.model.xmlbeans.report.StatisticsDocument;
+import com.likya.tlos.model.xmlbeans.report.StatisticsDocument.Statistics;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -2376,6 +2378,37 @@ public class DBOperations implements Serializable {
 			e.printStackTrace();
 		}
 		return agent;
+	}
+
+	public Statistics getDensityReport(String state, String substate, String status, String startDateTime, String endDateTime, String step) throws XMLDBException {
+
+		long startTime = System.currentTimeMillis();
+		
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace density=\"http://density.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDensityCalculations.xquery\";" + "density:recStat(" + state + "," + substate+ "," +status+ "," +startDateTime+ "," +endDateTime+ "," +step+")";
+
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		service.setProperty("indent", "yes");
+
+		ResourceSet result = service.query(xQueryStr);
+
+		ResourceIterator i = result.getIterator();
+		Statistics stat = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+				stat = StatisticsDocument.Factory.parse(xmlContent).getStatistics();
+			} catch (XmlException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+		}
+		System.err.println(" dashboardReport : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		return stat;
 	}
 
 	public Report getDashboardReport(int derinlik) throws XMLDBException {
