@@ -72,13 +72,13 @@
 					<p:inputText value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
 				</p:panelGrid>
 
-				<p:dialog id="jobCommandDialog" header="#{msgs['tlos.popup.jobCommand.panel']}" widgetVar="jobCommandDialog" resizable="true" showEffect="show" modal="true" appendToBody="true" >
+				<p:dialog id="jobCommandDialog" header="#{msgs['tlos.popup.jobCommand.panel']}" widgetVar="jobCommandDialog" resizable="true" showEffect="show" modal="true" appendToBody="true">
 					<p:panel id="jobCommandPanel">
 						<h:outputText value="#{jobMBean.jobCommandStr}" />
 					</p:panel>
 				</p:dialog>
 
-				<p:dialog id="jobLogDialog" header="#{msgs['tlos.popup.jobLog.panel']}" widgetVar="jobLogDialog" resizable="true" showEffect="show" modal="true" appendToBody="true" >
+				<p:dialog id="jobLogDialog" header="#{msgs['tlos.popup.jobLog.panel']}" widgetVar="jobLogDialog" resizable="true" showEffect="show" modal="true" appendToBody="true">
 					<p:panel id="jobLogPanel">
 						<h:outputText value="#{jobMBean.jobLog}" />
 					</p:panel>
@@ -123,7 +123,7 @@
 
 			<br />
 
-			<p:panel id="alarmPanel" header="#{msgs['tlos.live.pannel.job.pastAlarmInfo']}" rendered="#{not empty jobMBean.jobAlarmList}" toggleable="true" toggleSpeed="500" collapsed="true" >
+			<p:panel id="alarmPanel" header="#{msgs['tlos.live.pannel.job.pastAlarmInfo']}" rendered="#{not empty jobMBean.jobAlarmList}" toggleable="true" toggleSpeed="500" collapsed="true">
 
 				<p:dataTable id="alarmDataTable" var="alarm" value="#{jobMBean.jobAlarmList}" widgetVar="itemsTable" resizableColumns="true" binding="#{jobMBean.jobAlarmTable}" width="100%">
 
@@ -173,7 +173,7 @@
 
 				<p:dialog id="alarmDialog" header="#{msgs['tlos.live.pannel.job.alarmDetail']}" widgetVar="alarmDialog" resizable="false" showEffect="show" modal="true" appendToBody="true">
 					<p:panel id="alarmDetail">
-						<p:panelGrid columns="4" >
+						<p:panelGrid columns="4">
 							<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.name']}" />
 							<p:inputText value="#{jobMBean.selectedAlarm.alarmName}" readonly="true" />
 
@@ -229,7 +229,7 @@
 									<p:inputText value="#{jobMBean.job.timeManagement.tolerancePercentage}" readonly="true" />
 								</p:panelGrid>
 							</h:panelGrid>
-							
+
 							<h:panelGrid columns="1" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.minPercentage}">
 								<h:outputText value="#{msgs['tlos.live.pannel.job.alarmMinPercentage']}" />
 								<p:panelGrid columns="2">
@@ -244,7 +244,7 @@
 
 			<br />
 
-			<p:panel id="reportPanel" header="#{msgs['tlos.live.pannel.job.executionInfo']}" rendered="#{not empty jobMBean.jobBaseReportList}" toggleable="true" toggleSpeed="500" collapsed="true" >
+			<p:panel id="reportPanel" header="#{msgs['tlos.live.pannel.job.executionInfo']}" rendered="#{not empty jobMBean.jobBaseReportList}" toggleable="true" toggleSpeed="500" collapsed="true">
 
 				<p:dataTable id="reportDataTable" var="item" value="#{jobMBean.jobBaseReportList}" widgetVar="reportTable" resizableColumns="true" binding="#{jobMBean.jobBaseReportTable}" width="100%">
 
@@ -269,16 +269,76 @@
 						<h:outputText value="#{item.workDuration}" style="text-align: center;" />
 					</p:column>
 
-					<p:column style="text-align:center" >
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.jobReport']}" />
 						</f:facet>
 
-						<p:commandButton id="jobReportButton" value="#{msgs['tlos.live.pannel.job.getReport']}" />
+						<p:commandButton id="jobReportButton" value="#{msgs['tlos.live.pannel.job.getReport']}" action="#{jobMBean.openReportDetailAction}" update=":liveForm:jobReportDetailPanel"
+							oncomplete="jobReportDialog.show()" />
 					</p:column>
 
 				</p:dataTable>
 
+				<p:dialog id="jobReportDialog" header="#{msgs['tlos.popup.jobCommand.panel']}" widgetVar="jobReportDialog" resizable="true" showEffect="show">
+					<p:panel id="jobReportDetailPanel">
+						<p:panelGrid columns="4">
+							<h:outputText value="#{msgs['tlos.live.pannel.job.jobName']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobKey}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.oSystem}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.jobCommandType']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobCommandType}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.jobCommand']}"
+								rendered="#{jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND'}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobCommand}" readonly="true"
+								rendered="#{jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND'}" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.jobPath']}"
+								rendered="#{jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND'}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobPath}" readonly="true"
+								rendered="#{jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND'}" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.commandContent']}"
+								rendered="#{jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND'}" />
+							<p:commandButton value="#{msgs['tlos.button.open']}"
+								rendered="#{(jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND') and jobMBean.jobCommandExist}"
+								action="#{jobMBean.openJobCommandFromReportAction}" update=":liveForm:jobCommandPanel" oncomplete="jobCommandDialog.show()" />
+							<p:inputText value="#{msgs['tlos.live.pannel.job.fileNotFound']}"
+								rendered="#{(jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND') and !jobMBean.jobCommandExist}"
+								disabled="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="" rendered="#{!(jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND')}" />
+							<h:outputText value="" rendered="#{!(jobMBean.selectedJobBaseReport.jobCommandType eq 'BATCH PROCESS' or jobMBean.selectedJobBaseReport.jobCommandType eq 'SYSTEM COMMAND')}" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.logPath']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobLogPath}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.logContent']}" />
+							<p:commandButton value="#{msgs['tlos.button.open']}" rendered="#{jobMBean.jobLogExist}" action="#{jobMBean.openJobLogFromReportAction}" update=":liveForm:jobLogPanel"
+								oncomplete="jobLogDialog.show()" />
+							<p:inputText value="#{msgs['tlos.live.pannel.job.fileNotFound']}" rendered="#{!jobMBean.jobLogExist}" disabled="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.autoTry']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobAutoRetry}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.priority']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobPriority}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.stateInfo']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.liveStateInfo.stateName}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.subState']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.liveStateInfo.substateName}" readonly="true" maxlength="500" style="width: 150px;" />
+
+							<h:outputText value="#{msgs['tlos.live.pannel.job.status']}" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
+						</p:panelGrid>
+					</p:panel>
+				</p:dialog>
 			</p:panel>
 
 		</p:fieldset>
