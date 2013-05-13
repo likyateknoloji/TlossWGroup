@@ -28,6 +28,14 @@
 				</state-types:LiveStateInfo>
 			</alm:stateManagement>
 		</alm:caseManagement>
-		<alm-history:caseOccured></alm-history:caseOccured>
+		<alm-history:caseOccured>
+			<alm:stateManagement>
+				<state-types:LiveStateInfo LSIDateTime="2013-05-01T09:40:10+02:00">
+                    <state-types:StateName>FINISHED</state-types:StateName>
+                    <state-types:SubstateName>COMPLETED</state-types:SubstateName>
+                    <state-types:StatusName>FAILED</state-types:StatusName>
+                </state-types:LiveStateInfo>
+			</alm:stateManagement>
+		</alm-history:caseOccured>
 	</alm-history:alarm>
 </alm-history:alarmHistory>
