@@ -60,7 +60,7 @@ let $getJobs := hs:getJobsReport(1,0,0, true())
                                        order by $lSIDateTime ascending
                                        return $item
               }</state-types:LiveStateInfos>
-              let $fish :=  <group agentId="{$jobProperties/@agentId}" ID="{$jobProperties/@ID}" LSIDateTime="{$jobProperties/@LSIDateTime}"> {
+              let $fish :=  <rep:group agentId="{$jobProperties/@agentId}" ID="{$jobProperties/@ID}" LSIDateTime="{$jobProperties/@LSIDateTime}"> {
                                      for $liveStateInfo in $liveStateInfosSorted/state-types:LiveStateInfo
                                      let $lSIDateTime := density:stringToDateTime($liveStateInfo/@LSIDateTime)
                                      let $lSIDateTimeNext := $liveStateInfo/following-sibling::state-types:LiveStateInfo[1]/@LSIDateTime
@@ -71,7 +71,7 @@ let $getJobs := hs:getJobsReport(1,0,0, true())
                                      return <state-types:LiveStateInfo LSIDateTime="{$lSIDateTime}" LSIDateTimeEnd="{$lSIDateTimeNextValue}">
                                               { $liveStateInfo/* }
                                             </state-types:LiveStateInfo>
-                                    } </group>
+                                    } </rep:group>
                                   
               return  $fish
               
@@ -83,12 +83,12 @@ declare function density:SSSInterval($startDateTime as xs:dateTime, $endDateTime
 let $focused := density:focusedRecords($startDateTime, $endDateTime)
 
 let $tektek :=
-  let $sonuc := for $liveStateInfo in $focused/group
+  let $sonuc := for $liveStateInfo in $focused/rep:group
 
                            
                return $liveStateInfo
  
-  return <statistic sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </statistic>
+  return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </rep:data>
 return $tektek
 
 } ;
@@ -98,7 +98,7 @@ declare function density:calcStat($stateName as xs:string, $substateName as xs:s
 let $focused := density:SSSInterval($startDateTime, $endDateTime)
 
 let $tektek :=
-  let $sonuc := for $liveStateInfos in $focused/group
+  let $sonuc := for $liveStateInfos in $focused/rep:group
                  let $lsi := 
                     for $liveStateInfo in $liveStateInfos/state-types:LiveStateInfo
                     let $lSIDateTime := $liveStateInfo/@LSIDateTime
@@ -113,10 +113,10 @@ let $tektek :=
                            and $rightState and $rightSubstate and $rightStatus
                     return $liveStateInfo
                            
-              return if(exists($lsi)) then <group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/@LSIDateTime}" LSIDateTimeEnd="{$lsi/@LSIDateTimeEnd}"/>
+              return if(exists($lsi)) then <rep:group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/@LSIDateTime}" LSIDateTimeEnd="{$lsi/@LSIDateTimeEnd}"/>
                      else ()
  
-  return <statistic sDTime="{$startDateTime}" eDTime="{$endDateTime}" count="{count($sonuc)}"> { $sonuc } </statistic>
+  return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}" count="{count($sonuc)}"> { $sonuc } </rep:data>
 return $tektek 
 
 } ;
@@ -134,7 +134,7 @@ declare function density:recStat($stateName as xs:string, $substateName as xs:st
        let $endDTime := $startDateTime+ $n*$step
        let $fonk := density:calcStat($stateName, $substateName, $statusName, $startDTime, $endDTime)
       return $fonk           
-    return <statistics> { $sonuc } </statistics>
+    return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
  else ()
 };
 
@@ -145,11 +145,11 @@ let $endDateTime   := xs:dateTime("2013-05-05T15:59:00+03:00")
 return  density:recStat(xs:string("RUNNING"), xs:string("ON-RESOURCE"), xs:string("TIME-IN") , $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S'))
 
 :)
-(:   density:recStat(<statistics></statistics>, $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S')) :)
+(:   density:recStat(<rep:statistics></rep:statistics>, $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S')) :)
 
 (: let $endDTime := $endDateTime  $startDateTime + xs:dayTimeDuration('PT30S') :)
-(: let $sonson := density:recStat(<statistics></statistics>, $startDateTime, $endDateTime) :)
-(: return <statistics state="{xs:string("FINISHED")}" substate="{xs:string("COMPLATED")}" status="{xs:string("FAILED")}"> { $sonson/* } </statistics> :)
+(: let $sonson := density:recStat(<rep:statistics></rep:statistics>, $startDateTime, $endDateTime) :)
+(: return <rep:statistics state="{xs:string("FINISHED")}" substate="{xs:string("COMPLATED")}" status="{xs:string("FAILED")}"> { $sonson/* } </rep:statistics> :)
 (:   :let $focused := density:SSSInterval($startDateTime, $endDTime):)
 (:   :let $focused := density:calcStat(xs:string("RUNNING"), xs:string("ON-RESOURCE"), xs:string("TIME-IN"), $startDateTime, $endDTime) :)
 (:   density:focusedRecords(xs:string("FINISHED"), xs:string("COMPLETED"), xs:string("FAILED"), $startDateTime, $endDTime) :)
