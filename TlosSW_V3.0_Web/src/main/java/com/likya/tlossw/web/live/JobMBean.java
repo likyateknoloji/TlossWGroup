@@ -45,14 +45,16 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	private ArrayList<AlarmInfoTypeClient> jobAlarmList;
 	private transient DataTable jobAlarmTable;
-	
+
 	private AlarmInfoTypeClient selectedAlarm;
 	private Alarm selectedAlarmHistory;
 
 	private String slaName;
-	
+
 	private ArrayList<JobInfoTypeClient> jobBaseReportList;
 	private transient DataTable jobBaseReportTable;
+
+	private JobInfoTypeClient selectedJobBaseReport;
 
 	private boolean transformToLocalTime;
 
@@ -83,12 +85,42 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void openJobCommandAction() {
-		String jcmdStr = LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath().toString(), jobInTyCl.getJobCommand().toString());
+		openJobCommandAction(true);
+	}
+
+	public void openJobCommandFromReportAction() {
+		openJobCommandAction(false);
+	}
+
+	private void openJobCommandAction(boolean current) {
+		JobInfoTypeClient jobDef;
+		if (current) {
+			jobDef = jobInTyCl;
+		} else {
+			jobDef = selectedJobBaseReport;
+		}
+
+		String jcmdStr = LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobPath().toString(), jobDef.getJobCommand().toString());
 		jobCommandStr = TEJmxMpClient.readFile(new JmxUser(), jcmdStr).toString();
 	}
 
 	public void openJobLogAction() {
-		jobLog = TEJmxMpClient.readFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName())).toString();
+		openJobLogAction(true);
+	}
+
+	public void openJobLogFromReportAction() {
+		openJobLogAction(false);
+	}
+
+	private void openJobLogAction(boolean current) {
+		JobInfoTypeClient jobDef;
+		if (current) {
+			jobDef = jobInTyCl;
+		} else {
+			jobDef = selectedJobBaseReport;
+		}
+
+		jobLog = TEJmxMpClient.readFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobLogPath(), jobDef.getJobLogName())).toString();
 	}
 
 	public void fillJobReportGrid() {
@@ -99,18 +131,22 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	public void fillJobAlarmGrid() {
 		jobAlarmList = getDbOperations().getJobAlarmHistory(jobInTyCl.getJobId(), transformToLocalTime);
 	}
-	
-	//gecmis alarm listesindeki bir alarmin adini tiklayinca buraya geliyor, popup acip ayrinti bilgilerini gosteriyor
+
+	// gecmis alarm listesindeki bir alarmin adini tiklayinca buraya geliyor, popup acip ayrinti bilgilerini gosteriyor
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
 		job = getDbOperations().getJobFromId(ConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(jobInTyCl.getJobId()));
 
-		if(selectedAlarm.getAlarmType().equals("SLA")) {
-			if(selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
+		if (selectedAlarm.getAlarmType().equals("SLA")) {
+			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
 				slaName = getDbOperations().getSlaBySlaId(job.getAdvancedJobInfos().getSLAId()).getName();
 			}
 		}
+	}
+
+	public void openReportDetailAction() {
+		selectedJobBaseReport = (JobInfoTypeClient) jobBaseReportTable.getRowData();
 	}
 
 	public void pauseJobAction(ActionEvent e) {
@@ -319,6 +355,14 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSlaName(String slaName) {
 		this.slaName = slaName;
+	}
+
+	public JobInfoTypeClient getSelectedJobBaseReport() {
+		return selectedJobBaseReport;
+	}
+
+	public void setSelectedJobBaseReport(JobInfoTypeClient selectedJobBaseReport) {
+		this.selectedJobBaseReport = selectedJobBaseReport;
 	}
 
 }
