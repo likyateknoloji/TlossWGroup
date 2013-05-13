@@ -123,7 +123,7 @@
 
 			<br />
 
-			<p:panel id="alarmPanel" header="#{msgs['tlos.live.pannel.job.pastAlarmInfo']}" rendered="#{not empty jobMBean.jobAlarmList}">
+			<p:panel id="alarmPanel" header="#{msgs['tlos.live.pannel.job.pastAlarmInfo']}" rendered="#{not empty jobMBean.jobAlarmList}" toggleable="true" toggleSpeed="500" collapsed="true" >
 
 				<p:dataTable id="alarmDataTable" var="alarm" value="#{jobMBean.jobAlarmList}" widgetVar="itemsTable" resizableColumns="true" binding="#{jobMBean.jobAlarmTable}" width="100%">
 
@@ -135,35 +135,35 @@
 							update=":liveForm:alarmDetail :liveForm:alarmTypeDetail" oncomplete="alarmDialog.show()" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.reports.alarm.creationDate']}" />
 						</f:facet>
 						<h:outputText value="#{alarm.creationDate}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.alarmType']}" />
 						</f:facet>
 						<h:outputText value="#{alarm.alarmType}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.reports.alarm.resource']}" />
 						</f:facet>
 						<h:outputText value="#{alarm.resourceName}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.reports.alarm.level']}" />
 						</f:facet>
 						<h:outputText value="#{alarm.level}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.reports.alarm.subscriber']}" />
 						</f:facet>
@@ -195,78 +195,81 @@
 					</p:panel>
 
 					<p:panel id="alarmTypeDetail" header="#{msgs['tlos.management.pannel.alarmProcesses.alarmType']} : #{jobMBean.selectedAlarm.alarmType}">
-						<h:panelGrid columns="4" rendered="#{jobMBean.selectedAlarm.alarmType eq 'State'}">
-							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmStateExpected']} : " />
+						<p:panelGrid columns="4" rendered="#{jobMBean.selectedAlarm.alarmType eq 'State'}">
+							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmStateExpected']}" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseManagement.stateManagement.liveStateInfoArray[0].stateName}" readonly="true" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseManagement.stateManagement.liveStateInfoArray[0].substateName}" readonly="true"
 								rendered="#{jobMBean.selectedAlarmHistory.caseManagement.stateManagement.liveStateInfoArray[0].substateName ne null}" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseManagement.stateManagement.liveStateInfoArray[0].statusName}" readonly="true"
 								rendered="#{jobMBean.selectedAlarmHistory.caseManagement.stateManagement.liveStateInfoArray[0].statusName ne null}" />
 
-							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmStateOccured']} : " />
+							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmStateOccured']}" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseOccured.stateManagement.liveStateInfoArray[0].stateName}" readonly="true" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseOccured.stateManagement.liveStateInfoArray[0].substateName}" readonly="true"
 								rendered="#{jobMBean.selectedAlarmHistory.caseOccured.stateManagement.liveStateInfoArray[0].substateName ne null}" />
 							<p:inputText value="#{jobMBean.selectedAlarmHistory.caseOccured.stateManagement.liveStateInfoArray[0].statusName}" readonly="true"
 								rendered="#{jobMBean.selectedAlarmHistory.caseOccured.stateManagement.liveStateInfoArray[0].statusName ne null}" />
+						</p:panelGrid>
+
+						<h:outputText value="'#{jobMBean.slaName}' #{msgs['tlos.live.pannel.job.alarmSLA']}" rendered="#{jobMBean.selectedAlarm.alarmType eq 'SLA' and jobMBean.slaName ne null}" />
+
+						<h:panelGrid columns="1" rendered="#{jobMBean.selectedAlarm.alarmType eq 'Time'}">
+							<h:panelGrid columns="1" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.timeOutControl}">
+								<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTimeout']}" />
+								<p:panelGrid columns="2">
+									<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTimeoutValue']}" />
+									<p:inputText value="#{jobMBean.jobInTyCl.jobTimeOut}" readonly="true" />
+								</p:panelGrid>
+							</h:panelGrid>
+
+							<h:panelGrid columns="1" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.tolerancePercentage}">
+								<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTolerancePercentage']}" />
+								<p:panelGrid columns="2">
+									<h:outputText value="#{msgs['tlos.workspace.pannel.job.tolerancePercentage']}" />
+									<p:inputText value="#{jobMBean.job.timeManagement.tolerancePercentage}" readonly="true" />
+								</p:panelGrid>
+							</h:panelGrid>
+							
+							<h:panelGrid columns="1" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.minPercentage}">
+								<h:outputText value="#{msgs['tlos.live.pannel.job.alarmMinPercentage']}" />
+								<p:panelGrid columns="2">
+									<h:outputText value="#{msgs['tlos.workspace.pannel.job.minPercentage']}" />
+									<p:inputText value="#{jobMBean.job.timeManagement.minPercentage}" readonly="true" />
+								</p:panelGrid>
+							</h:panelGrid>
 						</h:panelGrid>
-
-						<p:panelGrid columns="1" rendered="#{jobMBean.selectedAlarm.alarmType eq 'SLA' and jobMBean.slaName ne null}">
-							<h:outputText value="#{jobMBean.slaName} #{msgs['tlos.live.pannel.job.alarmSLA']}" />
-						</p:panelGrid>
-
-						<p:panelGrid columns="2" rendered="#{jobMBean.selectedAlarm.alarmType eq 'Time'}">
-							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTimeout']}" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.timeOutControl}" />
-							<p:panelGrid columns="2" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.timeOutControl}">
-								<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTimeoutValue']}" />
-								<p:inputText value="#{jobMBean.jobInTyCl.jobTimeOut}" readonly="true" />
-							</p:panelGrid>
-
-							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmTolerancePercentage']}" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.tolerancePercentage}" />
-							<p:panelGrid columns="2" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.tolerancePercentage}">
-								<h:outputText value="#{msgs['tlos.workspace.pannel.job.tolerancePercentage']}" />
-								<p:inputText value="#{jobMBean.job.timeManagement.tolerancePercentage}" readonly="true" />
-							</p:panelGrid>
-
-							<h:outputText value="#{msgs['tlos.live.pannel.job.alarmMinPercentage']}" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.minPercentage}" />
-							<p:panelGrid columns="2" rendered="#{jobMBean.selectedAlarmHistory.caseOccured.timeManagement.minPercentage}">
-								<h:outputText value="#{msgs['tlos.workspace.pannel.job.minPercentage']}" />
-								<p:inputText value="#{jobMBean.job.timeManagement.minPercentage}" readonly="true" />
-							</p:panelGrid>
-						</p:panelGrid>
 					</p:panel>
 				</p:dialog>
 			</p:panel>
 
 			<br />
 
-			<p:panel id="reportPanel" header="#{msgs['tlos.live.pannel.job.executionInfo']}" rendered="#{not empty jobMBean.jobBaseReportList}">
+			<p:panel id="reportPanel" header="#{msgs['tlos.live.pannel.job.executionInfo']}" rendered="#{not empty jobMBean.jobBaseReportList}" toggleable="true" toggleSpeed="500" collapsed="true" >
 
 				<p:dataTable id="reportDataTable" var="item" value="#{jobMBean.jobBaseReportList}" widgetVar="reportTable" resizableColumns="true" binding="#{jobMBean.jobBaseReportTable}" width="100%">
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.plannedStartEndTime']}" />
 						</f:facet>
-
 						<h:outputText value="#{item.jobPlanTime} - #{item.jobPlanEndTime}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.realStartEndTime']}" />
 						</f:facet>
 						<h:outputText value="#{item.plannedExecutionDate} - #{item.completionDate}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center">
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.duration']}" />
 						</f:facet>
 						<h:outputText value="#{item.workDuration}" style="text-align: center;" />
 					</p:column>
 
-					<p:column>
+					<p:column style="text-align:center" >
 						<f:facet name="header">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.jobReport']}" />
 						</f:facet>
