@@ -52,7 +52,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="BYTIME"/>
-				<xs:element ref="BYUSER"/>
+                <xs:element ref="BYUSER"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -62,15 +62,15 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="LOOKFOR-RESOURCE"/>
-				<xs:element ref="USER-CHOOSE-RESOURCE"/>
-				<xs:element ref="USER-WAITING"/>
+                <xs:element ref="USER-CHOOSE-RESOURCE"/>
+                <xs:element ref="USER-WAITING"/>
                 <xs:element ref="WAITING"/>
                 <xs:element ref="TRANSFERING"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="USER-CHOOSE-RESOURCE" type="xs:integer"/>
-	<xs:element name="USER-WAITING" type="xs:integer"/>
+    <xs:element name="USER-WAITING" type="xs:integer"/>
     <xs:element name="LOOKFOR-RESOURCE" type="xs:integer"/>
     <xs:element name="WAITING" type="xs:integer"/>
     <xs:element name="TRANSFERING" type="xs:integer"/>
@@ -124,31 +124,56 @@
     <xs:element name="SKIPPED" type="xs:integer"/>
     <xs:element name="STOPPED" type="xs:integer"/>
     <xs:element name="FAILED" type="xs:integer"/>
-    
-  <xs:element name="jobArray">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="job"/>
-      </xs:sequence>
-      <xs:attribute name="maxNumOfListedJobs" use="required" type="xs:integer"/>
-      <xs:attribute name="numberOfJobs" use="required" type="xs:integer"/>
-      <xs:attribute name="numberOfScenarios" use="required" type="xs:integer"/>
-      <xs:attribute name="overallStart" use="required" type="xs:dateTime"/>
-      <xs:attribute name="overallStop" use="required" type="xs:dateTime"/>
-      <xs:attribute name="totalDurationInSec" use="required" type="xs:decimal"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="job">
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:decimal">
-          <xs:attribute name="id" use="required" type="xs:integer"/>
-          <xs:attribute name="jname" use="required" type="xs:string"/>
-          <xs:attribute name="startTime" use="required" type="xs:dateTime"/>
-          <xs:attribute name="stopTime" use="required"/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-    
+    <xs:element name="jobArray">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="job"/>
+            </xs:sequence>
+            <xs:attribute name="maxNumOfListedJobs" use="required" type="xs:integer"/>
+            <xs:attribute name="numberOfJobs" use="required" type="xs:integer"/>
+            <xs:attribute name="numberOfScenarios" use="required" type="xs:integer"/>
+            <xs:attribute name="overallStart" use="required" type="xs:dateTime"/>
+            <xs:attribute name="overallStop" use="required" type="xs:dateTime"/>
+            <xs:attribute name="totalDurationInSec" use="required" type="xs:decimal"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="job">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:decimal">
+                    <xs:attribute name="id" use="required" type="xs:integer"/>
+                    <xs:attribute name="jname" use="required" type="xs:string"/>
+                    <xs:attribute name="startTime" use="required" type="xs:dateTime"/>
+                    <xs:attribute name="stopTime" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+	<!-- Density schemas-->
+    <xs:element name="statistics">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="data"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="group"/>
+            </xs:sequence>
+            <xs:attribute name="count" use="required" type="xs:integer"/>
+            <xs:attribute name="eDTime" use="required" type="xs:dateTime"/>
+            <xs:attribute name="sDTime" use="required" type="xs:dateTime"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="group">
+        <xs:complexType>
+            <xs:attribute name="ID" use="required" type="xs:integer"/>
+            <xs:attribute name="LSIDateTime" use="required" type="xs:dateTime"/>
+            <xs:attribute name="LSIDateTimeEnd" use="required" type="xs:dateTime"/>
+            <xs:attribute name="agentId" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
