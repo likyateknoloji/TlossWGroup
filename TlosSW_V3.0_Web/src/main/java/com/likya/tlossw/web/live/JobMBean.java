@@ -11,6 +11,8 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
+import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
+import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
@@ -43,7 +45,12 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	private ArrayList<AlarmInfoTypeClient> jobAlarmList;
 	private transient DataTable jobAlarmTable;
+	
+	private AlarmInfoTypeClient selectedAlarm;
+	private Alarm selectedAlarmHistory;
 
+	private String slaName;
+	
 	private ArrayList<JobInfoTypeClient> jobBaseReportList;
 	private transient DataTable jobBaseReportTable;
 
@@ -91,6 +98,19 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void fillJobAlarmGrid() {
 		jobAlarmList = getDbOperations().getJobAlarmHistory(jobInTyCl.getJobId(), transformToLocalTime);
+	}
+	
+	//gecmis alarm listesindeki bir alarmin adini tiklayinca buraya geliyor, popup acip ayrinti bilgilerini gosteriyor
+	public void openAlarmDetailAction() {
+		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
+		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
+		job = getDbOperations().getJobFromId(ConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(jobInTyCl.getJobId()));
+
+		if(selectedAlarm.getAlarmType().equals("SLA")) {
+			if(selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
+				//getLiveMBean().setSlaName(TEJmxMpDBClient.getSlaBySlaId(job.getAdvancedJobInfos().getSLAId()).getName());
+			}
+		}
 	}
 
 	public void pauseJobAction(ActionEvent e) {
@@ -275,6 +295,30 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJobBaseReportTable(DataTable jobBaseReportTable) {
 		this.jobBaseReportTable = jobBaseReportTable;
+	}
+
+	public AlarmInfoTypeClient getSelectedAlarm() {
+		return selectedAlarm;
+	}
+
+	public void setSelectedAlarm(AlarmInfoTypeClient selectedAlarm) {
+		this.selectedAlarm = selectedAlarm;
+	}
+
+	public Alarm getSelectedAlarmHistory() {
+		return selectedAlarmHistory;
+	}
+
+	public void setSelectedAlarmHistory(Alarm selectedAlarmHistory) {
+		this.selectedAlarmHistory = selectedAlarmHistory;
+	}
+
+	public String getSlaName() {
+		return slaName;
+	}
+
+	public void setSlaName(String slaName) {
+		this.slaName = slaName;
 	}
 
 }
