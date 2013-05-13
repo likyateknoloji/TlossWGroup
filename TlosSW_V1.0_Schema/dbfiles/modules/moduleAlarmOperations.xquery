@@ -101,7 +101,8 @@ declare function lk:alarms() as element(alm:alarm)*
 	return  $alarm
 };
 
-declare function lk:jobAlarmListbyRunId($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(alm:alarm)*
+(: son kac gun icerisinde arama yapilacaksa $numberOfDay kismina yaziliyor :)
+declare function lk:jobAlarmListbyRunId($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $numberOfDay as xs:int) as element(alm:alarm)*
  {
     let $runIdFound := if ($runId != 0 ) 
 	                   then $runId 
