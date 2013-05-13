@@ -1,0 +1,26 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+
+	<ui:define name="center">
+	
+	
+		<h:form id="dashboardReports" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+            <p:fieldset legend="Job Density Graphics" widgetVar="dashWidget" style="width: 1500px;">
+
+				<p:panel id="density" header="Overall Job Execution Density">
+					<p:lineChart id="category" value="#{jobsDensityGraphicsMBean.denseModel}"  seriesColors="F73C84" animate="true" zoom="true" legendPosition="e" min="0" style="width:1200px;height:600px;margin-top:20px" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
+				</p:panel>
+ 
+			</p:fieldset>
+
+		</h:form>
+	</ui:define>
+    <ui:define name="west">
+		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
+	</ui:define>
+</ui:composition>
