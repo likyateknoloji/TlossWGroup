@@ -92,8 +92,8 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void fillJobReportGrid() {
-		// son 5 rundaki calisma listesini istiyor
-		jobBaseReportList = getDbOperations().getJobResultList(ConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 5, transformToLocalTime);
+		// son 3 rundaki calisma listesini istiyor
+		jobBaseReportList = getDbOperations().getJobResultList(ConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -108,7 +108,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 		if(selectedAlarm.getAlarmType().equals("SLA")) {
 			if(selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
-				//getLiveMBean().setSlaName(TEJmxMpDBClient.getSlaBySlaId(job.getAdvancedJobInfos().getSLAId()).getName());
+				slaName = getDbOperations().getSlaBySlaId(job.getAdvancedJobInfos().getSLAId()).getName();
 			}
 		}
 	}
