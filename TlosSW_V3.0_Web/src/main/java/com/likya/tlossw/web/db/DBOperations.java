@@ -2412,9 +2412,10 @@ public class DBOperations implements Serializable {
 	public ArrayList<AlarmInfoTypeClient> getJobAlarmHistory(String jobId, Boolean transformToLocalTime) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		// verilen isin son 5 rundaki alarmini runid'den bagimsiz olarak
+		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
 		// getiriyor
-		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
+		// son 30 gun icerisinde ariyor
+		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(3, 0, " + jobId + ", false(), 30)";
 
 		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
 
@@ -2718,6 +2719,40 @@ public class DBOperations implements Serializable {
 		}
 
 		return jobProperties;
+	}
+
+	public SLA getSlaBySlaId(int slaId) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSLAOperations.xquery\";" + "hs:searchSlaBySlaId(" + slaId + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+			SLA sla = null;
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					sla = SLADocument.Factory.parse(xmlContent).getSLA();
+
+					return sla;
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
 	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
