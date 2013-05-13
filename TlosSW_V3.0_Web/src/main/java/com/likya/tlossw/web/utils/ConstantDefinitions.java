@@ -30,5 +30,6 @@ public class ConstantDefinitions {
 	 * eXist'teki xml dosyalari
 	 */
 	public static final String DAILY_SCENARIOS_DATA = "tlosSWDailyScenarios10.xml";
-	
+	public static final String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
+	public static final String JOB_DEFINITION_DATA = "tlosSWData10.xml";
 }
