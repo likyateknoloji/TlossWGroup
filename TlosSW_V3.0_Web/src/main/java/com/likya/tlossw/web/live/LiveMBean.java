@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlossw.model.tree.JobNode;
@@ -31,6 +32,7 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 
 	public final static String SCENARIO_PAGE = "/inc/livePanels/scenarioLiveTree.xhtml";
 	public final static String JOB_PAGE = "/inc/livePanels/jobLiveTree.xhtml";
+	public final static String GRAPH_PAGE = "/inc/livePanels/scenarioGraphTreePanel.xhtml";
 
 	private boolean transformToLocalTime = false;
 
@@ -68,6 +70,15 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 		// TODO merve : eskisinde ayrı bir panele geçiyordu
 		// (agentSelectionPanel.xhtml),
 		// şimdiki duruma göre eklenecek
+	}
+
+	public void viewScenarioTree() {
+		liveJSTable = GRAPH_PAGE;
+		getScenarioMBean().setSelectedPanel(ConstantDefinitions.LIVE_TREE);
+		getScenarioMBean().setSelectedScenarioId(getScenarioMBean().getSpcInfoTypeClient().getSpcId());
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("liveForm");
 	}
 
 	public String getLiveJSTable() {
