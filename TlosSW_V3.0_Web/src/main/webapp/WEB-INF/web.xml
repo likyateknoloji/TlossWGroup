@@ -35,6 +35,20 @@
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<!-- graphViewServlet -->
+    <servlet>
+        <servlet-name>graphViewServlet</servlet-name>
+        <servlet-class>com.likya.tlossw.web.appmng.GraphViewServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <!-- graphViewServlet Mappings -->
+    <servlet-mapping>
+         <servlet-name>graphViewServlet</servlet-name>
+         <url-pattern>/graphView/*</url-pattern>
+    </servlet-mapping>  
+    
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
