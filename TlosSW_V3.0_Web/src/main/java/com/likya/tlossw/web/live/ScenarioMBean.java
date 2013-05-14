@@ -38,6 +38,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	private SelectItem[] oSSelectItem;
 
+	private String selectedPanel;
+	private String selectedScenarioId;
+
 	private boolean transformToLocalTime;
 
 	public void getJobList(String scenarioId) {
@@ -109,11 +112,6 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.start");
 		 */
-	}
-
-	public void viewScenarioTree() {
-		// TODO merve : eskisinde ayrı bir panele geçiyordu (scenarioTreePanel.xhtml),
-		// şimdiki duruma göre eklenecek
 	}
 
 	public void pauseJobAction(ActionEvent e) {
@@ -266,6 +264,22 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setTransformToLocalTime(boolean transformToLocalTime) {
 		this.transformToLocalTime = transformToLocalTime;
+	}
+
+	public String getSelectedPanel() {
+		return selectedPanel;
+	}
+
+	public void setSelectedPanel(String selectedPanel) {
+		this.selectedPanel = selectedPanel;
+	}
+
+	public String getSelectedScenarioId() {
+		return selectedScenarioId;
+	}
+
+	public void setSelectedScenarioId(String selectedScenarioId) {
+		this.selectedScenarioId = selectedScenarioId;
 	}
 
 }
