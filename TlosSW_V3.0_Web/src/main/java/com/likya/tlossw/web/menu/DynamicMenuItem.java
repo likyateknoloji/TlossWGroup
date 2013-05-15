@@ -95,23 +95,25 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 //			menuitems.add(new MenuItems("View", "ui-icon-document", "Past Runs", "#"));
 			
 			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Available Resources ", "#"));
-			menuitems.add(new MenuItems("Planning", "ui-icon-document", "SLA Solution ", "#"));
-			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Hardware Usage ", "#"));
-			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Program Provision ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "SLA Time Check ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "SLA Hardware Check ", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "SLA Program Provision Check", "#"));
+			menuitems.add(new MenuItems("Planning", "ui-icon-document", "Find Resources", "#"));
 			
 			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Jobs & Scenarios", "/inc/livePanels/liveJobsScenarios.jsf"));
-			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Agents ", "/inc/livePanels/liveAgents.jsf"));
+			//menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Agents ", "/inc/livePanels/liveAgents.jsf"));
 			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Resources ", "/inc/livePanels/liveResources.jsf"));
-			menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Alarms", "#"));
+			//menuitems.add(new MenuItems("WorkSpace", "ui-icon-document", "Alarms", "#"));
 			
 
 			
-			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Jobs & Scenarios  ", "/inc/reportPanels/dashboardPanel.jsf"));
-			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Alarms  ", "#"));
-			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Advanced R.", "#"));
+			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Jobs & Scenarios ", "/inc/reportPanels/dashboardPanel.jsf"));
+			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Alarms ", "#"));
+			menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Documentation ", "#"));
+			//menuitems.add(new MenuItems("Reporting", "ui-icon-document", "Advanced R.", "#"));
 
-			menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "SLA Violotions", "#"));
-			menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "Audit", "#"));
+			//menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "SLA Violotions", "#"));
+			//menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "Audit", "#"));
 
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Users", "/inc/managementPanels/userSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Permissions", "/inc/managementPanels/permissionsPanel.jsf"));
@@ -129,9 +131,9 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 
 			menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Overview", "#"));
 			menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Tutorials", "#"));
-			menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Samples", "#"));
+			//menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Samples", "#"));
 			menuitems.add(new MenuItems("Welcome", "ui-icon-document", "What's New", "#"));
-			menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Workbench", "#"));
+			//menuitems.add(new MenuItems("Welcome", "ui-icon-document", "Workbench", "#"));
 
 			menuitems.add(new MenuItems("Help", "ui-icon-document", "Support", "#"));
 			menuitems.add(new MenuItems("Help", "ui-icon-document", "About", "#"));
