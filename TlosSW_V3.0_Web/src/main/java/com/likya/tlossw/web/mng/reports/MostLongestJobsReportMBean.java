@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,6 +18,7 @@ import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.xmldb.api.base.XMLDBException;
 
+import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
@@ -36,7 +36,7 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	private CartesianChartModel curDurationModel;
 	private CartesianChartModel prevDurationModel;
  
-	private ArrayList<Job> jobsArray;
+	private JobArray jobsArray;
 	
 	@PostConstruct
 	public void init() {
@@ -61,12 +61,6 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		message.setSummary("Reordered: " + event.getWidgetId());
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
 
-	}
-	
-	public void resetJobReportAction() {
- 
-		jobsArray = new ArrayList<Job>();
-		 
 	}
 	
 	public void refreshCurDurationChart() {
@@ -97,10 +91,8 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		CartesianChartModel curDurationModel = new CartesianChartModel();
 
-		resetJobReportAction();
-		
 		try {
-			jobsArray = getDbOperations().getJobArrayReport(derinlik, runType, jobId, refPoint, orderType, jobCount);
+			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -109,7 +101,7 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		jobs.setLabel("Jobs");
 
 		BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
-		for (Job job : jobsArray) {
+		for (Job job : jobsArray.getJobArray()) {
 			BigDecimal figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
 			jobs.set(job.getJname(), figure);
 		}
@@ -142,11 +134,11 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		this.dbOperations = dbOperations;
 	}
 
-	public ArrayList<Job> getJobsArray() {
+	public JobArray getJobsArray() {
 		return jobsArray;
 	}
 
-	public void setJobsArray(ArrayList<Job> jobsArray) {
+	public void setJobsArray(JobArray jobsArray) {
 		this.jobsArray = jobsArray;
 	}
 
