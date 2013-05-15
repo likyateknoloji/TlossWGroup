@@ -1,10 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -19,13 +16,9 @@ import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
 import org.primefaces.model.DefaultDashboardColumn;
 import org.primefaces.model.DefaultDashboardModel;
-import org.primefaces.model.chart.CartesianChartModel;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.primefaces.model.chart.PieChartModel;
 import org.xmldb.api.base.XMLDBException;
 
-import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
@@ -196,10 +189,6 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements Serializ
 			pieDashboardModel.set(resolveMessage("tlos.reports.chart.TimeOut"), reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
 		}
 		
-//		pieDashboardModel.set("Failed", 5);
-//		pieDashboardModel.set("Ready", 62);
-//		pieDashboardModel.set("Pending", 30);
-	
 	}
 	 
 
