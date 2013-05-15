@@ -1,0 +1,46 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+
+	<ui:define name="center">
+	
+	
+		<h:form id="dashboardReports" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+            <p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget" style="width: 1500px;">
+			<p:dashboard id="board" model="#{zonesOfExecutionsMBean.model}">
+				<p:ajax event="reorder" listener="#{zonesOfExecutionsMBean.handleReorder}" update="messages" />
+
+ 
+ 
+				<p:panel id="gauge" header="Zones of Execution">
+					<p:meterGaugeChart id="ZonesofExecution" value="#{zonesOfExecutionsMBean.meterGaugeModel}" showTickLabels="true" 
+					labelHeightAdjust="160"
+					intervalOuterRadius="160"  
+					seriesColors="E70000, 0667C2, 5DB150, F9FC00, E70000"  style="width:600px;height:400px;font-weight: bold;color : 000000; font-size:1em" 
+					label="Zones Of Execution (h)" />
+					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}" action="#{zonesOfExecutionsMBean.refreshGaugeChart}" />
+				</p:panel>
+
+				<p:panel id="info" header="Information">
+                     <p:panelGrid columns="2" styleClass="companyHeaderGrid" style="width:600px">
+                     <h:outputText value="#{msgs['tlos.report.general.overall']}" />  <h:outputText value="#{zonesOfExecutionsMBean.overallDuration}" /> 
+                     <h:outputText value="#{msgs['tlos.report.general.jobCount']}" />  <h:outputText value="#{zonesOfExecutionsMBean.jobCount}" />
+                     <h:outputText value="#{msgs['tlos.report.general.overallStartTime']}" />  <h:outputText value="#{zonesOfExecutionsMBean.overallStartTime}" />
+                     <h:outputText value="#{msgs['tlos.report.general.overallEndTime']}" />  <h:outputText value="#{zonesOfExecutionsMBean.overallEndTime}" />
+                     
+                     </p:panelGrid>
+
+				</p:panel>
+
+			</p:dashboard>
+			</p:fieldset>
+
+		</h:form>
+	</ui:define>
+    <ui:define name="west">
+		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
+	</ui:define>
+</ui:composition>

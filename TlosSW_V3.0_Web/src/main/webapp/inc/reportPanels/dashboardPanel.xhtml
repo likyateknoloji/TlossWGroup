@@ -24,7 +24,10 @@
 					<p:panel id="top10"
 						header="The Top 10 longest duration jobs finished in last 1 hour">
 						<p:barChart id="curHorizontal" 
-						    min="0"
+						    xaxisAngle="20"
+						    min="0.0"
+						    xaxisLabel="Job Names"
+						    yaxisLabel="Durations as Sec"
 							value="#{mostLongestJobsReportMBean.curDurationModel}"
 							seriesColors="F73C84" 
 							animate="true" 

@@ -15,18 +15,21 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="Job Density Graphics" widgetVar="dashWidget"
+			<p:fieldset legend="Job Distribution Graphics" widgetVar="dashWidget"
 				style="width: 1500px;">
 
 				<p:panel id="density" header="Overall Job Execution Density">
-					<p:lineChart id="category"
-						value="#{jobsDensityGraphicsMBean.denseModel}"
-						seriesColors="F73C84" animate="true" zoom="true"
-						legendPosition="e" minY="0.0" xaxisAngle="20" maxY="#{jobsDensityGraphicsMBean.maxValue}"
-						yaxisLabel="Number of Jobs Running" xaxisLabel="Time"
-						style="width:1200px;height:600px;margin-top:20px; font-size:1em" />
+
+					<p:ohlcChart id="candleStick" value="#{jobsDistributionGraphicsMBean.ohlcModel}"
+					    xaxisAngle="20"
+					    minY="0.0"
+					    seriesColors="E70000, 0667C2, 5DB150, F9FC00, E70000"
+						candleStick="true" yaxisLabel="Job Duration" xaxisLabel="Relative Job Start Times with respect to the first"
+						title="Job Execution Density Chart"
+						style="width:1200px;height:600px" />
+						
 					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-						action="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
+						action="#{jobsDistributionGraphicsMBean.refreshOhlcChart}" />
 				</p:panel>
 
 			</p:fieldset>
