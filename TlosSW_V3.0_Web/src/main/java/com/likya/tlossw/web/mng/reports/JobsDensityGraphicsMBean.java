@@ -3,8 +3,6 @@ package com.likya.tlossw.web.mng.reports;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -15,11 +13,9 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.DashboardReorderEvent;
-import org.primefaces.model.DashboardModel;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.MeterGaugeChartModel;
-import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
@@ -41,6 +37,8 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 	private Statistics densityJobCountList;
 	private int derinlik;
 	
+	private Long maxValue;
+	
 	private String pieColorList;
 	
 	private ArrayList<Job> jobsArray;
@@ -58,7 +56,6 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 		System.out.println(parameter_value);
 
 		createDenseModel();
-		createMeterGaugeModel();
 
 		logger.info("end : init");
 
@@ -93,21 +90,21 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 
 	private void createMeterGaugeModel() {
 
-		List<Number> intervals = new ArrayList<Number>() {
-			{
-				add(2);
-				add(4);
-				add(6);
-				add(12);
-			}
-		};
-
-		meterGaugeModel = new MeterGaugeChartModel(6.5, intervals);
+//		List<Number> intervals = new ArrayList<Number>() {
+//			{
+//				add(2);
+//				add(4);
+//				add(6);
+//				add(12);
+//			}
+//		};
+//
+//		meterGaugeModel = new MeterGaugeChartModel(6.5, intervals);
 	}
 
 	private void createDenseModel() {
 		denseModel = new CartesianChartModel();
-
+       
 		ChartSeries dense = new ChartSeries();
 		dense.setLabel("Number of Jobs");
 
@@ -116,31 +113,18 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-
+        Integer counter = new Integer(0);
+        int maxval = 0;
 		for(Integer i=0; i<densityJobCountList.sizeOfDataArray(); i++) {
 
-			String formattedTime = new SimpleDateFormat("mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
+			String formattedTime = new SimpleDateFormat("hh:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
 			dense.set(formattedTime, densityJobCountList.getDataArray(i).getCount().intValue());
+			counter = counter + (densityJobCountList.getDataArray(i).getCount().intValue() > 0 ? 1 : 0);
+			maxval = (densityJobCountList.getDataArray(i).getCount().intValue()) > maxval ? densityJobCountList.getDataArray(i).getCount().intValue() : maxval;
 		}
-		/*
-		dense.set("00:00", 3);
-		dense.set("00:30", 5);
-		dense.set("01:30", 10);
-		dense.set("01:30", 10);
-		dense.set("02:00", 12);
-		dense.set("02:30", 13);
-		dense.set("03:00", 11);
-		dense.set("03:30", 9);
-		dense.set("04:00", 9);
-		dense.set("04:30", 10);
-		dense.set("05:00", 6);
-		dense.set("05:30", 4);
-		dense.set("06:00", 1);
-		dense.set("06:30", 2);
-		dense.set("07:00", 3);
-		dense.set("07:30", 2);
-		dense.set("08:00", 1);
-	*/
+		Double max = Math.ceil((double) maxval/counter.longValue())*counter.longValue();
+		setMaxValue( max.longValue());
+
 		denseModel.addSeries(dense);
 
 	}
@@ -191,6 +175,14 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 
 	public void setPieColorList(String pieColorList) {
 		this.pieColorList = pieColorList;
+	}
+
+	public Long getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(Long maxValue) {
+		this.maxValue = maxValue;
 	}
 
 }
