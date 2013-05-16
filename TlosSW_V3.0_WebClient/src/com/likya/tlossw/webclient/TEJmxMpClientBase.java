@@ -35,10 +35,10 @@ public class TEJmxMpClientBase {
 				jmxIpEnv = (String) ctx.lookup("java:comp/env/jmxIp");
 				jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxPort");
 				// jmxPort = (String) ctx.lookup("java:comp/env/jmxTlsPort"); // jmxtls icin
+				isEnvRead = true;
 			} catch (NamingException e1) {
 				e1.printStackTrace();
 			}
-			isEnvRead = true;
 		}
 
 		JMXConnector jmxConnector = null;
