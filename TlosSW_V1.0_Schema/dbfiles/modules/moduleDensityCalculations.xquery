@@ -123,19 +123,31 @@ return $tektek
 
 declare function density:recStat($stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
 {
-  if($endDateTime > $startDateTime) then
-    let $diff := $endDateTime - $startDateTime
+  (: Otomatik zaman penceresi hesabi icin :)
+  let $hepsi := hs:getJobArray(hs:getJobsReport(1,0,0, true()),"descending",1)
+  let $startDateTimex := xs:dateTime($hepsi/@overallStart)-xs:dayTimeDuration('PT2M')
+  let $endDateTimex := xs:dateTime($hepsi/@overallStop)+xs:dayTimeDuration('PT2M')
+
+  (:
+    let $startDateTime := xs:dateTime("2013-05-05T15:52:00+03:00")
+    let $endDateTime   := xs:dateTime("2013-05-05T16:54:00+03:00")
+  :)
+  let $sonuc :=
+   if($endDateTimex > $startDateTimex) then
+    let $diff := $endDateTimex - $startDateTimex
     let $numberOfInterval := xs:integer($diff div $step)
     let $sonuc :=
       let $seq := 1 to $numberOfInterval
       for $n in $seq
        let $kac := xs:integer($n)-1
-       let $startDTime := $startDateTime+ $kac*$step 
-       let $endDTime := $startDateTime+ $n*$step
+       let $startDTime := $startDateTimex+ $kac*$step 
+       let $endDTime := $startDateTimex+ $n*$step
        let $fonk := density:calcStat($stateName, $substateName, $statusName, $startDTime, $endDTime)
       return $fonk           
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
- else ()
+   else ()
+
+   return $sonuc
 };
 
 (:
