@@ -118,10 +118,27 @@
 						actionListener="#{scenarioMBean.startUserBasedJobAction}" />
 
 					<p:commandButton id="selectResourceButton" value="#{msgs['tlos.button.showAvailableResources']}"
-						rendered="#{item.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob}" actionListener="#{liveMBean.showAvailableResourcesForJob}" />
+						rendered="#{item.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob}" actionListener="#{scenarioMBean.showAvailableResourcesForJob}"
+						update=":liveForm:agentSelectionPanel" oncomplete="agentSelectionDialog.show()" />
 				</p:column>
 
 			</p:dataTable>
+
+			<p:dialog id="agentSelectionDialog" header="#{msgs['tlos.live.pannel.job.selectAgentPanel']}" widgetVar="agentSelectionDialog" resizable="false" showEffect="show">
+				<p:panel id="agentSelectionPanel">
+					<h:panelGrid columns="2">
+						<p:selectOneMenu rendered="#{scenarioMBean.resourceListForJob ne null}" id="resourceList" value="#{scenarioMBean.selectedResource}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{scenarioMBean.resourceListForJob}" />
+							<p:ajax partialSubmit="true" update="agentSelectionPanel"></p:ajax>
+						</p:selectOneMenu>
+
+						<p:commandButton id="assignResource" value="#{msgs['tlos.button.ok']}" rendered="#{scenarioMBean.selectedResource ne null and scenarioMBean.selectedResource ne ''}"
+							actionListener="#{scenarioMBean.assignAgentForJob}" />
+					</h:panelGrid>
+				</p:panel>
+			</p:dialog>
+
 		</p:fieldset>
 
 	</h:form>
