@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
@@ -62,14 +61,6 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 			liveJSTable = JOB_PAGE;
 		}
 
-	}
-
-	// job taniminda agentChoiceMethod: userInteractionPreference ise ekrandan
-	// agent listesini goruntule deyince buraya geliyor
-	public void showAvailableResourcesForJob(ActionEvent e) {
-		// TODO merve : eskisinde ayrı bir panele geçiyordu
-		// (agentSelectionPanel.xhtml),
-		// şimdiki duruma göre eklenecek
 	}
 
 	public void viewScenarioTree() {
