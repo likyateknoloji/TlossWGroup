@@ -1,12 +1,13 @@
 /*
  * Tlos_V2.0MC_JmxMp_Gxt
  * com.likya.tlos.omc : TEJmxMpClientBase.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Apr 13, 2009 10:10:44 AM
  */
 
 package com.likya.tlossw.web.exist;
 
+import javax.naming.NamingException;
 import javax.xml.transform.OutputKeys;
 
 import org.apache.log4j.Logger;
@@ -20,6 +21,11 @@ public class ExistClient {
 	private static final Logger logger = Logger.getLogger(ExistClient.class);
 
 	public static boolean tryReconnect = true;
+	public static boolean isEnvRead = false;
+
+	public static String existDbUri = null;
+	public static  String userName = null;
+	public static  String password = null;
 
 	public static Database database;
 
@@ -29,12 +35,10 @@ public class ExistClient {
 		logger.info("##### Veritabani sistemi ile baglanti ######");
 
 		String driver = "org.exist.xmldb.DatabaseImpl";
-		String dbUri = "xmldb:exist://localhost:8093/exist/xmlrpc/db/TLOSSW";
+		//String dbUri = "xmldb:exist://localhost:8093/exist/xmlrpc/db/TLOSSW";
 		
 		Collection collection = null;
 
-		logger.debug("Getting collection on " + dbUri + "...");
-		
 		int attemptCount = 0;
 
 		while (tryReconnect) {
@@ -46,19 +50,31 @@ public class ExistClient {
 				database.setProperty("create-database", "true");
 				DatabaseManager.registerDatabase(database);
 				
-				String userName = "admin";
-				String password = "admin";
-
-				collection = DatabaseManager.getCollection(dbUri, userName, password);
+				if (!isEnvRead) {
+					javax.naming.Context ctx;
+					try {
+						ctx = new javax.naming.InitialContext();
+						existDbUri = (String) ctx.lookup("java:comp/env/dbUri");
+						userName = (String) ctx.lookup("java:comp/env/dbUserName");
+						password = (String) ctx.lookup("java:comp/env/dbPassword");
+						isEnvRead = true;
+					} catch (NamingException e1) {
+						e1.printStackTrace();
+					}
+				}
+				
+				logger.debug("Getting collection on " + existDbUri + "...");
+				
+				collection = DatabaseManager.getCollection(existDbUri, userName, password);
 
 				if (collection != null) {
-					logger.info(">> Collection successfully obtained to " + dbUri);
+					logger.info(">> Collection successfully obtained to " + existDbUri);
 					collection.setProperty(OutputKeys.INDENT, "no");
 					tryReconnect = false;
 					break;
 				}
 
-				errprintln("Collection is null, check your eXist DB if it is running !");
+				errprintln("Collection is null, check your eXist DB if it is running for uri : " + existDbUri);
 
 			} catch (XMLDBException xException) {
 				xException.printStackTrace();
