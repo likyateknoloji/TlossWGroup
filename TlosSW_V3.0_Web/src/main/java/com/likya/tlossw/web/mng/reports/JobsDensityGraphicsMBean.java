@@ -109,7 +109,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 		dense.setLabel("Number of Jobs");
 
 		try {
-			densityJobCountList = getDbOperations().getDensityReport("xs:string(\"RUNNING\")", "xs:string(\"ON-RESOURCE\")", "xs:string(\"TIME-IN\")" , "xs:dateTime(\"2013-05-13T12:26:25+03:00\")", "xs:dateTime(\"2013-05-13T12:29:27+03:00\")", "xs:dayTimeDuration('PT10S')");
+			densityJobCountList = getDbOperations().getDensityReport("xs:string(\"RUNNING\")", "xs:string(\"ON-RESOURCE\")", "xs:string(\"TIME-IN\")" , "xs:dateTime(\"2013-05-15T16:26:25+03:00\")", "xs:dateTime(\"2013-05-15T16:49:27+03:00\")", "xs:dayTimeDuration('PT10S')");
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -117,7 +117,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
         int maxval = 0;
 		for(Integer i=0; i<densityJobCountList.sizeOfDataArray(); i++) {
 
-			String formattedTime = new SimpleDateFormat("hh:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
+			String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
 			dense.set(formattedTime, densityJobCountList.getDataArray(i).getCount().intValue());
 			counter = counter + (densityJobCountList.getDataArray(i).getCount().intValue() > 0 ? 1 : 0);
 			maxval = (densityJobCountList.getDataArray(i).getCount().intValue()) > maxval ? densityJobCountList.getDataArray(i).getCount().intValue() : maxval;
