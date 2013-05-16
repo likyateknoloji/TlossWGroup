@@ -80,16 +80,16 @@ public class AgentManager implements Runnable {
 
 		SWAgents swAgents = null;
 
-		SpaceWideRegistry.getGlobalLogger().info("Etmen listesini db'den alıyor...");
+		SpaceWideRegistry.getGlobalLogger().info("Etmen listesini db'den alÄ±yor...");
 		swAgents = DBUtils.initAgentList();
-		SpaceWideRegistry.getGlobalLogger().info("Agent listesini yükledi!");
+		SpaceWideRegistry.getGlobalLogger().info("Agent listesini yÃ¼kledi!");
 
 		if (swAgents == null) {
 			/**
-			 * @author serkan TODO Yapılacak işler notuna bakın !!
+			 * @author serkan TODO YapÄ±lacak iÅŸler notuna bakÄ±n !!
 			 */
-			// SpaceWideRegistry.getSpaceWideLogger().info("Etmen listesi veri tabanından okunamadı ya da tanımlı etmen yok !!!");
-			// SpaceWideRegistry.getSpaceWideLogger().info("TlosSW Etmensiz yapıda çalışacak !");
+			// SpaceWideRegistry.getSpaceWideLogger().info("Etmen listesi veri tabanÄ±ndan okunamadÄ± ya da tanÄ±mlÄ± etmen yok !!!");
+			// SpaceWideRegistry.getSpaceWideLogger().info("TlosSW Etmensiz yapÄ±da Ã§alÄ±ÅŸacak !");
 			System.exit(-1);
 		} else {
 			setSwAgentsCache(XmlUtils.generateSWAgentCache(swAgents));
@@ -107,18 +107,18 @@ public class AgentManager implements Runnable {
 		SWAgent cacheAgent = getSwAgentCache(jmxAgentUser.getAgentId() + "");
 
 		if (cacheAgent == null) {
-			System.err.println("Agent bilgisi saklandığı yerde bulunamadı : AgentID : " + jmxAgentUser.getAgentId());
+			System.err.println("Agent bilgisi saklandÄ±ÄŸÄ± yerde bulunamadÄ± : AgentID : " + jmxAgentUser.getAgentId());
 			System.err.println("Saklanan bilgiler : " + cacheAgent);
-			System.err.println("Beklenmedik bir hata oluştu, server kapandı !");
+			System.err.println("Beklenmedik bir hata oluÅŸtu, server kapandÄ± !");
 			System.exit(-1);
 		}
 
 		// TODO
-		// ilk ayaga kalkıs anınıda (agentların) burada hallet
+		// ilk ayaga kalkÄ±s anÄ±nda (agentlarÄ±n) burada hallet
 		// lastheartbeattime = 0 ise bu ilk andir
-		// soru agentlar çalışıyor konumda olabilirlermi
-		// yeni ayağa kalktıklarında sıfır ayağa kalktık veya
-		// dolu ayağa kalktık gibi bir şey geçseler!! recover olabilir
+		// soru agentlar Ã§alÄ±ÅŸÄ±yor konumda olabilirlermi
+		// yeni ayaÄŸa kalktÄ±klarÄ±nda sÄ±fÄ±r ayaÄŸa kalktÄ±k veya
+		// dolu ayaÄŸa kalktÄ±k gibi bir ÅŸey geÃ§seler!! recover olabilir
 
 		if (!cacheAgent.getOutJmxAvailable()) {
 			cacheAgent.setOutJmxAvailable(true);
@@ -126,7 +126,7 @@ public class AgentManager implements Runnable {
 			if (!cacheAgent.getJmxAvailable()) {
 				TSWAgentJmxClient.resetAgent(cacheAgent.getResource().getStringValue(), (int) cacheAgent.getJmxPort(), XmlUtils.getJmxAgentUser(cacheAgent));
 				// TODO sahin
-				// Agent'da calisan isleri kill et kuyrukları bosalt
+				// Agent'da calisan isleri kill et kuyruklarÄ± bosalt
 				// resetagent ustte bunu yapiyor fakat JmxAvailable(true) isini
 				// geriye kendi
 				// ben hazirim diye birsey donup yapsin
