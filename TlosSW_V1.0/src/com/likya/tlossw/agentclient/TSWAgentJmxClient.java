@@ -6,6 +6,7 @@ import javax.management.remote.JMXConnector;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 
 public class TSWAgentJmxClient extends TSWAgentJmxClientBase {
@@ -59,7 +60,7 @@ public class TSWAgentJmxClient extends TSWAgentJmxClientBase {
 	}
 	
 	//resetAgent ascnyron oldugu icin bir sey donmeyecek sadece Mbean'de bir hata cikarsa bildirsin! 
-	public static boolean resetAgent(String host, Integer port, JmxUser jmxUser) {
+	public static boolean resetAgent(String host, Integer port, JmxAgentUser jmxAgentUser) {
 
 		JMXConnector jmxConnector = TSWAgentJmxClient.getJMXTLSConnection(host, port);
 
@@ -68,8 +69,8 @@ public class TSWAgentJmxClient extends TSWAgentJmxClientBase {
 			return false;
 		}
 		
-		Object[] paramList = { jmxUser };
-		String[] signature = {  "com.likya.tlossw.model.jmx.JmxUser" };
+		Object[] paramList = { jmxAgentUser };
+		String[] signature = {  "com.likya.tlossw.model.jmx.JmxAgentUser" };
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
