@@ -64,11 +64,11 @@ public class TEJmxMpClientBase {
 					break;
 
 				} catch (UnknownHostException uhe) {
-					System.err.println("UnknownHostException : " + uhe.getLocalizedMessage());
+					System.err.println("UnknownHostException ! url : " + url + " message : " + uhe.getLocalizedMessage());
 				} catch (ConnectException ce) {
-					System.err.println("ConnectException : " + ce.getLocalizedMessage());
+					System.err.println("ConnectException to ! url : "  + url + " message : " +  ce.getLocalizedMessage());
 				} catch (SocketException se) {
-					System.err.println("SocketException : " + se.getLocalizedMessage());
+					System.err.println("SocketException with ! url : "  + url + " message : " +  se.getLocalizedMessage());
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}
