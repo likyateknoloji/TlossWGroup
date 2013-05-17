@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:commandButton style="float:right;"
+			value="#{msgs['tlos.button.save']}"
+			rendered="#{backingBean.jobInsertButton}"
+			oncomplete="jsActiveDialog.show()"
+			update=":jobDefinitionForm:jsActivePanel" />
+
+		<p:commandButton style="float:right;"
+			value="#{msgs['tlos.button.update']}"
+			rendered="#{backingBean.jobUpdateButton}"
+			oncomplete="jsActiveDialog.show()"
+			update=":jobDefinitionForm:jsActivePanel" />
+
+		<p:dialog id="jsActiveDialog" widgetVar="jsActiveDialog" resizable="false" showEffect="show">
+			<p:panelGrid columns="3" id="jsActivePanel">
+				<h:outputText value="#{msgs['tlos.workspace.pannel.job.jsActive']}" />
+				<p:selectBooleanCheckbox value="#{backingBean.jsActive}" />
+
+				<p:commandButton value="#{msgs['tlos.button.ok']}"
+					rendered="#{backingBean.jobInsertButton}"
+					action="#{backingBean['insertJobAction']}"
+					update=":jobDefinitionForm :jsTreeForm:tree" 
+					oncomplete="jsActiveDialog.hide();" />
+
+				<p:commandButton value="#{msgs['tlos.button.ok']}"
+					rendered="#{backingBean.jobUpdateButton}"
+					action="#{backingBean['updateJobAction']}"
+					update=":jobDefinitionForm:jsActivePanel :jsTreeForm:tree" 
+					oncomplete="jsActiveDialog.hide();" />
+			</p:panelGrid>
+
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>
