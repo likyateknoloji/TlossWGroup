@@ -54,6 +54,9 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	private JobArray jobsArray;
 
 	private String overallDuration;
+	private String minWorkingTimeStat;
+	private String maxWorkingTimeStat;
+	private String expWorkingTimeStat;
 	private BigInteger jobCount;
 	private BigInteger scenarioCount;
 	private String overallStartTime;
@@ -136,7 +139,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		Double expWorkingTimeStat = localStats.getAvg().doubleValue();; //new Integer(50);
 		
 		/* Hesaplanacak olanlar */
-		Double sifir = new Double(0.0);
+		
 		
 		Double minWorkingTime = new Double(minWorkingTimeStat);
 		
@@ -148,8 +151,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		Double maxWorkingTime = new Double(maxWorkingTimeStat);
 		
 		Double maxTolWorkingTime = new Double(expWorkingTimeStat + expWorkingTimeStat*(tolerancePer/100.0));
-		// göstergede ençok max süreden %25 fazlası olabilsin. Bu değere kadar toleransın 3 katı yüzde koydum şimdilik.
-		Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*3/100.0, 25)));
+		// göstergede ençok max süreden %25 fazlası olabilsin. Bu değere kadar toleransın 2 katı yüzde koydum şimdilik.
+		Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
+		
+		int deger = (int) (Math.min(minWorkingTimeStat, minTolWorkingTime)/2);
+		Double sifir = new Double(deger);
 		
 		// Renk bolgelerini belirliyoruz...
 		
@@ -203,23 +209,24 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 			e.printStackTrace();
 		}
 
-		BigDecimal totalDuration = jobsArray.getTotalDurationInSec();
+		Double totalDuration = jobsArray.getTotalDurationInSec().doubleValue();
+		BigDecimal totalDurationBD = jobsArray.getTotalDurationInSec();
+		Double totalDurationNormalized = totalDuration; 
+		//ibre sinirlari asmasin ..
+		if(totalDuration.compareTo(sifir)<0) {
+			totalDurationNormalized = sifir;
+		}
+		else if(totalDuration.compareTo(maxmaxTolWorkingTime)>=0) {
+			totalDurationNormalized = maxmaxTolWorkingTime;
+		}
 		
-		MeterGaugeChartModel meterGaugeModel = new MeterGaugeChartModel(totalDuration, intervals, ticks); 
+		MeterGaugeChartModel meterGaugeModel = new MeterGaugeChartModel(totalDurationNormalized, intervals, ticks); 
 		setMeterGaugeModel(meterGaugeModel);
 		
-		SimpleTimeZone tz = new SimpleTimeZone(0, "Out Timezone");        
-		TimeZone.setDefault(tz);
-
-		final Calendar cal = Calendar.getInstance(tz);
-		cal.setTimeInMillis(totalDuration.scaleByPowerOfTen(totalDuration.scale()).longValue());
-
-		// and here's how to get the String representation
-		final String timeString =
-		    new SimpleDateFormat("HH:mm:ss.SSS").format(cal.getTime());
-		//System.out.println(timeString);
-		
-		setOverallDuration(timeString);
+		setOverallDuration(numberToTimeFormat(totalDurationBD));
+		setMinWorkingTimeStat(numberToTimeFormat(localStats.getMin()));
+		setMaxWorkingTimeStat(numberToTimeFormat(localStats.getMax()));
+		setExpWorkingTimeStat(numberToTimeFormat(localStats.getAvg()));
 		setJobCount(jobsArray.getNumberOfJobs());
 		//setScenarioCount(jobsArray.getNumberOfScenarios());
 		setOverallStartTime(jobsArray.getOverallStart().toString());
@@ -227,6 +234,22 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		
 	}
 
+	public String numberToTimeFormat(BigDecimal number) {
+		final int SCALE = 3;  // Virgulden sonra 3 hane oldugunu kabul ettik.
+		
+		SimpleTimeZone tz = new SimpleTimeZone(0, "Out Timezone");        
+		TimeZone.setDefault(tz);
+
+		Calendar cal = Calendar.getInstance(tz);
+		cal.setTimeInMillis(number.scaleByPowerOfTen(SCALE).longValue());
+		
+		// and here's how to get the String representation
+		String timeString =
+		    new SimpleDateFormat("HH:mm:ss.SSS").format(cal.getTime());
+		
+		return timeString;
+	}
+	
 	public DashboardModel getModel() {
 		return model;
 	}
@@ -288,6 +311,30 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 	public void setScenarioCount(BigInteger scenarioCount) {
 		this.scenarioCount = scenarioCount;
+	}
+
+	public String getMinWorkingTimeStat() {
+		return minWorkingTimeStat;
+	}
+
+	public void setMinWorkingTimeStat(String minWorkingTimeStat) {
+		this.minWorkingTimeStat = minWorkingTimeStat;
+	}
+
+	public String getMaxWorkingTimeStat() {
+		return maxWorkingTimeStat;
+	}
+
+	public void setMaxWorkingTimeStat(String maxWorkingTimeStat) {
+		this.maxWorkingTimeStat = maxWorkingTimeStat;
+	}
+
+	public String getExpWorkingTimeStat() {
+		return expWorkingTimeStat;
+	}
+
+	public void setExpWorkingTimeStat(String expWorkingTimeStat) {
+		this.expWorkingTimeStat = expWorkingTimeStat;
 	}
 
 
