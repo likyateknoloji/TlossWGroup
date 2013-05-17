@@ -45,8 +45,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
  
 	
 	private static final long serialVersionUID = 2570957528954820036L;
-	private static final Logger logger = Logger
-			.getLogger(AlarmReportPanelMBean.class);
+	private static final Logger logger = Logger.getLogger(ZonesOfExecutionsMBean.class);
 
 	private DashboardModel model;
 	private MeterGaugeChartModel meterGaugeModel;
