@@ -18,6 +18,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
@@ -50,7 +51,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		String testString = resolveMessage("tlos.workspace.pannel.job.timeManagement");
 		System.out.println(testString);
 
-		root = new DefaultTreeNode("Root", null);
+		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, null);
 		TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
 		scenarioRootNode.setExpanded(true);
 		setSelectedTreeNode(scenarioRootNode);
