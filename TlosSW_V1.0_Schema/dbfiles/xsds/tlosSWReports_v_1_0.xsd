@@ -1,179 +1,198 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_report_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_report_types" elementFormDefault="qualified">
-    <xs:element name="reportAll">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="stateReport"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="stateReport">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="report" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="report">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="PENDING"/>
-                <xs:element ref="RUNNING"/>
-                <xs:element ref="FAILED"/>
-                <xs:element ref="CANCELLED"/>
-                <xs:element ref="FINISHED"/>
-            </xs:sequence>
-            <xs:attribute name="id" use="required" type="xs:integer"/>
-            <xs:attribute name="jsId" use="required" type="xs:integer"/>
-            <xs:attribute name="scope" use="required" type="xs:string"/>
-            <xs:attribute name="LSIDateTime" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:dateTime"/>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="PENDING">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="CREATED"/>
-                <xs:element ref="DEACTIVATED"/>
-                <xs:element ref="VALIDATED"/>
-                <xs:element ref="IDLED"/>
-                <xs:element ref="READY"/>
-                <xs:element ref="PAUSED"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="CREATED" type="xs:integer"/>
-    <xs:element name="DEACTIVATED" type="xs:integer"/>
-    <xs:element name="VALIDATED" type="xs:integer"/>
-    <xs:element name="IDLED">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="BYTIME"/>
-                <xs:element ref="BYUSER"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="BYTIME" type="xs:integer"/>
-    <xs:element name="BYUSER" type="xs:integer"/>
-    <xs:element name="READY">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="LOOKFOR-RESOURCE"/>
-                <xs:element ref="USER-CHOOSE-RESOURCE"/>
-                <xs:element ref="USER-WAITING"/>
-                <xs:element ref="WAITING"/>
-                <xs:element ref="TRANSFERING"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="USER-CHOOSE-RESOURCE" type="xs:integer"/>
-    <xs:element name="USER-WAITING" type="xs:integer"/>
-    <xs:element name="LOOKFOR-RESOURCE" type="xs:integer"/>
-    <xs:element name="WAITING" type="xs:integer"/>
-    <xs:element name="TRANSFERING" type="xs:integer"/>
-    <xs:element name="PAUSED" type="xs:integer"/>
-    <xs:element name="RUNNING">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="STAGE-IN"/>
-                <xs:element ref="MIGRATING"/>
-                <xs:element ref="ON-RESOURCE"/>
-                <xs:element ref="HELD"/>
-                <xs:element ref="STAGE-OUT"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="STAGE-IN" type="xs:integer"/>
-    <xs:element name="MIGRATING" type="xs:integer"/>
-    <xs:element name="ON-RESOURCE">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="TIME-IN"/>
-                <xs:element ref="TIME-OUT"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="TIME-IN" type="xs:integer"/>
-    <xs:element name="TIME-OUT" type="xs:integer"/>
-    <xs:element name="HELD" type="xs:integer"/>
-    <xs:element name="STAGE-OUT" type="xs:integer"/>
-    <xs:element name="CANCELLED" type="xs:integer"/>
-    <xs:element name="FINISHED">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="COMPLETED"/>
-                <xs:element ref="SKIPPED"/>
-                <xs:element ref="STOPPED"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="COMPLETED">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="SUCCESS"/>
-                <xs:element ref="WARNING"/>
-                <xs:element ref="FAILED"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="SUCCESS" type="xs:integer"/>
-    <xs:element name="WARNING" type="xs:integer"/>
-    <xs:element name="SKIPPED" type="xs:integer"/>
-    <xs:element name="STOPPED" type="xs:integer"/>
-    <xs:element name="FAILED" type="xs:integer"/>
-    <xs:element name="jobArray">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="job"/>
-            </xs:sequence>
-            <xs:attribute name="maxNumOfListedJobs" use="required" type="xs:integer"/>
-            <xs:attribute name="numberOfJobs" use="required" type="xs:integer"/>
-            <xs:attribute name="numberOfScenarios" use="required" type="xs:integer"/>
-            <xs:attribute name="overallStart" use="required" type="xs:dateTime"/>
-            <xs:attribute name="overallStop" use="required" type="xs:dateTime"/>
-            <xs:attribute name="totalDurationInSec" use="required" type="xs:decimal"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="job">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="xs:decimal">
-                    <xs:attribute name="id" use="required" type="xs:integer"/>
-                    <xs:attribute name="jname" use="required" type="xs:string"/>
-                    <xs:attribute name="startTime" use="required" type="xs:dateTime"/>
-                    <xs:attribute name="stopTime" use="required" type="xs:dateTime"/>
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_report_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_report_types"
+	elementFormDefault="qualified">
+	<xs:element name="reportAll">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="stateReport" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="stateReport">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="report" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="report">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PENDING" />
+				<xs:element ref="RUNNING" />
+				<xs:element ref="FAILED" />
+				<xs:element ref="CANCELLED" />
+				<xs:element ref="FINISHED" />
+			</xs:sequence>
+			<xs:attribute name="id" use="required" type="xs:integer" />
+			<xs:attribute name="jsId" use="required" type="xs:integer" />
+			<xs:attribute name="scope" use="required" type="xs:string" />
+			<xs:attribute name="LSIDateTime" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:dateTime" />
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PENDING">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="CREATED" />
+				<xs:element ref="DEACTIVATED" />
+				<xs:element ref="VALIDATED" />
+				<xs:element ref="IDLED" />
+				<xs:element ref="READY" />
+				<xs:element ref="PAUSED" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CREATED" type="xs:integer" />
+	<xs:element name="DEACTIVATED" type="xs:integer" />
+	<xs:element name="VALIDATED" type="xs:integer" />
+	<xs:element name="IDLED">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="BYTIME" />
+				<xs:element ref="BYUSER" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BYTIME" type="xs:integer" />
+	<xs:element name="BYUSER" type="xs:integer" />
+	<xs:element name="READY">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="LOOKFOR-RESOURCE" />
+				<xs:element ref="USER-CHOOSE-RESOURCE" />
+				<xs:element ref="USER-WAITING" />
+				<xs:element ref="WAITING" />
+				<xs:element ref="TRANSFERING" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="USER-CHOOSE-RESOURCE" type="xs:integer" />
+	<xs:element name="USER-WAITING" type="xs:integer" />
+	<xs:element name="LOOKFOR-RESOURCE" type="xs:integer" />
+	<xs:element name="WAITING" type="xs:integer" />
+	<xs:element name="TRANSFERING" type="xs:integer" />
+	<xs:element name="PAUSED" type="xs:integer" />
+	<xs:element name="RUNNING">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="STAGE-IN" />
+				<xs:element ref="MIGRATING" />
+				<xs:element ref="ON-RESOURCE" />
+				<xs:element ref="HELD" />
+				<xs:element ref="STAGE-OUT" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="STAGE-IN" type="xs:integer" />
+	<xs:element name="MIGRATING" type="xs:integer" />
+	<xs:element name="ON-RESOURCE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="TIME-IN" />
+				<xs:element ref="TIME-OUT" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TIME-IN" type="xs:integer" />
+	<xs:element name="TIME-OUT" type="xs:integer" />
+	<xs:element name="HELD" type="xs:integer" />
+	<xs:element name="STAGE-OUT" type="xs:integer" />
+	<xs:element name="CANCELLED" type="xs:integer" />
+	<xs:element name="FINISHED">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="COMPLETED" />
+				<xs:element ref="SKIPPED" />
+				<xs:element ref="STOPPED" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="COMPLETED">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="SUCCESS" />
+				<xs:element ref="WARNING" />
+				<xs:element ref="FAILED" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SUCCESS" type="xs:integer" />
+	<xs:element name="WARNING" type="xs:integer" />
+	<xs:element name="SKIPPED" type="xs:integer" />
+	<xs:element name="STOPPED" type="xs:integer" />
+	<xs:element name="FAILED" type="xs:integer" />
+	<xs:element name="jobArray">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="job" />
+			</xs:sequence>
+			<xs:attribute name="maxNumOfListedJobs" use="required"
+				type="xs:integer" />
+			<xs:attribute name="numberOfJobs" use="required" type="xs:integer" />
+			<xs:attribute name="numberOfScenarios" use="required"
+				type="xs:integer" />
+			<xs:attribute name="overallStart" use="required" type="xs:dateTime" />
+			<xs:attribute name="overallStop" use="required" type="xs:dateTime" />
+			<xs:attribute name="totalDurationInSec" use="required"
+				type="xs:decimal" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="job">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:decimal">
+					<xs:attribute name="id" use="required" type="xs:integer" />
+					<xs:attribute name="jname" use="required" type="xs:string" />
+					<xs:attribute name="startTime" use="required" type="xs:dateTime" />
+					<xs:attribute name="stopTime" use="required" type="xs:dateTime" />
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
 
-	<!-- Density schemas-->
-    <xs:element name="statistics">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="data"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="data">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="group"/>
-            </xs:sequence>
-            <xs:attribute name="count" use="required" type="xs:integer"/>
-            <xs:attribute name="eDTime" use="required" type="xs:dateTime"/>
-            <xs:attribute name="sDTime" use="required" type="xs:dateTime"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="group">
-        <xs:complexType>
-            <xs:attribute name="ID" use="required" type="xs:integer"/>
-            <xs:attribute name="LSIDateTime" use="required" type="xs:dateTime"/>
-            <xs:attribute name="LSIDateTimeEnd" use="required" type="xs:dateTime"/>
-            <xs:attribute name="agentId" use="required" type="xs:integer"/>
-        </xs:complexType>
-    </xs:element>
+	<!-- Density schemas -->
+	<xs:element name="statistics">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="data" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="data">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="group" />
+			</xs:sequence>
+			<xs:attribute name="count" use="required" type="xs:integer" />
+			<xs:attribute name="eDTime" use="required" type="xs:dateTime" />
+			<xs:attribute name="sDTime" use="required" type="xs:dateTime" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="group">
+		<xs:complexType>
+			<xs:attribute name="ID" use="required" type="xs:integer" />
+			<xs:attribute name="LSIDateTime" use="required" type="xs:dateTime" />
+			<xs:attribute name="LSIDateTimeEnd" use="required" type="xs:dateTime" />
+			<xs:attribute name="agentId" use="required" type="xs:integer" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- Statistics schemas -->
+	<xs:element name="localStats">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="max" />
+				<xs:element ref="min" />
+				<xs:element ref="avg" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="max" type="xs:decimal" />
+	<xs:element name="min" type="xs:decimal" />
+	<xs:element name="avg" type="xs:decimal" />
 </xs:schema>
