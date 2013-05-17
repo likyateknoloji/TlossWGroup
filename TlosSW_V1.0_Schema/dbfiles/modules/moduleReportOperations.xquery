@@ -34,6 +34,25 @@ return local:getJobArray($run, "ascending", 15)
 
 :)
 
+declare function hs:calculateBaseStats($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
+{
+  let $runIdx := if( $runId = 0 ) then sq:getId("runId") (: son run :)
+						 else $runId
+
+  (: Burada son run i bilerek dikkate almiyoruz, ondan onceki 3 run in ortalamasi yeterli :)
+  let $localStats :=
+    let $arasonuc := for $i in (1,2,3)
+                      let $hepsi := hs:getJobArray(hs:getJobsReport($numberOfElement,$runIdx - $i ,$jobId, $refRunIdBolean),"descending",50)/@totalDurationInSec
+                     return $hepsi
+                    
+    let $max :=  round-half-to-even( max($arasonuc), 2)
+    let $min := round-half-to-even( min($arasonuc), 2)
+    let $ortalama := round-half-to-even( avg($arasonuc), 2)
+    return <rep:localStats> <rep:max> { $max } </rep:max><rep:min> { $min } </rep:min><rep:avg>{ $ortalama } </rep:avg> </rep:localStats>
+
+  return $localStats
+};
+
 declare function hs:getJobsReport($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
  {
 
