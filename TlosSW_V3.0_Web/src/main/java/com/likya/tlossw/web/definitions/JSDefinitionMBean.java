@@ -12,9 +12,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
-import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
-import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
-import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
@@ -71,156 +68,24 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void onNodeSelect(NodeSelectEvent event) {
 		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
-		
-//		jobProperties = JobProperties.Factory.newInstance();
-//		
-//		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
-//		baseJobInfos.setJsName("hakan");
-//		
-//		JobInfos jobInfos = JobInfos.Factory.newInstance();
-//		JobTypeDetails jobTypeDetails = JobTypeDetails.Factory.newInstance();
-//		jobInfos.setJobTypeDetails(jobTypeDetails);
-//		baseJobInfos.setJobInfos(jobInfos);
-//		jobProperties.setBaseJobInfos(baseJobInfos);
+
 		String selectedJob = event.getTreeNode().toString();
-		String jobId = selectedJob.substring(selectedJob.lastIndexOf("|") + 1);
-		String jobAbsolutePath = selectedJob.substring(0, selectedJob.lastIndexOf("|")-1);
-		
+		// String jobId = selectedJob.substring(selectedJob.lastIndexOf("|") + 1);
+		String jobAbsolutePath = selectedJob.substring(0, selectedJob.lastIndexOf("|") - 1);
+
 		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData", jobAbsolutePath);
-		
-		getBatchProcessPanelMBean().setJobProperties(jobProperties);
-		getBatchProcessPanelMBean().setJobInsertButton(true);
-		getBatchProcessPanelMBean().fillTabs();
-		jobDefCenterPanel = BATCH_PROCESS_PAGE;
-		
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm");
+
+		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+
+		initializeJobPanel(jobType, false);
 	}
-	
+
 	public void handleDropAction(ActionEvent ae) {
 		jobProperties = getDbOperations().getTemplateJobFromName(JOB_TEMPLATES_DATA, draggedTemplateName);
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
-		switch (jobType) {
-
-		case JobCommandType.INT_SYSTEM_COMMAND:
-
-			break;
-
-		case JobCommandType.INT_BATCH_PROCESS:
-			if (jobProperties != null) {
-				getBatchProcessPanelMBean().setJobProperties(jobProperties);
-				getBatchProcessPanelMBean().setJobInsertButton(true);
-				getBatchProcessPanelMBean().fillTabs();
-
-				getBatchProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = BATCH_PROCESS_PAGE;
-
-			break;
-
-		case JobCommandType.INT_SHELL_SCRIPT:
-
-			break;
-
-		case JobCommandType.INT_SAP:
-
-			break;
-
-		case JobCommandType.INT_SAS:
-
-			break;
-
-		case JobCommandType.INT_ETL_TOOL_JOBS:
-
-			break;
-
-		case JobCommandType.INT_FTP:
-			if (jobProperties != null) {
-				getFtpPanelMBean().setJobProperties(jobProperties);
-				getFtpPanelMBean().setJobInsertButton(true);
-				getFtpPanelMBean().fillTabs();
-
-				getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = FTP_PAGE;
-
-			break;
-
-		case JobCommandType.INT_WEB_SERVICE:
-			if (jobProperties != null) {
-				getWebServicePanelMBean().setJobProperties(jobProperties);
-				getWebServicePanelMBean().setJobInsertButton(true);
-				getWebServicePanelMBean().fillTabs();
-
-				getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = WEB_SERVICE_PAGE;
-
-			break;
-
-		case JobCommandType.INT_DB_JOBS:
-			if (jobProperties != null) {
-				getDbJobsPanelMBean().setJobProperties(jobProperties);
-				getDbJobsPanelMBean().setJobInsertButton(true);
-				getDbJobsPanelMBean().fillTabs();
-
-				getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = DB_JOBS_PAGE;
-
-			break;
-
-		case JobCommandType.INT_FILE_LISTENER:
-			if (jobProperties != null) {
-				getFileListenerPanelMBean().setJobProperties(jobProperties);
-				getFileListenerPanelMBean().setJobInsertButton(true);
-				getFileListenerPanelMBean().fillTabs();
-
-				getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = FILE_LISTENER_PAGE;
-
-			break;
-
-		case JobCommandType.INT_PROCESS_NODE:
-			if (jobProperties != null) {
-				getProcessNodePanelMBean().setJobProperties(jobProperties);
-				getProcessNodePanelMBean().setJobInsertButton(true);
-				getProcessNodePanelMBean().fillTabs();
-
-				getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = PROCESS_NODE_PAGE;
-
-			break;
-
-		case JobCommandType.INT_FILE_PROCESS:
-			if (jobProperties != null) {
-				getFileProcessPanelMBean().setJobProperties(jobProperties);
-				getFileProcessPanelMBean().setJobInsertButton(true);
-				getFileProcessPanelMBean().fillTabs();
-
-				getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
-			}
-
-			jobDefCenterPanel = FILE_PROCESS_PAGE;
-
-			break;
-
-		default:
-			break;
-		}
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm");
+		initializeJobPanel(jobType, true);
 	}
 
 	public void handleJobDropAction(ActionEvent ae) {
@@ -252,6 +117,142 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			getProcessNodePanelMBean().setDraggedJobName(draggedJobNameForDependency);
 			getProcessNodePanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 		}
+	}
+
+	private void initializeJobPanel(int jobType, boolean dragged) {
+		switch (jobType) {
+
+		case JobCommandType.INT_SYSTEM_COMMAND:
+
+			break;
+
+		case JobCommandType.INT_BATCH_PROCESS:
+			if (jobProperties != null) {
+				getBatchProcessPanelMBean().setJobProperties(jobProperties);
+				getBatchProcessPanelMBean().setJobInsertButton(true);
+				getBatchProcessPanelMBean().fillTabs();
+
+				if (dragged) {
+					getBatchProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = BATCH_PROCESS_PAGE;
+
+			break;
+
+		case JobCommandType.INT_SHELL_SCRIPT:
+
+			break;
+
+		case JobCommandType.INT_SAP:
+
+			break;
+
+		case JobCommandType.INT_SAS:
+
+			break;
+
+		case JobCommandType.INT_ETL_TOOL_JOBS:
+
+			break;
+
+		case JobCommandType.INT_FTP:
+			if (jobProperties != null) {
+				getFtpPanelMBean().setJobProperties(jobProperties);
+				getFtpPanelMBean().setJobInsertButton(true);
+				getFtpPanelMBean().fillTabs();
+
+				if (dragged) {
+					getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = FTP_PAGE;
+
+			break;
+
+		case JobCommandType.INT_WEB_SERVICE:
+			if (jobProperties != null) {
+				getWebServicePanelMBean().setJobProperties(jobProperties);
+				getWebServicePanelMBean().setJobInsertButton(true);
+				getWebServicePanelMBean().fillTabs();
+
+				if (dragged) {
+					getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = WEB_SERVICE_PAGE;
+
+			break;
+
+		case JobCommandType.INT_DB_JOBS:
+			if (jobProperties != null) {
+				getDbJobsPanelMBean().setJobProperties(jobProperties);
+				getDbJobsPanelMBean().setJobInsertButton(true);
+				getDbJobsPanelMBean().fillTabs();
+
+				if (dragged) {
+					getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = DB_JOBS_PAGE;
+
+			break;
+
+		case JobCommandType.INT_FILE_LISTENER:
+			if (jobProperties != null) {
+				getFileListenerPanelMBean().setJobProperties(jobProperties);
+				getFileListenerPanelMBean().setJobInsertButton(true);
+				getFileListenerPanelMBean().fillTabs();
+
+				if (dragged) {
+					getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = FILE_LISTENER_PAGE;
+
+			break;
+
+		case JobCommandType.INT_PROCESS_NODE:
+			if (jobProperties != null) {
+				getProcessNodePanelMBean().setJobProperties(jobProperties);
+				getProcessNodePanelMBean().setJobInsertButton(true);
+				getProcessNodePanelMBean().fillTabs();
+
+				if (dragged) {
+					getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = PROCESS_NODE_PAGE;
+
+			break;
+
+		case JobCommandType.INT_FILE_PROCESS:
+			if (jobProperties != null) {
+				getFileProcessPanelMBean().setJobProperties(jobProperties);
+				getFileProcessPanelMBean().setJobInsertButton(true);
+				getFileProcessPanelMBean().fillTabs();
+
+				if (dragged) {
+					getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				}
+			}
+
+			jobDefCenterPanel = FILE_PROCESS_PAGE;
+
+			break;
+
+		default:
+			break;
+		}
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm");
 	}
 
 	public String getJobDefCenterPanel() {
