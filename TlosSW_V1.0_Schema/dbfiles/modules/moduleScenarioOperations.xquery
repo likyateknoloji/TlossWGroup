@@ -196,7 +196,7 @@ declare function hs:getJob($documentName as xs:string, $jobPath ,$jobName as xs:
 {	
 	let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
 
-	for $job in $doc/$jobPath//dat:jobProperties
+	for $job in $doc//$jobPath/dat:jobProperties
         where $job/dat:baseJobInfos/com:jsName = $jobName
         return $job
 };
