@@ -50,6 +50,8 @@ import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
+import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument;
+import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
 import com.likya.tlos.model.xmlbeans.report.StatisticsDocument;
@@ -2247,6 +2249,34 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public LocalStats getStatsReport(int derinlik, int runId, int jobId, String refPoint) throws XMLDBException {
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:calculateBaseStats(" + derinlik + "," + runId + "," + jobId + "," + refPoint + "())";
+		
+		Collection collection = existConnectionHolder.getCollection();
+		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		service.setProperty("indent", "yes");
+
+		ResourceSet result = service.query(xQueryStr);
+		ResourceIterator i = result.getIterator();
+		LocalStats localStats = null;
+
+		while (i.hasMoreResources()) {
+			Resource r = i.nextResource();
+			String xmlContent = (String) r.getContent();
+
+			try {
+				localStats = LocalStatsDocument.Factory.parse(xmlContent).getLocalStats();
+			} catch (XmlException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+		}
+
+		return localStats;
+	}
+	
 	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
 		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery\"; declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";" + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + "," + jobId + "," + refPoint + "()),\"" + orderType + "\"," + jobCount + ")";
