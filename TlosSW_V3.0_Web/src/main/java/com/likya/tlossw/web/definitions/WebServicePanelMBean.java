@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
@@ -83,7 +82,19 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 
 	public void insertJobAction() {
 		fillJobProperties();
+		fillWebServicePropertyDetails();
 
+		insertJobDefinition();
+	}
+
+	public void updateJobAction() {
+		fillJobProperties();
+		fillWebServicePropertyDetails();
+
+		updateJobDefinition();
+	}
+
+	private void fillWebServicePropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 
 		if (jobTypeDetails.getSpecialParameters() == null) {
@@ -95,8 +106,6 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 		} else {
 			jobTypeDetails.getSpecialParameters().setWebServiceDefinition(selectedWebService);
 		}
-
-		insertJobDefinition();
 	}
 
 	public static Logger getLogger() {

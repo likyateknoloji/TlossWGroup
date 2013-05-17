@@ -117,6 +117,13 @@ public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
 		insertJobDefinition();
 	}
 
+	public void updateJobAction() {
+		fillJobProperties();
+		fillDBJobPropertyDetails();
+
+		updateJobDefinition();
+	}
+
 	private void fillDBJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;

@@ -266,6 +266,13 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		insertJobDefinition();
 	}
 
+	public void updateJobAction() {
+		fillJobProperties();
+		fillFTPPropertyDetails();
+
+		updateJobDefinition();
+	}
+
 	private void fillFTPPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;

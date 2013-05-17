@@ -354,6 +354,13 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 		insertJobDefinition();
 	}
 
+	public void updateJobAction() {
+		fillJobProperties();
+		fillFileProcessPropertyDetails();
+
+		updateJobDefinition();
+	}
+
 	private void fillFileProcessPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;

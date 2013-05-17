@@ -59,6 +59,16 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 		insertJobDefinition();
 	}
 
+	public void updateJobAction() {
+		fillJobProperties();
+
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		jobTypeDetails.setJobCommand(jobCommand);
+		jobTypeDetails.setJobPath(jobPath);
+
+		updateJobDefinition();
+	}
+
 	public static Logger getLogger() {
 		return logger;
 	}

@@ -179,6 +179,13 @@ public class ProcessNodePanelMBean extends JobBaseBean implements Serializable {
 
 		insertJobDefinition();
 	}
+	
+	public void updateJobAction() {
+		fillJobProperties();
+		fillProcessNodePropertyDetails();
+
+		updateJobDefinition();
+	}
 
 	private void fillProcessNodePropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();

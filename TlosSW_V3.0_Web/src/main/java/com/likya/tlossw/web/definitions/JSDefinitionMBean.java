@@ -2,7 +2,6 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -10,10 +9,12 @@ import javax.faces.event.ActionEvent;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "jsDefinitionMBean")
 @ViewScoped
@@ -61,19 +62,32 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public String draggedTemplateName;
 	public String draggedTemplatePath;
 
+	public String selectedJobPath;
+
 	public String draggedJobNameForDependency;
 	public String draggedJobPathForDependency;
 
 	private JobProperties jobProperties;
 
 	public void onNodeSelect(NodeSelectEvent event) {
-		addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
+		// addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
 
 		String selectedJob = event.getTreeNode().toString();
+		
+		TreeNode treeNode = event.getTreeNode();
+		selectedJobPath = "";
+		
+		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
+			selectedJobPath += treeNode.getParent().toString() + "/";
+			treeNode = treeNode.getParent();
+		}
+		
+		event.getTreeNode().getParent().getParent().toString();
+		
 		// String jobId = selectedJob.substring(selectedJob.lastIndexOf("|") + 1);
 		String jobAbsolutePath = selectedJob.substring(0, selectedJob.lastIndexOf("|") - 1);
 
-		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData", jobAbsolutePath);
+		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData/dat:jobList", jobAbsolutePath);
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
@@ -119,7 +133,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	private void initializeJobPanel(int jobType, boolean dragged) {
+	private void initializeJobPanel(int jobType, boolean insert) {
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
@@ -129,11 +143,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_BATCH_PROCESS:
 			if (jobProperties != null) {
 				getBatchProcessPanelMBean().setJobProperties(jobProperties);
-				getBatchProcessPanelMBean().setJobInsertButton(true);
+				getBatchProcessPanelMBean().setJobInsertButton(insert);
+				getBatchProcessPanelMBean().setJobUpdateButton(!insert);
 				getBatchProcessPanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getBatchProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -160,11 +177,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FTP:
 			if (jobProperties != null) {
 				getFtpPanelMBean().setJobProperties(jobProperties);
-				getFtpPanelMBean().setJobInsertButton(true);
+				getFtpPanelMBean().setJobInsertButton(insert);
+				getFtpPanelMBean().setJobUpdateButton(!insert);
 				getFtpPanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -175,11 +195,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_WEB_SERVICE:
 			if (jobProperties != null) {
 				getWebServicePanelMBean().setJobProperties(jobProperties);
-				getWebServicePanelMBean().setJobInsertButton(true);
+				getWebServicePanelMBean().setJobInsertButton(insert);
+				getWebServicePanelMBean().setJobUpdateButton(!insert);
 				getWebServicePanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -190,11 +213,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_DB_JOBS:
 			if (jobProperties != null) {
 				getDbJobsPanelMBean().setJobProperties(jobProperties);
-				getDbJobsPanelMBean().setJobInsertButton(true);
+				getDbJobsPanelMBean().setJobInsertButton(insert);
+				getDbJobsPanelMBean().setJobUpdateButton(!insert);
 				getDbJobsPanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -205,11 +231,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FILE_LISTENER:
 			if (jobProperties != null) {
 				getFileListenerPanelMBean().setJobProperties(jobProperties);
-				getFileListenerPanelMBean().setJobInsertButton(true);
+				getFileListenerPanelMBean().setJobInsertButton(insert);
+				getFileListenerPanelMBean().setJobUpdateButton(!insert);
 				getFileListenerPanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -220,11 +249,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_PROCESS_NODE:
 			if (jobProperties != null) {
 				getProcessNodePanelMBean().setJobProperties(jobProperties);
-				getProcessNodePanelMBean().setJobInsertButton(true);
+				getProcessNodePanelMBean().setJobInsertButton(insert);
+				getProcessNodePanelMBean().setJobUpdateButton(!insert);
 				getProcessNodePanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -235,11 +267,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FILE_PROCESS:
 			if (jobProperties != null) {
 				getFileProcessPanelMBean().setJobProperties(jobProperties);
-				getFileProcessPanelMBean().setJobInsertButton(true);
+				getFileProcessPanelMBean().setJobInsertButton(insert);
+				getFileProcessPanelMBean().setJobUpdateButton(!insert);
 				getFileProcessPanelMBean().fillTabs();
 
-				if (dragged) {
+				if (insert) {
 					getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
+				} else {
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 

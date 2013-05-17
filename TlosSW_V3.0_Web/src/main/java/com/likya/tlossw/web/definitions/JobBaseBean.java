@@ -101,6 +101,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private boolean isScenario = false;
 
 	private boolean jobInsertButton = false;
+	private boolean jobUpdateButton = false;
 
 	public final static String PERIOD_TIME_PARAM = "Period Time";
 
@@ -126,7 +127,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	private String jobPathInScenario;
 
-	private boolean jsActiveDialogShow = false;
 	private boolean jsActive = false;
 
 	// baseJobInfos
@@ -1004,18 +1004,30 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
+			
+			switchInsertUpdateButtons();
 		} else {
-			// surukle birak ile getirilen isin agactan kalidrilmasi icin agaci
-			// guncelliyor
-			RequestContext context = RequestContext.getCurrentInstance();
-			context.update("jsTreeForm:tree");
-
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.insert", null);
 		}
-
-		jsActiveDialogShow = false;
 	}
 
+	public void updateJobDefinition() {
+		if (!jobCheckUp()) {
+			return;
+		}
+
+		if (getDbOperations().updateJob(ConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), getTreePath(jobPathInScenario))) {
+			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
+		} else {
+			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
+		}
+	}
+
+	private void switchInsertUpdateButtons() {
+		jobInsertButton = !jobInsertButton;
+		jobUpdateButton = !jobUpdateButton;
+	}
+	
 	private boolean getJobId() {
 		int jobId = getDbOperations().getNextId(ConstantDefinitions.JOB_ID);
 
@@ -1091,7 +1103,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		// ayni isimli iki is kaydedilmiyor
 		if (job != null && job.getBaseJobInfos().getJsName().equals(jobProperties.getBaseJobInfos().getJsName()) && !job.getID().equals(jobProperties.getID())) {
-			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+			addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 			return false;
 		}
 
@@ -1732,10 +1744,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 
 		statusDialogShow = false;
-	}
-
-	public void openJSDialogAction(ActionEvent e) {
-		jsActiveDialogShow = true;
 	}
 
 	public String getJobPropertiesXML() {
@@ -2606,14 +2614,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.scenarioStatusList = scenarioStatusList;
 	}
 
-	public boolean isJsActiveDialogShow() {
-		return jsActiveDialogShow;
-	}
-
-	public void setJsActiveDialogShow(boolean jsActiveDialogShow) {
-		this.jsActiveDialogShow = jsActiveDialogShow;
-	}
-
 	public boolean isJsActive() {
 		return jsActive;
 	}
@@ -2628,6 +2628,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setjSTree(JSTree jSTree) {
 		this.jSTree = jSTree;
+	}
+
+	public boolean isJobUpdateButton() {
+		return jobUpdateButton;
+	}
+
+	public void setJobUpdateButton(boolean jobUpdateButton) {
+		this.jobUpdateButton = jobUpdateButton;
 	}
 
 }

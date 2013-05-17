@@ -125,6 +125,13 @@ public class FileListenerPanelMBean extends JobBaseBean implements Serializable 
 		insertJobDefinition();
 	}
 
+	public void updateJobAction() {
+		fillJobProperties();
+		fillFileListenerPropertyDetails();
+
+		updateJobDefinition();
+	}
+
 	private void fillFileListenerPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
