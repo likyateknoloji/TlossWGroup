@@ -36,7 +36,7 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 	private DBOperations dbOperations;
 	
 
-	private static final Logger logger = Logger.getLogger(AlarmReportPanelMBean.class);
+	private static final Logger logger = Logger.getLogger(JobsDistributionGraphicsMBean.class);
 
 	private OhlcChartModel ohlcModel;
 

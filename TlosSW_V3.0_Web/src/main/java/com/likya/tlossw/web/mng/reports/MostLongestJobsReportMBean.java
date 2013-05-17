@@ -31,7 +31,7 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	private DBOperations dbOperations;
 	
 	private static final long serialVersionUID = 2570957528954820036L;
-	private static final Logger logger = Logger.getLogger(AlarmReportPanelMBean.class);
+	private static final Logger logger = Logger.getLogger(MostLongestJobsReportMBean.class);
  
 	private CartesianChartModel curDurationModel;
 	private CartesianChartModel prevDurationModel;

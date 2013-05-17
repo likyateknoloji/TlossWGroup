@@ -31,7 +31,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 	private DBOperations dbOperations;
 	
 	private static final long serialVersionUID = 2570957528954820036L;
-	private static final Logger logger = Logger.getLogger(AlarmReportPanelMBean.class);
+	private static final Logger logger = Logger.getLogger(JobsDensityGraphicsMBean.class);
 
 	private CartesianChartModel denseModel;
 	private Statistics densityJobCountList;
