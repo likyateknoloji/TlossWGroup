@@ -29,6 +29,8 @@ import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
+import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument;
+import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -105,42 +107,74 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 		
 		/*
-		 * 0 : kırmızı
+		 * 0 : mavi
            min çalışma süresi : sari
-           beklenen çalışma süresi -tolerans: 
+           beklenen çalışma süresi -tolerans: yeşil
            beklenen çalışma süresi : yeşil
-           beklenen çalışma süresi +tolerans: sarı
-           maximum çalışma süresi : kırmızı
+           beklenen çalışma süresi +tolerans: yeşil
+           maximum çalışma süresi : sarı
+           out of time : kırmızı
 
            timeout süresi
 		 */
-		/* DB den gelecek olan degerlerle dolacak. Simdilik sabit degerler var */
-		Integer tolerancePer = new Integer(30);
-		Integer minWorkingTimeStat = new Integer(30);
-		Integer maxWorkingTimeStat = new Integer(70);
-		Integer expWorkingTimeStat = new Integer(50);
+		int derinlik = 1;
+		int runId = 0;
+		int jobId =0;
+		String refRunIdBolean = "true";
+		
+		LocalStats localStats = null;
+		try {
+			localStats = getDbOperations().getStatsReport(derinlik, runId, jobId, refRunIdBolean);
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+
+		Double tolerancePer = new Double(20.0);
+		Double minWorkingTimeStat = localStats.getMin().doubleValue(); //new Integer(30);
+		Double maxWorkingTimeStat = localStats.getMax().doubleValue(); //new Integer(70);
+		Double expWorkingTimeStat = localStats.getAvg().doubleValue();; //new Integer(50);
 		
 		/* Hesaplanacak olanlar */
-		Integer sifir = new Integer(0);
+		Double sifir = new Double(0.0);
 		
-		Integer minWorkingTime = new Integer(minWorkingTimeStat);
+		Double minWorkingTime = new Double(minWorkingTimeStat);
 		
-		Integer minValueCand = new Integer((int) (expWorkingTimeStat - expWorkingTimeStat*(tolerancePer/100.0)));
-		Integer minTolWorkingTime = new Integer((minValueCand < 0 ? 0 : minValueCand));
+		Double minValueCand = new Double(expWorkingTimeStat - expWorkingTimeStat*(tolerancePer/100.0));
+		Double minTolWorkingTime = new Double((minValueCand < 0 ? 0 : minValueCand));
 		
-		Integer expectedWorkingTime = new Integer(expWorkingTimeStat);
+		Double expectedWorkingTime = new Double(expWorkingTimeStat);
 		
-		Integer maxWorkingTime = new Integer(maxWorkingTimeStat);
+		Double maxWorkingTime = new Double(maxWorkingTimeStat);
 		
-		Integer maxTolWorkingTime = new Integer((int) (expWorkingTimeStat + expWorkingTimeStat*(tolerancePer/100.0)));
+		Double maxTolWorkingTime = new Double(expWorkingTimeStat + expWorkingTimeStat*(tolerancePer/100.0));
 		// göstergede ençok max süreden %25 fazlası olabilsin. Bu değere kadar toleransın 3 katı yüzde koydum şimdilik.
-		Integer maxmaxTolWorkingTime = new Integer((int) (maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*3/100.0, 25))));
+		Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*3/100.0, 25)));
+		
+		// Renk bolgelerini belirliyoruz...
 		
 		List<Number> intervals = new ArrayList<Number>();
 		intervals.add(sifir);
-		if(minTolWorkingTime < minWorkingTime ) intervals.add(minTolWorkingTime); else intervals.add(minWorkingTime);
+		if(minTolWorkingTime < minWorkingTime ) {
+			intervals.add(minTolWorkingTime); 
+			intervals.add(minWorkingTime);
+		}
+		else {
+			intervals.add(minWorkingTime);
+			intervals.add(minTolWorkingTime); 
+		}
+		
 		intervals.add(expectedWorkingTime);
-		if(maxTolWorkingTime > maxWorkingTime ) intervals.add(maxTolWorkingTime); else intervals.add(maxWorkingTime);
+		
+		if(maxTolWorkingTime > maxWorkingTime ) {
+			intervals.add(maxWorkingTime);
+			intervals.add(maxTolWorkingTime); 
+		}
+		else {
+			intervals.add(maxTolWorkingTime);
+			intervals.add(maxWorkingTime);
+		}
+		
 		intervals.add(maxmaxTolWorkingTime);
 		
 		List<Number> ticks = new ArrayList<Number>();
@@ -154,7 +188,15 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 			ticks.add(sifir + step*i);
 		}
 
-		if(ticks.get( (ticks.size()== 0 ? 0 : ticks.size() - 1) ).intValue()< maxmaxTolWorkingTime) ticks.add(maxmaxTolWorkingTime);
+		int index = ticks.size()== 0 ? 0 : ticks.size() - 1;
+		for(int j=1; ticks.get(index).doubleValue() < maxmaxTolWorkingTime; j++) {
+			ticks.add( ticks.get(index).doubleValue() + step*j);
+			index = ticks.size()== 0 ? 0 : ticks.size() - 1;
+		}
+		maxmaxTolWorkingTime = ticks.get(index).doubleValue();
+		int intervalIndex = (intervals.size() == 0) ? 0 : intervals.size()-1;
+		intervals.set(intervalIndex, maxmaxTolWorkingTime);
+		
 		try {
 			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true", "descending", 1);
 		} catch (XMLDBException e) {
@@ -163,7 +205,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 		BigDecimal totalDuration = jobsArray.getTotalDurationInSec();
 		
-		MeterGaugeChartModel meterGaugeModel = new MeterGaugeChartModel(14, intervals, ticks); 
+		MeterGaugeChartModel meterGaugeModel = new MeterGaugeChartModel(totalDuration, intervals, ticks); 
 		setMeterGaugeModel(meterGaugeModel);
 		
 		SimpleTimeZone tz = new SimpleTimeZone(0, "Out Timezone");        
