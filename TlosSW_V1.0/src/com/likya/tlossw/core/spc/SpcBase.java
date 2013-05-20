@@ -132,7 +132,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			jobRuntimeProperties.setTreePath(getSpcId());
-			// TODO Hosuma gitmedi ama tip dönüsümü uyguladim.
+			// TODO Hosuma gitmedi ama tip dï¿½nï¿½sï¿½mï¿½ uyguladim.
 			// isleri onceliklerine gore siraya dizdigimiz bir dizi
 			// tanimlamistik, ona ekleyip siralandiralim.
 			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
@@ -192,7 +192,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			jobRuntimeProperties.setTreePath(getSpcId());
 
-			// TODO Hoþuma gitmedi ama tip dönüsümü yaptim
+			// TODO Hoï¿½uma gitmedi ama tip dï¿½nï¿½sï¿½mï¿½ yaptim
 			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 
 			Job myJob = null;
