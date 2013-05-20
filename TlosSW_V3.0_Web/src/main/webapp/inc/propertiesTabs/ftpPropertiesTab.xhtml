@@ -235,7 +235,9 @@
 						value="#{msgs['tlos.workspace.pannel.job.sourceIsRemote']}"
 						rendered="#{backingBean.operationType ne 'List Files'}" />
 					<p:selectBooleanCheckbox value="#{backingBean.sourceIsRemote}"
-						rendered="#{backingBean.operationType ne 'List Files'}" />
+						rendered="#{backingBean.operationType ne 'List Files'}" >
+						<p:ajax partialSubmit="true" update="fileDirectory" listener="#{backingBean['switchTargetRemoteDir']}"></p:ajax>
+					</p:selectBooleanCheckbox>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.sourceDirectory']}" />
@@ -250,7 +252,9 @@
 						value="#{msgs['tlos.workspace.pannel.job.targetIsRemote']}"
 						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
 					<p:selectBooleanCheckbox value="#{backingBean.targetIsRemote}"
-						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" >
+						<p:ajax partialSubmit="true" update="fileDirectory" listener="#{backingBean['switchSourceRemoteDir']}"></p:ajax>
+					</p:selectBooleanCheckbox>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.targetDirectory']}"
