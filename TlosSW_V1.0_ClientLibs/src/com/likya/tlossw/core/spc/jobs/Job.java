@@ -21,6 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
+import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.helpers.WatchDogTimer;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -463,7 +464,7 @@ public abstract class Job implements Runnable, Serializable {
 				while (itr.hasNext()) {
 					ParamList element = itr.next();
 					OutputParameterPassing outputParameterPassing = new OutputParameterPassing();
-					boolean yapildimi = outputParameterPassing.setOutputParameter(jobProperties, element.paramRef, element.getParamName());
+					boolean yapildimi = outputParameterPassing.setOutputParameter(jobProperties, element.getParamRef(), element.getParamName());
 					if (yapildimi) {
 						System.out.println("isin sonucu output parametreye yazildi !!");
 					} else {
