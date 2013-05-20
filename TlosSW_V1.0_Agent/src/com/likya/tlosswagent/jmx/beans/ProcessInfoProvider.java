@@ -7,7 +7,9 @@
 
 package com.likya.tlosswagent.jmx.beans;
 
+import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlosswagent.TlosSWAgent;
+import com.likya.tlosswagent.jmx.JMXServer;
 
 public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	
@@ -36,7 +38,12 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	}
 
 	@Override
-	public Object runningJobs() {
+	public Object runningJobs(JmxAgentUser jmxAgentUser) {
+		
+		if (!JMXServer.authroize(jmxAgentUser)) {
+			return false;
+		}
+		
 		Object jobs = TlosSWAgent.getSwAgentRegistry().getTaskQueManagerRef().runningJobsXML();
 		
 		return jobs;
