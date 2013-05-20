@@ -66,7 +66,7 @@ public class SpcMonitor implements Runnable {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				//	e.printStackTrace();
-				myLogger.info("SpcMonitor harici olarak akamete uðratýldý !");
+				myLogger.info("SpcMonitor harici olarak akamete uï¿½ratï¿½ldï¿½ !");
 				break;
 			}
 		}
