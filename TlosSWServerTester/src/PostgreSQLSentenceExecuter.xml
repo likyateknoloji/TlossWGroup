@@ -9,7 +9,7 @@
                     <com:jobTypeDetails>
                         <com:jobCommandType>DB JOBS</com:jobCommandType>
                         <com:specialParameters>
-                            <!--db:dbJobDefinition>
+                            <!-- db:dbJobDefinition>
 								<db:dbConnectionProperties>
 									<db:dbPropertiesId>1</db:dbPropertiesId>
 									<db:dbUserId>1</db:dbUserId>
@@ -39,7 +39,7 @@
 								</db:dbConnectionProperties>
 								<db:dbJobType>Free SQL</db:dbJobType>
 								<db:freeSQLProperties>
-									<db:sqlSentence>select magaza_ad from public.test_m()</db:sqlSentence>
+									<db:sqlSentence>select * from tlossw.personel</db:sqlSentence>
 								</db:freeSQLProperties>
 							</db:dbJobDefinition>
                         </com:specialParameters>
