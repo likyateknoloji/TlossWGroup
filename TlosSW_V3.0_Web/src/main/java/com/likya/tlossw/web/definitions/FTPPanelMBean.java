@@ -124,7 +124,7 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		processedFilesOperationType = ProcessedFilesOperationType.NONE.toString();
 		sourceDirectory = "";
 		targetDirectory = "";
-		sourceIsRemote = false;
+		sourceIsRemote = true;
 		targetIsRemote = false;
 		sourceFileNameType = "";
 		sourceFileName = "";
