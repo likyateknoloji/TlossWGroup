@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.utils : PersistenceUtils.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : 31.Mar.2010 22:39:32
  */
 
@@ -90,7 +90,7 @@ public class PersistenceUtils {
 
 		
 		if (data == null) {
-			logger.fatal("Global State Tanýmý boþ olmamalý !");
+			logger.fatal("Global State Tanï¿½mï¿½ boï¿½ olmamalï¿½ !");
 			logger.fatal("Program sona erdi !");
 			return false;
 		}
@@ -104,7 +104,7 @@ public class PersistenceUtils {
 	public static boolean persistAgentCache(Object data) {
 
 		if (data == null) {
-			logger.fatal("AgentCache boþ olmamalý !");
+			logger.fatal("AgentCache boï¿½ olmamalï¿½ !");
 			logger.fatal("Program sona erdi !");
 			return false;
 		}
