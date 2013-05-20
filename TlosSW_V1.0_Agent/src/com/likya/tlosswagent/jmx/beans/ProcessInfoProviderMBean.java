@@ -10,6 +10,8 @@
 
 package com.likya.tlosswagent.jmx.beans;
 
+import com.likya.tlossw.model.jmx.JmxAgentUser;
+
 
 
 /**
@@ -57,5 +59,5 @@ public interface ProcessInfoProviderMBean {
      */
     public void reset();
     
-	public Object runningJobs();
+	public Object runningJobs(JmxAgentUser jmxAgentUser);
 }
