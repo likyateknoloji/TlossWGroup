@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: lib/EvalUtils.jar lib/TlosSW_V1.0_AgentClient.jar lib/TlosSW_V1.0_Model.jar lib/tlosSW_xsd.jar lib/commons-logging-1.1.1.jar lib/log4j-1.2.15.jar lib/xbean.jar lib/jmxremote.jar lib/jmxremote_optional.jar lib/rmissl.jar  
+Ant-Version: Apache Ant 1.8.3
+Created-By: 1.7.0_09-b05 (Oracle Corporation)
 Main-Class: com.likya.tlossw.TlosSpaceWide
+
