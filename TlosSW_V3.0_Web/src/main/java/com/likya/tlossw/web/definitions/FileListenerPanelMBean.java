@@ -119,10 +119,12 @@ public class FileListenerPanelMBean extends JobBaseBean implements Serializable 
 	}
 
 	public void insertJobAction() {
-		fillJobProperties();
-		fillFileListenerPropertyDetails();
-
-		insertJobDefinition();
+		if (validateTimeManagement()) {
+			fillJobProperties();
+			fillFileListenerPropertyDetails();
+	
+			insertJobDefinition();
+		}
 	}
 
 	public void updateJobAction() {

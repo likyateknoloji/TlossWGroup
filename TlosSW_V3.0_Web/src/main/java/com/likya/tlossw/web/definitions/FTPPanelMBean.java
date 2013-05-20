@@ -260,10 +260,12 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 	}
 
 	public void insertJobAction() {
-		fillJobProperties();
-		fillFTPPropertyDetails();
-
-		insertJobDefinition();
+		if (validateTimeManagement()) {
+			fillJobProperties();
+			fillFTPPropertyDetails();
+	
+			insertJobDefinition();
+		}
 	}
 
 	public void updateJobAction() {

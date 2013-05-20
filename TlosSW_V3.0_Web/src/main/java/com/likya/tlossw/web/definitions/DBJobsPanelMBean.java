@@ -111,10 +111,12 @@ public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
 	}
 
 	public void insertJobAction() {
-		fillJobProperties();
-		fillDBJobPropertyDetails();
-
-		insertJobDefinition();
+		if (validateTimeManagement()) {
+			fillJobProperties();
+			fillDBJobPropertyDetails();
+	
+			insertJobDefinition();
+		}
 	}
 
 	public void updateJobAction() {

@@ -658,6 +658,18 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 	}
 
+	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
+	// ikisi de yoksa validasyondan gecemiyor
+	public boolean validateTimeManagement() {
+		if (startTime == null || startTime.equals("")) {
+			if (jobProperties.getDependencyList() == null || jobProperties.getDependencyList().getItemArray().length == 0) {
+				addMessage("", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.timeOrDependency", null);
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// ekrandan girilen degerler jobProperties icine dolduruluyor
 	public void fillJobProperties() {
 		fillBaseJobInfos();

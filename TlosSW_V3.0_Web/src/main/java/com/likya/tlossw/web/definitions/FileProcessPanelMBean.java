@@ -348,10 +348,12 @@ public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
 	}
 
 	public void insertJobAction() {
-		fillJobProperties();
-		fillFileProcessPropertyDetails();
-
-		insertJobDefinition();
+		if (validateTimeManagement()) {
+			fillJobProperties();
+			fillFileProcessPropertyDetails();
+	
+			insertJobDefinition();
+		}
 	}
 
 	public void updateJobAction() {
