@@ -1,7 +1,7 @@
     <dbc:dbConnectionProfile ID="1" xmlns:dbc="http://www.likyateknoloji.com/XML_dbconnection_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_dbconnection_types  xmldb:exist:///db/TLOSSW/xsds/tlosSWDBConnections_v_1_0.xsd">
         <dbc:dbDefinitionId>1</dbc:dbDefinitionId>
-        <com:userName>postgres</com:userName>
-        <com:userPassword>ad0215</com:userPassword>
+        <com:userName>test</com:userName>
+        <com:userPassword>test</com:userPassword>
         <dbc:jdbcConnectionPoolParams>
                   <dbc:initialCapacity>3</dbc:initialCapacity>
                   <dbc:maxCapacity>10</dbc:maxCapacity>
