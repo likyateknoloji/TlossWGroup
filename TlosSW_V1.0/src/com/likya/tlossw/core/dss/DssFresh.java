@@ -53,7 +53,7 @@ public class DssFresh {
 
 		if (numberOfResources == 0) {
 
-			myLogger.info("     > JOB " + jobId + " icin kaynak listesi boþ olduðundan !! KAYNAK ATANAMADI !!");
+			myLogger.info("     > JOB " + jobId + " icin kaynak listesi boï¿½ olduï¿½undan !! KAYNAK ATANAMADI !!");
 
 			return false;
 
@@ -76,7 +76,7 @@ public class DssFresh {
 
 		if (numberOfAvailableResources == 0) {
 
-			System.out.println("JOB:" + jobProperties.getID() + "---> Kaynaklar arasýnda uygun kaynak bulunamadýðýndan !! KAYNAK YINE ATANAMADI !!");
+			System.out.println("JOB:" + jobProperties.getID() + "---> Kaynaklar arasï¿½nda uygun kaynak bulunamadï¿½ï¿½ï¿½ndan !! KAYNAK YINE ATANAMADI !!");
 
 			return false;
 
@@ -245,15 +245,15 @@ public class DssFresh {
 
 				if (agentChoiceMethod.enumValue().intValue() != ChoiceType.INT_USER_MANDATORY_PREFERENCE) {
 					/**
-					 * agentChoiceMethod deðiþemeyen bir deðer olduðundan, loop içinde
-					 * ne kadar dönerse dönsün, eðer uygun algoritma yok ise sürekli -1 gelecektir.
-					 * Bu nedenle sonlanmasý uygundur.
+					 * agentChoiceMethod deï¿½iï¿½emeyen bir deï¿½er olduï¿½undan, loop iï¿½inde
+					 * ne kadar dï¿½nerse dï¿½nsï¿½n, eï¿½er uygun algoritma yok ise sï¿½rekli -1 gelecektir.
+					 * Bu nedenle sonlanmasï¿½ uygundur.
 					 * 
-					 * @author serkan taþ
+					 * @author serkan taï¿½
 					 *         26.09.2012
 					 */
-					// selectedResource gerekli loglamayý yapmaktadýr.
-					// Baþka loga gerek yok.
+					// selectedResource gerekli loglamayï¿½ yapmaktadï¿½r.
+					// Baï¿½ka loga gerek yok.
 					break;
 				} else {
 					continue;
