@@ -17,7 +17,7 @@ declare function hs:calendars( ) as element(cal:calendarProperties)*
 	for $calendars in doc("xmldb:exist://db/TLOSSW/xmls/tlosSWCalendar10.xml")/cal:calendarList/cal:calendarProperties
 	return  $calendars
 };
-(: ($calendar/com:userName= $prcal/com:userName          or data($prcal/com:userName)= "")  :)
+
 declare function hs:searchCalendar( $prcal as element(cal:calendarProperties)) as element(cal:calendarProperties)* 
  { 
    for $calendar in doc("//db/TLOSSW/xmls/tlosSWCalendar10.xml")//cal:calendarProperties
@@ -25,12 +25,13 @@ declare function hs:searchCalendar( $prcal as element(cal:calendarProperties)) a
 	 if ( ($calendar/cal:calendarName= $prcal/cal:calendarName  or data($prcal/cal:calendarName="") )          
            and ($calendar/com:userId =$prcal/com:userId  or $prcal/com:userId= "-1"  )   
            and ( 
-				if (string($prcal/cal:validFrom/com:date/com:year) != '')
+				if (exists($prcal/cal:validFrom/com:date))
  					 then  							
-						   xs:date(concat($prcal/cal:validFrom/com:date/com:year,'-', $prcal/cal:validFrom/com:date/com:month,'-',$prcal/cal:validFrom/com:date/com:day ) ) 
-               			   >=  xs:date(concat($calendar/cal:validFrom/com:date/com:year,'-', $calendar/cal:validFrom/com:date/com:month,'-',$calendar/cal:validFrom/com:date/com:day ) ) 
-                           and xs:date(concat($prcal/cal:validFrom/com:date/com:year,'-', $prcal/cal:validFrom/com:date/com:month,'-',$prcal/cal:validFrom/com:date/com:day ) ) 
-                           <=  xs:date(concat($calendar/cal:validTo/com:date/com:year,'-', $calendar/cal:validTo/com:date/com:month,'-',$calendar/cal:validTo/com:date/com:day ) )							
+						   ( 
+						     $prcal/cal:validFrom/com:date >=  $calendar/cal:validFrom/com:date 
+                             and 
+						     $prcal/cal:validFrom/com:date <=  $calendar/cal:validTo/com:date 
+						   )
 			        else ("TRUE")
 				)
                )             
