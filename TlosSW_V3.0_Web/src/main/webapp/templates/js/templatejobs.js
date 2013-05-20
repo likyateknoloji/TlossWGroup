@@ -240,7 +240,7 @@ function applyDragDrop() {
 						//bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
 						//center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)				   
 						console.log("Already defined Jobs : #centerWest .scenario .job");
-						var alreadyDefinedjobDef = document.querySelectorAll('[data-nodetype=scenario] [data-nodetype=jobs], #centerWest .scenario .job'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
+						var alreadyDefinedjobDef = document.querySelectorAll('[data-nodetype=scenario] [data-nodetype=job], #centerWest .scenario .job'); //document.querySelectorAll('.scenario'); //document.querySelectorAll('#centerWest .scenario .job');
 
 	                   [ ].forEach.call(alreadyDefinedjobDef, function (job) {
 		                 console.log(job);
@@ -254,34 +254,28 @@ function applyDragDrop() {
 	                   });
 						
 
-					//bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
-					//center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)
-					$('[data-nodetype=scenario] [data-nodetype=jobs], #centerWest .scenario .job')
-							.draggable(
-									{
-										helper : 'clone',
-										scope : 'treeScope',
-										zindex : ++PrimeFaces.zindex,
-										opacity : 0.35,
-										stack : $('.ui-treenode-leaf'),
-										start : function(event, ui) {
-											var jobName = $(
-													this.firstChild.lastChild)
-													.text();
-											document
-													.getElementById('jsTreeForm:draggedJobName').value = jobName;
+	                   //bagimlilik tanimlamada kullanilan drag ozelligi burada tanimlaniyor
+	                   //center layouttaki tree icindeki islere drag ozelligi ekleniyor (template tree west layoutta)
+	                   $('[data-nodetype=scenario] [data-nodetype=job], #centerWest .scenario .job').draggable({
+	                	   helper : 'clone',
+	                	   scope : 'treeScope',
+	                	   zindex : ++PrimeFaces.zindex,
+	                	   opacity : 0.35,
+	                	   stack : $('.ui-treenode-leaf'),
+	                	   start : function(event, ui) {
+	                		   var jobName = $(this.firstChild.lastChild).text();
+	                		   document.getElementById('jsTreeForm:draggedJobName').value = jobName;
 
-											var jobPath = getJobPathForDependency(this);
-											document
-													.getElementById('jsTreeForm:draggedJobPath').value = jobPath;
+	                		   var jobPath = getJobPathForDependency(this);
+	                		   document.getElementById('jsTreeForm:draggedJobPath').value = jobPath;
 
-											callHandleJobDrop();
-										}
-									});
+	                		   callHandleJobDrop();
+	                	   }
+	                   });
 
-					;
+	                   ;
 
-				}
+}
 
 //$(document).ready(function(){
 //	applyDragDrop();
