@@ -410,6 +410,14 @@ public class FTPPanelMBean extends JobBaseBean implements Serializable {
 		jobTypeDetails.setSpecialParameters(specialParameters);
 	}
 
+	public void switchSourceRemoteDir() {
+		sourceIsRemote = !targetIsRemote;
+	}
+
+	public void switchTargetRemoteDir() {
+		targetIsRemote = !sourceIsRemote;
+	}
+
 	private void fillAdapterTypeList() {
 		if (adapterTypeList == null) {
 			adapterTypeList = WebInputUtils.fillAdapterTypeList();
