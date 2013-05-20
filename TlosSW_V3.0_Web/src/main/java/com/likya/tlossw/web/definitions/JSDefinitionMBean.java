@@ -15,6 +15,7 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "jsDefinitionMBean")
 @ViewScoped
@@ -73,25 +74,28 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
 
 		String selectedJob = event.getTreeNode().toString();
-		
+
 		TreeNode treeNode = event.getTreeNode();
 		selectedJobPath = "";
-		
+
 		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
-			selectedJobPath += treeNode.getParent().toString() + "/";
+			selectedJobPath = treeNode.getParent().toString() + "/" + selectedJobPath;
 			treeNode = treeNode.getParent();
 		}
-		
+
 		event.getTreeNode().getParent().getParent().toString();
-		
+
 		// String jobId = selectedJob.substring(selectedJob.lastIndexOf("|") + 1);
 		String jobAbsolutePath = selectedJob.substring(0, selectedJob.lastIndexOf("|") - 1);
 
-		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, "/dat:TlosProcessData/dat:jobList", jobAbsolutePath);
+		jobProperties = null;
+		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(selectedJobPath), jobAbsolutePath);
 
-		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+		if (jobProperties != null) {
+			int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
-		initializeJobPanel(jobType, false);
+			initializeJobPanel(jobType, false);
+		}
 	}
 
 	public void handleDropAction(ActionEvent ae) {

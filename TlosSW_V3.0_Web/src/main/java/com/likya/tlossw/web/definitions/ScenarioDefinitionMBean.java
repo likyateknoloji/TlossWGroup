@@ -28,6 +28,7 @@ import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
@@ -213,7 +214,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	private void setScenarioTreePath(TreeNode scenarioNode) {
 		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root");
 
-		String path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + removeIdFromName(scenarioNode.getData().toString()) + "']/..";
+		String path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/..";
 
 		while (scenarioNode.getParent() != null) {
 			if (scenarioNode.getParent().getData().equals(scenarioRoot)) {
@@ -221,7 +222,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 				break;
 			}
 			scenarioNode = scenarioNode.getParent();
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
 		}
 
 		treePath = path;

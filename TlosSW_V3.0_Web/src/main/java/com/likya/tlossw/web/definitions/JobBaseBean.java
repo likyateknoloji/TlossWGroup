@@ -999,12 +999,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			return;
 		}
 
-		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), getTreePath(jobPathInScenario))) {
+		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
 			jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
-			
+
 			switchInsertUpdateButtons();
 		} else {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.insert", null);
@@ -1016,7 +1016,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			return;
 		}
 
-		if (getDbOperations().updateJob(ConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), getTreePath(jobPathInScenario))) {
+		if (getDbOperations().updateJob(ConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
@@ -1027,7 +1027,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobInsertButton = !jobInsertButton;
 		jobUpdateButton = !jobUpdateButton;
 	}
-	
+
 	private boolean getJobId() {
 		int jobId = getDbOperations().getNextId(ConstantDefinitions.JOB_ID);
 
@@ -1038,31 +1038,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		jobProperties.setID(jobId + "");
 		return true;
-	}
-
-	private String getTreePath(String treePath) {
-		String path = "/dat:TlosProcessData";
-
-		StringTokenizer pathTokenizer = new StringTokenizer(treePath, "/");
-
-		// ilk gelen isim senaryo agacinin koku oldugu icin onu cikariyoruz
-		if (pathTokenizer.hasMoreTokens()) {
-			pathTokenizer.nextToken();
-		}
-
-		while (pathTokenizer.hasMoreTokens()) {
-			String scenarioName = pathTokenizer.nextToken();
-
-			if (scenarioName.contains("|")) {
-				scenarioName = removeIdFromName(scenarioName);
-			}
-
-			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
-		}
-
-		path = path + "/dat:jobList";
-
-		return path;
 	}
 
 	private String getDependencyTreePath(String treePath) {
@@ -1091,15 +1066,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		return path;
 	}
 
-	public String removeIdFromName(String nameAndId) {
-		StringTokenizer nameTokenizer = new StringTokenizer(nameAndId, "|");
-		String name = nameTokenizer.nextToken().trim();
-
-		return name;
-	}
-
 	private boolean jobCheckUp() {
-		JobProperties job = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+		JobProperties job = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 		// ayni isimli iki is kaydedilmiyor
 		if (job != null && job.getBaseJobInfos().getJsName().equals(jobProperties.getBaseJobInfos().getJsName()) && !job.getID().equals(jobProperties.getID())) {
@@ -1117,7 +1085,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
-		dependencyItem.setJsName(removeIdFromName(draggedJobName));
+		dependencyItem.setJsName(DefinitionUtils.removeIdFromName(draggedJobName));
 
 		depStateName = "";
 		depSubstateName = "";
@@ -1128,7 +1096,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getTreePath(draggedJobPath), removeIdFromName(draggedJobName));
+		JobProperties draggedJobProperties = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(draggedJobPath), DefinitionUtils.removeIdFromName(draggedJobName));
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
@@ -1168,7 +1136,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		composeDependencyExpression();
 
-		String depJobName = removeIdFromName(draggedJobName);
+		String depJobName = DefinitionUtils.removeIdFromName(draggedJobName);
 
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);

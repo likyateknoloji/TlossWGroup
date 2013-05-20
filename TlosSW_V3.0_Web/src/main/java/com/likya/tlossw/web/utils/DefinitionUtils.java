@@ -178,13 +178,11 @@ public class DefinitionUtils {
 	}
 
 	/**
-	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini
-	 * karsilastiriyor.
+	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini karsilastiriyor.
 	 * 
 	 * @param validTo gecerliligin bittigi zaman
 	 * @param validFrom gecerliligin basladigi zaman
-	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true,
-	 *         ayni ya da once ise false donuyor
+	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise false donuyor
 	 */
 	public static boolean dateComparer(ValidTo validTo, ValidFrom validFrom) {
 		if (validTo.getDate().after(validFrom.getDate())) {
@@ -200,12 +198,9 @@ public class DefinitionUtils {
 	/**
 	 * Jobin baslangic ve bitis zamanlarini karsilastiriyor.
 	 * 
-	 * @param stopTime
-	 *            jobin bitis zamani
-	 * @param startTime
-	 *            jobin baslangic zamani
-	 * @return bitis zamani baslangic zamanindan sonra ise true, esit ya da once
-	 *         ise false donuyor
+	 * @param stopTime jobin bitis zamani
+	 * @param startTime jobin baslangic zamani
+	 * @return bitis zamani baslangic zamanindan sonra ise true, esit ya da once ise false donuyor
 	 */
 	public static boolean dateComparer(Calendar stopTime, Calendar startTime) {
 
@@ -218,19 +213,13 @@ public class DefinitionUtils {
 	}
 
 	/**
-	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini
-	 * karsilastiriyor.
+	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini karsilastiriyor.
 	 * 
-	 * @param date2
-	 *            gecerliligin bittigi tarih, ornegin 2019-12-01
-	 * @param time2
-	 *            gecerliligin bittigi zaman, ornegin 23:00:00
-	 * @param date1
-	 *            gecerliligin basladigi tarih, ornegin 2008-12-01
-	 * @param time1
-	 *            gecerliligin basladigi zaman, ornegin 08:00:00
-	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true,
-	 *         ayni ya da once ise false donuyor
+	 * @param date2 gecerliligin bittigi tarih, ornegin 2019-12-01
+	 * @param time2 gecerliligin bittigi zaman, ornegin 23:00:00
+	 * @param date1 gecerliligin basladigi tarih, ornegin 2008-12-01
+	 * @param time1 gecerliligin basladigi zaman, ornegin 08:00:00
+	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise false donuyor
 	 */
 	public static boolean dateComparer(Date date2, Time time2, Date date1, Time time1) {
 
@@ -325,4 +314,35 @@ public class DefinitionUtils {
 		return generatedDateList;
 	}
 
+	public static String getTreePath(String treePath) {
+		String path = "/dat:TlosProcessData";
+
+		StringTokenizer pathTokenizer = new StringTokenizer(treePath, "/");
+
+		// ilk gelen isim senaryo agacinin koku oldugu icin onu cikariyoruz
+		if (pathTokenizer.hasMoreTokens()) {
+			pathTokenizer.nextToken();
+		}
+
+		while (pathTokenizer.hasMoreTokens()) {
+			String scenarioName = pathTokenizer.nextToken();
+
+			if (scenarioName.contains("|")) {
+				scenarioName = removeIdFromName(scenarioName);
+			}
+
+			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+		}
+
+		path = path + "/dat:jobList";
+
+		return path;
+	}
+
+	public static String removeIdFromName(String nameAndId) {
+		StringTokenizer nameTokenizer = new StringTokenizer(nameAndId, "|");
+		String name = nameTokenizer.nextToken().trim();
+
+		return name;
+	}
 }
