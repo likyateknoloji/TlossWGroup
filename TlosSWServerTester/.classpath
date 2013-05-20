@@ -26,5 +26,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
 	<classpathentry kind="lib" path="/SharedLibs/Jsch/jsch-0.1.49.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V3.0_WebClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V3.0_Web"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
