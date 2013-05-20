@@ -4,10 +4,10 @@
         <dbc:dbType>PostgreSQL</dbc:dbType>
         <dbc:dbVersion>9.1</dbc:dbVersion>
         <dbc:driverName>JDBC</dbc:driverName>
-        <dbc:dbName>Carre</dbc:dbName>
-        <dbc:hostName>ayhan-laptop</dbc:hostName>
+        <dbc:dbName>test</dbc:dbName>
+        <dbc:hostName>192.168.1.70</dbc:hostName>
         <com:ftpPortNumber>5432</com:ftpPortNumber>
-        <com:ipAddress>127.0.0.1</com:ipAddress>
+        <com:ipAddress>192.168.1.70</com:ipAddress>
         <dbc:jdbcClassName>className</dbc:jdbcClassName>
  		<dbc:sqlClientAppName>psql</dbc:sqlClientAppName>
 		<dbc:sqlClientAppPath>C:/Program Files/PostgreSQL/9.1/bin/</dbc:sqlClientAppPath>
