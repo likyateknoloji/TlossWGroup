@@ -65,7 +65,7 @@ public class DssVisionaire extends DssBase {
 
 		}
 
-		return new DssResult(-1, "Kaynak atamasý yapýlamadý : Kaynak : FALSE ya da Jmx is not available !");
+		return new DssResult(-1, "Kaynak atamasï¿½ yapï¿½lamadï¿½ : Kaynak : FALSE ya da Jmx is not available !");
 	}
 
 	private static DssResult getResource(Job job) {
@@ -163,7 +163,7 @@ public class DssVisionaire extends DssBase {
 			
 		} else {
 			
-			String logStr = "     > Kaynak listesi taram sonucunda uygun kaynak bulunamadý !";
+			String logStr = "     > Kaynak listesi taram sonucunda uygun kaynak bulunamadï¿½ !";
 			myDssResult = new DssResult(-1, logStr, myDssResult.getResourceAgentList(), myResource);
 
 		}
@@ -218,7 +218,7 @@ public class DssVisionaire extends DssBase {
 		
 		} else {
 			
-			String logStr = "     > Kaynak listesi tarama sonucunda uygun kaynak bulunamadý !";
+			String logStr = "     > Kaynak listesi tarama sonucunda uygun kaynak bulunamadï¿½ !";
 			myDssResult = new DssResult(-1, logStr, myDssResult.getResourceAgentList(), myResource);
 
 		}
@@ -255,7 +255,7 @@ public class DssVisionaire extends DssBase {
 
 		if (numberOfResources == 0) {
 
-			String logStr = "     > JOB " + jobId + " icin kaynak listesi boþ olduðundan !! KAYNAK ATANAMADI !!";
+			String logStr = "     > JOB " + jobId + " icin kaynak listesi boï¿½ olduï¿½undan !! KAYNAK ATANAMADI !!";
 			myLogger.info(logStr);
 
 			return new DssResult(-1, logStr);
@@ -271,13 +271,13 @@ public class DssVisionaire extends DssBase {
 
 		if (availableResources.sizeOfResourceArray() == 0) {
 
-			String logStr = "JOB:" + jobProperties.getID() + "---> Kaynaklar arasýnda uygun kaynak bulunamadýðýndan !! KAYNAK YINE ATANAMADI !!";
+			String logStr = "JOB:" + jobProperties.getID() + "---> Kaynaklar arasï¿½nda uygun kaynak bulunamadï¿½ï¿½ï¿½ndan !! KAYNAK YINE ATANAMADI !!";
 
 			return new DssResult(-1, logStr);
 
 		}
 
-		return new DssResult(0, "Baþarýlý kaynak atamasý !", availableResources);
+		return new DssResult(0, "Baï¿½arï¿½lï¿½ kaynak atamasï¿½ !", availableResources);
 
 	}
 
