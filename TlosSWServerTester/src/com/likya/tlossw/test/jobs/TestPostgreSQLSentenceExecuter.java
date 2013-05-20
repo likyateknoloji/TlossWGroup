@@ -20,15 +20,16 @@ public class TestPostgreSQLSentenceExecuter extends TestSuit {
 
 	public void startTest() {
 
+		String xmlFilePath = "/Users/serkan/programlar/dev/workspace/TlosSWServerTester/src/";
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "PostgreSQLSentenceExecuter.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "PostgreSQLSentenceExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBPostgreConnection.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "DBPostgreConnection.xml");
 		DbProperties dbProperties = null;
 		dbProperties = getDbPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBPostgreConnectionProfile.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "DBPostgreConnectionProfile.xml");
 		DbConnectionProfile dbConnectionProfile = null;
 		dbConnectionProfile = getDbConnectionProfileFromFile(fileName);
 		
