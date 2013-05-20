@@ -75,6 +75,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		String selectedJob = event.getTreeNode().toString();
 
+		if (selectedJob.equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
+			return;
+		}
+
 		TreeNode treeNode = event.getTreeNode();
 		selectedJobPath = "";
 
