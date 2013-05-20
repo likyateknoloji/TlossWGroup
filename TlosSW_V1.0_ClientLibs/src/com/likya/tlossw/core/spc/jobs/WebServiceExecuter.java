@@ -43,6 +43,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.webservice.BindingNameDocument.BindingName;
 import com.likya.tlos.model.xmlbeans.webservice.OperationDocument.Operation;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
+import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.cxf.CXFUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
