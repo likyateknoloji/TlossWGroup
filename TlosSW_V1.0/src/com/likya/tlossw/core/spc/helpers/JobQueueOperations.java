@@ -24,8 +24,8 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 public class JobQueueOperations {
 
 	/**
-	 * Ýþ kuyruðunda bitmeyen bir iþ var mý yok mu ona bakýyor. Eðer yok ise,
-	 * bütün iþler baþarý ile bitmiþ sayýlýyor, ve true deðeri dönüyor.
+	 * ï¿½ï¿½ kuyruï¿½unda bitmeyen bir iï¿½ var mï¿½ yok mu ona bakï¿½yor. Eï¿½er yok ise,
+	 * bï¿½tï¿½n iï¿½ler baï¿½arï¿½ ile bitmiï¿½ sayï¿½lï¿½yor, ve true deï¿½eri dï¿½nï¿½yor.
 	 * 
 	 * @param jobQueue
 	 * @return true, false
@@ -106,14 +106,14 @@ public class JobQueueOperations {
 	}
 
 	/**
-	 * Spc : Sub Process Controller a ait iþ listesinin diske yazýlmasý iþlevini
-	 * görür
+	 * Spc : Sub Process Controller a ait iï¿½ listesinin diske yazï¿½lmasï¿½ iï¿½levini
+	 * gï¿½rï¿½r
 	 * 
 	 * @param fileName
-	 *            : Diskte tutlacak dosya ismi ki bu isim her Spc için farklý
-	 *            olmalý
+	 *            : Diskte tutlacak dosya ismi ki bu isim her Spc iï¿½in farklï¿½
+	 *            olmalï¿½
 	 * @param jobQueue
-	 *            : Spc'ye ait iþ listesi
+	 *            : Spc'ye ait iï¿½ listesi
 	 * @return
 	 */
 	public static boolean persistJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
@@ -200,7 +200,7 @@ public class JobQueueOperations {
 			}
 			// if(scheduledJob.getJobQueue() == null) {
 			// /**
-			// * jobQueue transient olduðunudun, serialize etmiyor
+			// * jobQueue transient olduï¿½unudun, serialize etmiyor
 			// * Recover ederken, bu alan null geliyor. Bu nedenle null ise
 			// yeninde okumak gerekiyor.
 			// */
@@ -258,25 +258,25 @@ public class JobQueueOperations {
 	 * 
 	 * Job scheduledJob = jobsIterator.next();
 	 * 
-	 * sb.append("\nÝþlem adý:" + scheduledJob.getJobProperties().getKey() +
-	 * " => "); sb.append("  [Çalýþtýrma Komutu:" +
+	 * sb.append("\nï¿½ï¿½lem adï¿½:" + scheduledJob.getJobProperties().getKey() +
+	 * " => "); sb.append("  [ï¿½alï¿½ï¿½tï¿½rma Komutu:" +
 	 * scheduledJob.getJobProperties().getJobCommand() + "]");
 	 * sb.append("  [Log dizini:" +
 	 * scheduledJob.getJobProperties().getLogFilePath() + "]");
 	 * sb.append("  [Planlanan:" +
 	 * scheduledJob.getJobProperties().getPreviousTime());
-	 * sb.append("  [Gerçekleþen:" +
+	 * sb.append("  [Gerï¿½ekleï¿½en:" +
 	 * scheduledJob.getJobProperties().getExecutionDate());
-	 * sb.append("  [Bitiþ Zamaný:" +
+	 * sb.append("  [Bitiï¿½ Zamanï¿½:" +
 	 * scheduledJob.getJobProperties().getCompletionDate());
-	 * sb.append("  [Çalýþma Zamaný:" +
+	 * sb.append("  [ï¿½alï¿½ï¿½ma Zamanï¿½:" +
 	 * DateUtils.getDate(scheduledJob.getJobProperties().getTime()) + "]");
-	 * sb.append("  [Çalýþma Süresi:" +
+	 * sb.append("  [ï¿½alï¿½ï¿½ma Sï¿½resi:" +
 	 * scheduledJob.getJobProperties().getWorkDuration());
 	 * sb.append("  [Sonraki Plan:" +
 	 * DateUtils.getDate(scheduledJob.getJobProperties().getTime()));
-	 * sb.append("  [Çalýþma Peryodu:" + "Günlük");
-	 * sb.append("  [Baðýmlýlýk Listesi:" +
+	 * sb.append("  [ï¿½alï¿½ï¿½ma Peryodu:" + "Gï¿½nlï¿½k");
+	 * sb.append("  [Baï¿½ï¿½mlï¿½lï¿½k Listesi:" +
 	 * scheduledJob.getJobProperties().getJobDependencyList().toString() + "]");
 	 * 
 	 * }
@@ -301,7 +301,7 @@ public class JobQueueOperations {
 	 * stringBuilder.append("</head>"); stringBuilder.append("<body>");
 	 * 
 	 * stringBuilder.append(
-	 * "<TABLE border=\"0\" summary=\"Tlos Scheduler iþ bilgileri\" align=\"center\">"
+	 * "<TABLE border=\"0\" summary=\"Tlos Scheduler iï¿½ bilgileri\" align=\"center\">"
 	 * ); stringBuilder.append("<tr>"); stringBuilder.append("<td>");
 	 * stringBuilder.append(
 	 * "<img src=cid:likyajpg10976@likyateknoloji.com align=\"right\" width=100 height=35>"
@@ -320,7 +320,7 @@ public class JobQueueOperations {
 	 * 
 	 * if (localizedMessage == null) { //
 	 * stringBuilder.append("Calismaya basladi !");
-	 * stringBuilder.append("Çalýþmaya baþladý !"); } else {
+	 * stringBuilder.append("ï¿½alï¿½ï¿½maya baï¿½ladï¿½ !"); } else {
 	 * stringBuilder.append(localizedMessage); }
 	 * 
 	 * stringBuilder.append("</td>"); stringBuilder.append("</tr>");
@@ -330,19 +330,19 @@ public class JobQueueOperations {
 	 * stringBuilder.append("<td colspan=\"2\">");
 	 * 
 	 * stringBuilder.append(
-	 * "<TABLE border=\"1\" summary=\"Tlos Scheduler iþ listesi ve çalýþma bilgilieri\" align=\"center\">"
+	 * "<TABLE border=\"1\" summary=\"Tlos Scheduler iï¿½ listesi ve ï¿½alï¿½ï¿½ma bilgilieri\" align=\"center\">"
 	 * ); stringBuilder.append(
-	 * "<CAPTION><EM>Tlos Scheduler iþ listesi ve çalýþma bilgilieri</EM></CAPTION>"
-	 * ); stringBuilder.append("<TR>"); stringBuilder.append("<TH>Ýþlem Adý");
-	 * stringBuilder.append("<TH>Çalýþtýrma Komutu");
+	 * "<CAPTION><EM>Tlos Scheduler iï¿½ listesi ve ï¿½alï¿½ï¿½ma bilgilieri</EM></CAPTION>"
+	 * ); stringBuilder.append("<TR>"); stringBuilder.append("<TH>ï¿½ï¿½lem Adï¿½");
+	 * stringBuilder.append("<TH>ï¿½alï¿½ï¿½tï¿½rma Komutu");
 	 * stringBuilder.append("<TH>Log dizini");
 	 * stringBuilder.append("<TH>Planlanan");
-	 * stringBuilder.append("<TH>Gerçekleþen");
-	 * stringBuilder.append("<TH>Bitiþ Zamaný");
-	 * stringBuilder.append("<TH>Çalýþma Süresi");
+	 * stringBuilder.append("<TH>Gerï¿½ekleï¿½en");
+	 * stringBuilder.append("<TH>Bitiï¿½ Zamanï¿½");
+	 * stringBuilder.append("<TH>ï¿½alï¿½ï¿½ma Sï¿½resi");
 	 * stringBuilder.append("<TH>Sonraki Plan");
-	 * stringBuilder.append("<TH>Çalýþma Peryodu");
-	 * stringBuilder.append("<TH>Baðýmlýlýk Listesi");
+	 * stringBuilder.append("<TH>ï¿½alï¿½ï¿½ma Peryodu");
+	 * stringBuilder.append("<TH>Baï¿½ï¿½mlï¿½lï¿½k Listesi");
 	 * 
 	 * Iterator<Job> jobsIterator = jobQueue.values().iterator();
 	 * 
@@ -364,7 +364,7 @@ public class JobQueueOperations {
 	 * scheduledJob.getJobProperties().getWorkDuration());
 	 * stringBuilder.append("<TD>" +
 	 * DateUtils.getDate(scheduledJob.getJobProperties().getTime()));
-	 * stringBuilder.append("<TD>" + "Günlük"); stringBuilder.append("<TD>" +
+	 * stringBuilder.append("<TD>" + "Gï¿½nlï¿½k"); stringBuilder.append("<TD>" +
 	 * scheduledJob.getJobProperties().getJobDependencyList().toString()); }
 	 * 
 	 * stringBuilder.append("</TABLE>"); stringBuilder.append("</td>");
@@ -382,17 +382,17 @@ public class JobQueueOperations {
 	 * 
 	 * footerValue.append("<br/><br/>"); if (!TlosServer.isLicensed()) {
 	 * footerValue.append(
-	 * "<h4 align=\"center\">UYARI : Bu ürün lisanssýz kullanýlmaktadýr.</h4>");
+	 * "<h4 align=\"center\">UYARI : Bu ï¿½rï¿½n lisanssï¿½z kullanï¿½lmaktadï¿½r.</h4>");
 	 * } else { // LicenseInfo licenseInfo = TlosServer.getLicenseInfo(); //
-	 * footerValue.append("<h4 align=\"center\">Bu ürün " + //
-	 * licenseInfo.getClientName() + " adýna lisanslýdýr. Müþteri No : " // +
+	 * footerValue.append("<h4 align=\"center\">Bu ï¿½rï¿½n " + //
+	 * licenseInfo.getClientName() + " adï¿½na lisanslï¿½dï¿½r. Mï¿½ï¿½teri No : " // +
 	 * licenseInfo.getClientId() + "</h4>"); }
 	 * 
 	 * footerValue.append("<HR  size=\"1\" COLOR=\"black\" WIDTH=\"80%\">");
 	 * footerValue.append("<h6 align=\"center\">" + TlosServer.getVersion() +
 	 * "<br>"); footerValue.append(
-	 * "Her Hakký saklýdýr (c) 2008 Likya Bilgi Teknolojileri ve Ýlet. Hiz. Ltd.<br>"
-	 * ); footerValue.append("Kayýþdaðý, Ýstanbul, Türkiye<br>");
+	 * "Her Hakkï¿½ saklï¿½dï¿½r (c) 2008 Likya Bilgi Teknolojileri ve ï¿½let. Hiz. Ltd.<br>"
+	 * ); footerValue.append("Kayï¿½ï¿½daï¿½ï¿½, ï¿½stanbul, Tï¿½rkiye<br>");
 	 * footerValue.append(
 	 * "<a href=\"http://www.likyateknoloji.com\" title=\"www.likyateknoloji.com\">www.likyateknoloji.com</a>"
 	 * ); footerValue.append(
