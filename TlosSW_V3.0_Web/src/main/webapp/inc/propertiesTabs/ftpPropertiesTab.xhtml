@@ -14,7 +14,7 @@
 				<p:panelGrid id="ftpJobInfos" columns="2">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
-					<p:selectOneMenu value="#{backingBean.adapterType}">
+					<p:selectOneMenu value="#{backingBean.adapterType}" style="width: 100pt">
 						<f:selectItems value="#{backingBean.adapterTypeList}" />
 					</p:selectOneMenu>
 
@@ -22,7 +22,7 @@
 						value="#{msgs['tlos.workspace.pannel.job.ftpConnectionDefinition']}" />
 					<p:selectOneMenu
 						value="#{backingBean.ftpProperties.remoteTransferProperties.ftpPropertiesId}"
-						required="true"
+						required="true" style="width: 100pt"
 						requiredMessage="#{msgs['tlos.validation.ftp.connectionDef']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -39,7 +39,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
 					<p:selectOneMenu value="#{backingBean.operationType}"
-						required="true"
+						required="true" style="width: 70pt"
 						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -51,7 +51,7 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.processedFilesOperationType']}" />
-					<p:selectOneMenu value="#{backingBean.processedFilesOperationType}">
+					<p:selectOneMenu value="#{backingBean.processedFilesOperationType}" style="width: 70pt">
 						<f:selectItems
 							value="#{backingBean.processedFilesOperationTypeList}" />
 					</p:selectOneMenu>
@@ -156,7 +156,7 @@
 
 				<p:panelGrid id="ftpFileProperties" columns="6">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.fileType']}" />
-					<p:selectOneMenu id="fileType" value="#{backingBean.fileType}">
+					<p:selectOneMenu id="fileType" value="#{backingBean.fileType}" style="width: 50pt">
 						<f:selectItems value="#{backingBean.fileTypeList}" />
 					</p:selectOneMenu>
 
@@ -209,7 +209,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.fileModificationTime']}"
 						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
-					<p:selectOneMenu
+					<p:selectOneMenu style="width: 100pt"
 						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
 						value="#{backingBean.fileModificationTime}">
 						<f:selectItems value="#{backingBean.fileModificationTimeList}" />

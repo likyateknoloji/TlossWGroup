@@ -15,7 +15,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
 					<p:selectOneMenu value="#{backingBean.fileAdapterType}"
-						required="true"
+						required="true" style="width: 120pt"
 						requiredMessage="#{msgs['tlos.validation.fileProcess.adapterType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -29,7 +29,7 @@
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}" />
 					<p:selectOneMenu value="#{backingBean.textFileDetail}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}"
-						required="true"
+						required="true" style="width: 120pt"
 						requiredMessage="#{msgs['tlos.validation.fileProcess.textFileType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -43,7 +43,7 @@
 						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}" />
 					<p:selectOneMenu value="#{backingBean.binaryFileDetail}"
 						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}"
-						required="true"
+						required="true" style="width: 100pt"
 						requiredMessage="#{msgs['tlos.validation.fileProcess.binaryFileType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -62,7 +62,7 @@
 						rendered="#{backingBean.fileAdapterType ne '' and backingBean.fileAdapterType ne null}"
 						value="#{msgs['tlos.workspace.pannel.job.operationType']}" />
 					<p:selectOneMenu value="#{backingBean.fileOperationType}"
-						required="true"
+						required="true" style="width: 100pt"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS'}"
 						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
@@ -72,7 +72,7 @@
 							update="operations :jobDefinitionForm:tabView:maxFileSize :jobDefinitionForm:tabView:minAge :jobDefinitionForm:tabView:fileModificationTime :jobDefinitionForm:tabView:fileDirectory :jobDefinitionForm:tabView:fileName :jobDefinitionForm:tabView:filter"></p:ajax>
 					</p:selectOneMenu>
 					<p:selectOneMenu value="#{backingBean.fileOperationType}"
-						required="true"
+						required="true" style="width: 100pt"
 						rendered="#{backingBean.fileAdapterType eq 'BINARY FILE PROCESS'}"
 						requiredMessage="#{msgs['tlos.validation.ftp.operationType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
@@ -85,7 +85,7 @@
 					<h:outputText
 						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'List Files'}"
 						value="#{msgs['tlos.workspace.pannel.job.processedFilesOperationType']}" />
-					<p:selectOneMenu value="#{backingBean.processedFilesOperationType}"
+					<p:selectOneMenu value="#{backingBean.processedFilesOperationType}" style="width: 100pt"
 						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'List Files'}">
 						<f:selectItems
 							value="#{backingBean.processedFilesOperationTypeList}" />
@@ -104,7 +104,7 @@
 						value="#{msgs['tlos.workspace.pannel.job.xmlNodeUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}" />
 					<p:selectOneMenu value="#{backingBean.xmlNodeUsage}"
-						required="true"
+						required="true" style="width: 60pt"
 						requiredMessage="#{msgs['tlos.validation.fileProcess.xmlNodeUsage']}"
 						rendered="#{backingBean.fileAdapterType eq 'TEXT FILE PROCESS' and (backingBean.fileOperationType eq 'Update Record' or backingBean.fileOperationType eq 'Insert Record' or backingBean.fileOperationType eq 'Delete Record') and backingBean.textFileDetail eq 'XML'}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
@@ -318,7 +318,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.fileModificationTime']}"
 						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}" />
-					<p:selectOneMenu
+					<p:selectOneMenu style="width: 100pt"
 						rendered="#{backingBean.fileOperationType eq 'Read File' or backingBean.fileOperationType eq 'Write File'}"
 						value="#{backingBean.fileModificationTime}">
 						<f:selectItems value="#{backingBean.fileModificationTimeList}" />
@@ -369,7 +369,7 @@
 						rendered="#{backingBean.fileOperationType ne 'Write File'}"
 						value="#{msgs['tlos.workspace.pannel.job.sourceFileNameType']}" />
 					<p:selectOneMenu value="#{backingBean.sourceFileNameType}"
-						required="true"
+						required="true" style="width: 100pt"
 						rendered="#{backingBean.fileOperationType ne 'Write File'}"
 						requiredMessage="#{msgs['tlos.validation.ftp.sourceFileNameType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"

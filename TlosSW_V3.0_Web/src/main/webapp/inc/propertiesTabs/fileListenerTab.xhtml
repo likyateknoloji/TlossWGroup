@@ -15,7 +15,7 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.fileNameType']}" />
 					<p:selectOneMenu value="#{backingBean.fileNameType}"
-						required="true"
+						required="true" style="width: 100pt"
 						requiredMessage="#{msgs['tlos.validation.fileListener.fileNameType']}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 							itemValue="" />
@@ -96,7 +96,7 @@
 				<p:panelGrid id="listenerProperties" columns="4">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.pollingType']}" />
-					<p:selectOneMenu value="#{backingBean.pollingType}">
+					<p:selectOneMenu value="#{backingBean.pollingType}" style="width: 50pt">
 						<f:selectItems value="#{backingBean.pollingTypeList}" />
 					</p:selectOneMenu>
 
