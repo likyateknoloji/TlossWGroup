@@ -599,7 +599,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		resetPanelInputs();
 	}
 
-	private void resetPanelInputs() {
+	public void resetPanelInputs() {
 		jobCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
 		jobPriority = "1";
@@ -663,7 +663,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public boolean validateTimeManagement() {
 		if (startTime == null || startTime.equals("")) {
 			if (jobProperties.getDependencyList() == null || jobProperties.getDependencyList().getItemArray().length == 0) {
-				addMessage("", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.timeOrDependency", null);
+				addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.timeOrDependency", null);
 				return false;
 			}
 		}
