@@ -1,7 +1,6 @@
 package com.likya.tlossw.web.management;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +22,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "userPanelMBean")
 @RequestScoped
@@ -39,7 +39,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private Person person;
@@ -52,26 +52,25 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 	private boolean insertButton;
 	private int personId;
 
-
 	@PostConstruct
 	public void init() {
 
 		person = Person.Factory.newInstance();
-		roleList = null;
-		fillRoleList();
-		
-		if (iCheck != null && iCheck.equals("insert")) insertButton = true;
-		
+		roleList = WebInputUtils.fillRoleList();
+
+		if (iCheck != null && iCheck.equals("insert"))
+			insertButton = true;
+
 		if (insertCheck != null) {
-			
+
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 				userPassword2 = null;
 				person = Person.Factory.newInstance();
 				transformToLocalTime = false;
-				
+
 				person = dbOperations.searchUserByUsername(selectedUserName);
-	
+
 				if (person != null) {
 					setRole(person.getRole().toString());
 					userPassword2 = person.getUserPassword();
@@ -80,10 +79,9 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 					mail = person.getEmailList().getEmailArray(0);
 					personId = person.getId();
 				}
-			}
-			else {
+			} else {
 				insertButton = true;
-				
+
 			}
 		}
 	}
@@ -94,24 +92,6 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 		String personXML = person.xmlText(xmlOptions);
 
 		return personXML;
-	}
-
-	public void fillRoleList() {
-		String roleValue = null;
-		roleList = new ArrayList<SelectItem>();
-		SelectItem item = new SelectItem();
-//		item.setLabel("Seciniz");
-//		item.setValue("Seciniz");
-//		roleList.add(item);
-
-		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
-			item = new SelectItem();
-			roleValue = Role.Enum.forInt(i + 1).toString();
-			item.setValue(roleValue);
-			item.setLabel(roleValue);
-			roleList.add(item);
-		}
-
 	}
 
 	public void updateUserAction(ActionEvent e) {
@@ -129,9 +109,9 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 		person.setTransformToLocalTime(transformToLocalTime);
 
 		if (dbOperations.updateUser(getPersonXML())) {
-				addMessage("yeniKullanici", FacesMessage.SEVERITY_INFO, "tlos.success.user.update", null);
-			} else {
-				addMessage("yeniKullanici", FacesMessage.SEVERITY_ERROR, "tlos.error.user.update", null);
+			addMessage("yeniKullanici", FacesMessage.SEVERITY_INFO, "tlos.success.user.update", null);
+		} else {
+			addMessage("yeniKullanici", FacesMessage.SEVERITY_ERROR, "tlos.error.user.update", null);
 		}
 
 	}
@@ -165,7 +145,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 	}
-	
+
 	public void resetPersonAction() {
 		setRole(null);
 		telefon = null;
@@ -174,10 +154,9 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 		person = Person.Factory.newInstance();
 		// searchUserList = null;
 		transformToLocalTime = false;
-		fillRoleList();
+		roleList = WebInputUtils.fillRoleList();
 	}
 
-	
 	public boolean getUserId() {
 		int userId = dbOperations.getNextId(ConstantDefinitions.USER_ID);
 		if (userId < 0) {
@@ -188,7 +167,6 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 		return true;
 	}
 
-	
 	public Person getPerson() {
 		return person;
 	}
@@ -203,7 +181,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
-	    person.setRole(Role.Enum.forString(role));
+		person.setRole(Role.Enum.forString(role));
 	}
 
 	public String getUserPassword2() {

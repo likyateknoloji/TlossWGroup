@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "userSearchPanelMBean")
 @ViewScoped
@@ -43,13 +44,12 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	private Person person;
 	private ArrayList<Person> searchUserList;
 
-	private List<Person> filteredUsers;   
+	private List<Person> filteredUsers;
 
 	private String userPassword2;
 	private boolean transformToLocalTime = false;
 
 	private transient DataTable searchUserTable;
-
 
 	public void dispose() {
 		person = null;
@@ -59,34 +59,15 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	@PostConstruct
 	public void init() {
 		person = Person.Factory.newInstance();
-		fillRoleList();
+		roleList = WebInputUtils.fillRoleList();
 		// resetPersonAction();
 	}
 
 	public void resetPersonAction() {
 		role = null;
 		person = Person.Factory.newInstance();
-		fillRoleList();
+		roleList = WebInputUtils.fillRoleList();
 		searchUserList = null;
-	}
-	
-	public void fillRoleList() {
-
-		String roleValue = null;
-		roleList = new ArrayList<SelectItem>();
-		SelectItem item = new SelectItem();
-		item.setLabel("Seciniz");
-		item.setValue("Seciniz");
-		roleList.add(item);
-
-		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
-			item = new SelectItem();
-			roleValue = Role.Enum.forInt(i + 1).toString();
-			item.setValue(roleValue);
-			item.setLabel(roleValue);
-			roleList.add(item);
-		}
-
 	}
 
 	public String getPersonXML() {
@@ -99,7 +80,7 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 
 	public void searchUserAction(ActionEvent e) {
 		searchUserList = dbOperations.searchUser(getPersonXML());
-		
+
 		if (searchUserList == null || searchUserList.size() == 0) {
 			addMessage("searchUser", FacesMessage.SEVERITY_INFO, "tlos.info.search.noRecord", "");
 		}
@@ -121,7 +102,6 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 
 	}
 
-
 	public void deleteUserAction(ActionEvent e) {
 		person = (Person) searchUserTable.getRowData();
 		role = person.getRole().toString();
@@ -130,9 +110,9 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 			if (dbOperations.deleteUser(getPersonXML())) {
 				searchUserList.remove(person);
 				person = Person.Factory.newInstance();
-				addMessage("searchUser", FacesMessage.SEVERITY_INFO, "tlos.success.user.delete", null );
+				addMessage("searchUser", FacesMessage.SEVERITY_INFO, "tlos.success.user.delete", null);
 			} else {
-				addMessage("searchUser", FacesMessage.SEVERITY_ERROR, "tlos.error.user.delete", null );
+				addMessage("searchUser", FacesMessage.SEVERITY_ERROR, "tlos.error.user.delete", null);
 			}
 		}
 

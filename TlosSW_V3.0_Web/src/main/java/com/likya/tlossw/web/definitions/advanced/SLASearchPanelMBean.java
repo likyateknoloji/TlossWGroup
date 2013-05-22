@@ -17,13 +17,13 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
-import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.sla.ResourcePoolDocument.ResourcePool;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "slaSearchPanelMBean")
 @ViewScoped
@@ -56,23 +56,9 @@ public class SLASearchPanelMBean extends TlosSWBaseBean implements Serializable 
 	public void init() {
 		sla = SLA.Factory.newInstance();
 		searchSlaList = new ArrayList<SLA>();
-		fillUserList();
-	}
 
-	private void fillUserList() {
-		Collection<SelectItem> userList = new ArrayList<SelectItem>();
-
-		try {
-			for (Person person : getDbOperations().getUsers()) {
-				SelectItem item = new SelectItem();
-				item.setValue(person.getId() + "");
-				item.setLabel(person.getUserName());
-				userList.add(item);
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-		setUserList(userList);
+		ArrayList<Person> dbUserList = getDbOperations().getUsers();
+		userList = WebInputUtils.fillUserList(dbUserList);
 	}
 
 	public String getSlaXML() {

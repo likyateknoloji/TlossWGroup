@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument;
 import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
+import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
@@ -36,6 +37,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 
 public class WebInputUtils {
@@ -546,5 +548,34 @@ public class WebInputUtils {
 		}
 
 		return sourceTypeList;
+	}
+
+	public static Collection<SelectItem> fillUserList(ArrayList<Person> dbUserList) {
+		Collection<SelectItem> userList = new ArrayList<SelectItem>();
+
+		for (Person person : dbUserList) {
+			SelectItem item = new SelectItem();
+			item.setValue(person.getId() + "");
+			item.setLabel(person.getUserName());
+			userList.add(item);
+		}
+
+		return userList;
+	}
+
+	public static Collection<SelectItem> fillRoleList() {
+		String roleValue = null;
+		Collection<SelectItem> roleList = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem();
+
+		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
+			item = new SelectItem();
+			roleValue = Role.Enum.forInt(i + 1).toString();
+			item.setValue(roleValue);
+			item.setLabel(roleValue);
+			roleList.add(item);
+		}
+
+		return roleList;
 	}
 }

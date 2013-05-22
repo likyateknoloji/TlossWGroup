@@ -66,6 +66,8 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
+import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument;
+import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
@@ -639,31 +641,39 @@ public class DBOperations implements Serializable {
 		return almList;
 	}
 
-	public ArrayList<Person> getUsers() throws XMLDBException {
+	public ArrayList<Person> getUsers() {
 
 		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleUserOperations.xquery\";" + "hs:users()";
 
 		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
 
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
 		ArrayList<Person> prsList = new ArrayList<Person>();
 
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
 
-			Person prs;
-			try {
-				prs = PersonDocument.Factory.parse(xmlContent).getPerson();
-				prsList.add(prs);
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				Person prs;
+				try {
+					prs = PersonDocument.Factory.parse(xmlContent).getPerson();
+					prsList.add(prs);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+
 			}
-
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
 		}
 
 		return prsList;
@@ -2789,6 +2799,41 @@ public class DBOperations implements Serializable {
 		}
 
 		return true;
+	}
+
+	public ArrayList<UserAccessProfile> searchWSAccessProfiles(String userAccessProfileXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
+
+		ArrayList<UserAccessProfile> userAccessProfiles = new ArrayList<UserAccessProfile>();
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				UserAccessProfile userAccessProfile;
+				try {
+					userAccessProfile = UserAccessProfileDocument.Factory.parse(xmlContent).getUserAccessProfile();
+					userAccessProfiles.add(userAccessProfile);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return userAccessProfiles;
 	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {

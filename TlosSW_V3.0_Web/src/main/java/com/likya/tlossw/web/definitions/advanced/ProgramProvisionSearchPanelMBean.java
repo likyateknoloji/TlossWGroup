@@ -17,12 +17,12 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
-import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "ppSearchPanelMBean")
 @ViewScoped
@@ -55,23 +55,9 @@ public class ProgramProvisionSearchPanelMBean extends TlosSWBaseBean implements 
 	public void init() {
 		license = License.Factory.newInstance();
 		searchLicenseList = new ArrayList<License>();
-		fillUserList();
-	}
-
-	private void fillUserList() {
-		Collection<SelectItem> userList = new ArrayList<SelectItem>();
-
-		try {
-			for (Person person : getDbOperations().getUsers()) {
-				SelectItem item = new SelectItem();
-				item.setValue(person.getId() + "");
-				item.setLabel(person.getUserName());
-				userList.add(item);
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-		setUserList(userList);
+		
+		ArrayList<Person> dbUserList = getDbOperations().getUsers();
+		userList = WebInputUtils.fillUserList(dbUserList);
 	}
 
 	public String getLicenseXML() {

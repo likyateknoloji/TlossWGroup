@@ -164,22 +164,18 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setEndDate(getAlarm().getEndDate().getTime());
 		setAlarmLevel(getAlarm().getLevel().toString());
 
-		try {
-			if (getAlarm().getSubscriber().getPerson() != null) {
-				setUserType(SubscriptionType.USER.toString());
+		if (getAlarm().getSubscriber().getPerson() != null) {
+			setUserType(SubscriptionType.USER.toString());
 
-				setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
+			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 
-				setAlarmUser(getAlarm().getSubscriber().getPerson().getId().toString());
-			} else {
-				setUserType(SubscriptionType.ROLE.toString());
-				setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-				setAlarmRole(Integer.toString(getAlarm().getSubscriber().getRole().intValue()));
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			setAlarmUser(getAlarm().getSubscriber().getPerson().getId().toString());
+		} else {
+			setUserType(SubscriptionType.ROLE.toString());
+			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
+			setAlarmRole(Integer.toString(getAlarm().getSubscriber().getRole().intValue()));
 		}
+
 
 		if (getAlarm().getFocus().getJobs() != null) {
 
