@@ -9,7 +9,7 @@ declare namespace xsi="http://www.w3.org/2001/XMLSchema-instance";
 declare namespace fn="http://www.w3.org/2005/xpath-functions"; 
 declare namespace functx = "http://www.functx.com";
 
-(:**************************DAILY PLAN**********************************:) 
+(:**************************Run PLAN**********************************:) 
 
 declare function functx:is-leap-year 
 		  ( $date as xs:anyAtomicType? )  as xs:boolean {
@@ -121,20 +121,24 @@ declare function functx:last-day-of-month
 (:("January", "February", "March", "April", "May", "June", "July", "August","September","October","November","December")
 		    [fn:month-from-date(fn:current-date())]:)
 
+(:************************** START PLANNING **********************************:) 
+
+(: Calendar Selection Phase :)
 			(:
-			  Calendar dan plan bilgilerini alalim ve bugun calisacak isleri belirleyelim.
+			  ## IPTAL Calendar dan plan bilgilerini alalim ve bugun calisacak isleri belirleyelim. IPTAL ##
+			  Takvimi kullanarak planlamayi yapalim ve calisacak isleri belirleyelim.
 			:)
 
-		
-declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:integer?) as xs:boolean?
+(: declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:integer?) as xs:boolean? :)
+declare function hs:createPlanCalendars() as node()*
  {	
-(:  let $planCnt := count(doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan)  :)
-    for $calList in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters
+    let $nextPlanId := sq:getNextPlanId()
+    let $yeniPlan :=
+	for $calList in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters
 	return update insert
 (:***************************************************************************:)
 		for $calendar in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWCalendar10.xml")/cal:calendarList//cal:calendarProperties
-	(:	   let $next := if($planCnt = 0) then 1 else max(doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan/@id) + 1 :)
-	(:	   let $nextPlanId := sq:getNextPlanId():)
+		  (: ################### PLAN KURALLARI HESAPLANSIN ################# :)
 		   let $date1  := data($calendar/cal:validFrom/com:date)
 		   let $time1  := data($calendar/cal:validFrom/com:time)
 		   let $date2  := data($calendar/cal:validTo/com:date)
@@ -173,7 +177,6 @@ declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:i
 	                      else 28
 	       let $firstDayOfYearFlg := if (functx:first-day-of-year(xs:date(fn:current-date())) eq fn:current-date()) then 1 else 0
 	       let $lastDayOfYearFlg  := if (functx:last-day-of-year(xs:date(fn:current-date())) eq fn:current-date()) then 1 else 0
-		   (: if (functx:date($currentYear,$currentMonthByNum,$dayLast) eq fn:current-date()) then 1 else 0  :)
 	  
 	       let $currentDayByName    := functx:day-of-week-name-en(xs:date(fn:current-date() ))
 (:
@@ -200,17 +203,10 @@ declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:i
 	       let $lastDayOfQ4 := functx:date($currentYear,12,31)
 		   let $lastDayOfQ4Flg := if ($lastDayOfQ4 = xs:date(fn:current-date() )) then 1 else 0
 
-	       (: let $firstDayOfQ1 := functx:date($currentYear,$currentMonthByNum,$currentDayByNum) :)
-
-
 	       (: functx:days-in-month(fn:current-date()) :)
 
-	       (: let $firstDayOfYear := dateTime(xs:date(concat(xs:string($currentYear),'-','01','-','01')),
-	                    xs:time(concat($hour1,':',$minute1, ':', $second1,'+02:00'))) :)
 		   let $firstDayOfYear := functx:first-day-of-year(xs:date(fn:current-date()))
-	       (: let $lastDayOfYear := dateTime(xs:date(concat(xs:string($currentYear),'-','12','-','31')),
-	                    xs:time(concat($hour1,':',$minute1, ':', $second1,'+02:00'))) :)
-		   let $lastDayOfYear := functx:last-day-of-year(xs:date(fn:current-date()))
+		   let $lastDayOfYear  := functx:last-day-of-year(xs:date(fn:current-date()))
 	       let $compbuss := 1 (:xs:date(concat(xs:string($currentYear),'-',$currentMonthByNum,'-',$day1)):)
 	       let $currentQuarter :=("Quarter1", "Quarter1", "Quarter1", "Quarter2", "Quarter2", "Quarter2", "Quarter3", "Quarter3","Quarter3","Quarter4","Quarter4","Quarter4")
 	       [fn:month-from-date(fn:current-date())]
@@ -438,80 +434,75 @@ return
 </plan>
 (:***************************************************************************:)
  into $calList
+
+ return hs:getPlan($nextPlanId)
 };
 
-(:**************************END OF DAILY PLAN**********************************:) 
+(: Calendars Selection Phase Ended :)
 
 
 
-(:**********************************************************************************:)
-
-
-
-(:**************************QUERY DAILY SCENARIOS**********************************:)
-
-declare function hs:today-jobs-and-scenarios($n as node()) as node()*
-	  {
+(: Jobs and Scenarios Selection Phase :)
+(: declare function hs:today-jobs-and-scenarios($n as node()) as node()* :)
+declare function hs:select-jobs-and-scenarios($n as node(), $plan as node()*) as node()*
+{
 	   typeswitch($n)
 	    case $a as element(dat:jobList)
 			 return element dat:jobList
 			 {
-          (:   let $maxid := max(doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan/@id) :)
-			   let $maxid := sq:getPlanId()
-			   for $calendar in doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan[@id = $maxid]
+			   for $calendar in $plan
 			     , $ca in $a/dat:jobProperties
-			   where data($calendar/calID)=data($ca/dat:baseJobInfos/dat:calendarId) and (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :) not($ca/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED')
-			   return hs:today-jobs-and-scenarios($ca)
+			   where data($calendar/calID)=data($ca/dat:baseJobInfos/dat:calendarId) and not($ca/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED')
+			         (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :)
+			   return hs:select-jobs-and-scenarios($ca, $plan)
 			 }
 	    case $es as element(dat:scenario) 
 	       return if (count($es//dat:jobProperties)>0) then element dat:scenario
-	         { attribute ID {$es/@*}, for $ces in $es/* return hs:today-jobs-and-scenarios($ces) } 
+	         { attribute ID {$es/@*}, for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $plan) } 
 			 else ()
 		case $d as element(dat:TlosProcessData) 
 		   return element dat:TlosProcessData
-		     { for $cd in $d/* return hs:today-jobs-and-scenarios($cd) }
+		     { for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $plan) }
 	     default return $n 
-	  };
+};
 		
-	(:hs:today-jobs-and-scenarios(doc("file:///D:/likya/tlos/tlos2.0/17haziran2009/tlosData20.xml")/*) :)
-
-declare function hs:TodayJobsAndScenarios($n as node()) as node()*
+(: declare function hs:TodayJobsAndScenarios($n as node()) as node()* :)
+declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as node()*
 {
-		 hs:today-jobs-and-scenarios(hs:today-jobs-and-scenarios($n))
+		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n, $plan), $plan)
 };
 
-declare function hs:queryDailyJobsAndScenarios()
+(: declare function hs:queryDailyJobsAndScenarios() :)
+declare function hs:querySelectedJobsAndScenarios($plan as node()*)
 {
-    (:let $sayac := 0:)
-(:	let $runCnt := count(doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN) :)
 	for $calList in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll
 	return update insert
-(:***************************************************************************:)
-(:let $sayac := $sayac + 1
- let $next := max(doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN/@id) + $sayac
-:)
-		(: let $next := if($runCnt = 0) then 1 else max(doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN/@id) + 1  :)
            let $next := sq:getNextRunId()
 		   return element RUN 
 		   { attribute id {$next},  
-	          hs:TodayJobsAndScenarios(doc("//db/TLOSSW/xmls/tlosSWData10.xml")/*)
+	          hs:SelectedJobsAndScenarios(doc("//db/TLOSSW/xmls/tlosSWData10.xml"), $plan)
 	       }
-(:***************************************************************************:)
     into $calList
 };
 
-(:**************************END OF QUERY DAILY SCENARIOS**********************************:)
+(: Jobs and Scenarios Selections Phase Ended :)
 
+(:************************** END OF PLANNING PHASE **********************************:) 
 
+declare function hs:getPlan( $planId as xs:integer ) as node()*
+{    
+  	for $plan in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan
+    where $plan[xs:integer(@id) eq $planId]
+	return $plan
+};
 
-declare function hs:getDailyJobsAndScenarios()
+(: declare function hs:getDailyJobsAndScenarios() :)
+declare function hs:doPlanAndSelectJobsAndScenarios( $scenarioId as xs:integer, $planId as xs:integer )
 {	
-	let $nextPlanId := sq:getNextPlanId()
-    let $retDailyPlan := hs:queryDailyPlan(0, $nextPlanId)
-	let $retDailyScenarios := hs:queryDailyJobsAndScenarios()
-(:	let $runId := max(doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN/@id)  :)
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars() else hs:getPlan( $planId )
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($retDailyPlan)
+
 	let $runId := sq:getRunId()
-(:	let $solsticeId := hs:getSolsticeId() :)
 	let $solsticeId := sq:getSolticeId()
 
 	let $insertInstanceId := hs:insertInstanceId(string($runId))
@@ -523,14 +514,12 @@ declare function hs:getDailyJobsAndScenarios()
 
 };
 
-declare function hs:getSolsticeJobsAndScenarios()
+declare function hs:getSolsticeJobsAndScenarios( $scenarioId as xs:integer, $planId as xs:integer )
 {	
-	let $nextPlanId := sq:getNextPlanId()
-    let $retDailyPlan := hs:queryDailyPlan(0,$nextPlanId)
-	let $retDailyScenarios := hs:queryDailyJobsAndScenarios()
-(:	let $runId := max(doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN/@id):)
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars() else $planId
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($retDailyPlan)
+
 	let $runId := sq:getRunId()
-(:	let $solsticeId := hs:getNextSolsticeId():)
 	let $solsticeId := sq:getNextSolticeId()
 
 	let $insertInstanceId := hs:insertInstanceId(string($runId))
