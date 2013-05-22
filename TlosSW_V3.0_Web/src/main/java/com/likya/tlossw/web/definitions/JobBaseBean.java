@@ -307,8 +307,16 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jobCalendar = baseJobInfos.getCalendarId() + "";
 			oSystem = baseJobInfos.getOSystem().toString();
 			jobPriority = baseJobInfos.getJobPriority().toString();
-			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
 			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
+			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
+
+			if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
+				for (Parameter param : baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray()) {
+					if (param.getName().equals(PERIOD_TIME_PARAM)) {
+						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
+					}
+				}
+			}
 
 			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
 				eventTypeDef = baseJobInfos.getJobInfos().getJobTypeDetails().getEventTypeDef().toString();
@@ -701,7 +709,13 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		// periyodik is ise onunla ilgili alanlari dolduruyor
 		if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
-			SpecialParameters specialParameters = SpecialParameters.Factory.newInstance();
+
+			SpecialParameters specialParameters;
+			if (baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters() == null) {
+				specialParameters = SpecialParameters.Factory.newInstance();
+			} else {
+				specialParameters = baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters();
+			}
 
 			InParam inParam = InParam.Factory.newInstance();
 
