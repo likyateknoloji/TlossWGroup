@@ -254,9 +254,9 @@ public class DBUtils {
 		return jobProperties;
 	}
 
-	public static TlosProcessData getTlosDailyData() throws TlosFatalException {
+	public static TlosProcessData getTlosDailyData(int scenarioId, int planId) throws TlosFatalException {
 
-		TlosProcessData tlosProcessData = getTlosDailyDataXml();
+		TlosProcessData tlosProcessData = getTlosDailyDataXml(scenarioId, planId);
 
 		/**
 		 * Aşağıdaki kontroller, aslında bir nevi validasyon işlevi görüyor.
@@ -337,7 +337,7 @@ public class DBUtils {
 		return null;
 	}
 
-	private static TlosProcessData getTlosDailyDataXml() {
+	private static TlosProcessData getTlosDailyDataXml(int scenarioId, int planId) {
 
 		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 
@@ -350,9 +350,9 @@ public class DBUtils {
 		} catch (XMLDBException e2) {
 			e2.printStackTrace();
 			return null;
-		}
-
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDailyOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getDailyJobsAndScenarios()";
+		}	
+		
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDailyOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:doPlanAndSelectJobsAndScenarios(" + scenarioId + "," + planId + ")";
 
 		try {
 			ResourceSet result = service.query(xQueryStr);
