@@ -1,0 +1,113 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - WS Access Search Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Administration" />
+		<ui:param name="title3" value="Web Service Access" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/managementPanels/wsAccessSearchPanel.xhtml" />
+		<ui:param name="title4link" value="Tlos SW Workload Automation Software v1.0 - WS Access Search Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchWSAccess" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl" header="#{msgs['tlos.management.pannel.dbAccess.header']}">
+
+				<div class="tablectrl">
+
+					<p:panelGrid columns="4">
+						<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.roles']}" />
+						<p:selectOneMenu id="role" value="#{wsAccessSearchPanelMBean.role}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{wsAccessSearchPanelMBean.roleList}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.calendar.user']}" />
+						<p:selectOneMenu value="#{wsAccessSearchPanelMBean.user}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{wsAccessSearchPanelMBean.userList}" />
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.management.pannel.dbAccess.active']}" />
+						<p:selectOneMenu id="active" value="#{wsAccessSearchPanelMBean.active}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.button.yes']}" itemValue="yes" />
+							<f:selectItem itemLabel="#{msgs['tlos.button.no']}" itemValue="no" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+				</div>
+
+			</p:panel>
+
+			<br></br>
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton id="wsAccessSearchButton" value="#{msgs['tlos.button.search']}" update="wsAccessSearchPanel" actionListener="#{wsAccessSearchPanelMBean.searchWSAccessAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}" update="searchWSAccess" action="#{wsAccessSearchPanelMBean.resetWSAccessProfileAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.addNew']}" rendered="#{security.WSAccessAdd}" update="wsAccessSearchPanel" ajax="false" immediate="false" action="wsAccessPanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="wsAccessSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight" rendered="#{not empty wsAccessSearchPanelMBean.searchWSAccessList}">
+					<p:dataTable var="item" rows="10" id="wsSearchDataTable" filteredValue="#{wsAccessSearchPanelMBean.filteredWSAccessList}" width="100%" value="#{wsAccessSearchPanelMBean.searchWSAccessList}"
+						binding="#{wsAccessSearchPanelMBean.searchWSAccessTable}" paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton id="wsEditButton" ajax="false" rendered="#{security.WSAccessEdit}" immediate="false" value="#{msgs['tlos.button.update']}" action="wsAccessPanel.xhtml">
+								<f:param name="selectedWSAccessID" value="#{item.ID}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton id="wsDeleteButton" value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" rendered="#{security.WSAccessDelete}" />
+							<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
+								severity="alert" widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchWSAccess:wsAccessSearchPanel" onclick="confirmation.hide()"
+									actionListener="#{wsAccessSearchPanelMBean.deleteWSAccessAction}" />
+								<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.id']}" sortBy="#{item.webServiceID}" filterBy="#{item.webServiceID}" filterMatchMode="contains">
+							<h:outputText value="#{item.webServiceID}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.active']}" sortBy="#{item.active}" filterBy="#{item.active}" filterMatchMode="contains">
+							<h:outputText value="#{item.active}" style="text-align: center;" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
