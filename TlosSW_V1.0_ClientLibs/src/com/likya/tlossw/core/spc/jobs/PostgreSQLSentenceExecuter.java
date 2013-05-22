@@ -86,9 +86,14 @@ public class PostgreSQLSentenceExecuter extends DbJob {
 			} catch (Exception err) {
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 				sendStatusChangeInfo();
+
 				try {
-					getStatement().close();
-					getConnection().close();
+					if(getStatement() != null) {
+						getStatement().close();
+					}
+					if(getStatement() != null) {
+						getConnection().close();
+					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
