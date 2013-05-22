@@ -39,7 +39,7 @@
 								</db:dbConnectionProperties>
 								<db:dbJobType>Free SQL</db:dbJobType>
 								<db:freeSQLProperties>
-									<db:sqlSentence>select * from snpw1.hmeq_flagged</db:sqlSentence>
+									<db:sqlSentence>select * from personel</db:sqlSentence>
 								</db:freeSQLProperties>
 							</db:dbJobDefinition>
                         </com:specialParameters>
