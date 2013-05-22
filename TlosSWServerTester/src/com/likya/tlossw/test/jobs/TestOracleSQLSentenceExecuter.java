@@ -21,14 +21,16 @@ public class TestOracleSQLSentenceExecuter extends TestSuit {
 	public void startTest() {
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "OracleSQLSentenceExecuter.xml");
+		String xmlFilePath = "/Users/serkan/programlar/dev/workspace/TlosSWServerTester/src/";
+		
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "OracleSQLSentenceExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBOracleConnection.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "DBOracleConnection.xml");
 		DbProperties dbProperties = null;
 		dbProperties = getDbPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBOracleConnectionProfile.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "DBOracleConnectionProfile.xml");
 		DbConnectionProfile dbConnectionProfile = null;
 		dbConnectionProfile = getDbConnectionProfileFromFile(fileName);
 		
