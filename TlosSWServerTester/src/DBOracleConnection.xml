@@ -4,10 +4,10 @@
         <dbc:dbType>Oracle</dbc:dbType>
         <dbc:dbVersion>11</dbc:dbVersion>
         <dbc:driverName>JDBC</dbc:driverName>
-        <dbc:dbName>oralikya</dbc:dbName>
-        <dbc:hostName>localhost</dbc:hostName>
+        <dbc:dbName>xe</dbc:dbName>
+        <dbc:hostName>192.168.1.32</dbc:hostName>
         <com:ftpPortNumber>1521</com:ftpPortNumber>
-        <com:ipAddress>127.0.0.1</com:ipAddress>
+        <com:ipAddress>192.168.1.32</com:ipAddress>
         <dbc:jdbcClassName>className</dbc:jdbcClassName>
  		<dbc:sqlClientAppName>sqlplus</dbc:sqlClientAppName>
 		<dbc:sqlClientAppPath>C:\app\ayhan\product\11.2.0\dbhome_2\BIN\</dbc:sqlClientAppPath>
