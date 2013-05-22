@@ -393,7 +393,7 @@ public class TlosSpaceWideBase {
 			logger.info("   > is listesi KDS nden sorgulaniyor ...");
 
 			try {
-				getSpaceWideRegistry().setTlosProcessData(DBUtils.getTlosDailyData());
+				getSpaceWideRegistry().setTlosProcessData(DBUtils.getTlosDailyData( 0 , 0 ));
 			} catch (TlosFatalException e) {
 				e.printStackTrace();
 				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
