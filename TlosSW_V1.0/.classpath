@@ -37,5 +37,6 @@
 	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-dom.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
 	<classpathentry kind="lib" path="/SharedLibs/evalUtils/EvalUtils.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/oracle/ojdbc14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
