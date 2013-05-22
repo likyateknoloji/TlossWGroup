@@ -1,6 +1,5 @@
 package com.likya.tlossw.web.mng.alarm;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,7 +11,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
@@ -85,6 +83,11 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		setAlarmType(AlarmType.JOB.toString());
 		setUserType(SubscriptionType.USER.toString());
+		setAlarmDepth("1");
+
+		setTimeOutControl("false");
+		setTolerancePercentage("false");
+		setMinPercentage("false");
 
 		selectedAlarmName = String.valueOf(FacesUtils.getRequestParameter("selectedAlarmName"));
 		insertCheck = String.valueOf(FacesUtils.getRequestParameter("insertCheck"));

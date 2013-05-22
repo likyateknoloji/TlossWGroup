@@ -214,16 +214,17 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	private void setScenarioTreePath(TreeNode scenarioNode) {
 		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root");
 
-		String path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/..";
+		String path = "";
+		if (!scenarioNode.getParent().getData().equals(ConstantDefinitions.TREE_ROOT)) {
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/..";
 
-		while (scenarioNode.getParent() != null) {
-			if (scenarioNode.getParent().getData().equals(scenarioRoot)) {
-				path = "/dat:TlosProcessData" + path;
-				break;
+			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
+				scenarioNode = scenarioNode.getParent();
+				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
 			}
-			scenarioNode = scenarioNode.getParent();
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
 		}
+
+		path = "/dat:TlosProcessData" + path;
 
 		treePath = path;
 	}
