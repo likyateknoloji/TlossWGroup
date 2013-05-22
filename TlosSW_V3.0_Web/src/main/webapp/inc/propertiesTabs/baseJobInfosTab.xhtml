@@ -17,20 +17,25 @@
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
 						required="true"
-						requiredMessage="#{msgs['tlos.validation.job.name']}" />
+						requiredMessage="#{msgs['tlos.validation.job.name']}" >
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.comment}"
 						required="true"
-						requiredMessage="#{msgs['tlos.validation.job.comment']}" />
+						requiredMessage="#{msgs['tlos.validation.job.comment']}" >
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.path']}">
+						<p:ajax partialSubmit="true"></p:ajax>
 						<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
 								<f:validateRegex
 									pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" /-->
@@ -42,6 +47,7 @@
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.file']}"
 						validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
+						<p:ajax partialSubmit="true"></p:ajax>
 						<f:validateRegex
 							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 					</p:inputText>
@@ -50,12 +56,14 @@
 					<p:selectOneMenu id="jsCalendar" style="text-align: center;"
 						value="#{backingBean.jobCalendar}">
 						<f:selectItems value="#{backingBean.jsCalendarList}" />
+						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 					<p:selectOneMenu id="oSystem" style="text-align: center;"
 						value="#{backingBean.oSystem}">
 						<f:selectItems value="#{backingBean.oSystemList}" />
+						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
@@ -63,7 +71,9 @@
 					<p:panelGrid columns="1">
 						<p:inputText id="priority"
 							value="#{backingBean.jobPriority}" />
-						<p:slider for="priority" minValue="1" maxValue="4" />
+						<p:slider for="priority" minValue="1" maxValue="4" >
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:slider>
 					</p:panelGrid>
 
 					<h:outputText value="" />
@@ -83,7 +93,9 @@
 					<p:inputMask value="#{backingBean.periodTime}"
 						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"
 						mask="99:99:99" required="true"
-						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" />
+						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" >
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputMask>
 
 					<h:outputText value=""
 						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
@@ -104,6 +116,7 @@
 						rendered="#{backingBean.jobTypeDef eq 'EVENT BASED'}"
 						value="#{backingBean.eventTypeDef}">
 						<f:selectItems value="#{backingBean.eventTypeDefList}" />
+						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText value=""
