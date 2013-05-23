@@ -21,7 +21,7 @@ public class TestOracleSQLSentenceExecuter extends TestSuit {
 	public void startTest() {
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String xmlFilePath = "/Users/serkan/programlar/dev/workspace/TlosSWServerTester/src/";
+		String xmlFilePath = "src/";
 		
 		String fileName = ParsingUtils.getConcatenatedPathAndFileName(xmlFilePath, "OracleSQLSentenceExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
