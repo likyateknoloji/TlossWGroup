@@ -28,11 +28,11 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:panel id="searchPnl" header="#{msgs['tlos.management.pannel.dbAccess.header']}">
+			<p:panel id="searchPnl" header="#{msgs['tlos.management.pannel.wsAccess.header']}">
 
 				<div class="tablectrl">
 
-					<p:panelGrid columns="4">
+					<p:panelGrid columns="2">
 						<h:outputText value="#{msgs['tlos.management.pannel.userProcesses.roles']}" />
 						<p:selectOneMenu id="role" value="#{wsAccessSearchPanelMBean.role}">
 							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
@@ -82,7 +82,7 @@
 
 						<p:column>
 							<p:commandButton id="wsEditButton" ajax="false" rendered="#{security.WSAccessEdit}" immediate="false" value="#{msgs['tlos.button.update']}" action="wsAccessPanel.xhtml">
-								<f:param name="selectedWSAccessID" value="#{item.ID}" />
+								<f:param name="selectedWSAccessID" value="#{item.wsAccessProfile.ID}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
@@ -95,12 +95,21 @@
 							</p:confirmDialog>
 						</p:column>
 
-						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.id']}" sortBy="#{item.webServiceID}" filterBy="#{item.webServiceID}" filterMatchMode="contains">
-							<h:outputText value="#{item.webServiceID}" style="text-align: center;" />
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.name']}" sortBy="#{item.serviceName}" filterBy="#{item.serviceName}" filterMatchMode="contains">
+							<h:outputText value="#{item.serviceName}" style="text-align: center;" />
 						</p:column>
 
-						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.active']}" sortBy="#{item.active}" filterBy="#{item.active}" filterMatchMode="contains">
-							<h:outputText value="#{item.active}" style="text-align: center;" />
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.description']}" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="contains">
+							<h:outputText value="#{item.description}" style="text-align: center;" />
+						</p:column>
+						
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.userOrRoleList']}" sortBy="#{item.userOrRoleList}" filterBy="#{item.userOrRoleList}" filterMatchMode="contains">
+							<h:outputText value="#{item.userOrRoleList}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.active']}" sortBy="#{item.wsAccessProfile.active}" filterBy="#{item.wsAccessProfile.active}" filterMatchMode="contains">
+							<h:outputText value="#{msgs['tlos.button.yes']}" style="text-align: center;" rendered="#{item.wsAccessProfile.active eq 'yes'}" />
+							<h:outputText value="#{msgs['tlos.button.no']}" style="text-align: center;" rendered="#{item.wsAccessProfile.active eq 'no'}" />
 						</p:column>
 
 					</p:dataTable>

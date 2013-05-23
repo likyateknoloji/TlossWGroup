@@ -23,6 +23,7 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.webservice.AllowedRolesDocument.AllowedRoles;
 import com.likya.tlos.model.xmlbeans.webservice.AllowedUsersDocument.AllowedUsers;
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
+import com.likya.tlossw.model.WSAccessInfoTypeClient;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -34,11 +35,12 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	private static final long serialVersionUID = 1260229231620387952L;
 
 	private UserAccessProfile userAccessProfile;
+	private WSAccessInfoTypeClient wsAccessInfoTypeClient;
 
-	private ArrayList<UserAccessProfile> searchWSAccessList;
+	private ArrayList<WSAccessInfoTypeClient> searchWSAccessList;
 	private transient DataTable searchWSAccessTable;
 
-	private List<UserAccessProfile> filteredWSAccessList;
+	private List<WSAccessInfoTypeClient> filteredWSAccessList;
 
 	private String active;
 
@@ -50,13 +52,14 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void dispose() {
 		userAccessProfile = null;
+		wsAccessInfoTypeClient = null;
 		searchWSAccessList = null;
 	}
 
 	@PostConstruct
 	public void init() {
 		userAccessProfile = UserAccessProfile.Factory.newInstance();
-		searchWSAccessList = new ArrayList<UserAccessProfile>();
+		searchWSAccessList = new ArrayList<WSAccessInfoTypeClient>();
 
 		ArrayList<Person> dbUserList = getDbOperations().getUsers();
 		userList = WebInputUtils.fillUserList(dbUserList);
@@ -75,7 +78,7 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	public void resetWSAccessProfileAction() {
 		userAccessProfile = UserAccessProfile.Factory.newInstance();
 
-		searchWSAccessList = new ArrayList<UserAccessProfile>();
+		searchWSAccessList = new ArrayList<WSAccessInfoTypeClient>();
 		role = "";
 		user = "";
 		active = "";
@@ -120,14 +123,6 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void setUserAccessProfile(UserAccessProfile userAccessProfile) {
 		this.userAccessProfile = userAccessProfile;
-	}
-
-	public ArrayList<UserAccessProfile> getSearchWSAccessList() {
-		return searchWSAccessList;
-	}
-
-	public void setSearchWSAccessList(ArrayList<UserAccessProfile> searchWSAccessList) {
-		this.searchWSAccessList = searchWSAccessList;
 	}
 
 	public DataTable getSearchWSAccessTable() {
@@ -178,11 +173,27 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		this.user = user;
 	}
 
-	public List<UserAccessProfile> getFilteredWSAccessList() {
+	public WSAccessInfoTypeClient getWsAccessInfoTypeClient() {
+		return wsAccessInfoTypeClient;
+	}
+
+	public void setWsAccessInfoTypeClient(WSAccessInfoTypeClient wsAccessInfoTypeClient) {
+		this.wsAccessInfoTypeClient = wsAccessInfoTypeClient;
+	}
+
+	public ArrayList<WSAccessInfoTypeClient> getSearchWSAccessList() {
+		return searchWSAccessList;
+	}
+
+	public void setSearchWSAccessList(ArrayList<WSAccessInfoTypeClient> searchWSAccessList) {
+		this.searchWSAccessList = searchWSAccessList;
+	}
+
+	public List<WSAccessInfoTypeClient> getFilteredWSAccessList() {
 		return filteredWSAccessList;
 	}
 
-	public void setFilteredWSAccessList(List<UserAccessProfile> filteredWSAccessList) {
+	public void setFilteredWSAccessList(List<WSAccessInfoTypeClient> filteredWSAccessList) {
 		this.filteredWSAccessList = filteredWSAccessList;
 	}
 

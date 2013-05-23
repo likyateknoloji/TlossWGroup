@@ -66,12 +66,15 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
+import com.likya.tlos.model.xmlbeans.webservice.AllowedRolesDocument.AllowedRoles;
+import com.likya.tlos.model.xmlbeans.webservice.AllowedUsersDocument.AllowedUsers;
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument;
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
+import com.likya.tlossw.model.WSAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxAppUser;
@@ -2801,19 +2804,47 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public ArrayList<UserAccessProfile> searchWSAccessProfiles(String userAccessProfileXML) {
+	public ArrayList<WSAccessInfoTypeClient> searchWSAccessProfiles(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
+		String xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSDefinitionList()";
 
-		ArrayList<UserAccessProfile> userAccessProfiles = new ArrayList<UserAccessProfile>();
+		HashMap<BigInteger, WebServiceDefinition> wsDefinitionList = new HashMap<BigInteger, WebServiceDefinition>();
 
-		XPathQueryService service;
+		XPathQueryService service = null;
+		ResourceSet result = null;
+
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			ResourceSet result = service.query(xQueryStr);
+			result = service.query(xQueryStr);
+			ResourceIterator iterator = result.getIterator();
+
+			while (iterator.hasMoreResources()) {
+				Resource r = iterator.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				WebServiceDefinition wsProperties;
+				try {
+					wsProperties = WebServiceDefinitionDocument.Factory.parse(xmlContent).getWebServiceDefinition();
+					wsDefinitionList.put(wsProperties.getID(), wsProperties);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException exception) {
+			exception.printStackTrace();
+			return null;
+		}
+
+		xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
+
+		ArrayList<WSAccessInfoTypeClient> wsAccessInfoTypeClients = new ArrayList<WSAccessInfoTypeClient>();
+
+		try {
+			result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 
 			while (i.hasMoreResources()) {
@@ -2821,19 +2852,58 @@ public class DBOperations implements Serializable {
 				String xmlContent = (String) r.getContent();
 
 				UserAccessProfile userAccessProfile;
+
 				try {
 					userAccessProfile = UserAccessProfileDocument.Factory.parse(xmlContent).getUserAccessProfile();
-					userAccessProfiles.add(userAccessProfile);
+
+					WebServiceDefinition wsDefinition = wsDefinitionList.get(userAccessProfile.getWebServiceID());
+
+					WSAccessInfoTypeClient wsInfoTypeClient = new WSAccessInfoTypeClient();
+					wsInfoTypeClient.setWsAccessProfile(userAccessProfile);
+					wsInfoTypeClient.setServiceName(wsDefinition.getServiceName());
+					wsInfoTypeClient.setDescription(wsDefinition.getDescription());
+
+					String userOrRoleStr = "";
+
+					if (userAccessProfile.getAllowedRoles() != null) {
+						AllowedRoles roles = userAccessProfile.getAllowedRoles();
+						for (int j = 0; j < roles.getRoleArray().length; j++) {
+							userOrRoleStr += roles.getRoleArray(j).toString() + ", ";
+						}
+					} else if (userAccessProfile.getAllowedUsers() != null) {
+						ArrayList<Person> userList = getUsers();
+
+						AllowedUsers users = userAccessProfile.getAllowedUsers();
+						for (int j = 0; j < users.getUserIdArray().length; j++) {
+
+							int userId = users.getUserIdArray(j);
+							for (Person user : userList) {
+
+								if (user.getId() == userId) {
+									userOrRoleStr += user.getUserName() + ", ";
+									break;
+								}
+							}
+						}
+					}
+
+					if (!userOrRoleStr.equals("")) {
+						userOrRoleStr = userOrRoleStr.substring(0, userOrRoleStr.length() - 2);
+					}
+					wsInfoTypeClient.setUserOrRoleList(userOrRoleStr);
+
+					wsAccessInfoTypeClients.add(wsInfoTypeClient);
 				} catch (XmlException e) {
 					e.printStackTrace();
 					return null;
 				}
 			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		} catch (XMLDBException exception) {
+			exception.printStackTrace();
+			return null;
 		}
 
-		return userAccessProfiles;
+		return wsAccessInfoTypeClients;
 	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
