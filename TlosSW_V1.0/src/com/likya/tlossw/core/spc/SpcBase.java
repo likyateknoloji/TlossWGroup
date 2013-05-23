@@ -23,7 +23,9 @@ import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
+import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
+import com.likya.tlos.model.xmlbeans.dbjob.DbJobDefinitionDocument.DbJobDefinition;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
@@ -42,7 +44,12 @@ import com.likya.tlossw.core.spc.jobs.FtpGetFile;
 import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
 import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
+import com.likya.tlossw.core.spc.jobs.OracleSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
+import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.PostgreSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
@@ -447,7 +454,29 @@ public abstract class SpcBase implements Runnable, Serializable {
 				myLogger.error("dbConnectionProfile -> id=" + dbCPID + "bulunamadi !");
 			}
 
-			myJob = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+			DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
+
+			if (dbProperties.getDbType().equals(DbType.ORACLE)) {
+				if (dbJobDefinition.getFreeSQLProperties() != null) {
+					myJob = new OracleSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+
+				} else if (dbJobDefinition.getScriptProperties() != null) {
+					myJob = new OracleSQLScriptExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+
+				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
+					myJob = new OracleSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+				}
+			} else if (dbProperties.getDbType().equals(DbType.POSTGRE_SQL)) {
+				if (dbJobDefinition.getFreeSQLProperties() != null) {
+					myJob = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+
+				} else if (dbJobDefinition.getScriptProperties() != null) {
+					myJob = new PostgreSQLScriptExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+
+				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
+					myJob = new PostgreSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+				}
+			}
 
 			break;
 
