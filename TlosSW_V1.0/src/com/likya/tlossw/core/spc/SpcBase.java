@@ -456,7 +456,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
 
-			if (dbProperties.getDbType().equals(DbType.ORACLE)) {
+			int dbType = dbProperties.getDbType().intValue();
+
+			switch (dbType) {
+
+			case DbType.INT_ORACLE:
 				if (dbJobDefinition.getFreeSQLProperties() != null) {
 					myJob = new OracleSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 
@@ -466,7 +470,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
 					myJob = new OracleSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 				}
-			} else if (dbProperties.getDbType().equals(DbType.POSTGRE_SQL)) {
+
+				break;
+
+			case DbType.INT_POSTGRE_SQL:
 				if (dbJobDefinition.getFreeSQLProperties() != null) {
 					myJob = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 
@@ -476,6 +483,43 @@ public abstract class SpcBase implements Runnable, Serializable {
 				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
 					myJob = new PostgreSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 				}
+
+				break;
+
+			case DbType.INT_DB_2:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_FIREBIRD:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_INFORMIX:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_MY_SQL:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_SAS:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_SQL_SERVER:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			case DbType.INT_SYBASE:
+				//TODO Gelistirme yapilacak.
+				break;
+				//TODO Gelistirme yapilacak.
+			case DbType.INT_TERADATA:
+				//TODO Gelistirme yapilacak.
+				break;
+
+			default:
+				break;
 			}
 
 			break;
