@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - WS Access Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Administration" />
+		<ui:param name="title3" value="Web Service Access" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/managementPanels/wsAccessPanel.xhtml" />
+		<ui:param name="title4link" value="Tlos SW Workload Automation Software v1.0 - WS Access Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newWSAccess">
+
+			<p:fieldset legend="#{msgs['tlos.management.pannel.wsAccess.definition']}" widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid id="wdDefGrid" columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.webServiceDefinition']}" />
+					<p:selectOneMenu value="#{wsAccessPanelMBean.webServiceDefinition}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItems value="#{wsAccessPanelMBean.webServiceDefinitionList}" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.dbAccess.active']}" />
+					<p:selectOneMenu id="active" value="#{wsAccessPanelMBean.active}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{msgs['tlos.button.yes']}" itemValue="yes" />
+						<f:selectItem itemLabel="#{msgs['tlos.button.no']}" itemValue="no" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.wsAccess.userDef']}" />
+					<p:selectOneMenu id="userType" value="#{wsAccessPanelMBean.userType}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newAlarm.userBased']}" itemValue="User" />
+						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newAlarm.roleBased']}" itemValue="Role" />
+						<p:ajax update="wdDefGrid"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText rendered="#{wsAccessPanelMBean.userType eq 'User'}" value="#{msgs['tlos.management.pannel.wsAccess.userList']}" />
+					<p:selectManyMenu style="width: 120px; height: 70px; overflow: auto;" rendered="#{wsAccessPanelMBean.userType eq 'User'}" value="#{wsAccessPanelMBean.selectedUserList}">
+						<f:selectItems value="#{wsAccessPanelMBean.userList}" />
+					</p:selectManyMenu>
+
+					<h:outputText rendered="#{wsAccessPanelMBean.userType eq 'Role'}" value="#{msgs['tlos.management.pannel.wsAccess.roleList']}" />
+					<p:selectManyMenu style="width: 120px; height: 70px; overflow: auto;" rendered="#{wsAccessPanelMBean.userType eq 'Role'}" value="#{wsAccessPanelMBean.selectedRoleList}">
+						<f:selectItems value="#{wsAccessPanelMBean.roleList}" />
+					</p:selectManyMenu>
+				</p:panelGrid>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton value=" #{msgs['tlos.button.save']} " rendered="#{wsAccessPanelMBean.insertButton and security.DBAccessSave}" actionListener="#{wsAccessPanelMBean.insertWSAccessAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{not wsAccessPanelMBean.insertButton and security.DBAccessUpdate}" actionListener="#{wsAccessPanelMBean.updateDBAccessAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false" immediate="true" action="wsAccessSearchPanel.xhtml" />
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
