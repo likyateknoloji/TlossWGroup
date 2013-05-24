@@ -700,6 +700,93 @@
 					<dat:minPercentage>11</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
+			<dat:jobProperties agentId="0" ID="18">
+	            <jsdl:JobDescription/>
+	            <dat:baseJobInfos>
+	                <com:jsName>File List</com:jsName>
+	                <com:comment>File List</com:comment>
+	                <dat:jobInfos>
+	                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+	                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
+	                    <com:jobTypeDetails>
+	                        <com:jobCommandType>FTP</com:jobCommandType>
+	                        <com:specialParameters>
+	                            <ftp:ftpAdapterProperties xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types">
+	                                <ftp:adapterType>FTP PROCESS</ftp:adapterType>
+	                                <ftp:fileProperties>
+	                                    <ftp:fileType>Ascii</ftp:fileType>
+	                                    <ftp:recursive>true</ftp:recursive>
+	                                    <ftp:gelGec>true</ftp:gelGec>
+	                                </ftp:fileProperties>
+	                                <ftp:operation>
+	                                    <ftp:operationType>List Files</ftp:operationType>
+	                                    <ftp:processedFilesOperationType>None</ftp:processedFilesOperationType>
+	                                </ftp:operation>
+	                                <ftp:filenameAndDirectory>
+	                                    <ftp:sourceDirectory>
+	                                        <com:path>/home/likya/murat/</com:path>
+	                                    </ftp:sourceDirectory>
+	                                    <ftp:sourceIsRemote>true</ftp:sourceIsRemote>
+	                                    <ftp:sourceFileName>
+	                                        <com:filename/>
+	                                    </ftp:sourceFileName>
+	                                </ftp:filenameAndDirectory>
+	                                <ftp:remoteTransferProperties>
+	                                    <ftp:ftpPropertiesId>1</ftp:ftpPropertiesId>
+	                                </ftp:remoteTransferProperties>
+	                                <ftp:archiveProperties>
+	                                    <ftp:archive>false</ftp:archive>
+	                                </ftp:archiveProperties>
+	                            </ftp:ftpAdapterProperties>
+	                        </com:specialParameters>
+	                    </com:jobTypeDetails>
+	                </dat:jobInfos>
+	                <dat:calendarId>1</dat:calendarId>
+	                <dat:jobLogFile>ftp_job_list.log</dat:jobLogFile>
+	                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+	                <dat:oSystem>Windows</dat:oSystem>
+	                <dat:jobPriority>1</dat:jobPriority>
+	                <dat:jsIsActive>YES</dat:jsIsActive>
+	                <com:userId>1</com:userId>
+	            </dat:baseJobInfos>
+	            <dat:cascadingConditions>
+	                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+	                <dat:jobSafeToRestart>NO</dat:jobSafeToRestart>
+	                <dat:jobAutoRetry>NO</dat:jobAutoRetry>
+	            </dat:cascadingConditions>
+	            <dat:stateInfos>
+	                <state-types:LiveStateInfos>
+	                    <state-types:LiveStateInfo LSIDateTime="2013-05-24T12:54:42.537+0300">
+	                        <state-types:StateName>PENDING</state-types:StateName>
+	                        <state-types:SubstateName>CREATED</state-types:SubstateName>
+	                    </state-types:LiveStateInfo>
+	                </state-types:LiveStateInfos>
+	            </dat:stateInfos>
+	            <dat:advancedJobInfos>
+	                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+	            </dat:advancedJobInfos>
+	            <dat:concurrencyManagement>
+	                <com:concurrent>false</com:concurrent>
+	            </dat:concurrencyManagement>
+	            <dat:timeManagement>
+	                <dat:jsPlannedTime>
+	                    <dat:startTime>
+	                        <com:time>08:30:00.000+03:00</com:time>
+	                    </dat:startTime>
+	                </dat:jsPlannedTime>
+	                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+	                <dat:jsTimeOut>
+	                    <com:value_integer>3</com:value_integer>
+	                    <com:unit>HOURS</com:unit>
+	                </dat:jsTimeOut>
+	                <dat:expectedTime>
+	                    <com:value_integer>1</com:value_integer>
+	                    <com:unit>MINUTES</com:unit>
+	                </dat:expectedTime>
+	                <dat:tolerancePercentage>1</dat:tolerancePercentage>
+	                <dat:minPercentage>11</dat:minPercentage>
+	            </dat:timeManagement>
+	        </dat:jobProperties>
 		</dat:jobList>
 		<dat:timeManagement>
 			<dat:jsPlannedTime>
@@ -1174,245 +1261,7 @@
 			<dat:jsIsActive>YES</dat:jsIsActive>
 			<com:userId>1</com:userId>
 		</dat:baseScenarioInfos>
-		<dat:jobList>
-			<dat:jobProperties ID="9" agentId="0">
-				<jsdl:JobDescription />
-				<dat:baseJobInfos>
-					<com:jsName>Postgre SQL Script</com:jsName>
-					<com:comment>db isi</com:comment>
-					<dat:jobInfos>
-						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
-						<com:jobTypeDetails>
-							<com:jobCommandType>DB JOBS</com:jobCommandType>
-							<com:specialParameters>
-								<db:dbJobDefinition>
-									<db:dbConnectionProperties>
-										<db:dbPropertiesId>5</db:dbPropertiesId>
-										<db:dbUserId>10</db:dbUserId>
-									</db:dbConnectionProperties>
-									<db:dbJobType>Script</db:dbJobType>
-									<db:scriptProperties>
-										<db:sqlScriptFileName>posgreSQLScript.sql
-										</db:sqlScriptFileName>
-										<db:sqlScriptFilePath>D:\likya\tlos\connection\
-										</db:sqlScriptFilePath>
-									</db:scriptProperties>
-								</db:dbJobDefinition>
-							</com:specialParameters>
-						</com:jobTypeDetails>
-					</dat:jobInfos>
-					<dat:calendarId>5</dat:calendarId>
-					<dat:jobLogFile>DBJob.log</dat:jobLogFile>
-					<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
-					</dat:jobLogPath>
-					<dat:oSystem>Windows</dat:oSystem>
-					<dat:jobPriority>1</dat:jobPriority>
-					<dat:jsIsActive>YES</dat:jsIsActive>
-					<com:userId>4</com:userId>
-				</dat:baseJobInfos>
-				<dat:cascadingConditions>
-					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-					<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-					<dat:jobAutoRetry>YES</dat:jobAutoRetry>
-				</dat:cascadingConditions>
-				<dat:stateInfos>
-					<state-types:LiveStateInfos>
-						<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
-							<state-types:StateName>PENDING</state-types:StateName>
-							<state-types:SubstateName>CREATED</state-types:SubstateName>
-						</state-types:LiveStateInfo>
-					</state-types:LiveStateInfos>
-				</dat:stateInfos>
-				<dat:advancedJobInfos>
-					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-				</dat:advancedJobInfos>
-				<dat:concurrencyManagement>
-					<com:instanceId>11</com:instanceId>
-					<com:concurrent>true</com:concurrent>
-				</dat:concurrencyManagement>
-				<dat:alarmPreference />
-				<dat:timeManagement>
-					<dat:jsPlannedTime>
-						<dat:startTime>
-							<com:time>08:00:00</com:time>
-						</dat:startTime>
-						<dat:stopTime>
-							<com:time>23:00:00</com:time>
-						</dat:stopTime>
-					</dat:jsPlannedTime>
-					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:jsTimeOut>
-					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:expectedTime>
-					<dat:tolerancePercentage>10</dat:tolerancePercentage>
-					<dat:minPercentage>10</dat:minPercentage>
-				</dat:timeManagement>
-			</dat:jobProperties>
-			<dat:jobProperties ID="10" agentId="0">
-				<jsdl:JobDescription />
-				<dat:baseJobInfos>
-					<com:jsName>Store Procedure</com:jsName>
-					<com:comment>db isi</com:comment>
-					<dat:jobInfos>
-						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
-						<com:jobTypeDetails>
-							<com:jobCommandType>DB JOBS</com:jobCommandType>
-							<com:specialParameters>
-								<db:dbJobDefinition>
-									<db:dbConnectionProperties>
-										<db:dbPropertiesId>1</db:dbPropertiesId>
-										<db:dbUserId>1</db:dbUserId>
-									</db:dbConnectionProperties>
-									<db:dbJobType>Store-Procedure</db:dbJobType>
-									<db:storeProcedureProperties>
-										<db:sqlStoredProcedureSchemaName>public
-										</db:sqlStoredProcedureSchemaName>
-										<db:sqlStoredProcedurePackageName>test_p
-										</db:sqlStoredProcedurePackageName>
-										<db:sqlStoredProcedureName>test_m()
-										</db:sqlStoredProcedureName>
-									</db:storeProcedureProperties>
-								</db:dbJobDefinition>
-							</com:specialParameters>
-						</com:jobTypeDetails>
-					</dat:jobInfos>
-					<dat:calendarId>5</dat:calendarId>
-					<dat:jobLogFile>DBJob.log</dat:jobLogFile>
-					<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
-					</dat:jobLogPath>
-					<dat:oSystem>Windows</dat:oSystem>
-					<dat:jobPriority>1</dat:jobPriority>
-					<dat:jsIsActive>YES</dat:jsIsActive>
-					<com:userId>4</com:userId>
-				</dat:baseJobInfos>
-				<dat:cascadingConditions>
-					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-					<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-					<dat:jobAutoRetry>YES</dat:jobAutoRetry>
-				</dat:cascadingConditions>
-				<dat:stateInfos>
-					<state-types:LiveStateInfos>
-						<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
-							<state-types:StateName>PENDING</state-types:StateName>
-							<state-types:SubstateName>CREATED</state-types:SubstateName>
-						</state-types:LiveStateInfo>
-					</state-types:LiveStateInfos>
-				</dat:stateInfos>
-				<dat:advancedJobInfos>
-					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-				</dat:advancedJobInfos>
-				<dat:concurrencyManagement>
-					<com:instanceId>11</com:instanceId>
-					<com:concurrent>true</com:concurrent>
-				</dat:concurrencyManagement>
-				<dat:alarmPreference />
-				<dat:timeManagement>
-					<dat:jsPlannedTime>
-						<dat:startTime>
-							<com:time>08:00:00</com:time>
-						</dat:startTime>
-						<dat:stopTime>
-							<com:time>23:00:00</com:time>
-						</dat:stopTime>
-					</dat:jsPlannedTime>
-					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:jsTimeOut>
-					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:expectedTime>
-					<dat:tolerancePercentage>10</dat:tolerancePercentage>
-					<dat:minPercentage>10</dat:minPercentage>
-				</dat:timeManagement>
-			</dat:jobProperties>
-			<dat:jobProperties ID="11" agentId="0">
-				<jsdl:JobDescription />
-				<dat:baseJobInfos>
-					<com:jsName>SQL Query</com:jsName>
-					<com:comment>db isi</com:comment>
-					<dat:jobInfos>
-						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
-						<com:jobTypeDetails>
-							<com:jobCommandType>DB JOBS</com:jobCommandType>
-							<com:specialParameters>
-								<db:dbJobDefinition>
-									<db:dbConnectionProperties>
-										<db:dbPropertiesId>2</db:dbPropertiesId>
-										<db:dbUserId>1</db:dbUserId>
-									</db:dbConnectionProperties>
-									<db:dbJobType>Free SQL</db:dbJobType>
-									<db:freeSQLProperties>
-										<db:sqlSentence>select * from snpw1.hmeq_flagged
-										</db:sqlSentence>
-									</db:freeSQLProperties>
-								</db:dbJobDefinition>
-							</com:specialParameters>
-						</com:jobTypeDetails>
-					</dat:jobInfos>
-					<dat:calendarId>5</dat:calendarId>
-					<dat:jobLogFile>DBJob.log</dat:jobLogFile>
-					<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
-					</dat:jobLogPath>
-					<dat:oSystem>Windows</dat:oSystem>
-					<dat:jobPriority>1</dat:jobPriority>
-					<dat:jsIsActive>YES</dat:jsIsActive>
-					<com:userId>4</com:userId>
-				</dat:baseJobInfos>
-				<dat:cascadingConditions>
-					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-					<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-					<dat:jobAutoRetry>YES</dat:jobAutoRetry>
-				</dat:cascadingConditions>
-				<dat:stateInfos>
-					<state-types:LiveStateInfos>
-						<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
-							<state-types:StateName>PENDING</state-types:StateName>
-							<state-types:SubstateName>CREATED</state-types:SubstateName>
-						</state-types:LiveStateInfo>
-					</state-types:LiveStateInfos>
-				</dat:stateInfos>
-				<dat:advancedJobInfos>
-					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-				</dat:advancedJobInfos>
-				<dat:concurrencyManagement>
-					<com:instanceId>11</com:instanceId>
-					<com:concurrent>true</com:concurrent>
-				</dat:concurrencyManagement>
-				<dat:alarmPreference />
-				<dat:timeManagement>
-					<dat:jsPlannedTime>
-						<dat:startTime>
-							<com:time>08:00:00</com:time>
-						</dat:startTime>
-						<dat:stopTime>
-							<com:time>23:00:00</com:time>
-						</dat:stopTime>
-					</dat:jsPlannedTime>
-					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:jsTimeOut>
-					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
-						<com:unit>MINUTES</com:unit>
-					</dat:expectedTime>
-					<dat:tolerancePercentage>10</dat:tolerancePercentage>
-					<dat:minPercentage>10</dat:minPercentage>
-				</dat:timeManagement>
-			</dat:jobProperties>
-		</dat:jobList>
+		<dat:jobList/>
 		<dat:timeManagement>
 			<dat:jsPlannedTime>
 				<dat:startTime>
@@ -1441,6 +1290,395 @@
 		<dat:concurrencyManagement>
 			<com:concurrent>false</com:concurrent>
 		</dat:concurrencyManagement>
+		<dat:scenario ID="9">
+			<dat:baseScenarioInfos>
+				<com:jsName>Postgre SQL</com:jsName>
+				<com:comment>Database job templates</com:comment>
+				<dat:calendarId>1</dat:calendarId>
+				<dat:jsIsActive>YES</dat:jsIsActive>
+				<com:userId>1</com:userId>
+			</dat:baseScenarioInfos>
+			<dat:jobList>
+				<dat:jobProperties ID="9" agentId="0">
+					<jsdl:JobDescription />
+					<dat:baseJobInfos>
+						<com:jsName>Postgre SQL Script</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>5</db:dbPropertiesId>
+											<db:dbUserId>10</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Script</db:dbJobType>
+										<db:scriptProperties>
+											<db:sqlScriptFileName>posgreSQLScript.sql
+											</db:sqlScriptFileName>
+											<db:sqlScriptFilePath>D:\likya\tlos\connection\
+											</db:sqlScriptFilePath>
+										</db:scriptProperties>
+									</db:dbJobDefinition>
+								</com:specialParameters>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
+						</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>4</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:alarmPreference />
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>08:00:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>23:00:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
+				<dat:jobProperties ID="10" agentId="0">
+					<jsdl:JobDescription />
+					<dat:baseJobInfos>
+						<com:jsName>Store Procedure</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>1</db:dbPropertiesId>
+											<db:dbUserId>1</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Store-Procedure</db:dbJobType>
+										<db:storeProcedureProperties>
+											<db:sqlStoredProcedureSchemaName>public
+											</db:sqlStoredProcedureSchemaName>
+											<db:sqlStoredProcedurePackageName>test_p
+											</db:sqlStoredProcedurePackageName>
+											<db:sqlStoredProcedureName>test_m()
+											</db:sqlStoredProcedureName>
+										</db:storeProcedureProperties>
+									</db:dbJobDefinition>
+								</com:specialParameters>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
+						</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>4</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:alarmPreference />
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>08:00:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>23:00:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
+				<dat:jobProperties ID="11" agentId="0">
+					<jsdl:JobDescription />
+					<dat:baseJobInfos>
+						<com:jsName>SQL Query</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>2</db:dbPropertiesId>
+											<db:dbUserId>1</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Free SQL</db:dbJobType>
+										<db:freeSQLProperties>
+											<db:sqlSentence>select * from snpw1.hmeq_flagged
+											</db:sqlSentence>
+										</db:freeSQLProperties>
+									</db:dbJobDefinition>
+								</com:specialParameters>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
+						</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>4</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:alarmPreference />
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>08:00:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>23:00:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
+			</dat:jobList>
+			<dat:timeManagement>
+				<dat:jsPlannedTime>
+					<dat:startTime>
+						<com:time>08:00:00.000+03:00</com:time>
+					</dat:startTime>
+					<dat:stopTime>
+						<com:time>23:00:00.000+03:00</com:time>
+					</dat:stopTime>
+				</dat:jsPlannedTime>
+				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+				<dat:jsTimeOut>
+					<com:value_integer>3</com:value_integer>
+					<com:unit>HOURS</com:unit>
+				</dat:jsTimeOut>
+				<dat:expectedTime>
+					<com:value_integer>1</com:value_integer>
+					<com:unit>HOURS</com:unit>
+				</dat:expectedTime>
+				<dat:tolerancePercentage>1</dat:tolerancePercentage>
+				<dat:minPercentage>1</dat:minPercentage>
+			</dat:timeManagement>
+			<dat:advancedScenarioInfos>
+				<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+				<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+			</dat:advancedScenarioInfos>
+			<dat:concurrencyManagement>
+				<com:concurrent>false</com:concurrent>
+			</dat:concurrencyManagement>
+		</dat:scenario>
+		<dat:scenario ID="10">
+			<dat:baseScenarioInfos>
+				<com:jsName>ORACLE</com:jsName>
+				<com:comment>Database job templates</com:comment>
+				<dat:calendarId>1</dat:calendarId>
+				<dat:jsIsActive>YES</dat:jsIsActive>
+				<com:userId>1</com:userId>
+			</dat:baseScenarioInfos>
+			<dat:jobList>
+				<dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="19" agentId="0">
+		            <jsdl:JobDescription/>
+		            <dat:baseJobInfos>
+		                <com:jsName>SQL Query</com:jsName>
+		                <com:comment>db isi</com:comment>
+		                <dat:jobInfos>
+		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+		                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
+		                    <com:jobTypeDetails>
+		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
+		                        <com:specialParameters>
+		                            <dbJobDefinition>
+		                                <dbConnectionProperties>
+		                                    <dbPropertiesId>5</dbPropertiesId>
+		                                    <dbUserId>3</dbUserId>
+		                                </dbConnectionProperties>
+		                                <dbJobType>Free SQL</dbJobType>
+		                                <freeSQLProperties>
+		                                    <sqlSentence>select * from personel</sqlSentence>
+		                                </freeSQLProperties>
+		                            </dbJobDefinition>
+		                        </com:specialParameters>
+		                    </com:jobTypeDetails>
+		                </dat:jobInfos>
+		                <dat:calendarId>5</dat:calendarId>
+		                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
+		                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+		                <dat:oSystem>Windows</dat:oSystem>
+		                <dat:jobPriority>1</dat:jobPriority>
+		                <dat:jsIsActive>YES</dat:jsIsActive>
+		                <com:userId>1</com:userId>
+		            </dat:baseJobInfos>
+		            <dat:cascadingConditions>
+		                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+		                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+		                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
+		            </dat:cascadingConditions>
+		            <dat:stateInfos>
+		                <state-types:LiveStateInfos>
+		                    <state-types:LiveStateInfo LSIDateTime="2013-05-23T16:12:53.341+0300">
+		                        <state-types:StateName>PENDING</state-types:StateName>
+		                        <state-types:SubstateName>CREATED</state-types:SubstateName>
+		                    </state-types:LiveStateInfo>
+		                </state-types:LiveStateInfos>
+		            </dat:stateInfos>
+		            <dat:advancedJobInfos>
+		                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+		            </dat:advancedJobInfos>
+		            <dat:concurrencyManagement>
+		                <com:instanceId>11</com:instanceId>
+		                <com:concurrent>true</com:concurrent>
+		            </dat:concurrencyManagement>
+		            <dat:timeManagement>
+		                <dat:jsPlannedTime>
+		                    <dat:startTime>
+		                        <com:time>08:00:00.000+03:00</com:time>
+		                    </dat:startTime>
+		                    <dat:stopTime>
+		                        <com:time>23:00:00.000+03:00</com:time>
+		                    </dat:stopTime>
+		                </dat:jsPlannedTime>
+		                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+		                <dat:jsTimeOut>
+		                    <com:value_integer>1</com:value_integer>
+		                    <com:unit>MINUTES</com:unit>
+		                </dat:jsTimeOut>
+		                <dat:expectedTime>
+		                    <com:value_integer>100</com:value_integer>
+		                    <com:unit>MINUTES</com:unit>
+		                </dat:expectedTime>
+		                <dat:tolerancePercentage>10</dat:tolerancePercentage>
+		                <dat:minPercentage>10</dat:minPercentage>
+		            </dat:timeManagement>
+		        </dat:jobProperties>
+			</dat:jobList>
+			<dat:timeManagement>
+				<dat:jsPlannedTime>
+					<dat:startTime>
+						<com:time>08:00:00.000+03:00</com:time>
+					</dat:startTime>
+					<dat:stopTime>
+						<com:time>23:00:00.000+03:00</com:time>
+					</dat:stopTime>
+				</dat:jsPlannedTime>
+				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+				<dat:jsTimeOut>
+					<com:value_integer>3</com:value_integer>
+					<com:unit>HOURS</com:unit>
+				</dat:jsTimeOut>
+				<dat:expectedTime>
+					<com:value_integer>1</com:value_integer>
+					<com:unit>HOURS</com:unit>
+				</dat:expectedTime>
+				<dat:tolerancePercentage>1</dat:tolerancePercentage>
+				<dat:minPercentage>1</dat:minPercentage>
+			</dat:timeManagement>
+			<dat:advancedScenarioInfos>
+				<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+				<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+			</dat:advancedScenarioInfos>
+			<dat:concurrencyManagement>
+				<com:concurrent>false</com:concurrent>
+			</dat:concurrencyManagement>
+		</dat:scenario>
 	</dat:scenario>
 	<dat:scenario ID="8">
 		<dat:baseScenarioInfos>
