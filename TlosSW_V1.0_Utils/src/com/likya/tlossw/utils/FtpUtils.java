@@ -20,7 +20,7 @@ public class FtpUtils {
 	/**
 	 * Ftp kullanarak verilen dizindeki dosya ve klasorleri listeliyor
 	 * 
-	 * @param ftpClient	Ftp islemlerini yapmak i�in kullanilan ftp istemcisi
+	 * @param ftpClient	Ftp islemlerini yapmak icin kullanilan ftp istemcisi
 	 * @param directory	Dosya ve klasorleri listelenen dizin
 	 * @return listelenen dosya ve klasorler donuyor ya da null donuyor
 	 * @see org.apache.commons.net.ftp.FTPClient
