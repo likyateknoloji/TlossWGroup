@@ -114,7 +114,17 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void deleteWSAccessAction(ActionEvent e) {
+		wsAccessInfoTypeClient = (WSAccessInfoTypeClient) searchWSAccessTable.getRowData();
+		userAccessProfile = wsAccessInfoTypeClient.getWsAccessProfile();
 
+		if (getDbOperations().deleteWSAccessProfile(getWSAccessProfileXML())) {
+			searchWSAccessList.remove(wsAccessInfoTypeClient);
+			wsAccessInfoTypeClient = new WSAccessInfoTypeClient();
+
+			addMessage("searchWSAccessProfile", FacesMessage.SEVERITY_INFO, "tlos.success.wsAccessDef.delete", null);
+		} else {
+			addMessage("searchWSAccessProfile", FacesMessage.SEVERITY_ERROR, "tlos.error.wsAccessDefinition.delete", null);
+		}
 	}
 
 	public UserAccessProfile getUserAccessProfile() {
