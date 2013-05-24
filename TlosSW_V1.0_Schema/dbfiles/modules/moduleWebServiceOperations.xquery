@@ -4,6 +4,14 @@ declare namespace ws = "http://www.likyateknoloji.com/XML_web_service_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace usr = "http://www.likyateknoloji.com/XML_user_types";
 
+declare function wso:getWSAccessProfile($id as xs:integer) as element(ws:userAccessProfile)?
+ {
+	for $userProfile in doc("//db/TLOSSW/xmls/tlosSWWebServiceAccessProfiles10.xml")/ws:userAccessProfiles/ws:userAccessProfile
+    where $userProfile/@ID = $id
+    return  $userProfile
+
+};
+
 declare function wso:insertWSDefinition($wsDefinition as element(ws:webServiceDefinition))
 {	
 	update insert $wsDefinition into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWSJWebServices10.xml")/ws:webServiceList
