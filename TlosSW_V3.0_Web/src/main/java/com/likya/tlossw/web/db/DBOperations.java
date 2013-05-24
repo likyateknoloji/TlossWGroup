@@ -2905,6 +2905,103 @@ public class DBOperations implements Serializable {
 
 		return wsAccessInfoTypeClients;
 	}
+	
+	public boolean deleteWSAccessProfile(String userAccessProfileXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:deleteWSAccessProfile(" + userAccessProfileXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean insertWSAccessProfile(String userAccessProfileXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:insertWSAccessProfile(" + userAccessProfileXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public UserAccessProfile searchWSAccessByID(String id) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		UserAccessProfile userAccessProfile = null;
+
+		try {
+			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSAccessProfile(" + id + ")";
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					userAccessProfile = UserAccessProfileDocument.Factory.parse(xmlContent).getUserAccessProfile();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+
+			}
+
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return userAccessProfile;
+	}
+
+	public boolean updateWSAccessProfile(String userAccessProfileXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace wso=\"http://wso.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:updateWSAccessProfileLock(" + userAccessProfileXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
