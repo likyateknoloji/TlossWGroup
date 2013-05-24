@@ -1,5 +1,7 @@
 package com.likya.tlossw.test.jobs;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -21,14 +23,14 @@ public class TestOracleSQLScriptExecuter extends TestSuit {
 	public void startTest() {
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "OracleSQLScriptExecuter.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "OracleSQLScriptExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBOracleConnection.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "DBOracleConnection.xml");
 		DbProperties dbProperties = null;
 		dbProperties = getDbPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBOracleConnectionProfile.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "DBOracleConnectionProfile.xml");
 		DbConnectionProfile dbConnectionProfile = null;
 		dbConnectionProfile = getDbConnectionProfileFromFile(fileName);
 		
