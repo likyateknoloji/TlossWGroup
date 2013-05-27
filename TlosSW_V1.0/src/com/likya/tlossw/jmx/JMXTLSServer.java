@@ -69,8 +69,8 @@ public class JMXTLSServer {
 
 			logger.info("Created !");
 
-			String MBeanArray[] = { "LocalManager", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator" };
-			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6" };
+			String MBeanArray[] = { "LocalManager", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter" };
+			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7" };
 
 			for (int i = 0; i < MBeanArray.length; i++) {
 				ObjectName mbeanName = new ObjectName("MBeans:type=" + MBeanTypeArray[i]);
