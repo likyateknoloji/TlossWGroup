@@ -3061,6 +3061,127 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public boolean checkFTPConnectionName(String ftpAccessPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace fc=\"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:checkFTPConnectionName(" + ftpAccessPropertiesXML + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			if (result.getSize() > 0) {
+				return false;
+			}
+
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean insertFTPAccessConnection(String ftpAccessPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace fc=\"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:insertFTPConnection(" + ftpAccessPropertiesXML + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public int getNextFTPConnectionId() {
+		Collection collection = existConnectionHolder.getCollection();
+
+		int ftpConnectionId = -1;
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"ftpConnectionId\")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				ftpConnectionId = Integer.parseInt(r.getContent().toString());
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return ftpConnectionId;
+	}
+
+	public FtpProperties searchFTPConnectionById(int ftpConnectionId) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\"; import module namespace fc = \"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+			FtpProperties ftpProperties = null;
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
+
+					return ftpProperties;
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public boolean updateFTPAccessConnection(String ftpAccessPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace fc=\"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:updateFTPConnectionLock(" + ftpAccessPropertiesXML + ")";
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}

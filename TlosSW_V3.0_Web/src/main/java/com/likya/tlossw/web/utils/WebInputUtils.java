@@ -25,7 +25,9 @@ import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
+import com.likya.tlos.model.xmlbeans.ftpadapter.AuthenticationTypeDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileTypeDocument;
+import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
@@ -577,5 +579,35 @@ public class WebInputUtils {
 		}
 
 		return roleList;
+	}
+
+	public static Collection<SelectItem> fillSftpAuthenticationTypeList() {
+		String authenticationType = null;
+		Collection<SelectItem> sftpAuthenticationTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < AuthenticationTypeDocument.AuthenticationType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			authenticationType = AuthenticationTypeDocument.AuthenticationType.Enum.forInt(i + 1).toString();
+			item.setValue(authenticationType);
+			item.setLabel(authenticationType);
+			sftpAuthenticationTypeList.add(item);
+		}
+
+		return sftpAuthenticationTypeList;
+	}
+
+	public static Collection<SelectItem> fillSftpTransportProviderList() {
+		String transportProvider = null;
+		Collection<SelectItem> sftpTransportProviderList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < TransportProviderDocument.TransportProvider.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			transportProvider = TransportProviderDocument.TransportProvider.Enum.forInt(i + 1).toString();
+			item.setValue(transportProvider);
+			item.setLabel(transportProvider);
+			sftpTransportProviderList.add(item);
+		}
+
+		return sftpTransportProviderList;
 	}
 }
