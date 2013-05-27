@@ -143,7 +143,7 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 		return userAccessProfileXML;
 	}
 
-	public void updateDBAccessAction(ActionEvent e) {
+	public void updateWSAccessAction(ActionEvent e) {
 		fillUserAccessProperties();
 
 		if (getDbOperations().updateWSAccessProfile(getWSAccessProfileXML())) {
