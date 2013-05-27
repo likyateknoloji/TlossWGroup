@@ -2,9 +2,13 @@ package com.likya.tlossw.web.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
+import org.joda.time.DateTimeZone;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
@@ -15,6 +19,7 @@ import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
@@ -44,6 +49,46 @@ import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.Web
 
 public class WebInputUtils {
 
+
+	
+	public static Collection<SelectItem> fillTZList() {
+		Collection<SelectItem> tZList = null;
+		//Collection<SelectItem> tZList2 = null;
+		String day = null;
+		
+		Set<String> availId2 = DateTimeZone.getAvailableIDs();
+		tZList = new ArrayList<SelectItem>();
+		// checking available Ids
+
+	      Iterator<String> itr = availId2.iterator();
+	      
+	      while(itr.hasNext()) {
+	         Object element = itr.next();
+	         SelectItem item2 = new SelectItem();
+				day = element.toString();
+				item2.setValue(day);
+				item2.setLabel(day);
+				tZList.add(item2);
+	         //System.out.print(element + " ");
+	      }
+	      
+//		tZList = new ArrayList<SelectItem>();
+//		// getting available Ids
+//		String[] availId = TimeZone.getAvailableIDs();
+//
+//		// checking available Ids
+//		System.out.println("Available Ids are: ");
+//		for (int i = 0; i < availId.length; i++) {
+//			//System.out.println(availId[i]);
+//			SelectItem item = new SelectItem();
+//			day = availId[i];
+//			item.setValue(day);
+//			item.setLabel(day);
+//			tZList.add(item);
+//		}
+		return tZList;
+	}
+	
 	public static Collection<SelectItem> fillCalendarList(ArrayList<CalendarProperties> calendarList) {
 		Collection<SelectItem> jsCalendarList = new ArrayList<SelectItem>();
 
@@ -57,6 +102,34 @@ public class WebInputUtils {
 		return jsCalendarList;
 	}
 
+	public static Collection<SelectItem> fillTypesOfTimeList() {
+		String tot = null;
+
+		Collection<SelectItem> typeOfTimeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < TypeOfTime.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			tot = TypeOfTime.Enum.table.forInt(i + 1).toString();
+			item.setValue(tot);
+			item.setLabel(tot);
+			typeOfTimeList.add(item);
+		}
+		return typeOfTimeList;
+	}
+	
+	public static Collection<SelectItem> fillCalendarList(ArrayList<CalendarProperties> calendarList) {
+		Collection<SelectItem> jsCalendarList = new ArrayList<SelectItem>();
+
+		for (CalendarProperties calendar : calendarList) {
+			SelectItem item = new SelectItem();
+			item.setValue(calendar.getId() + "");
+			item.setLabel(calendar.getCalendarName());
+			jsCalendarList.add(item);
+		}
+
+		return jsCalendarList;
+	}
+	
 	public static Collection<SelectItem> fillAlarmList(ArrayList<Alarm> alarmList) {
 		Collection<SelectItem> jsAlarmList = new ArrayList<SelectItem>();
 
@@ -550,64 +623,5 @@ public class WebInputUtils {
 		}
 
 		return sourceTypeList;
-	}
-
-	public static Collection<SelectItem> fillUserList(ArrayList<Person> dbUserList) {
-		Collection<SelectItem> userList = new ArrayList<SelectItem>();
-
-		for (Person person : dbUserList) {
-			SelectItem item = new SelectItem();
-			item.setValue(person.getId() + "");
-			item.setLabel(person.getUserName());
-			userList.add(item);
-		}
-
-		return userList;
-	}
-
-	public static Collection<SelectItem> fillRoleList() {
-		String roleValue = null;
-		Collection<SelectItem> roleList = new ArrayList<SelectItem>();
-		SelectItem item = new SelectItem();
-
-		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
-			item = new SelectItem();
-			roleValue = Role.Enum.forInt(i + 1).toString();
-			item.setValue(roleValue);
-			item.setLabel(roleValue);
-			roleList.add(item);
-		}
-
-		return roleList;
-	}
-
-	public static Collection<SelectItem> fillSftpAuthenticationTypeList() {
-		String authenticationType = null;
-		Collection<SelectItem> sftpAuthenticationTypeList = new ArrayList<SelectItem>();
-
-		for (int i = 0; i < AuthenticationTypeDocument.AuthenticationType.Enum.table.lastInt(); i++) {
-			SelectItem item = new SelectItem();
-			authenticationType = AuthenticationTypeDocument.AuthenticationType.Enum.forInt(i + 1).toString();
-			item.setValue(authenticationType);
-			item.setLabel(authenticationType);
-			sftpAuthenticationTypeList.add(item);
-		}
-
-		return sftpAuthenticationTypeList;
-	}
-
-	public static Collection<SelectItem> fillSftpTransportProviderList() {
-		String transportProvider = null;
-		Collection<SelectItem> sftpTransportProviderList = new ArrayList<SelectItem>();
-
-		for (int i = 0; i < TransportProviderDocument.TransportProvider.Enum.table.lastInt(); i++) {
-			SelectItem item = new SelectItem();
-			transportProvider = TransportProviderDocument.TransportProvider.Enum.forInt(i + 1).toString();
-			item.setValue(transportProvider);
-			item.setLabel(transportProvider);
-			sftpTransportProviderList.add(item);
-		}
-
-		return sftpTransportProviderList;
 	}
 }
