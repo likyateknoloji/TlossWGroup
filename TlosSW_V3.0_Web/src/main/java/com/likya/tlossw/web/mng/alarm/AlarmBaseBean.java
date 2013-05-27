@@ -49,6 +49,11 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	private String alarmName;
 	private Collection<SelectItem> alarmNameList = null;
 
+	private String selectedTZone;
+	
+	private Collection<SelectItem> typeOfTimeList;
+	private String selectedTypeOfTime;
+	
 	private Alarm alarm;
 	private Date startDate;
 	private Date endDate;
@@ -662,6 +667,30 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	public void setSubscriptionTypeList(Collection<SelectItem> subscriptionTypeList) {
 		this.subscriptionTypeList = subscriptionTypeList;
+	}
+
+	public String getSelectedTZone() {
+		return selectedTZone;
+	}
+
+	public void setSelectedTZone(String selectedTZone) {
+		this.selectedTZone = selectedTZone;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public String getSelectedTypeOfTime() {
+		return selectedTypeOfTime;
+	}
+
+	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
+		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 
 }
