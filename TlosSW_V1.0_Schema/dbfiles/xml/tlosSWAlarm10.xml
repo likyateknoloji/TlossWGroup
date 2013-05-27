@@ -1,75 +1,157 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <alm:alarmManagement xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAlarm_v_1_0.xsd">
-    <alarm xmlns="http://www.likyateknoloji.com/XML_alarm_types" ID="134">
-        <alm:name>alarm37</alm:name>
-        <alm:desc>Alarm Kaw</alm:desc>
-        <alm:alarmType>Job</alm:alarmType>
-        <alm:subscriptionType>User</alm:subscriptionType>
-        <alm:creationDate>2012-12-24T16:18:46.890+02:00</alm:creationDate>
-        <alm:startDate>2012-12-01T16:18:46.890+02:00</alm:startDate>
-        <alm:endDate>2012-12-25T16:18:46.891+02:00</alm:endDate>
-        <alm:level>2</alm:level>
+    <alm:alarm ID="1">
+        <alm:name>Failed alarmi</alm:name>
+        <alm:desc>Failed alarmi uret</alm:desc>
+		<alm:alarmType>Job</alm:alarmType>
+		<alm:subscriptionType>User</alm:subscriptionType>
+        <alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
+        <alm:startDate>2011-05-30T09:30:10+02:00</alm:startDate>
+        <alm:endDate>2012-05-30T09:30:10+02:00</alm:endDate>
+        <alm:level>3</alm:level>
         <alm:subscriber>
-            <person id="4"/>
-            <alarmChannelTypes>
-                <warnBy id="1"/>
-                <warnBy id="2"/>
-            </alarmChannelTypes>
+            <alm:person id="4"/>
+            <alm:alarmChannelTypes>
+                <alm:warnBy id="1"/>
+                <alm:warnBy id="2"/>
+            </alm:alarmChannelTypes>
         </alm:subscriber>
         <alm:focus>
-            <jobs>
-                <job id="2" depth="26"/>
-                <job id="7" depth="26"/>
-            </jobs>
+            <alm:jobs>
+                <alm:job id="0" depth="1"/>
+                <alm:job id="1" depth="7"/>
+                <alm:job id="3" depth="30"/>
+                <alm:job id="5" depth="365"/>
+                <alm:job id="11" depth="365"/>
+            </alm:jobs>
         </alm:focus>
         <alm:caseManagement>
-            <stateManagement>
-                <state-types:LiveStateInfo LSIDateTime="2012-12-24T16:18:46.891+0200">
-                    <state-types:StateName>PENDING</state-types:StateName>
-                    <state-types:SubstateName>CREATED</state-types:SubstateName>
-                    <state-types:StatusName>SUCCESS</state-types:StatusName>
+            <alm:stateManagement>
+                <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
+                    <state-types:StateName>FINISHED</state-types:StateName>
+                    <state-types:SubstateName>COMPLETED</state-types:SubstateName>
+                    <state-types:StatusName>FAILED</state-types:StatusName>
                 </state-types:LiveStateInfo>
-            </stateManagement>
-            <timeManagement>
-                <timeOutControl>false</timeOutControl>
-                <tolerancePercentage>false</tolerancePercentage>
-                <minPercentage>true</minPercentage>
-            </timeManagement>
+            </alm:stateManagement>
         </alm:caseManagement>
-    </alarm>
-    <alarm xmlns="http://www.likyateknoloji.com/XML_alarm_types" ID="136">
-        <alm:name>Alarm9</alm:name>
-        <alm:desc>Alarm99</alm:desc>
-        <alm:alarmType>Job</alm:alarmType>
-        <alm:subscriptionType>User</alm:subscriptionType>
-        <alm:creationDate>2012-12-24T16:24:26.666+02:00</alm:creationDate>
-        <alm:startDate>2012-12-02T16:24:26.666+02:00</alm:startDate>
-        <alm:endDate>2012-12-25T16:24:26.666+02:00</alm:endDate>
+    </alm:alarm>
+    <alm:alarm ID="2">
+        <alm:name>Sure asimi alarmi</alm:name>
+        <alm:desc>Sure asimi alarmi uret</alm:desc>
+		<alm:alarmType>Job</alm:alarmType>
+		<alm:subscriptionType>User</alm:subscriptionType>
+        <alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
+        <alm:startDate>2011-05-30T09:30:10+02:00</alm:startDate>
+        <alm:endDate>2012-05-30T09:30:10+02:00</alm:endDate>
         <alm:level>1</alm:level>
         <alm:subscriber>
-            <person id="1"/>
-            <alarmChannelTypes>
-                <warnBy id="1"/>
-            </alarmChannelTypes>
+            <com:role>ADMIN</com:role>
+            <alm:alarmChannelTypes>
+                <alm:warnBy id="1"/>
+            </alm:alarmChannelTypes>
         </alm:subscriber>
         <alm:focus>
-            <jobs>
-                <job id="2" depth="32"/>
-            </jobs>
+            <alm:jobs>
+                <alm:job id="0" depth="1"/>
+                <alm:job id="1" depth="7"/>
+                <alm:job id="3" depth="30"/>
+                <alm:job id="5" depth="365"/>
+            </alm:jobs>
         </alm:focus>
         <alm:caseManagement>
-            <stateManagement>
-                <state-types:LiveStateInfo LSIDateTime="2012-12-24T16:24:26.667+0200">
+            <alm:timeManagement>
+                <alm:timeOutControl>true</alm:timeOutControl>
+                <alm:tolerancePercentage>true</alm:tolerancePercentage>
+                <alm:minPercentage>true</alm:minPercentage>
+            </alm:timeManagement>
+        </alm:caseManagement>
+    </alm:alarm>
+    <alm:alarm ID="5">
+        <alm:name>Genel alarm</alm:name>
+        <alm:desc>Joblarin her birisinin calismasi sirasinda uyulacak genel Alarm</alm:desc>
+		<alm:alarmType>Job</alm:alarmType>
+		<alm:subscriptionType>User</alm:subscriptionType>
+        <alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
+        <alm:startDate>2011-05-30T09:30:10+02:00</alm:startDate>
+        <alm:endDate>2012-05-30T09:30:10+02:00</alm:endDate>
+        <alm:level>1</alm:level>
+        <alm:subscriber>
+            <alm:person id="3"/>
+            <alm:alarmChannelTypes>
+                <alm:warnBy id="1"/>
+            </alm:alarmChannelTypes>
+        </alm:subscriber>
+        <alm:focus>
+            <alm:jobs>
+                <alm:job id="0" depth="1"/>
+                <alm:job id="1" depth="7"/>
+                <alm:job id="3" depth="30"/>
+                <alm:job id="5" depth="365"/>
+            </alm:jobs>
+            <alm:scenarios>
+                <alm:scenario id="1" depth="1"/>
+                <alm:scenario id="6" depth="7"/>
+            </alm:scenarios>
+        </alm:focus>
+        <alm:caseManagement>
+            <alm:systemManagement>
+                <sla:Hardware entry-name="hakan-laptop">
+                    <sla:mem sla:birim="G" sla:for="free" sla:condition="gt">2</sla:mem>
+                    <sla:cpu sla:birim="%" sla:timein="1" sla:condition="lt">80</sla:cpu>
+                    <sla:disk sla:birim="G" sla:for="free" sla:condition="gt">2</sla:disk>
+                </sla:Hardware>
+            </alm:systemManagement>
+            <alm:stateManagement>
+                <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
+                    <state-types:StateName>RUNNING</state-types:StateName>
+                    <state-types:SubstateName>ON-RESOURCE</state-types:SubstateName>
+                    <state-types:StatusName>TIME-IN</state-types:StatusName>
+                </state-types:LiveStateInfo>
+                <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
                     <state-types:StateName>PENDING</state-types:StateName>
-                    <state-types:SubstateName>CREATED</state-types:SubstateName>
+                    <state-types:SubstateName>READY</state-types:SubstateName>
+                    <state-types:StatusName>LOOKFOR-RESOURCE</state-types:StatusName>
+                </state-types:LiveStateInfo>
+            </alm:stateManagement>
+            <alm:SLAManagement>NO</alm:SLAManagement>
+            <alm:timeManagement>
+                <alm:timeOutControl>true</alm:timeOutControl>
+                <alm:tolerancePercentage>true</alm:tolerancePercentage>
+                <alm:minPercentage>true</alm:minPercentage>
+            </alm:timeManagement>
+        </alm:caseManagement>
+    </alm:alarm>
+    <alm:alarm xmlns="http://www.likyateknoloji.com/XML_alarm_types" ID="116">
+        <alm:name>Is bitti alarmi</alm:name>
+        <alm:desc>Isler bitince alarm uret.</alm:desc>
+		<alm:alarmType>Job</alm:alarmType>
+		<alm:subscriptionType>User</alm:subscriptionType>
+        <alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
+        <alm:startDate>2011-05-30T09:30:10+02:00</alm:startDate>
+        <alm:endDate>2012-11-30T09:30:10+02:00</alm:endDate>
+        <alm:level>3</alm:level>
+        <alm:subscriber>
+            <com:role>ADMIN</com:role>
+            <alm:alarmChannelTypes>
+                <alm:warnBy id="1"/>
+            </alm:alarmChannelTypes>
+        </alm:subscriber>
+        <alm:focus>
+            <alm:jobs>
+                <alm:job id="0" depth="1"/>
+                <alm:job id="1" depth="7"/>
+                <alm:job id="3" depth="30"/>
+                <alm:job id="5" depth="365"/>
+            </alm:jobs>
+        </alm:focus>
+        <alm:caseManagement>
+            <alm:stateManagement>
+                <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
+                    <state-types:StateName>FINISHED</state-types:StateName>
+                    <state-types:SubstateName>COMPLETED</state-types:SubstateName>
                     <state-types:StatusName>SUCCESS</state-types:StatusName>
                 </state-types:LiveStateInfo>
-            </stateManagement>
-            <timeManagement>
-                <timeOutControl>false</timeOutControl>
-                <tolerancePercentage>false</tolerancePercentage>
-                <minPercentage>true</minPercentage>
-            </timeManagement>
+            </alm:stateManagement>
         </alm:caseManagement>
-    </alarm>
+    </alm:alarm>
 </alm:alarmManagement>
