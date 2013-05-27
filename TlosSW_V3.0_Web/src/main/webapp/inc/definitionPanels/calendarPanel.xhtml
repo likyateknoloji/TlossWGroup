@@ -177,13 +177,20 @@
 							mask="99:99:99" required="true"
 							requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
 
-						<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
-						<p:spinner id="gmt" value="#{calendarPanelMBean.gmt}" min="-12"
-							max="13" />
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
+						<p:selectOneMenu
+							value="#{calendarPanelMBean.selectedTZone}" filter="true" filterMatchMode="startsWith" >
+							<f:selectItems value="#{calendarPanelMBean.tZList}" />
+						</p:selectOneMenu>
 
-						<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
-						<p:selectBooleanCheckbox value="#{calendarPanelMBean.dst}">
-						</p:selectBooleanCheckbox>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
+						<p:selectOneMenu
+							value="#{calendarPanelMBean.selectedTypeOfTime}" filter="true" filterMatchMode="startsWith" >
+							<f:selectItems value="#{calendarPanelMBean.typeOfTimeList}" />
+						</p:selectOneMenu>
+						
 					</p:panelGrid>
 				</p:panel>
 
