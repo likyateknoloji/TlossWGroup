@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -18,6 +19,8 @@ import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalTime;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPeriodDocument.CalendarPeriod;
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
@@ -32,10 +35,13 @@ import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
 import com.likya.tlos.model.xmlbeans.calendar.WhichOnesDocument.WhichOnes;
 import com.likya.tlos.model.xmlbeans.common.DayDefDocument.DayDef;
 import com.likya.tlos.model.xmlbeans.common.DaySpecialDocument.DaySpecial;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime.Enum;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "calendarPanelMBean")
 @ViewScoped
@@ -68,6 +74,12 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	private List<SelectItem> specificDayList;
 	private String[] selectedSpecificDayList;
 
+	private Collection<SelectItem> tZList;
+	private String selectedTZone;
+
+	private Collection<SelectItem> typeOfTimeList = null;
+	private String selectedTypeOfTime;
+
 	private Date exceptionDate;
 
 	private List<SelectItem> exceptionDayList;
@@ -78,9 +90,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private String validFromTime;
 	private String validToTime;
-
-	private int gmt;
-	private boolean dst;
 
 	private boolean insertButton;
 
@@ -188,9 +197,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		selectedExceptionDayList = null;
 		exceptionDayList = new ArrayList<SelectItem>();
 
-		gmt = 2;
-		dst = false;
-
+		setSelectedTZone(new String("Europe/Istanbul"));
+		selectedTypeOfTime = new String("Actual");
 		resetCalendar();
 	}
 
@@ -205,6 +213,9 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		CalendarPeriod calendarPeriod = CalendarPeriod.Factory.newInstance();
 		calendar.setCalendarPeriod(calendarPeriod);
+
+		tZList = WebInputUtils.fillTZList();
+		typeOfTimeList = WebInputUtils.fillTypesOfTimeList();
 	}
 
 	private void fillPanelFromCalendar() {
@@ -222,19 +233,27 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		// validToTime =
 		// DefinitionUtils.dateToStringTime(calendar.getValidTo().getTime().getTime());
 
-		Calendar validFromTimeCal = calendar.getValidFrom().getTime();
-		Calendar validToTimeCal = calendar.getValidTo().getTime();
+//		Calendar validFromTimeCal = calendar.getValidFrom().getTime();
+//		Calendar validToTimeCal = calendar.getValidTo().getTime();
+		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+        LocalTime validFromTimeLT = new LocalTime(calendar.getValidFrom().getTime());
+        LocalTime validToTimeLT = new LocalTime(calendar.getValidTo().getTime());
 
-		validFromTime = DefinitionUtils.calendarToStringTimeFormat(validFromTimeCal);
-		validToTime = DefinitionUtils.calendarToStringTimeFormat(validToTimeCal);
-		gmt = DefinitionUtils.calendarToGMT(validToTimeCal);
-
-		if (DefinitionUtils.calendarToDST(validToTimeCal) == 1) {
-			dst = true;
-		}
+		validFromTime = validFromTimeLT.toString();
+		validToTime = validToTimeLT.toString();
+		
+//		String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+//		String timeOutputFormat = new String("HH:mm:ss");
+//		validFromTime = DefinitionUtils.calendarToStringTimeFormat(validFromTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
+//		validToTime = DefinitionUtils.calendarToStringTimeFormat(validToTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
 
 		daySpecial = calendar.getCalendarPeriod().getDaySpecial().toString();
 		dayDef = calendar.getCalendarPeriod().getDayDef().toString();
+		selectedTZone = calendar.getTimeZone();
+		if (calendar.getTypeOfTime() != null)
+			selectedTypeOfTime = calendar.getTypeOfTime().toString();
+		else
+			selectedTypeOfTime = new String("Broadcast");
 		howManyTimes = calendar.getHowmanyTimes();
 
 		insertButton = false;
@@ -257,7 +276,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		if (calendar.getSpecificDays() != null) {
 
 			for (int i = 0; i < calendar.getSpecificDays().getDateArray().length; i++) {
-				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime());
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime(), selectedTZone); //example 01.07.2009
 				specificDayList.add(new SelectItem(dateStr, dateStr));
 			}
 		}
@@ -268,7 +287,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		if (calendar.getExceptionDays() != null) {
 
 			for (int i = 0; i < calendar.getExceptionDays().getDateArray().length; i++) {
-				String dateStr = DefinitionUtils.dateToStringDate(calendar.getExceptionDays().getDateArray(i).getTime());
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getExceptionDays().getDateArray(i).getTime(), selectedTZone);
 				exceptionDayList.add(new SelectItem(dateStr, dateStr));
 			}
 		}
@@ -332,6 +351,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private void fillCalendarProperties() {
 		int id = -1;
+
 		if (calendar.getId() > 0) {
 			id = calendar.getId();
 		}
@@ -366,10 +386,20 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			calendar.setExceptionDays(exceptionDays);
 		}
 
-		calendar.getValidFrom().setTime(DefinitionUtils.dateToXmlTime(validFromTime, gmt, dst));
-		calendar.getValidFrom().setDate(DefinitionUtils.dateToXmlDateWithoutZone(validFrom));
-		calendar.getValidTo().setTime(DefinitionUtils.dateToXmlTime(validToTime, gmt, dst));
-		calendar.getValidTo().setDate(DefinitionUtils.dateToXmlDateWithoutZone(validTo));
+		Calendar dateToXmlTimeValue = DefinitionUtils.dateToXmlTime(validFrom, validFromTime, selectedTZone);
+		Calendar dateToXmlDateWithoutZoneValue = DefinitionUtils.dateToXmlDateWithoutZone(validFrom);
+		Calendar dateToXmlTimeValue2 = DefinitionUtils.dateToXmlTime(validTo, validToTime, selectedTZone);
+		Calendar dateToXmlDateWithoutZoneValue2 = DefinitionUtils.dateToXmlDateWithoutZone(validTo);
+
+		calendar.getValidFrom().setTime(dateToXmlTimeValue);
+		calendar.getValidFrom().setDate(dateToXmlTimeValue);
+		calendar.getValidTo().setTime(dateToXmlTimeValue2);
+		calendar.getValidTo().setDate(dateToXmlTimeValue2);
+
+		Calendar calendarNow = Calendar.getInstance();
+		calendar.setCreationDateTime(calendarNow);
+		calendar.setTimeZone(selectedTZone);
+		calendar.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
 
 		if (selectedWhichOnesList.length > 0) {
 			WhichOnes whichOnes = WhichOnes.Factory.newInstance();
@@ -400,14 +430,14 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			return;
 		}
 
-		String date = DefinitionUtils.dateToStringDate(specificDate);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
 		specificDayList.add(new SelectItem(date, date));
 
 		specificDate = null;
 	}
 
 	private boolean specificDateCheck() {
-		String date = DefinitionUtils.dateToStringDate(specificDate);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
 
 		for (int j = 0; j < specificDayList.size(); j++) {
 			if (specificDayList.get(j).getValue().equals(date)) {
@@ -419,7 +449,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public boolean exceptionDayListCheckForSpecificDate() {
-		String date = DefinitionUtils.dateToStringDate(specificDate);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
 
 		for (int j = 0; j < exceptionDayList.size(); j++) {
 			if (exceptionDayList.get(j).getValue().equals(date)) {
@@ -454,15 +484,14 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.info.calendar.specificDay.duplicate", null);
 			return;
 		}
-
-		String date = DefinitionUtils.dateToStringDate(exceptionDate);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
 		exceptionDayList.add(new SelectItem(date, date));
 
 		exceptionDate = null;
 	}
 
 	private boolean exceptionDateCheck() {
-		String date = DefinitionUtils.dateToStringDate(exceptionDate);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
 
 		for (int j = 0; j < exceptionDayList.size(); j++) {
 			if (exceptionDayList.get(j).getValue().equals(date)) {
@@ -474,7 +503,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private boolean specificDayListCheckForExceptionDate() {
-		String date = DefinitionUtils.dateToStringDate(exceptionDate);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
 
 		for (int j = 0; j < specificDayList.size(); j++) {
 			if (specificDayList.get(j).getValue().equals(date)) {
@@ -672,27 +701,43 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.howManyTimes = howManyTimes;
 	}
 
-	public int getGmt() {
-		return gmt;
-	}
-
-	public void setGmt(int gmt) {
-		this.gmt = gmt;
-	}
-
-	public boolean isDst() {
-		return dst;
-	}
-
-	public void setDst(boolean dst) {
-		this.dst = dst;
-	}
-
 	public String getCalendarName() {
 		return calendarName;
 	}
 
 	public void setCalendarName(String calendarName) {
 		this.calendarName = calendarName;
+	}
+
+	public String getSelectedTZone() {
+		return selectedTZone;
+	}
+
+	public void setSelectedTZone(String selectedTZone) {
+		this.selectedTZone = selectedTZone;
+	}
+
+	public Collection<SelectItem> gettZList() {
+		return tZList;
+	}
+
+	public void settZList(Collection<SelectItem> tZList) {
+		this.tZList = tZList;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public String getSelectedTypeOfTime() {
+		return selectedTypeOfTime;
+	}
+
+	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
+		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 }
