@@ -124,6 +124,7 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Access", "/inc/managementPanels/dbAccessSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Analysis", "/inc/managementPanels/webServiceWizardPanel.jsf"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Access", "/inc/managementPanels/wsAccessSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "FTP Access", "/inc/managementPanels/ftpAccessSearchPanel.jsf"));
 
 			menuitems.add(new MenuItems("Preferences", "ui-icon-document", "Theme", "#"));
 
