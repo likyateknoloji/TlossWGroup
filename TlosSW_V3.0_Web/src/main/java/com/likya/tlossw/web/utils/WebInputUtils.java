@@ -89,19 +89,6 @@ public class WebInputUtils {
 		return tZList;
 	}
 	
-	public static Collection<SelectItem> fillCalendarList(ArrayList<CalendarProperties> calendarList) {
-		Collection<SelectItem> jsCalendarList = new ArrayList<SelectItem>();
-
-		for (CalendarProperties calendar : calendarList) {
-			SelectItem item = new SelectItem();
-			item.setValue(calendar.getId() + "");
-			item.setLabel(calendar.getCalendarName());
-			jsCalendarList.add(item);
-		}
-
-		return jsCalendarList;
-	}
-
 	public static Collection<SelectItem> fillTypesOfTimeList() {
 		String tot = null;
 
@@ -623,5 +610,64 @@ public class WebInputUtils {
 		}
 
 		return sourceTypeList;
+	}
+
+	public static Collection<SelectItem> fillUserList(ArrayList<Person> dbUserList) {
+		Collection<SelectItem> userList = new ArrayList<SelectItem>();
+
+		for (Person person : dbUserList) {
+			SelectItem item = new SelectItem();
+			item.setValue(person.getId() + "");
+			item.setLabel(person.getUserName());
+			userList.add(item);
+		}
+
+		return userList;
+	}
+
+	public static Collection<SelectItem> fillRoleList() {
+		String roleValue = null;
+		Collection<SelectItem> roleList = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem();
+
+		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
+			item = new SelectItem();
+			roleValue = Role.Enum.forInt(i + 1).toString();
+			item.setValue(roleValue);
+			item.setLabel(roleValue);
+			roleList.add(item);
+		}
+
+		return roleList;
+	}
+
+	public static Collection<SelectItem> fillSftpAuthenticationTypeList() {
+		String authenticationType = null;
+		Collection<SelectItem> sftpAuthenticationTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < AuthenticationTypeDocument.AuthenticationType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			authenticationType = AuthenticationTypeDocument.AuthenticationType.Enum.forInt(i + 1).toString();
+			item.setValue(authenticationType);
+			item.setLabel(authenticationType);
+			sftpAuthenticationTypeList.add(item);
+		}
+
+		return sftpAuthenticationTypeList;
+	}
+
+	public static Collection<SelectItem> fillSftpTransportProviderList() {
+		String transportProvider = null;
+		Collection<SelectItem> sftpTransportProviderList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < TransportProviderDocument.TransportProvider.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			transportProvider = TransportProviderDocument.TransportProvider.Enum.forInt(i + 1).toString();
+			item.setValue(transportProvider);
+			item.setLabel(transportProvider);
+			sftpTransportProviderList.add(item);
+		}
+
+		return sftpTransportProviderList;
 	}
 }
