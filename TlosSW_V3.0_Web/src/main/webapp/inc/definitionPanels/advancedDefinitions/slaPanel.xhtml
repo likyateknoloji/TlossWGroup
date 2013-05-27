@@ -99,6 +99,19 @@
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
 
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
+					<p:selectOneMenu value="#{slaPanelMBean.selectedTZone}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{slaPanelMBean.tZList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
+					<p:selectOneMenu value="#{slaPanelMBean.selectedTypeOfTime}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{slaPanelMBean.typeOfTimeList}" />
+					</p:selectOneMenu>
+
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.newSla.maxTimeInQueue']}" />
 					<p:panelGrid columns="1">
@@ -221,8 +234,7 @@
 				<p:panel
 					header="#{msgs['tlos.management.pannel.newSla.hardwareReq']}">
 
-					<p:panelGrid id="resourceBasedDef" 
-						columns="4">
+					<p:panelGrid id="resourceBasedDef" columns="4">
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
 						<p:selectBooleanCheckbox value="#{slaPanelMBean.resourceBasedDef}">
@@ -307,7 +319,7 @@
 						<p:panelGrid id="memPanel" columns="2">
 							<h:outputText
 								value="#{msgs['tlos.management.pannel.newSla.memory']}" />
-							<p:panelGrid columns="1" 
+							<p:panelGrid columns="1"
 								rendered="#{slaPanelMBean.memoryUnit eq '%'}">
 								<p:inputText id="memValue" value="#{slaPanelMBean.memoryValue}"
 									immediate="true">
@@ -357,7 +369,7 @@
 						<p:panelGrid id="diskPanel" columns="2">
 							<h:outputText
 								value="#{msgs['tlos.management.pannel.newSla.disk']}" />
-							<p:panelGrid columns="1" 
+							<p:panelGrid columns="1"
 								rendered="#{slaPanelMBean.diskUnit eq '%'}">
 								<p:inputText id="diskValue" value="#{slaPanelMBean.diskValue}" />
 								<p:slider for="diskValue" />
