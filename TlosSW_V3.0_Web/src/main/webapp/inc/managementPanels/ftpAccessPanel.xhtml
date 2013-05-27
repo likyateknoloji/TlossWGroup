@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - FTP Access Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Administration" />
+		<ui:param name="title3" value="FTP Access" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/managementPanels/ftpAccessPanel.xhtml" />
+		<ui:param name="title4link" value="Tlos SW Workload Automation Software v1.0 - FTP Access Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="newFTPAccess">
+
+			<p:fieldset legend="#{msgs['tlos.management.pannel.ftpAccess.definition']}" widgetVar="regWidget">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:panelGrid columns="4">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.adapterType']}" />
+					<p:selectOneMenu style="text-align: center;" value="#{ftpAccessPanelMBean.adapterType}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItems value="#{ftpAccessPanelMBean.adapterTypeList}" />
+						<p:ajax update="newFTPAccess"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.dbAccess.active']}" />
+					<p:selectOneMenu id="active" style="text-align: center;" value="#{ftpAccessPanelMBean.active}">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{msgs['tlos.button.yes']}" itemValue="yes" />
+						<f:selectItem itemLabel="#{msgs['tlos.button.no']}" itemValue="no" />
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs['tlos.management.pannel.ftpAccess.connName']}" />
+					<p:inputText value="#{ftpAccessPanelMBean.ftpProperties.connection.connName}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ftpIpAddress']}" />
+					<p:inputText value="#{ftpAccessPanelMBean.ftpProperties.connection.ipAddress}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ftpPortNumber']}" />
+					<p:inputText value="#{ftpAccessPanelMBean.ftpPortNumber}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ftpUserName']}" />
+					<p:inputText value="#{ftpAccessPanelMBean.ftpProperties.connection.userName}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ftpUserPassword']}" />
+					<p:password id="ftpPassword" value="#{ftpAccessPanelMBean.ftpProperties.connection.userPassword}" label="#{msgs['tlos.workspace.pannel.job.ftpUserPassword']}" feedback="false" required="true"
+						redisplay="true" match="repeatFtpPassword" requiredMessage="#{msgs['tlos.validation.db.password']}">
+					</p:password>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.confirmUserPassword']}" />
+					<p:password id="repeatFtpPassword" value="#{ftpAccessPanelMBean.confirmUserPassword}" label="#{msgs['tlos.workspace.pannel.job.confirmUserPassword']}" feedback="false" required="true"
+						redisplay="true" requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}">
+					</p:password>
+				</p:panelGrid>
+
+				<br></br>
+
+				<p:panel id="sftpPanel" header="#{msgs['tlos.workspace.pannel.job.sftpProperties']}" rendered="#{ftpAccessPanelMBean.adapterType eq 'SFTP PROCESS'}">
+
+					<p:panelGrid columns="4">
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.sftpAuthenticationType']}" />
+						<p:selectOneMenu value="#{ftpAccessPanelMBean.sftpAuthenticationType}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{ftpAccessPanelMBean.sftpAuthenticationTypeList}" />
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.sftpTransportProvider']}" />
+						<p:selectOneMenu value="#{ftpAccessPanelMBean.sftpTransportProvider}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItems value="#{ftpAccessPanelMBean.sftpTransportProviderList}" />
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.sftpUseProxy']}" />
+						<p:selectOneMenu value="#{ftpAccessPanelMBean.sftpUseProxy}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.true']}" itemValue="true" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.false']}" itemValue="false" />
+							<p:ajax update="sftpPanel"></p:ajax>
+						</p:selectOneMenu>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.proxyUserName']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+						<p:inputText value="#{ftpAccessPanelMBean.proxyUserName}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.proxyPassword']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+						<p:password id="proxyPassword" value="#{ftpAccessPanelMBean.proxyPassword}" label="#{msgs['tlos.workspace.pannel.job.proxyPassword']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}"
+							feedback="false" required="true" redisplay="true" match="repeatProxyPassword">
+						</p:password>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.confirmProxyPassword']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+						<p:password id="repeatProxyPassword" value="#{ftpAccessPanelMBean.confirmProxyPassword}" label="#{msgs['tlos.workspace.pannel.job.confirmProxyPassword']}"
+							rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" feedback="false" required="true" redisplay="true">
+						</p:password>
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.proxyIpAddress']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+						<p:inputText value="#{ftpAccessPanelMBean.proxyIpAddress}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.proxyPortNumber']}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+						<p:inputText value="#{ftpAccessPanelMBean.proxyPortNumber}" rendered="#{ftpAccessPanelMBean.sftpUseProxy eq 'true'}" />
+
+					</p:panelGrid>
+
+				</p:panel>
+
+				<br></br>
+
+				<div class="tablectrl">
+					<p:panel>
+						<p:commandButton value=" #{msgs['tlos.button.save']} " rendered="#{ftpAccessPanelMBean.insertButton and security.FTPAccessSave}" actionListener="#{ftpAccessPanelMBean.insertFTPAccessAction}">
+							<f:param name="iCheck" value="insert" />
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{not ftpAccessPanelMBean.insertButton and security.FTPAccessUpdate}"
+							actionListener="#{ftpAccessPanelMBean.updateFTPAccessAction}" />
+
+						<p:commandButton id="userTestButton" value="#{msgs['tlos.button.test']}" actionListener="#{ftpAccessPanelMBean.testFTPAccessAction}" />
+
+						<p:commandButton value="#{msgs['tlos.button.clear']}" rendered="#{ftpAccessPanelMBean.insertButton and security.FTPAccessDefinitionClean}"
+							action="#{ftpAccessPanelMBean.resetFTPAccessProfileAction}" update="newFTPAccess" />
+
+						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false" immediate="true" action="ftpAccessSearchPanel.xhtml" />
+					</p:panel>
+				</div>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
