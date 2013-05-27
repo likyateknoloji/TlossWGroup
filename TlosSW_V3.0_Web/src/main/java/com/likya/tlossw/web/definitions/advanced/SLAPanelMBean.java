@@ -19,6 +19,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
@@ -45,6 +46,7 @@ import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "slaPanelMBean")
 @ViewScoped
@@ -60,6 +62,13 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private SLA sla;
 
+	private String selectedTZone = "Europe/Istanbul";
+	
+	private Collection<SelectItem> tZList;
+	
+	private Collection<SelectItem> typeOfTimeList;
+	private String selectedTypeOfTime;
+	
 	private Date startDate;
 	private String startTime;
 	private Date endDate;
@@ -121,6 +130,9 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		fillResourceList();
 		fillSoftwareNameList();
 
+		setTZList(WebInputUtils.fillTZList());
+		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
+		
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
 
@@ -292,6 +304,9 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		diskValue = "0";
 
 		selectedSoftwareList = null;
+		
+		setSelectedTZone(new String("Europe/Istanbul"));
+		selectedTypeOfTime = new String("Actual");
 	}
 
 	public void insertSlaAction(ActionEvent e) {
@@ -319,8 +334,8 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private void fillSlaProperties() {
-		sla.setStartDate(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime));
-		sla.setEndDate(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime));
+		sla.setStartDate(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, selectedTZone));
+		sla.setEndDate(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, selectedTZone));
 
 		sla.getQueueFrame().getMaxTimeInQueue().setStringValue(maxTimeInQueue);
 		sla.getQueueFrame().getMaxTimeInQueue().setBirim(Birim.Enum.forString(maxTimeInQueueUnit));
@@ -337,11 +352,15 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 		sla.getJobsInStatus().getNumberOfJobs().setState(State.Enum.forString(jobStatusName));
 
-		sla.getSInterval().setStartTime(DefinitionUtils.dateToXmlTime(sIntervalStartTime));
-		sla.getSInterval().setStopTime(DefinitionUtils.dateToXmlTime(sIntervalStopTime));
-		sla.getRInterval().setStartTime(DefinitionUtils.dateToXmlTime(rIntervalStartTime));
-		sla.getRInterval().setStopTime(DefinitionUtils.dateToXmlTime(rIntervalStopTime));
+		sla.getSInterval().setStartTime(DefinitionUtils.dateToXmlTime(sIntervalStartTime, selectedTZone));
+		sla.getSInterval().setStopTime(DefinitionUtils.dateToXmlTime(sIntervalStopTime, selectedTZone));
+		sla.getRInterval().setStartTime(DefinitionUtils.dateToXmlTime(rIntervalStartTime, selectedTZone));
+		sla.getRInterval().setStopTime(DefinitionUtils.dateToXmlTime(rIntervalStopTime, selectedTZone));
 
+
+		sla.setTimeZone(selectedTZone);
+		sla.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+		
 		// makine listesindekileri sla tanimindaki resourcePool kismina set
 		// ediyor
 		ResourcePool resourcePool = ResourcePool.Factory.newInstance();
@@ -395,12 +414,20 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private void fillPanelFromSla() {
-		startDate = sla.getStartDate().getTime();
-		endDate = sla.getEndDate().getTime();
+//		startDate = sla.getStartDate().getTime();
+//		endDate = sla.getEndDate().getTime();
 
-		startTime = DefinitionUtils.dateToStringTime(sla.getStartDate().getTime());
-		endTime = DefinitionUtils.dateToStringTime(sla.getEndDate().getTime());
-
+		startDate = DefinitionUtils.dateToDate(sla.getStartDate().getTime(), selectedTZone);
+		endDate = DefinitionUtils.dateToDate(sla.getEndDate().getTime(), selectedTZone);
+		
+		String timeOutputFormat = new String("HH:mm:ss");
+		
+		startTime = DefinitionUtils.calendarToStringTimeFormat(sla.getStartDate(), selectedTZone, timeOutputFormat);
+		endTime = DefinitionUtils.calendarToStringTimeFormat(sla.getEndDate(), selectedTZone, timeOutputFormat);
+		
+//		startTime = DefinitionUtils.dateToStringTime(sla.getStartDate().getTime());
+//		endTime = DefinitionUtils.dateToStringTime(sla.getEndDate().getTime());
+		
 		maxTimeInQueue = sla.getQueueFrame().getMaxTimeInQueue().getStringValue();
 		maxTimeInQueueUnit = sla.getQueueFrame().getMaxTimeInQueue().getBirim().toString();
 
@@ -410,10 +437,21 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		numberOfJobs = sla.getJobsInStatus().getNumberOfJobs().getStringValue();
 		jobStatusName = sla.getJobsInStatus().getNumberOfJobs().getState().toString();
 
-		sIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStartTime().getTime());
-		sIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStopTime().getTime());
-		rIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStartTime().getTime());
-		rIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStopTime().getTime());
+		sIntervalStartTime = DefinitionUtils.calendarToStringTimeFormat(sla.getSInterval().getStartTime(), selectedTZone, timeOutputFormat);
+		sIntervalStopTime = DefinitionUtils.calendarToStringTimeFormat(sla.getSInterval().getStopTime(), selectedTZone, timeOutputFormat);
+		rIntervalStartTime = DefinitionUtils.calendarToStringTimeFormat(sla.getRInterval().getStartTime(), selectedTZone, timeOutputFormat);
+		rIntervalStopTime = DefinitionUtils.calendarToStringTimeFormat(sla.getRInterval().getStopTime(), selectedTZone, timeOutputFormat);
+		
+		selectedTZone = sla.getTimeZone();
+		if (sla.getTypeOfTime() != null)
+			selectedTypeOfTime = sla.getTypeOfTime().toString();
+		else
+			selectedTypeOfTime = new String("Broadcast");
+		
+//		sIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStartTime().getTime());
+//		sIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStopTime().getTime());
+//		rIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStartTime().getTime());
+//		rIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStopTime().getTime());
 
 		cpuTimein = sla.getResourceReq().getHardware().getCpu().getTimein().toString();
 		cpuUnit = sla.getResourceReq().getHardware().getCpu().getBirim().toString();
@@ -775,6 +813,38 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedSoftwareList(String[] selectedSoftwareList) {
 		this.selectedSoftwareList = selectedSoftwareList;
+	}
+
+	public String getSelectedTZone() {
+		return selectedTZone;
+	}
+
+	public void setSelectedTZone(String selectedTZone) {
+		this.selectedTZone = selectedTZone;
+	}
+
+	public Collection<SelectItem> getTZList() {
+		return tZList;
+	}
+
+	public void setTZList(Collection<SelectItem> tZList) {
+		this.tZList = tZList;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public String getSelectedTypeOfTime() {
+		return selectedTypeOfTime;
+	}
+
+	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
+		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 
 }
