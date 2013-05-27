@@ -1,17 +1,18 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_data_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" targetNamespace="http://www.likyateknoloji.com/XML_data_types" elementFormDefault="qualified">
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_data_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" targetNamespace="http://www.likyateknoloji.com/XML_data_types" elementFormDefault="qualified">
     <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
     <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
     <xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep/functions" schemaLocation="sweep-functions.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types" schemaLocation="tlosSWSLA_v_1_0.xsd"/>
     <xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep" schemaLocation="sweep.xsd"/>
-
     <xs:element name="timeManagement">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="jsPlannedTime" minOccurs="0"/>
                 <xs:element ref="jsRealTime" minOccurs="0"/>
+                <xs:element ref="lt:timeZone" minOccurs="0"/>
+                <xs:element ref="lt:typeOfTime" minOccurs="0"/>
                 <xs:element ref="jsRelativeTimeOption" minOccurs="0"/>
                 <xs:element ref="jsTimeOut" minOccurs="0"/>
                 <xs:element ref="expectedTime" minOccurs="0"/>
@@ -19,6 +20,64 @@
                 <xs:element ref="minPercentage" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
+    </xs:element>
+	<xs:element name="stopTime">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" minOccurs="0"/>
+				<xs:element ref="lt:time"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="startTime">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" minOccurs="0"/>
+				<xs:element ref="lt:time"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+    <xs:element name="jsPlannedTime">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startTime"/>
+                <xs:element ref="stopTime" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jsRealTime">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="startTime"/>
+                <xs:element ref="stopTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="jsTimeOut">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="lt:value_integer"/>
+                <xs:element ref="lt:unit"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="expectedTime">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="lt:value_integer"/>
+                <xs:element ref="lt:unit"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="tolerancePercentage" default="10">
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="minPercentage" default="10">
+        <xs:simpleType>
+            <xs:restriction base="xs:int"/>
+        </xs:simpleType>
     </xs:element>
     <xs:element name="concurrencyManagement">
         <xs:complexType>
@@ -66,14 +125,6 @@
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:attribute>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="jsTimeOut">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:value_integer"/>
-                <xs:element ref="lt:unit"/>
-            </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="jobInfos">
@@ -136,72 +187,36 @@
     </xs:element>
     <xs:element name="jobProperties">
         <xs:complexType>
-            <!-- xs:complexContent>
-             <xs:extension base="JobDefinition_Type">  -->
-                    <xs:sequence>
-                        <xs:element ref="jsdl:JobDescription" minOccurs="0"/>
-				        <xs:element ref="sweep:Sweep" minOccurs="0"/>
-                        <xs:element ref="baseJobInfos"/>
-                        <xs:element ref="DependencyList" minOccurs="0"/>
-                        <xs:element ref="cascadingConditions"/>
-                        <xs:element ref="stateInfos"/>
-                        <xs:element ref="advancedJobInfos"/>
-                        <xs:element ref="concurrencyManagement"/>
-                        <xs:element ref="alarmPreference" minOccurs="0"/>
-                        <xs:element ref="timeManagement"/>
-                        <xs:element ref="lt:localParameters" minOccurs="0"/>
-                    </xs:sequence>
-                    <xs:attribute name="ID" use="required">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string"/>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="agentId" use="required">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:int"/>
-                        </xs:simpleType>
-                    </xs:attribute>
-                    <xs:attribute name="LSIDateTime" use="optional">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string"/>
-                        </xs:simpleType>
-                    </xs:attribute>
-            <!--  </xs:extension>
-            </xs:complexContent>   -->
-        </xs:complexType>
-    </xs:element>
-	<!-- xs:element name="jobProperties">
-        <xs:complexType>
             <xs:sequence>
-                <xs:element ref="jobPath"/>
-                <xs:element ref="lt:jsName"/>
-                <xs:element ref="lt:comment" minOccurs="0"/>
-                <xs:element ref="lt:instance" minOccurs="0"/>
-                <xs:element ref="lt:concurrent" minOccurs="0"/>
-                <xs:element ref="jobCommand"/>
-                <xs:element ref="jobCommandType"/>
-                <xs:element ref="jobLogPath"/>
-                <xs:element ref="calendarId" minOccurs="0"/>
-                <xs:element ref="jsCalendar"/>
-                <xs:element ref="jobInfos"/>
-                <xs:element ref="jobPlannedTime" minOccurs="0"/>
-                <xs:element ref="jobRealTime" minOccurs="0"/>
-                <xs:element ref="jobTimeOut"/>
-                <xs:element ref="jobAutoRetry"/>
+                <xs:element ref="jsdl:JobDescription" minOccurs="0"/>
+                <xs:element ref="sweep:Sweep" minOccurs="0"/>
+                <xs:element ref="baseJobInfos"/>
                 <xs:element ref="DependencyList" minOccurs="0"/>
-                <xs:element ref="jobPriority"/>
-                <xs:element ref="jobSafeToRestart"/>
-                <xs:element ref="state-types:JobStatusList" minOccurs="0"/>
-                <xs:element ref="lt:userId"/>
-                <xs:element ref="state-types:LiveStateInfo" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="cascadingConditions"/>
+                <xs:element ref="stateInfos"/>
+                <xs:element ref="advancedJobInfos"/>
+                <xs:element ref="concurrencyManagement"/>
+                <xs:element ref="alarmPreference" minOccurs="0"/>
+                <xs:element ref="timeManagement"/>
+                <xs:element ref="lt:localParameters" minOccurs="0"/>
             </xs:sequence>
-            <xs:attribute name="ID" use="optional">
+            <xs:attribute name="ID" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="agentId" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:int"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="LSIDateTime" use="optional">
                 <xs:simpleType>
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
-    </xs:element-->
+    </xs:element>
     <xs:element name="jobPriority">
         <xs:simpleType>
             <xs:restriction base="xs:string">
@@ -211,38 +226,6 @@
                 <xs:enumeration value="4"/>
             </xs:restriction>
         </xs:simpleType>
-    </xs:element>
-    <xs:element name="stopTime">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date" minOccurs="0"/>
-                <xs:element ref="lt:time"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="startTime">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date" minOccurs="0"/>
-                <xs:element ref="lt:time"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="jsPlannedTime">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="startTime"/>
-                <xs:element ref="stopTime" minOccurs="0"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="jsRealTime">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="startTime"/>
-                <xs:element ref="stopTime"/>
-            </xs:sequence>
-        </xs:complexType>
     </xs:element>
     <xs:element name="jobLogPath">
         <xs:simpleType>
@@ -350,24 +333,6 @@
                 <xs:element ref="sla:Hardware"/>
             </xs:sequence>
         </xs:complexType>
-    </xs:element>
-    <xs:element name="expectedTime">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:value_integer"/>
-                <xs:element ref="lt:unit"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="tolerancePercentage" default="10">
-        <xs:simpleType>
-            <xs:restriction base="xs:int"/>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="minPercentage" default="10">
-        <xs:simpleType>
-            <xs:restriction base="xs:int"/>
-        </xs:simpleType>
     </xs:element>
     <xs:element name="TlosProcessData">
         <xs:complexType mixed="true">

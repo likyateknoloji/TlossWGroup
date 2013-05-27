@@ -16,6 +16,8 @@
                 <xs:element ref="CreationDate"/>
                 <xs:element ref="StartDate"/>
                 <xs:element ref="EndDate"/>
+                <xs:element ref="lt:timeZone" minOccurs="0"/>
+                <xs:element ref="lt:typeOfTime" minOccurs="0"/>
                 <xs:element ref="SInterval"/>
                 <xs:element ref="RInterval"/>
                 <xs:element ref="Priority"/>

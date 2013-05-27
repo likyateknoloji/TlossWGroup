@@ -1,4 +1,4 @@
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_alarm_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_alarm_types">
+<xs:schema xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns="http://www.likyateknoloji.com/XML_alarm_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://www.likyateknoloji.com/XML_alarm_types">
     <xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types" schemaLocation="tlosSWSLA_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/XML_user_types" schemaLocation="tlosSWUser_v_1_0.xsd"/>
@@ -16,11 +16,13 @@
             <xs:sequence>
                 <xs:element ref="name"/>
                 <xs:element ref="desc"/>
-				<xs:element ref="alarmType"/>
-				<xs:element ref="subscriptionType"/>
+                <xs:element ref="alarmType"/>
+                <xs:element ref="subscriptionType"/>
                 <xs:element ref="creationDate"/>
                 <xs:element ref="startDate"/>
                 <xs:element ref="endDate"/>
+                <xs:element ref="com:timeZone" minOccurs="0"/>
+                <xs:element ref="com:typeOfTime" minOccurs="0"/>
                 <xs:element ref="level"/>
                 <xs:element ref="subscriber"/>
                 <xs:element ref="focus"/>
@@ -42,7 +44,7 @@
                     <xs:element ref="person"/>
                     <xs:element ref="com:role"/>
                 </xs:choice>
-                 <xs:element ref="alarmChannelTypes" minOccurs="0"/>
+                <xs:element ref="alarmChannelTypes" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -68,13 +70,13 @@
                 <xs:element maxOccurs="unbounded" ref="warnBy"/>
             </xs:sequence>
         </xs:complexType>
-    </xs:element>    
+    </xs:element>
     <xs:element name="warnBy">
         <xs:complexType>
             <xs:attribute name="id" use="required" type="xs:integer"/>
         </xs:complexType>
-    </xs:element>    
-	<xs:element name="alarmType" default="Job">
+    </xs:element>
+    <xs:element name="alarmType" default="Job">
         <xs:simpleType>
             <xs:restriction base="xs:string">
                 <xs:enumeration value="Job"/>
@@ -83,14 +85,14 @@
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
-	<xs:element name="subscriptionType" default="User">
+    <xs:element name="subscriptionType" default="User">
         <xs:simpleType>
             <xs:restriction base="xs:string">
                 <xs:enumeration value="User"/>
                 <xs:enumeration value="Role"/>
             </xs:restriction>
         </xs:simpleType>
-    </xs:element>	
+    </xs:element>
     <xs:element name="person">
         <xs:complexType>
             <xs:attribute name="id" use="required" type="xs:integer"/>

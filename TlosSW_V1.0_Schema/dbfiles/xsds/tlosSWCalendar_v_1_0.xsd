@@ -1,123 +1,132 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_calendar_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" targetNamespace="http://www.likyateknoloji.com/XML_calendar_types" elementFormDefault="qualified">
-    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
-    <xs:element name="calendarList">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="calendarProperties" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:simpleType name="DayOfWeek">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="MONDAY"/>
-            <xs:enumeration value="TUESDAY"/>
-            <xs:enumeration value="WEDNESDAY"/>
-            <xs:enumeration value="THURSDAY"/>
-            <xs:enumeration value="FRIDAY"/>
-            <xs:enumeration value="SATURDAY"/>
-            <xs:enumeration value="SUNDAY"/>
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:element name="Name">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="DayOfWeek">
-                    <xs:attribute name="ID" use="required">
-                        <xs:simpleType>
-                            <xs:restriction base="xs:string">
-                                <xs:enumeration value="day1"/>
-                                <xs:enumeration value="day2"/>
-                                <xs:enumeration value="day3"/>
-                                <xs:enumeration value="day4"/>
-                                <xs:enumeration value="day5"/>
-                                <xs:enumeration value="day6"/>
-                                <xs:enumeration value="day7"/>
-                            </xs:restriction>
-                        </xs:simpleType>
-                    </xs:attribute>
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="calendarPeriod">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:daySpecial"/>
-                <xs:element ref="lt:dayDef"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="calendarName">
-        <xs:simpleType>
-            <xs:restriction base="xs:string"/>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="howmanyTimes">
-        <xs:simpleType>
-            <xs:restriction base="xs:byte"/>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="whichOnes">
-        <xs:complexType>
-            <xs:choice>
-                <xs:element ref="Name" maxOccurs="unbounded"/>
-                <xs:sequence>
-                    <xs:element ref="lt:daySpecial"/>
-                    <xs:element ref="lt:dayDef"/>
-                </xs:sequence>
-            </xs:choice>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="validFrom">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date"/>
-                <xs:element ref="lt:time"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="validTo">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date"/>
-                <xs:element ref="lt:time"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="specificDays">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="exceptionDays">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="lt:date" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="calendarProperties">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="calendarName"/>
-                <xs:element ref="calendarPeriod"/>
-                <xs:element ref="howmanyTimes"/>
-                <xs:element ref="specificDays" minOccurs="0"/>
-                <xs:element ref="exceptionDays" minOccurs="0"/>
-                <xs:element ref="whichOnes" minOccurs="0"/>
-                <xs:element ref="validFrom"/>
-                <xs:element ref="validTo"/>
-                <!-- xs:element ref="lt:userName"/-->
-                <xs:element ref="lt:userId"/>
-            </xs:sequence>
-            <xs:attribute name="id" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:int"/>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_calendar_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
+	targetNamespace="http://www.likyateknoloji.com/XML_calendar_types"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+	<xs:element name="calendarList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="calendarProperties" minOccurs="0"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="DayOfWeek">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MONDAY" />
+			<xs:enumeration value="TUESDAY" />
+			<xs:enumeration value="WEDNESDAY" />
+			<xs:enumeration value="THURSDAY" />
+			<xs:enumeration value="FRIDAY" />
+			<xs:enumeration value="SATURDAY" />
+			<xs:enumeration value="SUNDAY" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Name">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="DayOfWeek">
+					<xs:attribute name="ID" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="day1" />
+								<xs:enumeration value="day2" />
+								<xs:enumeration value="day3" />
+								<xs:enumeration value="day4" />
+								<xs:enumeration value="day5" />
+								<xs:enumeration value="day6" />
+								<xs:enumeration value="day7" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="calendarPeriod">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:daySpecial" />
+				<xs:element ref="lt:dayDef" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="calendarName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string" />
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="howmanyTimes">
+		<xs:simpleType>
+			<xs:restriction base="xs:byte" />
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="whichOnes">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="Name" maxOccurs="unbounded" />
+				<xs:sequence>
+					<xs:element ref="lt:daySpecial" />
+					<xs:element ref="lt:dayDef" />
+				</xs:sequence>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="validFrom">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" />
+				<xs:element ref="lt:time" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="validTo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" />
+				<xs:element ref="lt:time" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="specificDays">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="exceptionDays">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:date" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="calendarProperties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="calendarName" />
+				<xs:element ref="calendarPeriod" />
+				<xs:element ref="howmanyTimes" />
+				<xs:element ref="specificDays" minOccurs="0" />
+				<xs:element ref="exceptionDays" minOccurs="0" />
+				<xs:element ref="whichOnes" minOccurs="0" />
+				<xs:element ref="validFrom" />
+				<xs:element ref="validTo" />
+				<xs:element ref="lt:timeZone" minOccurs="0" />
+				<xs:element ref="lt:typeOfTime" minOccurs="0" />
+				<xs:element ref="lt:creationDateTime" minOccurs="0" />
+				<xs:element ref="lt:userId" />
+			</xs:sequence>
+			<xs:attribute name="id" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:int" />
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
