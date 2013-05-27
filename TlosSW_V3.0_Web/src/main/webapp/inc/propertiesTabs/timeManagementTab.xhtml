@@ -21,9 +21,9 @@
 				</p:panelGrid>
 			</p:panel>
 
-			<p:panel id="timeManagementPanel"
-				>
-				<p:panelGrid id="timeManagement" columns="4" rendered="#{backingBean.useTimeManagement or !backingBean.scenario}">
+			<p:panel id="timeManagementPanel">
+				<p:panelGrid id="timeManagement" columns="4"
+					rendered="#{backingBean.useTimeManagement or !backingBean.scenario}">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
 
@@ -49,24 +49,28 @@
 
 				<br />
 
-				<p:panelGrid id="timeManagementSecond" columns="4" rendered="#{backingBean.useTimeManagement or !backingBean.scenario}"
+				<p:panelGrid id="timeManagementSecond" columns="4"
+					rendered="#{backingBean.useTimeManagement or !backingBean.scenario}"
 					style="width:80%;">
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.gmt']}" />
-					<p:spinner id="gmt" value="#{backingBean.gmt}" min="-12" max="13" />
 
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.dst']}" />
-					<p:selectBooleanCheckbox value="#{backingBean.dst}">
-					</p:selectBooleanCheckbox>
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
+					<p:selectOneMenu value="#{backingBean.selectedTZone}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{backingBean.TZList}" />
+					</p:selectOneMenu>
 
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
+					<p:selectOneMenu value="#{backingBean.selectedTypeOfTime}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{backingBean.typeOfTimeList}" />
+					</p:selectOneMenu>
+					
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
 					<p:selectOneMenu value="#{backingBean.relativeTimeOption}"
 						style="width: 100pt">
 						<f:selectItems value="#{backingBean.relativeTimeOptionList}" />
 					</p:selectOneMenu>
-
-					<h:outputText value="" />
-					<h:outputText value="" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timeOut']}" />
 					<p:inputText value="#{backingBean.jobTimeOutValue}"
