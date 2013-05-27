@@ -3,6 +3,8 @@ package com.likya.tlossw.web.mng.alarm;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -36,6 +38,7 @@ import com.likya.tlos.model.xmlbeans.alarm.SystemManagementDocument.SystemManage
 import com.likya.tlos.model.xmlbeans.alarm.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.alarm.WarnByDocument.WarnBy;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
@@ -51,6 +54,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.FacesUtils;
 import com.likya.tlossw.web.utils.WebAlarmUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "alarmPanelMBean")
 @ViewScoped
@@ -76,6 +80,8 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	private boolean skip;
 
+	private Collection<SelectItem> tZList;
+
 	@PostConstruct
 	public void init() {
 
@@ -92,6 +98,12 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		selectedAlarmName = String.valueOf(FacesUtils.getRequestParameter("selectedAlarmName"));
 		insertCheck = String.valueOf(FacesUtils.getRequestParameter("insertCheck"));
 		iCheck = String.valueOf(FacesUtils.getRequestParameter("iCheck"));
+
+		setSelectedTZone(new String("Europe/Istanbul"));
+		setSelectedTypeOfTime(new String("Actual"));
+
+		settZList(WebInputUtils.fillTZList());
+		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
 
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
@@ -160,9 +172,23 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setUserType(getAlarm().getSubscriptionType().toString());
 		setAlarmDesc(getAlarm().getDesc());
 		setAlarmName(getAlarm().getName());
-		setStartDate(getAlarm().getStartDate().getTime());
-		setEndDate(getAlarm().getEndDate().getTime());
+
+		Date startDate = DefinitionUtils.dateToDate(getAlarm().getStartDate().getTime(), getSelectedTZone());
+		Date endDate = DefinitionUtils.dateToDate(getAlarm().getEndDate().getTime(), getSelectedTZone());
+
+		setStartDate(startDate);
+		setEndDate(endDate);
+
 		setAlarmLevel(getAlarm().getLevel().toString());
+
+		if (getAlarm().getTimeZone() != null)
+			setSelectedTZone(getAlarm().getTimeZone());
+		else
+			setSelectedTZone(new String("Europe/Istanbul"));
+		if (getAlarm().getTypeOfTime() != null)
+			setSelectedTypeOfTime(getAlarm().getTypeOfTime().toString());
+		else
+			setSelectedTypeOfTime(new String("Broadcast"));
 
 		if (getAlarm().getSubscriber().getPerson() != null) {
 			setUserType(SubscriptionType.USER.toString());
@@ -175,7 +201,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
 			setAlarmRole(Integer.toString(getAlarm().getSubscriber().getRole().intValue()));
 		}
-
 
 		if (getAlarm().getFocus().getJobs() != null) {
 
@@ -389,7 +414,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 				stateManagement.addNewLiveStateInfo();
 
-				liveStateInfo.setLSIDateTime(DefinitionUtils.getW3CDateTime());
+				liveStateInfo.setLSIDateTime(DefinitionUtils.getW3CDateTime(getSelectedTZone()));
 				stateManagement.setLiveStateInfoArray(stateManagement.getLiveStateInfoArray().length - 1, liveStateInfo);
 			}
 		}
@@ -429,6 +454,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			subscriber.setAlarmChannelTypes(alarmChannelTypes);
 		}
 		getAlarm().setSubscriber(subscriber);
+
+		getAlarm().setTimeZone(getSelectedTZone());
+		getAlarm().setTypeOfTime(TypeOfTime.Enum.forString(getSelectedTypeOfTime()));
 
 		Focus focus = Focus.Factory.newInstance();
 		getAlarm().setFocus(focus);
@@ -587,6 +615,14 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	public void setSkip(boolean skip) {
 		this.skip = skip;
+	}
+
+	public Collection<SelectItem> gettZList() {
+		return tZList;
+	}
+
+	public void settZList(Collection<SelectItem> tZList) {
+		this.tZList = tZList;
 	}
 
 }
