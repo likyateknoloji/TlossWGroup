@@ -75,7 +75,7 @@
 							<f:param name="iCheck" value="insert" />
 						</p:commandButton>
 
-						<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{not wsAccessPanelMBean.insertButton and security.DBAccessUpdate}" actionListener="#{wsAccessPanelMBean.updateDBAccessAction}" />
+						<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{not wsAccessPanelMBean.insertButton and security.DBAccessUpdate}" actionListener="#{wsAccessPanelMBean.updateWSAccessAction}" />
 
 						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false" immediate="true" action="wsAccessSearchPanel.xhtml" />
 					</p:panel>
