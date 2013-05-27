@@ -3003,6 +3003,64 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public ArrayList<FtpProperties> searchFTPAccessConnection(String ftpAccessPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace fc=\"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:searchFTPConnection(" + ftpAccessPropertiesXML + ")";
+
+		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				FtpProperties ftpProperties;
+				try {
+					ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
+					ftpConnectionList.add(ftpProperties);
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return ftpConnectionList;
+	}
+
+	public boolean deleteFTPAccessConnection(String ftpAccessPropertiesXML) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace fc=\"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:deleteFTPConnection(" + ftpAccessPropertiesXML + ")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			result.getSize();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
