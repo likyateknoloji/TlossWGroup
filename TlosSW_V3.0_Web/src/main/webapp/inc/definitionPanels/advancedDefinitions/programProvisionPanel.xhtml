@@ -56,7 +56,6 @@
 					<p:inputText value="#{ppPanelMBean.license.version}" required="true"
 						requiredMessage="#{msgs['tlos.validation.pp.version']}"
 						validatorMessage="#{msgs['tlos.validation.pp.version.regex']}">
-						<f:validateRegex pattern="^(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$" />
 					</p:inputText>
 
 					<h:outputText
@@ -86,6 +85,19 @@
 					<p:inputMask value="#{ppPanelMBean.endTime}" mask="99:99:99"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.sla.endTime']}" />
+						
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
+					<p:selectOneMenu value="#{ppPanelMBean.selectedTZone}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{ppPanelMBean.tZList}" />
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
+					<p:selectOneMenu value="#{ppPanelMBean.selectedTypeOfTime}"
+						filter="true" filterMatchMode="startsWith">
+						<f:selectItems value="#{ppPanelMBean.typeOfTimeList}" />
+					</p:selectOneMenu>
 
 					<h:inputHidden value="#{ppPanelMBean.license.licenseID}" id="slaID" />
 
