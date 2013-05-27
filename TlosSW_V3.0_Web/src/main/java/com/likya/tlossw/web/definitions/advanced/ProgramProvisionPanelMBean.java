@@ -17,6 +17,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.programprovision.EndDateDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.programprovision.NameDocument;
@@ -28,6 +29,7 @@ import com.likya.tlos.model.xmlbeans.sla.ResourceDocument.Resource;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "ppPanelMBean")
 @RequestScoped
@@ -43,6 +45,13 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 	private String iCheck;
 
 	private static final long serialVersionUID = 1L;
+
+	private String selectedTZone = "Europe/Istanbul";
+
+	private Collection<SelectItem> tZList;
+
+	private Collection<SelectItem> typeOfTimeList;
+	private String selectedTypeOfTime;
 
 	private License license;
 
@@ -68,6 +77,9 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 		fillResourceList();
 
+		setTZList(WebInputUtils.fillTZList());
+		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
+		
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
 
@@ -145,14 +157,27 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 		Type type = Type.Factory.newInstance();
 		license.setType(type);
+		
+		setSelectedTZone(new String("Europe/Istanbul"));
+		selectedTypeOfTime = new String("Actual");
+		
+		license.setTimeZone(selectedTZone);
+		license.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
 	}
 
 	private void fillPanelFromProvision() {
-		startDate = license.getStartDate().getTime();
-		endDate = license.getEndDate().getTime();
+		// startDate = license.getStartDate().getTime();
+		// endDate = license.getEndDate().getTime();
 
-		startTime = DefinitionUtils.dateToStringTime(license.getStartDate().getTime());
-		endTime = DefinitionUtils.dateToStringTime(license.getEndDate().getTime());
+		startDate = DefinitionUtils.dateToDate(license.getStartDate().getTime(), selectedTZone);
+		endDate = DefinitionUtils.dateToDate(license.getEndDate().getTime(), selectedTZone);
+
+		String timeOutputFormat = new String("HH:mm:ss");
+
+		// startTime = DefinitionUtils.dateToStringTime(license.getStartDate().getTime());
+		// endTime = DefinitionUtils.dateToStringTime(license.getEndDate().getTime());
+		startTime = DefinitionUtils.calendarToStringTimeFormat(license.getStartDate(), selectedTZone, timeOutputFormat);
+		endTime = DefinitionUtils.calendarToStringTimeFormat(license.getEndDate(), selectedTZone, timeOutputFormat);
 
 		licenseType = license.getType().getStringValue();
 
@@ -164,6 +189,12 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 			minUser = license.getType().getMinUser().toString();
 		}
 
+		selectedTZone = license.getTimeZone();
+		if (license.getTypeOfTime() != null)
+			selectedTypeOfTime = license.getTypeOfTime().toString();
+		else
+			selectedTypeOfTime = new String("Broadcast");
+			
 		fillResourcePool();
 	}
 
@@ -201,11 +232,11 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 	private void fillProvisionProperties() {
 		if (startDate != null && startTime != null) {
-			license.setStartDate(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime));
+			license.setStartDate(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, selectedTZone));
 		}
 
 		if (endDate != null && endTime != null) {
-			license.setEndDate(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime));
+			license.setEndDate(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, selectedTZone));
 		}
 
 		// makine listesindekileri license tanimindaki resourcePool kismina set
@@ -355,6 +386,38 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 	public void setMaxUser(String maxUser) {
 		this.maxUser = maxUser;
+	}
+
+	public String getSelectedTZone() {
+		return selectedTZone;
+	}
+
+	public void setSelectedTZone(String selectedTZone) {
+		this.selectedTZone = selectedTZone;
+	}
+
+	public Collection<SelectItem> getTZList() {
+		return tZList;
+	}
+
+	public void setTZList(Collection<SelectItem> tZList) {
+		this.tZList = tZList;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public String getSelectedTypeOfTime() {
+		return selectedTypeOfTime;
+	}
+
+	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
+		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 
 }
