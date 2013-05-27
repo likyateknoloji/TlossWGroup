@@ -32,7 +32,7 @@
 
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-				<p:panelGrid id="wdDefGrid" columns="2">
+				<p:panelGrid id="wsDefGrid" columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.webServiceDefinition']}" />
 					<p:selectOneMenu value="#{wsAccessPanelMBean.webServiceDefinition}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
@@ -53,7 +53,7 @@
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newAlarm.userBased']}" itemValue="User" />
 						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newAlarm.roleBased']}" itemValue="Role" />
-						<p:ajax update="wdDefGrid"></p:ajax>
+						<p:ajax update="wsDefGrid"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText rendered="#{wsAccessPanelMBean.userType eq 'User'}" value="#{msgs['tlos.management.pannel.wsAccess.userList']}" />
