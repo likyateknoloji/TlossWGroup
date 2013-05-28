@@ -194,7 +194,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFtpPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -213,7 +213,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getWebServicePanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -232,7 +232,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getDbJobsPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -251,7 +251,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFileListenerPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -270,7 +270,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getProcessNodePanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
@@ -289,7 +289,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFileProcessPanelMBean().setJobPathInScenario(selectedJobPath);
 				}
 			}
 
