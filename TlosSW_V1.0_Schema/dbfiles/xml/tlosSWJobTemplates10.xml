@@ -728,7 +728,7 @@
 	                                    </ftp:sourceDirectory>
 	                                    <ftp:sourceIsRemote>true</ftp:sourceIsRemote>
 	                                    <ftp:sourceFileName>
-	                                        <com:filename/>
+	                                        <com:filename>test.txt</com:filename>
 	                                    </ftp:sourceFileName>
 	                                </ftp:filenameAndDirectory>
 	                                <ftp:remoteTransferProperties>
