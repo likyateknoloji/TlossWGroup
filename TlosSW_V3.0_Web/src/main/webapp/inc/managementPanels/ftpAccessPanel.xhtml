@@ -64,7 +64,7 @@
 					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ftpUserName']}" />
-					<p:inputText value="#{ftpAccessPanelMBean.ftpProperties.connection.userName}">
+					<p:inputText id="ftpUserName" value="#{ftpAccessPanelMBean.ftpProperties.connection.userName}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
 
