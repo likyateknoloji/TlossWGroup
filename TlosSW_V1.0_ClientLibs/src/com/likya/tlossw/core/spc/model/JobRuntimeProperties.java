@@ -44,11 +44,11 @@ public class JobRuntimeProperties implements Serializable {
 	public String toString() {
 
 		String dumpString = "";
-		dumpString += "*GÃ¶rev AdÄ± : " + jobProperties.getBaseJobInfos().getJsName() + " * ";
-		dumpString += "[GÃ¶rev Komutu:" + jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand() + "][";
-		dumpString += "[GÃ¶rev Tipi:" + jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType() + "][";
-		dumpString += "[GÃ¶rev Program AdÄ±:" + jobProperties.getBaseJobInfos().getJobLogPath() + "][";
-		dumpString += "[BaÄŸÄ±mlÄ±lÄ±k Listesi:";
+		dumpString += "*Görev Adý : " + jobProperties.getBaseJobInfos().getJsName() + " * ";
+		dumpString += "[Görev Komutu:" + jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand() + "][";
+		dumpString += "[Görev Tipi:" + jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType() + "][";
+		dumpString += "[Görev Program Adý:" + jobProperties.getBaseJobInfos().getJobLogPath() + "][";
+		dumpString += "[Baðýmlýlýk Listesi:";
 		DependencyList jobDependencyList = jobProperties.getDependencyList();
 		if(jobDependencyList == null) {
 			dumpString += "yok";	
@@ -56,11 +56,11 @@ public class JobRuntimeProperties implements Serializable {
 			dumpString += jobProperties.getDependencyList().toString();
 		}
 		dumpString += "][";
-		dumpString += "[Ã§Ä±kÄ±ÅŸ Kodu:" + getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode() + "][";
+		dumpString += "[Çýkýþ Kodu:" + getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode() + "][";
 		
 		// TODO Burada ï¿½imdilik listenin ilk elemanï¿½nï¿½ alï¿½yoruz ama xsd ï¿½zerinde konuï¿½mak gerekecek.
-		dumpString += "[BaÅŸlangÄ±Ã§ ZamanÄ±:" + jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().toString() + "][";
-		dumpString += "[Zaman AÅŸÄ±mÄ±:" + jobProperties.getTimeManagement().getJsTimeOut() + "][";
+		dumpString += "[Baþlangýç Zamaný:" + jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().toString() + "][";
+		dumpString += "[Zaman Aþýmý:" + jobProperties.getTimeManagement().getJsTimeOut() + "][";
 
 		return dumpString;
 	}
