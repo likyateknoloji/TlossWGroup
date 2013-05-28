@@ -2040,7 +2040,7 @@ public class DBOperations implements Serializable {
 	public boolean insertResource(String resourceXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:insertResource(" + resourceXML + ")";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace rsc=\"http://rsc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleResourcesOperations.xquery\";" + "rsc:insertResourceLock(" + resourceXML + ")";
 
 		XPathQueryService service;
 
