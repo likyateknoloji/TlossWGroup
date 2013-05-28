@@ -77,9 +77,7 @@
 						value="#{msgs['tlos.workspace.pannel.job.sqlStoredProcedurePackageName']}"
 						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}" />
 					<p:inputText value="#{backingBean.sqlStoredProcedurePackageName}"
-						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.db.PackageName']}" />
+						rendered="#{backingBean.selectedDbJobType eq 'Store-Procedure'}" />
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.sqlSentence']}"
