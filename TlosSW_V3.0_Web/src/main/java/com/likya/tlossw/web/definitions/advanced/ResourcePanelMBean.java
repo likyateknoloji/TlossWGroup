@@ -76,8 +76,8 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 		//QName qName = ResourceListType.type.getOuterType().getDocumentElementName();
 		//QName qName = ResourceType.type.getName();
 		
-		// TODO update işleminde Resource tagı ile güncelleme yapsın diye aşağıdaki şekilde yaptım.
-		// Üstteki kullanım için daha sonra değişiklik yapılabilir.
+		// TODO update iÅŸleminde Resource tagi ile gÃ¼ncelleme yapsÄ±n diye aÅŸaÄŸÄ±daki ÅŸekilde yaptÄ±m.
+		// Ã¼stteki kullanÄ±m iÃ§in daha sonra deÄŸiÅŸiklik yapÄ±labilir.
 		QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		String resourceXML = resource.xmlText(xmlOptions);
