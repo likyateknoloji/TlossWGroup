@@ -1578,7 +1578,7 @@
 				<dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="19" agentId="0">
 		            <jsdl:JobDescription/>
 		            <dat:baseJobInfos>
-		                <com:jsName>SQL Query</com:jsName>
+		                <com:jsName>Oracle SQL Query</com:jsName>
 		                <com:comment>db isi</com:comment>
 		                <dat:jobInfos>
 		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
