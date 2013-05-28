@@ -7,9 +7,12 @@
 
 package com.likya.tlossw.jmx.beans;
 
+import org.apache.commons.net.ftp.FTPClient;
+
+import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.FTPAccessInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-
+import com.likya.tlossw.utils.ConstantDefinitions;
 
 public class ValidationExecuter implements ValidationExecuterMBean {
 
@@ -22,7 +25,7 @@ public class ValidationExecuter implements ValidationExecuterMBean {
 	@Override
 	public void setState(String s) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -34,26 +37,52 @@ public class ValidationExecuter implements ValidationExecuterMBean {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void shutdown(String str) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void redeploy(String str) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public String checkFTPAccess(JmxUser jmxUser, FTPAccessInfoTypeClient ftpProperties) {
-		// TODO Auto-generated method stub
-		return "******************************merve";
+
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
+
+		FTPClient ftpClient = new FTPClient();
+
+		try {
+			if (ftpProperties.getPort() == 0) {
+				ftpClient.connect(ftpProperties.getIpAddress());
+			} else {
+				ftpClient.connect(ftpProperties.getIpAddress(), ftpProperties.getPort());
+			}
+		} catch (Exception ex) {
+			return ConstantDefinitions.FTP_CONNECTION_ERROR;
+		}
+
+		boolean login = false;
+
+		try {
+			login = ftpClient.login(ftpProperties.getUserName(), ftpProperties.getPassword());
+		} catch (Exception ex) {
+			return ConstantDefinitions.FTP_LOGIN_ERROR;
+		}
+
+		if (login) {
+			return ConstantDefinitions.FTP_SUCCESSFUL;
+		} else {
+			return ConstantDefinitions.FTP_LOGIN_ERROR;
+		}
 	}
-	
-	
 
 }
