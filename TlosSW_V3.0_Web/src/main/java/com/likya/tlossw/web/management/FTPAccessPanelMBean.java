@@ -27,6 +27,7 @@ import com.likya.tlossw.model.FTPAccessInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 import com.likya.tlossw.webclient.TEJmxMpValidationClient;
 
@@ -247,55 +248,32 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 	}
 
 	public void testFTPAccessAction(ActionEvent e) {
-		// Simdilik sftp yapilmadigi icin onunla ilgili test etme kismi yok. Bu yuzden sftp alanlarini doldurmadim
-		/*if (adapterType.equals(AdapterType.SFTP_PROCESS.toString())) {
-			fillSftpProperties();
-		}*/
+		// Simdilik sftp yapilmadigi icin onunla ilgili test etme kismi yok.
 
 		ftpProperties.getConnection().setFtpPortNumber(new Short(ftpPortNumber));
 		ftpProperties.setActive(Active.Enum.forString(active));
-		
+
 		FTPAccessInfoTypeClient ftpAccessInfoTypeClient = new FTPAccessInfoTypeClient();
 		ftpAccessInfoTypeClient.setIpAddress(ftpProperties.getConnection().getIpAddress());
 		ftpAccessInfoTypeClient.setPort(ftpProperties.getConnection().getFtpPortNumber());
 		ftpAccessInfoTypeClient.setUserName(ftpProperties.getConnection().getUserName());
 		ftpAccessInfoTypeClient.setPassword(ftpProperties.getConnection().getUserPassword());
-		
+
 		String message = TEJmxMpValidationClient.checkFTPAccess(new JmxUser(), ftpAccessInfoTypeClient);
-		
-		System.out.println(message);
-		
-		/*FTPClient ftpClient = new FTPClient();
-		
-		try {
-			if (ftpProperties.getConnection().getFtpPortNumber() == 0) {
-				ftpClient.connect(ftpProperties.getConnection().getIpAddress());
-			} else {
-				ftpClient.connect(ftpProperties.getConnection().getIpAddress(), ftpProperties.getConnection().getFtpPortNumber());
-			}
-		} catch (Exception ex) {
-			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.test", null);
-			
+
+		if (message == null) {
 			return;
 		}
-		
-		boolean login = false;
-		
-		try {
-			login = ftpClient.login(ftpProperties.getConnection().getUserName(), ftpProperties.getConnection().getUserPassword());
-		} catch (Exception ex) {
-			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.testLogin", null);
-			
-			return;
-		}
-		
-		if (login) {
+
+		if (message.equals(ConstantDefinitions.FTP_SUCCESSFUL)) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_INFO, "tlos.success.ftpConnectionDef.test", null);
-		} else {
+		} else if (message.equals(ConstantDefinitions.FTP_LOGIN_ERROR)) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.testLogin", null);
-		}*/
+		} else if (message.equals(ConstantDefinitions.FTP_CONNECTION_ERROR)) {
+			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.test", null);
+		}
 	}
-	
+
 	private void fillAdapterTypeList() {
 		if (adapterTypeList == null) {
 			adapterTypeList = WebInputUtils.fillAdapterTypeList();

@@ -41,4 +41,11 @@ public class ConstantDefinitions {
 	public static final String LIVE_TREE = "live";
 	public static final String DEFINITION_TREE = "workspace";
 
+	/**
+	 *  Validasyon testlerinde kullanılan tanımlamalar.
+	 */
+	public static final String FTP_CONNECTION_ERROR = "ftpConnectionError";
+	public static final String FTP_LOGIN_ERROR = "ftpLoginError";
+	public static final String FTP_SUCCESSFUL = "ftpSuccessful";
+
 }
