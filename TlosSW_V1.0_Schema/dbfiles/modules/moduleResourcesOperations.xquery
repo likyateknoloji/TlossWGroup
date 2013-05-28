@@ -56,13 +56,13 @@ declare function rsc:searchResourcesByResourceName($searchResourceName as xs:str
    </lrns:ResourceList>
 };
 
-declare function rsc:insertResourceLock($resource as element(lrns:ResourceType)) as xs:boolean
+declare function rsc:insertResourceLock($resource as element(lrns:Resource)) as xs:boolean
 {
    let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/lrns:ResourceList, rsc:insertResource($resource))     
    return true()
 };
 
-declare function rsc:insertResource($resource as element(lrns:ResourceType)) as node()*
+declare function rsc:insertResource($resource as element(lrns:Resource)) as node()*
 {
     let $XXX := $resource
 
