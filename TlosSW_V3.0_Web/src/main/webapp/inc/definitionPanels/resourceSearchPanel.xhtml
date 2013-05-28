@@ -1,0 +1,145 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Resource Search Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Definitions" />
+		<ui:param name="title3" value="Resource Search" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/definitionPanels/resourceSearchPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - Resource Search Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+				<p:menuitem value="#{title4}" url="#{title4link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchResource" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl"
+				header="#{msgs['tlos.management.pannel.resources.searchHeader']}">
+				<div class="tablectrl">
+					<p:panelGrid columns="2">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.resources.resourceName']}" />
+						<p:inputText value="#{resourceSearchPanelMBean.resourceName}" />
+					</p:panelGrid>
+				</div>
+			</p:panel>
+
+			<br />
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton id="resourceSearchButton"
+						update="resourceSearchPanel" value="#{msgs['tlos.button.search']}"
+						rendered="#{security.ResourceSearch}"
+						actionListener="#{resourceSearchPanelMBean.searchResourceAction}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}"
+						rendered="#{security.ResourceClear}" update="searchResource"
+						action="#{resourceSearchPanelMBean.resetResourceAction}" />
+
+					<p:commandButton update="resourceSearchPanel" ajax="false"
+						immediate="false" value="#{msgs['tlos.button.addNew']}"
+						rendered="#{security.ResourceAdd}" action="resourcePanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="resourceSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight"
+					rendered="#{not empty resourceSearchPanelMBean.searchResourceList}">
+					<p:dataTable var="item" rows="10" id="resourceSearchDataTable"
+						filteredValue="#{resourceSearchPanelMBean.filteredResourceList}"
+						width="100%"
+						value="#{resourceSearchPanelMBean.searchResourceList}"
+						binding="#{resourceSearchPanelMBean.searchResourceTable}"
+						paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" >
+
+						<p:column>
+							<p:commandButton id="resourceEditButton" ajax="false"
+								rendered="#{security.ResourceEdit}" immediate="false"
+								value="Update" action="resourcePanel.xhtml">
+								<f:param name="selectedResourceName" value="#{item.entryName}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton id="resourceDeleteButton" value="Delete"
+								onclick="confirmation.show()"
+								rendered="#{security.ResourceDelete}" />
+							<p:confirmDialog id="confirmDialog"
+								style="z-index: 999 !important;"
+								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+								widgetVar="confirmation">
+								<p:commandButton id="confirm" immediate="true" process="@this"
+									value="#{msgs['tlos.ask.delete.confirm1']}"
+									update=":searchResource:resourceSearchPanel" onclick="confirmation.hide()"
+									actionListener="#{resourceSearchPanelMBean.deleteResourceAction}" />
+								<p:commandButton id="decline"
+									value="#{msgs['tlos.ask.delete.confirm2']}"
+									onclick="confirmation.hide()" type="button" />
+							</p:confirmDialog>
+						</p:column>
+
+						<p:column id="entryNameId"
+							headerText="#{msgs['tlos.management.pannel.resources.resourceName']}"
+							sortBy="#{item.entryName}" filterBy="#{item.entryName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.entryName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column id="OSId"
+							headerText="#{msgs['tlos.management.pannel.resources.os']}"
+							sortBy="#{item.operatingSystemName}"
+							filterBy="#{item.operatingSystemName}" filterMatchMode="contains">
+							<h:outputText value="#{item.operatingSystemName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<!-- p:column
+							headerText="#{msgs['tlos.management.pannel.provisionProcesses.startDate']}"
+							sortBy="#{item.metadata.supportsRns.value}">
+							<p:selectBooleanCheckbox id="normalUser"
+								value="#{item.metadata.supportsRns.value}" />
+						</p:column-->
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+	
+	<ui:define name="west">
+		<ui:include src="/inc/livePanels/resourceLiveTree.xhtml" />
+	</ui:define>
+</ui:composition>
