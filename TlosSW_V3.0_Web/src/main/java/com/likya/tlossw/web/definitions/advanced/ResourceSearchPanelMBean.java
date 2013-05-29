@@ -23,12 +23,12 @@ import com.likya.tlossw.web.TlosSWBaseBean;
 @ViewScoped
 public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializable {
 
-	private static final long serialVersionUID = -8496956003387120301L;
+	private static final long serialVersionUID = 7899903706759759225L;
 
 	private ResourceType resource;
 
 	private ArrayList<ResourceType> searchResourceList;
-	private DataTable searchResourceTable;
+	private transient DataTable searchResourceTable;
 
 	private String resourceName;
 
@@ -57,7 +57,6 @@ public class ResourceSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	public void resetResourceAction() {
 		resource = ResourceType.Factory.newInstance();
 		searchResourceList = new ArrayList<ResourceType>();
-		searchResourceList = null;
 		resourceName = "";
 	}
 
