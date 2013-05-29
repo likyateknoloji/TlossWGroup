@@ -24,9 +24,12 @@
 		<link type="text/css" rel="stylesheet" href="/TlosSW_V3.0_Web/themes/default.css" />
 		<link type="text/css" rel="stylesheet" href="/TlosSW_V3.0_Web/themes/syntaxhighlighter.css" />
 
+		<!-- overflow ozelliklerini ekranda onde gorunmesi istedigimiz kisimlar icin koyduk
+			derecelendirmesini de z-index'e gore yaptik -->
+		
 		<style type="text/css">
 			.ui-layout-north {
-				z-index: 20 !important;
+				z-index: 30 !important;
 				overflow: visible !important;
 			}
 			
@@ -48,6 +51,30 @@
 			.selectOneRadioColumn td {
 				border: none !important;
 			}
+			
+			.ui-layout-center {
+                z-index: 10 !important;
+                overflow: visible;
+            }
+               
+			.ui-layout-center .ui-layout-west {
+				z-index: 20 !important;
+                overflow: visible;
+            }
+               
+            .ui-layout-center .ui-layout-west .ui-layout-unit-content {
+				overflow: visible !important;
+			}
+			
+			.ui-layout-center .ui-layout-center {
+				z-index: 15 !important;
+                overflow: visible;
+            }
+               
+            .ui-layout-center .ui-layout-center .ui-layout-unit-content {
+				overflow: visible !important;
+			}
+			
 		</style>
 
 	</h:head>
