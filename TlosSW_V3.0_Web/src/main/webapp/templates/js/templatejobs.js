@@ -259,9 +259,7 @@ function applyDragDrop() {
 	                   $('[data-nodetype=scenario] [data-nodetype=job], #centerWest .scenario .job').draggable({
 	                	   helper : 'clone',
 	                	   scope : 'treeScope',
-	                	   zindex : ++PrimeFaces.zindex,
 	                	   opacity : 0.35,
-	                	   stack : $('.ui-treenode-leaf'),
 	                	   start : function(event, ui) {
 	                		   var jobName = $(this.firstChild.lastChild).text();
 	                		   document.getElementById('jsTreeForm:draggedJobName').value = jobName;
