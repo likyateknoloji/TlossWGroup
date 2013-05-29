@@ -45,7 +45,8 @@
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.resources.resourceName']}" />
-					<p:inputText value="#{resourcePanelMBean.resourceName}" />
+					<p:inputText value="#{resourcePanelMBean.resourceName}" rendered="#{resourcePanelMBean.insertButton}"/>
+					<p:inputText disabled="true" value="#{resourcePanelMBean.resourceName}" rendered="#{not resourcePanelMBean.insertButton}"/>
 
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.resources.endpointAddress']}" />
