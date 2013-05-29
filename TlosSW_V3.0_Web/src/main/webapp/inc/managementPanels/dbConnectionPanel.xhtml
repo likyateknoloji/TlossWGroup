@@ -49,8 +49,8 @@
 						value="#{dbConnectionPanelMBean.dbProperties.connectionName}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.db.connectionName']}"
-						validatorMessage="#{msgs['tlos.validation.db.connectionName.min']}">
-						<f:validateLength minimum="4"></f:validateLength>
+						validatorMessage="#{msgs['tlos.validation.db.connectionName.regex']}">
+						<f:validateRegex pattern="[a-zA-Z0-9_#$]{1,8}"></f:validateRegex>
 					</p:inputText>
 
 					<h:outputText
