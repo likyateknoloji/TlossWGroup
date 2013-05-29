@@ -135,7 +135,7 @@ public interface RemoteDBOperatorMBean {
 
 	public Object updateJob(JmxUser jmxUser, String documentName, String jobPropertiesXML, String jobPath);
 
-	public JobProperties getJob(JmxUser jmxUser, String documentName, String jobPath, String jobName) throws XMLDBException;
+	public JobProperties getJobFromId(JmxUser jmxUser, String documentName, String jobPath, String jobId) throws XMLDBException;
 
 	public Scenario getScenario(JmxUser jmxUser, String documentName, String scenariPath, String scenarioName) throws XMLDBException;
 
