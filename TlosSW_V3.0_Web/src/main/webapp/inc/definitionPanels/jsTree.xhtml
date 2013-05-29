@@ -28,7 +28,7 @@
 		</p:contextMenu>
 
 		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
-			style="width:350px;height:720px" dynamic="true"
+			style="width:100%;height:100%" dynamic="true"
 			selectionMode="single" selection="#{jSTree.selectedJS}">
 
 			<p:ajax event="expand" update=":jsTreeForm:messages"
