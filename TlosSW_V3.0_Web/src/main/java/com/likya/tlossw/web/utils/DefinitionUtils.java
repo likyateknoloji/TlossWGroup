@@ -410,7 +410,7 @@ public class DefinitionUtils {
 			String scenarioName = pathTokenizer.nextToken();
 
 			if (scenarioName.contains("|")) {
-				scenarioName = removeIdFromName(scenarioName);
+				scenarioName = getXFromNameId(scenarioName, "Name");
 			}
 
 			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
@@ -421,10 +421,14 @@ public class DefinitionUtils {
 		return path;
 	}
 
-	public static String removeIdFromName(String nameAndId) {
+	public static String getXFromNameId(String nameAndId, String X) {
 		StringTokenizer nameTokenizer = new StringTokenizer(nameAndId, "|");
 		String name = nameTokenizer.nextToken().trim();
+		String id = nameTokenizer.nextToken().trim();
 
-		return name;
+		if(X.equalsIgnoreCase("Name")) return name;
+		else if(X.equalsIgnoreCase("Id"))return id;
+		else return null;
 	}
+	
 }
