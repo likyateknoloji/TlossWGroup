@@ -863,7 +863,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		return true;
 	}
 
-	public JobProperties getJob(JmxUser jmxUser, String documentName, String jobPath, String jobName) {
+	public JobProperties getJobFromId(JmxUser jmxUser, String documentName, String jobPath, String jobId) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
@@ -879,7 +879,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJob(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(" + jobName + "))";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " +  "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + ", xs:string(\"" + jobId + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
