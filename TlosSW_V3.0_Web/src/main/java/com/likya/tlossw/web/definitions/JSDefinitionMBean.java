@@ -13,6 +13,7 @@ import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
@@ -63,43 +64,63 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public String draggedTemplateName;
 	public String draggedTemplatePath;
 
-	public String selectedJobPath;
+	public String selectedJSPath;
+	public String selectedType;
 
 	public String draggedJobNameForDependency;
 	public String draggedJobPathForDependency;
 
 	private JobProperties jobProperties;
+	private Scenario scenario;
 
 	public void onNodeSelect(NodeSelectEvent event) {
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
 
-		String selectedJob = event.getTreeNode().toString();
+		String selectedJS = event.getTreeNode().toString();
 
-		if (selectedJob.equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
+		if (selectedJS.equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
 			return;
 		}
 
 		TreeNode treeNode = event.getTreeNode();
-		selectedJobPath = "";
+		
+		if( (treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
+			selectedType = new String("scenario");
+		} else if( (treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("job")) {
+			selectedType = new String("job");
+		} else selectedType = new String("what?");
+		
+		selectedJSPath = "";
 
 		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
-			selectedJobPath = treeNode.getParent().toString() + "/" + selectedJobPath;
+			selectedJSPath = treeNode.getParent().toString() + "/" + selectedJSPath;
 			treeNode = treeNode.getParent();
 		}
 
 		event.getTreeNode().getParent().getParent().toString();
 
-		// String jobId = selectedJob.substring(selectedJob.lastIndexOf("|") + 1);
-		String jobAbsolutePath = selectedJob.substring(0, selectedJob.lastIndexOf("|") - 1);
+		String jsId = DefinitionUtils.getXFromNameId(selectedJS, "Id");
 
-		jobProperties = null;
-		jobProperties = getDbOperations().getJob(JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(selectedJobPath), jobAbsolutePath);
+		if(selectedType.equalsIgnoreCase("job")) {
+		  jobProperties = null;
+		  jobProperties = getDbOperations().getJobFromId(JOB_DEFINITION_DATA, jsId);
 
-		if (jobProperties != null) {
+		  if (jobProperties != null) {
 			int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 			initializeJobPanel(jobType, false);
-		}
+		  }
+		} else 
+			if(selectedType.equalsIgnoreCase("scenario")) {
+			  scenario = null;
+			  scenario = getDbOperations().getScenarioFromId(JOB_DEFINITION_DATA, jsId);
+
+			  if (scenario != null) {
+
+                // buraya senaryo paneli doldurması gelecek ...
+				//initializeScenarioPanel(?);
+			  }
+			}
 	}
 
 	public void handleDropAction(ActionEvent ae) {
@@ -159,7 +180,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getBatchProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getBatchProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getBatchProcessPanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -194,7 +215,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFtpPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getFtpPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFtpPanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -213,7 +234,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getWebServicePanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getWebServicePanelMBean().setJobPathInScenario(selectedJobPath);
+					getWebServicePanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -232,7 +253,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getDbJobsPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getDbJobsPanelMBean().setJobPathInScenario(selectedJobPath);
+					getDbJobsPanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -251,7 +272,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFileListenerPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getFileListenerPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFileListenerPanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -270,7 +291,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getProcessNodePanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getProcessNodePanelMBean().setJobPathInScenario(selectedJobPath);
+					getProcessNodePanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -289,7 +310,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				if (insert) {
 					getFileProcessPanelMBean().setJobPathInScenario(draggedTemplatePath);
 				} else {
-					getFileProcessPanelMBean().setJobPathInScenario(selectedJobPath);
+					getFileProcessPanelMBean().setJobPathInScenario(selectedJSPath);
 				}
 			}
 
@@ -407,6 +428,22 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setProcessNodePanelMBean(ProcessNodePanelMBean processNodePanelMBean) {
 		this.processNodePanelMBean = processNodePanelMBean;
+	}
+
+	public String getSelectedType() {
+		return selectedType;
+	}
+
+	public void setSelectedType(String selectedType) {
+		this.selectedType = selectedType;
+	}
+
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
 	}
 
 }
