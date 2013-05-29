@@ -5,11 +5,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
@@ -17,7 +19,14 @@ import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
@@ -1123,14 +1132,27 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean jobCheckUp() {
-		JobProperties job = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
-
-		// ayni isimli iki is kaydedilmiyor
-		if (job != null && job.getBaseJobInfos().getJsName().equals(jobProperties.getBaseJobInfos().getJsName()) && !job.getID().equals(jobProperties.getID())) {
-			addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
-			return false;
+		String jobCheckResult = null;
+		try {
+			jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getID(), jobProperties.getBaseJobInfos().getJsName());
+		} catch (XmlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+		// ayni path de aynı isimde bir iş varsa 1
+		// path farklı olsa da aynı isimde bir iş varsa 2
+		// bu isimde bir iş yoksa 0
+		if (jobCheckResult != null ) {
+			if(jobCheckResult.equalsIgnoreCase("1")) {
+				addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+				return false;
+			} else if(jobCheckResult.equalsIgnoreCase("2")) {
+				// Merve ye not: Burada kullanıcıya soru sorulacak, "Aynı path de olmasada bu isimde başka bir iş var. Yine de kaydetmek ister misiniz?"
+			       addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+			       return false;
+			  }
+		}
 		return true;
 	}
 
@@ -1141,7 +1163,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
-		dependencyItem.setJsName(DefinitionUtils.removeIdFromName(draggedJobName));
+		dependencyItem.setJsName(DefinitionUtils.getXFromNameId(draggedJobName, "Name"));
 
 		depStateName = "";
 		depSubstateName = "";
@@ -1152,7 +1174,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(draggedJobPath), DefinitionUtils.removeIdFromName(draggedJobName));
+		JobProperties draggedJobProperties = getDbOperations().getJobFromId(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getXFromNameId(draggedJobName, "Id)"));
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
@@ -1192,7 +1214,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		composeDependencyExpression();
 
-		String depJobName = DefinitionUtils.removeIdFromName(draggedJobName);
+		String depJobName = DefinitionUtils.getXFromNameId(draggedJobName, "Name");
 
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
