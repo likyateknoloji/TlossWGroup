@@ -1683,7 +1683,37 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public JobProperties getJob(String documentName, String jobPath, String jobName) {
+	public String getJobExistence(String documentName, String jobPath, String JobId, String jobName) throws XmlException {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String sonuc = null;
+
+		XPathQueryService service;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+
+			service.setProperty("indent", "yes");
+
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJobExistence(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\")" + "," + JobId + ")";
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				sonuc = xmlContent.toString();
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return sonuc;
+	}
+
+
+	public JobProperties getJobFromId(String documentName, String jobId) {
 		Collection collection = existConnectionHolder.getCollection();
 
 		JobProperties jobProperties = null;
@@ -1694,7 +1724,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJob(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
+			String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + ", " + jobId + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1717,7 +1747,7 @@ public class DBOperations implements Serializable {
 		}
 		return jobProperties;
 	}
-
+	
 	public ArrayList<SWAgent> getAgents() {
 		Collection collection = existConnectionHolder.getCollection();
 
@@ -2208,6 +2238,40 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public Scenario getScenarioFromId(String documentName, String scenarioId) {
+		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getScenarioFromId(" + "xs:string(\"" + documentName + "\")" + ", " + scenarioId + " )";
+
+		Scenario scenario = null;
+
+		XPathQueryService service = null;
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					scenario = ScenarioDocument.Factory.parse(xmlContent).getScenario();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		return scenario;
+	}
+	
 	public Scenario getScenario(String documentName, String scenarioPath, String scenarioName) {
 		Collection collection = existConnectionHolder.getCollection();
 
