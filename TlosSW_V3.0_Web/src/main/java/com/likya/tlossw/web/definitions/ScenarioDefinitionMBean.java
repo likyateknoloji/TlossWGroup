@@ -216,11 +216,11 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		String path = "";
 		if (!scenarioNode.getParent().getData().equals(ConstantDefinitions.TREE_ROOT)) {
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/..";
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
 
 			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
-				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.removeIdFromName(scenarioNode.getData().toString()) + "']/.." + path;
+				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
 			}
 		}
 
