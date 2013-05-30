@@ -76,11 +76,6 @@
 
 			<div class="tablectrl">
 				<p:panel>
-					<p:commandButton id="ldapLoginButton" update="userSearchPanel"
-						value="LDAP USER"
-						rendered="#{security.UserSearch}"
-						actionListener="#{ldapLoginBean.login}" />
-						
 					<p:commandButton id="userSearchButton" update="userSearchPanel"
 						value="#{msgs['tlos.button.search']}"
 						rendered="#{security.UserSearch}"
