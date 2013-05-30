@@ -34,11 +34,21 @@
 				<p:commandButton value="#{msgs['tlos.button.ok']}"
 					rendered="#{backingBean.jobUpdateButton}"
 					action="#{backingBean['updateJobAction']}"
-					update=":jobDefinitionForm:jsActivePanel :jsTreeForm:tree" 
+					update=":jobDefinitionForm:jsActivePanel :jsTreeForm:tree :jobDefinitionForm:confirmDialogPanel" 
 					oncomplete="jsActiveDialog.hide();" />
 			</p:panelGrid>
-
 		</p:dialog>
+
+		<p:confirmDialog id="jsNameConfirmDialog" message="#{msgs['tlos.confirm.workspace.duplicateJobName']}" visible="#{backingBean.jsNameConfirmDialog}"
+			header="#{msgs['tlos.confirm.workspace.duplicateJobName.header']}" severity="alert" widgetVar="confirmation" appendToBody="true">  
+			<p:panel id="confirmDialogPanel">
+				<p:commandButton id="confirm" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
+					actionListener="#{backingBean['insertJobWithDuplicateName']}" />
+				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()" type="button" 
+					action="#{backingBean['cancelInsertJobAction']}"/>   
+	    	</p:panel>
+	    </p:confirmDialog> 
+	    
 	</ui:composition>
 </h:body>
 </html>
