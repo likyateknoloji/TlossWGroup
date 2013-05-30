@@ -79,6 +79,12 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void searchUserAction(ActionEvent e) {
+		if (!role.equals("")) {
+			person.setRole(Role.Enum.forString(role));
+		} else {
+			person.setRole(null);
+		}
+		
 		searchUserList = dbOperations.searchUser(getPersonXML());
 
 		if (searchUserList == null || searchUserList.size() == 0) {
@@ -173,11 +179,6 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 
 	public void setRole(String role) {
 		this.role = role;
-		if (!role.equals("Seciniz")) {
-			person.setRole(Role.Enum.forString(role));
-		} else if (role.equals("Seciniz")) {
-			person.setRole(null);
-		}
 	}
 
 	public String getUserPassword2() {
