@@ -5,13 +5,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
@@ -21,12 +19,6 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
@@ -173,10 +165,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	private Collection<SelectItem> tZList;
 	private String selectedTZone;
-	
+
 	private Collection<SelectItem> typeOfTimeList;
 	private String selectedTypeOfTime;
-	
+
 	private Collection<SelectItem> relativeTimeOptionList = null;
 	private String relativeTimeOption;
 
@@ -302,6 +294,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private String diskValue;
 	private String diskUnit;
 
+	private boolean jsNameConfirmDialog = false;
+
+	public static final String NEW_NAME = "0";
+	public static final String DUPLICATE_NAME_AND_PATH = "1";
+	public static final String DUPLICATE_NAME = "2";
+
 	public void fillJobPanel() {
 		fillBaseInfosTab();
 		fillTimeManagementTab();
@@ -326,7 +324,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
 				for (Parameter param : baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray()) {
 					if (param.getName().equals(PERIOD_TIME_PARAM)) {
-						//periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
+						// periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
 						String timeOutputFormat = new String("HH:mm:ss");
 						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime(), selectedTZone, timeOutputFormat);
 					}
@@ -353,28 +351,28 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			if (timeManagement.getJsPlannedTime() != null && timeManagement.getJsPlannedTime().getStartTime() != null) {
 				Calendar jobStartTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
 
-//				DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-//				DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss.SSSZZ");
-//				LocalTime localStartTime = dtf.parseLocalTime(jobStartTime);
-//				
-//				DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-//				String jobLocalStartTime = localStartTime.toDateTimeToday(zone).toString(formatter);
+				// DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+				// DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss.SSSZZ");
+				// LocalTime localStartTime = dtf.parseLocalTime(jobStartTime);
+				//
+				// DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
+				// String jobLocalStartTime = localStartTime.toDateTimeToday(zone).toString(formatter);
 
 				String timeOutputFormat = new String("HH:mm:ss.SSS");
 				startTime = DefinitionUtils.calendarToStringTimeFormat(jobStartTime, selectedTZone, timeOutputFormat);
-//				startTime = jobLocalTime.toString();
+				// startTime = jobLocalTime.toString();
 
 				if (timeManagement.getJsPlannedTime().getStopTime() != null) {
 					defineStopTime = true;
-					
+
 					Calendar jobStopTime = timeManagement.getJsPlannedTime().getStopTime().getTime();
-//					LocalTime jobLocalStopTime = new LocalTime( jobStopTime);
+					// LocalTime jobLocalStopTime = new LocalTime( jobStopTime);
 					stopTime = DefinitionUtils.calendarToStringTimeFormat(jobStopTime, selectedTZone, timeOutputFormat);
-//					stopTime = jobLocalStopTime.toString();
-//					LocalTime localStopTime = dtf.parseLocalTime(jobStopTime);
-//					
-//					String jobLocalStopTime = localStopTime.toDateTimeToday(zone).toString(formatter);
-					
+					// stopTime = jobLocalStopTime.toString();
+					// LocalTime localStopTime = dtf.parseLocalTime(jobStopTime);
+					//
+					// String jobLocalStopTime = localStopTime.toDateTimeToday(zone).toString(formatter);
+
 				}
 			}
 
@@ -413,10 +411,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			if (timeManagement.getMinPercentage() > 0) {
 				minPercentage = timeManagement.getMinPercentage() + "";
 			}
-			
+
 			timeManagement.setTimeZone(selectedTZone);
 			timeManagement.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
-			
+
 		} else {
 			System.out.println("jobProperties is NULL in fillTimeManagementTab !!");
 		}
@@ -650,8 +648,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		startTime = "";
 		defineStopTime = false;
 		stopTime = "";
-//		gmt = 0;
-//		dst = false;
+		// gmt = 0;
+		// dst = false;
 		selectedTZone = new String("Europe/Istanbul");
 		selectedTypeOfTime = new String("Actual");
 		relativeTimeOption = JsRelativeTimeOption.NO.toString();
@@ -691,8 +689,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		fillJobStatusList();
 		fillJobStateList();
 		fillJobSubtateList();
-		
-		
+
 		setTZList(WebInputUtils.fillTZList());
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
 		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
@@ -801,7 +798,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 			JsPlannedTime jsPlannedTime = timeManagement.getJsPlannedTime();
 			String startTimeStr = jsPlannedTime.getStartTime().getTime().toString();
-			jsPlannedTime.getStartTime().setTime(DefinitionUtils.dateToXmlTime( startTimeStr, selectedTZone));
+			jsPlannedTime.getStartTime().setTime(DefinitionUtils.dateToXmlTime(startTimeStr, selectedTZone));
 
 			// ekrandan stoptime girildiyse onu set ediyor, bunu starttime
 			// girildiyse kontrol ediyor cunku start time olmadan stop time
@@ -850,7 +847,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			XmlCursor xmlCursor = timeManagement.getExpectedTime().newCursor();
 			xmlCursor.removeXml();
 		}
-		System.out.println("nedir"+timeManagement.toString());
+		System.out.println("nedir" + timeManagement.toString());
 	}
 
 	private void fillDependencyDefinitions() {
@@ -1059,9 +1056,20 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setAdvancedJobInfos(advancedJobInfos);
 	}
 
+	public void insertJobWithDuplicateName(ActionEvent actionEvent) {
+		insertJobDefinition();
+	}
+
 	public void insertJobDefinition() {
-		if (!jobCheckUp() & getJobId()) {
-			return;
+		if (!jsNameConfirmDialog) {
+			if (!jobCheckUp() & getJobId()) {
+				return;
+			}
+		} else {
+			jsNameConfirmDialog = false;
+
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update(":jobDefinitionForm:confirmDialogPanel");
 		}
 
 		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
@@ -1136,22 +1144,24 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		try {
 			jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getID(), jobProperties.getBaseJobInfos().getJsName());
 		} catch (XmlException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// jobCheckResult = DUPLICATE_NAME;
 
 		// ayni path de aynı isimde bir iş varsa 1
 		// path farklı olsa da aynı isimde bir iş varsa 2
 		// bu isimde bir iş yoksa 0
-		if (jobCheckResult != null ) {
-			if(jobCheckResult.equalsIgnoreCase("1")) {
+		if (jobCheckResult != null) {
+			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
 				addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 				return false;
-			} else if(jobCheckResult.equalsIgnoreCase("2")) {
-				// Merve ye not: Burada kullanıcıya soru sorulacak, "Aynı path de olmasada bu isimde başka bir iş var. Yine de kaydetmek ister misiniz?"
-			       addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
-			       return false;
-			  }
+			} else if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME)) {
+
+				jsNameConfirmDialog = true;
+
+				return false;
+			}
 		}
 		return true;
 	}
@@ -2148,21 +2158,21 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.minPercentage = minPercentage;
 	}
 
-//	public int getGmt() {
-//		return gmt;
-//	}
-//
-//	public void setGmt(int gmt) {
-//		this.gmt = gmt;
-//	}
-//
-//	public boolean isDst() {
-//		return dst;
-//	}
-//
-//	public void setDst(boolean dst) {
-//		this.dst = dst;
-//	}
+	// public int getGmt() {
+	// return gmt;
+	// }
+	//
+	// public void setGmt(int gmt) {
+	// this.gmt = gmt;
+	// }
+	//
+	// public boolean isDst() {
+	// return dst;
+	// }
+	//
+	// public void setDst(boolean dst) {
+	// this.dst = dst;
+	// }
 
 	public String getJobPathInScenario() {
 		return jobPathInScenario;
@@ -2714,6 +2724,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
 		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public boolean isJsNameConfirmDialog() {
+		return jsNameConfirmDialog;
+	}
+
+	public void setJsNameConfirmDialog(boolean jsNameConfirmDialog) {
+		this.jsNameConfirmDialog = jsNameConfirmDialog;
 	}
 
 }
