@@ -5,8 +5,8 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.xml.namespace.QName;
 
@@ -23,18 +23,13 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 
 @ManagedBean(name = "resourcePanelMBean")
-@RequestScoped
+@ViewScoped
 public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 45790551446681215L;
 
-	@ManagedProperty(value = "#{param.selectedResourceName}")
 	private String selectedResourceName;
-
-	@ManagedProperty(value = "#{param.insertCheck}")
 	private String insertCheck;
-
-	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
 
 	private ResourceType resource;
@@ -49,6 +44,10 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		resetResourceAction();
+
+		selectedResourceName = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedResourceName"));
+		insertCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck"));
+		iCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iCheck"));
 
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
@@ -73,9 +72,9 @@ public class ResourcePanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public String getResourceXML() {
-		//QName qName = ResourceListType.type.getOuterType().getDocumentElementName();
-		//QName qName = ResourceType.type.getName();
-		
+		// QName qName = ResourceListType.type.getOuterType().getDocumentElementName();
+		// QName qName = ResourceType.type.getName();
+
 		// TODO update işleminde Resource tagi ile güncelleme yapsın diye aşağıdaki şekilde yaptım.
 		// üstteki kullanım için daha sonra değişiklik yapılabilir.
 		QName qName = new QName("http://www.likyateknoloji.com/XML_SWResourceNS_types", "Resource", "lrns");
