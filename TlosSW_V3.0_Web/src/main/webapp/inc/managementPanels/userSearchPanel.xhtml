@@ -65,6 +65,7 @@
 							value="#{msgs['tlos.management.pannel.userProcesses.roles']}" />
 						<p:selectOneMenu id="role" style="text-align: center;"
 							value="#{userSearchPanelMBean.role}" >
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 							<f:selectItems value="#{userSearchPanelMBean.roleList}" />
 						</p:selectOneMenu>
 					</p:panelGrid>
@@ -139,9 +140,7 @@
 						</p:column>
 
 						<p:column id="modelHeader"
-							headerText="#{msgs['tlos.management.pannel.userProcesses.role']}"
-							sortBy="#{item.role}" filterBy="#{item.role}"
-							filterMatchMode="contains">
+							headerText="#{msgs['tlos.management.pannel.userProcesses.role']}">
 							<h:outputText value="#{item.role}" style="text-align: center;" />
 						</p:column>
 
