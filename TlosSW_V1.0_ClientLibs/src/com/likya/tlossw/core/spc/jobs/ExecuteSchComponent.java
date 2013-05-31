@@ -18,6 +18,7 @@ import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
+import com.likyateknoloji.xmlExecuteRShellTypes.ExecuteRShellParamsDocument.ExecuteRShellParams;
 
 public abstract class ExecuteSchComponent extends Job {
 
@@ -38,14 +39,17 @@ public abstract class ExecuteSchComponent extends Job {
 		StringBuffer stringBufferForOUTPUT = new StringBuffer();
 
 		JSch jsch = new JSch();
-
-		String host = "192.168.1.39";
-		String user = "likya";
-		String password = "likya";
-
-		jobCommand = "/home/likya/murat/Agent/jobs/job1.sh";
 		
-		Session session = jsch.getSession(user, host, 22);
+		ExecuteRShellParams executeRShellParams = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getExecuteRShellParams();
+
+		String host = executeRShellParams.getIpAddress(); //"192.168.1.39";
+		String user = executeRShellParams.getUserName(); // "likya";
+		String password = executeRShellParams.getUserPassword(); //"likya";
+		int port = executeRShellParams.getPort().intValue(); //"likya";
+
+		jobCommand = executeRShellParams.getJobCommand(); //"/home/likya/murat/Agent/jobs/job1.sh";
+		
+		Session session = jsch.getSession(user, host, port);
 
 		/*
 		 * String xhost="127.0.0.1"; int xport=0; String
