@@ -1056,6 +1056,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setAdvancedJobInfos(advancedJobInfos);
 	}
 
+	public void cancelInsertJobAction(ActionEvent actionEvent) {
+		jsNameConfirmDialog = false;
+	}
+
 	public void insertJobWithDuplicateName(ActionEvent actionEvent) {
 		insertJobDefinition();
 	}
@@ -1067,9 +1071,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			}
 		} else {
 			jsNameConfirmDialog = false;
-
-			RequestContext context = RequestContext.getCurrentInstance();
-			context.update(":jobDefinitionForm:confirmDialogPanel");
 		}
 
 		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
@@ -1079,6 +1080,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
 
 			switchInsertUpdateButtons();
+
 		} else {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.insert", null);
 		}
@@ -1146,8 +1148,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		} catch (XmlException e) {
 			e.printStackTrace();
 		}
-
-		// jobCheckResult = DUPLICATE_NAME;
 
 		// ayni path de aynı isimde bir iş varsa 1
 		// path farklı olsa da aynı isimde bir iş varsa 2
