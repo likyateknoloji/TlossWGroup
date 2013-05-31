@@ -34,21 +34,26 @@
 				<p:commandButton value="#{msgs['tlos.button.ok']}"
 					rendered="#{backingBean.jobUpdateButton}"
 					action="#{backingBean['updateJobAction']}"
-					update=":jobDefinitionForm:jsActivePanel :jsTreeForm:tree :jobDefinitionForm:confirmDialogPanel" 
+					update=":jobDefinitionForm :jsTreeForm:tree" 
 					oncomplete="jsActiveDialog.hide();" />
 			</p:panelGrid>
 		</p:dialog>
 
-		<p:confirmDialog id="jsNameConfirmDialog" message="#{msgs['tlos.confirm.workspace.duplicateJobName']}" visible="#{backingBean.jsNameConfirmDialog}"
-			header="#{msgs['tlos.confirm.workspace.duplicateJobName.header']}" severity="alert" widgetVar="confirmation" appendToBody="true">  
+		<p:dialog id="jsNameConfirmDialog" visible="#{backingBean.jsNameConfirmDialog}" resizable="false" showEffect="show"
+			header="#{msgs['tlos.confirm.workspace.duplicateJobName.header']}" severity="alert" widgetVar="confirmation" 
+			width="250px">  
+
+			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName']}" />
+			<br/>
+			<br/>
 			<p:panel id="confirmDialogPanel">
 				<p:commandButton id="confirm" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['insertJobWithDuplicateName']}" />
-				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()" type="button" 
-					action="#{backingBean['cancelInsertJobAction']}"/>   
+					actionListener="#{backingBean['insertJobWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree" />
+				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
+					actionListener="#{backingBean['cancelInsertJobAction']}"/>
 	    	</p:panel>
-	    </p:confirmDialog> 
-	    
+	    </p:dialog>
+
 	</ui:composition>
 </h:body>
 </html>
