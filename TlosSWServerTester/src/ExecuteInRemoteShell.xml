@@ -1,62 +1,44 @@
-        <dat:jobProperties ID="1" agentId="0" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
-            <jsdl:JobDescription/>
-            <dat:baseJobInfos>
-                <com:jsName>dbJob</com:jsName>
-                <com:comment>db isi</com:comment>
-                <dat:jobInfos>
-                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-                    <com:jobTypeDetails>
-                        <com:jobCommandType>DB JOBS</com:jobCommandType>
-                        <com:specialParameters>
-                            <db:dbJobDefinition>
-								<db:dbConnectionProperties>
-									<db:dbPropertiesId>1</db:dbPropertiesId>
-									<db:dbUserId>1</db:dbUserId>
-								</db:dbConnectionProperties>
-								<db:dbJobType>Script</db:dbJobType>
-								<db:scriptProperties>
-									<db:sqlScriptFileName>script.sql</db:sqlScriptFileName>
-									<db:sqlScriptFilePath>D:\likya\tlos\connection\</db:sqlScriptFilePath>
-								</db:scriptProperties>
-							</db:dbJobDefinition>
-							<!--db:dbJobDefinition>
-								<db:dbConnectionProperties>
-									<db:dbPropertiesId>1</db:dbPropertiesId>
-									<db:dbUserId>1</db:dbUserId>
-								</db:dbConnectionProperties>
-								<db:dbJobType>Store-Procedure</db:dbJobType>
-								<db:storeProcedureProperties>
-									<db:sqlStoredProcedureSchemaName>public</db:sqlStoredProcedureSchemaName>
-									<db:sqlStoredProcedurePackageName>test_p</db:sqlStoredProcedurePackageName>
-									<db:sqlStoredProcedureName>test_m()</db:sqlStoredProcedureName>
-								</db:storeProcedureProperties>
-							</db:dbJobDefinition-->
-							<!--db:dbJobDefinition>
-								<db:dbConnectionProperties>
-									<db:dbPropertiesId>2</db:dbPropertiesId>
-									<db:dbUserId>1</db:dbUserId>
-								</db:dbConnectionProperties>
-								<db:dbJobType>Free SQL</db:dbJobType>
-								<db:freeSQLProperties>
-									<db:sqlSentence>select * from snpw1.hmeq_flagged</db:sqlSentence>
-								</db:freeSQLProperties>
-							</db:dbJobDefinition-->
-                        </com:specialParameters>
-                    </com:jobTypeDetails>
-                </dat:jobInfos>
-                <dat:calendarId>5</dat:calendarId>
-                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
-                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs</dat:jobLogPath>
-                <dat:oSystem>Windows</dat:oSystem>
-                <dat:jobPriority>1</dat:jobPriority>
-                <com:userId>4</com:userId>
-            </dat:baseJobInfos>
-            <dat:cascadingConditions>
-                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-            </dat:cascadingConditions>
+
+<dat:jobProperties ID="1" agentId="0"
+	xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
+	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
+	xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
+	xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types">
+	<jsdl:JobDescription />
+	<dat:baseJobInfos>
+		<com:jsName>dbJob</com:jsName>
+		<com:comment>db isi</com:comment>
+		<dat:jobInfos>
+			<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+			<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+			<com:jobTypeDetails>
+				<com:jobCommandType>DB JOBS</com:jobCommandType>
+				<com:specialParameters>
+					<rs:executeRShellParams>
+						<com:ipAddress>192.168.1.39</com:ipAddress>
+						<port>22</port>
+						<com:userName>likya</com:userName>
+						<com:userPassword>likya</com:userPassword>
+						<com:jobCommand>/home/likya/murat/Agent/jobs/job1.sh</com:jobCommand>
+					</rs:executeRShellParams>
+				</com:specialParameters>
+			</com:jobTypeDetails>
+		</dat:jobInfos>
+		<dat:calendarId>5</dat:calendarId>
+		<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+		<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
+		</dat:jobLogPath>
+		<dat:oSystem>Windows</dat:oSystem>
+		<dat:jobPriority>1</dat:jobPriority>
+		<com:userId>4</com:userId>
+	</dat:baseJobInfos>
+	<dat:cascadingConditions>
+		<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+		<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+		<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+	</dat:cascadingConditions>
 	<dat:stateInfos>
 		<state-types:JobStatusList
 			xmlns:state-types="http://www.likyateknoloji.com/state-types">
@@ -97,33 +79,33 @@
 			</state-types:LiveStateInfo>
 		</state-types:LiveStateInfos>
 	</dat:stateInfos>
-            <dat:advancedJobInfos>
-                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-            </dat:advancedJobInfos>
-            <dat:concurrencyManagement>
-                <com:instanceId>11</com:instanceId>
-                <com:concurrent>true</com:concurrent>
-            </dat:concurrencyManagement>
-            <dat:alarmPreference/>
-            <dat:timeManagement>
-                <dat:jsPlannedTime>
-                    <dat:startTime>
-                        <com:time>08:00:00</com:time>
-                    </dat:startTime>
-                    <dat:stopTime>
-                        <com:time>23:00:00</com:time>
-                    </dat:stopTime>
-                </dat:jsPlannedTime>
-                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-                <dat:jsTimeOut>
-                    <com:value_integer>1</com:value_integer>
-                    <com:unit>MINUTES</com:unit>
-                </dat:jsTimeOut>
-                <dat:expectedTime>
-                    <com:value_integer>100</com:value_integer>
-                    <com:unit>MINUTES</com:unit>
-                </dat:expectedTime>
-                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-                <dat:minPercentage>10</dat:minPercentage>
-            </dat:timeManagement>
-        </dat:jobProperties>
+	<dat:advancedJobInfos>
+		<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+	</dat:advancedJobInfos>
+	<dat:concurrencyManagement>
+		<com:instanceId>11</com:instanceId>
+		<com:concurrent>true</com:concurrent>
+	</dat:concurrencyManagement>
+	<dat:alarmPreference />
+	<dat:timeManagement>
+		<dat:jsPlannedTime>
+			<dat:startTime>
+				<com:time>08:00:00</com:time>
+			</dat:startTime>
+			<dat:stopTime>
+				<com:time>23:00:00</com:time>
+			</dat:stopTime>
+		</dat:jsPlannedTime>
+		<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+		<dat:jsTimeOut>
+			<com:value_integer>1</com:value_integer>
+			<com:unit>MINUTES</com:unit>
+		</dat:jsTimeOut>
+		<dat:expectedTime>
+			<com:value_integer>100</com:value_integer>
+			<com:unit>MINUTES</com:unit>
+		</dat:expectedTime>
+		<dat:tolerancePercentage>10</dat:tolerancePercentage>
+		<dat:minPercentage>10</dat:minPercentage>
+	</dat:timeManagement>
+</dat:jobProperties>
