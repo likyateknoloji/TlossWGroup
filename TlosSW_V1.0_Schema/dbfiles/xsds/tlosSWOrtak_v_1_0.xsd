@@ -7,6 +7,7 @@
 	xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pn="http://www.likyateknoloji.com/XML_process_node"
 	xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
+	xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
 	targetNamespace="http://www.likyateknoloji.com/XML_common_types"
 	elementFormDefault="qualified">
 	<xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types"
@@ -23,7 +24,9 @@
 		schemaLocation="tlosSWSJDBJob_v_1_0.xsd" />
 	<xs:import namespace="http://www.likyateknoloji.com/XML_process_node"
 		schemaLocation="tlosSWSJProcessNode_v_1_0.xsd" />
-
+	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types"
+		schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd" />
+		
 	<xs:element name="date">
 		<xs:simpleType>
 			<xs:restriction base="xs:date" />
@@ -110,12 +113,13 @@
 				<xs:element ref="inParam" minOccurs="0" />
 				<xs:element ref="outParam" minOccurs="0" />
 				<xs:choice>
-					<xs:element ref="ftp:ftpAdapterProperties" minOccurs="0" />
-					<xs:element ref="file:fileAdapterProperties" minOccurs="0" />
-					<xs:element ref="lstn:fileListener" minOccurs="0" />
-					<xs:element ref="ws:webServiceDefinition" minOccurs="0" />
-					<xs:element ref="db:dbJobDefinition" minOccurs="0" />
-					<xs:element ref="pn:processNodes" minOccurs="0" />
+					<xs:element ref="ftp:ftpAdapterProperties"/>
+					<xs:element ref="file:fileAdapterProperties"/>
+					<xs:element ref="lstn:fileListener"/>
+					<xs:element ref="ws:webServiceDefinition"/>
+					<xs:element ref="db:dbJobDefinition"/>
+					<xs:element ref="pn:processNodes"/>
+					<xs:element ref="rs:executeRShellParams"/>
 				</xs:choice>
 			</xs:sequence>
 		</xs:complexType>
