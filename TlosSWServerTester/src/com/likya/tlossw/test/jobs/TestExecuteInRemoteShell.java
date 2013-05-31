@@ -1,5 +1,7 @@
 package com.likya.tlossw.test.jobs;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -19,7 +21,7 @@ public class TestExecuteInRemoteShell extends TestSuit {
 	public void startTest() {
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src/", "ExecuteInRemoteShell.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "ExecuteInRemoteShell.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
 		JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
