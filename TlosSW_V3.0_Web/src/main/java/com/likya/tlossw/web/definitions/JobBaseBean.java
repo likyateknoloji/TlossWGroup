@@ -1144,7 +1144,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private boolean jobCheckUp() {
 		String jobCheckResult = null;
 		try {
-			jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getID(), jobProperties.getBaseJobInfos().getJsName());
+			jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 		} catch (XmlException e) {
 			e.printStackTrace();
 		}
