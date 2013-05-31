@@ -30,6 +30,19 @@ declare function hs:getScenario($documentName as xs:string, $scenarioPath, $scen
 		return $scenario
 };
 
+declare function hs:getScenarioExistence($documentName as xs:string, $scenarioPath as node()*, $scenarioName as xs:string) as xs:integer
+{    
+    let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
+    let $refPath := $doc//$scenarioPath
+    let $exactMatch := count($refPath/dat:scenario/dat:baseScenarioInfos[.//com:jsName/text() = xs:string($scenarioName)])
+    let $partialMatch := count($refPath//dat:scenario/dat:baseScenarioInfos[.//com:jsName/text() = xs:string($scenarioName)])
+    
+    let $sonuc := if($exactMatch > 0) then 1 
+                  else if($partialMatch > 0) then 2
+                  else 0
+    return  $sonuc
+};
+
 declare function hs:getScenarioFromId($documentName as xs:string, $id as xs:integer) as element(dat:scenario)?
 {	
 	let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
@@ -210,7 +223,7 @@ declare function hs:getJobFromId($documentName as xs:string, $id as xs:integer) 
 };
 
 
-declare function hs:getJobExistence($documentName as xs:string, $jobPath as node()*, $jobName as xs:string, $jobId as xs:integer) as xs:integer
+declare function hs:getJobExistence($documentName as xs:string, $jobPath as node()*, $jobName as xs:string) as xs:integer
 {    
     let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
     let $refPath := $doc//$jobPath
