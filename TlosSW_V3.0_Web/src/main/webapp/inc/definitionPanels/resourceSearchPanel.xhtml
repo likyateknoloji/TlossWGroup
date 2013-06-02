@@ -17,7 +17,8 @@
 
 		<ui:param name="title1link" value="/" />
 		<ui:param name="title2link" value="DefinitionsLink" />
-		<ui:param name="title3link" value="/inc/definitionPanels/resourceSearchPanel.xhtml" />
+		<ui:param name="title3link"
+			value="/inc/definitionPanels/resourceSearchPanel.xhtml" />
 		<ui:param name="title4link"
 			value="Tlos SW Workload Automation Software v1.0 - Resource Search Page" />
 		<h:form>
@@ -73,6 +74,22 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty resourceSearchPanelMBean.searchResourceList}">
+
+					<p:confirmDialog id="confirmDialog"
+						style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchResource:resourceSearchPanel"
+							onclick="confirmation.hide()"
+							actionListener="#{resourceSearchPanelMBean.deleteResourceAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="resourceSearchDataTable"
 						filteredValue="#{resourceSearchPanelMBean.filteredResourceList}"
 						width="100%"
@@ -80,32 +97,22 @@
 						binding="#{resourceSearchPanelMBean.searchResourceTable}"
 						paginator="true" paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,15" >
+						rowsPerPageTemplate="5,10,15">
 
 						<p:column>
 							<p:commandButton id="resourceEditButton" ajax="false"
 								rendered="#{security.ResourceEdit}" immediate="false"
-								value="Update" action="resourcePanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}"
+								action="resourcePanel.xhtml">
 								<f:param name="selectedResourceName" value="#{item.entryName}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="resourceDeleteButton" value="Delete"
-								onclick="confirmation.show()"
-								rendered="#{security.ResourceDelete}" />
-							<p:confirmDialog id="confirmDialog"
-								style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchResource:resourceSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{resourceSearchPanelMBean.deleteResourceAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton id="resourceDeleteButton" icon="ui-icon-trash"
+								title="Delete" value="#{msgs['tlos.ask.delete.button']}"
+								action="#{resourceSearchPanelMBean.setSelectedRow(item)}"
+								onclick="confirmation.show()" />
+
 						</p:column>
 
 						<p:column id="entryNameId"
@@ -137,6 +144,7 @@
 			</p:outputPanel>
 
 		</h:form>
+
 	</ui:define>
-	
+
 </ui:composition>
