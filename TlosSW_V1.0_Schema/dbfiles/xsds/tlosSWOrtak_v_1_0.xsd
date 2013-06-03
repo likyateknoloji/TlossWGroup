@@ -1,13 +1,13 @@
-
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
-	xmlns="http://www.likyateknoloji.com/XML_common_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types"
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
+	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
 	xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
 	xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types"
 	xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pn="http://www.likyateknoloji.com/XML_process_node"
-	xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
 	xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
+	xmlns:pn="http://www.likyateknoloji.com/XML_process_node"
 	targetNamespace="http://www.likyateknoloji.com/XML_common_types"
 	elementFormDefault="qualified">
 	<xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types"
@@ -26,32 +26,27 @@
 		schemaLocation="tlosSWSJProcessNode_v_1_0.xsd" />
 	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types"
 		schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd" />
-		
 	<xs:element name="date">
 		<xs:simpleType>
 			<xs:restriction base="xs:date" />
 		</xs:simpleType>
 	</xs:element>
-
 	<xs:element name="time">
 		<xs:simpleType>
 			<xs:restriction base="xs:time" />
 		</xs:simpleType>
 	</xs:element>
-
 	<xs:element name="creationDateTime">
 		<xs:simpleType>
 			<xs:restriction base="xs:dateTime" />
 		</xs:simpleType>
 	</xs:element>
-	
 	<xs:complexType name="datetimeType">
 		<xs:sequence>
 			<xs:element ref="date" minOccurs="0" />
 			<xs:element ref="time" />
 		</xs:sequence>
 	</xs:complexType>
-
 	<xs:element name="typeOfTime">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -62,13 +57,11 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-
-    <xs:element name="timeZone">
-        <xs:simpleType>
-            <xs:restriction base="xs:string"/>
-        </xs:simpleType>
-    </xs:element>
-    
+	<xs:element name="timeZone">
+		<xs:simpleType>
+			<xs:restriction base="xs:string" />
+		</xs:simpleType>
+	</xs:element>
 	<xs:element name="unit">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -78,7 +71,6 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-
 	<xs:element name="path">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -112,14 +104,14 @@
 			<xs:sequence>
 				<xs:element ref="inParam" minOccurs="0" />
 				<xs:element ref="outParam" minOccurs="0" />
-				<xs:choice>
-					<xs:element ref="ftp:ftpAdapterProperties"/>
-					<xs:element ref="file:fileAdapterProperties"/>
-					<xs:element ref="lstn:fileListener"/>
-					<xs:element ref="ws:webServiceDefinition"/>
-					<xs:element ref="db:dbJobDefinition"/>
-					<xs:element ref="pn:processNodes"/>
-					<xs:element ref="rs:executeRShellParams"/>
+				<xs:choice minOccurs="0">
+					<xs:element ref="ftp:ftpAdapterProperties" />
+					<xs:element ref="file:fileAdapterProperties" />
+					<xs:element ref="lstn:fileListener" />
+					<xs:element ref="ws:webServiceDefinition" />
+					<xs:element ref="db:dbJobDefinition" />
+					<xs:element ref="pn:processNodes" />
+					<xs:element ref="rs:executeRShellParams" />
 				</xs:choice>
 			</xs:sequence>
 		</xs:complexType>
@@ -270,7 +262,6 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-
 	<xs:simpleType name="choiceType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="UserInteractionPreference" />
