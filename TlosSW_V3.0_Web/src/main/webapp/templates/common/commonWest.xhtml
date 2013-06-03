@@ -12,9 +12,12 @@
 		<h1>This is default west</h1>
 
 		<div id="navigation">
-			<ui:insert name="navigation">
-				<ui:include src="/inc/navigationxxx.xhtml" />
-			</ui:insert>
+		<h:form>
+			<p:panelMenu rendered="true" model="#{dynamicMenuItem.selectedMenuItem}" />
+
+			<!-- p:slideMenu model="#{dynamicMenuItem.initMenu()}" / -->
+		</h:form>
+
 		</div>
 
 	</ui:composition>
