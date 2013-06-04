@@ -59,7 +59,9 @@ public abstract class ExecuteOSComponent extends Job {
 		StringBuffer stringBufferForOUTPUT = new StringBuffer();
 
 		ProcessBuilder processBuilder = null;
-
+		
+		myLogger.info(" >>" + logLabel + jobKey + " çalıştırılaacak komut : " + jobCommand);
+		
 		if (isShell) {
 			String[] cmd = ValidPlatforms.getCommand(jobCommand);
 			processBuilder = new ProcessBuilder(cmd);
