@@ -41,10 +41,14 @@ public class OracleSQLScriptExecuter extends SQLScriptExecuter {
 			try {
 
 				startWathcDogTimer();
+				
+				String dbPath = "";
 
 				String osqlClientNamePath = dbProperties.getSqlClientAppPath();
 				String osqlClientName = dbProperties.getSqlClientAppName().toString();
-
+				String ipAddress = dbProperties.getIpAddress();
+				short port = dbProperties.getFtpPortNumber();
+				
 				String userName = dbConnectionProfile.getUserName(); // "postgres"; // Connection profile dan alacak.
 				String password = dbConnectionProfile.getUserPassword(); // "ad0215"; // Connection profile dan alacak.
 
@@ -57,10 +61,17 @@ public class OracleSQLScriptExecuter extends SQLScriptExecuter {
 				// "Carre"; // Connection profile dan alacak.
 				String dbName = dbProperties.getDbName();
 
+				if(ipAddress != null && !ipAddress.equals("") && port != 0) {
+					// 192.168.1.75:1521/orcl
+					dbPath = ipAddress + ":" + port + "/" + dbName;
+				} else {
+					dbPath = dbName;
+				}
+				
 				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
 				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
 
-				osqlClientName = osqlClientName + " " + userName + "/" + password + "@" + dbName + " @" + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
+				osqlClientName = osqlClientName + " " + userName + "/" + password + "@" + dbPath + " @" + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
