@@ -7,7 +7,7 @@
         <dbc:driverName>JDBC</dbc:driverName>
         <dbc:dbName>Carre</dbc:dbName>
         <dbc:hostName>ayhan-laptop2</dbc:hostName>
-        <com:ftpPortNumber>5432</com:ftpPortNumber>
+        <dbc:listenerPortNumber>5432</dbc:listenerPortNumber>
         <com:ipAddress>127.0.0.1</com:ipAddress>
         <dbc:jdbcClassName>className</dbc:jdbcClassName>
 		<dbc:sqlClientAppName>psql</dbc:sqlClientAppName>
@@ -21,7 +21,7 @@
         <dbc:driverName>JDBC</dbc:driverName>
         <dbc:dbName>oralikya</dbc:dbName>
         <dbc:hostName>localhost</dbc:hostName>
-        <com:ftpPortNumber>1521</com:ftpPortNumber>
+        <dbc:listenerPortNumber>1521</dbc:listenerPortNumber>
         <com:ipAddress>127.0.0.1</com:ipAddress>
         <dbc:jdbcClassName>className</dbc:jdbcClassName>
  		<dbc:sqlClientAppName>sqlplus</dbc:sqlClientAppName>
