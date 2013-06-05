@@ -5,7 +5,7 @@
 			<com:connName>Fedora VM</com:connName>
 			<com:userName>likya</com:userName>
 			<com:userPassword>likya</com:userPassword>
-			<com:ftpPortNumber>0</com:ftpPortNumber>
+			<ftp:ftpPortNumber>0</ftp:ftpPortNumber>
 			<com:ipAddress>192.168.1.39</com:ipAddress>
 		</ftp:connection>
 	</ftp:ftpProperties>
@@ -15,7 +15,7 @@
 			<com:connName>Likya 2 numara</com:connName>
 			<com:userName>likya2</com:userName>
 			<com:userPassword>likya2</com:userPassword>
-			<com:ftpPortNumber>0</com:ftpPortNumber>
+			<ftp:ftpPortNumber>0</ftp:ftpPortNumber>
 			<com:ipAddress>192.168.1.41</com:ipAddress>
 		</ftp:connection>
 		<ftp:ftpSecure>

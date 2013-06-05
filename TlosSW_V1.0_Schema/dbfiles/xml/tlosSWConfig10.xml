@@ -47,7 +47,7 @@
 			<con:smtpServerUserName>test9027@likyateknoloji.com</con:smtpServerUserName>
 			<com:smtpServerPassword>7209tset</com:smtpServerPassword>
 			<com:smtpServerAddress>mail.likyateknoloji.com</com:smtpServerAddress>
-			<com:smtpServerPort>587</com:smtpServerPort>
+			<con:smtpServerPort>587</con:smtpServerPort>
 			<con:statusListForMail>
 				<state-types:StatusName>FAILED</state-types:StatusName>
 				<state-types:StatusName>SUCCESS</state-types:StatusName>
@@ -65,12 +65,12 @@
 		<con:remoteManagerProperties>
 			<com:comment>managementPort : yonetim konsolu haberlesme portu
 		managementBufferSize : yonetim konsolu buffer boyu</com:comment>
-			<com:portNumber>3001</com:portNumber>
+			<con:portNumber>3001</con:portNumber>
 			<com:bufferSize>128</com:bufferSize>
 		</con:remoteManagerProperties>
 		<con:httpManagerProperties>
 			<com:ipAddress>192.168.1.60</com:ipAddress>
-			<com:portNumber>8000</com:portNumber>
+			<con:portNumber>8000</con:portNumber>
 		</con:httpManagerProperties>
 		<con:agentOptions>
 			<con:InOutJmxDurationForUnavailability>
@@ -127,11 +127,11 @@
 	<con:jmxParams>
 		<con:jmxTlsPort>
             <com:comment>jmxTlsPort</com:comment>
-            <com:portNumber>5555</com:portNumber>
+            <con:portNumber>5555</con:portNumber>
         </con:jmxTlsPort>
         <con:jmxPort>
             <com:comment>jmxPort</com:comment>
-            <com:portNumber>5554</com:portNumber>
+            <con:portNumber>5554</con:portNumber>
         </con:jmxPort>
 		<con:trustStore>likyaKeystore</con:trustStore>
 		<con:keyStore>likyaKeystore</con:keyStore>
