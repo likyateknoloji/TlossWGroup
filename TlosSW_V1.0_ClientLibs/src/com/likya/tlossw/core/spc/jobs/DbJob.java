@@ -53,7 +53,7 @@ public abstract class DbJob extends Job {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		String url = dbProperties.getDbUrl();
-		url += "@//" + dbProperties.getHostName() + ":" + dbProperties.getFtpPortNumber() + "/" + dbProperties.getDbName();
+		url += "@//" + dbProperties.getHostName() + ":" + dbProperties.getListenerPortNumber() + "/" + dbProperties.getDbName();
 
 		Properties props = new Properties();
 
