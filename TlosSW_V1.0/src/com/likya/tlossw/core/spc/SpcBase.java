@@ -45,7 +45,7 @@ import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
 import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.OracleSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.JDBCOracleSQLSentenceExecuter;
 import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
@@ -462,7 +462,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			case DbType.INT_ORACLE:
 				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new OracleSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+					myJob = new JDBCOracleSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 
 				} else if (dbJobDefinition.getScriptProperties() != null) {
 					myJob = new OracleSQLScriptExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
