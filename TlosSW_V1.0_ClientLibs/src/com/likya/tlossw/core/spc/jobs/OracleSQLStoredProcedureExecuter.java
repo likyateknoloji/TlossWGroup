@@ -46,7 +46,7 @@ public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 				String osqlClientNamePath = dbProperties.getSqlClientAppPath();
 				String osqlClientName = dbProperties.getSqlClientAppName().toString();
 				String ipAddress = dbProperties.getIpAddress();
-				short port = dbProperties.getFtpPortNumber();
+				int port = dbProperties.getListenerPortNumber();
 
 				String userName = dbConnectionProfile.getUserName(); // "postgres"; // Connection profile dan alacak.
 				String password = dbConnectionProfile.getUserPassword(); // "ad0215"; // Connection profile dan alacak.
