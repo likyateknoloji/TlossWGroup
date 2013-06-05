@@ -5,7 +5,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>5556</agnt:jmxPort>
+        <agnt:jmxTlsPort>5556</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
@@ -25,7 +25,7 @@
         <agnt:osType>Unix</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>5685</agnt:jmxPort>
+        <agnt:jmxTlsPort>5685</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
@@ -45,7 +45,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>server</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>5555</agnt:jmxPort>
+        <agnt:jmxTlsPort>5555</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>true</agnt:inJmxAvailable>
@@ -73,7 +73,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>5557</agnt:jmxPort>
+        <agnt:jmxTlsPort>5557</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
@@ -101,7 +101,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>5557</agnt:jmxPort>
+        <agnt:jmxTlsPort>5557</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
@@ -129,7 +129,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>3001</agnt:jmxPort>
+        <agnt:jmxTlsPort>3001</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
@@ -157,7 +157,7 @@
         <agnt:osType>Windows</agnt:osType>
         <agnt:agentType>agent</agnt:agentType>
         <agnt:nrpePort>5666</agnt:nrpePort>
-        <agnt:jmxPort>3001</agnt:jmxPort>
+        <agnt:jmxTlsPort>3001</agnt:jmxTlsPort>
         <agnt:jmxUser>jmxuser</agnt:jmxUser>
         <agnt:jmxPassword>jmxpaswd</agnt:jmxPassword>
         <agnt:inJmxAvailable>false</agnt:inJmxAvailable>
