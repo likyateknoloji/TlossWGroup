@@ -986,7 +986,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		TlosAgentInfoTypeClient tlosAgentInfoTypeClient = new TlosAgentInfoTypeClient();
 		tlosAgentInfoTypeClient.setAgentId(agent.getId());
 		tlosAgentInfoTypeClient.setAgentType(agent.getAgentType().toString());
-		tlosAgentInfoTypeClient.setJmxPort(agent.getJmxPort());
+		tlosAgentInfoTypeClient.setJmxPort(agent.getJmxTlsPort());
 		tlosAgentInfoTypeClient.setInJmxAvailable(agent.getInJmxAvailable());
 		tlosAgentInfoTypeClient.setOutJmxAvailable(agent.getOutJmxAvailable());
 		tlosAgentInfoTypeClient.setJmxAvailable(agent.getJmxAvailable());
