@@ -23,9 +23,7 @@ import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
-import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
-import com.likya.tlos.model.xmlbeans.dbjob.DbJobDefinitionDocument.DbJobDefinition;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
@@ -36,6 +34,7 @@ import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioSt
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.CpcBase;
+import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
@@ -44,12 +43,6 @@ import com.likya.tlossw.core.spc.jobs.FtpGetFile;
 import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
 import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.JDBCOracleSQLSentenceExecuter;
-import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
@@ -299,71 +292,31 @@ public abstract class SpcBase implements Runnable, Serializable {
 		int jobType = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 		switch (jobType) {
-		
+
 		case JobCommandType.INT_SYSTEM_COMMAND:
 			myJob = new ExecuteAsProcess(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 			break;
-			
+
 		case JobCommandType.INT_BATCH_PROCESS:
 			myJob = new ExecuteInShell(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 			break;
-			
+
 		case JobCommandType.INT_SHELL_SCRIPT:
 			myJob = new ExecuteInShell(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 			break;
-			
+
 		case JobCommandType.INT_SAP:
-			//TODO Gelistirme yapilacak.
+			// TODO Gelistirme yapilacak.
 			break;
-			
+
 		case JobCommandType.INT_SAS:
-			//TODO Gelistirme yapilacak.
+			// TODO Gelistirme yapilacak.
 			break;
-			
+
 		case JobCommandType.INT_ETL_TOOL_JOBS:
-
-			// DB Connection
-			DbConnectionProperties dbConnectionProperties2 = TypeUtils.resolvedbConnectionProperties(jobRuntimeProperties.getJobProperties());
-
-			int dbPropertiesID2 = dbConnectionProperties2.getDbPropertiesId().intValue();
-
-			DbProperties dbProperties2 = null;
-
-			try {
-				dbProperties2 = DBUtils.searchDBPropertiesById(dbPropertiesID2);
-			} catch (XMLDBException e) {
-				e.printStackTrace();
-			}
-
-			if (dbProperties2 != null) {
-				jobRuntimeProperties.setDbProperties(dbProperties2);
-			} else {
-				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli Db baglanti bilgileri alinamadi !");
-				myLogger.error("dbProperties -> id=" + dbPropertiesID2 + "bulunamadi !");
-			}
-
-			// DB Connection Profile
-
-			int dbCPID2 = dbConnectionProperties2.getDbUserId().intValue();
-
-			DbConnectionProfile dbConnectionProfile2 = null;
-
-			try {
-				dbConnectionProfile2 = DBUtils.searchDBConnectionProfilesById(dbCPID2);
-			} catch (XMLDBException e) {
-				e.printStackTrace();
-			}
-
-			if (dbConnectionProfile2 != null) {
-				jobRuntimeProperties.setDbConnectionProfile(dbConnectionProfile2);
-			} else {
-				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli DbConnectionProfile baglanti bilgileri alinamadi !");
-				myLogger.error("dbConnectionProfile -> id=" + dbCPID2 + "bulunamadi !");
-			}
-
-			myJob = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);			
+			// TODO Gelistirme yapilacak.
 			break;
-			
+
 		case JobCommandType.INT_FTP:
 
 			FtpAdapterProperties adapterProperties = TypeUtils.resolveFtpAdapterProperties(jobRuntimeProperties.getJobProperties());
@@ -412,9 +365,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			break;
 
 		case JobCommandType.INT_DB_JOBS:
+			
 			// TODO db joblari ile ilgili ayarlama yapilacak
 			// TODO ilgili ayarlama yapilacak
-            // Simdilik DB JOBS da olani koydum. hs.
+			// Simdilik DB JOBS da olani koydum. hs.
 			// DB Connection
 			DbConnectionProperties dbConnectionProperties = TypeUtils.resolvedbConnectionProperties(jobRuntimeProperties.getJobProperties());
 
@@ -433,6 +387,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			} else {
 				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli Db baglanti bilgileri alinamadi !");
 				myLogger.error("dbProperties -> id=" + dbPropertiesID + "bulunamadi !");
+				break;
 			}
 
 			// DB Connection Profile
@@ -452,76 +407,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 			} else {
 				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli DbConnectionProfile baglanti bilgileri alinamadi !");
 				myLogger.error("dbConnectionProfile -> id=" + dbCPID + "bulunamadi !");
-			}
-
-			DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
-
-			int dbType = dbProperties.getDbType().intValue();
-
-			switch (dbType) {
-
-			case DbType.INT_ORACLE:
-				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new JDBCOracleSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getScriptProperties() != null) {
-					myJob = new OracleSQLScriptExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-					myJob = new OracleSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				}
-
-				break;
-
-			case DbType.INT_POSTGRE_SQL:
-				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getScriptProperties() != null) {
-					myJob = new PostgreSQLScriptExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-					myJob = new PostgreSQLStoredProcedureExecuter(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				}
-
-				break;
-
-			case DbType.INT_DB_2:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_FIREBIRD:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_INFORMIX:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_MY_SQL:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SAS:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SQL_SERVER:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SYBASE:
-				//TODO Gelistirme yapilacak.
-				break;
-				//TODO Gelistirme yapilacak.
-			case DbType.INT_TERADATA:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			default:
 				break;
 			}
-
+			
+			ExtractDBJobs.evaluate(spaceWideRegistry, dbProperties, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger());
+			
 			break;
 
 		case JobCommandType.INT_FILE_LISTENER:
@@ -531,7 +421,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		case JobCommandType.INT_PROCESS_NODE:
 			myJob = new ProcessNode(getSpaceWideRegistry(), SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 			break;
-			
+
 		case JobCommandType.INT_FILE_PROCESS:
 			FileAdapterProperties fileAdapterProperties = TypeUtils.resolveFileAdapterProperties(jobRuntimeProperties.getJobProperties());
 
