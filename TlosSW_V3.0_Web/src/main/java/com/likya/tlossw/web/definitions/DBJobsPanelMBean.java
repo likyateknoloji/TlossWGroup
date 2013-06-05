@@ -16,6 +16,7 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetail
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
+import com.likya.tlos.model.xmlbeans.dbjob.DbAccessMethodDocument.DbAccessMethod;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.DbJobDefinitionDocument.DbJobDefinition;
 import com.likya.tlos.model.xmlbeans.dbjob.DbJobTypeDocument.DbJobType;
@@ -130,15 +131,17 @@ public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
-		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin
-		// bu kontrol yapiliyor
+		dbJobDefinition = DbJobDefinition.Factory.newInstance();
+
+		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin bu kontrol yapiliyor
+		// ayrica dbAccessMethod alani set ediliyor
 		if (jobTypeDetails.getSpecialParameters() == null) {
 			specialParameters = SpecialParameters.Factory.newInstance();
+			dbJobDefinition.setDbAccessMethod(DbAccessMethod.NATIVE);
 		} else {
 			specialParameters = jobTypeDetails.getSpecialParameters();
+			dbJobDefinition.setDbAccessMethod(specialParameters.getDbJobDefinition().getDbAccessMethod());
 		}
-
-		dbJobDefinition = DbJobDefinition.Factory.newInstance();
 
 		DbConnectionProperties dbConnectionProperties = DbConnectionProperties.Factory.newInstance();
 		dbConnectionProperties.setDbUserId(new BigInteger(selectedDbDefinition));
