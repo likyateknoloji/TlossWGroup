@@ -1211,7 +1211,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 
 		String url = dbProperties.getDbUrl();
-		url += "@//" + dbProperties.getHostName() + ":" + dbProperties.getFtpPortNumber() + "/" + dbProperties.getDbName();
+		url += "@//" + dbProperties.getHostName() + ":" + dbProperties.getListenerPortNumber() + "/" + dbProperties.getDbName();
 
 		Properties props = new Properties();
 
