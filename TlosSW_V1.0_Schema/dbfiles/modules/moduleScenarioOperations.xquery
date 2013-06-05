@@ -51,6 +51,12 @@ declare function hs:getScenarioFromId($documentName as xs:string, $id as xs:inte
         return $scenario
 };
 
+declare function hs:scenarioList() as element(dat:scenario)* 
+ {
+	for $scenario in doc("//db/TLOSSW/xmls/tlosSWData10.xml")/dat:TlosProcessData//dat:scenario
+	return  $scenario
+};
+
 (: INSERT :)
 declare function hs:insertScenarioLock($documentName as xs:string, $scenario as element(dat:scenario), $scenarioPath )
 {
@@ -244,6 +250,13 @@ declare function hs:getJobFromJobName($documentName as xs:string, $jobName as xs
 	for $job in $doc//dat:jobProperties
         where $job/dat:baseJobInfos/com:jsName = $jobName
         return $job
+};
+
+(: ornek kullanim lk:jobList(1,2) ilk uc eleman :)
+declare function hs:jobList($firstElement as xs:int, $lastElement as xs:int) as element(dat:jobProperties)* 
+ {
+	for $jobd in doc("//db/TLOSSW/xmls/tlosSWData10.xml")/dat:TlosProcessData//dat:jobProperties[position() = ($firstElement to $lastElement)]
+	return  $jobd
 };
 
 (: INSERT :)
