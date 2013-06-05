@@ -38,6 +38,9 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		DbProperties dbProperties = getJobRuntimeProperties().getDbProperties();
 		DbConnectionProfile dbConnectionProfile = getJobRuntimeProperties().getDbConnectionProfile();
+		String ipAddress = dbProperties.getIpAddress();
+		int port = dbProperties.getListenerPortNumber();
+		String remoteInfo = "";
 
 		while (true) {
 
@@ -51,11 +54,15 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 				String userName = dbConnectionProfile.getUserName(); // "postgres"; // Connection profile dan alacak.
 				String password = dbConnectionProfile.getUserPassword(); // "ad0215"; // Connection profile dan alacak.
 				String dbName = dbProperties.getDbName(); // "Carre"; // Connection profile dan alacak.
+				
+				if(ipAddress != null && !ipAddress.equals("") && port != 0) {
+					remoteInfo = " -h " + ipAddress + " -p " + port;
+				}
 
 				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
 				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
 
-				psqlClientName = psqlClientName + " -U " + userName + " -d " + dbName + " -f " + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
+				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -f " + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
