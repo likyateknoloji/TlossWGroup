@@ -1595,9 +1595,10 @@
 		                                    <dbUserId>3</dbUserId>
 		                                </dbConnectionProperties>
 		                                <dbJobType>Free SQL</dbJobType>
-		                                <freeSQLProperties>
+										<db:dbAccessMethod>JDBC</db:dbAccessMethod>
+		                                <db:freeSQLProperties>
 		                                    <sqlSentence>select * from personel</sqlSentence>
-		                                </freeSQLProperties>
+		                                </db:freeSQLProperties>
 		                            </dbJobDefinition>
 		                        </com:specialParameters>
 		                    </com:jobTypeDetails>
