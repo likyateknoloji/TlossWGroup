@@ -27,7 +27,7 @@ public abstract class FtpExecutor extends FileJob {
 	private String userName = null;
 	private String password = null;
 	
-	short port = 0;
+	int port = 0;
 	
 	protected boolean retryFlag = true;
 
