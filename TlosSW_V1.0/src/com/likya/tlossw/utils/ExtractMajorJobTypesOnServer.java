@@ -155,7 +155,7 @@ public class ExtractMajorJobTypesOnServer {
 				break;
 			}
 			
-			ExtractDBJobs.evaluate(spaceWideRegistry, dbProperties, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger());
+			myJob = ExtractDBJobs.evaluate(spaceWideRegistry, dbProperties, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger());
 			
 			break;
 
