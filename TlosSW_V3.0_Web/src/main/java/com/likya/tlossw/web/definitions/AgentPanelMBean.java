@@ -53,7 +53,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	private Collection<SelectItem> resourceList = null;
 
 	private String nrpePort;
-	private String jmxPort;
+	private String jmxTlsPort;
 	private String jmxPassword2;
 	private int durationForUnavailability;
 	private long jobTransferFailureTime;
@@ -107,7 +107,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 					agentType = agent.getAgentType().toString();
 
 					nrpePort = agent.getNrpePort() + "";
-					jmxPort = agent.getJmxPort() + "";
+					jmxTlsPort = agent.getJmxTlsPort() + "";
 					jmxPassword2 = agent.getJmxPassword();
 					setDurationForUnavailability(agent.getDurationForUnavailability());
 					setJobTransferFailureTime(agent.getJobTransferFailureTime());
@@ -148,7 +148,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private boolean validate() {
-		if (nrpePort.equals(jmxPort)) {
+		if (nrpePort.equals(jmxTlsPort)) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_WARN, "tlos.error.agent.insert.portDuplicate", null);
 			return false;
 		}
@@ -157,7 +157,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private boolean checkDuplicate() {
-		SWAgent duplicateAgent = getDbOperations().checkAgent(agent.getResource().getStringValue(), agent.getJmxPort());
+		SWAgent duplicateAgent = getDbOperations().checkAgent(agent.getResource().getStringValue(), agent.getJmxTlsPort());
 		if (duplicateAgent != null) {
 			addMessage("yeniAgent", FacesMessage.SEVERITY_WARN, "tlos.error.agent.insert.duplicate", null);
 			return false;
@@ -180,8 +180,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		Resource resourceDef = Resource.Factory.newInstance();
 		resourceDef.setStringValue(resource);
 		agent.setResource(resourceDef);
-		agent.setNrpePort(Short.parseShort(nrpePort));
-		agent.setJmxPort(Short.parseShort(jmxPort));
+		agent.setNrpePort(Integer.parseInt(nrpePort));
+		agent.setJmxTlsPort(Integer.parseInt(jmxTlsPort));
 		agent.setOsType(OperatingSystemTypeEnumeration.Enum.forString(osType));
 		agent.setAgentType(AgentType.Enum.forString(agentType));
 		agent.setDurationForUnavailability(durationForUnavailability);
@@ -545,12 +545,12 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.nrpePort = nrpePort;
 	}
 
-	public String getJmxPort() {
-		return jmxPort;
+	public String getJmxTlsPort() {
+		return jmxTlsPort;
 	}
 
-	public void setJmxPort(String jmxPort) {
-		this.jmxPort = jmxPort;
+	public void setJmxTlsPort(String jmxTlsPort) {
+		this.jmxTlsPort = jmxTlsPort;
 	}
 
 	public String getParamPreValueTime() {
