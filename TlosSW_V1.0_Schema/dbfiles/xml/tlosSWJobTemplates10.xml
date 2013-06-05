@@ -1316,6 +1316,7 @@
 											<db:dbUserId>10</db:dbUserId>
 										</db:dbConnectionProperties>
 										<db:dbJobType>Script</db:dbJobType>
+										<db:dbAccessMethod>JDBC</db:dbAccessMethod>
 										<db:scriptProperties>
 											<db:sqlScriptFileName>posgreSQLScript.sql
 											</db:sqlScriptFileName>
@@ -1395,6 +1396,7 @@
 											<db:dbUserId>1</db:dbUserId>
 										</db:dbConnectionProperties>
 										<db:dbJobType>Store-Procedure</db:dbJobType>
+										<db:dbAccessMethod>JDBC</db:dbAccessMethod>
 										<db:storeProcedureProperties>
 											<db:sqlStoredProcedureSchemaName>public
 											</db:sqlStoredProcedureSchemaName>
@@ -1476,6 +1478,7 @@
 											<db:dbUserId>1</db:dbUserId>
 										</db:dbConnectionProperties>
 										<db:dbJobType>Free SQL</db:dbJobType>
+										<db:dbAccessMethod>JDBC</db:dbAccessMethod>
 										<db:freeSQLProperties>
 											<db:sqlSentence>select * from snpw1.hmeq_flagged
 											</db:sqlSentence>
