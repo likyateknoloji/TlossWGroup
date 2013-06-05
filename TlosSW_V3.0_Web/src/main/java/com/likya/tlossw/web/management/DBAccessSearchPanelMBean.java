@@ -44,6 +44,7 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	private ArrayList<DBAccessInfoTypeClient> searchDBAccessProfileList;
 	private transient DataTable searchDBAccessProfileTable;
+	private DBAccessInfoTypeClient selectedRow;
 
 	private List<Person> filteredDBAccessList;
 
@@ -118,7 +119,9 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void deleteDBAccessAction(ActionEvent e) {
-		dbAccessInfoTypeClient = (DBAccessInfoTypeClient) searchDBAccessProfileTable.getRowData();
+		// dbAccessInfoTypeClient = (DBAccessInfoTypeClient) searchDBAccessProfileTable.getRowData();
+		dbAccessInfoTypeClient = selectedRow;
+
 		dbConnectionProfile = dbAccessInfoTypeClient.getDbConnectionProfile();
 
 		if (getDbOperations().deleteDBAccessProfile(getDBAccessXML())) {
@@ -209,6 +212,14 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void setFilteredDBAccessList(List<Person> filteredDBAccessList) {
 		this.filteredDBAccessList = filteredDBAccessList;
+	}
+
+	public DBAccessInfoTypeClient getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(DBAccessInfoTypeClient selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

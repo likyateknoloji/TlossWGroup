@@ -29,6 +29,7 @@ public class FTPAccessSearchPanelMBean extends TlosSWBaseBean implements Seriali
 
 	private ArrayList<FtpProperties> searchFTPAccessList;
 	private transient DataTable searchFTPAccessTable;
+	private FtpProperties selectedRow;
 
 	private List<FtpProperties> filteredFTPAccessList;
 
@@ -75,7 +76,9 @@ public class FTPAccessSearchPanelMBean extends TlosSWBaseBean implements Seriali
 	}
 
 	public void deleteFTPAccessAction(ActionEvent e) {
-		ftpProperties = (FtpProperties) searchFTPAccessTable.getRowData();
+		// ftpProperties = (FtpProperties) searchFTPAccessTable.getRowData();
+		ftpProperties = selectedRow;
+
 		// int id = ftpProperties.getId();
 
 		if (getDbOperations().deleteFTPAccessConnection(getFTPPropertiesXML())) {
@@ -132,6 +135,14 @@ public class FTPAccessSearchPanelMBean extends TlosSWBaseBean implements Seriali
 
 	public void setFilteredFTPAccessList(List<FtpProperties> filteredFTPAccessList) {
 		this.filteredFTPAccessList = filteredFTPAccessList;
+	}
+
+	public FtpProperties getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(FtpProperties selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

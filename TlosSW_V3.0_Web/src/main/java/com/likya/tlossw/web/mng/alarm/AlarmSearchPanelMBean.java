@@ -81,7 +81,8 @@ public class AlarmSearchPanelMBean extends AlarmBaseBean implements Serializable
 	}
 
 	public void deleteAlarmAction(ActionEvent e) {
-		setAlarm((Alarm) getSearchAlarmTable().getRowData());
+		// setAlarm((Alarm) getSearchAlarmTable().getRowData());
+		setAlarm(getSelectedRow());
 
 		if (getDbOperations().deleteAlarm(getAlarmXML())) {
 			getSearchAlarmList().remove(getAlarm());

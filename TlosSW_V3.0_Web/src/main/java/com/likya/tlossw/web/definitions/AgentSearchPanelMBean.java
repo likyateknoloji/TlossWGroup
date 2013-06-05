@@ -39,6 +39,7 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	private ArrayList<SWAgent> searchAgentList;
 	private transient DataTable searchAgentTable;
+	private SWAgent selectedRow;
 
 	private List<SWAgent> filteredAgents;
 
@@ -88,7 +89,9 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 	}
 
 	public void deleteAgentAction(ActionEvent e) {
-		agent = (SWAgent) searchAgentTable.getRowData();
+		// agent = (SWAgent) searchAgentTable.getRowData();
+		agent = selectedRow;
+
 		resource = agent.getResource().toString();
 
 		if (dbOperations.deleteAgent(getAgentXML())) {
@@ -178,6 +181,14 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void setResourceList(Collection<SelectItem> resourceList) {
 		this.resourceList = resourceList;
+	}
+
+	public SWAgent getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(SWAgent selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

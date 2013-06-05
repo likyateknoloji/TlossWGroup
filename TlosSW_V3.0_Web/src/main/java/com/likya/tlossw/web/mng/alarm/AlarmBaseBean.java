@@ -112,7 +112,8 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	private ArrayList<Alarm> searchAlarmList;
 	private transient DataTable searchAlarmTable;
-	
+	private Alarm selectedRow;
+
 	private JsRealTime jsRealTime;
 
 	public String getAlarmXML() {
@@ -691,6 +692,14 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
 		this.selectedTypeOfTime = selectedTypeOfTime;
+	}
+
+	public Alarm getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(Alarm selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

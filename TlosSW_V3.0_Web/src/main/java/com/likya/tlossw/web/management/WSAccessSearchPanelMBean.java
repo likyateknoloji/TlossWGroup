@@ -39,6 +39,7 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	private ArrayList<WSAccessInfoTypeClient> searchWSAccessList;
 	private transient DataTable searchWSAccessTable;
+	private WSAccessInfoTypeClient selectedRow;
 
 	private List<WSAccessInfoTypeClient> filteredWSAccessList;
 
@@ -114,7 +115,9 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void deleteWSAccessAction(ActionEvent e) {
-		wsAccessInfoTypeClient = (WSAccessInfoTypeClient) searchWSAccessTable.getRowData();
+		// wsAccessInfoTypeClient = (WSAccessInfoTypeClient) searchWSAccessTable.getRowData();
+		wsAccessInfoTypeClient = selectedRow;
+
 		userAccessProfile = wsAccessInfoTypeClient.getWsAccessProfile();
 
 		if (getDbOperations().deleteWSAccessProfile(getWSAccessProfileXML())) {
@@ -205,6 +208,14 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void setFilteredWSAccessList(List<WSAccessInfoTypeClient> filteredWSAccessList) {
 		this.filteredWSAccessList = filteredWSAccessList;
+	}
+
+	public WSAccessInfoTypeClient getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(WSAccessInfoTypeClient selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

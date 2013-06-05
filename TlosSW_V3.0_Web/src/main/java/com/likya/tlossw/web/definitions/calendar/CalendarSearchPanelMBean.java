@@ -35,6 +35,7 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	private ArrayList<CalendarProperties> searchCalendarList;
 	private transient DataTable searchCalendarTable;
+	private CalendarProperties selectedRow;
 
 	private Date validFrom;
 
@@ -99,7 +100,8 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	}
 
 	public void deleteCalendarAction(ActionEvent e) {
-		calendar = (CalendarProperties) searchCalendarTable.getRowData();
+		// calendar = (CalendarProperties) searchCalendarTable.getRowData();
+		calendar = selectedRow;
 
 		if (getDbOperations().deleteCalendar(getCalendarPropertiesXML())) {
 			searchCalendarList.remove(calendar);
@@ -165,6 +167,14 @@ public class CalendarSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void setFilteredCalendarList(List<CalendarProperties> filteredCalendarList) {
 		this.filteredCalendarList = filteredCalendarList;
+	}
+
+	public CalendarProperties getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(CalendarProperties selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

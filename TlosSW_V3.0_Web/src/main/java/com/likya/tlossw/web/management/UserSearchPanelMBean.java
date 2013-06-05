@@ -50,6 +50,7 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	private boolean transformToLocalTime = false;
 
 	private transient DataTable searchUserTable;
+	private Person selectedRow;
 
 	public void dispose() {
 		person = null;
@@ -109,7 +110,9 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void deleteUserAction(ActionEvent e) {
-		person = (Person) searchUserTable.getRowData();
+		// person = (Person) searchUserTable.getRowData();
+		person = selectedRow;
+		
 		role = person.getRole().toString();
 
 		if (checkDeleteUser()) {
@@ -125,6 +128,7 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public boolean checkDeleteUser() {
+		// TODO login kullanıcının id değerine göre kontrol edilmeli, 1'e göre değil.
 		if (person.getId() == 1) {
 			addMessage("searchUser", FacesMessage.SEVERITY_ERROR, "tlos.error.user.delete.defaultUser", null);
 			return false;
@@ -219,6 +223,14 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 
 	public void setFilteredUsers(List<Person> filteredUsers) {
 		this.filteredUsers = filteredUsers;
+	}
+
+	public Person getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(Person selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

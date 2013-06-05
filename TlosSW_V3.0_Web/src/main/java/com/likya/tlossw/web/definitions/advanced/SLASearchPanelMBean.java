@@ -35,6 +35,7 @@ public class SLASearchPanelMBean extends TlosSWBaseBean implements Serializable 
 
 	private ArrayList<SLA> searchSlaList;
 	private transient DataTable searchSlaTable;
+	private SLA selectedRow;
 
 	private Date startDate;
 	private Date endDate;
@@ -120,7 +121,8 @@ public class SLASearchPanelMBean extends TlosSWBaseBean implements Serializable 
 	}
 
 	public void deleteSlaAction(ActionEvent e) {
-		sla = (SLA) searchSlaTable.getRowData();
+		// sla = (SLA) searchSlaTable.getRowData();
+		sla = selectedRow;
 
 		if (getDbOperations().deleteSla(getSlaXML())) {
 			searchSlaList.remove(sla);
@@ -202,6 +204,14 @@ public class SLASearchPanelMBean extends TlosSWBaseBean implements Serializable 
 
 	public void setFilteredSlaList(List<SLA> filteredSlaList) {
 		this.filteredSlaList = filteredSlaList;
+	}
+
+	public SLA getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(SLA selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

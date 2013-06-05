@@ -34,6 +34,7 @@ public class ProgramProvisionSearchPanelMBean extends TlosSWBaseBean implements 
 
 	private ArrayList<License> searchLicenseList;
 	private transient DataTable searchLicenseTable;
+	private License selectedRow;
 
 	private Date startDate;
 	private Date endDate;
@@ -110,7 +111,8 @@ public class ProgramProvisionSearchPanelMBean extends TlosSWBaseBean implements 
 	}
 
 	public void deleteProvisionAction(ActionEvent e) {
-		license = (License) searchLicenseTable.getRowData();
+		// license = (License) searchLicenseTable.getRowData();
+		license = selectedRow;
 
 		if (getDbOperations().deleteProvision(getLicenseXML())) {
 			searchLicenseList.remove(license);
@@ -192,6 +194,14 @@ public class ProgramProvisionSearchPanelMBean extends TlosSWBaseBean implements 
 
 	public void setFilteredLicenseList(List<License> filteredLicenseList) {
 		this.filteredLicenseList = filteredLicenseList;
+	}
+
+	public License getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(License selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

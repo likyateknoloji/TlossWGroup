@@ -32,6 +32,7 @@ public class DBConnectionSearchPanelMBean extends TlosSWBaseBean implements Seri
 
 	private ArrayList<DbProperties> searchDBList;
 	private transient DataTable searchDBTable;
+	private DbProperties selectedRow;
 
 	private List<Person> filteredDBList;
 
@@ -93,7 +94,8 @@ public class DBConnectionSearchPanelMBean extends TlosSWBaseBean implements Seri
 	}
 
 	public void deleteDBConnectionAction(ActionEvent e) {
-		dbProperties = (DbProperties) searchDBTable.getRowData();
+		// dbProperties = (DbProperties) searchDBTable.getRowData();
+		dbProperties = selectedRow;
 
 		if (getDbOperations().deleteDBConnection(getDBPropertiesXML())) {
 			searchDBList.remove(dbProperties);
@@ -150,6 +152,14 @@ public class DBConnectionSearchPanelMBean extends TlosSWBaseBean implements Seri
 
 	public void setFilteredDBList(List<Person> filteredDBList) {
 		this.filteredDBList = filteredDBList;
+	}
+
+	public DbProperties getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(DbProperties selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }
