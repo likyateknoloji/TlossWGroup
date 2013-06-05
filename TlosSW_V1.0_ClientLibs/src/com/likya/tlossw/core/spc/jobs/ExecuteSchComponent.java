@@ -45,7 +45,7 @@ public abstract class ExecuteSchComponent extends Job {
 		String host = executeRShellParams.getIpAddress(); //"192.168.1.39";
 		String user = executeRShellParams.getUserName(); // "likya";
 		String password = executeRShellParams.getUserPassword(); //"likya";
-		int port = executeRShellParams.getPort().intValue(); //"likya";
+		int port = executeRShellParams.getPort(); //"22";
 
 		jobCommand = executeRShellParams.getJobCommand(); //"/home/likya/murat/Agent/jobs/job1.sh";
 		
