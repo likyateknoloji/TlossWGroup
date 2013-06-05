@@ -797,16 +797,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			}
 
 			JsPlannedTime jsPlannedTime = timeManagement.getJsPlannedTime();
-			String startTimeStr = jsPlannedTime.getStartTime().getTime().toString();
-			jsPlannedTime.getStartTime().setTime(DefinitionUtils.dateToXmlTime(startTimeStr, selectedTZone));
+			jsPlannedTime.getStartTime().setTime(DefinitionUtils.dateToXmlTime(startTime, selectedTZone));
 
 			// ekrandan stoptime girildiyse onu set ediyor, bunu starttime
 			// girildiyse kontrol ediyor cunku start time olmadan stop time
 			// tanimi yapilmiyor
 			if (defineStopTime) {
 				StopTime jsStopTime = StopTime.Factory.newInstance();
-				String stopTimeStr = jsPlannedTime.getStopTime().getTime().toString();
-				jsStopTime.setTime(DefinitionUtils.dateToXmlTime(stopTimeStr, selectedTZone));
+				jsStopTime.setTime(DefinitionUtils.dateToXmlTime(stopTime, selectedTZone));
 
 				jsPlannedTime.setStopTime(jsStopTime);
 
