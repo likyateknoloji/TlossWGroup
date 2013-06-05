@@ -413,7 +413,7 @@
 							<p:panelGrid columns="6" style="border-width: 0px;" width="100%">
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newAlarm.stateName']}" />
-								<p:selectOneMenu id="dropstate" style="text-align: center;"
+								<p:selectOneMenu id="dropstate" style="text-align: center;width: 100pt"
 									value="#{alarmPanelMBean.state}" partialSubmit="true">
 									<f:selectItems value="#{alarmPanelMBean.alarmStateList}" />
 								</p:selectOneMenu>
@@ -421,7 +421,7 @@
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newAlarm.alarmSubState']}"
 									rendered="#{alarmPanelMBean.stateDepth eq 'SubState' or alarmPanelMBean.stateDepth eq 'Status'}" />
-								<p:selectOneMenu id="dropsubstate" style="text-align: center;"
+								<p:selectOneMenu id="dropsubstate" style="text-align: center;width: 100pt"
 									rendered="#{alarmPanelMBean.stateDepth eq 'SubState' or alarmPanelMBean.stateDepth eq 'Status'}"
 									value="#{alarmPanelMBean.substate}" partialSubmit="true">
 									<f:selectItems value="#{alarmPanelMBean.alarmSubStateList}" />
@@ -435,7 +435,7 @@
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newAlarm.alarmStateStatus']}"
 									rendered="#{alarmPanelMBean.stateDepth eq 'Status'}" />
-								<p:selectOneMenu id="dropstatus" style="text-align: center;"
+								<p:selectOneMenu id="dropstatus" style="text-align: center;width: 150pt"
 									rendered="#{alarmPanelMBean.stateDepth eq 'Status'}"
 									value="#{alarmPanelMBean.status}" partialSubmit="true">
 									<f:selectItems value="#{alarmPanelMBean.alarmStateStatusList}" />
