@@ -71,7 +71,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 				<xs:element ref="lt:bufferSize"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -81,7 +81,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -90,7 +90,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -128,7 +128,7 @@
 			<xs:sequence>
 			    <xs:element ref="res:Resource"/>
 				<xs:element ref="lt:ipAddress"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

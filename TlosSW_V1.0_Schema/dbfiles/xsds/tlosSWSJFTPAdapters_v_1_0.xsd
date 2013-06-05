@@ -242,7 +242,7 @@
 				<xs:element ref="com:connName"/>
 				<xs:element ref="com:userName"/>
 				<xs:element ref="com:userPassword"/>
-				<xs:element ref="com:ftpPortNumber"/>
+				<xs:element name="ftpPortNumber" type="com:portType"/>
 				<xs:element ref="com:ipAddress"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -273,7 +273,7 @@
 	<xs:element name="securePort">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="com:ftpPortNumber"/>
+				<xs:element name="ftpPortNumber" type="com:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -324,7 +324,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="com:ipAddress"/>
-				<xs:element ref="com:portNumber"/>
+				<xs:element name="portNumber" type="com:portType"/>
 				<xs:element ref="com:userName"/>
 				<xs:element ref="com:userPassword"/>
 			</xs:sequence>

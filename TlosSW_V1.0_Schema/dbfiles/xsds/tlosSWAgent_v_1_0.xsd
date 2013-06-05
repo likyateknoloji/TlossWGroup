@@ -1,10 +1,12 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_agent_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_agent_types" elementFormDefault="qualified">
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_agent_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_agent_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/XML_data_types" schemaLocation="tlosSWData_v_1_0.xsd"/>
     <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types" schemaLocation="tlosSWParameters_v_1_0.xsd"/>
     <xs:import namespace="http://www.likyateknoloji.com/resource-extension-defs" schemaLocation="tlosSW-resource-extension-defs.xsd"/>
+    
     <xs:element name="TxMessageTypeEnumeration">
         <xs:simpleType>
             <xs:restriction base="xs:string">
@@ -148,21 +150,13 @@
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
+    
     <xs:element name="nrpeAvailable" type="xs:boolean" default="true"/>
-    <xs:element name="nrpePort">
-        <xs:simpleType>
-            <xs:restriction base="xs:short">
-                <xs:pattern value="[1-9][0-9]{3}"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="jmxPort">
-        <xs:simpleType>
-            <xs:restriction base="xs:short">
-                <xs:pattern value="[1-9][0-9]{3}"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
+    
+    <xs:element name="nrpePort" type="lt:portType"/>
+
+    <xs:element name="jmxPort" type="lt:portType"/>
+
     <xs:element name="jmxUser">
         <xs:simpleType>
             <xs:restriction base="xs:string">

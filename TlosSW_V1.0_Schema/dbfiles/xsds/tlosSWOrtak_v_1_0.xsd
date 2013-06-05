@@ -342,20 +342,13 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="portNumber">
-		<xs:simpleType>
-			<xs:restriction base="xs:short">
-				<xs:pattern value="[1-9][0-9]{3}" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="ftpPortNumber">
-		<xs:simpleType>
-			<xs:restriction base="xs:short">
-				<xs:pattern value="[0-9]{1,4}" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+	<xs:simpleType name="portType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="65535"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<xs:element name="smtpServerPassword">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -367,13 +360,6 @@
 	<xs:element name="smtpServerAddress">
 		<xs:simpleType>
 			<xs:restriction base="xs:string" />
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="smtpServerPort">
-		<xs:simpleType>
-			<xs:restriction base="xs:short">
-				<xs:pattern value="[0-9]{1,5}" />
-			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="ipAddress">

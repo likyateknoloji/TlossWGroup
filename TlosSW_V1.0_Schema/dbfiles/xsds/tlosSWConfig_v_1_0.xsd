@@ -166,7 +166,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment" />
-				<xs:element ref="lt:portNumber" />
+				<xs:element name="portNumber" type="lt:portType"/>
 				<xs:element ref="lt:bufferSize" />
 			</xs:sequence>
 		</xs:complexType>
@@ -198,7 +198,7 @@
 				<xs:element ref="smtpServerUserName" />
 				<xs:element ref="lt:smtpServerPassword" />
 				<xs:element ref="lt:smtpServerAddress" />
-				<xs:element ref="lt:smtpServerPort" />
+				<xs:element name="smtpServerPort" type="lt:portType"/>
 				<xs:element ref="statusListForMail" />
 			</xs:sequence>
 		</xs:complexType>
@@ -276,7 +276,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:ipAddress" />
-				<xs:element ref="lt:portNumber" />
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -379,7 +379,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -388,7 +388,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment"/>
-				<xs:element ref="lt:portNumber"/>
+				<xs:element name="portNumber" type="lt:portType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

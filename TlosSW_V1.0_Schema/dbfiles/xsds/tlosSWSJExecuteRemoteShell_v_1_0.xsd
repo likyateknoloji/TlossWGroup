@@ -14,7 +14,7 @@
 					<xs:element name="hostName" type="xs:string" />
 					<xs:element ref="com:ipAddress" />
 				</xs:choice>
-				<xs:element name="port" type="xs:integer" default="22" />
+				<xs:element name="port" type="com:portType" default="22" />
 				<xs:element ref="com:userName" />
 				<xs:element ref="com:userPassword" />
 				<xs:element ref="com:jobCommand" />

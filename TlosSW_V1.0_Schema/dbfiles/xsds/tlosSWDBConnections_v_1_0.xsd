@@ -23,7 +23,7 @@
 				<xs:element ref="dbc:driverName"/>
 				<xs:element ref="dbc:dbName"/>
 				<xs:element ref="dbc:hostName"/>
-				<xs:element ref="com:ftpPortNumber"/>
+				<xs:element name="listenerPortNumber" type="com:portType"/>
 				<xs:element ref="com:ipAddress"/>
 				<xs:element ref="dbc:jdbcClassName"/>
 				<xs:element ref="dbc:sqlClientAppName" minOccurs="0"/> <!-- free sqlde kullanilmiyor -->

@@ -1,6 +1,7 @@
 <!-- Created for the TLOSSW Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_nrpe_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_nrpe_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
 		   targetNamespace="http://www.likyateknoloji.com/XML_nrpe_types" elementFormDefault="qualified">
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
 	
     <xs:element name="NrpeData">
        <xs:complexType>
@@ -20,11 +21,7 @@
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="port" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:int"/>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="port" use="required" type="lt:portType"/>
             <xs:attribute name="os" use="required">
                 <xs:simpleType>
                     <xs:restriction base="xs:string"/>
