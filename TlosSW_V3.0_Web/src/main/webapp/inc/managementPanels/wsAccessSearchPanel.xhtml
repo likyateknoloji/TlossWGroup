@@ -76,6 +76,14 @@
 			<p:outputPanel id="wsAccessSearchPanel">
 
 				<p:panel styleClass="tlosFormBorderHighlight" rendered="#{not empty wsAccessSearchPanelMBean.searchWSAccessList}">
+
+					<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
+						severity="alert" widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchWSAccess:wsAccessSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{wsAccessSearchPanelMBean.deleteWSAccessAction}" />
+						<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="wsSearchDataTable" filteredValue="#{wsAccessSearchPanelMBean.filteredWSAccessList}" width="100%" value="#{wsAccessSearchPanelMBean.searchWSAccessList}"
 						binding="#{wsAccessSearchPanelMBean.searchWSAccessTable}" paginator="true" paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
@@ -86,13 +94,9 @@
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="wsDeleteButton" value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" rendered="#{security.WSAccessDelete}" />
-							<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
-								severity="alert" widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchWSAccess:wsAccessSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{wsAccessSearchPanelMBean.deleteWSAccessAction}" />
-								<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton id="wsDeleteButton" title="#{msgs['tlos.button.delete']}" value="#{msgs['tlos.button.delete']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.WSAccessDelete}" 
+								action="#{wsAccessSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column headerText="#{msgs['tlos.management.pannel.wsAccess.name']}" sortBy="#{item.serviceName}" filterBy="#{item.serviceName}" filterMatchMode="contains">

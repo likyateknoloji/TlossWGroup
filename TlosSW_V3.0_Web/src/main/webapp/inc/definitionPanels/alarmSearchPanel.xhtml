@@ -57,6 +57,12 @@
 			<p:outputPanel id="alarmSearchPanel">
 
 				<p:panel styleClass="tlosFormBorderHighlight" style="text-align: center;" header="#{msgs['tlos.management.pannel.alarmSearchDataTable.header']}" rendered="#{not empty alarmSearchPanelMBean.searchAlarmList}">
+
+					<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchAlarm:alarmSearchPanel" onclick="confirmation.hide()" actionListener="#{alarmSearchPanelMBean.deleteAlarmAction}" />
+						<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="alarmSearchDataTable" resizableColumns="true" filteredValue="#{alarmSearchPanelMBean.filteredAlarms}" width="100%" value="#{alarmSearchPanelMBean.searchAlarmList}" binding="#{alarmSearchPanelMBean.searchAlarmTable}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 
 
@@ -74,14 +80,9 @@
 							<!-- 								<f:param name="insertCheck" value="update" /> -->
 							<!-- 							</h:link> -->
 
-
-							<p:commandButton id="alarmDeleteButton" value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" rendered="#{security.AlarmDelete}">
-								<!-- <h:graphicImage value="../../images/delete2.png" /> -->
-								<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
-									<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchAlarm:alarmSearchPanel" onclick="confirmation.hide()" actionListener="#{alarmSearchPanelMBean.deleteAlarmAction}" />
-									<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
-								</p:confirmDialog>
-							</p:commandButton>
+							<p:commandButton id="alarmDeleteButton" title="#{msgs['tlos.button.delete']}" value="#{msgs['tlos.button.delete']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.AlarmDelete}" 
+								action="#{alarmSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column headerText="#{msgs['tlos.management.pannel.alarmProcesses.name']}" sortBy="#{item.name}" filterBy="#{item.name}" filterMatchMode="contains">

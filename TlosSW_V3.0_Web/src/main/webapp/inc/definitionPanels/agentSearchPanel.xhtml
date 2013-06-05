@@ -83,6 +83,21 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty agentSearchPanelMBean.searchAgentList}">
+
+					<p:confirmDialog id="confirmDialog"
+						style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchAgent:agentSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{agentSearchPanelMBean.deleteAgentAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="agentSearchDataTable"
 						resizableColumns="true"
 						filteredValue="#{agentSearchPanelMBean.filteredAgents}"
@@ -95,26 +110,14 @@
 						<p:column>
 							<p:commandButton id="agentEditButton" ajax="false"
 								rendered="#{security.AgentEdit}" immediate="false"
-								value="Update" action="agentPanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}" action="agentPanel.xhtml">
 								<f:param name="selectedAgentID" value="#{item.id}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="agentDeleteButton" value="Delete"
-								onclick="confirmation.show()" rendered="#{security.AgentDelete}" />
-							<p:confirmDialog id="confirmDialog"
-								style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchAgent:agentSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{agentSearchPanelMBean.deleteAgentAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton id="agentDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.AgentDelete}" 
+								action="#{agentSearchPanelMBean.setSelectedRow(item)}"/>
 
 						</p:column>
 

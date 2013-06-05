@@ -108,6 +108,21 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty dbAccessSearchPanelMBean.searchDBAccessProfileList}">
+
+					<p:confirmDialog id="confirmDialog"
+						style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchDBAccess:dbAccessSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{dbAccessSearchPanelMBean.deleteDBAccessAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="dbSearchDataTable"
 						filteredValue="#{dbAccessSearchPanelMBean.filteredDBAccessList}"
 						width="100%"
@@ -120,28 +135,15 @@
 						<p:column>
 							<p:commandButton id="dbEditButton" ajax="false"
 								rendered="#{security.DBAccessEdit}" immediate="false"
-								value="Update" action="dbAccessPanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}" action="dbAccessPanel.xhtml">
 								<f:param name="selectedDBAccessID"
 									value="#{item.dbConnectionProfile.ID}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="userDeleteButton" value="Delete"
-								onclick="confirmation.show()"
-								rendered="#{security.DBAccessDelete}" />
-							<p:confirmDialog id="confirmDialog"
-								style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchDBAccess:dbAccessSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{dbAccessSearchPanelMBean.deleteDBAccessAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton id="dbDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.DBAccessDelete}" 
+								action="#{dbAccessSearchPanelMBean.setSelectedRow(item)}"/>
 
 							<p:commandButton id="dbDeployButton"
 								value="#{msgs['tlos.button.deploy']}"

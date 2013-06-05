@@ -60,6 +60,14 @@
 			<p:outputPanel id="ftpAccessSearchPanel">
 
 				<p:panel styleClass="tlosFormBorderHighlight" rendered="#{not empty ftpAccessSearchPanelMBean.searchFTPAccessList}">
+
+					<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
+						severity="alert" widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchFTPAccess:ftpAccessSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{ftpAccessSearchPanelMBean.deleteFTPAccessAction}" />
+						<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="wsSearchDataTable" filteredValue="#{ftpAccessSearchPanelMBean.filteredFTPAccessList}" width="100%" value="#{ftpAccessSearchPanelMBean.searchFTPAccessList}"
 						binding="#{ftpAccessSearchPanelMBean.searchFTPAccessTable}" paginator="true" paginatorPosition="bottom"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
@@ -70,13 +78,9 @@
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" rendered="#{security.FTPAccessDelete}" />
-							<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
-								severity="alert" widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchFTPAccess:ftpAccessSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{ftpAccessSearchPanelMBean.deleteFTPAccessAction}" />
-								<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton title="#{msgs['tlos.button.delete']}" value="#{msgs['tlos.button.delete']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.FTPAccessDelete}" 
+								action="#{ftpAccessSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column headerText="#{msgs['tlos.management.pannel.ftpAccess.connName']}" sortBy="#{item.connection.connName}" filterBy="#{item.connection.connName}" filterMatchMode="contains">

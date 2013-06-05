@@ -91,6 +91,21 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty calendarSearchPanelMBean.searchCalendarList}">
+
+					<p:confirmDialog id="confirmDialog"
+						style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchCalendar:calendarSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{calendarSearchPanelMBean.deleteCalendarAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="calendarSearchDataTable"
 						filteredValue="#{calendarSearchPanelMBean.filteredCalendarList}"
 						width="100%"
@@ -103,26 +118,14 @@
 						<p:column>
 							<p:commandButton id="calEditButton" ajax="false"
 								rendered="#{security.CalendarEdit}" immediate="false"
-								value="Update" action="calendarPanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}" action="calendarPanel.xhtml">
 								<f:param name="selectedCalendarID" value="#{item.id}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton value="Delete" onclick="confirmation.show()"
-								rendered="#{security.CalendarDelete}" />
-							<p:confirmDialog id="confirmDialog"
-								style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchCalendar:calendarSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{calendarSearchPanelMBean.deleteCalendarAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.CalendarDelete}" 
+								action="#{calendarSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column

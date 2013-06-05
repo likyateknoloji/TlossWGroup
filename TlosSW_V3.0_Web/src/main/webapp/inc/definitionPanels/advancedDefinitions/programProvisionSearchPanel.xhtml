@@ -107,6 +107,21 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty ppSearchPanelMBean.searchLicenseList}">
+
+					<p:confirmDialog id="confirmDialog"
+						style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchPP:ppSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{ppSearchPanelMBean.deleteProvisionAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="ppSearchDataTable"
 						filteredValue="#{ppSearchPanelMBean.filteredLicenseList}"
 						width="100%" value="#{ppSearchPanelMBean.searchLicenseList}"
@@ -118,27 +133,14 @@
 						<p:column>
 							<p:commandButton id="ppEditButton" ajax="false"
 								rendered="#{security.ProvisionEdit}" immediate="false"
-								value="Update" action="programProvisionPanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}" action="programProvisionPanel.xhtml">
 								<f:param name="selectedProvisionID" value="#{item.licenseID}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="ppDeleteButton" value="Delete"
-								onclick="confirmation.show()"
-								rendered="#{security.ProvisionDelete}" />
-							<p:confirmDialog id="confirmDialog"
-								style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchPP:ppSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{ppSearchPanelMBean.deleteProvisionAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
+							<p:commandButton id="ppDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.ProvisionDelete}" 
+								action="#{ppSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column

@@ -102,6 +102,20 @@
 
 				<p:panel styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty userSearchPanelMBean.searchUserList}">
+
+					<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;"
+						message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"  
+						header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+						widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this"
+							value="#{msgs['tlos.ask.delete.confirm1']}"
+							update=":searchUser:userSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{userSearchPanelMBean.deleteUserAction}" />
+						<p:commandButton id="decline"
+							value="#{msgs['tlos.ask.delete.confirm2']}"
+							onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
 					<p:dataTable var="item" rows="10" id="userSearchDataTable" resizableColumns="true"  
 					    filteredValue="#{userSearchPanelMBean.filteredUsers}"
 						width="100%" value="#{userSearchPanelMBean.searchUserList}"
@@ -112,26 +126,14 @@
 
 						<p:column>
 							<p:commandButton id="userEditButton" ajax="false" rendered="#{security.UserEdit}"
-								immediate="false" value="Update" action="userPanel.xhtml">
+								immediate="false" value="#{msgs['tlos.ask.update.button']}" action="userPanel.xhtml">
 								<f:param name="selectedUserName" value="#{item.userName}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="userDeleteButton" value="Delete"
-								onclick="confirmation.show()" rendered="#{security.UserDelete}" />
-							<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;"
-								message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"  
-								header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-								widgetVar="confirmation">
-								<p:commandButton id="confirm" immediate="true" process="@this"
-									value="#{msgs['tlos.ask.delete.confirm1']}"
-									update=":searchUser:userSearchPanel" onclick="confirmation.hide()"
-									actionListener="#{userSearchPanelMBean.deleteUserAction}" />
-								<p:commandButton id="decline"
-									value="#{msgs['tlos.ask.delete.confirm2']}"
-									onclick="confirmation.hide()" type="button" />
-							</p:confirmDialog>
-					
+							<p:commandButton id="userDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.UserDelete}" 
+								action="#{userSearchPanelMBean.setSelectedRow(item)}"/>
 						</p:column>
 
 						<p:column id="modelHeader"
