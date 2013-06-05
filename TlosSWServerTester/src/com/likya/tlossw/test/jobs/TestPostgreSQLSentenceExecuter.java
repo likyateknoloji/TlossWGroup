@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.JDBCPostgreSQLSentenceExecuter;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -51,7 +51,7 @@ public class TestPostgreSQLSentenceExecuter extends TestSuit {
 		jobRuntimeProperties.setTreePath(spcId);
 
 		
-		PostgreSQLSentenceExecuter postgreSQLSentenceExecuter = new PostgreSQLSentenceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
+		JDBCPostgreSQLSentenceExecuter postgreSQLSentenceExecuter = new JDBCPostgreSQLSentenceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
 
 		Thread myRunner = new Thread(postgreSQLSentenceExecuter);
 
