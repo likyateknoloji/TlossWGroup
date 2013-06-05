@@ -100,9 +100,9 @@ public class Spc extends SpcBase {
 		getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin ana thread baslatiliyor. Toplam is Sayisi : " + getJobQueue().size());
 
 		/**
-		 * InfoBus null ise kritik bir hata vardýr, muhtemelen yazýlýmda bug vardýr. Koþulsuz olarak uygulama kapanmalýdýr.
+		 * InfoBus null ise kritik bir hata vardï¿½r, muhtemelen yazï¿½lï¿½mda bug vardï¿½r. Koï¿½ulsuz olarak uygulama kapanmalï¿½dï¿½r.
 		 * 
-		 * @author serkan taþ 19.09.2012
+		 * @author serkan taï¿½ 19.09.2012
 		 */
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcId(), getJobQueue().size()));
@@ -116,9 +116,9 @@ public class Spc extends SpcBase {
 		// PerformanceManager performanceManager = TlosSpaceWide.getSpaceWideRegistry().getPerformanceManagerReference();
 
 		/**
-		 * Senaryo içinde bulunan tüm iþler bitene yahut, bir nedenle senaryo durdurulana kadar aþaðýdaki döngü belli aralýklarla çalýþacaktýr.
+		 * Senaryo iï¿½inde bulunan tï¿½m iï¿½ler bitene yahut, bir nedenle senaryo durdurulana kadar aï¿½aï¿½ï¿½daki dï¿½ngï¿½ belli aralï¿½klarla ï¿½alï¿½ï¿½acaktï¿½r.
 		 * 
-		 * @author serkan taþ
+		 * @author serkan taï¿½
 		 *         22.09.2012
 		 */
 
@@ -163,9 +163,9 @@ public class Spc extends SpcBase {
 					// is kuyrugunun durumunu dokelim. Calisan, bekleyen ve
 					// biten islerin sayisini tespit edelim.
 					/**
-					 * TODO Burada listenin loglanmasý sýrasýnda, logun sadece ilgili senaryo yöneticisi loguna yönlendirilmesi gerekiyor.
+					 * TODO Burada listenin loglanmasï¿½ sï¿½rasï¿½nda, logun sadece ilgili senaryo yï¿½neticisi loguna yï¿½nlendirilmesi gerekiyor.
 					 * 
-					 * @author serkan taþ
+					 * @author serkan taï¿½
 					 *         20.09.2012
 					 */
 					JobQueueOperations.dumpJobQueue(getSpcId(), getJobQueue());
@@ -245,7 +245,7 @@ public class Spc extends SpcBase {
 
 				}
 
-				// Gelen deger saniye tipine çevriliyor.
+				// Gelen deger saniye tipine ï¿½evriliyor.
 				Thread.sleep(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000);
 
 				// myLogger.info("     > "+ this.getBaseScenarioInfos().getJsName() + " icin islerin bitmesini bekliyoruz ...");
@@ -266,9 +266,9 @@ public class Spc extends SpcBase {
 		// isForced true ise kalan islerin zorla bitirilmesi isteniyor anlamina geliyor. Thread ler terminate ediliyor.
 		// Kalan ne varsa temizliyoruz. Normalde kalmamasi lazim.
 		/**
-		 * Buraya sadece iþiler bitince deðil, executionPermission = false yapýlýnca da giriliyor. isActiveThreads : true : kalan bütün joblar taranýp çalýþanlar kapatýlýyor isActiveThreads : false : kalan bütün joblar taranýyor, eüer en az bir tane çalýþan var ise, bekliyor. Bütün iþler bitene kadar bekliyor.
+		 * Buraya sadece iï¿½iler bitince deï¿½il, executionPermission = false yapï¿½lï¿½nca da giriliyor. isActiveThreads : true : kalan bï¿½tï¿½n joblar taranï¿½p ï¿½alï¿½ï¿½anlar kapatï¿½lï¿½yor isActiveThreads : false : kalan bï¿½tï¿½n joblar taranï¿½yor, eï¿½er en az bir tane ï¿½alï¿½ï¿½an var ise, bekliyor. Bï¿½tï¿½n iï¿½ler bitene kadar bekliyor.
 		 * 
-		 * @author serkan taþ
+		 * @author serkan taï¿½
 		 *         20.09.2012
 		 */
 
@@ -314,17 +314,17 @@ public class Spc extends SpcBase {
 			// sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties().getJobProperties());
 
 		} else {
-			getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin süreç durduruldu.");
+			getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin sï¿½reï¿½ durduruldu.");
 		}
 
 		// **
-		// * Su anda calisan senaryo yöneticisinin yönettigi senaryoya ait tüm
-		// * isler bitince, asagidaki deger düzenlenmeli.
+		// * Su anda calisan senaryo yï¿½neticisinin yï¿½nettigi senaryoya ait tï¿½m
+		// * isler bitince, asagidaki deger dï¿½zenlenmeli.
 		// *
 		/**
-		 * Bu yorumda ve aþýda yapýlan iþ nedir ???
+		 * Bu yorumda ve aï¿½ï¿½da yapï¿½lan iï¿½ nedir ???
 		 * 
-		 * @author serkan taþ 20.09.2012
+		 * @author serkan taï¿½ 20.09.2012
 		 */
 		getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(getSpcId()).setJobListStatus(true);
 
@@ -374,9 +374,9 @@ public class Spc extends SpcBase {
 				getGlobalLogger().error("  > HATA : Bir isin state bilgisi tamamen bos olamaz !! Kontrol ediniz. " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 
 				/**
-				 * Eðer bu durum gerçekleþirse, ilgili iþ FAIL edilip bir sonraki iþe geçmeli
+				 * Eï¿½er bu durum gerï¿½ekleï¿½irse, ilgili iï¿½ FAIL edilip bir sonraki iï¿½e geï¿½meli
 				 * 
-				 * @author serkan taþ 21.09.2012
+				 * @author serkan taï¿½ 21.09.2012
 				 */
 				/*
 				 * StateName FAILED sadece sistemsel basarisizlik durumlarinda kullanilir. Diger durumlarda asagidaki sekilde kullanilir. HS 24.09.2012
@@ -389,9 +389,9 @@ public class Spc extends SpcBase {
 			// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
 			if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
 				/**
-				 * Burada yapýlan iþin ne olduüunu anlamadým...
+				 * Burada yapï¿½lan iï¿½in ne olduï¿½unu anlamadï¿½m...
 				 * 
-				 * @author serkan taþ 21.09.2012
+				 * @author serkan taï¿½ 21.09.2012
 				 */
 				scheduledJob.setFirstLoop(false);
 				continue;
@@ -399,7 +399,7 @@ public class Spc extends SpcBase {
 
 			try {
 
-				// job in PENDING olmasi halinde yapilacaklarin baþladýðý yer.
+				// job in PENDING olmasi halinde yapilacaklarin baï¿½ladï¿½ï¿½ï¿½ yer.
 
 				if (jobLiveStateInfo.getSubstateName().equals(SubstateName.IDLED)) {
 					/*
@@ -463,9 +463,9 @@ public class Spc extends SpcBase {
 
 						getGlobalLogger().error("  > HATA : Bir isin baslama kosulu bilgisi USER/EVENT/TIME disinda birsey bos olamaz !! Kontrol ediniz. " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 						/**
-						 * Eðer bu durum gerçekleþirse, ilgili iþ FAIL edilip bir sonraki iþe geçmeli
+						 * Eï¿½er bu durum gerï¿½ekleï¿½irse, ilgili iï¿½ FAIL edilip bir sonraki iï¿½e geï¿½meli
 						 * 
-						 * @author serkan taþ 21.09.2012
+						 * @author serkan taï¿½ 21.09.2012
 						 */
 						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 						scheduledJob.sendStatusChangeInfo();
@@ -478,9 +478,9 @@ public class Spc extends SpcBase {
 				} else {
 
 					/**
-					 * Eðer bu durum gerçekleþirse, ilgili iþ FAIL edilip bir sonraki iþe geçmeli
+					 * Eï¿½er bu durum gerï¿½ekleï¿½irse, ilgili iï¿½ FAIL edilip bir sonraki iï¿½e geï¿½meli
 					 * 
-					 * @author serkan taþ 21.09.2012
+					 * @author serkan taï¿½ 21.09.2012
 					 */
 					getGlobalLogger().error("  > HATA : Bir isin baslama kosulu bilgisi IDLED ve READY disinda birsey bos olamaz !! Kontrol ediniz. " + jobProperties.getBaseJobInfos().getJsName());
 					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
@@ -562,7 +562,7 @@ public class Spc extends SpcBase {
 			 * if (item != null) { myLogger.info("     > bagimlilik var1>" + item.getJsDependencyRule()); } else { myLogger.info("     > item bos !!"); throw new TlosFatalException(); }
 			 */
 			if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
-				// getMyLogger().error("Hatalý tanýmlama ! Uygulama sona eriyor !");
+				// getMyLogger().error("Hatalï¿½ tanï¿½mlama ! Uygulama sona eriyor !");
 				String errorMessage = "     > " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + " isi icin hatali bagimlilik tanimlamasi yapilmis ! (" + dependencyExpression + ") kontrol ediniz.";
 				getMyLogger().info(errorMessage);
 				getMyLogger().error(errorMessage);
@@ -751,7 +751,7 @@ public class Spc extends SpcBase {
 
 		// XmlBeansTransformer.insertNewLiveStateInfo(scheduledJob.getJobRuntimeProperties().getJobProperties(), StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 		// myLogger.info("     2XXX"+scheduledJob.getJobRuntimeProperties().getJobProperties().getJsName()+" > " +scheduledJob.getJobRuntimeProperties().getJobProperties());
-		boolean transferSuccess = TSWAgentJmxClient.jobHandle(agent.getResource().getStringValue(), (int) agent.getJmxPort(), XmlUtils.getRxMessageXML(rxMessage), jmxAgentUser);
+		boolean transferSuccess = TSWAgentJmxClient.jobHandle(agent.getResource().getStringValue(), (int) agent.getJmxTlsPort(), XmlUtils.getRxMessageXML(rxMessage), jmxAgentUser);
 
 		if (!transferSuccess) { // Eger agent a transfer basarili olmadi ise onden ekledigimiz state leri silmemiz gerekiyor. HS
 			jobProperties.getStateInfos().getLiveStateInfos().removeLiveStateInfo(0);
@@ -978,7 +978,7 @@ public class Spc extends SpcBase {
 
 	public void pause() {
 		if (isPausable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Beklemeye alýyor...");
+			getMyLogger().info("Spc " + getSpcId() + " Beklemeye alï¿½yor...");
 			getLiveStateInfo().setStateName(StateName.PENDING);
 			getLiveStateInfo().setSubstateName(SubstateName.PAUSED);
 			getMyLogger().info("Spc " + getSpcId() + " Beklemede !");
@@ -987,10 +987,10 @@ public class Spc extends SpcBase {
 
 	public void resume() {
 		if (isResumable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çýkartýyor...");
+			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan ï¿½ï¿½kartï¿½yor...");
 			getLiveStateInfo().setStateName(StateName.RUNNING);
 			getLiveStateInfo().setSubstateName(null);
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çýkartýldý !");
+			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan ï¿½ï¿½kartï¿½ldï¿½ !");
 		}
 	}
 
@@ -1018,13 +1018,13 @@ public class Spc extends SpcBase {
 				Spc spc = null;
 
 				if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
-					getMyLogger().error("Hatalý tanýmlama ! Uygulama sona eriyor !");
+					getMyLogger().error("Hatalï¿½ tanï¿½mlama ! Uygulama sona eriyor !");
 					throw new TlosFatalException();
 				}
 
 				if (item.getJsPath() == null || item.getJsPath() == "") {
-					getMyLogger().error("Hatalý sanal baðýmlýlýk ! Tanýmý yapýlan senaryonun yolu yanlýþ ! Sernaryo adý : " + item.getJsName());
-					getMyLogger().error("Ana senaryo adý : " + getSpcId());
+					getMyLogger().error("Hatalï¿½ sanal baï¿½ï¿½mlï¿½lï¿½k ! Tanï¿½mï¿½ yapï¿½lan senaryonun yolu yanlï¿½ï¿½ ! Sernaryo adï¿½ : " + item.getJsName());
+					getMyLogger().error("Ana senaryo adï¿½ : " + getSpcId());
 					getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
 					getMyLogger().error("Uygulama sona eriyor !");
 					throw new TlosFatalException();
@@ -1033,8 +1033,8 @@ public class Spc extends SpcBase {
 					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), getSpaceWideRegistry().getInstanceLookupTable());
 
 					if (spcInfoType == null) {
-						getMyLogger().error("Genel baðýmlýlýk tanýmý yapýlan senaryo bulunamadý : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-						getMyLogger().error("Ana senaryo adý : " + getSpcId());
+						getMyLogger().error("Genel baï¿½ï¿½mlï¿½lï¿½k tanï¿½mï¿½ yapï¿½lan senaryo bulunamadï¿½ : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+						getMyLogger().error("Ana senaryo adï¿½ : " + getSpcId());
 						getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
 						getMyLogger().error("Uygulama sona eriyor !");
 						Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
