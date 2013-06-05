@@ -1,6 +1,9 @@
 xquery version "1.0";
 module namespace lk = "http://likya.tlos.com/";
+
 import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+import module namespace hs = "http://hs.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery";
+
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace alm = "http://www.likyateknoloji.com/XML_alarm_types";
 declare namespace com="http://www.likyateknoloji.com/XML_common_types";
@@ -11,8 +14,9 @@ declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 declare namespace alm-history="http://www.likyateknoloji.com/XML_alarm_history";
 
+(:
 declare function lk:searchAlarm_ayhan($searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
- {
+{
 	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
 		return if (
                    (fn:contains(fn:lower-case($alarm/alm:level), fn:lower-case($searchAlarm/alm:level)) or data($searchAlarm/alm:level)="")
@@ -20,6 +24,7 @@ declare function lk:searchAlarm_ayhan($searchAlarm as element(alm:alarm)) as ele
 		then $alarm
 		else  ( )
 };
+:)
 
 declare function lk:getAlarms($date1 as xs:string, $date2 as xs:string, $level1 as xs:string, $alarm1 as xs:string, $per1 as xs:string) as node()*
 {
@@ -51,19 +56,6 @@ declare function lk:getAlarms($date1 as xs:string, $date2 as xs:string, $level1 
                 return  $sonuc
 
 }; 
-
-(: ornek kullanim lk:jobList(1,2) ilk uc eleman :)
-declare function lk:jobList($firstElement as xs:int, $lastElement as xs:int) as element(dat:jobProperties)* 
- {
-	for $jobd in doc("//db/TLOSSW/xmls/tlosSWData10.xml")/dat:TlosProcessData//dat:jobProperties[position() = ($firstElement to $lastElement)]
-	return  $jobd
-};
-
-declare function lk:scenarioList() as element(dat:scenario)* 
- {
-	for $scenario in doc("//db/TLOSSW/xmls/tlosSWData10.xml")/dat:TlosProcessData//dat:scenario
-	return  $scenario
-};
 
 (:fn:empty($prs/com:role):)
 declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
