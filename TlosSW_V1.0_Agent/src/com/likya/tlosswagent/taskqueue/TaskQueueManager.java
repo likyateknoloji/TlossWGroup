@@ -30,7 +30,7 @@ import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
 import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.OracleSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.JDBCOracleSQLSentenceExecuter;
 import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
@@ -239,7 +239,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 
 			case DbType.INT_ORACLE:
 				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new OracleSQLSentenceExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
+					myJob = new JDBCOracleSQLSentenceExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
 
 				} else if (dbJobDefinition.getScriptProperties() != null) {
 					myJob = new OracleSQLScriptExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
