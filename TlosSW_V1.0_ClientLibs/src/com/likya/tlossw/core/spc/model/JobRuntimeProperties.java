@@ -58,8 +58,8 @@ public class JobRuntimeProperties implements Serializable {
 		dumpString += "][";
 		dumpString += "[Çıkış Kodu:" + getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode() + "][";
 		
-		// TODO Burada �imdilik listenin ilk eleman�n� al�yoruz ama xsd �zerinde konu�mak gerekecek.
-		dumpString += "[Başlangıç Zaman�:" + jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().toString() + "][";
+		// TODO Burada şimdilik listenin ilk elemanını alıyoruz ama xsd üzerinde konuşmak gerekecek.
+		dumpString += "[Başlangıç Zamanı:" + jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().toString() + "][";
 		dumpString += "[Zaman Aşımı:" + jobProperties.getTimeManagement().getJsTimeOut() + "][";
 
 		return dumpString;
