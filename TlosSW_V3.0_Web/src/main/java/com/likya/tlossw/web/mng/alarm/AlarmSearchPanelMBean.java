@@ -70,6 +70,12 @@ public class AlarmSearchPanelMBean extends AlarmBaseBean implements Serializable
 		subscriber.setPerson(apers);
 		getAlarm().setSubscriber(subscriber);
 
+		if (getAlarmName() != null && !getAlarmName().equals("")) {
+			getAlarm().setName(getAlarmName());
+		} else {
+			getAlarm().setName(null);
+		}
+
 		try {
 			setSearchAlarmList(getDbOperations().searchAlarm(getAlarmXML()));
 		} catch (XMLDBException e1) {
