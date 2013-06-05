@@ -46,7 +46,7 @@ public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 				String osqlClientNamePath = dbProperties.getSqlClientAppPath();
 				String osqlClientName = dbProperties.getSqlClientAppName().toString();
 				String ipAddress = dbProperties.getIpAddress();
-				int port = dbProperties.getListenerPortNumber();
+				short port = dbProperties.getListenerPortNumber();
 
 				String userName = dbConnectionProfile.getUserName(); // "postgres"; // Connection profile dan alacak.
 				String password = dbConnectionProfile.getUserPassword(); // "ad0215"; // Connection profile dan alacak.
@@ -73,9 +73,10 @@ public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 
 				if (sqlStoredProcedurePackageName != "") {
 					osqlClientName = "echo execute " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedurePackageName + "." + sqlStoredProcedureName + "|" + osqlClientName + " " + userName + "/" + password + "@" + dbPath;
-				} else
+				} else {
 					osqlClientName = "echo execute " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedureName + "|" + osqlClientName + " " + userName + "/" + password + "@" + dbPath;
-
+				}
+				
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				sendStatusChangeInfo();
