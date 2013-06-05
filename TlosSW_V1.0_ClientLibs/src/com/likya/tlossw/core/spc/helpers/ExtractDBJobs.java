@@ -21,7 +21,7 @@ public class ExtractDBJobs {
 
 	private static Logger myLogger = Logger.getLogger(ExtractDBJobs.class);
 
-	public static void evaluate(GlobalRegistry globalRegistry, DbProperties dbProperties, JobRuntimeProperties jobRuntimeProperties, Job myJob, Logger gobalLogger) {
+	public static Job evaluate(GlobalRegistry globalRegistry, DbProperties dbProperties, JobRuntimeProperties jobRuntimeProperties, Job myJob, Logger gobalLogger) {
 
 		DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
 
@@ -149,6 +149,8 @@ public class ExtractDBJobs {
 		default:
 			break;
 		}
+		
+		return myJob;
 
 	}
 
