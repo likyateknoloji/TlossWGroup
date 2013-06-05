@@ -72,7 +72,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 				if (dbProperties != null) {
 					dbType = dbProperties.getDbType().toString();
-					portNumber = dbProperties.getFtpPortNumber() + "";
+					portNumber = dbProperties.getListenerPortNumber() + "";
 					sqlClientAppName = dbProperties.getSqlClientAppName().toString();
 				}
 
@@ -165,7 +165,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 	private void fillDBProperties() {
 		if (portNumber != null && !portNumber.equals("")) {
-			dbProperties.setFtpPortNumber(new Short(portNumber));
+			dbProperties.setListenerPortNumber(new Integer(portNumber));
 		}
 
 		if (!dbType.equals("")) {
