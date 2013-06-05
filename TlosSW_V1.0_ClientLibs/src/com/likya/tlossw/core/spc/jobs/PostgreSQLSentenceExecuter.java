@@ -1,9 +1,7 @@
 package com.likya.tlossw.core.spc.jobs;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -13,12 +11,11 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProper
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
-public class PostgreSQLSentenceExecuter extends DbJob {
+public class PostgreSQLSentenceExecuter extends SQLScriptExecuter {
 
 	private static final long serialVersionUID = -1947157346281291622L;
 
@@ -28,8 +25,6 @@ public class PostgreSQLSentenceExecuter extends DbJob {
 	private boolean retryFlag = true;
 
 	transient protected Process process;
-
-	public final static String DB_RESULT = "dbResult";
 
 	public PostgreSQLSentenceExecuter(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
@@ -42,7 +37,9 @@ public class PostgreSQLSentenceExecuter extends DbJob {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		DbProperties dbProperties = getJobRuntimeProperties().getDbProperties();
 		DbConnectionProfile dbConnectionProfile = getJobRuntimeProperties().getDbConnectionProfile();
-		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
+		String ipAddress = dbProperties.getIpAddress();
+		int port = dbProperties.getListenerPortNumber();
+		String remoteInfo = "";
 
 		while (true) {
 
@@ -50,58 +47,39 @@ public class PostgreSQLSentenceExecuter extends DbJob {
 
 				startWathcDogTimer();
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-				sendStatusChangeInfo();
+				String psqlClientNamePath = dbProperties.getSqlClientAppPath();
+				String psqlClientName = dbProperties.getSqlClientAppName().toString();
 
-				initDbConnection(dbProperties, dbConnectionProfile);
-
-				// String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray(0).getValueString();
-				// qString="select * from public.test_m()";
+				String userName = dbConnectionProfile.getUserName(); // "postgres"; // Connection profile dan alacak.
+				String password = dbConnectionProfile.getUserPassword(); // "ad0215"; // Connection profile dan alacak.
+				String dbName = dbProperties.getDbName(); // "Carre"; // Connection profile dan alacak.
+				
+				if(ipAddress != null && !ipAddress.equals("") && port != 0) {
+					remoteInfo = " -h " + ipAddress + " -p " + port;
+				}
+				
 				String sqlSentence = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getFreeSQLProperties().getSqlSentence();
 
-				Statement statement = getStatement();
+				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -c " + sqlSentence;
 
-				ResultSet result = statement.executeQuery(sqlSentence);
+				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
+				sendStatusChangeInfo();
 
-				
-				System.out.println("");
-				System.out.println("*****************************************");
-				System.out.println("Query'nizin sonucu ...");
+				Map<String, String> env = new HashMap<String, String>();
+				env.put("PGPASSWORD", password);
 
-				while (result.next()) {
-					System.out.println(result.getString(2));
-					ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", result.getString(2));
-					myParamList.add(thisParam);
-
-				}
-
-				System.out.println("*****************************************");
-				System.out.println("");
-				statement.close();
+				startShellProcess(psqlClientNamePath, psqlClientName, env, this.getClass().getName(), myLogger);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-				sendStatusChangeInfo();
 
 			} catch (Exception err) {
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
-
-				try {
-					if(getStatement() != null) {
-						getStatement().close();
-					}
-					if(getStatement() != null) {
-						getConnection().close();
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
 				handleException(err, myLogger);
 			}
 
-			if (processJobResult(retryFlag, myLogger, myParamList)) {
+			sendStatusChangeInfo();
+
+			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
 			}
