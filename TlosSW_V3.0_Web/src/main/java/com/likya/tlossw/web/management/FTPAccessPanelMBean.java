@@ -169,7 +169,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 				fillSftpProperties();
 			}
 
-			ftpProperties.getConnection().setFtpPortNumber(new Short(ftpPortNumber));
+			ftpProperties.getConnection().setFtpPortNumber(new Integer(ftpPortNumber));
 			ftpProperties.setActive(Active.Enum.forString(active));
 
 			if (getDbOperations().updateFTPAccessConnection(getFTPPropertiesXML())) {
@@ -194,7 +194,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 					fillSftpProperties();
 				}
 
-				ftpProperties.getConnection().setFtpPortNumber(new Short(ftpPortNumber));
+				ftpProperties.getConnection().setFtpPortNumber(new Integer(ftpPortNumber));
 				ftpProperties.setActive(Active.Enum.forString(active));
 
 				if (getDbOperations().insertFTPAccessConnection(getFTPPropertiesXML())) {
@@ -225,7 +225,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 			proxyProperties.setUserName(getProxyUserName());
 			proxyProperties.setUserPassword(getProxyPassword());
 			proxyProperties.setIpAddress(getProxyIpAddress());
-			proxyProperties.setPortNumber(new Short(getProxyPortNumber()));
+			proxyProperties.setPortNumber(new Integer(getProxyPortNumber()));
 
 			sftpProperties.setProxyProperties(proxyProperties);
 		}
@@ -250,7 +250,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 	public void testFTPAccessAction(ActionEvent e) {
 		// Simdilik sftp yapilmadigi icin onunla ilgili test etme kismi yok.
 
-		ftpProperties.getConnection().setFtpPortNumber(new Short(ftpPortNumber));
+		ftpProperties.getConnection().setFtpPortNumber(new Integer(ftpPortNumber));
 		ftpProperties.setActive(Active.Enum.forString(active));
 
 		FTPAccessInfoTypeClient ftpAccessInfoTypeClient = new FTPAccessInfoTypeClient();
