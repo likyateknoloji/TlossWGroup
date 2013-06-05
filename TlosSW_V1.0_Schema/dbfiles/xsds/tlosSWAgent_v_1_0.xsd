@@ -88,7 +88,7 @@
                 <xs:element ref="osType"/>
                 <xs:element ref="agentType"/>
                 <xs:element ref="nrpePort"/>
-                <xs:element ref="jmxPort"/>
+                <xs:element ref="jmxTlsPort"/>
                 <xs:element ref="jmxUser"/>
                 <xs:element ref="jmxPassword"/>
                 <xs:element ref="inJmxAvailable"/>
@@ -155,7 +155,7 @@
     
     <xs:element name="nrpePort" type="lt:portType"/>
 
-    <xs:element name="jmxPort" type="lt:portType"/>
+    <xs:element name="jmxTlsPort" type="lt:portType"/>
 
     <xs:element name="jmxUser">
         <xs:simpleType>
