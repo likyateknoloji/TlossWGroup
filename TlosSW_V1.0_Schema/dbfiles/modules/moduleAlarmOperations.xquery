@@ -73,6 +73,7 @@ declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(a
 };
 
 (: ornek kullanim lk:alarmList(1,2) ilk iki eleman :)
+(: Su anda kullanilmiyor :)
 declare function lk:alarmList($firstElement as xs:int, $lastElement as xs:int) as element(alm:alarm)* 
  {
 	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm[position() = ($firstElement to $lastElement)]
@@ -115,6 +116,7 @@ declare function lk:jobAlarmListbyRunId($numberOfElement as xs:int, $runId as xs
 };
 
 (: ornek kullanim lk:searchAlarmByAlarmName(xs:string('Failed alarmi')) :)
+(: Su anda kullanilmiyor :)
 declare function lk:searchAlarmByAlarmName($searchAlarmName as xs:string) as element(alm:alarm)? 
  {
 	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
