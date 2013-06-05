@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
-import com.likya.tlossw.core.spc.jobs.OracleSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.JDBCOracleSQLSentenceExecuter;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -52,7 +52,7 @@ public class TestOracleSQLSentenceExecuter extends TestSuit {
 		jobRuntimeProperties.setTreePath(spcId);
 
 		
-		OracleSQLSentenceExecuter oracleSQLSentenceExecuter = new OracleSQLSentenceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
+		JDBCOracleSQLSentenceExecuter oracleSQLSentenceExecuter = new JDBCOracleSQLSentenceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
 
 		Thread myRunner = new Thread(oracleSQLSentenceExecuter);
 
