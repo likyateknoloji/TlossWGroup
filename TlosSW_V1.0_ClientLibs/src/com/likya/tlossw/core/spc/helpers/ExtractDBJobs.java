@@ -11,7 +11,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
 import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
+import com.likya.tlossw.core.spc.jobs.JDBCPostgreSQLSentenceExecuter;
 import com.likya.tlossw.core.spc.jobs.PostgreSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
@@ -20,7 +20,7 @@ import com.likya.tlossw.utils.TypeUtils;
 public class ExtractDBJobs {
 
 	private static Logger myLogger = Logger.getLogger(ExtractDBJobs.class);
-	
+
 	public static void evaluate(GlobalRegistry globalRegistry, DbProperties dbProperties, JobRuntimeProperties jobRuntimeProperties, Job myJob, Logger gobalLogger) {
 
 		DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
@@ -46,6 +46,7 @@ public class ExtractDBJobs {
 				}
 
 			} else if (dbJobDefinition.getScriptProperties() != null) {
+
 				switch (dbAccessMethod) {
 
 				case DbAccessMethod.INT_JDBC:
@@ -57,20 +58,58 @@ public class ExtractDBJobs {
 				}
 
 			} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-				myJob = new OracleSQLStoredProcedureExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				switch (dbAccessMethod) {
+
+				case DbAccessMethod.INT_JDBC:
+					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					break;
+
+				default:
+					myJob = new OracleSQLStoredProcedureExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				}
 			}
 
 			break;
 
 		case DbType.INT_POSTGRE_SQL:
+			
+			dbAccessMethod = dbJobDefinition.getDbAccessMethod().intValue();
+			
 			if (dbJobDefinition.getFreeSQLProperties() != null) {
-				myJob = new PostgreSQLSentenceExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+
+				switch (dbAccessMethod) {
+
+				case DbAccessMethod.INT_JDBC:
+					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					break;
+
+				default:
+					myJob = new JDBCPostgreSQLSentenceExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				}
 
 			} else if (dbJobDefinition.getScriptProperties() != null) {
-				myJob = new PostgreSQLScriptExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				
+				switch (dbAccessMethod) {
+
+				case DbAccessMethod.INT_JDBC:
+					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					break;
+
+				default:
+					myJob = new PostgreSQLScriptExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				}
 
 			} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-				myJob = new PostgreSQLStoredProcedureExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				
+				switch (dbAccessMethod) {
+
+				case DbAccessMethod.INT_JDBC:
+					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					break;
+
+				default:
+					myJob = new PostgreSQLStoredProcedureExecuter(globalRegistry, gobalLogger, jobRuntimeProperties);
+				}
 			}
 
 			break;
