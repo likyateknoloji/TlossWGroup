@@ -75,7 +75,7 @@ public class XmlUtils {
 		Resource resource = Resource.Factory.newInstance();
 		resource.setStringValue(addr.getHostName());
 		swAgent.setResource(resource);
-		swAgent.setJmxPort(TlosSWAgent.getSwAgentRegistry().getAgentConfigInfo().getSettings().getJmxTlsPort().getPortNumber());
+		swAgent.setJmxTlsPort(TlosSWAgent.getSwAgentRegistry().getAgentConfigInfo().getSettings().getJmxTlsPort().getPortNumber());
 		
 		return swAgent;
 	}
