@@ -37,7 +37,10 @@ public class PostgreSQLStoredProcedureExecuter extends SQLScriptExecuter {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		DbProperties dbProperties = getJobRuntimeProperties().getDbProperties();
 		DbConnectionProfile dbConnectionProfile = getJobRuntimeProperties().getDbConnectionProfile();
-
+		String ipAddress = dbProperties.getIpAddress();
+		int port = dbProperties.getListenerPortNumber();
+		String remoteInfo = "";
+		
 		while (true) {
 
 			try {
@@ -52,10 +55,14 @@ public class PostgreSQLStoredProcedureExecuter extends SQLScriptExecuter {
 
 				String dbName = dbProperties.getDbName(); // "Carre"; // Connection profile dan alacak.
 
+				if(ipAddress != null && !ipAddress.equals("") && port != 0) {
+					remoteInfo = " -h " + ipAddress + " -p " + port;
+				}
+				
 				String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureSchemaName();
 				String sqlStoredProcedureName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureName();
 
-				psqlClientName = psqlClientName + " -U " + userName + " -d " + dbName + " -c \"Select " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedureName + "\"";
+				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -c \"Select " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedureName + "\"";
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
