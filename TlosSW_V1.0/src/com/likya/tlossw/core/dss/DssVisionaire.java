@@ -65,7 +65,7 @@ public class DssVisionaire extends DssBase {
 
 		}
 
-		return new DssResult(-1, "Kaynak atamas� yap�lamad� : Kaynak : FALSE ya da Jmx is not available !");
+		return new DssResult(-1, "Kaynak ataması yapılamadı : Kaynak : FALSE ya da Jmx is not available !");
 	}
 
 	private static DssResult getResource(Job job) {
