@@ -12,7 +12,6 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
-import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.DbJobDefinitionDocument.DbJobDefinition;
 import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
@@ -20,6 +19,7 @@ import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.Operation
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument;
+import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
@@ -29,12 +29,6 @@ import com.likya.tlossw.core.spc.jobs.FtpGetFile;
 import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
 import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.core.spc.jobs.OracleSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.JDBCOracleSQLSentenceExecuter;
-import com.likya.tlossw.core.spc.jobs.OracleSQLStoredProcedureExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLScriptExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLSentenceExecuter;
-import com.likya.tlossw.core.spc.jobs.PostgreSQLStoredProcedureExecuter;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
@@ -196,6 +190,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 			break;
 
 		case JobCommandType.INT_DB_JOBS:
+			
 			// TODO db joblari ile ilgili ayarlama yapilacak
 
 			DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobRuntimeProperties.getJobProperties());
@@ -219,6 +214,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 			} else {
 				taskQueueLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli Db baglanti bilgileri alinamadi !");
 				taskQueueLogger.error("dbProperties -> id=" + dbPropertiesID + "bulunamadi !");
+				break;
 			}
 
 			// DB Connection Profile
@@ -231,73 +227,10 @@ public class TaskQueueManager implements Runnable, Serializable {
 			} else {
 				taskQueueLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli DbConnectionProfile baglanti bilgileri alinamadi !");
 				taskQueueLogger.error("dbConnectionProfile -> id=" + dbCPID + "bulunamadi !");
-			}
-
-			int dbType = dbProperties.getDbType().intValue();
-
-			switch (dbType) {
-
-			case DbType.INT_ORACLE:
-				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new JDBCOracleSQLSentenceExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getScriptProperties() != null) {
-					myJob = new OracleSQLScriptExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-					myJob = new OracleSQLStoredProcedureExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				}
-
-				break;
-
-			case DbType.INT_POSTGRE_SQL:
-				if (dbJobDefinition.getFreeSQLProperties() != null) {
-					myJob = new PostgreSQLSentenceExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getScriptProperties() != null) {
-					myJob = new PostgreSQLScriptExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-
-				} else if (dbJobDefinition.getStoreProcedureProperties() != null) {
-					myJob = new PostgreSQLStoredProcedureExecuter(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				}
-
-				break;
-
-			case DbType.INT_DB_2:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_FIREBIRD:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_INFORMIX:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_MY_SQL:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SAS:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SQL_SERVER:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			case DbType.INT_SYBASE:
-				//TODO Gelistirme yapilacak.
-				break;
-				//TODO Gelistirme yapilacak.
-			case DbType.INT_TERADATA:
-				//TODO Gelistirme yapilacak.
-				break;
-
-			default:
 				break;
 			}
+			
+			ExtractDBJobs.evaluate(agentGlobalRegistry, dbProperties, jobRuntimeProperties, myJob, taskQueueLogger);
 
 			break;
 
