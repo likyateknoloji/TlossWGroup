@@ -96,7 +96,7 @@ public class AgentManager implements Runnable {
 		}
 
 		for (int i = 0; i < swAgents.sizeOfSWAgentArray(); i++) {
-			SpaceWideRegistry.getGlobalLogger().info(" Agent : " + swAgents.getSWAgentArray(i).getResource().getStringValue() + " |Tip : " + swAgents.getSWAgentArray(i).getAgentType() + " |NrpePort : " + swAgents.getSWAgentArray(i).getNrpePort() + " |JMXPort : " + swAgents.getSWAgentArray(i).getJmxPort() + " |JMXuser : " + swAgents.getSWAgentArray(i).getJmxUser());
+			SpaceWideRegistry.getGlobalLogger().info(" Agent : " + swAgents.getSWAgentArray(i).getResource().getStringValue() + " |Tip : " + swAgents.getSWAgentArray(i).getAgentType() + " |NrpePort : " + swAgents.getSWAgentArray(i).getNrpePort() + " |JMXTlsPort : " + swAgents.getSWAgentArray(i).getJmxTlsPort() + " |JMXuser : " + swAgents.getSWAgentArray(i).getJmxUser());
 		}
 
 	}
@@ -124,7 +124,7 @@ public class AgentManager implements Runnable {
 			cacheAgent.setOutJmxAvailable(true);
 			cacheAgent.setInJmxAvailable(true);
 			if (!cacheAgent.getJmxAvailable()) {
-				TSWAgentJmxClient.resetAgent(cacheAgent.getResource().getStringValue(), (int) cacheAgent.getJmxPort(), XmlUtils.getJmxAgentUser(cacheAgent));
+				TSWAgentJmxClient.resetAgent(cacheAgent.getResource().getStringValue(), (int) cacheAgent.getJmxTlsPort(), XmlUtils.getJmxAgentUser(cacheAgent));
 				// TODO sahin
 				// Agent'da calisan isleri kill et kuyrukları bosalt
 				// resetagent ustte bunu yapiyor fakat JmxAvailable(true) isini
@@ -138,7 +138,7 @@ public class AgentManager implements Runnable {
 
 		cacheAgent.setLastHeartBeatTime(System.currentTimeMillis());
 
-		Logger.getLogger(AgentManager.class).info("Agent ID = " + cacheAgent.getId() + " HEARTBEAT:" + agent.getResource().getStringValue() + "." + cacheAgent.getJmxPort());
+		Logger.getLogger(AgentManager.class).info("Agent ID = " + cacheAgent.getId() + " HEARTBEAT:" + agent.getResource().getStringValue() + "." + cacheAgent.getJmxTlsPort());
 
 	}
 
