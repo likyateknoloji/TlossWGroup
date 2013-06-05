@@ -372,12 +372,6 @@ public class Spc extends SpcBase {
 			if (jobLiveStateInfo == null || jobLiveStateInfo.getStateName() == null) {
 				getGlobalLogger().info("liveStateInfo = null");
 				getGlobalLogger().error("  > HATA : Bir isin state bilgisi tamamen bos olamaz !! Kontrol ediniz. " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-
-				/**
-				 * E�er bu durum ger�ekle�irse, ilgili i� FAIL edilip bir sonraki i�e ge�meli
-				 * 
-				 * @author serkan ta� 21.09.2012
-				 */
 				/*
 				 * StateName FAILED sadece sistemsel basarisizlik durumlarinda kullanilir. Diger durumlarda asagidaki sekilde kullanilir. HS 24.09.2012
 				 */
@@ -389,9 +383,9 @@ public class Spc extends SpcBase {
 			// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
 			if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
 				/**
-				 * Burada yap�lan i�in ne oldu�unu anlamad�m...
+				 * Burada yapılan işin ne olduğunu anlamadım...
 				 * 
-				 * @author serkan ta� 21.09.2012
+				 * @author serkan taş 21.09.2012
 				 */
 				scheduledJob.setFirstLoop(false);
 				continue;
@@ -1018,13 +1012,13 @@ public class Spc extends SpcBase {
 				Spc spc = null;
 
 				if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
-					getMyLogger().error("Hatal� tan�mlama ! Uygulama sona eriyor !");
+					getMyLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
 					throw new TlosFatalException();
 				}
 
 				if (item.getJsPath() == null || item.getJsPath() == "") {
-					getMyLogger().error("Hatal� sanal ba��ml�l�k ! Tan�m� yap�lan senaryonun yolu yanl�� ! Sernaryo ad� : " + item.getJsName());
-					getMyLogger().error("Ana senaryo ad� : " + getSpcId());
+					getMyLogger().error("Hatalı sanal bağımlılık ! Tanımı yapılan senaryonun yolu yanlış ! Sernaryo adı : " + item.getJsName());
+					getMyLogger().error("Ana senaryo adı : " + getSpcId());
 					getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
 					getMyLogger().error("Uygulama sona eriyor !");
 					throw new TlosFatalException();
@@ -1033,8 +1027,8 @@ public class Spc extends SpcBase {
 					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), getSpaceWideRegistry().getInstanceLookupTable());
 
 					if (spcInfoType == null) {
-						getMyLogger().error("Genel ba��ml�l�k tan�m� yap�lan senaryo bulunamad� : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-						getMyLogger().error("Ana senaryo ad� : " + getSpcId());
+						getMyLogger().error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+						getMyLogger().error("Ana senaryo adı : " + getSpcId());
 						getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
 						getMyLogger().error("Uygulama sona eriyor !");
 						Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
