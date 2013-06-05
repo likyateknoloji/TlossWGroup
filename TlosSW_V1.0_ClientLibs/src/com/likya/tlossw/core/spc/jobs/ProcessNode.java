@@ -169,7 +169,7 @@ public class ProcessNode extends Job {
 				} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
 					fileContent = parameter.getValueString();
 					// break;
-				} else if (parameter.getName().equals(PostgreSQLSentenceExecuter.DB_RESULT)) {
+				} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
 					fileContent = parameter.getValueString();
 					// break;
 				}
@@ -206,7 +206,7 @@ public class ProcessNode extends Job {
 				} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
 					fileContent = parameter.getValueString();
 					// break;
-				} else if (parameter.getName().equals(PostgreSQLSentenceExecuter.DB_RESULT)) {
+				} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
 					fileContent = parameter.getValueString();
 					// break;
 				}
