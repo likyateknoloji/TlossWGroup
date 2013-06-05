@@ -106,8 +106,8 @@ public class AgentSearchPanelMBean extends TlosSWBaseBean implements Serializabl
 
 	public void resetAgentAction() {
 		agent = SWAgent.Factory.newInstance();
-		agent.setJmxPort(new Short("0"));
-		agent.setNrpePort(new Short("0"));
+		agent.setJmxTlsPort(new Integer("0"));
+		agent.setNrpePort(new Integer("0"));
 		agent.setJmxUser("");
 		agent.setJmxPassword("");
 		agent.setDurationForUnavailability(new Integer(0));
