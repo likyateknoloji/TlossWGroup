@@ -101,7 +101,7 @@
                     <sla:disk sla:birim="G" sla:for="free" sla:condition="gt">2</sla:disk>
                 </sla:Hardware>
             </alm:systemManagement>
-            <alm:stateManagement>
+            <!-- alm:stateManagement>
                 <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
                     <state-types:StateName>RUNNING</state-types:StateName>
                     <state-types:SubstateName>ON-RESOURCE</state-types:SubstateName>
@@ -118,7 +118,7 @@
                 <alm:timeOutControl>true</alm:timeOutControl>
                 <alm:tolerancePercentage>true</alm:tolerancePercentage>
                 <alm:minPercentage>true</alm:minPercentage>
-            </alm:timeManagement>
+            </alm:timeManagement-->
         </alm:caseManagement>
     </alm:alarm>
     <alm:alarm xmlns="http://www.likyateknoloji.com/XML_alarm_types" ID="116">
