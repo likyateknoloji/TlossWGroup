@@ -39,8 +39,8 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
 
-	@ManagedProperty(value = "#{jsDefinitionMBean}")
-	private JSDefinitionMBean jsDefinitionMBean;
+	/*@ManagedProperty(value = "#{jsDefinitionMBean}")
+	private JSDefinitionMBean jsDefinitionMBean;*/
 
 	private String scenarioName;
 	private String comment;
@@ -82,7 +82,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		TreeNode selectedScenario = getJsTree().getSelectedJS();
 		setScenarioTreePath(selectedScenario);
 
-		getJsDefinitionMBean().setJobDefCenterPanel(JSDefinitionMBean.SCENARIO_PAGE);
+		// getJsDefinitionMBean().setJobDefCenterPanel(JSDefinitionMBean.SCENARIO_PAGE);
 
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// selectedScenario.toString() + " içinde tanımlanacak", null);
@@ -177,6 +177,17 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.insert", null);
 		}
 	}
+	
+	public void initializeScenarioPanel(boolean insert) {
+		/* TreeNode selectedScenario = getJsTree().getSelectedJS();
+		setScenarioTreePath(selectedScenario);*/
+
+		System.out.println("SENARYO");
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm");
+		
+	}
 
 	private boolean scenarioCheckUp() {
 		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
@@ -237,13 +248,13 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		this.jsTree = jsTree;
 	}
 
-	public JSDefinitionMBean getJsDefinitionMBean() {
+	/*public JSDefinitionMBean getJsDefinitionMBean() {
 		return jsDefinitionMBean;
 	}
 
 	public void setJsDefinitionMBean(JSDefinitionMBean jsDefinitionMBean) {
 		this.jsDefinitionMBean = jsDefinitionMBean;
-	}
+	}*/
 
 	public String getScenarioName() {
 		return scenarioName;

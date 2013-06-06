@@ -44,6 +44,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
+	
+	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
+	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
 	private String jobDefCenterPanel = BATCH_PROCESS_PAGE;
 
@@ -83,13 +86,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		TreeNode treeNode = event.getTreeNode();
-		
-		if( (treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
-			selectedType = new String("scenario");
-		} else if( (treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("job")) {
-			selectedType = new String("job");
-		} else selectedType = new String("what?");
-		
+
+		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
+			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
+		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("job")) {
+			selectedType = new String(ConstantDefinitions.TREE_JOB);
+		} else
+			selectedType = new String("what?");
+
 		selectedJSPath = "";
 
 		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
@@ -101,26 +105,28 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		String jsId = DefinitionUtils.getXFromNameId(selectedJS, "Id");
 
-		if(selectedType.equalsIgnoreCase("job")) {
-		  jobProperties = null;
-		  jobProperties = getDbOperations().getJobFromId(JOB_DEFINITION_DATA, jsId);
+		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+			jobProperties = null;
+			jobProperties = getDbOperations().getJobFromId(JOB_DEFINITION_DATA, jsId);
 
-		  if (jobProperties != null) {
-			int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+			if (jobProperties != null) {
+				int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
-			initializeJobPanel(jobType, false);
-		  }
-		} else 
-			if(selectedType.equalsIgnoreCase("scenario")) {
-			  scenario = null;
-			  scenario = getDbOperations().getScenarioFromId(JOB_DEFINITION_DATA, jsId);
-
-			  if (scenario != null) {
-
-                // buraya senaryo paneli doldurması gelecek ...
-				//initializeScenarioPanel(?);
-			  }
+				initializeJobPanel(jobType, false);
 			}
+		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
+			scenario = null;
+			scenario = getDbOperations().getScenarioFromId(JOB_DEFINITION_DATA, jsId);
+
+			if (scenario != null) {
+				switchToScenarioPanel();
+				getScenarioDefinitionMBean().initializeScenarioPanel(false);
+			}
+		}
+	}
+	
+	public void switchToScenarioPanel() {
+		jobDefCenterPanel = JSDefinitionMBean.SCENARIO_PAGE;
 	}
 
 	public void handleDropAction(ActionEvent ae) {
@@ -444,6 +450,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
+	}
+
+	public ScenarioDefinitionMBean getScenarioDefinitionMBean() {
+		return scenarioDefinitionMBean;
+	}
+
+	public void setScenarioDefinitionMBean(ScenarioDefinitionMBean scenarioDefinitionMBean) {
+		this.scenarioDefinitionMBean = scenarioDefinitionMBean;
 	}
 
 }
