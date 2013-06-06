@@ -17,6 +17,7 @@
 			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
 				update="tree :jobDefinitionForm"
 				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
+				action="#{jsDefinitionMBean.switchToScenarioPanel}"
 				icon="ui-icon-plus" />
 		</p:contextMenu>
 
