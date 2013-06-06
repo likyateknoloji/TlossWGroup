@@ -88,11 +88,11 @@
 					</p:inputText>
 
 					<h:outputText
-						value="#{msgs['tlos.management.pannel.agentProcesses.jmxPort']}" />
-					<p:inputText id="jmxPort" value="#{agentPanelMBean.jmxPort}"
+						value="#{msgs['tlos.management.pannel.agentProcesses.jmxTlsPort']}" />
+					<p:inputText id="jmxTlsPort" value="#{agentPanelMBean.jmxTlsPort}"
 						required="true"
-						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jmxPort']}"
-						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxPort.regex']}">
+						requiredMessage="#{msgs['tlos.agentPanel.reqMessage.jmxTlsPort']}"
+						validatorMessage="#{msgs['tlos.agentPanel.valMessage.jmxTlsPort.regex']}">
 						<f:validateRegex pattern="[1-9][0-9]{3}" />
 					</p:inputText>
 
