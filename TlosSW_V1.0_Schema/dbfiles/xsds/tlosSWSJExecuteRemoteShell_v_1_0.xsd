@@ -17,7 +17,7 @@
 				<xs:element name="port" type="com:portType" default="22" />
 				<xs:element ref="com:userName" />
 				<xs:element ref="com:userPassword" />
-				<xs:element ref="com:jobCommand" />
+				<xs:element ref="com:fileSeperator" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

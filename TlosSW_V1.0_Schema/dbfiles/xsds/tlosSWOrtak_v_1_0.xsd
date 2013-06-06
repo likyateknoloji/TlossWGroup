@@ -191,6 +191,7 @@
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:enumeration value="SHELL SCRIPT" />
+				<xs:enumeration value="REMOTE SHELL" />
 				<xs:enumeration value="ETL TOOL JOBS" />
 				<xs:enumeration value="SAP" />
 				<xs:enumeration value="SAS" />
@@ -558,6 +559,11 @@
 	<xs:element name="transformToLocalTime" type="xs:boolean"
 		default="false" />
 	<xs:element name="connName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string" />
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="fileSeperator">
 		<xs:simpleType>
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
