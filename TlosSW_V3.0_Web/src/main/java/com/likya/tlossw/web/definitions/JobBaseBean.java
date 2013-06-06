@@ -412,8 +412,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				minPercentage = timeManagement.getMinPercentage() + "";
 			}
 
-			timeManagement.setTimeZone(selectedTZone);
-			timeManagement.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+			selectedTZone = timeManagement.getTimeZone();
+			selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
 
 		} else {
 			System.out.println("jobProperties is NULL in fillTimeManagementTab !!");
@@ -845,6 +845,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			XmlCursor xmlCursor = timeManagement.getExpectedTime().newCursor();
 			xmlCursor.removeXml();
 		}
+
+		timeManagement.setTimeZone(selectedTZone);
+		timeManagement.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+
 		System.out.println("nedir" + timeManagement.toString());
 	}
 
