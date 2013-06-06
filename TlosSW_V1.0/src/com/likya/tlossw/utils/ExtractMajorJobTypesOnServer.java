@@ -7,21 +7,18 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
-import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
-import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
 import com.likya.tlossw.core.spc.helpers.ExtractFTPJobs;
+import com.likya.tlossw.core.spc.helpers.ExtractFileProcessJobs;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
 import com.likya.tlossw.core.spc.jobs.ExecuteInRemoteSch;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
-import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
-import com.likya.tlossw.core.spc.jobs.WriteLocalFileProcess;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.db.utils.DBUtils;
 
@@ -157,40 +154,9 @@ public class ExtractMajorJobTypesOnServer {
 			break;
 
 		case JobCommandType.INT_FILE_PROCESS:
-			FileAdapterProperties fileAdapterProperties = TypeUtils.resolveFileAdapterProperties(jobRuntimeProperties.getJobProperties());
-
-			int fileProcessOperationType = fileAdapterProperties.getOperation().getOperationType().intValue();
-
-			switch (fileProcessOperationType) {
-
-			case OperationType.INT_READ_FILE:
-				myJob = new ReadLocalFileProcess(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				break;
-
-			case OperationType.INT_WRITE_FILE:
-				myJob = new WriteLocalFileProcess(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				break;
-
-			case OperationType.INT_LIST_FILES:
-				// TODO
-				break;
-
-			case OperationType.INT_INSERT_RECORD:
-				// TODO
-				break;
-
-			case OperationType.INT_UPDATE_RECORD:
-				// TODO
-				break;
-
-			case OperationType.INT_DELETE_RECORD:
-				// TODO
-				break;
-
-			default:
-				break;
-			}
-
+			
+			myJob = ExtractFileProcessJobs.evaluate(spaceWideRegistry, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger());
+			
 			break;
 
 		default:
