@@ -63,12 +63,12 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 	private SLA sla;
 
 	private String selectedTZone = "Europe/Istanbul";
-	
+
 	private Collection<SelectItem> tZList;
-	
+
 	private Collection<SelectItem> typeOfTimeList;
 	private String selectedTypeOfTime;
-	
+
 	private Date startDate;
 	private String startTime;
 	private Date endDate;
@@ -127,12 +127,13 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		fillJobStatusList();
 		fillCalendarList();
-		fillResourceList();
 		fillSoftwareNameList();
+
+		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		setTZList(WebInputUtils.fillTZList());
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
-		
+
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
 
@@ -179,35 +180,6 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 			calendarList.add(item);
 		}
 		setCalendarList(calendarList);
-	}
-
-	public void fillResourceList() {
-		resourceNameList = new ArrayList<SelectItem>();
-
-		SelectItem item;
-
-		// TODO resource.getEntryName() ile makine adlari null geliyor, gecici
-		// olarak elle iki makine adi doldurdum
-		// try {
-		// for (RNSEntryType resource : dbOperations.resources()) {
-		// item = new SelectItem();
-		// item.setValue(resource.getEntryName());
-		// item.setLabel(resource.getEntryName());
-		// resourceList.add(item);
-		// }
-		// } catch (XMLDBException e) {
-		// e.printStackTrace();
-		// }
-
-		item = new SelectItem();
-		item.setValue("laptop1");
-		item.setLabel("laptop1");
-		resourceNameList.add(item);
-
-		item = new SelectItem();
-		item.setValue("laptop2");
-		item.setLabel("laptop2");
-		resourceNameList.add(item);
 	}
 
 	public void fillSoftwareNameList() {
@@ -304,7 +276,7 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		diskValue = "0";
 
 		selectedSoftwareList = null;
-		
+
 		setSelectedTZone(new String("Europe/Istanbul"));
 		selectedTypeOfTime = new String("Actual");
 	}
@@ -357,10 +329,9 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		sla.getRInterval().setStartTime(DefinitionUtils.dateToXmlTime(rIntervalStartTime, selectedTZone));
 		sla.getRInterval().setStopTime(DefinitionUtils.dateToXmlTime(rIntervalStopTime, selectedTZone));
 
-
 		sla.setTimeZone(selectedTZone);
 		sla.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
-		
+
 		// makine listesindekileri sla tanimindaki resourcePool kismina set
 		// ediyor
 		ResourcePool resourcePool = ResourcePool.Factory.newInstance();
@@ -414,20 +385,20 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private void fillPanelFromSla() {
-//		startDate = sla.getStartDate().getTime();
-//		endDate = sla.getEndDate().getTime();
+		// startDate = sla.getStartDate().getTime();
+		// endDate = sla.getEndDate().getTime();
 
 		startDate = DefinitionUtils.dateToDate(sla.getStartDate().getTime(), selectedTZone);
 		endDate = DefinitionUtils.dateToDate(sla.getEndDate().getTime(), selectedTZone);
-		
+
 		String timeOutputFormat = new String("HH:mm:ss");
-		
+
 		startTime = DefinitionUtils.calendarToStringTimeFormat(sla.getStartDate(), selectedTZone, timeOutputFormat);
 		endTime = DefinitionUtils.calendarToStringTimeFormat(sla.getEndDate(), selectedTZone, timeOutputFormat);
-		
-//		startTime = DefinitionUtils.dateToStringTime(sla.getStartDate().getTime());
-//		endTime = DefinitionUtils.dateToStringTime(sla.getEndDate().getTime());
-		
+
+		// startTime = DefinitionUtils.dateToStringTime(sla.getStartDate().getTime());
+		// endTime = DefinitionUtils.dateToStringTime(sla.getEndDate().getTime());
+
 		maxTimeInQueue = sla.getQueueFrame().getMaxTimeInQueue().getStringValue();
 		maxTimeInQueueUnit = sla.getQueueFrame().getMaxTimeInQueue().getBirim().toString();
 
@@ -441,17 +412,17 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		sIntervalStopTime = DefinitionUtils.calendarToStringTimeFormat(sla.getSInterval().getStopTime(), selectedTZone, timeOutputFormat);
 		rIntervalStartTime = DefinitionUtils.calendarToStringTimeFormat(sla.getRInterval().getStartTime(), selectedTZone, timeOutputFormat);
 		rIntervalStopTime = DefinitionUtils.calendarToStringTimeFormat(sla.getRInterval().getStopTime(), selectedTZone, timeOutputFormat);
-		
+
 		selectedTZone = sla.getTimeZone();
 		if (sla.getTypeOfTime() != null)
 			selectedTypeOfTime = sla.getTypeOfTime().toString();
 		else
 			selectedTypeOfTime = new String("Broadcast");
-		
-//		sIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStartTime().getTime());
-//		sIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStopTime().getTime());
-//		rIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStartTime().getTime());
-//		rIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStopTime().getTime());
+
+		// sIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStartTime().getTime());
+		// sIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getSInterval().getStopTime().getTime());
+		// rIntervalStartTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStartTime().getTime());
+		// rIntervalStopTime = DefinitionUtils.dateToStringTime(sla.getRInterval().getStopTime().getTime());
 
 		cpuTimein = sla.getResourceReq().getHardware().getCpu().getTimein().toString();
 		cpuUnit = sla.getResourceReq().getHardware().getCpu().getBirim().toString();

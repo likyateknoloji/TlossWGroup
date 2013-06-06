@@ -2,7 +2,6 @@ package com.likya.tlossw.web.definitions.advanced;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -75,11 +74,11 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 	public void init() {
 		resetProvisionAction();
 
-		fillResourceList();
+		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		setTZList(WebInputUtils.fillTZList());
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
-		
+
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
 
@@ -98,35 +97,6 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 				insertButton = true;
 			}
 		}
-	}
-
-	public void fillResourceList() {
-		resourceNameList = new ArrayList<SelectItem>();
-
-		SelectItem item;
-
-		// TODO resource.getEntryName() ile makine adlari null geliyor, gecici
-		// olarak elle iki makine adi doldurdum
-		// try {
-		// for (RNSEntryType resource : dbOperations.resources()) {
-		// item = new SelectItem();
-		// item.setValue(resource.getEntryName());
-		// item.setLabel(resource.getEntryName());
-		// resourceList.add(item);
-		// }
-		// } catch (XMLDBException e) {
-		// e.printStackTrace();
-		// }
-
-		item = new SelectItem();
-		item.setValue("laptop1");
-		item.setLabel("laptop1");
-		resourceNameList.add(item);
-
-		item = new SelectItem();
-		item.setValue("laptop2");
-		item.setLabel("laptop2");
-		resourceNameList.add(item);
 	}
 
 	public String getLicenseXML() {
@@ -157,10 +127,10 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 		Type type = Type.Factory.newInstance();
 		license.setType(type);
-		
+
 		setSelectedTZone(new String("Europe/Istanbul"));
 		selectedTypeOfTime = new String("Actual");
-		
+
 		license.setTimeZone(selectedTZone);
 		license.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
 	}
@@ -194,7 +164,7 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 			selectedTypeOfTime = license.getTypeOfTime().toString();
 		else
 			selectedTypeOfTime = new String("Broadcast");
-			
+
 		fillResourcePool();
 	}
 

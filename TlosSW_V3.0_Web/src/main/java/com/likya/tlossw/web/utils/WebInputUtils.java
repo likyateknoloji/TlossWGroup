@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
@@ -29,13 +28,13 @@ import com.likya.tlos.model.xmlbeans.dbjob.DbJobTypeDocument.DbJobType;
 import com.likya.tlos.model.xmlbeans.fileadapter.BinaryFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.fileadapter.TextFileDetailOptions;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AdapterTypeDocument.AdapterType;
-import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
 import com.likya.tlos.model.xmlbeans.ftpadapter.AuthenticationTypeDocument;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FileModificationTimeDocument.FileModificationTime;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FileTypeDocument;
-import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.ProcessedFilesOperationTypeDocument.ProcessedFilesOperationType;
+import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument;
 import com.likya.tlos.model.xmlbeans.listener.PollingTypeDocument.PollingType;
 import com.likya.tlos.model.xmlbeans.processnode.ProcessDocument.Process.Source;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
@@ -49,8 +48,6 @@ import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.Web
 
 public class WebInputUtils {
 
-
-	
 	public static Collection<SelectItem> fillTZList() {
 		Collection<SelectItem> tZList = null;
 		//Collection<SelectItem> tZList2 = null;
