@@ -25,7 +25,7 @@ public abstract class ExecuteSchComponent extends Job {
 	private static final long serialVersionUID = 7931558555995487881L;
 
 	transient private Process process;
-	
+
 	public ExecuteSchComponent(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
@@ -39,30 +39,27 @@ public abstract class ExecuteSchComponent extends Job {
 		StringBuffer stringBufferForOUTPUT = new StringBuffer();
 
 		JSch jsch = new JSch();
-		
+
 		ExecuteRShellParams executeRShellParams = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getExecuteRShellParams();
 
-		String host = executeRShellParams.getIpAddress(); //"192.168.1.39";
+		String host = executeRShellParams.getIpAddress(); // "192.168.1.39";
 		String user = executeRShellParams.getUserName(); // "likya";
-		String password = executeRShellParams.getUserPassword(); //"likya";
-		int port = executeRShellParams.getPort(); //"22";
+		String password = executeRShellParams.getUserPassword(); // "likya";
+		int port = executeRShellParams.getPort(); // "22";
+		String fileSeperator = executeRShellParams.getFileSeperator();
 
-		jobCommand = executeRShellParams.getJobCommand(); //"/home/likya/murat/Agent/jobs/job1.sh";
-		
+		jobCommand = jobPath + fileSeperator + jobCommand; // "/home/likya/murat/Agent/jobs/job1.sh";
+
 		Session session = jsch.getSession(user, host, port);
 
 		/*
-		 * String xhost="127.0.0.1"; int xport=0; String
-		 * display=JOptionPane.showInputDialog("Enter display name",
-		 * xhost+":"+xport); xhost=display.substring(0, display.indexOf(':'));
-		 * xport=Integer.parseInt(display.substring(display .indexOf(':')+1));
-		 * session.setX11Host(xhost); session.setX11Port(xport+6000);
+		 * String xhost="127.0.0.1"; int xport=0; String display=JOptionPane.showInputDialog("Enter display name", xhost+":"+xport); xhost=display.substring(0, display.indexOf(':')); xport=Integer.parseInt(display.substring(display .indexOf(':')+1)); session.setX11Host(xhost); session.setX11Port(xport+6000);
 		 */
-		
+
 		java.util.Properties config = new java.util.Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
-		
+		config.put("StrictHostKeyChecking", "no");
+		session.setConfig(config);
+
 		session.setPassword(password);
 		session.connect();
 
@@ -107,7 +104,7 @@ public abstract class ExecuteSchComponent extends Job {
 				if (channel.isClosed()) {
 					break;
 				}
-				
+
 				Thread.sleep(1000);
 			}
 
