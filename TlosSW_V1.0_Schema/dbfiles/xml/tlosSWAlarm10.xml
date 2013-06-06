@@ -82,12 +82,12 @@
             </alm:alarmChannelTypes>
         </alm:subscriber>
         <alm:focus>
-            <alm:jobs>
+            <!-- alm:jobs>
                 <alm:job id="0" depth="1"/>
                 <alm:job id="1" depth="7"/>
                 <alm:job id="3" depth="30"/>
                 <alm:job id="5" depth="365"/>
-            </alm:jobs>
+            </alm:jobs-->
             <alm:scenarios>
                 <alm:scenario id="1" depth="1"/>
                 <alm:scenario id="6" depth="7"/>
