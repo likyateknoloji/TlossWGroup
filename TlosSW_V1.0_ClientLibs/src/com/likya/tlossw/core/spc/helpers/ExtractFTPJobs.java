@@ -2,7 +2,6 @@ package com.likya.tlossw.core.spc.helpers;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument;
 import com.likya.tlossw.core.spc.jobs.FtpGetFile;
 import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
@@ -13,16 +12,8 @@ import com.likya.tlossw.utils.GlobalRegistry;
 
 public class ExtractFTPJobs {
 
-	private static Logger myLogger = Logger.getLogger(ExtractFTPJobs.class);
+	public static Job evaluate(GlobalRegistry globalRegistry, int operationType, JobRuntimeProperties jobRuntimeProperties, Job myJob, Logger gobalLogger) {
 
-	public static Job evaluate(GlobalRegistry globalRegistry, int operationType, JobRuntimeProperties jobRuntimeProperties, Job myJob, Logger gobalLogger, FtpProperties ftpProperties, int ftpConnectionId) {
-
-		if (ftpProperties != null) {
-			jobRuntimeProperties.setFtpProperties(ftpProperties);
-		} else {
-			myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli ftp baglanti bilgileri alinamadi !");
-			myLogger.error("ftpProperties -> id=" + ftpConnectionId + "bulunamadi !");
-		}
 
 		switch (operationType) {
 
