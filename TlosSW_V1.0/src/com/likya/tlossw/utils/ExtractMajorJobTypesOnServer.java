@@ -11,15 +11,12 @@ import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.F
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
-import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument;
 import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
+import com.likya.tlossw.core.spc.helpers.ExtractFTPJobs;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
 import com.likya.tlossw.core.spc.jobs.ExecuteInRemoteSch;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
-import com.likya.tlossw.core.spc.jobs.FtpGetFile;
-import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
-import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
@@ -68,7 +65,7 @@ public class ExtractMajorJobTypesOnServer {
 			break;
 
 		case JobCommandType.INT_FTP:
-
+			
 			FtpAdapterProperties adapterProperties = TypeUtils.resolveFtpAdapterProperties(jobRuntimeProperties.getJobProperties());
 			int operationType = adapterProperties.getOperation().getOperationType().intValue();
 
@@ -81,33 +78,11 @@ public class ExtractMajorJobTypesOnServer {
 				ftpProperties = DBUtils.searchFTPConnectionById(ftpConnectionId);
 			} catch (XMLDBException e) {
 				e.printStackTrace();
-			}
-
-			if (ftpProperties != null) {
-				jobRuntimeProperties.setFtpProperties(ftpProperties);
-			} else {
-				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli ftp baglanti bilgileri alinamadi !");
-				myLogger.error("ftpProperties -> id=" + ftpConnectionId + "bulunamadi !");
-			}
-
-			switch (operationType) {
-
-			case OperationTypeDocument.OperationType.INT_READ_FILE:
-				myJob = new FtpGetFile(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				break;
-
-			case OperationTypeDocument.OperationType.INT_WRITE_FILE:
-				myJob = new FtpPutFile(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				break;
-
-			case OperationTypeDocument.OperationType.INT_LIST_FILES:
-				myJob = new FtpListRemoteFiles(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
-				break;
-
-			default:
 				break;
 			}
-
+			
+			myJob = ExtractFTPJobs.evaluate(spaceWideRegistry, operationType, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger(), ftpProperties, ftpConnectionId);
+			
 			break;
 
 		case JobCommandType.INT_WEB_SERVICE:
