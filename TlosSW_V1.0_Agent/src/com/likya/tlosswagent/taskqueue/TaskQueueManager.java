@@ -14,12 +14,11 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.D
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.DbConnectionPropertiesDocument.DbConnectionProperties;
 import com.likya.tlos.model.xmlbeans.dbjob.DbJobDefinitionDocument.DbJobDefinition;
-import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.FileAdapterProperties;
-import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
 import com.likya.tlossw.core.spc.helpers.ExtractFTPJobs;
+import com.likya.tlossw.core.spc.helpers.ExtractFileProcessJobs;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
@@ -27,9 +26,7 @@ import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
-import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
-import com.likya.tlossw.core.spc.jobs.WriteLocalFileProcess;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.TypeUtils;
@@ -211,7 +208,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 				break;
 			}
 			
-			ExtractDBJobs.evaluate(agentGlobalRegistry, dbProperties, jobRuntimeProperties, myJob, taskQueueLogger);
+			myJob = ExtractDBJobs.evaluate(agentGlobalRegistry, dbProperties, jobRuntimeProperties, myJob, taskQueueLogger);
 
 			break;
 
@@ -224,40 +221,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 			break;
 			
 		case JobCommandType.INT_FILE_PROCESS:
-			FileAdapterProperties fileAdapterProperties = TypeUtils.resolveFileAdapterProperties(jobRuntimeProperties.getJobProperties());
-			
-			int fileProcessOperationType = fileAdapterProperties.getOperation().getOperationType().intValue();
-			
-			switch (fileProcessOperationType) {
-
-			case OperationType.INT_READ_FILE:
-				myJob = new ReadLocalFileProcess(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				break;
-
-			case OperationType.INT_WRITE_FILE:
-				myJob = new WriteLocalFileProcess(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				break;
-
-			case OperationType.INT_LIST_FILES:
-				// TODO
-				break;
-				
-			case OperationType.INT_INSERT_RECORD:
-				// TODO
-				break;
-
-			case OperationType.INT_UPDATE_RECORD:
-				// TODO
-				break;
-
-			case OperationType.INT_DELETE_RECORD:
-				// TODO
-				break;
-				
-			default:
-				break;
-			}
-
+			myJob = ExtractFileProcessJobs.evaluate(agentGlobalRegistry, jobRuntimeProperties, myJob, taskQueueLogger);
 			break;
 			
 		default:
