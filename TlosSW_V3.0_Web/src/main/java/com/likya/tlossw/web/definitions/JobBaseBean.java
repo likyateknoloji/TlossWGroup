@@ -17,7 +17,6 @@ import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
@@ -295,10 +294,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private String diskUnit;
 
 	private boolean jsNameConfirmDialog = false;
+	private boolean innerJsNameDuplicate = false;
 
 	public static final String NEW_NAME = "0";
 	public static final String DUPLICATE_NAME_AND_PATH = "1";
-	public static final String DUPLICATE_NAME = "2";
+	public static final String INNER_DUPLICATE_NAME = "2";
+	public static final String OUTER_DUPLICATE_NAME = "3";
 
 	public void fillJobPanel() {
 		fillBaseInfosTab();
@@ -1058,12 +1059,16 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setAdvancedJobInfos(advancedJobInfos);
 	}
 
-	public void cancelInsertJobAction(ActionEvent actionEvent) {
+	public void cancelInsertOrUpdateJobAction(ActionEvent actionEvent) {
 		jsNameConfirmDialog = false;
 	}
 
 	public void insertJobWithDuplicateName(ActionEvent actionEvent) {
 		insertJobDefinition();
+	}
+
+	public void updateJobWithDuplicateName(ActionEvent actionEvent) {
+		updateJobDefinition();
 	}
 
 	public void insertJobDefinition() {
@@ -1089,8 +1094,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void updateJobDefinition() {
-		if (!jobCheckUp()) {
-			return;
+		if (!jsNameConfirmDialog) {
+			if (!jobCheckUpForUpdate()) {
+				return;
+			}
+		} else {
+			jsNameConfirmDialog = false;
 		}
 
 		if (getDbOperations().updateJob(ConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
@@ -1143,24 +1152,60 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		return path;
 	}
 
-	private boolean jobCheckUp() {
-		String jobCheckResult = null;
-		try {
-			jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
-		} catch (XmlException e) {
-			e.printStackTrace();
+	private boolean jobCheckUpForUpdate() {
+		String jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+
+		// bu isimde bir iş yoksa 0
+		// ayni path de aynı isimde bir iş varsa 1
+		// iç senaryolarda aynı isimde bir iş varsa 2
+		// senaryonun dışında aynı isimde bir iş varsa 3
+		if (jobCheckResult != null) {
+			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+
+				JobProperties job = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+
+				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
+				if (!job.getID().equals(jobProperties.getID())) {
+					addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+					return false;
+				}
+			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+				jsNameConfirmDialog = true;
+				innerJsNameDuplicate = true;
+
+				return false;
+
+			} else if (jobCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+				jsNameConfirmDialog = true;
+				innerJsNameDuplicate = false;
+
+				return false;
+			}
 		}
 
-		// ayni path de aynı isimde bir iş varsa 1
-		// path farklı olsa da aynı isimde bir iş varsa 2
+		return true;
+	}
+
+	private boolean jobCheckUp() {
+		String jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+
 		// bu isimde bir iş yoksa 0
+		// ayni path de aynı isimde bir iş varsa 1
+		// iç senaryolarda aynı isimde bir iş varsa 2
+		// senaryonun dışında aynı isimde bir iş varsa 3
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
 				addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 				return false;
-			} else if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME)) {
-
+			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
 				jsNameConfirmDialog = true;
+				innerJsNameDuplicate = true;
+
+				return false;
+
+			} else if (jobCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+				jsNameConfirmDialog = true;
+				innerJsNameDuplicate = false;
 
 				return false;
 			}
@@ -2734,6 +2779,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setJsNameConfirmDialog(boolean jsNameConfirmDialog) {
 		this.jsNameConfirmDialog = jsNameConfirmDialog;
+	}
+
+	public boolean isInnerJsNameDuplicate() {
+		return innerJsNameDuplicate;
+	}
+
+	public void setInnerJsNameDuplicate(boolean innerJsNameDuplicate) {
+		this.innerJsNameDuplicate = innerJsNameDuplicate;
 	}
 
 }

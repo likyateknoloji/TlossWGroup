@@ -1718,7 +1718,7 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public String getJobExistence(String documentName, String jobPath, String jobName) throws XmlException {
+	public String getJobExistence(String documentName, String jobPath, String jobName) {
 		Collection collection = existConnectionHolder.getCollection();
 
 		String sonuc = null;
