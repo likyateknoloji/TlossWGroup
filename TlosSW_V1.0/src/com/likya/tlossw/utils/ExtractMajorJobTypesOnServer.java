@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpPropert
 import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument;
 import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
+import com.likya.tlossw.core.spc.jobs.ExecuteInRemoteSch;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
 import com.likya.tlossw.core.spc.jobs.FtpGetFile;
@@ -48,6 +49,10 @@ public class ExtractMajorJobTypesOnServer {
 
 		case JobCommandType.INT_SHELL_SCRIPT:
 			myJob = new ExecuteInShell(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
+			break;
+			
+		case JobCommandType.INT_REMOTE_SHELL:
+			myJob = new ExecuteInRemoteSch(spaceWideRegistry, SpaceWideRegistry.getGlobalLogger(), jobRuntimeProperties);
 			break;
 
 		case JobCommandType.INT_SAP:
