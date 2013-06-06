@@ -28,12 +28,10 @@ return  density:recStat(xs:string("RUNNING"), xs:string("ON-RESOURCE"), xs:strin
 declare function density:stringToDateTime($t1 as xs:string) as xs:dateTime
 {
     (: Degisik tarih formatlari icin dusunuldu. 2011-10-13T15:08:31+0300 veya 2011-10-13T15:08:31.91+0300 veya 2011-10-13T15:08:31.897+0300 :)
-    let $uzunluk := string-length($t1)
-    let $baslangic := if($uzunluk eq 24) then 19 else if($uzunluk eq 27) then 22 else if($uzunluk eq 28) then 23 else ()
     
-    let $t2 := substring($t1, 1, $baslangic)
-    let $t3 := substring($t1, $baslangic+2, 2)
-    let $t7 := concat($t2, '+', $t3, ':00')
+    let $t2 := substring-before($t1, '+')
+    let $t3 := substring-after($t1, '+')
+    let $t7 := concat($t2, '+', substring($t3,1,2) , ':00')
     let $t8 := xs:dateTime($t7)
     
     return $t8
