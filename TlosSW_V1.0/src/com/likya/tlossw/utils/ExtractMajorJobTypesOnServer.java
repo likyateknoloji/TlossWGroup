@@ -81,7 +81,16 @@ public class ExtractMajorJobTypesOnServer {
 				break;
 			}
 			
-			myJob = ExtractFTPJobs.evaluate(spaceWideRegistry, operationType, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger(), ftpProperties, ftpConnectionId);
+			if (ftpProperties != null) {
+				jobRuntimeProperties.setFtpProperties(ftpProperties);
+			} else {
+				myLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " icin tanimli ftp baglanti bilgileri alinamadi !");
+				myLogger.error("ftpProperties -> id=" + ftpConnectionId + "bulunamadi !");
+				
+				break;
+			}
+			
+			myJob = ExtractFTPJobs.evaluate(spaceWideRegistry, operationType, jobRuntimeProperties, myJob, SpaceWideRegistry.getGlobalLogger());
 			
 			break;
 
