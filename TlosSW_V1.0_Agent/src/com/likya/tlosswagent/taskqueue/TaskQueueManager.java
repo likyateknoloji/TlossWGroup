@@ -18,16 +18,13 @@ import com.likya.tlos.model.xmlbeans.fileadapter.FileAdapterPropertiesDocument.F
 import com.likya.tlos.model.xmlbeans.fileadapter.OperationTypeDocument.OperationType;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
-import com.likya.tlos.model.xmlbeans.ftpadapter.OperationTypeDocument;
 import com.likya.tlossw.core.spc.helpers.ExtractDBJobs;
+import com.likya.tlossw.core.spc.helpers.ExtractFTPJobs;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteAsProcess;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
-import com.likya.tlossw.core.spc.jobs.FtpGetFile;
-import com.likya.tlossw.core.spc.jobs.FtpListRemoteFiles;
-import com.likya.tlossw.core.spc.jobs.FtpPutFile;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.ReadLocalFileProcess;
@@ -165,23 +162,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 				taskQueueLogger.error(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " tanimi icerisinde ftp baglanti bilgileri bulunamadi !");
 			}
 
-			switch (operationType) {
-
-			case OperationTypeDocument.OperationType.INT_READ_FILE:
-				myJob = new FtpGetFile(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				break;
-
-			case OperationTypeDocument.OperationType.INT_WRITE_FILE:
-				myJob = new FtpPutFile(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				break;
-
-			case OperationTypeDocument.OperationType.INT_LIST_FILES:
-				myJob = new FtpListRemoteFiles(agentGlobalRegistry, taskQueueLogger, jobRuntimeProperties);
-				break;
-
-			default:
-				break;
-			}
+			myJob = ExtractFTPJobs.evaluate(agentGlobalRegistry, operationType, jobRuntimeProperties, myJob, taskQueueLogger);
 
 			break;
 
