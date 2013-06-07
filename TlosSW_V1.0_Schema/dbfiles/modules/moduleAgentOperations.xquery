@@ -71,7 +71,7 @@ declare function lk:searchAgent($searchAgent as element(agnt:SWAgent)) as elemen
                    and
                    (fn:contains(fn:lower-case($agent/agnt:jmxAvailable), fn:lower-case($searchAgent/agnt:jmxAvailable)) or data($searchAgent/agnt:jmxAvailable)="") 
                    and
-                   ($agent/agnt:jmxPort eq $searchAgent/agnt:jmxPort or data($searchAgent/agnt:jmxPort)="0")
+                   ($agent/agnt:jmxTlsPort eq $searchAgent/agnt:jmxTlsPort or data($searchAgent/agnt:jmxTlsPort)="0")
              )
 		then $agent
 		else  ( )
