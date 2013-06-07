@@ -759,6 +759,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		baseJobInfos.setCalendarId(Integer.parseInt(jsCalendar));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
+		if(jobPriority.isEmpty()) jobPriority = "1"; // default değer
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
 
 		if (jsActive) {
