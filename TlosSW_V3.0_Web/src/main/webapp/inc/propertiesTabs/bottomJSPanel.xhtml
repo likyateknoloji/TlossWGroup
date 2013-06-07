@@ -10,13 +10,13 @@
 	<ui:composition>
 		<p:commandButton style="float:right;"
 			value="#{msgs['tlos.button.save']}"
-			rendered="#{backingBean.jobInsertButton}"
+			rendered="#{backingBean.jsInsertButton}"
 			oncomplete="jsActiveDialog.show()"
 			update=":jobDefinitionForm:jsActivePanel" />
 
 		<p:commandButton style="float:right;"
 			value="#{msgs['tlos.button.update']}"
-			rendered="#{backingBean.jobUpdateButton}"
+			rendered="#{backingBean.jsUpdateButton}"
 			oncomplete="jsActiveDialog.show()"
 			update=":jobDefinitionForm:jsActivePanel" />
 
@@ -26,14 +26,14 @@
 				<p:selectBooleanCheckbox value="#{backingBean.jsActive}" />
 
 				<p:commandButton value="#{msgs['tlos.button.ok']}"
-					rendered="#{backingBean.jobInsertButton}"
-					action="#{backingBean['insertJobAction']}"
+					rendered="#{backingBean.jsInsertButton}"
+					action="#{backingBean['insertJsAction']}"
 					update=":jobDefinitionForm :jsTreeForm:tree" 
 					oncomplete="jsActiveDialog.hide();" />
 
 				<p:commandButton value="#{msgs['tlos.button.ok']}"
-					rendered="#{backingBean.jobUpdateButton}"
-					action="#{backingBean['updateJobAction']}"
+					rendered="#{backingBean.jsUpdateButton}"
+					action="#{backingBean['updateJsAction']}"
 					update=":jobDefinitionForm :jsTreeForm:tree" 
 					oncomplete="jsActiveDialog.hide();" />
 			</p:panelGrid>
@@ -51,10 +51,10 @@
 			<p:panel id="confirmDialogPanel">
 				<p:commandButton id="confirmInsert" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['insertJobWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jobInsertButton}" />
+					rendered="#{backingBean.jsInsertButton}" />
 				<p:commandButton id="confirmUpdate" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['updateJobWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jobUpdateButton}" />
+					rendered="#{backingBean.jsUpdateButton}" />
 				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['cancelInsertOrUpdateJobAction']}"/>
 	    	</p:panel>

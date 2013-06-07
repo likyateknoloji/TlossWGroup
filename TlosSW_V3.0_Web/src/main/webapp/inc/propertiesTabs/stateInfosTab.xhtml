@@ -124,7 +124,7 @@
 			</p:panel>
 
 			<p:panel header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}"
-				rendered="#{!backingBean.jobInsertButton}">
+				rendered="#{backingBean.jsUpdateButton and !backingBean.scenario}">
 				<p:panelGrid columns="4">
 					<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
 					<p:selectOneMenu value="#{backingBean.stateName}" style="width: 100pt">

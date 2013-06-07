@@ -37,13 +37,6 @@
 							</p:inputText>
 
 							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.scenario.jsIsActive']}" />
-							<p:selectBooleanCheckbox
-								value="#{scenarioDefinitionMBean.active}">
-								<p:ajax partialSubmit="true"></p:ajax>
-							</p:selectBooleanCheckbox>
-
-							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.scenario.useCalendarDef']}" />
 							<p:selectBooleanCheckbox
 								value="#{scenarioDefinitionMBean.useCalendarDef}">
@@ -55,7 +48,7 @@
 								rendered="#{scenarioDefinitionMBean.useCalendarDef}" />
 							<p:selectOneMenu
 								rendered="#{scenarioDefinitionMBean.useCalendarDef}"
-								value="#{scenarioDefinitionMBean.jobCalendar}">
+								value="#{scenarioDefinitionMBean.jsCalendar}">
 								<f:selectItems value="#{scenarioDefinitionMBean.jsCalendarList}" />
 							</p:selectOneMenu>
 
@@ -122,6 +115,7 @@
 								value="#{msgs['tlos.workspace.pannel.scenario.schedulingAlgorithm']}" />
 							<p:selectOneMenu
 								value="#{scenarioDefinitionMBean.selectedSchedulingAlgorithm}">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 								<f:selectItems
 									value="#{scenarioDefinitionMBean.schedulingAlgorithmList}" />
 								<p:ajax partialSubmit="true"></p:ajax>
