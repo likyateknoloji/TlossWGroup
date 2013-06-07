@@ -44,7 +44,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
-	
+
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
@@ -120,11 +120,12 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 			if (scenario != null) {
 				switchToScenarioPanel();
+				getScenarioDefinitionMBean().setScenario(scenario);
 				getScenarioDefinitionMBean().initializeScenarioPanel(false);
 			}
 		}
 	}
-	
+
 	public void switchToScenarioPanel() {
 		jobDefCenterPanel = JSDefinitionMBean.SCENARIO_PAGE;
 	}
@@ -178,8 +179,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_BATCH_PROCESS:
 			if (jobProperties != null) {
 				getBatchProcessPanelMBean().setJobProperties(jobProperties);
-				getBatchProcessPanelMBean().setJobInsertButton(insert);
-				getBatchProcessPanelMBean().setJobUpdateButton(!insert);
+				getBatchProcessPanelMBean().setJsInsertButton(insert);
+				getBatchProcessPanelMBean().setJsUpdateButton(!insert);
 				getBatchProcessPanelMBean().resetPanelInputs();
 				getBatchProcessPanelMBean().fillTabs();
 
@@ -213,8 +214,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FTP:
 			if (jobProperties != null) {
 				getFtpPanelMBean().setJobProperties(jobProperties);
-				getFtpPanelMBean().setJobInsertButton(insert);
-				getFtpPanelMBean().setJobUpdateButton(!insert);
+				getFtpPanelMBean().setJsInsertButton(insert);
+				getFtpPanelMBean().setJsUpdateButton(!insert);
 				getFtpPanelMBean().resetPanelInputs();
 				getFtpPanelMBean().fillTabs();
 
@@ -232,8 +233,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_WEB_SERVICE:
 			if (jobProperties != null) {
 				getWebServicePanelMBean().setJobProperties(jobProperties);
-				getWebServicePanelMBean().setJobInsertButton(insert);
-				getWebServicePanelMBean().setJobUpdateButton(!insert);
+				getWebServicePanelMBean().setJsInsertButton(insert);
+				getWebServicePanelMBean().setJsUpdateButton(!insert);
 				getWebServicePanelMBean().resetPanelInputs();
 				getWebServicePanelMBean().fillTabs();
 
@@ -251,8 +252,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_DB_JOBS:
 			if (jobProperties != null) {
 				getDbJobsPanelMBean().setJobProperties(jobProperties);
-				getDbJobsPanelMBean().setJobInsertButton(insert);
-				getDbJobsPanelMBean().setJobUpdateButton(!insert);
+				getDbJobsPanelMBean().setJsInsertButton(insert);
+				getDbJobsPanelMBean().setJsUpdateButton(!insert);
 				getDbJobsPanelMBean().resetPanelInputs();
 				getDbJobsPanelMBean().fillTabs();
 
@@ -270,8 +271,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FILE_LISTENER:
 			if (jobProperties != null) {
 				getFileListenerPanelMBean().setJobProperties(jobProperties);
-				getFileListenerPanelMBean().setJobInsertButton(insert);
-				getFileListenerPanelMBean().setJobUpdateButton(!insert);
+				getFileListenerPanelMBean().setJsInsertButton(insert);
+				getFileListenerPanelMBean().setJsUpdateButton(!insert);
 				getFileListenerPanelMBean().resetPanelInputs();
 				getFileListenerPanelMBean().fillTabs();
 
@@ -289,8 +290,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_PROCESS_NODE:
 			if (jobProperties != null) {
 				getProcessNodePanelMBean().setJobProperties(jobProperties);
-				getProcessNodePanelMBean().setJobInsertButton(insert);
-				getProcessNodePanelMBean().setJobUpdateButton(!insert);
+				getProcessNodePanelMBean().setJsInsertButton(insert);
+				getProcessNodePanelMBean().setJsUpdateButton(!insert);
 				getProcessNodePanelMBean().resetPanelInputs();
 				getProcessNodePanelMBean().fillTabs();
 
@@ -308,8 +309,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		case JobCommandType.INT_FILE_PROCESS:
 			if (jobProperties != null) {
 				getFileProcessPanelMBean().setJobProperties(jobProperties);
-				getFileProcessPanelMBean().setJobInsertButton(insert);
-				getFileProcessPanelMBean().setJobUpdateButton(!insert);
+				getFileProcessPanelMBean().setJsInsertButton(insert);
+				getFileProcessPanelMBean().setJsUpdateButton(!insert);
 				getFileProcessPanelMBean().resetPanelInputs();
 				getFileProcessPanelMBean().fillTabs();
 

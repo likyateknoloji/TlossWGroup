@@ -23,8 +23,12 @@ import com.likya.tlos.model.xmlbeans.common.ChoiceType;
 import com.likya.tlos.model.xmlbeans.common.SchedulingAlgorithmDocument.SchedulingAlgorithm;
 import com.likya.tlos.model.xmlbeans.data.AdvancedScenarioInfosDocument.AdvancedScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
+import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
+import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
+import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -39,13 +43,8 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
 
-	/*@ManagedProperty(value = "#{jsDefinitionMBean}")
-	private JSDefinitionMBean jsDefinitionMBean;*/
-
 	private String scenarioName;
 	private String comment;
-
-	private boolean active = true;
 
 	private boolean useCalendarDef = false;
 
@@ -57,15 +56,42 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	@PostConstruct
 	public void init() {
 		setScenario(true);
-		setJobInsertButton(true);
+		setJsInsertButton(true);
 		initScenarioPanel();
 
 		fillSchedulingAlgorithmList();
 	}
 
-	private void fillSchedulingAlgorithmList() {
-		selectedSchedulingAlgorithm = SchedulingAlgorithm.FIRST_COME_FIRST_SERVED.toString();
+	public void initScenarioPanel() {
+		fillAllLists();
 
+		setScenario(Scenario.Factory.newInstance());
+
+		BaseScenarioInfos baseScenarioInfos = BaseScenarioInfos.Factory.newInstance();
+		getScenario().setBaseScenarioInfos(baseScenarioInfos);
+
+		JobList jobList = JobList.Factory.newInstance();
+		getScenario().setJobList(jobList);
+
+		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
+		getScenario().setTimeManagement(timeManagement);
+
+		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
+		getScenario().setConcurrencyManagement(concurrencyManagement);
+
+		resetScenarioPanelInputs();
+	}
+
+	private void resetScenarioPanelInputs() {
+		resetPanelInputs();
+
+		scenarioName = "";
+		comment = "";
+		useCalendarDef = false;
+		selectedSchedulingAlgorithm = SchedulingAlgorithm.FIRST_COME_FIRST_SERVED.toString();
+	}
+
+	private void fillSchedulingAlgorithmList() {
 		String algorithm = null;
 		schedulingAlgorithmList = new ArrayList<SelectItem>();
 
@@ -78,26 +104,33 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		}
 	}
 
+	// sağ tıkla yeni senaryo ekle seçilince buraya geliyor
 	public void addNewScenario() {
+		resetScenarioPanelInputs();
+
 		TreeNode selectedScenario = getJsTree().getSelectedJS();
 		setScenarioTreePath(selectedScenario);
 
-		// getJsDefinitionMBean().setJobDefCenterPanel(JSDefinitionMBean.SCENARIO_PAGE);
-
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// selectedScenario.toString() + " içinde tanımlanacak", null);
+		setJsInsertButton(true);
+		setJsUpdateButton(false);
 	}
 
-	public void insertJobAction() {
+	public void insertJsAction() {
 		fillScenarioProperties();
 		insertScenarioDefinition();
+	}
+
+	public void updateJsAction() {
+		fillScenarioProperties();
+		updateScenarioDefinition();
 	}
 
 	// ekrandan girilen degerler scenario icine dolduruluyor
 	public void fillScenarioProperties() {
 		fillBaseScenarioInfos();
 		fillTimeManagement();
-		fillDependencyDefinitions();
+		// şimdilik senaryolar arası bağımlılık yok
+		// fillDependencyDefinitions();
 		fillStateInfos();
 		fillConcurrencyManagement();
 		fillAlarmPreference();
@@ -111,14 +144,14 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		baseScenarioInfos.setJsName(scenarioName);
 		baseScenarioInfos.setComment(comment);
 
-		if (active) {
+		if (isJsActive()) {
 			baseScenarioInfos.setJsIsActive(JsIsActive.YES);
 		} else {
 			baseScenarioInfos.setJsIsActive(JsIsActive.NO);
 		}
 
 		if (useCalendarDef) {
-			baseScenarioInfos.setCalendarId(Integer.parseInt(getJobCalendar()));
+			baseScenarioInfos.setCalendarId(Integer.parseInt(getJsCalendar()));
 		}
 
 		// TODO login ekrani olmadigi icin simdilik 1 id'li kullaniciyi
@@ -172,21 +205,116 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.update("jsTreeForm:tree");
 
-			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.insert", null);
+			addMessage("scenarioInsert", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.insert", null);
 		} else {
-			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.insert", null);
+			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.insert", null);
 		}
 	}
-	
-	public void initializeScenarioPanel(boolean insert) {
-		/* TreeNode selectedScenario = getJsTree().getSelectedJS();
-		setScenarioTreePath(selectedScenario);*/
 
-		System.out.println("SENARYO");
-		
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm");
-		
+	public void updateScenarioDefinition() {
+		if (getDbOperations().updateScenario(ConstantDefinitions.JOB_DEFINITION_DATA, treePath, getScenarioXML())) {
+			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
+		} else {
+			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.update", null);
+		}
+	}
+
+	public void initializeScenarioPanel(boolean insert) {
+		TreeNode selectedScenario = getJsTree().getSelectedJS();
+		setScenarioTreePath(selectedScenario);
+
+		setJsInsertButton(insert);
+		setJsUpdateButton(!insert);
+
+		resetScenarioPanelInputs();
+		fillScenarioPanel();
+	}
+
+	public void fillScenarioPanel() {
+		fillBaseScenarioInfosTab();
+		fillTimeManagementTab();
+		// şimdilik senaryolar arası bağımlılık yok
+		// fillDependencyDefinitionsTab();
+		fillStateInfosTab();
+		fillConcurrencyManagementTab();
+		fillAlarmPreferenceTab();
+		fillLocalParametersTab();
+		fillAdvancedScenarioInfosTab();
+	}
+
+	private void fillBaseScenarioInfosTab() {
+		if (getScenario() != null) {
+			BaseScenarioInfos baseScenarioInfos = getScenario().getBaseScenarioInfos();
+
+			scenarioName = baseScenarioInfos.getJsName();
+			comment = baseScenarioInfos.getComment();
+
+			if (baseScenarioInfos.getCalendarId() != 0) {
+				useCalendarDef = true;
+				setJsCalendar(baseScenarioInfos.getCalendarId() + "");
+			} else {
+				useCalendarDef = false;
+			}
+
+			if (baseScenarioInfos.getJsIsActive().equals(JsIsActive.YES)) {
+				setJsActive(true);
+			} else {
+				setJsActive(false);
+			}
+
+		} else {
+			System.out.println("scenario is NULL in fillBaseScenarioInfosTab !!");
+		}
+	}
+
+	private void fillStateInfosTab() {
+		if (getScenario() != null) {
+			// durum tanimi yapildiysa alanlari dolduruyor
+			if (getScenario().getScenarioStatusList() != null) {
+
+				setManyJobStatusList(new ArrayList<SelectItem>());
+				for (Status scenarioStatus : getScenario().getScenarioStatusList().getScenarioStatusArray()) {
+					String statusName = scenarioStatus.getStatusName().toString();
+					getManyJobStatusList().add(new SelectItem(statusName, statusName));
+				}
+			} else {
+				setManyJobStatusList(null);
+			}
+		} else {
+			System.out.println("scenario is NULL in fillStateInfosTab !!");
+		}
+	}
+
+	public void fillConcurrencyManagementTab() {
+		if (getScenario() != null) {
+			setConcurrent(getScenario().getConcurrencyManagement().getConcurrent());
+		} else {
+			System.out.println("scenario is NULL in fillConcurrencyManagementTab !!");
+		}
+	}
+
+	private void fillAdvancedScenarioInfosTab() {
+		if (getScenario() != null) {
+			if (getScenario().getAdvancedScenarioInfos() == null) {
+				return;
+			}
+
+			AdvancedScenarioInfos advancedScenarioInfos = getScenario().getAdvancedScenarioInfos();
+
+			// agent secme metodu
+			if (advancedScenarioInfos.getAgentChoiceMethod() != null) {
+				setAgentChoiceMethod(advancedScenarioInfos.getAgentChoiceMethod().getStringValue());
+
+				if (getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
+					setSelectedAgent(advancedScenarioInfos.getAgentChoiceMethod().getAgentId());
+				}
+			}
+
+			setSelectedSchedulingAlgorithm(advancedScenarioInfos.getSchedulingAlgorithm().toString());
+
+		} else {
+			System.out.println("scenario is NULL in fillAdvancedScenarioInfosTab !!");
+		}
 	}
 
 	private boolean scenarioCheckUp() {
@@ -248,14 +376,6 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		this.jsTree = jsTree;
 	}
 
-	/*public JSDefinitionMBean getJsDefinitionMBean() {
-		return jsDefinitionMBean;
-	}
-
-	public void setJsDefinitionMBean(JSDefinitionMBean jsDefinitionMBean) {
-		this.jsDefinitionMBean = jsDefinitionMBean;
-	}*/
-
 	public String getScenarioName() {
 		return scenarioName;
 	}
@@ -270,14 +390,6 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public boolean isUseCalendarDef() {
