@@ -59,16 +59,42 @@ declare function lk:getAlarms($date1 as xs:string, $date2 as xs:string, $level1 
 
 (:fn:empty($prs/com:role):)
 declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
- {
-	  for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
-				      
-	let $nedir1 := if ((fn:contains(fn:lower-case($alarm/alm:name), fn:lower-case($searchAlarm/alm:name)) or data($searchAlarm/alm:name)="")
-                  and	(data($alarm/alm:subscriber/alm:person/@id)=data($searchAlarm/alm:subscriber/alm:person/@id) or data($searchAlarm/alm:subscriber/alm:person/@id) = "-1"    or data($searchAlarm/alm:subscriber/alm:person/@id) = "0")
-			      and	((data($alarm/alm:startDate) ge data($searchAlarm/alm:startDate) or data($searchAlarm/alm:startDate) = "")
- 			      and (data($alarm/alm:endDate) le data($searchAlarm/alm:endDate) or data($searchAlarm/alm:endDate) = "")
-				 )
-             ) then $alarm else ()
-   let $sonuc := $nedir1
+{
+      for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+        let $itemStartDate  := data($alarm/alm:startDate)
+        let $itemEndDate    := data($alarm/alm:endDate)
+        let $searchedStartDate := data($searchAlarm/alm:startDate)
+        let $searchedEndDate   := data($searchAlarm/alm:endDate)
+        
+    let $nedir := if ( 
+                       (fn:contains(fn:lower-case($alarm/alm:name), fn:lower-case($searchAlarm/alm:name)) or data($searchAlarm/alm:name)="")
+                       and	
+                       ( data($alarm/alm:subscriber/alm:person/@id)=data($searchAlarm/alm:subscriber/alm:person/@id) 
+                         or data($searchAlarm/alm:subscriber/alm:person/@id) = "-1" 
+                         or data($searchAlarm/alm:subscriber/alm:person/@id) = "0"
+                       )
+			           and 
+                       ( 
+                        ( $searchedEndDate = "" and $searchedEndDate = "" )
+                        or
+                        (
+                          ($searchedEndDate = "" or ( exists($searchedEndDate) and $itemEndDate > $searchedStartDate ))
+                          and
+                          ( 
+                            exists($searchedStartDate) and ( $itemStartDate < $searchedStartDate and $itemEndDate > $searchedStartDate )
+                          )
+                        )                       
+                        or                       
+                        (
+                          ($searchedStartDate = "" or ( exists($searchedStartDate) and $itemStartDate > $searchedStartDate ))
+                          and
+                          ( 
+                             exists($searchedEndDate) and ( $itemEndDate > $searchedEndDate and  $itemStartDate < $searchedEndDate) 
+                          )
+                        )
+                       )
+                      ) then $alarm else ()
+   let $sonuc := $nedir
    return $sonuc
 };
 
