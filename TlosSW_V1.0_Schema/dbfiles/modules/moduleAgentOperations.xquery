@@ -15,7 +15,7 @@ declare function lk:getAgents() as element()*
 
 (:declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:boolean  
 {
-	let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxPort)
+	let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxTlsPort)
 	let $checkUser := if($swAgent/agnt:jmxUser = $agent/agnt:jmxUser and $swAgent/agnt:jmxPassword = $agent/agnt:jmxPassword) 
         then true()
         else (false())
@@ -25,8 +25,8 @@ declare function lk:getAgents() as element()*
 
 declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:int  
 {
-	(:let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxPort):)
-	let $swAgent := lk:searchAgent($agent/res:Resource, $agent/agnt:jmxPort)
+	(:let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxTlsPort):)
+	let $swAgent := lk:searchAgent($agent/res:Resource, $agent/agnt:jmxTlsPort)
 	let $checkUser := if($swAgent/agnt:jmxUser = $agent/agnt:jmxUser and $swAgent/agnt:jmxPassword = $agent/agnt:jmxPassword) 
         then $swAgent/@id
         else (-1)
@@ -35,14 +35,14 @@ declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:int
 
 declare function lk:searchAgent($host as xs:string, $jmxport as xs:short)  as element(agnt:SWAgent)? 
 {
-   doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxPort = $jmxport]
+   doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxTlsPort = $jmxport]
 };
 
 (: eski versiyon , coklama hatasi veriyordu. hs. 10eylul2012
 declare function lk:searchAgent($host as element(res:Resource), $jmxport as as element(res:Resource))  as element(agnt:SWAgent)? 
 {
 	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
-        where $agent/res:Resource = $host and $agent/agnt:jmxPort = $jmxport 
+        where $agent/res:Resource = $host and $agent/agnt:jmxTlsPort = $jmxport 
     return $agent 
 };
 :)
@@ -52,7 +52,7 @@ declare function lk:searchAgent($host as element(res:Resource), $jmxport as as e
 declare function lk:searchAgent($ip as xs:string, $jmxport as xs:int)  as element(agnt:SWAgent)? 
 {
 	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
-        where $agent/agnt:ipAddress = $ip and $agent/agnt:jmxPort = $jmxport 
+        where $agent/agnt:ipAddress = $ip and $agent/agnt:jmxTlsPort = $jmxport 
     return $agent 
 };
 
@@ -88,7 +88,7 @@ declare function lk:agentList($firstElement as xs:int, $lastElement as xs:int) a
 declare function lk:searchAgentByjmxPort($searchjmxPort as xs:string) as element(agnt:SWAgent)* 
  {
     for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
-    where $agent/agnt:jmxPort=$searchjmxPort
+    where $agent/agnt:jmxTlsPort=$searchjmxPort
     return $agent
 };
 
@@ -130,7 +130,7 @@ declare function lk:insertAgent($agent as element(agnt:SWAgent)) as node()*
         <agnt:osType>{data($XXX/agnt:osType)}</agnt:osType>
         <agnt:agentType>{data($XXX/agnt:agentType)}</agnt:agentType>
         <agnt:nrpePort>{data($XXX/agnt:nrpePort)}</agnt:nrpePort>
-        <agnt:jmxPort>{data($XXX/agnt:jmxPort)}</agnt:jmxPort>
+        <agnt:jmxTlsPort>{data($XXX/agnt:jmxTlsPort)}</agnt:jmxTlsPort>
         <agnt:jmxUser>{data($XXX/agnt:jmxUser)}</agnt:jmxUser>
         <agnt:jmxPassword>{data($XXX/agnt:jmxPassword)}</agnt:jmxPassword>
         <agnt:inJmxAvailable>{data($XXX/agnt:inJmxAvailable)}</agnt:inJmxAvailable>
