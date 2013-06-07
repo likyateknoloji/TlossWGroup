@@ -36,7 +36,6 @@ import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobInfos;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
-import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.CascadingConditionsDocument.CascadingConditions;
 import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
@@ -44,7 +43,6 @@ import com.likya.tlos.model.xmlbeans.data.ExpectedTimeDocument.ExpectedTime;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobAutoRetryDocument.JobAutoRetry;
 import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
-import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
@@ -101,8 +99,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private Scenario scenario;
 	private boolean isScenario = false;
 
-	private boolean jobInsertButton = false;
-	private boolean jobUpdateButton = false;
+	private boolean jsInsertButton = false;
+	private boolean jsUpdateButton = false;
 
 	public final static String PERIOD_TIME_PARAM = "Period Time";
 
@@ -130,9 +128,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	private boolean jsActive = false;
 
-	// baseJobInfos
+	// baseJsInfos
 	private Collection<SelectItem> jsCalendarList = null;
-	private String jobCalendar;
+	private String jsCalendar;
 
 	private Collection<SelectItem> oSystemList = null;
 	private String oSystem;
@@ -316,7 +314,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private void fillBaseInfosTab() {
 		if (jobProperties != null) {
 			BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
-			jobCalendar = baseJobInfos.getCalendarId() + "";
+			jsCalendar = baseJobInfos.getCalendarId() + "";
 			oSystem = baseJobInfos.getOSystem().toString();
 			jobPriority = baseJobInfos.getJobPriority().toString();
 			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
@@ -346,9 +344,22 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
-	private void fillTimeManagementTab() {
-		if (jobProperties != null) {
-			TimeManagement timeManagement = jobProperties.getTimeManagement();
+	public void fillTimeManagementTab() {
+		TimeManagement timeManagement = null;
+
+		if (isScenario) {
+			if (scenario != null) {
+				timeManagement = scenario.getTimeManagement();
+			}
+		} else {
+			if (jobProperties != null) {
+				timeManagement = jobProperties.getTimeManagement();
+			}
+		}
+
+		if (timeManagement != null && timeManagement.getJsTimeOut() != null) {
+			useTimeManagement = true;
+
 			if (timeManagement.getJsPlannedTime() != null && timeManagement.getJsPlannedTime().getStartTime() != null) {
 				Calendar jobStartTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
 
@@ -381,15 +392,13 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				relativeTimeOption = timeManagement.getJsRelativeTimeOption().toString();
 			}
 
-			if (timeManagement.getJsTimeOut() != null) {
-				JsTimeOut timeOut = timeManagement.getJsTimeOut();
+			JsTimeOut timeOut = timeManagement.getJsTimeOut();
 
-				if (timeOut.getValueInteger() != null) {
-					jobTimeOutValue = timeOut.getValueInteger() + "";
-				}
-				if (timeOut.getUnit() != null) {
-					jobTimeOutUnit = timeOut.getUnit().toString();
-				}
+			if (timeOut.getValueInteger() != null) {
+				jobTimeOutValue = timeOut.getValueInteger() + "";
+			}
+			if (timeOut.getUnit() != null) {
+				jobTimeOutUnit = timeOut.getUnit().toString();
 			}
 
 			if (timeManagement.getExpectedTime() != null) {
@@ -417,33 +426,49 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
 
 		} else {
-			System.out.println("jobProperties is NULL in fillTimeManagementTab !!");
+			useTimeManagement = false;
 		}
 	}
 
-	private void fillDependencyDefinitionsTab() {
-		if (jobProperties != null) {
-			if (jobProperties.getDependencyList() != null && jobProperties.getDependencyList().sizeOfItemArray() > 0) {
+	public void fillDependencyDefinitionsTab() {
+		DependencyList dependencyList = null;
 
-				for (Item item : jobProperties.getDependencyList().getItemArray()) {
-					String depPathAndName = item.getJsPath() + "." + item.getJsName();
-
-					SelectItem selectItem = new SelectItem();
-					selectItem.setLabel(item.getJsName());
-					selectItem.setValue(depPathAndName);
-					boolean var = false;
-					for (SelectItem temp : manyJobDependencyList) {
-						if (temp.getLabel().equals(selectItem.getLabel()))
-							var = true;
-					}
-					if (!var)
-						manyJobDependencyList.add(selectItem);
-				}
-
-				dependencyExpression = jobProperties.getDependencyList().getDependencyExpression();
+		if (isScenario) {
+			if (scenario != null && scenario.getDependencyList() != null) {
+				dependencyList = scenario.getDependencyList();
 			}
 		} else {
-			System.out.println("jobProperties is NULL in fillDependencyDefinitionsTab !!");
+			if (jobProperties != null && jobProperties.getDependencyList() != null) {
+				dependencyList = jobProperties.getDependencyList();
+			}
+		}
+
+		if (dependencyList != null && dependencyList.sizeOfItemArray() > 0) {
+			for (Item item : dependencyList.getItemArray()) {
+				String depPathAndName = item.getJsPath() + "." + item.getJsName();
+
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(item.getJsName());
+				selectItem.setValue(depPathAndName);
+
+				/*
+				 * bir iş aynı isimli ama farklı pathlerdeki iki işe bağımlı olarak tanımlanabiliyor, db ye de kaydediliyor 
+				 * ama aşağıdaki kontrol olunca güncellemek istendiğinde sadece bir tanesi görüntülendiği için commentledim.
+				 * 
+				 * 	boolean var = false; 
+				 * 	for (SelectItem temp : manyJobDependencyList) { 
+				 * 		if (temp.getLabel().equals(selectItem.getLabel())) 
+				 * 			var = true; 
+				 * 	} 
+				 * 	
+				 * 	if (!var) 
+				 * 		manyJobDependencyList.add(selectItem);
+				 */
+
+				manyJobDependencyList.add(selectItem);
+			}
+
+			dependencyExpression = dependencyList.getDependencyExpression();
 		}
 	}
 
@@ -475,19 +500,21 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	private void fillStateInfosTab() {
 		if (jobProperties != null) {
-			if (!jobInsertButton) {
+			if (!jsInsertButton) {
 				stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().toString();
 				subStateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
 			}
 
 			// durum tanimi yapildiysa alanlari dolduruyor
 			if (jobProperties.getStateInfos() != null && jobProperties.getStateInfos().getJobStatusList() != null) {
-
 				manyJobStatusList = new ArrayList<SelectItem>();
+
 				for (Status jobStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
 					String statusName = jobStatus.getStatusName().toString();
 					manyJobStatusList.add(new SelectItem(statusName, statusName));
 				}
+			} else {
+				manyJobStatusList = null;
 			}
 		} else {
 			System.out.println("jobProperties is NULL in fillStateInfosTab !!");
@@ -502,26 +529,45 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
-	private void fillAlarmPreferenceTab() {
-		if (jobProperties != null) {
-			if (jobProperties.getAlarmPreference() != null && jobProperties.getAlarmPreference().getAlarmIdArray() != null && jobProperties.getAlarmPreference().getAlarmIdArray().length > 0) {
+	public void fillAlarmPreferenceTab() {
+		AlarmPreference alarmPreference = null;
 
-				int length = jobProperties.getAlarmPreference().getAlarmIdArray().length;
-				selectedAlarmList = new String[length];
-
-				for (int i = 0; i < length; i++) {
-					selectedAlarmList[i] = jobProperties.getAlarmPreference().getAlarmIdArray(i) + "";
-				}
+		if (isScenario) {
+			if (scenario != null && scenario.getAlarmPreference() != null) {
+				alarmPreference = scenario.getAlarmPreference();
 			}
 		} else {
-			System.out.println("jobProperties is NULL in fillAlarmPreferenceTab !!");
+			if (jobProperties != null && jobProperties.getAlarmPreference() != null) {
+				alarmPreference = jobProperties.getAlarmPreference();
+			}
+		}
+
+		if (alarmPreference != null && alarmPreference.getAlarmIdArray() != null && alarmPreference.getAlarmIdArray().length > 0) {
+			int length = alarmPreference.getAlarmIdArray().length;
+			selectedAlarmList = new String[length];
+
+			for (int i = 0; i < length; i++) {
+				selectedAlarmList[i] = alarmPreference.getAlarmIdArray(i) + "";
+			}
 		}
 	}
 
-	private void fillLocalParametersTab() {
-		if (jobProperties != null) {
-			if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
-				InParam inParam = jobProperties.getLocalParameters().getInParam();
+	public void fillLocalParametersTab() {
+		LocalParameters localParameters = null;
+
+		if (isScenario) {
+			if (scenario != null && scenario.getLocalParameters() != null) {
+				localParameters = scenario.getLocalParameters();
+			}
+		} else {
+			if (jobProperties != null && jobProperties.getLocalParameters() != null) {
+				localParameters = jobProperties.getLocalParameters();
+			}
+		}
+
+		if (localParameters != null) {
+			if (localParameters != null && localParameters.getInParam() != null) {
+				InParam inParam = localParameters.getInParam();
 
 				for (Parameter parameter : inParam.getParameterArray()) {
 					parameterList.add(parameter);
@@ -529,8 +575,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			} else {
 				parameterList = new ArrayList<Parameter>();
 			}
-		} else {
-			System.out.println("jobProperties is NULL in fillLocalParametersTab !!");
 		}
 	}
 
@@ -589,28 +633,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
-	public void initScenarioPanel() {
-		fillAllLists();
-
-		scenario = Scenario.Factory.newInstance();
-
-		BaseScenarioInfos baseScenarioInfos = BaseScenarioInfos.Factory.newInstance();
-		scenario.setBaseScenarioInfos(baseScenarioInfos);
-
-		JobList jobList = JobList.Factory.newInstance();
-		scenario.setJobList(jobList);
-
-		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
-		JsTimeOut jobTimeOut = JsTimeOut.Factory.newInstance();
-		timeManagement.setJsTimeOut(jobTimeOut);
-		scenario.setTimeManagement(timeManagement);
-
-		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
-		scenario.setConcurrencyManagement(concurrencyManagement);
-
-		resetPanelInputs();
-	}
-
 	public void initJobPanel() {
 		fillAllLists();
 
@@ -638,7 +660,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void resetPanelInputs() {
-		jobCalendar = "0";
+		jsCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
 		jobPriority = "1";
 		jobBaseType = JobBaseType.NON_PERIODIC.toString();
@@ -664,6 +686,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobStatus = Status.Factory.newInstance();
 		returnCode = ReturnCode.Factory.newInstance();
 
+		jobStatusName = "";
+		manyJobStatusList = new ArrayList<SelectItem>();
+
 		agentChoiceMethod = AgentChoiceMethod.SIMPLE_METASCHEDULER.toString();
 		jobSLA = NONE;
 		useResourceReq = false;
@@ -677,6 +702,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		manyJobDependencyList = new ArrayList<SelectItem>();
 		dependencyExpression = "";
+
+		selectedAlarmList = null;
+
+		parameterList = new ArrayList<Parameter>();
 	}
 
 	public void fillAllLists() {
@@ -728,7 +757,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private void fillBaseJobInfos() {
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
-		baseJobInfos.setCalendarId(Integer.parseInt(jobCalendar));
+		baseJobInfos.setCalendarId(Integer.parseInt(jsCalendar));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
 
@@ -782,6 +811,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		TimeManagement timeManagement;
 
 		if (isScenario) {
+			if (!useTimeManagement) {
+				return;
+			}
 			timeManagement = scenario.getTimeManagement();
 		} else {
 			timeManagement = jobProperties.getTimeManagement();
@@ -822,6 +854,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		timeManagement.setJsRelativeTimeOption(JsRelativeTimeOption.Enum.forString(relativeTimeOption));
 
 		if (jobTimeOutValue != null && !jobTimeOutValue.equals("")) {
+			if (timeManagement.getJsTimeOut() == null) {
+				JsTimeOut jsTimeOut = JsTimeOut.Factory.newInstance();
+				timeManagement.setJsTimeOut(jsTimeOut);
+			}
 			timeManagement.getJsTimeOut().setValueInteger(new BigInteger(jobTimeOutValue));
 			timeManagement.getJsTimeOut().setUnit(Unit.Enum.forString(jobTimeOutUnit));
 		}
@@ -899,7 +935,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			}
 		}
 
-		if (jobInsertButton || jobUpdateButton) {
+		if (jsInsertButton || jsUpdateButton) {
 			LiveStateInfos liveStateInfos = LiveStateInfos.Factory.newInstance();
 			jobProperties.getStateInfos().setLiveStateInfos(liveStateInfos);
 
@@ -1110,8 +1146,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private void switchInsertUpdateButtons() {
-		jobInsertButton = !jobInsertButton;
-		jobUpdateButton = !jobUpdateButton;
+		jsInsertButton = !jsInsertButton;
+		jsUpdateButton = !jsUpdateButton;
 	}
 
 	private boolean getJobId() {
@@ -1925,28 +1961,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.jobProperties = jobProperties;
 	}
 
-	public boolean isJobInsertButton() {
-		return jobInsertButton;
-	}
-
-	public void setJobInsertButton(boolean jobInsertButton) {
-		this.jobInsertButton = jobInsertButton;
-	}
-
 	public Collection<SelectItem> getJsCalendarList() {
 		return jsCalendarList;
 	}
 
 	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
 		this.jsCalendarList = jsCalendarList;
-	}
-
-	public String getJobCalendar() {
-		return jobCalendar;
-	}
-
-	public void setJobCalendar(String jobCalendar) {
-		this.jobCalendar = jobCalendar;
 	}
 
 	public Collection<SelectItem> getoSystemList() {
@@ -2733,14 +2753,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.jSTree = jSTree;
 	}
 
-	public boolean isJobUpdateButton() {
-		return jobUpdateButton;
-	}
-
-	public void setJobUpdateButton(boolean jobUpdateButton) {
-		this.jobUpdateButton = jobUpdateButton;
-	}
-
 	public String getSelectedTZone() {
 		return selectedTZone;
 	}
@@ -2787,6 +2799,30 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setInnerJsNameDuplicate(boolean innerJsNameDuplicate) {
 		this.innerJsNameDuplicate = innerJsNameDuplicate;
+	}
+
+	public boolean isJsInsertButton() {
+		return jsInsertButton;
+	}
+
+	public void setJsInsertButton(boolean jsInsertButton) {
+		this.jsInsertButton = jsInsertButton;
+	}
+
+	public boolean isJsUpdateButton() {
+		return jsUpdateButton;
+	}
+
+	public void setJsUpdateButton(boolean jsUpdateButton) {
+		this.jsUpdateButton = jsUpdateButton;
+	}
+
+	public String getJsCalendar() {
+		return jsCalendar;
+	}
+
+	public void setJsCalendar(String jsCalendar) {
+		this.jsCalendar = jsCalendar;
 	}
 
 }
