@@ -217,7 +217,7 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
-    <xs:element name="jobPriority">
+    <xs:element name="jobPriority" default="1">
         <xs:simpleType>
             <xs:restriction base="xs:string">
                 <xs:enumeration value="1"/>
