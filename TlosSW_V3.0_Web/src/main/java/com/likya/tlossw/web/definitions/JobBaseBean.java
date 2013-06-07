@@ -1231,7 +1231,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJobFromId(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getXFromNameId(draggedJobName, "Id)"));
+		JobProperties draggedJobProperties = getDbOperations().getJobFromId(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getXFromNameId(draggedJobName, "Id"));
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
