@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
@@ -193,9 +194,21 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		getScenario().setAdvancedScenarioInfos(advancedScenarioInfos);
 	}
 
+	public void insertJsWithDuplicateName(ActionEvent actionEvent) {
+		insertScenarioDefinition();
+	}
+
+	public void updateJsWithDuplicateName(ActionEvent actionEvent) {
+		updateScenarioDefinition();
+	}
+
 	public void insertScenarioDefinition() {
-		if (!scenarioCheckUp() & getScenarioId()) {
-			return;
+		if (!isJsNameConfirmDialog()) {
+			if (!scenarioCheckUp() & getScenarioId()) {
+				return;
+			}
+		} else {
+			setJsNameConfirmDialog(false);
 		}
 
 		if (getDbOperations().insertScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, getScenarioXML(), treePath)) {
@@ -206,12 +219,23 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			context.update("jsTreeForm:tree");
 
 			addMessage("scenarioInsert", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.insert", null);
+
+			switchInsertUpdateButtons();
+
 		} else {
 			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.insert", null);
 		}
 	}
 
 	public void updateScenarioDefinition() {
+		if (!isJsNameConfirmDialog()) {
+			if (!scenarioCheckUpForUpdate()) {
+				return;
+			}
+		} else {
+			setJsNameConfirmDialog(false);
+		}
+
 		if (getDbOperations().updateScenario(ConstantDefinitions.JOB_DEFINITION_DATA, treePath, getScenarioXML())) {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
 		} else {
@@ -317,14 +341,67 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		}
 	}
 
+	private boolean scenarioCheckUpForUpdate() {
+		String scenarioPath = treePath; // + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
+
+		// bu isimde bir senaryo yoksa 0
+		// ayni path de aynı isimde bir senaryo varsa 1
+		// iç senaryolarda aynı isimde bir senaryo varsa 2
+		// senaryonun dışında aynı isimde bir senaryo varsa 3
+		if (scenarioCheckResult != null) {
+			if (scenarioCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+
+				Scenario scenarioDefinition = getDbOperations().getScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
+
+				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
+				if (!scenarioDefinition.getID().equals(getScenario().getID())) {
+					addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
+					return false;
+				}
+			} else if (scenarioCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+				setJsNameConfirmDialog(true);
+				setInnerJsNameDuplicate(true);
+
+				return false;
+
+			} else if (scenarioCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+				setJsNameConfirmDialog(true);
+				setInnerJsNameDuplicate(false);
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	private boolean scenarioCheckUp() {
 		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
 
-		Scenario scenarioDefinition = getDbOperations().getScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
 
-		if (scenarioDefinition != null && scenarioDefinition.getBaseScenarioInfos().getJsName().equals(scenarioName)) {
-			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
-			return false;
+		// bu isimde bir senaryo yoksa 0
+		// ayni path de aynı isimde bir senaryo varsa 1
+		// iç senaryolarda aynı isimde bir senaryo varsa 2
+		// senaryonun dışında aynı isimde bir senaryo varsa 3
+		if (scenarioCheckResult != null) {
+			if (scenarioCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+				addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
+				return false;
+			} else if (scenarioCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+				setJsNameConfirmDialog(true);
+				setInnerJsNameDuplicate(true);
+
+				return false;
+
+			} else if (scenarioCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+				setJsNameConfirmDialog(true);
+				setInnerJsNameDuplicate(false);
+
+				return false;
+			}
 		}
 
 		return true;

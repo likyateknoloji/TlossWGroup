@@ -759,7 +759,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		baseJobInfos.setCalendarId(Integer.parseInt(jsCalendar));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
-		if(jobPriority.isEmpty()) jobPriority = "1"; // default değer
+		if (jobPriority.isEmpty())
+			jobPriority = "1"; // default değer
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
 
 		if (jsActive) {
@@ -1096,15 +1097,15 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setAdvancedJobInfos(advancedJobInfos);
 	}
 
-	public void cancelInsertOrUpdateJobAction(ActionEvent actionEvent) {
+	public void cancelInsertOrUpdateJsAction(ActionEvent actionEvent) {
 		jsNameConfirmDialog = false;
 	}
 
-	public void insertJobWithDuplicateName(ActionEvent actionEvent) {
+	public void insertJsWithDuplicateName(ActionEvent actionEvent) {
 		insertJobDefinition();
 	}
 
-	public void updateJobWithDuplicateName(ActionEvent actionEvent) {
+	public void updateJsWithDuplicateName(ActionEvent actionEvent) {
 		updateJobDefinition();
 	}
 
@@ -1146,7 +1147,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 	}
 
-	private void switchInsertUpdateButtons() {
+	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
 		jsUpdateButton = !jsUpdateButton;
 	}
@@ -1203,7 +1204,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
 				if (!job.getID().equals(jobProperties.getID())) {
-					addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+					addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 					return false;
 				}
 			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
@@ -1232,7 +1233,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		// senaryonun dışında aynı isimde bir iş varsa 3
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
-				addMessage("jobInsertOrUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
+				addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 				return false;
 			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
 				jsNameConfirmDialog = true;
