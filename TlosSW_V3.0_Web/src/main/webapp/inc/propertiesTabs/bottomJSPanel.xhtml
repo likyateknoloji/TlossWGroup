@@ -40,23 +40,30 @@
 		</p:dialog>
 
 		<p:dialog id="jsNameConfirmDialog" visible="#{backingBean.jsNameConfirmDialog}" resizable="false" showEffect="show"
-			header="#{msgs['tlos.confirm.workspace.duplicateJobName.header']}" severity="alert" widgetVar="confirmation" 
-			width="300px">  
+			header="#{msgs['tlos.confirm.workspace.duplicateJSName.header']}" severity="alert" widgetVar="confirmation" 
+			width="300px">
 
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.inner']}" rendered="#{backingBean.innerJsNameDuplicate}" />
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.outer']}" rendered="#{!backingBean.innerJsNameDuplicate}" />
+			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.inner']}" 
+				rendered="#{backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
+			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.outer']}" 
+				rendered="#{!backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
+			
+			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.inner']}" 
+				rendered="#{backingBean.innerJsNameDuplicate and backingBean.scenario}" />
+			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.outer']}" 
+				rendered="#{!backingBean.innerJsNameDuplicate and backingBean.scenario}" />
 
 			<br/>
 			<br/>
 			<p:panel id="confirmDialogPanel">
 				<p:commandButton id="confirmInsert" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['insertJobWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
+					actionListener="#{backingBean['insertJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
 					rendered="#{backingBean.jsInsertButton}" />
 				<p:commandButton id="confirmUpdate" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['updateJobWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
+					actionListener="#{backingBean['updateJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
 					rendered="#{backingBean.jsUpdateButton}" />
 				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['cancelInsertOrUpdateJobAction']}"/>
+					actionListener="#{backingBean['cancelInsertOrUpdateJsAction']}"/>
 	    	</p:panel>
 	    </p:dialog>
 
