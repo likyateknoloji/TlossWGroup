@@ -37,8 +37,24 @@
 			
 				<p:growl id="messages" showDetail="true" autoUpdate="true" />
 	
-				<p:tabView effect="blind" effectDuration="normal" id="alarmWizard">
+				<p:wizard backLabel="#{msgs['tlos.wizard.back.label']}"
+					nextLabel="#{msgs['tlos.wizard.next.label']}" id="alarmWizard"
+					flowListener="#{alarmPanelMBean.onFlowProcess}">
+
 					<p:tab id="alarmMainTab" title="#{msgs['tlos.management.pannel.alarmProcesses.header']}" style="width: 600px;">
+						<br/>
+						<p:panel>
+							<p:panelGrid columns="2">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.alarmProcesses.alarmType']}" />
+								<p:selectOneMenu id="alarmType" value="#{alarmPanelMBean.alarmType}">
+									<f:selectItems value="#{alarmPanelMBean.alarmTypeList}" />
+									<p:ajax update="alarmWizard"></p:ajax>
+								</p:selectOneMenu>
+							</p:panelGrid>
+						</p:panel>
+						<br/>
+						
 						<p:panel id="alarmGeneralPanel"
 							header="#{msgs['tlos.management.pannel.alarmProcesses.header']}">
 	
@@ -62,19 +78,29 @@
 								</p:inputText>
 	
 								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.startDate']}" />
-								<p:calendar value="#{alarmPanelMBean.startDate}" id="startDate"
-									required="true" mode="popup" showOn="focus">
+									value="#{msgs['tlos.management.pannel.alarmProcesses.creationDate']}" 
+									rendered="#{not alarmPanelMBean.insertButton}" />
+								<p:calendar value="#{alarmPanelMBean.creationDate}" id="creationDate"
+									label="#{msgs['tlos.management.pannel.alarmProcesses.creationDate']}"
+									navigator="true" showOn="button" rendered="#{not alarmPanelMBean.insertButton}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</p:calendar>
-	
+								
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.alarmProcesses.startDate']}" />
+								<p:calendar value="#{alarmPanelMBean.startDate}" id="startDate"
+									label="#{msgs['tlos.management.pannel.alarmProcesses.startDate']}"
+									navigator="true" showOn="button">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</p:calendar>
+								
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.endDate']}" />
 								<p:calendar value="#{alarmPanelMBean.endDate}" id="endDate"
-									required="true" mode="popup" showOn="focus">
+									label="#{msgs['tlos.management.pannel.alarmProcesses.endDate']}"
+									navigator="true" showOn="button">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</p:calendar>
-	
 	
 								<h:outputText
 									value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
@@ -91,17 +117,8 @@
 								</p:selectOneMenu>
 	
 								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.alarmType']}" />
-								<p:selectOneMenu id="alarmType"
-									style="width:150px;text-align: center;"
-									value="#{alarmPanelMBean.alarmType}" partialSubmit="true">
-									<f:selectItems value="#{alarmPanelMBean.alarmTypeList}" />
-								</p:selectOneMenu>
-	
-								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.level']}" />
 								<p:selectOneMenu id="alarmLevel" required="true"
-									style="width:250px;text-align: center;"
 									value="#{alarmPanelMBean.alarmLevel}"
 									label="#{msgs['tlos.management.pannel.alarmProcesses.alarmLevel']}">
 									<f:selectItem
@@ -121,31 +138,25 @@
 										itemValue="5" />
 								</p:selectOneMenu>
 	
-								<h:outputText value="" />
-								<h:inputHidden value="#{alarmPanelMBean.alarmId}"
-									id="inputHidden_1" />
-	
 							</p:panelGrid>
-	
+							
+							<h:inputHidden value="#{alarmPanelMBean.alarmId}" id="inputHidden_1" />
+							
 						</p:panel>
 					</p:tab>
 	
-	
-	
 					<p:tab id="alarmKullaniciTab"
-						title="#{msgs['tlos.management.pannel.newAlarm.subsPool']}"
-						style="width: 600px;">
+						title="#{msgs['tlos.management.pannel.newAlarm.subsPool']}" >
 	
 						<p:panel id="alarmKullaniciPanel"
 							header="#{msgs['tlos.management.pannel.newAlarm.subsPool']}">
 	
-							<p:panelGrid columns="4" style="border-width: 0px;" width="100%">
+							<p:panelGrid columns="2" >
 	
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.subscriptionType']}" />
 								<p:selectOneMenu id="userType" required="true"
-									style="width:250px;text-align: center;"
-									value="#{alarmPanelMBean.userType}" partialSubmit="true">
+									value="#{alarmPanelMBean.userType}" >
 									<f:selectItems value="#{alarmPanelMBean.subscriptionTypeList}" />
 									<p:ajax update="alarmKullaniciPanel" />
 								</p:selectOneMenu>
@@ -153,112 +164,95 @@
 								<h:outputText rendered="#{alarmPanelMBean.userType eq 'User'}"
 									value="#{msgs['tlos.management.pannel.newAlarm.alarmSubscriber']}" />
 								<p:selectOneMenu id="user"
-									style="width:250px;text-align: center;"
 									rendered="#{alarmPanelMBean.userType eq 'User'}"
-									value="#{alarmPanelMBean.alarmUser}" partialSubmit="true">
+									value="#{alarmPanelMBean.alarmUser}" >
 									<f:selectItems value="#{alarmPanelMBean.alarmUserList}" />
 								</p:selectOneMenu>
 	
 								<h:outputText rendered="#{alarmPanelMBean.userType eq 'Role'}"
 									value="#{msgs['tlos.management.pannel.newAlarm.alarmRole']}" />
-								<p:selectOneMenu id="rol" style="width:250px;text-align: center;"
+								<p:selectOneMenu id="rol"
 									rendered="#{alarmPanelMBean.userType eq 'Role'}"
-									value="#{alarmPanelMBean.alarmRole}" partialSubmit="true">
+									value="#{alarmPanelMBean.alarmRole}" >
 									<f:selectItems value="#{alarmPanelMBean.alarmRoleList}" />
 								</p:selectOneMenu>
 	
 							</p:panelGrid>
 						</p:panel>
-					</p:tab>
-	
-					<p:tab id="commChannelTab"
-						title="#{msgs['tlos.management.pannel.newAlarm.commChannel']}"
-						style="width: 600px;">
-	
+						
+						<br/>
+						
 						<p:panel id="commChannelPanel"
 							header="#{msgs['tlos.management.pannel.newAlarm.alarmWarnBy']}">
 	
-							<p:panelGrid columns="4" style="border-width: 0px;" width="100%">
-	
+							<p:panelGrid columns="4" >
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newAlarm.alarmWarnBy']}" />
-								<p:selectManyMenu style="width:150px;height:150px;overflow: auto"
-									value="#{alarmPanelMBean.selectedWarnByList}">
+								<p:selectManyMenu value="#{alarmPanelMBean.selectedWarnByList}">
 									<f:selectItems value="#{alarmPanelMBean.alarmWarnByList}" />
 								</p:selectManyMenu>
 							</p:panelGrid>
 						</p:panel>
-	
 					</p:tab>
 	
-					<p:tab id="alarmJobTab"
-						title="#{msgs['tlos.management.pannel.newAlarm.focusItems']}"
-						style="width: 600px;">
+					<p:tab id="alarmJobTab" rendered="#{alarmPanelMBean.alarmType eq 'Job'}"
+						title="#{msgs['tlos.management.pannel.newAlarm.jobList']}" >
 	
 						<p:panel id="alarmJobPanel"
-							rendered="#{alarmPanelMBean.alarmType eq 'Job'}"
 							header="#{msgs['tlos.management.pannel.newAlarm.jobsPool']}">
 	
-							<p:panelGrid columns="4" style="border-width: 0px;" width="100%">
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newAlarm.alarmJob']}" />
-								<p:selectManyMenu style="width:150px;height:150px;overflow: auto"
-									value="#{alarmPanelMBean.selectedJobNameList}">
+							<p:panelGrid columns="2" >
+								<h:outputText title="#{msgs['tlos.management.pannel.newAlarm.jobListGroup']}"
+									value="#{msgs['tlos.management.pannel.newAlarm.jobList']}" />
+								<p:selectManyMenu value="#{alarmPanelMBean.selectedJobNameList}" 
+									style="width:170px; height:150px;">
 									<f:selectItems value="#{alarmPanelMBean.alarmJobNameList}" />
 								</p:selectManyMenu>
 	
-	
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.depth']}" />
-								<p:panelGrid columns="1" style="margin-bottom:10px">
-									<p:inputText id="txt1" value="#{alarmPanelMBean.alarmDepth}" />
-									<p:slider for="txt1" minValue="1" />
+								<p:panelGrid columns="1" >
+									<p:inputText id="jobDepth" value="#{alarmPanelMBean.alarmDepth}" />
+									<p:slider for="jobDepth" minValue="1" />
 								</p:panelGrid>
-	
 							</p:panelGrid>
+							
 						</p:panel>
+					</p:tab>
+					
+					<p:tab id="alarmScenarioTab" rendered="#{alarmPanelMBean.alarmType eq 'Scenario'}"
+						title="#{msgs['tlos.management.pannel.newAlarm.alarmScenario']}" >
 	
 						<p:panel id="alarmScenarioPanel"
-							rendered="#{alarmPanelMBean.alarmType eq 'Scenario'}"
 							header="#{msgs['tlos.management.pannel.newAlarm.scenarioPool']}">
 	
-							<p:panelGrid columns="4" style="border-width: 0px;" width="100%">
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newAlarm.alarmScenario']}" />
-	
-								<p:selectManyMenu style="width:150px;height:150px;overflow: auto"
-									value="#{alarmPanelMBean.selectedScenarioNameList}">
-									<f:selectItem itemLabel="#{msgs['tlos.combo.all']}" itemValue="" />
+							<p:panelGrid columns="2" >
+								<h:outputText value="#{msgs['tlos.management.pannel.newAlarm.alarmScenario']}" 
+									title="#{msgs['tlos.management.pannel.newAlarm.alarmScenarioList']}"/>
+								<p:selectManyMenu value="#{alarmPanelMBean.selectedScenarioNameList}"
+									style="width:170px; height:150px;">
 									<f:selectItems value="#{alarmPanelMBean.alarmScenarioNameList}" />
 								</p:selectManyMenu>
 	
-	
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.depth']}" />
-								<p:panelGrid columns="1" style="margin-bottom:10px">
-									<p:inputText id="txt2" value="#{alarmPanelMBean.alarmDepth}" />
-									<p:slider for="txt2" />
+								<p:panelGrid columns="1" >
+									<p:inputText id="scenarioDepth" value="#{alarmPanelMBean.alarmDepth}" />
+									<p:slider for="scenarioDepth" />
 								</p:panelGrid>
-	
 							</p:panelGrid>
 	
 						</p:panel>
 					</p:tab>
-	
-	
+
 					<p:tab id="alarmResTab"
 						title="#{msgs['tlos.management.pannel.newSla.resourceReq']}"
-						style="width: 600px;">
+						rendered="#{alarmPanelMBean.alarmType eq 'System'}" >
 	
 						<p:panel id="alarmResPanel"
 							header="#{msgs['tlos.management.pannel.newSla.resourceReq']}">
 	
-							<p:panelGrid columns="2"
-								rendered="#{alarmPanelMBean.alarmType eq 'System'}"
-								style="border-width: 0px;" width="100%">
-	
+							<p:panelGrid columns="2" rendered="#{alarmPanelMBean.alarmType eq 'System'}" >
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newSla.donanimReq']}" />
 								<h:outputText value="" />
@@ -545,7 +539,7 @@
 	
 					</p:tab>
 	
-				</p:tabView>
+				</p:wizard>
 
 			</p:fieldset>
 
