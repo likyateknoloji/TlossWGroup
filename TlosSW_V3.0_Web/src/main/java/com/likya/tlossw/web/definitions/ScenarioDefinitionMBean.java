@@ -106,7 +106,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	// sağ tıkla yeni senaryo ekle seçilince buraya geliyor
 	public void addNewScenario() {
-		resetScenarioPanelInputs();
+		initScenarioPanel();
 
 		TreeNode selectedScenario = getJsTree().getSelectedJS();
 		setScenarioTreePath(selectedScenario);
