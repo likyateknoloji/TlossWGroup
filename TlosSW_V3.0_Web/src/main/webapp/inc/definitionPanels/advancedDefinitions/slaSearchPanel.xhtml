@@ -43,7 +43,7 @@
 
 				<div class="tablectrl">
 
-					<p:panelGrid columns="4" >
+					<p:panelGrid columns="4">
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.slaProcesses.name']}" />
@@ -54,21 +54,22 @@
 							value="#{msgs['tlos.management.pannel.slaProcesses.userName']}" />
 						<p:selectOneMenu id="user" style="text-align: center;"
 							value="#{slaSearchPanelMBean.user}" partialSubmit="true">
-							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
 							<f:selectItems value="#{slaSearchPanelMBean.userList}" />
 						</p:selectOneMenu>
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.slaProcesses.startDate']}" />
-						<p:calendar value="#{slaSearchPanelMBean.startDate}" navigator="true"
-							id="startDate" showOn="button">
+						<p:calendar value="#{slaSearchPanelMBean.startDate}"
+							navigator="true" id="startDate" showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.slaProcesses.endDate']}" />
-						<p:calendar value="#{slaSearchPanelMBean.endDate}" id="endDate" navigator="true"
-							showOn="button">
+						<p:calendar value="#{slaSearchPanelMBean.endDate}" id="endDate"
+							navigator="true" showOn="button">
 							<f:convertDateTime pattern="dd.MM.yyyy" />
 						</p:calendar>
 
@@ -106,8 +107,7 @@
 
 			<p:outputPanel id="slaSearchPanel">
 
-				<p:panel
-					rendered="#{not empty slaSearchPanelMBean.searchSlaList}">
+				<p:panel rendered="#{not empty slaSearchPanelMBean.searchSlaList}">
 
 					<p:confirmDialog id="confirmDialog"
 						style="z-index: 999 !important;"
@@ -133,15 +133,18 @@
 
 						<p:column>
 							<p:commandButton id="slaEditButton" ajax="false"
-								rendered="#{security.SlaEdit}" immediate="false" value="#{msgs['tlos.ask.update.button']}"
+								rendered="#{security.SlaEdit}" immediate="false"
+								value="#{msgs['tlos.ask.update.button']}"
 								action="slaPanel.xhtml">
 								<f:param name="selectedSlaID" value="#{item.ID}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="slaDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
-								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.SlaDelete}" 
-								action="#{slaSearchPanelMBean.setSelectedRow(item)}"/>
+							<p:commandButton id="slaDeleteButton"
+								title="#{msgs['tlos.ask.delete.button']}"
+								value="#{msgs['tlos.ask.delete.button']}" icon="ui-icon-trash"
+								onclick="confirmation.show()" rendered="#{security.SlaDelete}"
+								action="#{slaSearchPanelMBean.setSelectedRow(item)}" />
 						</p:column>
 
 						<p:column
@@ -171,9 +174,20 @@
 							sortBy="#{item.resourceReq.hardware.mem.stringValue}"
 							filterBy="#{item.resourceReq.hardware.mem.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText
-								value="#{item.resourceReq.hardware.mem}"
+							<h:outputText value="#{item.resourceReq.hardware.mem}"
 								style="text-align: center;" />
+
+							<h:panelGrid columns="1" style="width:100%" cellpadding="5">
+								<p:graphicImage value="/images/dash01.png" />
+
+								<h:outputText
+									value="Birim: #{item.resourceReq.hardware.mem.birim}" />
+
+								<h:outputText value="For: #{item.resourceReq.hardware.mem.birim}" />
+
+								<h:outputText
+									value="Condition: #{item.resourceReq.hardware.mem.condition}" />
+							</h:panelGrid>
 						</p:column>
 
 						<p:column
@@ -181,8 +195,7 @@
 							sortBy="#{item.resourceReq.hardware.cpu.stringValue}"
 							filterBy="#{item.resourceReq.hardware.cpu.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText
-								value="#{item.resourceReq.hardware.cpu}"
+							<h:outputText value="#{item.resourceReq.hardware.cpu}"
 								style="text-align: center;" />
 						</p:column>
 
@@ -191,8 +204,7 @@
 							sortBy="#{item.resourceReq.hardware.disk.stringValue}"
 							filterBy="#{item.resourceReq.hardware.disk.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText
-								value="#{item.resourceReq.hardware.disk}"
+							<h:outputText value="#{item.resourceReq.hardware.disk}"
 								style="text-align: center;" />
 						</p:column>
 
