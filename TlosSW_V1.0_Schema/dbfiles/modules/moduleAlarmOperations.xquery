@@ -68,7 +68,7 @@ declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(a
         
     let $nedir := if ( 
                        (fn:contains(fn:lower-case($alarm/alm:name), fn:lower-case($searchAlarm/alm:name)) or data($searchAlarm/alm:name)="")
-                       and	
+                       and    
                        ( data($alarm/alm:subscriber/alm:person/@id)=data($searchAlarm/alm:subscriber/alm:person/@id) 
                          or data($searchAlarm/alm:subscriber/alm:person/@id) = "-1" 
                          or data($searchAlarm/alm:subscriber/alm:person/@id) = "0"
@@ -78,21 +78,28 @@ declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(a
                         ( $searchedStartDate='' and $searchedEndDate = '' )
                         or
                         (
-                          ($searchedEndDate = '' or ( exists($searchedEndDate) and $searchedEndDate > $itemStartDate  ))
+                          ($searchedEndDate='' or ( exists($searchedEndDate) and xs:dateTime($searchedEndDate) > xs:dateTime($itemStartDate)  ))
                           and
-                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $searchedStartDate < $itemStartDate  ))
+                          ($searchedStartDate='' or ( exists($searchedStartDate) and xs:dateTime($searchedStartDate) < xs:dateTime($itemStartDate)  ))
                         )                       
                         or                       
-                        (
-                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $itemStartDate < $searchedStartDate ))
-                          and
-                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $searchedStartDate < $itemEndDate  ))
+                        ( 
+                         ( $searchedStartDate='' or 
+                          (
+                          exists($searchedStartDate) and xs:dateTime($itemStartDate) < xs:dateTime($searchedStartDate) and  xs:dateTime($searchedStartDate) < xs:dateTime($itemEndDate)
+                          )
+                         )
+                         and
+                         ( $searchedEndDate='' or (
+                           exists($searchedEndDate) and xs:dateTime($searchedEndDate) > xs:dateTime($itemStartDate) and xs:dateTime($searchedEndDate) < xs:dateTime($itemEndDate) )
+                         )
                         )
                        )
                       ) then $alarm else ()
    let $sonuc := $nedir
    return $sonuc
 };
+
 
 (: ornek kullanim lk:alarmList(1,2) ilk iki eleman :)
 (: Su anda kullanilmiyor :)
