@@ -108,8 +108,10 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
-			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList()));
+			setAlarmRoleList(WebInputUtils.fillRoleList());
+			
+			//ilk 20 iş ekranda görünecek
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(20)));
 
 			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList()));
 		} catch (XMLDBException e) {
@@ -175,9 +177,11 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		Date startDate = DefinitionUtils.dateToDate(getAlarm().getStartDate().getTime(), getSelectedTZone());
 		Date endDate = DefinitionUtils.dateToDate(getAlarm().getEndDate().getTime(), getSelectedTZone());
+		Date creationDate = DefinitionUtils.dateToDate(getAlarm().getCreationDate().getTime(), getSelectedTZone());
 
 		setStartDate(startDate);
 		setEndDate(endDate);
+		setCreationDate(creationDate);
 
 		setAlarmLevel(getAlarm().getLevel().toString());
 
@@ -198,7 +202,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			setAlarmUser(getAlarm().getSubscriber().getPerson().getId().toString());
 		} else {
 			setUserType(SubscriptionType.ROLE.toString());
-			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
 			setAlarmRole(Integer.toString(getAlarm().getSubscriber().getRole().intValue()));
 		}
 

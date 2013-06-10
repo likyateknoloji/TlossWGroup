@@ -39,15 +39,9 @@ public class AlarmSearchPanelMBean extends AlarmBaseBean implements Serializable
 		
 		setAlarmType(AlarmType.JOB.toString());
 		setUserType(SubscriptionType.USER.toString());
-		
-		try {
-			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
-			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
-			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList()));
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
+
+		setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
+		setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
 
 		logger.info("end : init");
 

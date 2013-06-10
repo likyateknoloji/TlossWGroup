@@ -57,6 +57,7 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	private Alarm alarm;
 	private Date startDate;
 	private Date endDate;
+	private Date creationDate;
 
 	private Date alarmReportStartDate;
 	private Date alarmReportFinishDate;
@@ -700,6 +701,14 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	public void setSelectedRow(Alarm selectedRow) {
 		this.selectedRow = selectedRow;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 }
