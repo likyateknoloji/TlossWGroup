@@ -233,13 +233,16 @@ declare function hs:getJobExistence($documentName as xs:string, $jobPath as node
 {    
     let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
     let $refPath := $doc//$jobPath
+    let $refPathPrevious := $refPath/..
     let $exactMatch := count($refPath/dat:jobProperties[.//com:jsName/text() = $jobName])
-    let $partialMatch := count($refPath//dat:jobProperties[.//com:jsName/text() = $jobName])
+    let $partialMatchIn  := count($refPathPrevious//dat:jobProperties[.//com:jsName/text() = $jobName])
+    let $partialMatchOut := count($doc//dat:jobProperties[.//com:jsName/text() = $jobName])
     
-    let $sonuc := if($exactMatch > 0) then 1 
-                  else if($partialMatch > 0) then 2
+    let $sonuc := if($exactMatch > 0) then 1 (: ayni senaryoda var :)
+                  else if($partialMatchIn > 0) then 2 (: Senaryonun icindeki bir senaryoda var :)
+                  else if($partialMatchOut > 0) then 3 (: Senaryonun disindaki bir senaryoda var :)
                   else 0
-    return  $sonuc 
+    return  $sonuc
 };
 
 (:hs:getJobExistence(xs:string("tlosSWData10.xml"), /dat:TlosProcessData/dat:scenario/dat:jobList, xs:string("job1.bat"), 13) :)
