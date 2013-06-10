@@ -34,13 +34,16 @@ declare function hs:getScenarioExistence($documentName as xs:string, $scenarioPa
 {    
     let $doc := doc(fn:concat("//db/TLOSSW/xmls/",$documentName)) 
     let $refPath := $doc//$scenarioPath
-    let $exactMatch := count($refPath/dat:scenario/dat:baseScenarioInfos[.//com:jsName/text() = xs:string($scenarioName)])
-    let $partialMatch := count($refPath//dat:scenario/dat:baseScenarioInfos[.//com:jsName/text() = xs:string($scenarioName)])
+
+    let $exactMatch := count($refPath/dat:scenario/dat:baseScenarioInfos[.//normalize-space(com:jsName/text()) = normalize-space(xs:string($scenarioName))])
+    let $partialMatchIn := count($refPath//dat:scenario/dat:baseScenarioInfos[.//normalize-space(com:jsName/text()) = normalize-space(xs:string($scenarioName))])
+    let $partialMatchOut := count($doc//dat:scenario/dat:baseScenarioInfos[.//normalize-space(com:jsName/text()) = normalize-space(xs:string($scenarioName))])
     
-    let $sonuc := if($exactMatch > 0) then 1 
-                  else if($partialMatch > 0) then 2
+    let $sonuc := if($exactMatch > 0) then 1 (: ayni senaryoda var :)
+                  else if($partialMatchIn > 0) then 2 (: Senaryonun icindeki bir senaryoda var :)
+                  else if($partialMatchOut > 0) then 3 (: Senaryonun disindaki bir senaryoda var :)
                   else 0
-    return  $sonuc
+    return $sonuc
 };
 
 declare function hs:getScenarioFromId($documentName as xs:string, $id as xs:integer) as element(dat:scenario)?
