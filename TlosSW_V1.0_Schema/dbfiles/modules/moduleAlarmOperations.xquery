@@ -75,22 +75,18 @@ declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(a
                        )
 			           and 
                        ( 
-                        ( $searchedEndDate = "" and $searchedEndDate = "" )
+                        ( $searchedStartDate='' and $searchedEndDate = '' )
                         or
                         (
-                          ($searchedEndDate = "" or ( exists($searchedEndDate) and $itemEndDate > $searchedStartDate ))
+                          ($searchedEndDate = '' or ( exists($searchedEndDate) and $searchedEndDate > $itemStartDate  ))
                           and
-                          ( 
-                            exists($searchedStartDate) and ( $itemStartDate < $searchedStartDate and $itemEndDate > $searchedStartDate )
-                          )
+                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $searchedStartDate < $itemStartDate  ))
                         )                       
                         or                       
                         (
-                          ($searchedStartDate = "" or ( exists($searchedStartDate) and $itemStartDate > $searchedStartDate ))
+                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $itemStartDate < $searchedStartDate ))
                           and
-                          ( 
-                             exists($searchedEndDate) and ( $itemEndDate > $searchedEndDate and  $itemStartDate < $searchedEndDate) 
-                          )
+                          ($searchedStartDate = '' or ( exists($searchedStartDate) and $searchedStartDate < $itemEndDate  ))
                         )
                        )
                       ) then $alarm else ()
