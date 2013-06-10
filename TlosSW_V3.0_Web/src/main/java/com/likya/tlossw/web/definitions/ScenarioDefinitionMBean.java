@@ -380,7 +380,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	private boolean scenarioCheckUp() {
 		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
 
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, treePath, scenarioName);
 
 		// bu isimde bir senaryo yoksa 0
 		// ayni path de aynı isimde bir senaryo varsa 1
