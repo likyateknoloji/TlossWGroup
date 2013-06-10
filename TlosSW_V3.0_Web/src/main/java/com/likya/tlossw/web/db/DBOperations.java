@@ -682,9 +682,9 @@ public class DBOperations implements Serializable {
 		return prsList;
 	}
 
-	public ArrayList<JobProperties> getJobList() throws XMLDBException {
+	public ArrayList<JobProperties> getJobList(int maxNumber) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "hs:jobList(1,5)";
+		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "hs:jobList(1," + maxNumber + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
