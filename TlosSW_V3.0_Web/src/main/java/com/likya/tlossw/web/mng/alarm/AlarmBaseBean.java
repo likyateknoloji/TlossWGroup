@@ -23,6 +23,8 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	private static final long serialVersionUID = -7436267818850177642L;
 
 	private String alarmType;
+	private String caseType;
+
 	private String userType;
 
 	private String alarmLevel;
@@ -50,10 +52,10 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	private Collection<SelectItem> alarmNameList = null;
 
 	private String selectedTZone;
-	
+
 	private Collection<SelectItem> typeOfTimeList;
 	private String selectedTypeOfTime;
-	
+
 	private Alarm alarm;
 	private Date startDate;
 	private Date endDate;
@@ -107,15 +109,22 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	private List<SelectItem> stateList;
 
-	private String timeOutControl;
-	private String tolerancePercentage;
-	private String minPercentage;
+	private boolean timeOutControl = false;
+	private boolean tolerancePercentage = false;
+	private boolean minPercentage = false;
 
 	private ArrayList<Alarm> searchAlarmList;
 	private transient DataTable searchAlarmTable;
 	private Alarm selectedRow;
 
 	private JsRealTime jsRealTime;
+
+	private boolean useSlaManagement = true;
+	
+	public static final String SYSTEM_CASE_TYPE = "system";
+	public static final String STATE_CASE_TYPE = "state";
+	public static final String SLA_CASE_TYPE = "sla";
+	public static final String TIME_CASE_TYPE = "time";
 
 	public String getAlarmXML() {
 
@@ -134,8 +143,6 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 		setAlarmSubStateList(WebAlarmUtils.fillSubStateList());
 	}
 
-
-	
 	public void fillStateStatusList() {
 		setAlarmStateStatusList(WebAlarmUtils.fillStateStatusList());
 	}
@@ -171,7 +178,7 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	public void setHardwareName(String hardwareName) {
 		this.hardwareName = hardwareName;
 	}
- 
+
 	public String getCpuTimein() {
 		return cpuTimein;
 	}
@@ -607,30 +614,6 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 		this.stateList = stateList;
 	}
 
-	public String getTimeOutControl() {
-		return timeOutControl;
-	}
-
-	public void setTimeOutControl(String timeOutControl) {
-		this.timeOutControl = timeOutControl;
-	}
-
-	public String getTolerancePercentage() {
-		return tolerancePercentage;
-	}
-
-	public void setTolerancePercentage(String tolerancePercentage) {
-		this.tolerancePercentage = tolerancePercentage;
-	}
-
-	public String getMinPercentage() {
-		return minPercentage;
-	}
-
-	public void setMinPercentage(String minPercentage) {
-		this.minPercentage = minPercentage;
-	}
-
 	public ArrayList<Alarm> getSearchAlarmList() {
 		return searchAlarmList;
 	}
@@ -709,6 +692,46 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public String getCaseType() {
+		return caseType;
+	}
+
+	public void setCaseType(String caseType) {
+		this.caseType = caseType;
+	}
+
+	public boolean isUseSlaManagement() {
+		return useSlaManagement;
+	}
+
+	public void setUseSlaManagement(boolean useSlaManagement) {
+		this.useSlaManagement = useSlaManagement;
+	}
+
+	public boolean isTimeOutControl() {
+		return timeOutControl;
+	}
+
+	public void setTimeOutControl(boolean timeOutControl) {
+		this.timeOutControl = timeOutControl;
+	}
+
+	public boolean isTolerancePercentage() {
+		return tolerancePercentage;
+	}
+
+	public void setTolerancePercentage(boolean tolerancePercentage) {
+		this.tolerancePercentage = tolerancePercentage;
+	}
+
+	public boolean isMinPercentage() {
+		return minPercentage;
+	}
+
+	public void setMinPercentage(boolean minPercentage) {
+		this.minPercentage = minPercentage;
 	}
 
 }

@@ -72,7 +72,7 @@ public class WebAlarmUtils {
 		for (JobProperties jobProperties : jobList) {
 			SelectItem item = new SelectItem();
 			item.setValue(jobProperties.getID());
-			item.setLabel(jobProperties.getBaseJobInfos().getJsName());
+			item.setLabel(jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID());
 			jobNameList.add(item);
 		}
 
@@ -282,7 +282,7 @@ public class WebAlarmUtils {
 		for (Scenario scenario : ScenarioList) {
 			SelectItem item = new SelectItem();
 			item.setValue(scenario.getID());
-			item.setLabel(scenario.getBaseScenarioInfos().getJsName());
+			item.setLabel(scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID());
 			scenarioNameList.add(item);
 		}
 

@@ -99,6 +99,7 @@ public class AlarmSearchPanelMBean extends AlarmBaseBean implements Serializable
 		setStartDate(null);
 		setEndDate(null);
 		setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
+		setAlarmUser("");
 	}
 	
 	public String updateAlarm() {

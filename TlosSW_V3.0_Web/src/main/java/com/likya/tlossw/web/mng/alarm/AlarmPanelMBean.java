@@ -17,7 +17,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.event.FlowEvent;
 import org.xmldb.api.base.XMLDBException;
 
@@ -29,12 +28,15 @@ import com.likya.tlos.model.xmlbeans.alarm.FocusDocument.Focus;
 import com.likya.tlos.model.xmlbeans.alarm.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.alarm.JobsDocument.Jobs;
 import com.likya.tlos.model.xmlbeans.alarm.PersonDocument.Person;
+import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
 import com.likya.tlos.model.xmlbeans.alarm.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.alarm.ScenariosDocument.Scenarios;
 import com.likya.tlos.model.xmlbeans.alarm.StateManagementDocument.StateManagement;
 import com.likya.tlos.model.xmlbeans.alarm.SubscriberDocument.Subscriber;
 import com.likya.tlos.model.xmlbeans.alarm.SubscriptionTypeDocument.SubscriptionType;
+import com.likya.tlos.model.xmlbeans.alarm.SystemDocument.System;
 import com.likya.tlos.model.xmlbeans.alarm.SystemManagementDocument.SystemManagement;
+import com.likya.tlos.model.xmlbeans.alarm.SystemsDocument.Systems;
 import com.likya.tlos.model.xmlbeans.alarm.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.alarm.WarnByDocument.WarnBy;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
@@ -87,13 +89,24 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		logger.info("begin : init");
 
-		setAlarmType(AlarmType.JOB.toString());
+		setAlarmType("");
+		setCaseType("");
 		setUserType(SubscriptionType.USER.toString());
 		setAlarmDepth("1");
 
-		setTimeOutControl("false");
-		setTolerancePercentage("false");
-		setMinPercentage("false");
+		setTimeOutControl(false);
+		setTolerancePercentage(false);
+		setMinPercentage(false);
+		setUseSlaManagement(true);
+
+		setSelectedResourceList(null);
+
+		setCpuValue("0");
+		setCpuUnit("%");
+		setMemoryValue("0");
+		setDiskValue("0");
+
+		setStateList(new ArrayList<SelectItem>());
 
 		selectedAlarmName = String.valueOf(FacesUtils.getRequestParameter("selectedAlarmName"));
 		insertCheck = String.valueOf(FacesUtils.getRequestParameter("insertCheck"));
@@ -105,12 +118,13 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		settZList(WebInputUtils.fillTZList());
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
 
+		setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
+		setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
+		setAlarmRoleList(WebInputUtils.fillRoleList());
+		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
+
 		try {
-			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
-			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
-			setAlarmRoleList(WebInputUtils.fillRoleList());
-			
-			//ilk 20 iş ekranda görünecek
+			// ilk 20 iş ekranda görünecek
 			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(20)));
 
 			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList()));
@@ -165,15 +179,10 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	public void fillPanelFromAlarm() {
 
-		setSelectedWarnByList(new String[getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length]);
-		for (int i = 0; i < getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length; i++) {
-			getSelectedWarnByList()[i] = getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray(i).getId().toString();
-		}
-
+		setAlarmName(getAlarm().getName());
+		setAlarmDesc(getAlarm().getDesc());
 		setAlarmType(getAlarm().getAlarmType().toString());
 		setUserType(getAlarm().getSubscriptionType().toString());
-		setAlarmDesc(getAlarm().getDesc());
-		setAlarmName(getAlarm().getName());
 
 		Date startDate = DefinitionUtils.dateToDate(getAlarm().getStartDate().getTime(), getSelectedTZone());
 		Date endDate = DefinitionUtils.dateToDate(getAlarm().getEndDate().getTime(), getSelectedTZone());
@@ -182,8 +191,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setStartDate(startDate);
 		setEndDate(endDate);
 		setCreationDate(creationDate);
-
-		setAlarmLevel(getAlarm().getLevel().toString());
 
 		if (getAlarm().getTimeZone() != null)
 			setSelectedTZone(getAlarm().getTimeZone());
@@ -194,7 +201,14 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		else
 			setSelectedTypeOfTime(new String("Broadcast"));
 
-		if (getAlarm().getSubscriber().getPerson() != null) {
+		setAlarmLevel(getAlarm().getLevel().toString());
+
+		setSelectedWarnByList(new String[getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length]);
+		for (int i = 0; i < getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length; i++) {
+			getSelectedWarnByList()[i] = getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray(i).getId().toString();
+		}
+
+		if (getAlarm().getSubscriptionType().equals(SubscriptionType.USER)) {
 			setUserType(SubscriptionType.USER.toString());
 
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
@@ -205,62 +219,32 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			setAlarmRole(Integer.toString(getAlarm().getSubscriber().getRole().intValue()));
 		}
 
-		if (getAlarm().getFocus().getJobs() != null) {
+		if (getAlarm().getAlarmType().equals(AlarmType.JOB)) {
+			setSelectedJobNameList(new String[getAlarm().getFocus().getJobs().getJobArray().length]);
 
-			if (getAlarm().getFocus().getJobs().getJobArray() != null) {
-
-				setSelectedJobNameList(new String[getAlarm().getFocus().getJobs().getJobArray().length]);
-
-				for (int i = 0; i < getAlarm().getFocus().getJobs().getJobArray().length; i++) {
-					getSelectedJobNameList()[i] = getAlarm().getFocus().getJobs().getJobArray(i).getId().toString();
-				}
+			for (int i = 0; i < getAlarm().getFocus().getJobs().getJobArray().length; i++) {
+				getSelectedJobNameList()[i] = getAlarm().getFocus().getJobs().getJobArray(i).getId().toString();
 			}
-
 			setAlarmDepth(getAlarm().getFocus().getJobs().getJobArray(0).getDepth().toString());
-		}
-		if (getAlarm().getFocus().getScenarios() != null) {
 
-			if (getAlarm().getFocus().getScenarios().getScenarioArray() != null) {
+		} else if (getAlarm().getAlarmType().equals(AlarmType.SCENARIO)) {
+			setSelectedScenarioNameList(new String[getAlarm().getFocus().getScenarios().getScenarioArray().length]);
 
-				setSelectedScenarioNameList(new String[getAlarm().getFocus().getScenarios().getScenarioArray().length]);
-
-				for (int i = 0; i < getAlarm().getFocus().getScenarios().getScenarioArray().length; i++) {
-					getSelectedScenarioNameList()[i] = getAlarm().getFocus().getScenarios().getScenarioArray(i).getId().toString();
-				}
+			for (int i = 0; i < getAlarm().getFocus().getScenarios().getScenarioArray().length; i++) {
+				getSelectedScenarioNameList()[i] = getAlarm().getFocus().getScenarios().getScenarioArray(i).getId().toString();
 			}
-
 			setAlarmDepth(getAlarm().getFocus().getScenarios().getScenarioArray(0).getDepth().toString());
-		}
 
-		if (getAlarmType().equals(AlarmType.SYSTEM.toString()) && getAlarm().getCaseManagement().getSystemManagement().getHardware() != null) {
+		} else if (getAlarm().getAlarmType().equals(AlarmType.SYSTEM)) {
+			setSelectedResourceList(new String[getAlarm().getFocus().getSystems().getSystemArray().length]);
 
-			Hardware tmpHardware = getAlarm().getCaseManagement().getSystemManagement().getHardware();
-
-			setHardwareName(tmpHardware.getEntryName().toString());
-			setCpuTimein(tmpHardware.getCpu().getTimein().toString());
-			setCpuUnit(tmpHardware.getCpu().getBirim().toString());
-			setCpuCondition(tmpHardware.getCpu().getCondition().toString());
-			setCpuValue(tmpHardware.getCpu().getStringValue());
-
-			setDiskPart(tmpHardware.getDisk().getFor().toString());
-			setDiskUnit(tmpHardware.getDisk().getBirim().toString());
-			setDiskCondition(tmpHardware.getDisk().getCondition().toString());
-			setDiskValue(tmpHardware.getDisk().getStringValue());
-
-			setMemoryPart(tmpHardware.getMem().getFor().toString());
-			setMemoryUnit(tmpHardware.getMem().getBirim().toString());
-			setMemoryCondition(tmpHardware.getMem().getCondition().toString());
-			setMemoryValue(tmpHardware.getMem().getStringValue());
-		}
-
-		if (getAlarmType().equals(AlarmType.JOB.toString()) && getAlarm().getCaseManagement().getStateManagement() != null) {
-			fillStateList();
-			fillSubStateList();
-			fillStateStatusList();
-
-			if (getStateList() == null) {
-				setStateList(new ArrayList<SelectItem>());
+			for (int i = 0; i < getAlarm().getFocus().getSystems().getSystemArray().length; i++) {
+				getSelectedResourceList()[i] = getAlarm().getFocus().getSystems().getSystemArray(i).getEntryName();
 			}
+		}
+
+		if (getAlarm().getCaseManagement().getStateManagement() != null) {
+			setCaseType(STATE_CASE_TYPE);
 
 			for (int i = 0; i < getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray().length; i++) {
 
@@ -281,23 +265,47 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				}
 
 				getStateList().add(new SelectItem(stateName));
-
 			}
+		} else if (getAlarm().getCaseManagement().getTimeManagement() != null) {
+			setCaseType(TIME_CASE_TYPE);
+			TimeManagement timeManagement = getAlarm().getCaseManagement().getTimeManagement();
 
+			if (timeManagement != null && (getAlarmType().equals(AlarmType.JOB.toString()) || getAlarmType().equals(AlarmType.SCENARIO.toString()))) {
+				setTimeOutControl(timeManagement.getTimeOutControl());
+				setTolerancePercentage(timeManagement.getTolerancePercentage());
+				setMinPercentage(timeManagement.getMinPercentage());
+			}
+		} else if (getAlarm().getCaseManagement().getSLAManagement() != null) {
+			setCaseType(SLA_CASE_TYPE);
+			if (getAlarm().getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
+				setUseSlaManagement(true);
+			} else {
+				setUseSlaManagement(false);
+			}
+		} else if (getAlarm().getCaseManagement().getSystemManagement() != null) {
+			setCaseType(SYSTEM_CASE_TYPE);
+			Hardware tmpHardware = getAlarm().getCaseManagement().getSystemManagement().getHardware();
+
+			setCpuTimein(tmpHardware.getCpu().getTimein().toString());
+			setCpuUnit(tmpHardware.getCpu().getBirim().toString());
+			setCpuCondition(tmpHardware.getCpu().getCondition().toString());
+			setCpuValue(tmpHardware.getCpu().getStringValue());
+
+			setDiskPart(tmpHardware.getDisk().getFor().toString());
+			setDiskUnit(tmpHardware.getDisk().getBirim().toString());
+			setDiskCondition(tmpHardware.getDisk().getCondition().toString());
+			setDiskValue(tmpHardware.getDisk().getStringValue());
+
+			setMemoryPart(tmpHardware.getMem().getFor().toString());
+			setMemoryUnit(tmpHardware.getMem().getBirim().toString());
+			setMemoryCondition(tmpHardware.getMem().getCondition().toString());
+			setMemoryValue(tmpHardware.getMem().getStringValue());
 		}
-
-		TimeManagement timeManagement = getAlarm().getCaseManagement().getTimeManagement();
-
-		if (timeManagement != null && (getAlarmType().equals(AlarmType.JOB.toString()) || getAlarmType().equals(AlarmType.SCENARIO.toString()))) {
-			setTimeOutControl(timeManagement.getTimeOutControl() + "");
-			setTolerancePercentage(timeManagement.getTolerancePercentage() + "");
-			setMinPercentage(timeManagement.getMinPercentage() + "");
-		}
-
 	}
 
 	public void updateAlarmAction(ActionEvent e) {
 		fillAlarmProperties();
+		getAlarm().setID(getAlarmId());
 
 		if (getDbOperations().updateAlarm(getAlarmXML())) {
 			addMessage("yeniAlarm", FacesMessage.SEVERITY_INFO, "tlos.success.alarm.update", null);
@@ -308,9 +316,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 	}
 
 	public void insertAlarmAction(ActionEvent e) {
-
-		setAlarm(Alarm.Factory.newInstance());
-
 		fillAlarmProperties();
 
 		if (getDbOperations().insertAlarm(getAlarmXML())) {
@@ -318,13 +323,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		} else {
 			addMessage("yeniAlarm", FacesMessage.SEVERITY_ERROR, "tlos.error.alarm.insert", null);
 		}
-
-		// try {
-		// FacesContext.getCurrentInstance().getExternalContext().redirect("alarmSearchPanel.xhtml");
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
-
 	}
 
 	public void addStateAction() {
@@ -367,77 +365,26 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	private void fillAlarmProperties() {
 
+		setAlarm(Alarm.Factory.newInstance());
+
 		getAlarm().setName(getAlarmName());
 		getAlarm().setDesc(getAlarmDesc());
-		getAlarm().setLevel(new BigInteger(getAlarmLevel()));
-
 		getAlarm().setAlarmType(AlarmType.Enum.forString(getAlarmType()));
 		getAlarm().setSubscriptionType(SubscriptionType.Enum.forString(getUserType()));
-
-		if (getStartDate() != null) {
-			getAlarm().setStartDate(DefinitionUtils.dateToXmlDate(getStartDate()));
-		}
-
-		Calendar creationDate = Calendar.getInstance();
-		getAlarm().setCreationDate(creationDate);
-
-		if (getEndDate() != null) {
-			getAlarm().setEndDate(DefinitionUtils.dateToXmlDate(getEndDate()));
-		}
-
-		// girilen stateleri alarm icine set ediyor
-
-		CaseManagement caseManagement = CaseManagement.Factory.newInstance();
-		getAlarm().setCaseManagement(caseManagement);
-
-		if (getAlarm().getAlarmType().toString().equals(AlarmType.SYSTEM.toString())) {
-			SystemManagement systemManagement = SystemManagement.Factory.newInstance();
-			getAlarm().getCaseManagement().setSystemManagement(systemManagement);
-		}
-
-		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
-		getAlarm().getCaseManagement().setTimeManagement(timeManagement);
-
-		StateManagement stateManagement = StateManagement.Factory.newInstance();
-		if (getStateList() != null) {
-			for (int i = 0; i < getStateList().size(); i++) {
-				LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
-
-				StringTokenizer stateTokenizer = new StringTokenizer(getStateList().get(i).getValue().toString(), "|");
-
-				liveStateInfo.setStateName(StateName.Enum.forString(stateTokenizer.nextToken()));
-
-				if (stateTokenizer.hasMoreTokens()) {
-					liveStateInfo.setSubstateName(SubstateName.Enum.forString(stateTokenizer.nextToken()));
-
-					if (stateTokenizer.hasMoreTokens()) {
-						liveStateInfo.setStatusName(StatusName.Enum.forString(stateTokenizer.nextToken()));
-					}
-				}
-
-				stateManagement.addNewLiveStateInfo();
-
-				liveStateInfo.setLSIDateTime(DefinitionUtils.getW3CDateTime(getSelectedTZone()));
-				stateManagement.setLiveStateInfoArray(stateManagement.getLiveStateInfoArray().length - 1, liveStateInfo);
-			}
-		}
-
-		getAlarm().getCaseManagement().setStateManagement(stateManagement);
-
-		if (getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray().length == 0) {
-			XmlCursor xmlCursor = getAlarm().getCaseManagement().getStateManagement().newCursor();
-			xmlCursor.removeXml();
-		}
+		getAlarm().setCreationDate(Calendar.getInstance());
+		getAlarm().setStartDate(DefinitionUtils.dateToXmlDate(getStartDate()));
+		getAlarm().setEndDate(DefinitionUtils.dateToXmlDate(getEndDate()));
+		getAlarm().setTimeZone(getSelectedTZone());
+		getAlarm().setTypeOfTime(TypeOfTime.Enum.forString(getSelectedTypeOfTime()));
+		getAlarm().setLevel(new BigInteger(getAlarmLevel()));
 
 		Subscriber subscriber = Subscriber.Factory.newInstance();
-
-		if (getAlarmUser() != null && !getAlarmUser().equals("")) {
-			Person apers = Person.Factory.newInstance();
-			apers.setId(new BigInteger(getAlarmUser()));
+		if (getUserType().equals(SubscriptionType.USER.toString())) {
+			Person person = Person.Factory.newInstance();
+			person.setId(new BigInteger(getAlarmUser()));
 			subscriber.addNewPerson();
-			subscriber.setPerson(apers);
-		}
-		if (getAlarmRole() != null && !getAlarmRole().equals("")) {
+			subscriber.setPerson(person);
+		} else if (getUserType().equals(SubscriptionType.ROLE.toString())) {
 			java.util.Iterator<SelectItem> rolesItem = getAlarmRoleList().iterator();
 			while (rolesItem.hasNext()) {
 				SelectItem selectItem = rolesItem.next();
@@ -446,6 +393,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				}
 			}
 		}
+
 		AlarmChannelTypes alarmChannelTypes = AlarmChannelTypes.Factory.newInstance();
 		if (getSelectedWarnByList() != null) {
 			for (int i = 0; i < getSelectedWarnByList().length; i++) {
@@ -456,112 +404,169 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			}
 			subscriber.setAlarmChannelTypes(alarmChannelTypes);
 		}
+
 		getAlarm().setSubscriber(subscriber);
 
-		getAlarm().setTimeZone(getSelectedTZone());
-		getAlarm().setTypeOfTime(TypeOfTime.Enum.forString(getSelectedTypeOfTime()));
-
 		Focus focus = Focus.Factory.newInstance();
+		if (getAlarmType().equals(AlarmType.JOB.toString())) {
+
+			Jobs jobs = Jobs.Factory.newInstance();
+			if (getSelectedJobNameList() != null) {
+
+				for (int i = 0; i < getSelectedJobNameList().length; i++) {
+					Job job = Job.Factory.newInstance();
+					job.setId(new BigInteger(getSelectedJobNameList()[i].toString()));
+
+					if (getAlarmDepth() != null) {
+						job.setDepth(new BigInteger(getAlarmDepth()));
+					}
+
+					jobs.addNewJob();
+					jobs.setJobArray(i, job);
+				}
+				focus.setJobs(jobs);
+			}
+		} else if (getAlarmType().equals(AlarmType.SCENARIO.toString())) {
+
+			Scenarios scenarios = Scenarios.Factory.newInstance();
+			if (getSelectedScenarioNameList() != null) {
+
+				for (int i = 0; i < getSelectedScenarioNameList().length; i++) {
+					Scenario scenario = Scenario.Factory.newInstance();
+					scenario.setId(new BigInteger(getSelectedScenarioNameList()[i].toString()));
+
+					if (getAlarmDepth() != null) {
+						scenario.setDepth(new BigInteger(getAlarmDepth()));
+					}
+
+					scenarios.addNewScenario();
+					scenarios.setScenarioArray(i, scenario);
+				}
+				focus.setScenarios(scenarios);
+			}
+		} else if (getAlarmType().equals(AlarmType.SYSTEM.toString())) {
+
+			Systems systems = Systems.Factory.newInstance();
+
+			for (int i = 0; i < getSelectedResourceList().length; i++) {
+				System system = System.Factory.newInstance();
+				system.setEntryName(getSelectedResourceList()[i]);
+
+				systems.addNewSystem();
+				systems.setSystemArray(i, system);
+			}
+			focus.setSystems(systems);
+
+			setCaseType(SYSTEM_CASE_TYPE);
+		}
+
 		getAlarm().setFocus(focus);
-		Jobs jobs = Jobs.Factory.newInstance();
 
-		if (getSelectedJobNameList() != null) {
-			for (int i = 0; i < getSelectedJobNameList().length; i++) {
-				Job job = Job.Factory.newInstance();
-				job.setId(new BigInteger(getSelectedJobNameList()[i].toString()));
-				if (getAlarmDepth() != null) {
-					job.setDepth(new BigInteger(getAlarmDepth()));
+		CaseManagement caseManagement = CaseManagement.Factory.newInstance();
+		if (getCaseType().equals(SYSTEM_CASE_TYPE)) {
+			SystemManagement systemManagement = SystemManagement.Factory.newInstance();
+			Hardware hardTmp = Hardware.Factory.newInstance();
+			Mem memory = Mem.Factory.newInstance();
+			Cpu cpu = Cpu.Factory.newInstance();
+			Disk disk = Disk.Factory.newInstance();
+
+			if (getHardwareName() != null && !getHardwareName().equals("")) {
+				hardTmp.setEntryName(getHardwareName());
+			}
+			if (getDiskValue() != null && !getDiskValue().equals("")) {
+				disk.setStringValue(getDiskValue());
+				hardTmp.setDisk(disk);
+			}
+			if (getDiskCondition() != null && !getDiskCondition().equals("")) {
+				disk.setCondition(Condition.Enum.forString(getDiskCondition()));
+				hardTmp.setDisk(disk);
+			}
+			if (getDiskPart() != null && !getDiskPart().equals("")) {
+				disk.setFor(For.Enum.forString(getDiskPart()));
+				hardTmp.setDisk(disk);
+			}
+			if (getDiskUnit() != null && !getDiskUnit().equals("")) {
+				disk.setBirim(Birim.Enum.forString(getDiskUnit()));
+				hardTmp.setDisk(disk);
+			}
+			if (getMemoryValue() != null && getMemoryValue() != null && !getMemoryValue().equals("")) {
+				memory.setStringValue(getMemoryValue());
+				hardTmp.setMem(memory);
+			}
+			if (getMemoryUnit() != null && !getMemoryUnit().equals("")) {
+				memory.setBirim(Birim.Enum.forString(getMemoryUnit()));
+				hardTmp.setMem(memory);
+			}
+			if (getMemoryCondition() != null && !getMemoryCondition().equals("")) {
+				memory.setCondition(Condition.Enum.forString(getMemoryCondition()));
+				hardTmp.setMem(memory);
+			}
+			if (getMemoryPart() != null && !getMemoryPart().equals("")) {
+				memory.setFor(For.Enum.forString(getMemoryPart()));
+				hardTmp.setMem(memory);
+			}
+			if (getCpuValue() != null && !getCpuValue().equals("")) {
+				cpu.setStringValue(getCpuValue());
+				hardTmp.setCpu(cpu);
+			}
+			if (getCpuUnit() != null && !getCpuUnit().equals("")) {
+				cpu.setBirim(Birim.Enum.forString(getCpuUnit()));
+				hardTmp.setCpu(cpu);
+			}
+			if (getCpuCondition() != null && !getCpuCondition().equals("")) {
+				cpu.setCondition(Condition.Enum.forString(getCpuCondition()));
+				hardTmp.setCpu(cpu);
+			}
+			if (getCpuTimein() != null && !getCpuTimein().equals("")) {
+				cpu.setTimein(Timein.Enum.forString(getCpuTimein()));
+				hardTmp.setCpu(cpu);
+			}
+			systemManagement.setHardware(hardTmp);
+			caseManagement.setSystemManagement(systemManagement);
+
+		} else if (getCaseType().equals(STATE_CASE_TYPE)) {
+			StateManagement stateManagement = StateManagement.Factory.newInstance();
+			if (getStateList() != null) {
+				for (int i = 0; i < getStateList().size(); i++) {
+					LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
+
+					StringTokenizer stateTokenizer = new StringTokenizer(getStateList().get(i).getValue().toString(), "|");
+
+					liveStateInfo.setStateName(StateName.Enum.forString(stateTokenizer.nextToken()));
+
+					if (stateTokenizer.hasMoreTokens()) {
+						liveStateInfo.setSubstateName(SubstateName.Enum.forString(stateTokenizer.nextToken()));
+
+						if (stateTokenizer.hasMoreTokens()) {
+							liveStateInfo.setStatusName(StatusName.Enum.forString(stateTokenizer.nextToken()));
+						}
+					}
+
+					stateManagement.addNewLiveStateInfo();
+
+					liveStateInfo.setLSIDateTime(DefinitionUtils.getW3CDateTime(getSelectedTZone()));
+					stateManagement.setLiveStateInfoArray(stateManagement.getLiveStateInfoArray().length - 1, liveStateInfo);
 				}
-				jobs.addNewJob();
-				jobs.setJobArray(i, job);
+			}
+			caseManagement.setStateManagement(stateManagement);
+
+		} else if (getCaseType().equals(SLA_CASE_TYPE)) {
+			if (isUseSlaManagement()) {
+				caseManagement.setSLAManagement(SLAManagement.YES);
+			} else {
+				caseManagement.setSLAManagement(SLAManagement.NO);
 			}
 
-			getAlarm().getFocus().setJobs(jobs);
+		} else if (getCaseType().equals(TIME_CASE_TYPE)) {
+			TimeManagement timeManagement = TimeManagement.Factory.newInstance();
+			timeManagement.setTimeOutControl(isTimeOutControl());
+			timeManagement.setTolerancePercentage(isTolerancePercentage());
+			timeManagement.setMinPercentage(isMinPercentage());
 
-		}
-
-		Scenarios scenarios = Scenarios.Factory.newInstance();
-
-		if (getSelectedScenarioNameList() != null) {
-			for (int i = 0; i < getSelectedScenarioNameList().length; i++) {
-				Scenario scenario = Scenario.Factory.newInstance();
-				if (getAlarmDepth() != null) {
-					scenario.setDepth(new BigInteger(getAlarmDepth()));
-				}
-				scenario.setId(new BigInteger(getSelectedScenarioNameList()[i].toString()));
-				scenarios.addNewScenario();
-				scenarios.setScenarioArray(i, scenario);
-			}
-
-			getAlarm().getFocus().setScenarios(scenarios);
-
+			caseManagement.setTimeManagement(timeManagement);
 		}
 
-		Hardware hardTmp = Hardware.Factory.newInstance();
-		Mem memory = Mem.Factory.newInstance();
-		Cpu cpu = Cpu.Factory.newInstance();
-		Disk disk = Disk.Factory.newInstance();
-
-		if (getHardwareName() != null && !getHardwareName().equals("")) {
-			hardTmp.setEntryName(getHardwareName());
-			getAlarm().getCaseManagement().getSystemManagement().setHardware(hardTmp);
-
-		}
-
-		if (getDiskValue() != null && !getDiskValue().equals("")) {
-			disk.setStringValue(getDiskValue());
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setDisk(disk);
-		}
-		if (getDiskCondition() != null && !getDiskCondition().equals("")) {
-			disk.setCondition(Condition.Enum.forString(getDiskCondition()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setDisk(disk);
-		}
-		if (getDiskPart() != null && !getDiskPart().equals("")) {
-			disk.setFor(For.Enum.forString(getDiskPart()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setDisk(disk);
-		}
-		if (getDiskUnit() != null && !getDiskUnit().equals("")) {
-			disk.setBirim(Birim.Enum.forString(getDiskUnit()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setDisk(disk);
-		}
-
-		if (getMemoryValue() != null && getMemoryValue() != null && !getMemoryValue().equals("")) {
-			memory.setStringValue(getMemoryValue());
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setMem(memory);
-		}
-		if (getMemoryUnit() != null && !getMemoryUnit().equals("")) {
-			memory.setBirim(Birim.Enum.forString(getMemoryUnit()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setMem(memory);
-		}
-		if (getMemoryCondition() != null && !getMemoryCondition().equals("")) {
-			memory.setCondition(Condition.Enum.forString(getMemoryCondition()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setMem(memory);
-		}
-		if (getMemoryPart() != null && !getMemoryPart().equals("")) {
-			memory.setFor(For.Enum.forString(getMemoryPart()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setMem(memory);
-		}
-		if (getCpuValue() != null && !getCpuValue().equals("")) {
-			cpu.setStringValue(getCpuValue());
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setCpu(cpu);
-		}
-		if (getCpuUnit() != null && !getCpuUnit().equals("")) {
-			cpu.setBirim(Birim.Enum.forString(getCpuUnit()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setCpu(cpu);
-		}
-		if (getCpuCondition() != null && !getCpuCondition().equals("")) {
-			cpu.setCondition(Condition.Enum.forString(getCpuCondition()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setCpu(cpu);
-		}
-		if (getCpuTimein() != null && !getCpuTimein().equals("")) {
-			cpu.setTimein(Timein.Enum.forString(getCpuTimein()));
-			getAlarm().getCaseManagement().getSystemManagement().getHardware().setCpu(cpu);
-		}
-
-		getAlarm().getCaseManagement().getTimeManagement().setTimeOutControl(new Boolean(getTimeOutControl()));
-		getAlarm().getCaseManagement().getTimeManagement().setTolerancePercentage(new Boolean(getTolerancePercentage()));
-		getAlarm().getCaseManagement().getTimeManagement().setMinPercentage(new Boolean(getMinPercentage()));
-
+		getAlarm().setCaseManagement(caseManagement);
 	}
 
 	public String getSelectedAlarmName() {
