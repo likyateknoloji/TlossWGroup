@@ -187,6 +187,8 @@ declare function lk:insertAlarm($alarm as element(alm:alarm)) as node()*
                   <alm:creationDate>{data($XXX/alm:creationDate)}</alm:creationDate>
                   <alm:startDate>{data($XXX/alm:startDate)}</alm:startDate>
                   <alm:endDate>{data($XXX/alm:endDate)}</alm:endDate>
+                  <com:timeZone>{data($XXX/com:timeZone)}</com:timeZone>
+                  <com:typeOfTime>{data($XXX/com:typeOfTime)}</com:typeOfTime>
                   <alm:level>{data($XXX/alm:level)}</alm:level>
                   <alm:subscriber>{$XXX/alm:subscriber/*}</alm:subscriber>
                   <alm:focus>{$XXX/alm:focus/*}</alm:focus>
