@@ -352,8 +352,12 @@
 							value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
 						<p:selectOneMenu style="text-align: center;"
 							value="#{slaPanelMBean.diskPart}" partialSubmit="true">
-							<f:selectItem itemLabel="Kullanilan" itemValue="used" />
-							<f:selectItem itemLabel="Bos" itemValue="free" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+								itemValue="used" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+								itemValue="free" />
 						</p:selectOneMenu>
 
 						<h:outputText

@@ -48,9 +48,23 @@
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.alarmType']}" />
 								<p:selectOneMenu id="alarmType" value="#{alarmPanelMBean.alarmType}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmTypeList}" />
 									<p:ajax update="alarmWizard"></p:ajax>
 								</p:selectOneMenu>
+								
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.alarmProcesses.caseType']}" 
+									rendered="#{alarmPanelMBean.alarmType eq 'Job' or alarmPanelMBean.alarmType eq 'Scenario'}"/>
+								<p:selectOneMenu value="#{alarmPanelMBean.caseType}" 
+									rendered="#{alarmPanelMBean.alarmType eq 'Job' or alarmPanelMBean.alarmType eq 'Scenario'}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+									<f:selectItem itemLabel="State" itemValue="state" />
+									<f:selectItem itemLabel="SLA" itemValue="sla" />
+									<f:selectItem itemLabel="Time" itemValue="time" />
+									<p:ajax update="alarmWizard"></p:ajax>
+								</p:selectOneMenu>
+								
 							</p:panelGrid>
 						</p:panel>
 						<br/>
@@ -80,9 +94,9 @@
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.creationDate']}" 
 									rendered="#{not alarmPanelMBean.insertButton}" />
-								<p:calendar value="#{alarmPanelMBean.creationDate}" id="creationDate"
+								<p:calendar value="#{alarmPanelMBean.creationDate}" id="creationDate" disabled="true"
 									label="#{msgs['tlos.management.pannel.alarmProcesses.creationDate']}"
-									navigator="true" showOn="button" rendered="#{not alarmPanelMBean.insertButton}">
+									navigator="true" rendered="#{not alarmPanelMBean.insertButton}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</p:calendar>
 								
@@ -143,6 +157,14 @@
 							<h:inputHidden value="#{alarmPanelMBean.alarmId}" id="inputHidden_1" />
 							
 						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
+						</p:panel>
 					</p:tab>
 	
 					<p:tab id="alarmKullaniciTab"
@@ -193,6 +215,14 @@
 								</p:selectManyMenu>
 							</p:panelGrid>
 						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
+						</p:panel>
 					</p:tab>
 	
 					<p:tab id="alarmJobTab" rendered="#{alarmPanelMBean.alarmType eq 'Job'}"
@@ -217,6 +247,14 @@
 								</p:panelGrid>
 							</p:panelGrid>
 							
+						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
 						</p:panel>
 					</p:tab>
 					
@@ -243,205 +281,72 @@
 							</p:panelGrid>
 	
 						</p:panel>
-					</p:tab>
-
-					<p:tab id="alarmResTab"
-						title="#{msgs['tlos.management.pannel.newSla.resourceReq']}"
-						rendered="#{alarmPanelMBean.alarmType eq 'System'}" >
-	
-						<p:panel id="alarmResPanel"
-							header="#{msgs['tlos.management.pannel.newSla.resourceReq']}">
-	
-							<p:panelGrid columns="2" rendered="#{alarmPanelMBean.alarmType eq 'System'}" >
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newSla.donanimReq']}" />
-								<h:outputText value="" />
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
-								<p:inputText value="#{alarmPanelMBean.hardwareName}"
-									partialSubmit="true" />
-							</p:panelGrid>
-	
-							<p:fieldset legend="CPU"
-								rendered="#{alarmPanelMBean.alarmType eq 'System'}"
-								widgetVar="cpuWidget" style="width: 600px;">
-	
-								<p:panelGrid styleClass="companyHeaderGrid" columns="2"
-									border="0">
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.cpuTimein}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.timeinList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.condition']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.cpuCondition}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.conditionList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
-									<p:inputText value="#{alarmPanelMBean.cpuValue}"
-										style="width:150px;text-align: right;" />
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.cpuUnit}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.unitList}" />
-									</p:selectOneMenu>
-								</p:panelGrid>
-							</p:fieldset>
-							<p:fieldset legend="Memory"
-								rendered="#{alarmPanelMBean.alarmType eq 'System'}"
-								widgetVar="memWidget" style="width: 600px;">
-								<p:panelGrid styleClass="companyHeaderGrid" columns="2"
-									border="0">
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.memoryPart}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.forList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.condition']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.memoryCondition}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.conditionList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.memory']}" />
-									<p:inputText value="#{alarmPanelMBean.memoryValue}"
-										style="width:150px;text-align: right;" />
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.memoryUnit}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.unitList}" />
-									</p:selectOneMenu>
-								</p:panelGrid>
-							</p:fieldset>
-	
-							<p:fieldset legend="Disk"
-								rendered="#{alarmPanelMBean.alarmType eq 'System'}"
-								widgetVar="diskWidget" style="width: 600px;">
-								<p:panelGrid styleClass="companyHeaderGrid" columns="2"
-									border="0">
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.diskPart}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.forList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.condition']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.diskCondition}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.conditionList}" />
-									</p:selectOneMenu>
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.disk']}" />
-									<p:inputText value="#{alarmPanelMBean.diskValue}"
-										style="width:150px;text-align: right;" />
-	
-									<h:outputText
-										value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
-									<p:selectOneMenu style="width:150px;text-align: center;"
-										value="#{alarmPanelMBean.diskUnit}" partialSubmit="true">
-										<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-											itemValue="" />
-										<f:selectItems value="#{alarmPanelMBean.unitList}" />
-									</p:selectOneMenu>
-								</p:panelGrid>
-							</p:fieldset>
-	
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
 						</p:panel>
 					</p:tab>
-	
-					<p:tab id="alarmStateTab"
-						title="#{msgs['tlos.management.pannel.newAlarm.statePool']}"
-						style="width: 600px;">
+					
+					<p:tab id="alarmStateTab" 
+						title="#{msgs['tlos.management.pannel.newAlarm.statePool']}" 
+						rendered="#{alarmPanelMBean.alarmType ne 'System' and alarmPanelMBean.caseType eq 'state'}" >
 	
 						<p:panel id="alarmStatePanel"
-							rendered="#{alarmPanelMBean.alarmType eq 'Job'}"
 							header="#{msgs['tlos.management.pannel.newAlarm.statePool']}">
-	
-							<p:panelGrid columns="2">
+							
+							<h:panelGrid columns="2">
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.alarmProcesses.stateType']}" />
-								<p:selectOneRadio value="#{alarmPanelMBean.stateDepth}"
-									styleClass="selectOneRadioColumn" partialSubmit="true">
-									<f:selectItem itemLabel="State" itemValue="State" />
-									<f:selectItem itemLabel="SubState" itemValue="SubState" />
-									<f:selectItem itemLabel="Status" itemValue="Status" />
+								<p:selectOneRadio value="#{alarmPanelMBean.stateDepth}">
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.state']}"
+										itemValue="State" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.substate']}"
+										itemValue="SubState" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.popup.dependency.status']}"
+										itemValue="Status" />
 									<p:ajax update="alarmStatePanel" />
 								</p:selectOneRadio>
-							</p:panelGrid>
-	
-							<p:panelGrid columns="6" style="border-width: 0px;" width="100%">
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newAlarm.stateName']}" />
-								<p:selectOneMenu id="dropstate" style="text-align: center;width: 100pt"
-									value="#{alarmPanelMBean.state}" partialSubmit="true">
+							</h:panelGrid>
+
+							<br />
+
+							<p:panelGrid columns="2">
+								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
+								<p:selectOneMenu value="#{alarmPanelMBean.state}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmStateList}" />
 								</p:selectOneMenu>
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newAlarm.alarmSubState']}"
-									rendered="#{alarmPanelMBean.stateDepth eq 'SubState' or alarmPanelMBean.stateDepth eq 'Status'}" />
-								<p:selectOneMenu id="dropsubstate" style="text-align: center;width: 100pt"
-									rendered="#{alarmPanelMBean.stateDepth eq 'SubState' or alarmPanelMBean.stateDepth eq 'Status'}"
-									value="#{alarmPanelMBean.substate}" partialSubmit="true">
+
+								<h:outputText value="#{msgs['tlos.popup.dependency.substate']}"
+									rendered="#{alarmPanelMBean.stateDepth ne 'State'}" />
+								<p:selectOneMenu value="#{alarmPanelMBean.substate}"
+									rendered="#{alarmPanelMBean.stateDepth ne 'State'}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmSubStateList}" />
 								</p:selectOneMenu>
-	
-								<h:outputText value="NoSubState"
-									rendered="#{alarmPanelMBean.stateDepth eq 'State'}" />
-								<h:outputText value=""
-									rendered="#{alarmPanelMBean.stateDepth eq 'State'}" />
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.newAlarm.alarmStateStatus']}"
+
+								<h:outputText value="#{msgs['tlos.popup.dependency.status']}"
 									rendered="#{alarmPanelMBean.stateDepth eq 'Status'}" />
-								<p:selectOneMenu id="dropstatus" style="text-align: center;width: 150pt"
-									rendered="#{alarmPanelMBean.stateDepth eq 'Status'}"
-									value="#{alarmPanelMBean.status}" partialSubmit="true">
+								<p:selectOneMenu value="#{alarmPanelMBean.status}"
+									rendered="#{alarmPanelMBean.stateDepth eq 'Status'}">
+									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+										itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmStateStatusList}" />
 								</p:selectOneMenu>
-								<h:outputText value="NoStatus"
-									rendered="#{alarmPanelMBean.stateDepth eq 'State' or alarmPanelMBean.stateDepth eq 'SubState'}" />
-								<h:outputText value=""
-									rendered="#{alarmPanelMBean.stateDepth eq 'State' or alarmPanelMBean.stateDepth eq 'SubState'}" />
 							</p:panelGrid>
+							
+							<br />
 	
-							<p:panelGrid columns="4" style="border-width: 0px;" width="100%">
-	
+							<p:panelGrid columns="3">
 								<h:outputText
 									value="#{msgs['tlos.management.pannel.newAlarm.stateList']}" />
 	
@@ -451,9 +356,7 @@
 									<f:selectItems value="#{alarmPanelMBean.stateList}" />
 								</h:selectManyListbox>
 	
-								<h:outputText />
-	
-								<p:panelGrid columns="1" style="border-width: 0px;" width="100%">
+								<p:panelGrid columns="1" >
 									<p:commandButton
 										value="#{msgs['tlos.management.pannel.alarmProcesses.statePlus']}"
 										update="stateList"
@@ -467,76 +370,276 @@
 							</p:panelGrid>
 	
 						</p:panel>
-					</p:tab>
-	
-					<p:tab id="alarmTimeTab"
-						title="#{msgs['tlos.management.pannel.newAlarm.timeManagement']}"
-						style="width: 600px;">
-	
-						<p:panel id="alarmTimePanel"
-							rendered="#{alarmPanelMBean.alarmType eq 'Job' or alarmPanelMBean.alarmType eq 'Scenario'}"
-							header="#{msgs['tlos.management.pannel.newAlarm.timeManagement']}">
-	
-							<p:panelGrid columns="2">
-	
-	
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.timeOutControl']}" />
-								<h:selectOneRadio value="#{alarmPanelMBean.timeOutControl}"
-									styleClass="selectOneRadioColumn" partialSubmit="true">
-									<f:selectItem itemLabel="false" itemValue="false" />
-									<f:selectItem itemLabel="true" itemValue="true" />
-								</h:selectOneRadio>
-	
-	
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.tolerancePercentage']}" />
-								<h:selectOneRadio value="#{alarmPanelMBean.tolerancePercentage}"
-									styleClass="selectOneRadioColumn" partialSubmit="true">
-									<f:selectItem itemLabel="false" itemValue="false" />
-									<f:selectItem itemLabel="true" itemValue="true" />
-								</h:selectOneRadio>
-	
-	
-	
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.minPercentage']}" />
-								<h:selectOneRadio value="#{alarmPanelMBean.minPercentage}"
-									styleClass="selectOneRadioColumn" partialSubmit="true">
-									<f:selectItem itemLabel="false" itemValue="false" />
-									<f:selectItem itemLabel="true" itemValue="true" />
-								</h:selectOneRadio>
-	
-							</p:panelGrid>
-	
-						</p:panel>
-	
-						<p:panel>
-	
-							<p:commandButton id="alarmInsertButton"
-								value=" #{msgs['tlos.button.save']} "
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
+								
+							<p:commandButton value="#{msgs['tlos.button.save']}" style="float:right;"
 								rendered="#{alarmPanelMBean.insertButton and security.AlarmSave}"
 								actionListener="#{alarmPanelMBean.insertAlarmAction}">
 								<f:param name="iCheck" value="insert" />
 							</p:commandButton>
 	
-							<p:commandButton id="alarmUpdateButton"
-								value="#{msgs['tlos.button.update']}"
+							<p:commandButton value="#{msgs['tlos.button.update']}" style="float:right;"
 								rendered="#{not alarmPanelMBean.insertButton and security.AlarmUpdate}"
 								actionListener="#{alarmPanelMBean.updateAlarmAction}" />
-	
-							<p:commandButton value=" #{msgs['tlos.button.clear']} "
-								rendered="#{alarmPanelMBean.insertButton and security.AlarmDefinitionClean}"
-								update="alarmWizard" action="#{alarmPanelMBean.resetAlarmAction}" />
-	
-							<p:commandButton value="#{msgs['tlos.button.back']}"
+						</p:panel>
+					</p:tab>
+					
+					<p:tab id="alarmSlaTab" 
+						title="#{msgs['tlos.management.pannel.newAlarm.slaManagement']}" 
+						rendered="#{alarmPanelMBean.caseType eq 'sla' and alarmPanelMBean.alarmType ne 'System'}" >
+						
+						<p:panel>
+							<p:panelGrid columns="2">
+								<h:outputText value="#{msgs['tlos.management.pannel.newAlarm.useSlaManagement']}" />
+								<p:selectBooleanCheckbox value="#{alarmPanelMBean.useSlaManagement}" />
+							</p:panelGrid>
+						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
 								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
 								action="alarmSearchPanel.xhtml" />
-						</p:panel>
+								
+							<p:commandButton value="#{msgs['tlos.button.save']}" style="float:right;"
+								rendered="#{alarmPanelMBean.insertButton and security.AlarmSave}"
+								actionListener="#{alarmPanelMBean.insertAlarmAction}">
+								<f:param name="iCheck" value="insert" />
+							</p:commandButton>
 	
+							<p:commandButton value="#{msgs['tlos.button.update']}" style="float:right;"
+								rendered="#{not alarmPanelMBean.insertButton and security.AlarmUpdate}"
+								actionListener="#{alarmPanelMBean.updateAlarmAction}" />
+						</p:panel>
+					</p:tab>
+					
+					<p:tab id="alarmTimeTab"
+						title="#{msgs['tlos.management.pannel.newAlarm.timeManagement']}"
+						rendered="#{alarmPanelMBean.alarmType ne 'System' and alarmPanelMBean.caseType eq 'time'}" >
+	
+						<p:panel id="alarmTimePanel" >
+	
+							<p:panelGrid columns="2">
+								<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.timeOutControl']}" />
+								<p:selectBooleanCheckbox value="#{alarmPanelMBean.timeOutControl}" />
+	
+								<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.tolerancePercentage']}" />
+								<p:selectBooleanCheckbox value="#{alarmPanelMBean.tolerancePercentage}" />
+	
+								<h:outputText value="#{msgs['tlos.management.pannel.alarmProcesses.minPercentage']}" />
+								<p:selectBooleanCheckbox value="#{alarmPanelMBean.minPercentage}" />
+							</p:panelGrid>
+	
+						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
+								
+							<p:commandButton value="#{msgs['tlos.button.save']}" style="float:right;"
+								rendered="#{alarmPanelMBean.insertButton and security.AlarmSave}"
+								actionListener="#{alarmPanelMBean.insertAlarmAction}">
+								<f:param name="iCheck" value="insert" />
+							</p:commandButton>
+	
+							<p:commandButton value="#{msgs['tlos.button.update']}" style="float:right;"
+								rendered="#{not alarmPanelMBean.insertButton and security.AlarmUpdate}"
+								actionListener="#{alarmPanelMBean.updateAlarmAction}" />
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="alarmResTab"
+						title="#{msgs['tlos.management.pannel.newSla.resourceReq']}"
+						rendered="#{alarmPanelMBean.alarmType eq 'System'}" >
+	
+						<p:panel id="alarmResPanel">
+						
+							<p:panelGrid columns="2">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.agentProcesses.resource']}" />
+								<p:selectManyMenu value="#{alarmPanelMBean.selectedResourceList}"
+									style="height:100px">
+									<f:selectItems value="#{alarmPanelMBean.resourceNameList}" />
+								</p:selectManyMenu>
+							</p:panelGrid>
+							
+							<br />
+							
+							<p:panelGrid columns="7">
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.cpuMeasurement']}" />
+								<p:selectOneMenu style="text-align: center;"
+									value="#{alarmPanelMBean.cpuTimein}" partialSubmit="true">
+									<f:selectItem itemLabel="1" itemValue="1" />
+									<f:selectItem itemLabel="5" itemValue="5" />
+									<f:selectItem itemLabel="15" itemValue="15" />
+								</p:selectOneMenu>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+								<p:selectOneButton value="#{alarmPanelMBean.cpuCondition}"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.cpuCondition']}">
+									<f:selectItem itemLabel="&lt;" itemValue="lt" />
+									<!-- f:selectItem itemLabel="&lt;=" itemValue="le" /-->
+									<f:selectItem itemLabel="=" itemValue="eq" />
+									<!-- f:selectItem itemLabel="&gt;=" itemValue="ge" /-->
+									<f:selectItem itemLabel="&gt;" itemValue="gt" />
+								</p:selectOneButton>
+		
+								<p:panelGrid id="cpuPanel" columns="2">
+									<h:outputText
+										value="#{msgs['tlos.management.pannel.newSla.cpu']}" />
+									<p:panelGrid columns="1">
+										<p:inputText id="cpuValue" value="#{alarmPanelMBean.cpuValue}" />
+										<p:slider for="cpuValue" />
+									</p:panelGrid>
+								</p:panelGrid>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.cpuUnit']}" />
+								<p:selectOneButton value="#{alarmPanelMBean.cpuUnit}"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.cpuUnit']}">
+									<f:selectItem itemLabel="%" itemValue="%" />
+								</p:selectOneButton>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
+								<p:selectOneMenu style="text-align: center;"
+									value="#{alarmPanelMBean.memoryPart}" partialSubmit="true">
+									<f:selectItem
+										itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+										itemValue="used" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+										itemValue="free" />
+								</p:selectOneMenu>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+								<p:selectOneButton value="#{alarmPanelMBean.memoryCondition}"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.memCondition']}">
+									<f:selectItem itemLabel="&lt;" itemValue="lt" />
+									<f:selectItem itemLabel="=" itemValue="eq" />
+									<f:selectItem itemLabel="&gt;" itemValue="gt" />
+								</p:selectOneButton>
+		
+								<p:panelGrid id="memPanel" columns="2">
+									<h:outputText
+										value="#{msgs['tlos.management.pannel.newSla.memory']}" />
+									<p:panelGrid columns="1"
+										rendered="#{alarmPanelMBean.memoryUnit eq '%'}">
+										<p:inputText id="memValue" value="#{alarmPanelMBean.memoryValue}"
+											immediate="true">
+											<p:ajax partialSubmit="true"></p:ajax>
+										</p:inputText>
+										<p:slider for="memValue" />
+									</p:panelGrid>
+									<p:inputText rendered="#{alarmPanelMBean.memoryUnit ne '%'}"
+										value="#{alarmPanelMBean.memoryValue}"
+										label="#{msgs['tlos.management.pannel.newSla.memory']}"
+										required="true" type="integer" immediate="true">
+										<p:ajax partialSubmit="true" />
+									</p:inputText>
+								</p:panelGrid>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.memoryUnit']}" />
+								<p:selectOneButton id="memUnit" required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.memUnit']}"
+									value="#{alarmPanelMBean.memoryUnit}">
+									<f:selectItem itemLabel="%" itemValue="%" />
+									<f:selectItem itemLabel="G" itemValue="G" />
+									<f:selectItem itemLabel="M" itemValue="M" />
+									<f:selectItem itemLabel="K" itemValue="K" />
+									<f:selectItem itemLabel="B" itemValue="B" />
+									<p:ajax update="memPanel"></p:ajax>
+								</p:selectOneButton>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
+								<p:selectOneMenu style="text-align: center;"
+									value="#{alarmPanelMBean.diskPart}" partialSubmit="true">
+									<f:selectItem
+										itemLabel="#{msgs['tlos.management.pannel.newSla.used']}"
+										itemValue="used" />
+									<f:selectItem
+										itemLabel="#{msgs['tlos.management.pannel.newSla.free']}"
+										itemValue="free" />
+								</p:selectOneMenu>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.condition']}" />
+								<p:selectOneButton value="#{alarmPanelMBean.diskCondition}"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.diskCondition']}">
+									<f:selectItem itemLabel="&lt;" itemValue="lt" />
+									<f:selectItem itemLabel="=" itemValue="eq" />
+									<f:selectItem itemLabel="&gt;" itemValue="gt" />
+								</p:selectOneButton>
+		
+								<p:panelGrid id="diskPanel" columns="2">
+									<h:outputText
+										value="#{msgs['tlos.management.pannel.newSla.disk']}" />
+									<p:panelGrid columns="1"
+										rendered="#{alarmPanelMBean.diskUnit eq '%'}">
+										<p:inputText id="diskValue" value="#{alarmPanelMBean.diskValue}" />
+										<p:slider for="diskValue" />
+									</p:panelGrid>
+									<p:inputText rendered="#{alarmPanelMBean.diskUnit ne '%'}"
+										value="#{alarmPanelMBean.diskValue}"
+										label="#{msgs['tlos.management.pannel.newSla.disk']}"
+										required="true" type="integer">
+									</p:inputText>
+								</p:panelGrid>
+		
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.newSla.diskUnit']}" />
+								<p:selectOneButton id="diskUnit" value="#{alarmPanelMBean.diskUnit}"
+									required="true"
+									requiredMessage="#{msgs['tlos.validation.sla.diskUnit']}">
+									<f:selectItem itemLabel="%" itemValue="%" />
+									<f:selectItem itemLabel="G" itemValue="G" />
+									<f:selectItem itemLabel="M" itemValue="M" />
+									<f:selectItem itemLabel="K" itemValue="K" />
+									<f:selectItem itemLabel="B" itemValue="B" />
+									<p:ajax update="diskPanel"></p:ajax>
+								</p:selectOneButton>
+		
+							</p:panelGrid>
+							
+						</p:panel>
+						
+						<br />
+						
+						<p:panel style="height:40px;">
+							<p:commandButton value="#{msgs['tlos.button.back.searchPanel']}" style="float:right;"
+								rendered="#{security.AlarmBack}" ajax="false" immediate="true"
+								action="alarmSearchPanel.xhtml" />
+								
+							<p:commandButton value="#{msgs['tlos.button.save']}" style="float:right;"
+								rendered="#{alarmPanelMBean.insertButton and security.AlarmSave}"
+								actionListener="#{alarmPanelMBean.insertAlarmAction}">
+								<f:param name="iCheck" value="insert" />
+							</p:commandButton>
+	
+							<p:commandButton value="#{msgs['tlos.button.update']}" style="float:right;"
+								rendered="#{not alarmPanelMBean.insertButton and security.AlarmUpdate}"
+								actionListener="#{alarmPanelMBean.updateAlarmAction}" />
+						</p:panel>
 					</p:tab>
 	
 				</p:wizard>
