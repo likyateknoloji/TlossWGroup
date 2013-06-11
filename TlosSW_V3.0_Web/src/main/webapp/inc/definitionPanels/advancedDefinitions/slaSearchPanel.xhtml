@@ -174,19 +174,14 @@
 							sortBy="#{item.resourceReq.hardware.mem.stringValue}"
 							filterBy="#{item.resourceReq.hardware.mem.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.resourceReq.hardware.mem}"
-								style="text-align: center;" />
+
 
 							<h:panelGrid columns="1" style="width:100%" cellpadding="5">
 								<p:graphicImage value="/images/dash01.png" />
 
 								<h:outputText
-									value="Birim: #{item.resourceReq.hardware.mem.birim}" />
+									value="Condition #{item.resourceReq.hardware.mem.condition} #{item.resourceReq.hardware.mem.bigIntegerValue}#{item.resourceReq.hardware.mem.birim} #{item.resourceReq.hardware.mem.formen}" />
 
-								<h:outputText value="For: #{item.resourceReq.hardware.mem.birim}" />
-
-								<h:outputText
-									value="Condition: #{item.resourceReq.hardware.mem.condition}" />
 							</h:panelGrid>
 						</p:column>
 
