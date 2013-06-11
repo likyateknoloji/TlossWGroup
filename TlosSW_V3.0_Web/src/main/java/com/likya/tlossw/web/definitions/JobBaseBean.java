@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
@@ -1284,6 +1283,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			return;
 		}
 
+		dependencyItem.setDependencyID(dependencyItem.getDependencyID().toUpperCase());
+
 		dependencyItem.setJsType(JsType.JOB);
 
 		dependencyTreePath = getDependencyTreePath(draggedJobPath);
@@ -1325,9 +1326,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		for (Item item : jobProperties.getDependencyList().getItemArray()) {
 			if (depExpression.equals("")) {
-				depExpression = item.getDependencyID().toUpperCase(Locale.ENGLISH);
+				depExpression = item.getDependencyID().toUpperCase();
 			} else {
-				depExpression = depExpression + " AND " + item.getDependencyID().toUpperCase(Locale.ENGLISH);
+				depExpression = depExpression + " AND " + item.getDependencyID().toUpperCase();
 			}
 		}
 		jobProperties.getDependencyList().setDependencyExpression(depExpression);
