@@ -281,7 +281,7 @@ public class DBUtils {
 						// Eğer, expression içinde bu job yok ise, tanımda hata
 						// vardır !
 						if (dependencyExpression.indexOf(item.getDependencyID()) < 0) {
-							SpaceWideRegistry.getGlobalLogger().error("[" + item.getJsName() + "], bağımlılık kuralı olan [" + dependencyExpression + "] içinde bulunamadı !");
+							SpaceWideRegistry.getGlobalLogger().error("[" + item.getDependencyID() + "], bağımlılık kuralı olan [" + dependencyExpression + "] içinde bulunamadı !");
 							SpaceWideRegistry.getGlobalLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
 							throw new TlosFatalException();
 						}
