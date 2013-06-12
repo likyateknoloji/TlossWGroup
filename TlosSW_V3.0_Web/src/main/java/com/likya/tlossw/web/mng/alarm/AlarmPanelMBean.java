@@ -45,7 +45,7 @@ import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
 import com.likya.tlos.model.xmlbeans.sla.DiskDocument.Disk;
-import com.likya.tlos.model.xmlbeans.sla.ForAttribute.For;
+import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.HardwareDocument.Hardware;
 import com.likya.tlos.model.xmlbeans.sla.MemDocument.Mem;
 import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
@@ -291,12 +291,12 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			setCpuCondition(tmpHardware.getCpu().getCondition().toString());
 			setCpuValue(tmpHardware.getCpu().getStringValue());
 
-			setDiskPart(tmpHardware.getDisk().getFor().toString());
+			setDiskPart(tmpHardware.getDisk().getForWhat().toString());
 			setDiskUnit(tmpHardware.getDisk().getBirim().toString());
 			setDiskCondition(tmpHardware.getDisk().getCondition().toString());
 			setDiskValue(tmpHardware.getDisk().getStringValue());
 
-			setMemoryPart(tmpHardware.getMem().getFor().toString());
+			setMemoryPart(tmpHardware.getMem().getForWhat().toString());
 			setMemoryUnit(tmpHardware.getMem().getBirim().toString());
 			setMemoryCondition(tmpHardware.getMem().getCondition().toString());
 			setMemoryValue(tmpHardware.getMem().getStringValue());
@@ -482,7 +482,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				hardTmp.setDisk(disk);
 			}
 			if (getDiskPart() != null && !getDiskPart().equals("")) {
-				disk.setFor(For.Enum.forString(getDiskPart()));
+				disk.setForWhat(ForWhat.Enum.forString(getDiskPart()));
 				hardTmp.setDisk(disk);
 			}
 			if (getDiskUnit() != null && !getDiskUnit().equals("")) {
@@ -502,7 +502,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				hardTmp.setMem(memory);
 			}
 			if (getMemoryPart() != null && !getMemoryPart().equals("")) {
-				memory.setFor(For.Enum.forString(getMemoryPart()));
+				memory.setForWhat(ForWhat.Enum.forString(getMemoryPart()));
 				hardTmp.setMem(memory);
 			}
 			if (getCpuValue() != null && !getCpuValue().equals("")) {
