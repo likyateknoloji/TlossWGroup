@@ -71,16 +71,16 @@ declare function dss:distinct-deep
 declare function dss:ResourceUnique($n as node()) as node()*
 {
       let $resources := for $tek in $n/nrpr:nrpeCall
-						where $tek/nrpr:message/nrpr:response/nrpr:disk[data(@for)="free"] or 
-							  $tek/nrpr:message/nrpr:response/nrpr:mem[data(@for)="free"] or 
+						where $tek/nrpr:message/nrpr:response/nrpr:disk[data(@forWhat)="free"] or 
+							  $tek/nrpr:message/nrpr:response/nrpr:mem[data(@forWhat)="free"] or 
                               $tek/nrpr:message/nrpr:response/nrpr:cpu[data(@timein)="1"]
 						return <resource entry-name="{ $tek/@entry-name }" 
 						                         id="{ $tek/@id }" 
 									 inJmxAvailable="{ $tek/@inJmxAvailable }" 
 									   JmxAvailable="{ $tek/@JmxAvailable }"
                                        os="{ $tek/@os }">
-						                                                  { $tek/nrpr:message/nrpr:response/nrpr:disk[data(@for)="free"] ,
-										                                    $tek/nrpr:message/nrpr:response/nrpr:mem[data(@for)="free"] ,
+						                                                  { $tek/nrpr:message/nrpr:response/nrpr:disk[data(@forWhat)="free"] ,
+										                                    $tek/nrpr:message/nrpr:response/nrpr:mem[data(@forWhat)="free"] ,
 																			$tek/nrpr:message/nrpr:response/nrpr:cpu[data(@timein)="1"]
 										                                  } 
                               </resource>
@@ -381,10 +381,10 @@ declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTim
 						 (: --------------------- ATAMALAR -----------------------------------:)
                          (: SLA den ilgili parametreleri degiskenlere aktaralim (Burada DISK) :)
 						 let $SLA_disk_birim     := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:disk/@sla:birim
-						 let $SLA_disk_for       := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:disk/@sla:for
+						 let $SLA_disk_for       := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:disk/@sla:forWhat
 						 let $SLA_disk_condition := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:disk/@sla:condition
  						 let $SLA_mem_birim      := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:mem/@sla:birim
-						 let $SLA_mem_for        := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:mem/@sla:for
+						 let $SLA_mem_for        := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:mem/@sla:forWhat
 						 let $SLA_mem_condition  := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:mem/@sla:condition 
  						 let $SLA_cpu_birim      := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:cpu/@sla:birim
 						 let $SLA_cpu_timein     := $tek/sla:SLA/sla:ResourceReq/sla:Hardware/sla:cpu/@sla:timein 
@@ -434,8 +434,8 @@ declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTim
 						 (:---------------------------- KAYNAK TANIMLA ----------------------------:)
 						 (: kaynak ismi ve varsa kullanim parametresini alalim (burada disk) :)
 (:                         let $resources := for $tekken in $n/nrp:nrpeCall
-						                   where $tekken/nrp:message/nrp:response/disk[data(@for)="free"] 
-										   return <resource entry-name="{$tekken/@entry-name}"> { $tekken/nrp:message/nrp:response/disk[data(@for)="free"] } </resource>
+						                   where $tekken/nrp:message/nrp:response/disk[data(@forWhat)="free"] 
+										   return <resource entry-name="{$tekken/@entry-name}"> { $tekken/nrp:message/nrp:response/disk[data(@forWhat)="free"] } </resource>
 						 let $kaynaklar := <a>{$resources}</a>:)
                          (:------------------------------------------------------------------------:)
                          
