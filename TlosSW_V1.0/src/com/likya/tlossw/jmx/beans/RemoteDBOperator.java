@@ -51,7 +51,6 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.alarm.AlarmDocument;
 import com.likya.tlos.model.xmlbeans.alarm.AlarmDocument.Alarm;
-import com.likya.tlos.model.xmlbeans.alarm.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument.AlarmReport;
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument;
@@ -71,7 +70,6 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProper
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
 import com.likya.tlos.model.xmlbeans.nrperesults.CpuKullanimType.Timein;
-import com.likya.tlos.model.xmlbeans.nrperesults.MemdiskKullanimType.For;
 import com.likya.tlos.model.xmlbeans.nrperesults.MessageDocument.Message;
 import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument;
 import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument.NrpeData;
@@ -83,6 +81,7 @@ import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
+import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -1603,10 +1602,10 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 					diskInfoTypeClient.setDiskUnit(response.getDiskArray(0).getBirim().toString());
 
 					for (int diskCnt = 0; diskCnt < response.getDiskArray().length; diskCnt++) {
-						if (response.getDiskArray(diskCnt).getFor().equals(For.USED)) {
+						if (response.getDiskArray(diskCnt).getForWhat().equals(ForWhat.USED)) {
 							diskInfoTypeClient.setUsedDisk(response.getDiskArray(diskCnt).getStringValue());
 
-						} else if (response.getDiskArray(diskCnt).getFor().equals(For.FREE)) {
+						} else if (response.getDiskArray(diskCnt).getForWhat().equals(ForWhat.FREE)) {
 							diskInfoTypeClient.setFreeDisk(response.getDiskArray(diskCnt).getStringValue());
 						}
 					}
@@ -1620,10 +1619,10 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 					memoryInfoTypeClient.setMemoryUnit(response.getMemArray(0).getBirim().toString());
 
 					for (int memCnt = 0; memCnt < response.getMemArray().length; memCnt++) {
-						if (response.getMemArray(memCnt).getFor().equals(For.USED)) {
+						if (response.getMemArray(memCnt).getForWhat().equals(ForWhat.USED)) {
 							memoryInfoTypeClient.setUsedMemory(response.getMemArray(memCnt).getStringValue());
 
-						} else if (response.getMemArray(memCnt).getFor().equals(For.FREE)) {
+						} else if (response.getMemArray(memCnt).getForWhat().equals(ForWhat.FREE)) {
 							memoryInfoTypeClient.setFreeMemory(response.getMemArray(memCnt).getStringValue());
 						}
 					}
