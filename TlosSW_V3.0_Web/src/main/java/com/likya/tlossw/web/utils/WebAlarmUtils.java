@@ -14,7 +14,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
-import com.likya.tlos.model.xmlbeans.sla.ForAttribute.For;
+import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -151,9 +151,9 @@ public class WebAlarmUtils {
 
 		Collection<SelectItem> forList = new ArrayList<SelectItem>();
 
-		for (int i = 0; i < For.Enum.table.lastInt(); i++) {
+		for (int i = 0; i < ForWhat.Enum.table.lastInt(); i++) {
 			SelectItem item = new SelectItem();
-			part = For.Enum.table.forInt(i + 1).toString();
+			part = ForWhat.Enum.table.forInt(i + 1).toString();
 			item.setValue(part);
 			item.setLabel(part);
 			forList.add(item);
