@@ -7,12 +7,12 @@
 <nrp:cpu timein="15" birim="%">12</nrp:cpu>
 </nrp:response>
 <nrp:response command="alias_disk">
-<nrp:disk for="used" birim="G">53.19</nrp:disk>
-<nrp:disk for="free" birim="G">24.83</nrp:disk>
+<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
 </nrp:response>
 <nrp:response command="alias_mem">
-<nrp:mem for="used" birim="G">3.32</nrp:mem>
-<nrp:mem for="free" birim="G">4.67</nrp:mem>
+<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
+<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
 </nrp:response>
 </nrp:message>
 <nrp:message time="2012-02-21T01:01:31+0300">
@@ -22,12 +22,12 @@
 <nrp:cpu timein="15" birim="%">13</nrp:cpu>
 </nrp:response>
 <nrp:response command="alias_disk">
-<nrp:disk for="used" birim="G">53.19</nrp:disk>
-<nrp:disk for="free" birim="G">24.83</nrp:disk>
+<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
 </nrp:response>
 <nrp:response command="alias_mem">
-<nrp:mem for="used" birim="G">3.31</nrp:mem>
-<nrp:mem for="free" birim="G">4.68</nrp:mem>
+<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
+<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
 </nrp:response>
 </nrp:message>
 </nrp:nrpeCall>
@@ -39,12 +39,12 @@
 <nrp:cpu timein="15" birim="%">13</nrp:cpu>
 </nrp:response>
 <nrp:response command="alias_disk">
-<nrp:disk for="used" birim="G">53.19</nrp:disk>
-<nrp:disk for="free" birim="G">24.83</nrp:disk>
+<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
 </nrp:response>
 <nrp:response command="alias_mem">
-<nrp:mem for="used" birim="G">3.31</nrp:mem>
-<nrp:mem for="free" birim="G">4.68</nrp:mem>
+<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
+<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
 </nrp:response>
 </nrp:message>
 <nrp:message time="2012-02-21T01:01:31+0300">
@@ -54,12 +54,12 @@
 <nrp:cpu timein="15" birim="%">13</nrp:cpu>
 </nrp:response>
 <nrp:response command="alias_disk">
-<nrp:disk for="used" birim="G">53.19</nrp:disk>
-<nrp:disk for="free" birim="G">24.83</nrp:disk>
+<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
 </nrp:response>
 <nrp:response command="alias_mem">
-<nrp:mem for="used" birim="G">3.32</nrp:mem>
-<nrp:mem for="free" birim="G">4.67</nrp:mem>
+<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
+<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
 </nrp:response>
 </nrp:message>
 </nrp:nrpeCall>
