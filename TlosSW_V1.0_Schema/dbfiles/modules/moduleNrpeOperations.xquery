@@ -203,13 +203,13 @@ let $nrpeData :=
                   <nrpr:response command="{ data($response/@command) }">
 				    {
                        if (data($response/@command) = xs:string('check_disk')) 
-                       then (<nrpr:disk for="used" birim="{replace( $response/@value, 
+                       then (<nrpr:disk forWhat="used" birim="{replace( $response/@value, 
 							      '^(.*?)/=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})$', '$3')}">
 					   {xs:decimal(replace( $response/@value, 
 							      '^(.*?)/=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})$', '$10'))}
 
                        </nrpr:disk>,
-                       <nrpr:disk for="free" birim="{replace( $response/@value, 
+                       <nrpr:disk forWhat="free" birim="{replace( $response/@value, 
 							      '^(.*?)/=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})$', '$3')}">
 					     {xs:decimal(replace( $response/@value, 
 							      '^(.*?)/=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})$', '$10')) - 
@@ -225,10 +225,10 @@ let $nrpeData :=
 								   '^(.*?): (\d{1,3}.\d{1,3}), (\d{1,3}.\d{1,3}), (\d{1,3}.\d{1,3})\|(.*?)$', '$4'))*100}</nrpr:cpu>
 								  )
                        else if(data($response/@command) = xs:string('check_mem'))
-                            then (<nrpr:mem for="used" birim="{replace( $response/@value, '^(.*?) USED=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$3')}"> 
+                            then (<nrpr:mem forWhat="used" birim="{replace( $response/@value, '^(.*?) USED=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$3')}"> 
 							     {xs:decimal(replace( $response/@value, 
 							      '^(.*?) USED=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$2'))}</nrpr:mem>,
-                                  <nrpr:mem for="free" birim="{replace( $response/@value, '^(.*?) FREE=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$3')}"> 
+                                  <nrpr:mem forWhat="free" birim="{replace( $response/@value, '^(.*?) FREE=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$3')}"> 
 								  {xs:decimal(replace( $response/@value, 
 							      '^(.*?) FREE=(\d{1,8}.?\d{0,3})(G(B)?|M(B)?|K(B)?)(.*?)$', '$2'))}</nrpr:mem>
 								  )
@@ -241,19 +241,19 @@ let $nrpeData :=
 							      '^(.*?)''15m''=(\d{1,3})%(.*?)$', '$2')}</nrpr:cpu>
 								  )
                        else if(data($response/@command) = xs:string('alias_disk'))
-                            then (<nrpr:disk for="used" birim="{replace( $response/@value, 
+                            then (<nrpr:disk forWhat="used" birim="{replace( $response/@value, 
 							      '^(.*?)''C:\\''=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?)$', '$3')}"> {xs:decimal(replace( $response/@value, 
 							      '^(.*?)''C:\\''=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?)$', '$2'))}</nrpr:disk>,
-                                  <nrpr:disk for="free" birim="{replace( $response/@value, 
+                                  <nrpr:disk forWhat="free" birim="{replace( $response/@value, 
 							      '^(.*?)''C:\\''=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?)$', '$3')}"> {xs:decimal(replace( $response/@value, 
 							      '^(.*?)''C:\\''=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(;| )(.*?)$', '$10')) -
 								  xs:decimal(replace( $response/@value, '^(.*?)''C:\\''=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?)$', '$2'))}</nrpr:disk>
 								  )
                        else if(data($response/@command) = xs:string('alias_mem'))
-                            then (<nrpr:mem for="used" birim="{replace( $response/@value, '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$3')}"> 
+                            then (<nrpr:mem forWhat="used" birim="{replace( $response/@value, '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$3')}"> 
 							{replace( $response/@value, 
 							      '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$2')}</nrpr:mem>,
-                                  <nrpr:mem for="free" birim="{replace( $response/@value, '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$3')}"> {xs:decimal(replace( $response/@value, 
+                                  <nrpr:mem forWhat="free" birim="{replace( $response/@value, '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$3')}"> {xs:decimal(replace( $response/@value, 
 							      '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$10')) - xs:decimal(replace( $response/@value, 
 							      '^(.*?)=(\d{1,3}.?\d{0,3})(G(B)?|M(B)?|K(B)?);(.*?);(.*?);(.*?);(\d{1,5}.?\d{0,3})(; |)$', '$2'))}</nrpr:mem>
 								  )
