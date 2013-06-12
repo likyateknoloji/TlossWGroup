@@ -322,7 +322,7 @@ public class LiveMBean_old implements Serializable {
 		for (int i = 0; i < droppedBeanTreePath.size(); i++) {
 			
 			if (!droppedBeanTreePath.get(i).equals("Serbest") && i != droppedBeanTreePath.size() - 1) {
-				path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + droppedBeanTreePath.get(i) + "']/..";
+				path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + droppedBeanTreePath.get(i) + "']/..";
 			}
 		}
 
