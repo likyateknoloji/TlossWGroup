@@ -212,7 +212,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().insertScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, getScenarioXML(), treePath)) {
+		if (getDbOperations().insertScenario(JSDefinitionMBean.JOB_DEFINITION_DATA, getScenarioXML(), scenarioPath)) {
 			TreeNode scenarioNode = new DefaultTreeNode("scenario", scenarioName + " | " + getScenario().getID(), getJsTree().getSelectedJS());
 			scenarioNode.setExpanded(true);
 
@@ -445,7 +445,11 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		path = "/dat:TlosProcessData" + path;
 
 		treePath = path;
-		scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
+		scenarioPath = treePath;
+
+		if (scenarioName != null && !scenarioName.equals("")) {
+			scenarioPath += "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
+		}
 	}
 
 	public JSTree getJsTree() {
