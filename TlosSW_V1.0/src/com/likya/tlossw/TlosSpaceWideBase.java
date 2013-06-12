@@ -1,9 +1,6 @@
 package com.likya.tlossw;
 
 import java.lang.Thread.State;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -13,10 +10,7 @@ import javax.xml.transform.OutputKeys;
 import org.apache.log4j.Logger;
 import org.apache.log4j.RollingFileAppender;
 import org.exist.xmldb.DatabaseInstanceManager;
-import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -609,7 +603,9 @@ public class TlosSpaceWideBase {
 
 	}
 
+	/*
 	public void startWebSystem() {
+		
 		try {
 			Server server = new Server();
 			getSpaceWideRegistry().setHttpServer(server);
@@ -681,7 +677,9 @@ public class TlosSpaceWideBase {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
+		
 	}
+	*/
 
 	public void shutDownHttpServer() {
 
