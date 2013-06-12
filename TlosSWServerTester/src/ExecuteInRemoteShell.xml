@@ -15,13 +15,15 @@
 			<com:jobTypeDef>TIME BASED</com:jobTypeDef>
 			<com:jobTypeDetails>
 				<com:jobCommandType>DB JOBS</com:jobCommandType>
+				<com:jobCommand>job1.sh</com:jobCommand>
+                <com:jobPath>/home/likya/murat/Agent/jobs</com:jobPath>
 				<com:specialParameters>
 					<rs:executeRShellParams>
 						<com:ipAddress>192.168.1.39</com:ipAddress>
-						<com:port>22</com:port>
+						<rs:port>22</rs:port>
 						<com:userName>likya</com:userName>
 						<com:userPassword>likya</com:userPassword>
-						<com:jobCommand>/home/likya/murat/Agent/jobs/job1.sh</com:jobCommand>
+						<com:fileSeperator>/</com:fileSeperator>
 					</rs:executeRShellParams>
 				</com:specialParameters>
 			</com:jobTypeDetails>
