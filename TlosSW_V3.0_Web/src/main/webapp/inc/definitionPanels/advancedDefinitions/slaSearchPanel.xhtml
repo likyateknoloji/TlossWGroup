@@ -177,11 +177,15 @@
 
 
 							<h:panelGrid columns="1" style="width:100%" cellpadding="5">
-								<p:graphicImage value="/images/dash01.png" />
-
-								<h:outputText
-									value="Condition #{item.resourceReq.hardware.mem.condition} #{item.resourceReq.hardware.mem.bigIntegerValue}#{item.resourceReq.hardware.mem.birim} #{item.resourceReq.hardware.mem.formen}" />
-
+								<p:row>
+									<p:column style="font-weight: bold;">
+										<p:graphicImage value="/images/dash01.png" />
+									</p:column>
+									<p:column style="font-weight: bold;">
+										<h:outputText
+											value=" #{item.resourceReq.hardware.mem.forWhat} #{item.resourceReq.hardware.mem.condition} #{item.resourceReq.hardware.mem.bigIntegerValue}#{item.resourceReq.hardware.mem.birim}" />
+									</p:column>
+								</p:row>
 							</h:panelGrid>
 						</p:column>
 
@@ -190,8 +194,17 @@
 							sortBy="#{item.resourceReq.hardware.cpu.stringValue}"
 							filterBy="#{item.resourceReq.hardware.cpu.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.resourceReq.hardware.cpu}"
-								style="text-align: center;" />
+							<h:panelGrid columns="1" style="width:100%" cellpadding="5">
+								<p:row>
+									<p:column style="font-weight: bold;">
+										<p:graphicImage value="/images/dash01.png" />
+									</p:column>
+									<p:column style="font-weight: bold;">
+										<h:outputText
+											value=" #{item.resourceReq.hardware.cpu.condition} #{item.resourceReq.hardware.cpu.birim}#{item.resourceReq.hardware.cpu.bigIntegerValue} in #{item.resourceReq.hardware.cpu.timein} Min" />
+									</p:column>
+								</p:row>
+							</h:panelGrid>
 						</p:column>
 
 						<p:column
@@ -199,8 +212,17 @@
 							sortBy="#{item.resourceReq.hardware.disk.stringValue}"
 							filterBy="#{item.resourceReq.hardware.disk.stringValue}"
 							filterMatchMode="contains">
-							<h:outputText value="#{item.resourceReq.hardware.disk}"
-								style="text-align: center;" />
+							<h:panelGrid columns="1" style="width:100%" cellpadding="5">
+								<p:row>
+									<p:column style="font-weight: bold;">
+										<p:graphicImage value="/images/dash01.png" />
+									</p:column>
+									<p:column style="font-weight: bold;">
+										<h:outputText
+											value=" #{item.resourceReq.hardware.disk.forWhat} #{item.resourceReq.hardware.disk.condition} #{item.resourceReq.hardware.disk.bigIntegerValue}#{item.resourceReq.hardware.disk.birim}" />
+									</p:column>
+								</p:row>
+							</h:panelGrid>
 						</p:column>
 
 					</p:dataTable>
