@@ -20,7 +20,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		//define a folder root
-		Path myDir = Paths.get("/3.4.1");
+		Path myDir = Paths.get("/Users/serkan/Desktop/tlosTest");
 
 		try {
 			WatchService watcher = myDir.getFileSystem().newWatchService();
