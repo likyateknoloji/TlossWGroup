@@ -1,0 +1,105 @@
+<ui:composition template="/templates/common/commonLayout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - FTP Access Search Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Administration" />
+		<ui:param name="title3" value="FTP Access" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link" value="/inc/administrationPanels/ftpAccessSearchPanel.xhtml" />
+		<ui:param name="title4link" value="Tlos SW Workload Automation Software v1.0 - FTP Access Search Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="searchFTPAccess" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel id="searchPnl" header="#{msgs['tlos.management.pannel.wsAccess.header']}">
+
+				<div class="tablectrl">
+
+					<p:panelGrid columns="2">
+						<h:outputText value="#{msgs['tlos.management.pannel.ftpAccess.connName']}" />
+						<p:inputText id="connectionName" value="#{ftpAccessSearchPanelMBean.connName}" />
+					</p:panelGrid>
+
+				</div>
+
+			</p:panel>
+
+			<br></br>
+
+			<div class="tablectrl">
+				<p:panel>
+					<p:commandButton value="#{msgs['tlos.button.search']}" update="ftpAccessSearchPanel" actionListener="#{ftpAccessSearchPanelMBean.searchFTPAccessAction}" rendered="#{security.FTPAccessSearch}" />
+
+					<p:commandButton value="#{msgs['tlos.button.clear']}" update="searchFTPAccess" action="#{ftpAccessSearchPanelMBean.resetFTPAccessProfileAction}" rendered="#{security.FTPAccessClear}" />
+
+					<p:commandButton value="#{msgs['tlos.button.addNew']}" rendered="#{security.FTPAccessAdd}" update="ftpAccessSearchPanel" ajax="false" immediate="false" action="ftpAccessPanel.xhtml">
+						<f:param name="insertCheck" value="insert" />
+					</p:commandButton>
+				</p:panel>
+			</div>
+
+			<br></br>
+
+			<p:outputPanel id="ftpAccessSearchPanel">
+
+				<p:panel styleClass="tlosFormBorderHighlight" rendered="#{not empty ftpAccessSearchPanelMBean.searchFTPAccessList}">
+
+					<p:confirmDialog id="confirmDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}"
+						severity="alert" widgetVar="confirmation">
+						<p:commandButton id="confirm" immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" update=":searchFTPAccess:ftpAccessSearchPanel" onclick="confirmation.hide()"
+							actionListener="#{ftpAccessSearchPanelMBean.deleteFTPAccessAction}" />
+						<p:commandButton id="decline" value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
+					</p:confirmDialog>
+
+					<p:dataTable var="item" rows="10" id="wsSearchDataTable" filteredValue="#{ftpAccessSearchPanelMBean.filteredFTPAccessList}" width="100%" value="#{ftpAccessSearchPanelMBean.searchFTPAccessList}"
+						binding="#{ftpAccessSearchPanelMBean.searchFTPAccessTable}" paginator="true" paginatorPosition="bottom"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+
+						<p:column>
+							<p:commandButton ajax="false" rendered="#{security.FTPAccessEdit}" immediate="false" value="#{msgs['tlos.button.update']}" action="ftpAccessPanel.xhtml">
+								<f:param name="selectedFTPAccessID" value="#{item.id}" />
+								<f:param name="insertCheck" value="update" />
+							</p:commandButton>
+
+							<p:commandButton title="#{msgs['tlos.button.delete']}" value="#{msgs['tlos.button.delete']}" 
+								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.FTPAccessDelete}" 
+								action="#{ftpAccessSearchPanelMBean.setSelectedRow(item)}"/>
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.management.pannel.ftpAccess.connName']}" sortBy="#{item.connection.connName}" filterBy="#{item.connection.connName}" filterMatchMode="contains">
+							<h:outputText value="#{item.connection.connName}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.workspace.pannel.job.ftpIpAddress']}" sortBy="#{item.connection.ipAddress}" filterBy="#{item.connection.ipAddress}" filterMatchMode="contains">
+							<h:outputText value="#{item.connection.ipAddress}" style="text-align: center;" />
+						</p:column>
+
+						<p:column headerText="#{msgs['tlos.workspace.pannel.job.ftpUserName']}" sortBy="#{item.connection.userName}" filterBy="#{item.connection.userName}" filterMatchMode="contains">
+							<h:outputText value="#{item.connection.userName}" style="text-align: center;" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

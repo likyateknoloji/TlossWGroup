@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Web Service Analysis Page" />
+
+	<ui:define name="center">
+
+		<ui:param name="title1" value="Main Menu" />
+		<ui:param name="title2" value="Administration" />
+		<ui:param name="title3" value="Web Service Analysis" />
+		<ui:param name="title4" value="" />
+
+		<ui:param name="title1link" value="/" />
+		<ui:param name="title2link" value="DefinitionsLink" />
+		<ui:param name="title3link"
+			value="/inc/administrationPanels/webServiceWizardPanel.xhtml" />
+		<ui:param name="title4link"
+			value="Tlos SW Workload Automation Software v1.0 - Web Service Analysis Page" />
+		<h:form>
+			<p:breadCrumb>
+				<p:menuitem value="#{title1}" url="#{title1link}" />
+				<p:menuitem value="#{title2}" url="#{title2link}" />
+				<p:menuitem value="#{title3}" url="#{title3link}" />
+			</p:breadCrumb>
+		</h:form>
+
+		<br></br>
+
+		<h:form id="wsForm">
+
+			<p:fieldset
+				legend="#{msgs['tlos.management.pannel.webservice.header']}"
+				widgetVar="regWidget" style="width: 850px;">
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+				<p:wizard backLabel="#{msgs['tlos.wizard.back.label']}"
+					nextLabel="#{msgs['tlos.wizard.next.label']}" id="wsWizard"
+					flowListener="#{wsWizardPanelMBean.onFlowProcess}">
+
+					<p:tab id="wsdlTab"
+						title="#{msgs['tlos.management.pannel.webservice.WSDLPanel']}">
+						<p:panel>
+							<p:panelGrid columns="2" border="0">
+								<h:outputText
+									value="#{msgs['tlos.management.pannel.webservice.address']}" />
+								<p:inputText value="#{wsWizardPanelMBean.wsdlAddress}" required="true" requiredMessage="#{msgs['tlos.validation.wsDef.wsdl']}"
+									style="width: 500px;" />
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="operationsTab"
+						title="#{msgs['tlos.management.pannel.webservice.operationsPanel']}">
+
+						<p:accordionPanel id="functionList"
+							value="#{wsWizardPanelMBean.functionList}" var="function">
+
+							<p:tab title="#{function.functionName}">
+								<p:panelGrid columns="1">
+									<p:dataTable var="innerItem" rows="10" id="parameters"
+										value="#{function.parameterList}">
+										<p:column>
+											<f:facet name="header">
+												<h:outputText
+													value="#{msgs['tlos.management.pannel.webservice.paramName']}" />
+											</f:facet>
+											<h:outputText value="#{innerItem.parameterName}"
+												style="text-align: center;" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText
+													value="#{msgs['tlos.management.pannel.webservice.paramType']}" />
+											</f:facet>
+											<h:outputText value="#{innerItem.parameterType}"
+												style="text-align: center;" />
+										</p:column>
+									</p:dataTable>
+								</p:panelGrid>
+							</p:tab>
+
+						</p:accordionPanel>
+
+					</p:tab>
+
+					<p:tab id="operationTab"
+						title="#{msgs['tlos.management.pannel.webservice.operationPanel']}">
+						<p:panel
+							header="#{wsWizardPanelMBean.serviceName}: #{wsWizardPanelMBean.currentFunction.functionName}">
+							<p:panelGrid columns="1">
+								<p:dataTable var="parameter" rows="10" id="parameterList"
+									value="#{wsWizardPanelMBean.currentFunction.parameterList}">
+									<p:column>
+										<f:facet name="header">
+											<h:outputText
+												value="#{msgs['tlos.management.pannel.webservice.paramName']}" />
+										</f:facet>
+										<h:outputText value="#{parameter.parameterName}"
+											style="text-align: center;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText
+												value="#{msgs['tlos.management.pannel.webservice.paramType']}" />
+										</f:facet>
+										<h:outputText value="#{parameter.parameterType}"
+											style="text-align: center;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText
+												value="#{msgs['tlos.management.pannel.webservice.paramValue']}" />
+										</f:facet>
+
+										<p:inputText value="#{parameter.value}" label="#{parameter.parameterName}"
+											rendered="#{!parameter.isEnum}"
+											style="text-align: center; width: 100%;" required="true"/>
+
+										<p:selectOneMenu rendered="#{parameter.isEnum}"
+											style="text-align: center; align: center;"
+											value="#{parameter.value}" partialSubmit="true">
+											<f:selectItems value="#{parameter.enumList}" />
+										</p:selectOneMenu>
+									</p:column>
+								</p:dataTable>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel>
+							<p:commandButton value="#{msgs['tlos.button.save']}"
+								onclick="saveDialog.show()" />
+
+							<p:commandButton value="#{msgs['tlos.button.test']}"
+								actionListener="#{wsWizardPanelMBean.testWsMethodAction}"
+								update="resultPanel" />
+
+							<p:dialog id="dialog" header="#{msgs['tlos.management.pannel.webservice.wsRegistration']}" widgetVar="saveDialog" resizable="false"
+								showEffect="show">
+
+								<h:panelGrid columns="2">
+									<h:outputText
+										value="#{msgs['tlos.management.pannel.webservice.serviceName']}" />
+									<p:inputText value="#{wsWizardPanelMBean.recordName}" />
+
+									<h:outputText
+										value="#{msgs['tlos.management.pannel.webservice.serviceDesc']}" />
+									<p:inputText
+										value="#{wsWizardPanelMBean.webServiceDefinition.description}" />
+
+									<f:facet name="footer">
+										<p:commandButton value="#{msgs['tlos.button.ok']}"
+											actionListener="#{wsWizardPanelMBean.saveWSDefinitionAction}"
+											oncomplete="saveDialog.hide();" />
+									</f:facet>
+								</h:panelGrid>
+
+							</p:dialog>
+						</p:panel>
+
+						<p:panel id="resultPanel">
+							<p:inputTextarea value="#{wsWizardPanelMBean.result}"
+								rendered="#{wsWizardPanelMBean.result != null}" rows="5"
+								cols="50" autoResize="false" />
+						</p:panel>
+					</p:tab>
+
+				</p:wizard>
+
+			</p:fieldset>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
