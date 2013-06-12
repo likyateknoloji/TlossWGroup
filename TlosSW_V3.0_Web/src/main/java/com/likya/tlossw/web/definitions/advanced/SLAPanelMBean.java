@@ -24,7 +24,7 @@ import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
 import com.likya.tlos.model.xmlbeans.sla.DiskDocument.Disk;
-import com.likya.tlos.model.xmlbeans.sla.ForAttribute.For;
+import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.HardwareDocument.Hardware;
 import com.likya.tlos.model.xmlbeans.sla.JobsInStatusDocument.JobsInStatus;
 import com.likya.tlos.model.xmlbeans.sla.MaxTimeInQueueDocument.MaxTimeInQueue;
@@ -355,12 +355,12 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		sla.getResourceReq().getHardware().getCpu().setStringValue(cpuValue);
 		sla.getResourceReq().getHardware().getCpu().setBirim(Birim.Enum.forString(cpuUnit));
 
-		sla.getResourceReq().getHardware().getMem().setFor(For.Enum.forString(memoryPart));
+		sla.getResourceReq().getHardware().getMem().setForWhat(ForWhat.Enum.forString(memoryPart));
 		sla.getResourceReq().getHardware().getMem().setCondition(Condition.Enum.forString(memoryCondition));
 		sla.getResourceReq().getHardware().getMem().setStringValue(memoryValue);
 		sla.getResourceReq().getHardware().getMem().setBirim(Birim.Enum.forString(memoryUnit));
 
-		sla.getResourceReq().getHardware().getDisk().setFor(For.Enum.forString(diskPart));
+		sla.getResourceReq().getHardware().getDisk().setForWhat(ForWhat.Enum.forString(diskPart));
 		sla.getResourceReq().getHardware().getDisk().setCondition(Condition.Enum.forString(diskCondition));
 		sla.getResourceReq().getHardware().getDisk().setStringValue(diskValue);
 		sla.getResourceReq().getHardware().getDisk().setBirim(Birim.Enum.forString(diskUnit));
@@ -429,12 +429,12 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		cpuCondition = sla.getResourceReq().getHardware().getCpu().getCondition().toString();
 		cpuValue = sla.getResourceReq().getHardware().getCpu().getStringValue();
 
-		diskPart = sla.getResourceReq().getHardware().getDisk().getFor().toString();
+		diskPart = sla.getResourceReq().getHardware().getDisk().getForWhat().toString();
 		diskUnit = sla.getResourceReq().getHardware().getDisk().getBirim().toString();
 		diskCondition = sla.getResourceReq().getHardware().getDisk().getCondition().toString();
 		diskValue = sla.getResourceReq().getHardware().getDisk().getStringValue();
 
-		memoryPart = sla.getResourceReq().getHardware().getMem().getFor().toString();
+		memoryPart = sla.getResourceReq().getHardware().getMem().getForWhat().toString();
 		memoryUnit = sla.getResourceReq().getHardware().getMem().getBirim().toString();
 		memoryCondition = sla.getResourceReq().getHardware().getMem().getCondition().toString();
 		memoryValue = sla.getResourceReq().getHardware().getMem().getStringValue();
