@@ -63,6 +63,6 @@ public interface LocalManagerMBean {
     
 	public void shutdown(String str);
 	
-	public void redeploy(String str);
+	// public void redeploy(String str);
 
 }

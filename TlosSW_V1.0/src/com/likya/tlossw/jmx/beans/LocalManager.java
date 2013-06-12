@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.jmx.mp.helper : ProcessInfoProvider.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Apr 6, 2009 2:19:17 PM
  */
 
@@ -31,7 +31,8 @@ public class LocalManager implements LocalManagerMBean {
 
 		TlosSpaceWide.stopSpacewide();
 	}
-
+	
+	/*
 	public void redeploy(String str) {
 		
 		String ipAddr = null;
@@ -54,6 +55,7 @@ public class LocalManager implements LocalManagerMBean {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	@Override
 	public int getNbChanges() {
