@@ -63,7 +63,7 @@ import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
 import com.likya.tlos.model.xmlbeans.sla.DiskDocument.Disk;
-import com.likya.tlos.model.xmlbeans.sla.ForAttribute.For;
+import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.HardwareDocument.Hardware;
 import com.likya.tlos.model.xmlbeans.sla.MemDocument.Mem;
 import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
@@ -616,13 +616,13 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				cpuUnit = cpu.getBirim().toString();
 
 				Mem mem = hardware.getMem();
-				memoryPart = mem.getFor().toString();
+				memoryPart = mem.getForWhat().toString();
 				memoryCondition = mem.getCondition().toString();
 				memoryValue = mem.getStringValue();
 				memoryUnit = mem.getBirim().toString();
 
 				Disk disk = hardware.getDisk();
-				diskPart = disk.getFor().toString();
+				diskPart = disk.getForWhat().toString();
 				diskCondition = disk.getCondition().toString();
 				diskValue = disk.getStringValue();
 				diskUnit = disk.getBirim().toString();
@@ -1074,13 +1074,13 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			cpu.setBirim(Birim.Enum.forString(cpuUnit));
 
 			Mem mem = Mem.Factory.newInstance();
-			mem.setFor(For.Enum.forString(memoryPart));
+			mem.setForWhat(ForWhat.Enum.forString(memoryPart));
 			mem.setCondition(Condition.Enum.forString(memoryCondition));
 			mem.setStringValue(memoryValue);
 			mem.setBirim(Birim.Enum.forString(memoryUnit));
 
 			Disk disk = Disk.Factory.newInstance();
-			disk.setFor(For.Enum.forString(diskPart));
+			disk.setForWhat(ForWhat.Enum.forString(diskPart));
 			disk.setCondition(Condition.Enum.forString(diskCondition));
 			disk.setStringValue(diskValue);
 			disk.setBirim(Birim.Enum.forString(diskUnit));
