@@ -421,8 +421,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				minPercentage = timeManagement.getMinPercentage() + "";
 			}
 
-			selectedTZone = timeManagement.getTimeZone();
-			selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
+			if( timeManagement.getTimeZone() !=null ) selectedTZone = timeManagement.getTimeZone();
+			
+			if( timeManagement.getTypeOfTime() != null ) selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
 
 		} else {
 			useTimeManagement = false;
