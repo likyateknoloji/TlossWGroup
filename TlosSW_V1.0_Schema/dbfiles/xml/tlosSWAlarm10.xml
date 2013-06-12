@@ -102,9 +102,9 @@
         <alm:caseManagement>
             <!-- alm:systemManagement>
                 <sla:Hardware entry-name="hakan-laptop">
-                    <sla:mem sla:birim="G" sla:for="free" sla:condition="gt">2</sla:mem>
+                    <sla:mem sla:birim="G" sla:forWhat="free" sla:condition="gt">2</sla:mem>
                     <sla:cpu sla:birim="%" sla:timein="1" sla:condition="lt">80</sla:cpu>
-                    <sla:disk sla:birim="G" sla:for="free" sla:condition="gt">2</sla:disk>
+                    <sla:disk sla:birim="G" sla:forWhat="free" sla:condition="gt">2</sla:disk>
                 </sla:Hardware>
             </alm:systemManagement>
             <alm:stateManagement>
