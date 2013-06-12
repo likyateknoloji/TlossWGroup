@@ -304,6 +304,10 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 	}
 
 	public void updateAlarmAction(ActionEvent e) {
+		if (!checkValidInterval()) {
+			return;
+		}
+
 		fillAlarmProperties();
 		getAlarm().setID(getAlarmId());
 
@@ -315,7 +319,20 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	}
 
+	private boolean checkValidInterval() {
+		if (getEndDate().before(getStartDate())) {
+			addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.validation.alarm.timeInterval", null);
+			return false;
+		}
+
+		return true;
+	}
+
 	public void insertAlarmAction(ActionEvent e) {
+		if (!checkValidInterval()) {
+			return;
+		}
+
 		fillAlarmProperties();
 
 		if (getDbOperations().insertAlarm(getAlarmXML())) {
