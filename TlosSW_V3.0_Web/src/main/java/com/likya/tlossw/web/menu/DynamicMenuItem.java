@@ -115,16 +115,16 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			//menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "SLA Violotions", "#"));
 			//menuitems.add(new MenuItems("Advanced R.", "ui-icon-document", "Audit", "#"));
 
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Users", "/inc/managementPanels/userSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Permissions", "/inc/managementPanels/permissionsPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Users", "/inc/administrationPanels/userSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Permissions", "/inc/administrationPanels/permissionsPanel.jsf"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Performance", "#"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "BackUps", "#"));
 			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Audits", "#"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Connections", "/inc/managementPanels/dbConnectionSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Access", "/inc/managementPanels/dbAccessSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Analysis", "/inc/managementPanels/webServiceWizardPanel.jsf"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Access", "/inc/managementPanels/wsAccessSearchPanel.jsf"));
-			menuitems.add(new MenuItems("Administration", "ui-icon-document", "FTP Access", "/inc/managementPanels/ftpAccessSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Connections", "/inc/administrationPanels/dbConnectionSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "DB Access", "/inc/administrationPanels/dbAccessSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Analysis", "/inc/administrationPanels/webServiceWizardPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "Web Service Access", "/inc/administrationPanels/wsAccessSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Administration", "ui-icon-document", "FTP Access", "/inc/administrationPanels/ftpAccessSearchPanel.jsf"));
 
 			menuitems.add(new MenuItems("Preferences", "ui-icon-document", "Theme", "#"));
 
