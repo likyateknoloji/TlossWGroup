@@ -233,19 +233,19 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		// validToTime =
 		// DefinitionUtils.dateToStringTime(calendar.getValidTo().getTime().getTime());
 
-//		Calendar validFromTimeCal = calendar.getValidFrom().getTime();
-//		Calendar validToTimeCal = calendar.getValidTo().getTime();
+		// Calendar validFromTimeCal = calendar.getValidFrom().getTime();
+		// Calendar validToTimeCal = calendar.getValidTo().getTime();
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-        LocalTime validFromTimeLT = new LocalTime(calendar.getValidFrom().getTime());
-        LocalTime validToTimeLT = new LocalTime(calendar.getValidTo().getTime());
+		LocalTime validFromTimeLT = new LocalTime(calendar.getValidFrom().getTime());
+		LocalTime validToTimeLT = new LocalTime(calendar.getValidTo().getTime());
 
 		validFromTime = validFromTimeLT.toString();
 		validToTime = validToTimeLT.toString();
-		
-//		String timeInputFormat = new String("HH:mm:ss.SSSZZ");
-//		String timeOutputFormat = new String("HH:mm:ss");
-//		validFromTime = DefinitionUtils.calendarToStringTimeFormat(validFromTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
-//		validToTime = DefinitionUtils.calendarToStringTimeFormat(validToTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
+
+		// String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+		// String timeOutputFormat = new String("HH:mm:ss");
+		// validFromTime = DefinitionUtils.calendarToStringTimeFormat(validFromTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
+		// validToTime = DefinitionUtils.calendarToStringTimeFormat(validToTimeCal, selectedTZone, timeInputFormat, timeOutputFormat);
 
 		daySpecial = calendar.getCalendarPeriod().getDaySpecial().toString();
 		dayDef = calendar.getCalendarPeriod().getDayDef().toString();
@@ -276,7 +276,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		if (calendar.getSpecificDays() != null) {
 
 			for (int i = 0; i < calendar.getSpecificDays().getDateArray().length; i++) {
-				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime(), selectedTZone); //example 01.07.2009
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime(), selectedTZone); // example 01.07.2009
 				specificDayList.add(new SelectItem(dateStr, dateStr));
 			}
 		}
@@ -295,6 +295,10 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void updateCalendarAction(ActionEvent e) {
 		fillCalendarProperties();
+
+		if (!checkValidInterval()) {
+			return;
+		}
 
 		if (getDbOperations().updateCalendar(getCalendarPropertiesXML())) {
 			addMessage("insertCalendar", FacesMessage.SEVERITY_INFO, "tlos.success.calendar.update", null);
