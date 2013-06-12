@@ -413,7 +413,7 @@ public class DefinitionUtils {
 				scenarioName = getXFromNameId(scenarioName, "Name");
 			}
 
-			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
 		}
 
 		path = path + "/dat:jobList";
