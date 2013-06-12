@@ -18,7 +18,7 @@
 				<com:specialParameters>
 					<rs:executeRShellParams>
 						<com:ipAddress>192.168.1.39</com:ipAddress>
-						<port>22</port>
+						<com:port>22</com:port>
 						<com:userName>likya</com:userName>
 						<com:userPassword>likya</com:userPassword>
 						<com:jobCommand>/home/likya/murat/Agent/jobs/job1.sh</com:jobCommand>
