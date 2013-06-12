@@ -342,7 +342,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean scenarioCheckUpForUpdate() {
-		String scenarioPath = treePath; // + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+		String scenarioPath = treePath; // + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
 
 		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, scenarioPath, scenarioName);
 
@@ -378,7 +378,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean scenarioCheckUp() {
-		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + scenarioName + "']/..";
+		String scenarioPath = treePath + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
 
 		String scenarioCheckResult = getDbOperations().getScenarioExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, treePath, scenarioName);
 
@@ -432,11 +432,11 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		String path = "";
 		if (!scenarioNode.getParent().getData().equals(ConstantDefinitions.TREE_ROOT)) {
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
 
 			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
-				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
+				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
 			}
 		}
 
