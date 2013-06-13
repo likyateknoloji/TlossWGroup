@@ -390,7 +390,7 @@
 	<xs:element name="userPassword">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:minLength value="5" />
+				<xs:minLength value="4" />
 				<xs:maxLength value="8" />
 			</xs:restriction>
 		</xs:simpleType>
