@@ -1807,18 +1807,18 @@
 		                    <com:jobTypeDetails>
 		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
 		                        <com:specialParameters>
-		                            <dbJobDefinition>
-		                                <dbConnectionProperties>
-		                                    <dbPropertiesId>4</dbPropertiesId>
-		                                    <dbUserId>2</dbUserId>
-		                                </dbConnectionProperties>
-		                                <dbJobType>Script</dbJobType>
-		                                <dbAccessMethod>NATIVE</dbAccessMethod>
-		                                <scriptProperties>
-		                                    <sqlScriptFileName>posgreSQLScript.sql</sqlScriptFileName>
-		                                    <sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Postgres\PostgreSqlScipt\</sqlScriptFilePath>
-		                                </scriptProperties>
-		                            </dbJobDefinition>
+		                            <db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>4</db:dbPropertiesId>
+											<db:dbUserId>2</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Script</db:dbJobType>
+										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
+										<db:scriptProperties>
+											<db:sqlScriptFileName>posgreSQLScript.sql</db:sqlScriptFileName>
+											<db:sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Postgres\PostgreSqlScipt\</db:sqlScriptFilePath>
+										</db:scriptProperties>
+									</db:dbJobDefinition>
 		                        </com:specialParameters>
 		                    </com:jobTypeDetails>
 		                </dat:jobInfos>
@@ -2239,17 +2239,18 @@
 		                    <com:jobTypeDetails>
 		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
 		                        <com:specialParameters>
-		                            <dbJobDefinition>
-		                                <dbConnectionProperties>
-		                                    <dbPropertiesId>5</dbPropertiesId>
-		                                    <dbUserId>3</dbUserId>
-		                                </dbConnectionProperties>
-		                                <dbJobType>Script</dbJobType>
-		                                <scriptProperties>
-		                                    <sqlScriptFileName>oracleSQLScript.sql</sqlScriptFileName>
-		                                    <sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Oracle\Oracle_script\</sqlScriptFilePath>
-		                                </scriptProperties>
-		                            </dbJobDefinition>
+		                            <db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>5</db:dbPropertiesId>
+											<db:dbUserId>3</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Script</db:dbJobType>
+										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
+										<db:scriptProperties>
+											<db:sqlScriptFileName>oracleSQLScript.sql</db:sqlScriptFileName>
+											<db:sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Oracle\Oracle_script\</db:sqlScriptFilePath>
+										</db:scriptProperties>
+									</db:dbJobDefinition>
 		                        </com:specialParameters>
 		                    </com:jobTypeDetails>
 		                </dat:jobInfos>
