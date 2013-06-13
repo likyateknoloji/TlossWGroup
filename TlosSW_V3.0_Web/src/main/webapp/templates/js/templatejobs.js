@@ -1,5 +1,12 @@
+var templateJobsDraggable = true;
+
+function activateDraggable() {
+	// alert("activateDraggable");
+	templateJobsDraggable = true;
+}
+
 function applyDragDrop() {
-					
+					// alert("başta2");
 	                var jobs_ = document.querySelectorAll('[data-nodetype="jobGroup"] [data-nodetype="job"]');
 	                var debug = false;
 	                
@@ -143,7 +150,26 @@ function applyDragDrop() {
 						document.getElementById('jobTemplatesForm:draggedTemplateName').value = jobName;
 						document.getElementById('jobTemplatesForm:draggedTemplatePath').value = jobPath;
 
+						//alert("merve1");
+						//tekrarlı olarak sürükle-bırak yapılmaması için template işlerin draggable özelliğini kaldırıyoruz
+						removeDraggableProperties();
+						//alert("ok");
 						callHandleDrop();
+					}
+					
+					function removeDraggableProperties() {
+						console.log("Template Jobs and Groups");
+						//var jobs_ = document.querySelectorAll('.jobGroup .job');
+						
+						[ ].forEach.call(jobs_, function (job) {
+							console.log(job);
+							job.setAttribute('draggable', 'false');  // Enable jobs to be draggable.
+							// job.removeEventListener('dragstart', handleDragStart, false);
+					    });
+						
+						templateJobsDraggable = false;
+					 
+					    //$("#west").hide().fadeIn('fast');
 					}
 
 					// jobin senaryo agacinda birakildigi pathi buluyor
@@ -211,16 +237,21 @@ function applyDragDrop() {
 					console.log("Template Jobs and Groups");
 					//var jobs_ = document.querySelectorAll('.jobGroup .job');
 					
-	                   [ ].forEach.call(jobs_, function (job) {
-		                 console.log(job);
-	                     job.setAttribute('draggable', 'true');  // Enable jobs to be draggable.
-	                     job.addEventListener('dragstart', handleDragStart, false);
-	                     //job.addEventListener('dragenter', handleDragEnter, false);
-	                     //job.addEventListener('dragover', handleDragOver, false);
-	                     //job.addEventListener('dragleave', handleDragLeave, false);
-	                     //job.addEventListener('drop', handleDrop, false);
-	                     //job.addEventListener('dragend', handleDragEnd, false);
-	                   });
+					if (templateJobsDraggable) {
+						
+						//alert("surukleme eklendi");
+		                   [ ].forEach.call(jobs_, function (job) {
+			                 console.log(job);
+		                     job.setAttribute('draggable', 'true');  // Enable jobs to be draggable.
+		                     job.addEventListener('dragstart', handleDragStart, false);
+		                     //job.addEventListener('dragenter', handleDragEnter, false);
+		                     //job.addEventListener('dragover', handleDragOver, false);
+		                     //job.addEventListener('dragleave', handleDragLeave, false);
+		                     //job.addEventListener('drop', handleDrop, false);
+		                     //job.addEventListener('dragend', handleDragEnd, false);
+		                   });
+	                   
+					}
 
 						//center layouttaki tree icindeki islere drop ozelligi ekleniyor (template tree west layoutta)				   
 						console.log("Already defined Scenarios : #centerWest .scenario");
