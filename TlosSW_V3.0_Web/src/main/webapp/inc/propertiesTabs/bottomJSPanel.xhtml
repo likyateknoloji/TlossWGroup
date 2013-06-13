@@ -19,6 +19,12 @@
 			rendered="#{backingBean.jsUpdateButton}"
 			oncomplete="jsActiveDialog.show()"
 			update=":jobDefinitionForm:jsActivePanel" />
+			
+		<p:commandButton style="float:right;" immediate="true"
+			value="#{msgs['tlos.button.cancel']}" 
+			action="#{jsDefinitionMBean.cancelJsAction}"
+			update=":jobDefinitionForm :jsTreeForm :jobTemplatesForm" 
+			oncomplete="activateDraggable()"/>
 
 		<p:dialog id="jsActiveDialog" widgetVar="jsActiveDialog" resizable="false" showEffect="show">
 			<p:panelGrid columns="3" id="jsActivePanel">
