@@ -1885,20 +1885,20 @@
 		                    <com:jobTypeDetails>
 		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
 		                        <com:specialParameters>
-		                            <dbJobDefinition>
-		                                <dbConnectionProperties>
-		                                    <dbPropertiesId>4</dbPropertiesId>
-		                                    <dbUserId>2</dbUserId>
-		                                </dbConnectionProperties>
-		                                <dbJobType>Store-Procedure</dbJobType>
-		                                <dbAccessMethod>NATIVE</dbAccessMethod>
-		                                <storeProcedureProperties>
-		                                    <sqlStoredProcedureSchemaName>tlossw</sqlStoredProcedureSchemaName>
-		                                    <sqlStoredProcedurePackageName/>
-		                                    <sqlStoredProcedureName>personel_ad()</sqlStoredProcedureName>
-		                                </storeProcedureProperties>
-		                            </dbJobDefinition>
-		                        </com:specialParameters>
+			                        <db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>4</db:dbPropertiesId>
+											<db:dbUserId>2</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Store-Procedure</db:dbJobType>
+										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
+										<db:storeProcedureProperties>
+											<db:sqlStoredProcedureSchemaName>tlossw</db:sqlStoredProcedureSchemaName>
+											<db:sqlStoredProcedurePackageName></db:sqlStoredProcedurePackageName>
+											<db:sqlStoredProcedureName>personel_ad()</db:sqlStoredProcedureName>
+										</db:storeProcedureProperties>
+									</db:dbJobDefinition>
+								</com:specialParameters>
 		                    </com:jobTypeDetails>
 		                </dat:jobInfos>
 		                <dat:calendarId>5</dat:calendarId>
@@ -2160,19 +2160,20 @@
 		                    <com:jobTypeDetails>
 		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
 		                        <com:specialParameters>
-		                            <dbJobDefinition>
-		                                <dbConnectionProperties>
-		                                    <dbPropertiesId>5</dbPropertiesId>
-		                                    <dbUserId>3</dbUserId>
-		                                </dbConnectionProperties>
-		                                <dbJobType>Store-Procedure</dbJobType>
-		                                <storeProcedureProperties>
-		                                    <sqlStoredProcedureSchemaName>test</sqlStoredProcedureSchemaName>
-		                                    <sqlStoredProcedurePackageName/>
-		                                    <sqlStoredProcedureName>PERSONEL_YUKLE(2,'mk','km')</sqlStoredProcedureName>
-		                                </storeProcedureProperties>
-		                            </dbJobDefinition>
-		                        </com:specialParameters>
+									<db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>5</db:dbPropertiesId>
+											<db:dbUserId>3</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Store-Procedure</db:dbJobType>
+										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
+										<db:storeProcedureProperties>
+											<db:sqlStoredProcedureSchemaName>test</db:sqlStoredProcedureSchemaName>
+											<db:sqlStoredProcedurePackageName></db:sqlStoredProcedurePackageName>
+											<db:sqlStoredProcedureName>PERSONEL_YUKLE(2,'mk','km')</db:sqlStoredProcedureName>
+										</db:storeProcedureProperties>
+									</db:dbJobDefinition>
+								</com:specialParameters>
 		                    </com:jobTypeDetails>
 		                </dat:jobInfos>
 		                <dat:calendarId>5</dat:calendarId>
