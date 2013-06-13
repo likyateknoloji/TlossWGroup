@@ -48,7 +48,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
-	private String jobDefCenterPanel = BATCH_PROCESS_PAGE;
+	private String jobDefCenterPanel = DEFAULT_DEF_PAGE;
 
 	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
@@ -331,6 +331,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("jobDefinitionForm");
+	}
+
+	public void cancelJsAction() {
+		jobDefCenterPanel = DEFAULT_DEF_PAGE;
 	}
 
 	public String getJobDefCenterPanel() {
