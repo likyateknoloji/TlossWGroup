@@ -262,6 +262,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 		String message = TEJmxMpValidationClient.checkFTPAccess(new JmxUser(), ftpAccessInfoTypeClient);
 
 		if (message == null) {
+			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.jmxConnection", null);
 			return;
 		}
 
