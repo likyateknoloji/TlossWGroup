@@ -56,7 +56,7 @@ public class TEJmxMpClientBase {
 
 				try {
 
-					// jmxConnector = JMXConnectorFactory.connect(url, getEnv()); // TLS için
+					// jmxConnector = JMXConnectorFactory.connect(url, getEnv());
 					jmxConnector = JMXConnectorFactory.connect(url);
 					jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
 					logger.info(">> JMXMP Connection successfully established to " + url);
@@ -73,9 +73,13 @@ public class TEJmxMpClientBase {
 					t.printStackTrace();
 				}
 
-				logger.info(">> JMXMP Connection can NOT be established ! Waiting for 5 second before retry...");
-				Thread.sleep(5000);
-				logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
+				if (attemptCount < 3) {
+					logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
+					Thread.sleep(2000);
+					logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
+				} else {
+					return null;
+				}
 			}
 
 			logger.debug("Connected to JMXMP server on host " + host + " through port " + port);
