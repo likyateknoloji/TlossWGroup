@@ -66,11 +66,10 @@
 			process="@this,draggedJobName,draggedJobPath"
 			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
 
-		<p:outputPanel autoUpdate="true">
-			<h:outputScript id="applyDragDrop">
-               applyDragDrop();
-            </h:outputScript>
-		</p:outputPanel>
 	</h:form>
-
+	<script>
+		jQuery(document).ready(function() {
+			 applyDragDrop();
+		});
+	</script>
 </ui:composition>
