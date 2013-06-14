@@ -35,13 +35,15 @@
 					rendered="#{backingBean.jsInsertButton}"
 					action="#{backingBean['insertJsAction']}"
 					update=":jobDefinitionForm :jsTreeForm:tree" 
-					oncomplete="jsActiveDialog.hide();" />
+					oncomplete="jsActiveDialog.hide();" 
+					onsuccess="activateDraggable()"/>
 
 				<p:commandButton value="#{msgs['tlos.button.ok']}"
 					rendered="#{backingBean.jsUpdateButton}"
 					action="#{backingBean['updateJsAction']}"
 					update=":jobDefinitionForm :jsTreeForm:tree" 
-					oncomplete="jsActiveDialog.hide();" />
+					oncomplete="jsActiveDialog.hide();" 
+					onsuccess="activateDraggable()"/>
 			</p:panelGrid>
 		</p:dialog>
 
@@ -64,10 +66,10 @@
 			<p:panel id="confirmDialogPanel">
 				<p:commandButton id="confirmInsert" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['insertJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jsInsertButton}" />
+					rendered="#{backingBean.jsInsertButton}" onsuccess="activateDraggable()"/>
 				<p:commandButton id="confirmUpdate" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['updateJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jsUpdateButton}" />
+					rendered="#{backingBean.jsUpdateButton}" onsuccess="activateDraggable()"/>
 				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
 					actionListener="#{backingBean['cancelInsertOrUpdateJsAction']}"/>
 	    	</p:panel>
