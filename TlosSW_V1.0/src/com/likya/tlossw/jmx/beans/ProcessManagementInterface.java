@@ -556,11 +556,15 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		if (spcInfoType != null) {
 			Spc spc = spcInfoType.getSpcReferance();
 			if (spc.isStartable()) {
+				spc.prepareJobsForManuelScenarioExecution();
+
 				Thread thread = new Thread(spc);
 				spc.setExecuterThread(thread);
 				spc.setExecutionPermission(true, false);
 				// spc.getLiveStateInfo().setStateName(StateName.WORKING);
 				spc.getLiveStateInfo().setStateName(StateName.RUNNING);
+				spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
+
 				// TODO Serkan Tas asagidaki substate tanimli degil
 				// spc.getLiveStateInfo().setSubstateName(SubstateNameType.RESTARTED);
 				spc.getExecuterThread().start();

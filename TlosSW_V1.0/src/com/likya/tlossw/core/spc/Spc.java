@@ -1131,4 +1131,21 @@ public class Spc extends SpcBase {
 		return jobList;
 	}
 
+	public void prepareJobsForManuelScenarioExecution() {
+		Iterator<SortType> jobQueueIndexIterator = getJobQueueIndex().iterator();
+
+		while (jobQueueIndexIterator.hasNext()) {
+
+			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
+			SortType sortType = jobQueueIndexIterator.next();
+
+			Job scheduledJob = getJobQueue().get(sortType.getJobKey());
+			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
+			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.IDLED, null);
+			scheduledJob.sendStatusChangeInfo();
+		}
+	}
+
 }
