@@ -3,6 +3,7 @@ var templateJobsDraggable = true;
 function activateDraggable() {
 	// alert("activateDraggable");
 	templateJobsDraggable = true;
+	applyDragDrop();
 }
 
 function applyDragDrop() {
