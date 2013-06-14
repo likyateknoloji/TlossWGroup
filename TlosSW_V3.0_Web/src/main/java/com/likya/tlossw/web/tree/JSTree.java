@@ -1,6 +1,8 @@
 package com.likya.tlossw.web.tree;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
@@ -84,6 +86,41 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		}
 
 		addJobNode(jobProperties, selectedNode);
+	}
+
+	// silinen senaryoyu ağaçtan kaldırıyor
+	public void removeScenarioSubtree(String scenarioPath) {
+		TreeNode selectedNode = root;
+
+		ArrayList<String> scenarioNameList = new ArrayList<>();
+		StringTokenizer pathTokenizer = new StringTokenizer(scenarioPath, "/");
+		while (pathTokenizer.hasMoreTokens()) {
+			scenarioNameList.add(pathTokenizer.nextToken());
+		}
+		
+		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
+		deleteSubtree(scenarioNameList, 0, nodeList);
+	}
+	
+	private void deleteSubtree(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList) {
+		for (TreeNode node : nodeList) {
+			
+			String scenarioName = scenarioNameList.get(index);
+			if (node.getData().equals(scenarioName)) {
+				if (scenarioNameList.size() == index + 1) {
+					TreeNode parent = node.getParent();
+				    parent.getChildren().remove(node);
+					System.out.println("silindi");
+				} else {
+					deleteSubtree(scenarioNameList, ++index, node.getChildren());
+				}
+			}
+
+			if (node.isLeaf()) {
+				continue;
+			}
+		}
+		
 	}
 
 	public void constructTree(Scenario[] scenario) {

@@ -1889,6 +1889,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		statusDialogShow = false;
 	}
 
+	// silinen senaryoyu ağaçtan kaldırıyor
+	public void removeScenarioSubtree(String scenarioPath) {
+		jSTree.removeScenarioSubtree(scenarioPath);
+	}
+
 	public String getJobPropertiesXML() {
 		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);

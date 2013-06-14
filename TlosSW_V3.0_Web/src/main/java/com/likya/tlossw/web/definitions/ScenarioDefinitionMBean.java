@@ -54,6 +54,9 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	private String treePath;
 	private String scenarioPath;
+	
+	// senaryonun senaryo ağacındaki pathinin sadece "isim | id" ve "/" ile oluşturulmuş hali
+	private String scenarioPathInScenario;
 
 	@PostConstruct
 	public void init() {
@@ -429,16 +432,24 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root");
 
 		String path = "";
-		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibarek path'i tutuyor
+		scenarioPathInScenario = "";
+
+		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibaren path'i tutuyor
 		if (isJsUpdateButton()) {
-			scenarioName = DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name");
+			scenarioPathInScenario = scenarioNode.getData().toString();
+			scenarioName = DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
+
 			scenarioNode = scenarioNode.getParent();
 		}
 		if (!scenarioNode.getParent().getData().equals(ConstantDefinitions.TREE_ROOT)) {
+			scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
 			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
 
 			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
+
+
+				scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
 				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
 			}
 		}
@@ -451,6 +462,20 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		if (scenarioName != null && !scenarioName.equals("")) {
 			scenarioPath += "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
 		}
+	}
+
+	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
+	public boolean deleteScenario() {
+		boolean result = true;
+		if (getDbOperations().deleteScenario(ConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
+			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
+			removeScenarioSubtree(scenarioPathInScenario);
+		} else {
+			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.delete", null);
+			result = false;
+		}
+		
+		return result;
 	}
 
 	public JSTree getJsTree() {
@@ -499,6 +524,14 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	public void setSelectedSchedulingAlgorithm(String selectedSchedulingAlgorithm) {
 		this.selectedSchedulingAlgorithm = selectedSchedulingAlgorithm;
+	}
+
+	public String getScenarioPathInScenario() {
+		return scenarioPathInScenario;
+	}
+
+	public void setScenarioPathInScenario(String scenarioPathInScenario) {
+		this.scenarioPathInScenario = scenarioPathInScenario;
 	}
 
 }

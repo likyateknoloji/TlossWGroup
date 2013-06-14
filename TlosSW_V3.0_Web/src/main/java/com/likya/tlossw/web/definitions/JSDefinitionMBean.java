@@ -337,6 +337,12 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		jobDefCenterPanel = DEFAULT_DEF_PAGE;
 	}
 
+	public void deleteScenarioAction() {
+		if (getScenarioDefinitionMBean().deleteScenario()) {
+			cancelJsAction();
+		}
+	}
+
 	public String getJobDefCenterPanel() {
 		return jobDefCenterPanel;
 	}
