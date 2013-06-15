@@ -9,7 +9,7 @@
                     <com:jobTypeDetails>
                         <com:jobCommandType>FTP</com:jobCommandType>
                         <com:specialParameters>
-                            <ftp:adapterProperties>
+                            <ftp:ftpAdapterProperties>
 								<ftp:adapterType>FTP PROCESS</ftp:adapterType>
 								<ftp:fileProperties>
 									<ftp:fileType>Binary</ftp:fileType>
@@ -47,7 +47,7 @@
 								<ftp:archiveProperties>
 									<ftp:archive>false</ftp:archive>
 								</ftp:archiveProperties>
-                            </ftp:adapterProperties>
+                            </ftp:ftpAdapterProperties>
                         </com:specialParameters>
                     </com:jobTypeDetails>
                 </dat:jobInfos>
