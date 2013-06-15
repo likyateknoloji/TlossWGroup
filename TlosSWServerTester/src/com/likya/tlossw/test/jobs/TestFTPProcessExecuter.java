@@ -1,5 +1,7 @@
 package com.likya.tlossw.test.jobs;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -25,13 +27,13 @@ public class TestFTPProcessExecuter extends TestSuit {
 
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "FTPProcessExecuter.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "FTPProcessExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
 		JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 		jobRuntimeProperties.setJobProperties(jobProperties);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "FTPProperties.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "FTPProperties.xml");
 		
 		FtpProperties ftpProperties = null;
 		ftpProperties = getFtpPropertiesFromFile(fileName);
