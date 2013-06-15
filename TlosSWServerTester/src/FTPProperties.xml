@@ -3,7 +3,7 @@
 		<com:connName>Likya 1 numara</com:connName>
 		<com:userName>likya</com:userName>
 		<com:userPassword>likya</com:userPassword>
-		<com:ftpPortNumber>0</com:ftpPortNumber>
+		<com:ftpPortNumber>21</com:ftpPortNumber>
 		<com:ipAddress>192.168.1.39</com:ipAddress>
 	</ftp:connection>
 </ftp:ftpProperties>
