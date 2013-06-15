@@ -77,9 +77,12 @@ public abstract class FtpExecutor extends FileJob {
 	
 	public boolean checkLogin(Logger logger) throws Exception {
 		
-		logger.info("Ftp ile kaynaga baglaniliyor !");
+		logger.info("Ftp ile kaynağa bağlanılıyor ip : " + ipAddress + " port : " + port);
 		
-		getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ile kaynaga baglaniliyor !" + System.getProperty( "line.separator" ));
+		String logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ile kaynağa bağlanılıyor !" + System.getProperty( "line.separator");
+		
+		getOutputFile().write(logStr);
+		logger.info(logStr);
 		
 		if(port == 0) {
 			ftpClient.connect(ipAddress);
@@ -87,29 +90,50 @@ public abstract class FtpExecutor extends FileJob {
 			ftpClient.connect(ipAddress, port);
 		}
 		
-		getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ile kaynaga baglanti gerceklestirildi !" + System.getProperty( "line.separator" ));
+		logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ile kaynağa bağlantı gerçekleştirildi !" + System.getProperty( "line.separator" );
+		getOutputFile().write(logStr);
+		logger.info(logStr);
 		
 		boolean login = ftpClient.login(userName, password);
 		
 		if(!login) {
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusuna giris yapilamadi" + System.getProperty("line.separator"));
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyCode: " + getFtpClient().getReplyCode() + System.getProperty("line.separator"));
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyString: " + getFtpClient().getReplyString());
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusuna giriş yapılamadı" + System.getProperty("line.separator");
+			getOutputFile().write(logStr);
+			logger.error(logStr);
+			
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyCode: " + getFtpClient().getReplyCode() + System.getProperty("line.separator");
+			getOutputFile().write(logStr);
+			logger.error(logStr);
+			
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyString: " + getFtpClient().getReplyString();
+			getOutputFile().write(logStr);
+			logger.error(logStr);
 		}
 		
 		return login;
 	}
 	
-	public boolean logout() throws Exception {
+	public boolean logout(Logger logger) throws Exception {
 		
 		boolean logout = ftpClient.logout();
-		
+		String logStr = "";
+				
 		if (logout) {
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusundan cikis yapildi" + System.getProperty( "line.separator" ));
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusundan cikis yapildi" + System.getProperty( "line.separator");
+			logger.info(logStr);
+			getOutputFile().write(logStr);
 		} else {
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusundan cikis hatali" + System.getProperty( "line.separator" ));
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyCode: " + ftpClient.getReplyCode() + System.getProperty( "line.separator" ));
-			getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyString: " + ftpClient.getReplyString());
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp sunucusundan cikis hatali" + System.getProperty( "line.separator");
+			logger.info(logStr);
+			getOutputFile().write(logStr);
+
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyCode: " + ftpClient.getReplyCode() + System.getProperty( "line.separator" );
+			logger.info(logStr);
+			getOutputFile().write(logStr);
+
+			logStr = DateUtils.getCurrentTimeWithMilliseconds() + " Ftp ReplyString: " + ftpClient.getReplyString();
+			logger.info(logStr);
+			getOutputFile().write(logStr);
 		}
 		
 		return logout;
