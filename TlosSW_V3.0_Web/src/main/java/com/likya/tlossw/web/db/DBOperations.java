@@ -99,6 +99,7 @@ public class DBOperations implements Serializable {
 	private static final String rscNsUrl = "rsc=\"http://rsc.tlos.com/\"";
 	private static final String ksNsUrl = "ks=\"http://ks.tlos.com/\"";
 	private static final String wsoNsUrl = "wso=\"http://wso.tlos.com/\"";
+	private static final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
 	
 	@ManagedProperty(value = "#{existConnectionHolder}")
 	private ExistConnectionHolder existConnectionHolder;
@@ -1912,7 +1913,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<FtpProperties> getFtpConnectionList() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace fc = \"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList()";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList()";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
@@ -2584,7 +2585,7 @@ public class DBOperations implements Serializable {
 		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
 		// getiriyor
 		// son 30 gun icerisinde ariyor
-		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(3, 0, " + jobId + ", false(), 30)";
+		String xQueryStr = xQueryNsHeader + lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(3, 0, " + jobId + ", false(), 30)";
 
 		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
 
@@ -2828,7 +2829,7 @@ public class DBOperations implements Serializable {
 	public com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm getAlarmHistoryById(int alarmHistoryId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace lk = \"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(" + alarmHistoryId + ")";
+		String xQueryStr = xQueryNsHeader + lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(" + alarmHistoryId + ")";
 
 		XPathQueryService service;
 		try {
@@ -2947,7 +2948,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<WSAccessInfoTypeClient> searchWSAccessProfiles(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\"" + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSDefinitionList()";
+		String xQueryStr = xQueryNsHeader + wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:getWSDefinitionList()";
 
 		HashMap<BigInteger, WebServiceDefinition> wsDefinitionList = new HashMap<BigInteger, WebServiceDefinition>();
 
@@ -2979,7 +2980,7 @@ public class DBOperations implements Serializable {
 			return null;
 		}
 
-		xQueryStr = "xquery version \"1.0\"; import module namespace wso=\"http://wso.tlos.com/\"" + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
+		xQueryStr = xQueryNsHeader + wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
 
 		ArrayList<WSAccessInfoTypeClient> wsAccessInfoTypeClients = new ArrayList<WSAccessInfoTypeClient>();
 
@@ -3146,7 +3147,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<FtpProperties> searchFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + "fc=\"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:searchFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:searchFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
@@ -3183,7 +3184,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + "fc=\"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:deleteFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:deleteFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 
@@ -3204,7 +3205,7 @@ public class DBOperations implements Serializable {
 	public boolean checkFTPConnectionName(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + "fc=\"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:checkFTPConnectionName(" + ftpAccessPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:checkFTPConnectionName(" + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -3227,7 +3228,7 @@ public class DBOperations implements Serializable {
 	public boolean insertFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + "fc=\"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:insertFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:insertFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -3272,7 +3273,7 @@ public class DBOperations implements Serializable {
 	public FtpProperties searchFTPConnectionById(int ftpConnectionId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace fc = \"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
 
 		XPathQueryService service;
 		try {
@@ -3305,7 +3306,7 @@ public class DBOperations implements Serializable {
 	public boolean updateFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + "fc=\"http://fc.tlos.com/\"" + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:updateFTPConnectionLock(" + ftpAccessPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "fc:updateFTPConnectionLock(" + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
