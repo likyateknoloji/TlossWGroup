@@ -24,6 +24,7 @@ public class ExistClient {
 	public static boolean isEnvRead = false;
 
 	public static String existDbUri = null;
+	public static String dbCollectionName = null;
 	public static  String userName = null;
 	public static  String password = null;
 
@@ -57,6 +58,8 @@ public class ExistClient {
 						existDbUri = (String) ctx.lookup("java:comp/env/dbUri");
 						userName = (String) ctx.lookup("java:comp/env/dbUserName");
 						password = (String) ctx.lookup("java:comp/env/dbPassword");
+						dbCollectionName = (String) ctx.lookup("java:comp/env/dbCollectionName");
+						existDbUri = existDbUri + "/" + dbCollectionName;
 						isEnvRead = true;
 					} catch (NamingException e1) {
 						e1.printStackTrace();
