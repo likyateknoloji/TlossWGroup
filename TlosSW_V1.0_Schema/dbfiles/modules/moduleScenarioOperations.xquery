@@ -163,7 +163,7 @@ declare function hs:updateScenarioSuccessCodes($documentUrl as xs:string, $scena
 declare function hs:updateScenario($documentUrl as xs:string, $scenarioPath as node(),$scenario as element(dat:scenario)){
 
     let $XXX := $scenario
-	let $doc :=  doc(fn:concat($documentUrl)
+	let $doc :=  doc($documentUrl)
 	let $updateBaseScenarioInfos :=  update replace $doc//$scenarioPath/dat:baseScenarioInfos with 
 	                   <dat:baseScenarioInfos>{$XXX/dat:baseScenarioInfos/*}</dat:baseScenarioInfos>
 
