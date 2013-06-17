@@ -25,8 +25,8 @@ public class ExistClient {
 
 	public static String existDbUri = null;
 	public static String dbCollectionName = null;
-	public static  String userName = null;
-	public static  String password = null;
+	public static String userName = null;
+	public static String password = null;
 
 	public static Database database;
 
