@@ -1,0 +1,42 @@
+	<env-entry>
+    	<description>exist db uri definition</description>
+    	<env-entry-name>dbUri</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db collection name</description>
+    	<env-entry-name>dbCollectionName</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>tlossw-serkan</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>db user name</description>
+    	<env-entry-name>dbUserName</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>admin</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>db password</description>
+    	<env-entry-name>dbPassword</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>admin</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>jmx erisim adresi</description>
+    	<env-entry-name>jmxIp</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>127.0.0.1</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>jmx erisim portu</description>
+    	<env-entry-name>jmxPort</env-entry-name>
+    	<env-entry-type>java.lang.Integer</env-entry-type>
+    	<env-entry-value>5554</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>jmx tls erisim portu</description>
+    	<env-entry-name>jmxTlsPort</env-entry-name>
+    	<env-entry-type>java.lang.Integer</env-entry-type>
+    	<env-entry-value>5555</env-entry-value>
+	</env-entry>
