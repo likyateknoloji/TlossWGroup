@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -90,29 +91,35 @@ public class DBOperations implements Serializable {
 	private static final long serialVersionUID = 8575509360685840755L;
 	
 	private static final String xQueryNsHeader =  "xquery version \"1.0\";  import module namespace ";
-	private static final String xQueryModuleUrl = " at \"xmldb:exist://db/" + ExistClient.dbCollectionName + "/modules";
 	
-	private static final String hsNsUrl = "hs=\"http://likya.tlos.com/\"";
-	private static final String sqNsUrl = "sq=\"http://sq.tlos.com/\"";
-	private static final String dbNsUrl = "db=\"http://db.tlos.com/\"";
-	private static final String lkNsUrl = "lk=\"http://likya.tlos.com/\"";
-	private static final String rscNsUrl = "rsc=\"http://rsc.tlos.com/\"";
-	private static final String ksNsUrl = "ks=\"http://ks.tlos.com/\"";
-	private static final String wsoNsUrl = "wso=\"http://wso.tlos.com/\"";
-	private static final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
+	private final String hsNsUrl = "hs=\"http://hs.tlos.com/\"";
+	private final String sqNsUrl = "sq=\"http://sq.tlos.com/\"";
+	private final String dbNsUrl = "db=\"http://db.tlos.com/\"";
+	private final String lkNsUrl = "lk=\"http://likya.tlos.com/\"";
+	private final String rscNsUrl = "rsc=\"http://rsc.tlos.com/\"";
+	private final String ksNsUrl = "ks=\"http://ks.tlos.com/\"";
+	private final String wsoNsUrl = "wso=\"http://wso.tlos.com/\"";
+	private final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
 
-	private static final String decNsRes = "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";";
-	private static final String decNsDbc = "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";";
-	private static final String decNsCom = "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";";
-	private static final String decNsDat = "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";";
-	private static final String decNsFtp = "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";";
-	private static final String decNsSt = "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";";
-	private static final String decNsWs = "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";";
-	private static final String decNsRep = "declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";";
+	private final String decNsRes = "declare namespace res=\"http://www.likyateknoloji.com/resource-extension-defs\";";
+	private final String decNsDbc = "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";";
+	private final String decNsCom = "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";";
+	private final String decNsDat = "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";";
+	private final String decNsFtp = "declare namespace ftp = \"http://www.likyateknoloji.com/XML_ftp_adapter_types\";";
+	private final String decNsSt = "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";";
+	private final String decNsWs = "declare namespace ws = \"http://www.likyateknoloji.com/XML_web_service_types\";";
+	private final String decNsRep = "declare namespace rep=\"http://www.likyateknoloji.com/XML_report_types\";";
 	
 	@ManagedProperty(value = "#{existConnectionHolder}")
 	private ExistConnectionHolder existConnectionHolder;
+	
+	private String xQueryModuleUrl = null;
 
+	@PostConstruct
+	public void init() {
+		xQueryModuleUrl = " at \"xmldb:exist://db/" + ExistClient.dbCollectionName + "/modules";
+	}
+	
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
 
 		ArrayList<SWAgent> agentList = null;
@@ -3379,4 +3386,5 @@ public class DBOperations implements Serializable {
 	public void setExistConnectionHolder(ExistConnectionHolder existConnectionHolder) {
 		this.existConnectionHolder = existConnectionHolder;
 	}
+
 }
