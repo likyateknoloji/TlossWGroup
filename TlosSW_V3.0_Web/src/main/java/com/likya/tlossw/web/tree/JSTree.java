@@ -36,7 +36,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("tlosSWData10.xml");
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(ConstantDefinitions.JOB_DEFINITION_DATA);
 		System.out.println("Tree has been loaded !!");
 
 		System.out.println("Job Tree olusturuluyor ..");
