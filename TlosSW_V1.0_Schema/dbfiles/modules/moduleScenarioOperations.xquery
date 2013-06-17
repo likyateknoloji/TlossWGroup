@@ -54,7 +54,7 @@ declare function hs:getScenarioFromId($documentUrl as xs:string, $id as xs:integ
         return $scenario
 };
 
-declare function hs:scenarioList() as element($documentUrl as xs:string, dat:scenario)* 
+declare function hs:scenarioList($documentUrl as xs:string) as element(dat:scenario)* 
  {
 	for $scenario in doc($documentUrl)/dat:TlosProcessData//dat:scenario
 	return  $scenario
