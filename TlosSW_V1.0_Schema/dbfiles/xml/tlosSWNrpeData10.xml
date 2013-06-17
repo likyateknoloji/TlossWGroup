@@ -1,6 +1,6 @@
 <nrp:NrpeData xmlns:nrp="http://www.likyateknoloji.com/XML_nrpe_types"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_types xmldb:exist:///db/TLOSSW/xsds/tlosSWNrpe_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_types ../xsds/tlosSWNrpe_v_1_0.xsd">
 	<nrpeCall xmlns="http://www.likyateknoloji.com/XML_nrpe_types"
 		entry-name="WINSRVSTD2012" port="5666" os="Windows">
 		<message time="2013-06-17T09:32:35+0300">

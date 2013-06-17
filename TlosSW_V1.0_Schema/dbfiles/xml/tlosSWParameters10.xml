@@ -1,6 +1,6 @@
 
 <par:Parameters xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.likyateknoloji.com/XML_parameters_types xmldb:exist:///db/TLOSSW/xsds/tlosSWParameters_v_1_0.xsd">
+                xsi:schemaLocation="http://www.likyateknoloji.com/XML_parameters_types ../xsds/tlosSWParameters_v_1_0.xsd">
     <par:Globals>
         <par:parameter id="1">
             <par:name>filename</par:name>

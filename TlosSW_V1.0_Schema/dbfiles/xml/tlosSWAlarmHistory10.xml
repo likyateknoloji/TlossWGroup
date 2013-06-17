@@ -2,7 +2,7 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <alm-history:alarmHistory xmlns:alm-history="http://www.likyateknoloji.com/XML_alarm_history" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
                           xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
-                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_history xmldb:exist:///db/TLOSSW/xsds/tlosSWAlarmHistory_v_1_0.xsd">
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_history ../xsds/tlosSWAlarmHistory_v_1_0.xsd">
 	<alm-history:alarm aHistoryId="1" agentId="hakan-laptop" runId="900">
 		<alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
 		<alm:level>3</alm:level>

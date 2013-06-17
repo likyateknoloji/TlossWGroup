@@ -5,7 +5,7 @@
                      xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
                      xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types"
                      xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types xmldb:exist:///db/TLOSSW/xsds/tlosSWData_v_1_0.xsd">
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
 	<dat:baseScenarioInfos>
 		<com:jsName>Serbest isler</com:jsName>
 		<com:comment>Serbest isler burada yer alir</com:comment>

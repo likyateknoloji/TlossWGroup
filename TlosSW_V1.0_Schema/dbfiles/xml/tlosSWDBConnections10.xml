@@ -1,6 +1,6 @@
 <dbc:dbList xmlns:dbc="http://www.likyateknoloji.com/XML_dbconnection_types"
 	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_dbconnection_types  xmldb:exist:///db/TLOSSW/xsds/tlosSWDBConnections_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_dbconnection_types  ../xsds/tlosSWDBConnections_v_1_0.xsd">
 	<dbc:dbProperties ID="4">
 		<dbc:connectionName>Centos</dbc:connectionName>
 		<dbc:dbUrl>jdbc:postgresql://</dbc:dbUrl>

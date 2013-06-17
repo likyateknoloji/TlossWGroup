@@ -2,7 +2,7 @@
 <sla:ServiceLevelAgreement
 	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SLA_types xmldb:exist:///db/TLOSSW/xsds/tlosSWSLA_v_1_0.xsd http://www.likyateknoloji.com/XML_common_types xmldb:exist:///db/TLOSSW/xsds/tlosSWOrtak_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SLA_types ../xsds/tlosSWSLA_v_1_0.xsd http://www.likyateknoloji.com/XML_common_types ../xsds/tlosSWOrtak_v_1_0.xsd">
 	<sla:SLA ID="1">
 		<sla:Organization>Yok</sla:Organization>
 		<sla:Name>Genel SLA</sla:Name>

@@ -1,6 +1,6 @@
 <nrp:NrpeData xmlns:nrp="http://www.likyateknoloji.com/XML_nrpe_results"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_results xmldb:exist:///db/TLOSSW/xsds/tlosSWNrpeResult_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_results ../xsds/tlosSWNrpeResult_v_1_0.xsd">
 	<nrp:nrpeCall entry-name="sahin-laptop" port="5666" os="windows">
 		<nrp:message time="2012-02-21T01:01:01+0300">
 			<nrp:response command="alias_cpu">

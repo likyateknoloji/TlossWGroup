@@ -2,7 +2,7 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <pp:Licenses xmlns:com="http://www.likyateknoloji.com/XML_common_types"
 	xmlns:pp="http://www.likyateknoloji.com/XML_PP_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_PP_types xmldb:exist:///db/TLOSSW/xsds/tlosSWProgramProvisioning_v_1_0.xsd                          http://www.likyateknoloji.com/XML_common_types xmldb:exist:///db/TLOSSW/xsds/tlosSWOrtak_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_PP_types ../xsds/tlosSWProgramProvisioning_v_1_0.xsd http://www.likyateknoloji.com/XML_common_types ../xsds/tlosSWOrtak_v_1_0.xsd">
 	<pp:License licenseID="1">
 		<pp:Name>Tlos SW</pp:Name>
 		<pp:version>V1.0</pp:version>

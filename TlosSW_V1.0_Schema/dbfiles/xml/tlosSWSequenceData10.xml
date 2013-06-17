@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<com:TlosSequenceData xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_common_types xmldb:exist:///db/TLOSSW/xsds/tlosSWOrtak_v_1_0.xsd">
+<com:TlosSequenceData xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_common_types ../xsds/tlosSWOrtak_v_1_0.xsd">
     <com:jobId>15</com:jobId>
     <com:scenarioId>1</com:scenarioId>
     <com:calendarId>10</com:calendarId>

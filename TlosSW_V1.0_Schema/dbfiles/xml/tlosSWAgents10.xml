@@ -2,7 +2,7 @@
 <agnt:SWAgents xmlns:res="http://www.likyateknoloji.com/resource-extension-defs"
 	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAgent_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_agent_types ../xsds/tlosSWAgent_v_1_0.xsd">
 	<agnt:SWAgent id="1">
 		<res:Resource>WINSRVSTD2012</res:Resource>
 		<agnt:osType>Windows</agnt:osType>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ws:webServiceList xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_web_service_types xmldb:exist:///db/TLOSSW/xsds/tlosSWSJWebService_v_1_0.xsd">
+<ws:webServiceList xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_web_service_types ../xsds/tlosSWSJWebService_v_1_0.xsd">
    <ws:webServiceDefinition ID="1">
         <ws:serviceName>GlobalWeather</ws:serviceName>
         <ws:description>İstanbul'un hava durumu</ws:description>

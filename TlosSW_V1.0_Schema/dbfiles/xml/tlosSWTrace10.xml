@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<trc:TlosTraceData xmlns:trc="http://www.likyateknoloji.com/XML_trace_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_trace_types xmldb:exist:///db/TLOSSW/xsds/tlosSWTrace_v_1_0.xsd">
+<trc:TlosTraceData xmlns:trc="http://www.likyateknoloji.com/XML_trace_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_trace_types ../xsds/tlosSWTrace_v_1_0.xsd">
     <trc:trace id="1">
         <trc:trcTime millis="1084224175321">2004-05-10 17:22:55.321-01:00</trc:trcTime>
         <trc:trcUser id="12" password="1234" role="admin">Hasan</trc:trcUser>

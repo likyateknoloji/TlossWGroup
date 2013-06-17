@@ -1,4 +1,4 @@
-<state-types:GlobalStateDefinition xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/state-types xmldb:exist:///db/TLOSSW/xsds/tlosSWState_v_1_0.xsd">
+<state-types:GlobalStateDefinition xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/state-types ../xsds/tlosSWState_v_1_0.xsd">
     <state-types:GlobalState stId="1">
         <state-types:StateName>PENDING</state-types:StateName>
         <state-types:Code>1</state-types:Code>

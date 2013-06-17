@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<alm:alarmManagement xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_types xmldb:exist:///db/TLOSSW/xsds/tlosSWAlarm_v_1_0.xsd">
+<alm:alarmManagement xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_types ../xsds/tlosSWAlarm_v_1_0.xsd">
     <alm:alarm ID="1">
         <alm:name>Failed alarmi</alm:name>
         <alm:desc>Failed alarmi uret</alm:desc>

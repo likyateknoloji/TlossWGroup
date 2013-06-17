@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<cal:calendarList xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:cal="http://www.likyateknoloji.com/XML_calendar_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_calendar_types xmldb:exist:///db/TLOSSW/xsds/tlosSWCalendar_v_1_0.xsd">
+<cal:calendarList xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:cal="http://www.likyateknoloji.com/XML_calendar_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_calendar_types ../xsds/tlosSWCalendar_v_1_0.xsd">
     <calendarProperties xmlns="http://www.likyateknoloji.com/XML_calendar_types" id="0">
         <calendarName>kontrol</calendarName>
         <calendarPeriod>

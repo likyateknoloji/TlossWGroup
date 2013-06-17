@@ -1,6 +1,6 @@
 <rep:reportAll xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:rep="http://www.likyateknoloji.com/XML_report_types"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_report_types xmldb:exist:///db/TLOSSW/xsds/tlosSWReports_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_report_types ../xsds/tlosSWReports_v_1_0.xsd">
 	<rep:stateReport>
 		<rep:report xmlns="http://www.likyateknoloji.com/XML_report_types"
 			id="9" jsId="0" scope="job" LSIDateTime="2012-05-09T19:19:49.765+03:00">

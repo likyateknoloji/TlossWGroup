@@ -1,7 +1,7 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <err:SWErrors xmlns:res="http://www.likyateknoloji.com/resource-extension-defs"
 	xmlns:err="http://www.likyateknoloji.com/XML_error_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_error_types xmldb:exist:///db/TLOSSW/xsds/tlosSWError_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_error_types ../xsds/tlosSWError_v_1_0.xsd">
 	<err:SWError id="1" LSIDateTime="2011-05-30T09:40:10+03:00">
 		<res:Resource>WINSRVSTD2012</res:Resource>
 		<err:agentId>1</err:agentId>
