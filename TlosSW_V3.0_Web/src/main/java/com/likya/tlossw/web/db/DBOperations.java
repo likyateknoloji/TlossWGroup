@@ -1673,7 +1673,7 @@ public class DBOperations implements Serializable {
 
 		JobProperties jobProperties = JobProperties.Factory.newInstance();
 
-		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + decNsSt + "hs:getJobFromJobName(" + "xs:string(\"" + documentName + "\")" + ", \"" + jobName + "\")";
+		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + decNsSt + "hs:getJobFromJobName(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", \"" + jobName + "\")";
 
 		XPathQueryService service;
 		try {
@@ -1738,7 +1738,7 @@ public class DBOperations implements Serializable {
 	public boolean insertJob(String documentName, String jobPropertiesXML, String jobPath) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:insertJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:insertJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		XPathQueryService service;
 		try {
@@ -1766,7 +1766,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJobExistence(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
+			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJobExistence(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
