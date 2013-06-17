@@ -97,30 +97,32 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		while (pathTokenizer.hasMoreTokens()) {
 			scenarioNameList.add(pathTokenizer.nextToken());
 		}
-		
+
 		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
 		deleteSubtree(scenarioNameList, 0, nodeList);
 	}
-	
+
 	private void deleteSubtree(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList) {
+		boolean result = false;
 		for (TreeNode node : nodeList) {
-			
+
 			String scenarioName = scenarioNameList.get(index);
 			if (node.getData().equals(scenarioName)) {
 				if (scenarioNameList.size() == index + 1) {
-					TreeNode parent = node.getParent();
-				    parent.getChildren().remove(node);
-					System.out.println("silindi");
+					result = true;
 				} else {
 					deleteSubtree(scenarioNameList, ++index, node.getChildren());
 				}
 			}
 
-			if (node.isLeaf()) {
-				continue;
+			if (result) {
+				TreeNode parent = node.getParent();
+				parent.getChildren().remove(node);
+
+				break;
 			}
 		}
-		
+
 	}
 
 	public void constructTree(Scenario[] scenario) {
