@@ -1,15 +1,18 @@
-<ftp:ftpConnections xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_ftp_adapter_types ../xsds/tlosSWSJFTPAdapters_v_1_0.xsd">
-	<ftp:ftpProperties id="1">
+<ftp:ftpConnections xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_ftp_adapter_types ../xsds/tlosSWSJFTPAdapters_v_1_0.xsd">
+	<ftp:ftpProperties id="3">
 		<com:active>yes</com:active>
 		<ftp:connection>
-			<com:connName>Fedora VM</com:connName>
+			<com:connName>Fedora</com:connName>
 			<com:userName>likya</com:userName>
 			<com:userPassword>likya</com:userPassword>
-			<ftp:ftpPortNumber>0</ftp:ftpPortNumber>
+			<ftp:ftpPortNumber>21</ftp:ftpPortNumber>
 			<com:ipAddress>192.168.1.39</com:ipAddress>
 		</ftp:connection>
 	</ftp:ftpProperties>
-	<ftp:ftpProperties id="2">
+	<!-- ftp:ftpProperties id="2">
 		<com:active>yes</com:active>
 		<ftp:connection>
 			<com:connName>Likya 2 numara</com:connName>
@@ -25,5 +28,5 @@
 				<ftp:useProxy>false</ftp:useProxy>
 			</ftp:sftpProperties>
 		</ftp:ftpSecure>
-	</ftp:ftpProperties>
+	</ftp:ftpProperties -->
 </ftp:ftpConnections>
