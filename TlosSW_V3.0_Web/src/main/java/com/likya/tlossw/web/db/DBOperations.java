@@ -83,6 +83,7 @@ import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "dbOperations")
 @SessionScoped
@@ -114,10 +115,17 @@ public class DBOperations implements Serializable {
 	private ExistConnectionHolder existConnectionHolder;
 	
 	private String xQueryModuleUrl = null;
+	private String dbUrl = "xmldb:exist:";
+	private String rootUrl = "//db/";
+	private String dataDocUrl = "";
+	
+	private String xmlsUrl = "";
 
 	@PostConstruct
 	public void init() {
-		xQueryModuleUrl = " at \"xmldb:exist://db/" + ExistClient.dbCollectionName + "/modules";
+		xQueryModuleUrl = " at \"" + dbUrl + rootUrl + ExistClient.dbCollectionName + "/modules";
+		dataDocUrl = "//db/" + ExistClient.dbCollectionName + "/" + ConstantDefinitions.JOB_DEFINITION_DATA;
+		xmlsUrl = dbUrl + rootUrl + ExistClient.dbCollectionName + "/xmls/";
 	}
 	
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
@@ -520,7 +528,7 @@ public class DBOperations implements Serializable {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + decNsSt + "hs:getTlosDataXml(xs:string(\"" + documentName + "\"))";
+			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + decNsSt + "hs:getTlosDataXml(xs:string(\"" + xmlsUrl + documentName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -743,7 +751,7 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Scenario> getScenarioList() throws XMLDBException {
 
-		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:scenarioList()";
+		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:scenarioList(" + dataDocUrl + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -3407,4 +3415,5 @@ public class DBOperations implements Serializable {
 	public void setExistConnectionHolder(ExistConnectionHolder existConnectionHolder) {
 		this.existConnectionHolder = existConnectionHolder;
 	}
+
 }
