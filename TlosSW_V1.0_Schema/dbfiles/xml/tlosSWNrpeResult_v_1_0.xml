@@ -1,66 +1,68 @@
-<nrp:NrpeData xmlns:nrp="http://www.likyateknoloji.com/XML_nrpe_results" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_results xmldb:exist:///db/TLOSSW/xsds/tlosSWNrpeResult_v_1_0.xsd">
-<nrp:nrpeCall entry-name="sahin-laptop" port="5666" os="windows">
-<nrp:message time="2012-02-21T01:01:01+0300">
-<nrp:response command="alias_cpu">
-<nrp:cpu timein="1" birim="%">9</nrp:cpu>
-<nrp:cpu timein="5" birim="%">8</nrp:cpu>
-<nrp:cpu timein="15" birim="%">12</nrp:cpu>
-</nrp:response>
-<nrp:response command="alias_disk">
-<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
-<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
-</nrp:response>
-<nrp:response command="alias_mem">
-<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
-<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
-</nrp:response>
-</nrp:message>
-<nrp:message time="2012-02-21T01:01:31+0300">
-<nrp:response command="alias_cpu">
-<nrp:cpu timein="1" birim="%">9</nrp:cpu>
-<nrp:cpu timein="5" birim="%">8</nrp:cpu>
-<nrp:cpu timein="15" birim="%">13</nrp:cpu>
-</nrp:response>
-<nrp:response command="alias_disk">
-<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
-<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
-</nrp:response>
-<nrp:response command="alias_mem">
-<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
-<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
-</nrp:response>
-</nrp:message>
-</nrp:nrpeCall>
-<nrp:nrpeCall entry-name="laptop-hakan" port="5666" os="windows">
-<nrp:message time="2012-02-21T01:01:01+0300">
-<nrp:response command="alias_cpu">
-<nrp:cpu timein="1" birim="%">10</nrp:cpu>
-<nrp:cpu timein="5" birim="%">8</nrp:cpu>
-<nrp:cpu timein="15" birim="%">13</nrp:cpu>
-</nrp:response>
-<nrp:response command="alias_disk">
-<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
-<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
-</nrp:response>
-<nrp:response command="alias_mem">
-<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
-<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
-</nrp:response>
-</nrp:message>
-<nrp:message time="2012-02-21T01:01:31+0300">
-<nrp:response command="alias_cpu">
-<nrp:cpu timein="1" birim="%">11</nrp:cpu>
-<nrp:cpu timein="5" birim="%">8</nrp:cpu>
-<nrp:cpu timein="15" birim="%">13</nrp:cpu>
-</nrp:response>
-<nrp:response command="alias_disk">
-<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
-<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
-</nrp:response>
-<nrp:response command="alias_mem">
-<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
-<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
-</nrp:response>
-</nrp:message>
-</nrp:nrpeCall>
+<nrp:NrpeData xmlns:nrp="http://www.likyateknoloji.com/XML_nrpe_results"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_results xmldb:exist:///db/TLOSSW/xsds/tlosSWNrpeResult_v_1_0.xsd">
+	<nrp:nrpeCall entry-name="sahin-laptop" port="5666" os="windows">
+		<nrp:message time="2012-02-21T01:01:01+0300">
+			<nrp:response command="alias_cpu">
+				<nrp:cpu timein="1" birim="%">9</nrp:cpu>
+				<nrp:cpu timein="5" birim="%">8</nrp:cpu>
+				<nrp:cpu timein="15" birim="%">12</nrp:cpu>
+			</nrp:response>
+			<nrp:response command="alias_disk">
+				<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+				<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
+			</nrp:response>
+			<nrp:response command="alias_mem">
+				<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
+				<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
+			</nrp:response>
+		</nrp:message>
+		<nrp:message time="2012-02-21T01:01:31+0300">
+			<nrp:response command="alias_cpu">
+				<nrp:cpu timein="1" birim="%">9</nrp:cpu>
+				<nrp:cpu timein="5" birim="%">8</nrp:cpu>
+				<nrp:cpu timein="15" birim="%">13</nrp:cpu>
+			</nrp:response>
+			<nrp:response command="alias_disk">
+				<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+				<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
+			</nrp:response>
+			<nrp:response command="alias_mem">
+				<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
+				<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
+			</nrp:response>
+		</nrp:message>
+	</nrp:nrpeCall>
+	<nrp:nrpeCall entry-name="laptop-hakan" port="5666" os="windows">
+		<nrp:message time="2012-02-21T01:01:01+0300">
+			<nrp:response command="alias_cpu">
+				<nrp:cpu timein="1" birim="%">10</nrp:cpu>
+				<nrp:cpu timein="5" birim="%">8</nrp:cpu>
+				<nrp:cpu timein="15" birim="%">13</nrp:cpu>
+			</nrp:response>
+			<nrp:response command="alias_disk">
+				<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+				<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
+			</nrp:response>
+			<nrp:response command="alias_mem">
+				<nrp:mem forWhat="used" birim="G">3.31</nrp:mem>
+				<nrp:mem forWhat="free" birim="G">4.68</nrp:mem>
+			</nrp:response>
+		</nrp:message>
+		<nrp:message time="2012-02-21T01:01:31+0300">
+			<nrp:response command="alias_cpu">
+				<nrp:cpu timein="1" birim="%">11</nrp:cpu>
+				<nrp:cpu timein="5" birim="%">8</nrp:cpu>
+				<nrp:cpu timein="15" birim="%">13</nrp:cpu>
+			</nrp:response>
+			<nrp:response command="alias_disk">
+				<nrp:disk forWhat="used" birim="G">53.19</nrp:disk>
+				<nrp:disk forWhat="free" birim="G">24.83</nrp:disk>
+			</nrp:response>
+			<nrp:response command="alias_mem">
+				<nrp:mem forWhat="used" birim="G">3.32</nrp:mem>
+				<nrp:mem forWhat="free" birim="G">4.67</nrp:mem>
+			</nrp:response>
+		</nrp:message>
+	</nrp:nrpeCall>
 </nrp:NrpeData>
