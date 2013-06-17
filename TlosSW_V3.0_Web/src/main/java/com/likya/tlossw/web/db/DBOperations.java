@@ -1711,7 +1711,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJob(" + "xs:string(\"" + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
+			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJob(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1796,7 +1796,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + ", " + jobId + ")";
+			String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:getJobFromId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", " + jobId + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -2952,7 +2952,7 @@ public class DBOperations implements Serializable {
 	public boolean updateJob(String documentName, String jobPropertiesXML, String jobPath) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:updateJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:updateJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		XPathQueryService service = null;
 		try {
