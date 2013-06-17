@@ -468,8 +468,8 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	public boolean deleteScenario() {
 		boolean result = true;
 		if (getDbOperations().deleteScenario(ConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
-			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 			removeScenarioSubtree(scenarioPathInScenario);
+			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 		} else {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.delete", null);
 			result = false;
