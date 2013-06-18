@@ -95,7 +95,6 @@ public class LoginBean extends LoginBase implements Serializable {
 		jmxAppUser.setAppUser(appUser);
 
 		Object o = dbOperations.checkUser(jmxAppUser);
-		jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
 		if (o instanceof JmxUser) {
 
