@@ -9,23 +9,37 @@
 	<h:form id="jsTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:confirmDialog id="confirmDialog"
+		<p:confirmDialog id="scenarioConfirmDialog"
 			style="z-index: 999 !important;"
 			message="#{msgs['tlos.ask.delete.scenario.confirm']}" appendToBody="true"
 			header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-			widgetVar="deleteConfirmation">
-			<p:commandButton id="confirm" immediate="true" process="@this"
+			widgetVar="deleteScenarioConfirmation">
+			<p:commandButton id="confirmScenarioDelete" immediate="true" process="@this"
 				value="#{msgs['tlos.ask.delete.confirm1']}"
-				update="tree :jobDefinitionForm" onclick="deleteConfirmation.hide()"
+				update="tree :jobDefinitionForm" onclick="deleteScenarioConfirmation.hide()"
 				actionListener="#{jsDefinitionMBean.deleteScenarioAction}" />
-			<p:commandButton id="decline"
+			<p:commandButton id="declineScenarioDelete"
 				value="#{msgs['tlos.ask.delete.confirm2']}"
-				onclick="deleteConfirmation.hide()" type="button" />
+				onclick="deleteScenarioConfirmation.hide()" type="button" />
 		</p:confirmDialog>
-					
+
+		<p:confirmDialog id="jobConfirmDialog"
+			style="z-index: 999 !important;"
+			message="#{msgs['tlos.ask.delete.job.confirm']}" appendToBody="true"
+			header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+			widgetVar="deleteJobConfirmation">
+			<p:commandButton id="confirmJobDelete" immediate="true" process="@this"
+				value="#{msgs['tlos.ask.delete.confirm1']}"
+				update="tree :jobDefinitionForm" onclick="deleteJobConfirmation.hide()"
+				actionListener="#{jsDefinitionMBean.deleteJobAction}" />
+			<p:commandButton id="declineJobDelete"
+				value="#{msgs['tlos.ask.delete.confirm2']}"
+				onclick="deleteJobConfirmation.hide()" type="button" />
+		</p:confirmDialog>
+
 		<p:contextMenu for="tree" nodeType="scenario">
 			<p:menuitem value="#{msgs['tlos.button.delete']}"
-				onclick="deleteConfirmation.show()" icon="ui-icon-close" >
+				onclick="deleteScenarioConfirmation.show()" icon="ui-icon-close" >
 			</p:menuitem>
 			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
 				update="tree :jobDefinitionForm"
@@ -35,10 +49,9 @@
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">
-			<!-- p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
-				actionListener="#{jSTree.viewJob}" icon="ui-icon-search" /-->
-			<p:menuitem value="#{msgs['tlos.button.delete']}" update="tree"
-				actionListener="#{jSTree.deleteJob}" icon="ui-icon-close" />
+			<p:menuitem value="#{msgs['tlos.button.delete']}"
+				onclick="deleteJobConfirmation.show()" icon="ui-icon-close" >
+			</p:menuitem>
 		</p:contextMenu>
 
 		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
