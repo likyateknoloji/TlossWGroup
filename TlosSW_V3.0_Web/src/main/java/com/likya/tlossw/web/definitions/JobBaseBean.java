@@ -1894,6 +1894,20 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jSTree.removeScenarioSubtree(scenarioPath);
 	}
 
+	// işe sağ tıklayarak sil dediğimizde buraya geliyor
+	public boolean deleteJob() {
+		boolean result = true;
+		if (getDbOperations().deleteJob(ConstantDefinitions.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
+			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID());
+			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
+		} else {
+			addMessage("jobDelete", FacesMessage.SEVERITY_ERROR, "tlos.error.job.delete", null);
+			result = false;
+		}
+
+		return result;
+	}
+
 	public String getJobPropertiesXML() {
 		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);

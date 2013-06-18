@@ -122,7 +122,43 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 				break;
 			}
 		}
+	}
 
+	// silinen işi ağaçtan kaldırıyor
+	public void removeJobNode(String jobPath, String jobName) {
+		TreeNode selectedNode = root;
+
+		ArrayList<String> scenarioNameList = new ArrayList<>();
+		StringTokenizer pathTokenizer = new StringTokenizer(jobPath, "/");
+		while (pathTokenizer.hasMoreTokens()) {
+			scenarioNameList.add(pathTokenizer.nextToken());
+		}
+		scenarioNameList.add(jobName);
+
+		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
+		deleteJobNode(scenarioNameList, 0, nodeList);
+	}
+
+	private void deleteJobNode(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList) {
+		boolean result = false;
+		for (TreeNode node : nodeList) {
+
+			String scenarioName = scenarioNameList.get(index);
+			if (node.getData().equals(scenarioName)) {
+				if (scenarioNameList.size() == index + 1) {
+					result = true;
+				} else {
+					deleteSubtree(scenarioNameList, ++index, node.getChildren());
+				}
+			}
+
+			if (result) {
+				TreeNode parent = node.getParent();
+				parent.getChildren().remove(node);
+
+				break;
+			}
+		}
 	}
 
 	public void constructTree(Scenario[] scenario) {

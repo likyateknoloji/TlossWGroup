@@ -54,7 +54,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 	private String treePath;
 	private String scenarioPath;
-	
+
 	// senaryonun senaryo ağacındaki pathinin sadece "isim | id" ve "/" ile oluşturulmuş hali
 	private String scenarioPathInScenario;
 
@@ -448,7 +448,6 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
 
-
 				scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
 				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
 			}
@@ -471,10 +470,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			removeScenarioSubtree(scenarioPathInScenario);
 			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 		} else {
-			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.delete", null);
+			addMessage("scenarioDelete", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.delete", null);
 			result = false;
 		}
-		
+
 		return result;
 	}
 

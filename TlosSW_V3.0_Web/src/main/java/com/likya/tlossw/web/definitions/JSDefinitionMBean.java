@@ -343,6 +343,43 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
+	public void deleteJobAction() {
+		boolean result = false;
+		if (jobDefCenterPanel.equals(BATCH_PROCESS_PAGE)) {
+			if (getBatchProcessPanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(WEB_SERVICE_PAGE)) {
+			if (getWebServicePanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
+			if (getFtpPanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(FILE_PROCESS_PAGE)) {
+			if (getFileProcessPanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(FILE_LISTENER_PAGE)) {
+			if (getFileListenerPanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(DB_JOBS_PAGE)) {
+			if (getDbJobsPanelMBean().deleteJob()) {
+				result = true;
+			}
+		} else if (jobDefCenterPanel.equals(PROCESS_NODE_PAGE)) {
+			if (getProcessNodePanelMBean().deleteJob()) {
+				result = true;
+			}
+		}
+
+		if (result) {
+			cancelJsAction();
+		}
+	}
+
 	public String getJobDefCenterPanel() {
 		return jobDefCenterPanel;
 	}
