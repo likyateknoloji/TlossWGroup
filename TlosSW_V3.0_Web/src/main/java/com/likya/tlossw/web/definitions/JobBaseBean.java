@@ -298,6 +298,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public static final String INNER_DUPLICATE_NAME = "2";
 	public static final String OUTER_DUPLICATE_NAME = "3";
 
+	abstract public void fillTabs();
+	
 	public void fillJobPanel() {
 		fillBaseInfosTab();
 		fillTimeManagementTab();

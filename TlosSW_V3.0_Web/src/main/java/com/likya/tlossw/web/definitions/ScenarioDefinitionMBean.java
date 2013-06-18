@@ -533,4 +533,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		this.scenarioPathInScenario = scenarioPathInScenario;
 	}
 
+	@Override
+	public void fillTabs() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
