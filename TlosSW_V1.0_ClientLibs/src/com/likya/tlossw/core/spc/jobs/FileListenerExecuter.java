@@ -115,13 +115,13 @@ public class FileListenerExecuter extends FileJob {
 
 					if (fileListener.getFileNameType() == FileNameType.FULL_TEXT) {
 
-						File file = new File(directory + "/" + fileName);
+						File file = new File(directory + File.separator + fileName);
 
 						if (file.exists()) {
-							myLogger.info("\"" + directory + "/" + fileName + "\" exists");
+							myLogger.info("\"" + directory + File.separator + fileName + "\" exists");
 
 							try {
-								outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "\"" + directory + "/" + fileName + "\" zaten mevcut" + System.getProperty("line.separator"));
+								outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "\"" + directory + File.separator + fileName + "\" zaten mevcut" + System.getProperty("line.separator"));
 							} catch (IOException e) {
 								handleException(e, myLogger);
 							}
