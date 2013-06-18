@@ -21,6 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -28,17 +29,10 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DssDbUtils {
 	
-	private static final String standartNameSpaceDeclaritions = "declare namespace dat  = \"http://www.likyateknoloji.com/XML_data_types\";  "
-			   + "declare namespace com  = \"http://www.likyateknoloji.com/XML_common_types\";  "
-			   + "declare namespace cal  = \"http://www.likyateknoloji.com/XML_calendar_types\";  "
-			   + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";  "	       				   
-			   + "declare namespace xsi  = \"http://www.w3.org/2001/XMLSchema-instance\";  "
-			   + "declare namespace fn   = \"http://www.w3.org/2005/xpath-functions\";  "
-			   + "declare namespace lrns   = \"www.likyateknoloji.com/XML_SWResourceNS_types\";  "
-			   + "declare namespace nrp   = \"www.likyateknoloji.com/XML_nrpe_types\";  "	       				   
-		       + "declare namespace res = \"http://www.likyateknoloji.com/resource-extension-defs\"; ";
-	
-	
+	private static final String standartNameSpaceDeclaritions = ConstantDefinitions.decNsDat + ConstantDefinitions.decNsCom + ConstantDefinitions.decNsCal
+			   + ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsXsi + ConstantDefinitions.decNsFn 
+			   + ConstantDefinitions.decNsLrns + ConstantDefinitions.decNsNrp + ConstantDefinitions.decNsRes;
+
 	public static ResourceAgentList swFindResourcesForAJob(JobProperties jobProperties){
 
 		JobPropFuncPass jobPropFuncPass = JobPropFuncPass.Factory.newInstance();
@@ -57,10 +51,8 @@ public class DssDbUtils {
 		
 		ResourceAgentList resourceAgentList = ResourceAgentList.Factory.newInstance();
 		//System.out.println("  > jobPropFuncPassXML : " + jobPropFuncPassXML);
-		String xQueryStr = "xquery version \"1.0\";"
-		                   + "import module namespace dss=\"http://tlos.dss.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDSSOperations.xquery\";" 
-		                   + standartNameSpaceDeclaritions
-		                   + "dss:SWFindResourcesForAJob("+ jobPropFuncPassXML  +", fn:current-dateTime())";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dssNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDSSOperations.xquery\";" + 
+			standartNameSpaceDeclaritions + "dss:SWFindResourcesForAJob("+ jobPropFuncPassXML  +", fn:current-dateTime())";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -68,12 +60,7 @@ public class DssDbUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
-		
-		try {
+
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -102,12 +89,9 @@ public class DssDbUtils {
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 		
 		Alarm alarm= Alarm.Factory.newInstance();
-		
-		String xQueryStr = "xquery version \"1.0\";"
-		                   + "import module namespace lk = \"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAlarmOperations.xquery\";" 
-		                   + standartNameSpaceDeclaritions
-	       				   + "declare namespace state-types=\"http://www.likyateknoloji.com/state-types\";" 
-					       + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + 
+				standartNameSpaceDeclaritions + ConstantDefinitions.decNsSt + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -115,13 +99,7 @@ public class DssDbUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			System.out.println("  > Alarm sorgusunda Hata(kod : 1123 ! " + xQueryStr);
-			e2.printStackTrace();
-			return null;
-		}
-		
-		try {
+
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -138,6 +116,5 @@ public class DssDbUtils {
 		
 		return alarm;
 	}
-
 
 }

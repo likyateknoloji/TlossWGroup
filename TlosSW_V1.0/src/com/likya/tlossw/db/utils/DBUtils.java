@@ -53,6 +53,7 @@ import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -66,18 +67,15 @@ public class DBUtils {
 		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDailyOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getSolsticeJobsAndScenarios()";
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDailyOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:getSolsticeJobsAndScenarios()";
-
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -167,7 +165,8 @@ public class DBUtils {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:updateLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:updateLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -175,12 +174,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -198,7 +192,8 @@ public class DBUtils {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:updateFirstLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "'])";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:updateFirstLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "'])";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -206,12 +201,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -230,7 +220,8 @@ public class DBUtils {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertJobInTheBeginningLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertJobInTheBeginningLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -238,12 +229,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -343,18 +329,15 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDailyOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:doPlanAndSelectJobsAndScenarios(" + scenarioId + "," + planId + ")";
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}	
-		
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDailyOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:doPlanAndSelectJobsAndScenarios(" + scenarioId + "," + planId + ")";
 
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -389,18 +372,15 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(" + "xs:string(\"" + documentName + "\")" + ")";
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:getTlosDataXml(" + "xs:string(\"" + documentName + "\")" + ")";
-
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -429,18 +409,15 @@ public class DBUtils {
 		GlobalStateDefinition globalStateDefinition = null;
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleStateOperations.xquery\";" + 
+				ConstantDefinitions.decNsSt + "lk:getTlosGlobalStates()";
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleStateOperations.xquery\";" + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";    " + "lk:getTlosGlobalStates()";
-
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -469,18 +446,15 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleTlosManagementOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsCon + "hs:getTlosConfig()";
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleTlosManagementOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace con =\"http://www.likyateknoloji.com/XML_config_types\";  " + "hs:getTlosConfig()";
-
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -509,20 +483,16 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleParameterOperations.xquery\";" + "lk:parameterList(1,10)";
+
+		ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+		
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleParameterOperations.xquery\";" + "lk:parameterList(1,10)";
-
-		ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -549,7 +519,8 @@ public class DBUtils {
 
 	public static boolean insertFreeJobToDailyXML(String documentName, String jobPropertiesXML, String runId) {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertFreeJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + runId + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertFreeJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + runId + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -557,12 +528,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -577,7 +543,8 @@ public class DBUtils {
 
 		SWAgents swAgents = null;
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery\";" + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";  " + "lk:getAgents()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+				ConstantDefinitions.decNsAgnt + "lk:getAgents()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -585,12 +552,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -613,7 +575,8 @@ public class DBUtils {
 
 	public static boolean insertJobAgentId(String documentName, String agentId, String jobId, String jobPath) {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertJobAgentIdLock(" + "xs:string(\"" + documentName + "\")" + "," + "'" + agentId + "'" + "," + "'" + jobId + "'" + "," + jobPath + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertJobAgentIdLock(" + "xs:string(\"" + documentName + "\")" + "," + "'" + agentId + "'" + "," + "'" + jobId + "'" + "," + jobPath + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -621,12 +584,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -641,7 +599,8 @@ public class DBUtils {
 
 		String jobPropertiesXML = XmlUtils.getJobPropertiesXML(jobProperties);
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:insertLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -649,12 +608,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -672,7 +626,8 @@ public class DBUtils {
 
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "declare namespace state-types = \"http://www.likyateknoloji.com/state-types\";  " + "hs:insertJobStateLock(" + "xs:string(\"" + documentName + "\")" + "," + liveStateInfoXML + "," + jobPath + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:insertJobStateLock(" + "xs:string(\"" + documentName + "\")" + "," + liveStateInfoXML + "," + jobPath + ")";
 
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + xQueryStr);
@@ -682,12 +637,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return null;
-		}
 
-		try {
 			ResourceSet result = service.query(xQueryStr);
 			SpaceWideRegistry.getGlobalLogger().debug(" >> Query Result >> " + result);
 		} catch (XMLDBException e) {
@@ -702,8 +652,7 @@ public class DBUtils {
 
 		int errorId = -1;
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"errorId\")";
-		// + "sq:getNextErrorId()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.sqNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"errorId\")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -711,8 +660,8 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
 			return -1;
 		}
 
@@ -731,7 +680,7 @@ public class DBUtils {
 
 		Person person = null;
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs = \"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleUserOperations.xquery\";" + "hs:getSubscribers(" + userId + ",'" + role + "')";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:getSubscribers(" + userId + ",'" + role + "')";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -739,8 +688,8 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
+		} catch (XMLDBException e) {
+			e.printStackTrace();
 			return null;
 		}
 
@@ -769,7 +718,8 @@ public class DBUtils {
 		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
 
 		// TODO dailyscenarios.xml'de gerekli kisma logname yazilacak
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:??????(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + "," + logFileName + " )";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:??????(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + "," + logFileName + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -777,12 +727,7 @@ public class DBUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
 
-		try {
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -795,7 +740,8 @@ public class DBUtils {
 
 	public static FtpProperties searchFTPConnectionById(int ftpConnectionId) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\"; import module namespace fc = \"http://fc.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+				"fc:searchFTPConnectionById(" + ftpConnectionId + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -824,7 +770,8 @@ public class DBUtils {
 
 	public static DbProperties searchDBPropertiesById(int dbPropertiesID) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbConnection(" + dbPropertiesID + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + ConstantDefinitions.decNsSt + "db:getDbConnection(" + dbPropertiesID + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -853,7 +800,8 @@ public class DBUtils {
 
 	public static DbConnectionProfile searchDBConnectionProfilesById(int dbCPID) throws XMLDBException {
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace db=\"http://db.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleDBConnectionsOperations.xquery\";" + "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";" + "db:getDbCP(" + dbCPID + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + ConstantDefinitions.decNsSt + "db:getDbCP(" + dbCPID + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();

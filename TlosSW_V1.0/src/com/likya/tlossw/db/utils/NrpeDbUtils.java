@@ -1,7 +1,7 @@
 /*
  * TlosSW_V1.0
  * com.likya.tlossw.db.utils : NrpeDbUtils.java
- * @author Þahin Kekevi
+ * @author ï¿½ahin Kekevi
  * Tarih : 13.May.2011 09:12:00
  */
 
@@ -17,6 +17,7 @@ import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.nrpe.NrpeCallDocument.NrpeCall;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -29,10 +30,8 @@ public class NrpeDbUtils {
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 
 		String nrpeCallXML = nrpeCall.xmlText(xmlOptions);
-		
-		String xQueryStr = "xquery version \"1.0\";" +
-					       "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleNrpeOperations.xquery\";" +
-					       "lk:insertNrpe("+ nrpeCallXML + ")";
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + "lk:insertNrpe("+ nrpeCallXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -40,12 +39,7 @@ public class NrpeDbUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-		
-		try {
+
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {
@@ -55,12 +49,11 @@ public class NrpeDbUtils {
 
 		return true;
 	}
-	
+
 	public static boolean deleteExpiredNrpeMessages(String currentTimeZone , int expireHour){
-		
-		String xQueryStr = "xquery version \"1.0\";" +
-					       "import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleNrpeOperations.xquery\";" +
-					       "lk:deleteExpiredNrpeMessagesLock("+ "'" + currentTimeZone + "'" + "," + expireHour + ")";
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + 
+				"lk:deleteExpiredNrpeMessagesLock("+ "'" + currentTimeZone + "'" + "," + expireHour + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -68,12 +61,7 @@ public class NrpeDbUtils {
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-		
-		try {
+
 			@SuppressWarnings("unused")
 			ResourceSet result = service.query(xQueryStr);
 		} catch (XMLDBException e) {

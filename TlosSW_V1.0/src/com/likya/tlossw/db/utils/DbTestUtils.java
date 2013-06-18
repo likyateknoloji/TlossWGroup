@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.agent.RxMessageTypeEnumerationDocument.RxMe
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class DbTestUtils {
@@ -24,25 +25,18 @@ public class DbTestUtils {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
 		String xmlContent = null;
 		JobProperties jobProperties = null;
-		
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleTestOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "lk:getJob("+ jobPath + "," + jobName + " )";
+
+		XPathQueryService service = null;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
-		} catch (XMLDBException e1) {
-			e1.printStackTrace();
-		}
-		
-		String xQueryStr = "xquery version \"1.0\";" +
-		"import module namespace lk=\"http://likya.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleTestOperations.xquery\";" +
-	      "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  "+
-		  "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  "+
-	      "lk:getJob("+ jobPath + "," + jobName + " )";
 
-		ResourceIterator i;
-		try {
+			ResourceIterator i;
 			ResourceSet result = service.query(xQueryStr);
 			i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -69,6 +63,4 @@ public class DbTestUtils {
 		
 		return rxMessage;
 	}
-
-	
 }
