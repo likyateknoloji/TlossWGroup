@@ -8,7 +8,9 @@ public class CommonConstantDefinitions {
 	public static final String DAILY_SCENARIOS_DATA = "tlosSWDailyScenarios10.xml";
 	public static final String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
 	public static final String JOB_DEFINITION_DATA = "tlosSWData10.xml";
-
+	public static final String PLAN_DEFINITION_DATA = "tlosSWDailyPlan10.xml";
+	public static final String CALENDAR_DEFINITION_DATA = "tlosSWCalendar10.xml";
+	
 	/**
 	 * Exist arabirimi tanımları
 	 */
