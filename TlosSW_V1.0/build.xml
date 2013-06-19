@@ -1,6 +1,6 @@
 <project name="TlosSW_V1.0" default="build-all" basedir=".">
 
-	<property name="appname" value="TlosSW" />
+	<property name="appname" value="tlossw-server" />
 
 	<property file="build.properties" />
 
@@ -23,7 +23,7 @@
 	<!-- war, jar, ear files -->
 
 	<target name="jar" depends="compile">
-		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="jar" value="${appname}-V${version.num}${buildchar}${minor.number}.jar" />
 		
 		<manifest file="MANIFEST.MF">
 			<attribute name="Main-Class" value="com.likya.tlossw.TlosSpaceWide"/>
@@ -39,7 +39,7 @@
 			</fileset>
 		</jar>
 		
-		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="src.jar" value="${appname}-src-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
 			</fileset>
@@ -81,7 +81,7 @@
 			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_utils.dir}/tlossw-utils-V${version.num}${buildchar}${minor.number}.jar" />	
-			<pathelement location="${tlos_clientLibs.dir}/TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar" />	
+			<pathelement location="${tlos_clientLibs.dir}/tlossw-clientlibs-V${version.num}${buildchar}${minor.number}.jar" />	
 			<!--pathelement location="${tlos_client.dir}/TlosSW_AgentClient_V${version.num}${buildchar}${minor.number}.jar" /-->	
 			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${sharedlib.dir}/javamail/mail.jar" />
@@ -127,7 +127,7 @@
 		
 		<mkdir dir="test"/>
 		<copy file="${jar}" todir="test"/>
-		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
 	</target>
 
 </project>
