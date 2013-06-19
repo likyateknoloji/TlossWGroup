@@ -72,7 +72,6 @@ import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.db.utils.DBUtils;
-import com.likya.tlossw.exceptions.XSLLoadException;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
@@ -165,32 +164,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		return false;
 	}
-
-	/*public int getNextUserId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int userId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"userId\")";
-		// + "sq:getNextUserId()";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			userId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return userId;
-	}*/
 
 	public ArrayList<Person> searchUser(JmxUser jmxUser, String personXML) throws XMLDBException {
 
@@ -374,32 +347,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		return person;
 	}
 
-	/*public int getNextCalendarId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int calendarId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"calendarId\")";
-		// + "sq:getNextCalendarId()";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			calendarId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return calendarId;
-	}*/
-
 	public Object insertCalendar(JmxUser jmxUser, String calendarPropertiesXML) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -450,32 +397,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		return calendarNames;
 	}
 
-	/*public int getNextScenarioId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int scenarioId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"scenarioId\")";
-		// + "sq:getNextScenarioId()";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			scenarioId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return scenarioId;
-	}*/
-
 	public Object insertScenario(JmxUser jmxUser, String documentName, String scenarioXML, String scenarioPath) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -501,32 +422,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		return true;
 	}
-
-	/*public int getNextJobId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int jobId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"jobId\")";
-		// + "sq:getNextJobId()";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			jobId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return jobId;
-	}*/
 
 	public Object insertJob(JmxUser jmxUser, String documentName, String jobPropertiesXML, String jobPath) {
 
@@ -1154,32 +1049,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 //		// return base64Decoder.getByteArray();
 //	}
 
-	/*public int getNextTraceId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int userId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"traceId\")";
-		// + "sq:getNextTraceId()";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			userId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return userId;
-	}*/
-
 	public Object insertTrace(JmxUser jmxUser, String traceXML) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -1210,25 +1079,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 	// XML lerde transformasyon yapmak icin
 	// Hakan
-//	public static StreamSource getTransformXslCode(String codeOfXSLT) throws IOException {
-//
-//		String tlosJobTransformXsl = null;
-//
-//		try {
-//			tlosJobTransformXsl = getDbDoc(codeOfXSLT);
-//
-//		} catch (XMLDBException e) {
-//			e.printStackTrace();
-//		} catch (XSLLoadException e) {
-//			e.printStackTrace();
-//		}
-//
-//		StringReader xslReader = new StringReader(tlosJobTransformXsl);
-//
-//		StreamSource streamSource = new StreamSource(xslReader);
-//
-//		return streamSource;
-//	}
+
 
 //	public static byte[] getHtmlContent() throws IOException {
 //
@@ -1404,26 +1255,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 //			throw e;
 //		}
 //	}
-
-	public String getDbDoc(String xqueryMethod) throws XMLDBException, XSLLoadException {
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleXslOperations.xquery\";" + 
-				ConstantDefinitions.decNsFo + ConstantDefinitions.decNsXslfo + xqueryMethod;
-
-		ResourceSet result = service.query(xQueryStr);
-		if (result == null) {
-			throw new XSLLoadException("moduleXslOperations.xquery returned empty result !");
-		}
-		String tlosData = (String) result.getResource(0).getContent();
-
-		return tlosData;
-	}
 
 	// Web ekranindaki kaynak listesi agacinda herhangi bir Nagios Agent secildiginde buraya geliyor, sunucu da o agentin calistigi makinenin kullanim bilgisini donuyor
 	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient) {
@@ -3034,56 +2865,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		return true;
 	}
 
-	/*public int getNextDbAccessProfileId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int dbConnectionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"dbUserId\")";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			dbConnectionId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return dbConnectionId;
-	}*/
-
-	/*public int getNextDbConnectionId(JmxUser jmxUser) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int dbConnectionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"dbConnectionId\")";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			dbConnectionId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return dbConnectionId;
-	}*/
-
 	@Override
 	public ArrayList<FtpProperties> ftpConnectionList(JmxUser jmxUser) throws XMLDBException {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -3261,54 +3042,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		return true;
 	}
 
-	/*public int getNextFTPConnectionId(JmxUser jmxUser) throws XMLDBException {
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int ftpConnectionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"ftpConnectionId\")";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			ftpConnectionId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return ftpConnectionId;
-	}*/
-
-	/*public int getNextWSDefinitionId(JmxUser jmxUser) throws XMLDBException {
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int wsDefinitionId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"wsDefinitionId\")";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			wsDefinitionId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return wsDefinitionId;
-	}*/
-
 	@Override
 	public Object insertWSDefinition(JmxUser jmxUser, String wsPropertiesXML) {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -3439,30 +3172,6 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		return almList;
 	}
-
-	/*public int getNextWSUserProfileId(JmxUser jmxUser) throws XMLDBException {
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return -1;
-		}
-
-		int wsUserProfileId = -1;
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace sq=\"http://sq.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"wsUserProfileId\")";
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			wsUserProfileId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return wsUserProfileId;
-	}*/
 
 	@Override
 	public Object insertWSAccessProfile(JmxUser jmxUser, String userAccessProfileXML) {

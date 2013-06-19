@@ -101,21 +101,13 @@ public interface RemoteDBOperatorMBean {
 
 	public Object deleteUser(JmxUser jmxUser, String personXML);
 
-//	public int getNextUserId(JmxUser jmxUser) throws XMLDBException;
-
 	public Person searchUserByUsername(JmxUser jmxUser, String username) throws XMLDBException;
-
-//	public int getNextCalendarId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertCalendar(JmxUser jmxUser, String calendarPropertiesXML);
 
 	public ArrayList<String> calendarNames(JmxUser jmxUser) throws XMLDBException;
 
-//	public int getNextScenarioId(JmxUser jmxUser) throws XMLDBException;
-
 	public Object insertScenario(JmxUser jmxUser, String documentName, String scenarioXML, String scenarioPath);
-
-//	public int getNextJobId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertJob(JmxUser jmxUser, String documentName, String jobPropertiesXML, String jobPath);
 
@@ -156,8 +148,6 @@ public interface RemoteDBOperatorMBean {
 //	public byte[] getPdfDoc(JmxUser jmxUser, String str) throws XMLDBException;
 
 //	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException;
-
-//	public int getNextTraceId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertTrace(JmxUser jmxUser, String traceXML);
 
@@ -231,8 +221,6 @@ public interface RemoteDBOperatorMBean {
 
 	public boolean checkDBConnectionName(JmxUser jmxUser, String dbAccessPropertiesXML) throws XMLDBException;
 
-//	public int getNextDbConnectionId(JmxUser jmxUser) throws XMLDBException;
-
 	public ArrayList<JobInfoTypeClient> getJobResultListByDates(JmxUser jmxUser, String documentName, String jobId, String date1, String date2, Boolean transformToLocalTime) throws XMLDBException;
 
 	public ArrayList<JobProperties> getJobResultListByDates2(JmxUser jmxUser, String documentName, String jobId, String date1, String date2) throws XMLDBException;
@@ -249,10 +237,6 @@ public interface RemoteDBOperatorMBean {
 
 	public Object updateFTPAccessConnection(JmxUser jmxUser, String ftpAccessPropertiesXML);
 
-//	public int getNextFTPConnectionId(JmxUser jmxUser) throws XMLDBException;
-
-//	public int getNextWSDefinitionId(JmxUser jmxUser) throws XMLDBException;
-
 	public Object insertWSDefinition(JmxUser jmxUser, String wsPropertiesXML);
 
 	public ArrayList<WebServiceDefinition> webServiceList(JmxUser jmxUser) throws XMLDBException;
@@ -260,8 +244,6 @@ public interface RemoteDBOperatorMBean {
 	public ArrayList<AlarmReport> getAlarmReportList(JmxUser jmxUser, String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException;
 
 	public ArrayList<UserAccessProfile> searchWSAccessProfiles(JmxUser jmxUser, String userAccessProfileXML) throws XMLDBException;
-
-//	public int getNextWSUserProfileId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertWSAccessProfile(JmxUser jmxUser, String userAccessProfileXML);
 
@@ -276,8 +258,6 @@ public interface RemoteDBOperatorMBean {
 	public ArrayList<DBAccessInfoTypeClient> searchDBAccessProfile(JmxUser jmxUser, String dbAccessProfileXML) throws XMLDBException;
 
 	public Object deleteDBAccessProfile(JmxUser jmxUser, String dbAccessProfileXML);
-
-//	public int getNextDbAccessProfileId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertDBAccessProfile(JmxUser jmxUser, String dbAccessProfileXML);
 
