@@ -53,9 +53,6 @@ public class ConstantDefinitions {
 
 	public static final String dbUrl = "xmldb:exist:";
 	public static final String rootUrl = "//db/";
-	// TODO merve: collection ismi config dosyasından alınınca "TLOSSW" kısmı ona göre düzenlenecek
-	public static String xQueryModuleUrl = " at \"" + ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + "TLOSSW" + "/modules";
-	public static String xmlsUrl = dbUrl + rootUrl + "TLOSSW" + "/xmls/";
 
 	/**
 	 * Ağaç yapısında kullanılan tanımlamalar
