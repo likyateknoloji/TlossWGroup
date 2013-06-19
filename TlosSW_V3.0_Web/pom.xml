@@ -249,6 +249,11 @@
 			<artifactId>tlossw-utils</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-webclient</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
