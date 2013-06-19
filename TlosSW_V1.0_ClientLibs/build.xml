@@ -72,10 +72,10 @@
 			<pathelement location="${sharedlib.dir}/apache-cxf-2.6.0/xml-resolver-1.2.jar"/>
 			<pathelement location="${sharedlib.dir}/apache-cxf-2.6.0/xmlschema-core-2.0.2.jar"/>
 			<pathelement location="${sharedlib.dir}/Jsch/jsch-0.1.49.jar"/>
-			<pathelement location="${tlos_model.dir}/TlosSW_Model_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_schemaDefinitions.dir}/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_commonDefinitions.dir}/TlosSW_Common_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_utils.dir}/TlosSW_Utils_V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_model.dir}/tlossw_model-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_utils.dir}/tlossw-utils-V${version.num}${buildchar}${minor.number}.jar" />
 		</path>
 
 		<mkdir dir="${build.classes.dir}" />
