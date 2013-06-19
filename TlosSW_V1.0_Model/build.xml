@@ -1,8 +1,9 @@
 <project name="TlosSW_V1.0_Model" default="build-all" basedir=".">
 
-	<property name="appname" value="TlosSW_Model" />
+	<property name="appname" value="tlossw-model" />
 	
 	<property file="build.properties" />
+	<property name="home.dir" value="${basedir}/.." />
 	
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="build.dir" value="build/classes" />
@@ -11,6 +12,12 @@
 	<property name="app.deploy.dir" value="${basedir}" />
 	<property name="version.num" value="1.0"/>
 
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${home.dir}/${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+	
 	<target name="init" depends="init2" unless="minor.number">
 		<property name="minor.number" value="" />
 		<property name="buildchar" value="" />
@@ -73,6 +80,19 @@
 		<mkdir dir="test"/>
 		<copy file="${jar}" todir="test"/>
 		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
+		
+		<if>
+			<equals arg1="${minor.number}" arg2="" />
+			<then>
+				<echo message="Tying to mavenize locally..." />
+				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
+				<copy file="${appname}-1.0.0.jar" todir="${user.home}/.m2/repository/tlossw/${appname}/1.0.0/" />
+				<echo message="Tying to mavenize locally... completed !" />
+			</then>
+			<else>
+			</else>
+		</if>
+
 	</target>
 
 </project>
