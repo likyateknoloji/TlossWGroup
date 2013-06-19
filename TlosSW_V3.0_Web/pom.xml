@@ -112,20 +112,6 @@
 			<artifactId>jstl-api</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>likyateknoloji</groupId> -->
-		<!-- <artifactId>tlossw-model</artifactId> -->
-		<!-- <version>1.0.0</version> -->
-		<!-- <scope>system</scope> -->
-		<!-- <systemPath>/TlosSW_V1.0_Model/tlossw-model-1.0.0.jar</systemPath> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>likyateknoloji</groupId> -->
-		<!-- <artifactId>tlossw-xsd</artifactId> -->
-		<!-- <version>1.0.0</version> -->
-		<!-- <scope>compile</scope> -->
-		<!-- <systemPath>/TlosSW_V1.0_Schema/tlossw-xsd-1.0.0.jar</systemPath> -->
-		<!-- </dependency> -->
 		<dependency>
 			<groupId>primefaces</groupId>
 			<artifactId>cupertino</artifactId>
@@ -241,6 +227,27 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-model</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-xsd</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-common</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-utils</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 
