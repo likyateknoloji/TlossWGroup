@@ -79,16 +79,16 @@ declare function lk:searchAgentByAgentId($documentUrl as xs:string, $id as xs:in
     return $agent
 };
 
-declare function lk:insertAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
+declare function lk:insertAgentLock($documentUrl as xs:string, $documentSeqUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:insertAgent($documentUrl, $agent))     
+   let $sonuc := util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:insertAgent($documentUrl, $documentSeqUrl, $agent))     
    return true()
 };
 
-declare function lk:insertAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as node()*
+declare function lk:insertAgent($documentUrl as xs:string, $documentSeqUrl as xs:string, $agent as element(agnt:SWAgent)) as node()*
 {
     let $XXX := $agent
-    let $nextId := sq:getNextId("agentId")	
+    let $nextId := sq:getNextId($documentSeqUrl, "agentId")	
 	let $localParameters := count($XXX/agnt:locals)
     let $locals := 	for $loc in $XXX/agnt:locals
 	                  return 
