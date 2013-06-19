@@ -78,12 +78,12 @@
 			<pathelement location="${sharedlib.dir}/eXist_1.4/core/xmldb.jar" />
 			<pathelement location="${sharedlib.dir}/eXist_1.4/endorsed/xalan-2.7.1.jar"/>
 			<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
-			<pathelement location="${tlos_model.dir}/TlosSW_Model_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_commonDefinitions.dir}/TlosSW_Common_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_utils.dir}/TlosSW_Utils_V${version.num}${buildchar}${minor.number}.jar" />	
+			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_utils.dir}/tlossw-utils-V${version.num}${buildchar}${minor.number}.jar" />	
 			<pathelement location="${tlos_clientLibs.dir}/TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar" />	
 			<!--pathelement location="${tlos_client.dir}/TlosSW_AgentClient_V${version.num}${buildchar}${minor.number}.jar" /-->	
-			<pathelement location="${tlos_schemaDefinitions.dir}/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${sharedlib.dir}/javamail/mail.jar" />
 			<pathelement location="${sharedlib.dir}/evalUtils/EvalUtils.jar" />
 			<pathelement location="${sharedlib.dir}/jetty_6.1.14/jetty-6.1.14.jar" />
