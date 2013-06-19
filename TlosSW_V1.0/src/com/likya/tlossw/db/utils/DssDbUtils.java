@@ -21,7 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -29,9 +29,9 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DssDbUtils {
 	
-	private static final String standartNameSpaceDeclaritions = ConstantDefinitions.decNsDat + ConstantDefinitions.decNsCom + ConstantDefinitions.decNsCal
-			   + ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsXsi + ConstantDefinitions.decNsFn 
-			   + ConstantDefinitions.decNsLrns + ConstantDefinitions.decNsNrp + ConstantDefinitions.decNsRes;
+	private static final String standartNameSpaceDeclaritions = CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCal
+			   + CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsXsi + CommonConstantDefinitions.decNsFn 
+			   + CommonConstantDefinitions.decNsLrns + CommonConstantDefinitions.decNsNrp + CommonConstantDefinitions.decNsRes;
 
 	public static ResourceAgentList swFindResourcesForAJob(JobProperties jobProperties){
 
@@ -54,7 +54,7 @@ public class DssDbUtils {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dssNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDSSOperations.xquery\";" + 
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dssNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDSSOperations.xquery\";" + 
 			standartNameSpaceDeclaritions + "dss:SWFindResourcesForAJob("+ jobPropFuncPassXML  +", fn:current-dateTime())";
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -94,8 +94,8 @@ public class DssDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
-				standartNameSpaceDeclaritions + ConstantDefinitions.decNsSt + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
+				standartNameSpaceDeclaritions + CommonConstantDefinitions.decNsSt + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;

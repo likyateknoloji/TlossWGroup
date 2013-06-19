@@ -12,7 +12,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.FTPAccessInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 
 public class ValidationExecuter implements ValidationExecuterMBean {
 
@@ -67,7 +67,7 @@ public class ValidationExecuter implements ValidationExecuterMBean {
 				ftpClient.connect(ftpProperties.getIpAddress(), ftpProperties.getPort());
 			}
 		} catch (Exception ex) {
-			return ConstantDefinitions.FTP_CONNECTION_ERROR;
+			return CommonConstantDefinitions.FTP_CONNECTION_ERROR;
 		}
 
 		boolean login = false;
@@ -75,13 +75,13 @@ public class ValidationExecuter implements ValidationExecuterMBean {
 		try {
 			login = ftpClient.login(ftpProperties.getUserName(), ftpProperties.getPassword());
 		} catch (Exception ex) {
-			return ConstantDefinitions.FTP_LOGIN_ERROR;
+			return CommonConstantDefinitions.FTP_LOGIN_ERROR;
 		}
 
 		if (login) {
-			return ConstantDefinitions.FTP_SUCCESSFUL;
+			return CommonConstantDefinitions.FTP_SUCCESSFUL;
 		} else {
-			return ConstantDefinitions.FTP_LOGIN_ERROR;
+			return CommonConstantDefinitions.FTP_LOGIN_ERROR;
 		}
 	}
 

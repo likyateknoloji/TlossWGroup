@@ -14,7 +14,7 @@ import com.likya.tlos.model.xmlbeans.agent.RxMessageTypeEnumerationDocument.RxMe
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class DbTestUtils {
@@ -28,8 +28,8 @@ public class DbTestUtils {
 		String xmlContent = null;
 		JobProperties jobProperties = null;
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTestOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "lk:getJob("+ jobPath + "," + jobName + " )";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTestOperations.xquery\";" + 
+				CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "lk:getJob("+ jobPath + "," + jobName + " )";
 
 		XPathQueryService service = null;
 		try {

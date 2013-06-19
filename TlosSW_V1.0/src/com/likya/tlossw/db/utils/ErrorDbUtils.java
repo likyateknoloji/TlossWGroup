@@ -10,7 +10,7 @@ import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.error.SWErrorDocument.SWError;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -25,8 +25,8 @@ public class ErrorDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleErrorOperations.xquery\";" + 
-				ConstantDefinitions.decNsErr + ConstantDefinitions.decNsRes + "lk:insertError("+ errorXML + ")";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleErrorOperations.xquery\";" + 
+				CommonConstantDefinitions.decNsErr + CommonConstantDefinitions.decNsRes + "lk:insertError("+ errorXML + ")";
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;

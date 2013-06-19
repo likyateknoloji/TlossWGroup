@@ -32,8 +32,8 @@ import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.nagios.NagiosServer;
 import com.likya.tlossw.perfmng.PerformanceManager;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ConfigLoader;
-import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.InfoBus;
 import com.likya.tlossw.utils.PersistenceUtils;
@@ -88,10 +88,10 @@ public class TlosSpaceWideBase {
 			col.setProperty(OutputKeys.INDENT, "no");
 			getSpaceWideRegistry().setEXistColllection(col);
 
-			String xQueryModuleUrl = " at \"" + ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + collectionName + "/modules";
+			String xQueryModuleUrl = " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "/modules";
 			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
 
-			String xmlsUrl = ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + collectionName + "/xmls/";
+			String xmlsUrl = CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "/xmls/";
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
 
 		} catch (Exception e) {
