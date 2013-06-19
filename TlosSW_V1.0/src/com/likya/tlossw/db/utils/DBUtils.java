@@ -374,7 +374,7 @@ public class DBUtils {
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
 		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(" + "xs:string(\"" + documentName + "\")" + ")";
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\"))";
 
 		XPathQueryService service;
 		try {

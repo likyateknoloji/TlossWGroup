@@ -866,7 +866,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		service.setProperty("indent", "yes");
 
 		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenario(" + "xs:string(\"" + documentName + "\")" + "," + scenariPath + ", \"" + scenarioName + "\" )";
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenario(" + "xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\")" + "," + scenariPath + ", \"" + scenarioName + "\" )";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -1088,7 +1088,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		
 		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(" + "xs:string(\"" + documentName + "\")" + ")";
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\"))";
 
 		XPathQueryService service;
 		try {
@@ -2637,7 +2637,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		service.setProperty("indent", "yes");
 
 		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" +
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + documentName + "\")" + "," + scenarioId + ")";
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\")" + "," + scenarioId + ")";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
