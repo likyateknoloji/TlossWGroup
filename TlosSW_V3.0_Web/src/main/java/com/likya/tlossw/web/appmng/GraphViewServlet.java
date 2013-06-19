@@ -19,7 +19,8 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 import com.likya.tlossw.webclient.TEJmxMpDBClient;
 
@@ -148,7 +149,7 @@ public class GraphViewServlet extends HttpServlet {
 	private String constructGML(String scenarioId) {
 		String gml = null;
 		
-		Scenario scenario = TEJmxMpDBClient.getScenarioFromId(new JmxUser(), ConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
+		Scenario scenario = TEJmxMpDBClient.getScenarioFromId(new JmxUser(), CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
 		
 		gml = "<Graph>\n";
 		

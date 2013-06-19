@@ -17,7 +17,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.LiveUtils;
@@ -125,7 +125,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
-		jobBaseReportList = getDbOperations().getJobResultList(ConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 3, transformToLocalTime);
+		jobBaseReportList = getDbOperations().getJobResultList(CommonConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -136,7 +136,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
-		job = getDbOperations().getJobFromId(ConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(jobInTyCl.getJobId()));
+		job = getDbOperations().getJobFromId(CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(jobInTyCl.getJobId()));
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {

@@ -18,10 +18,10 @@ import com.likya.tlos.model.xmlbeans.common.EmailListDocument.EmailList;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.common.TelListDocument.TelList;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "userPanelMBean")

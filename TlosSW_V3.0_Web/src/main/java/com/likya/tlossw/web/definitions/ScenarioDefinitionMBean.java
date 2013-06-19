@@ -30,7 +30,7 @@ import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.Status;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.DefinitionUtils;
@@ -240,7 +240,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().updateScenario(ConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
+		if (getDbOperations().updateScenario(CommonConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
 		} else {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.update", null);
@@ -409,7 +409,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean getScenarioId() {
-		int scenarioId = getDbOperations().getNextId(ConstantDefinitions.SCENARIO_ID);
+		int scenarioId = getDbOperations().getNextId(com.likya.tlossw.web.utils.ConstantDefinitions.SCENARIO_ID);
 
 		if (scenarioId < 0) {
 			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.getId", null);
@@ -441,7 +441,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 			scenarioNode = scenarioNode.getParent();
 		}
-		if (!scenarioNode.getParent().getData().equals(ConstantDefinitions.TREE_ROOT)) {
+		if (!scenarioNode.getParent().getData().equals(com.likya.tlossw.web.utils.ConstantDefinitions.TREE_ROOT)) {
 			scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
 			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
 
@@ -466,7 +466,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteScenario() {
 		boolean result = true;
-		if (getDbOperations().deleteScenario(ConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
+		if (getDbOperations().deleteScenario(CommonConstantDefinitions.JOB_DEFINITION_DATA, scenarioPath, getScenarioXML())) {
 			removeScenarioSubtree(scenarioPathInScenario);
 			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 		} else {

@@ -30,9 +30,9 @@ import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.webservice.Function;
 import com.likya.tlossw.model.webservice.Parameter;
 import com.likya.tlossw.model.webservice.WebService;
-import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpWSClient;
 
 @ManagedBean(name = "wsWizardPanelMBean")

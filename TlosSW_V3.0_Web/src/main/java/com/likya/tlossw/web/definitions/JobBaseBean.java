@@ -78,7 +78,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -1142,7 +1142,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jsNameConfirmDialog = false;
 		}
 
-		if (getDbOperations().updateJob(ConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		if (getDbOperations().updateJob(CommonConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
@@ -1155,7 +1155,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean getJobId() {
-		int jobId = getDbOperations().getNextId(ConstantDefinitions.JOB_ID);
+		int jobId = getDbOperations().getNextId(com.likya.tlossw.web.utils.ConstantDefinitions.JOB_ID);
 
 		if (jobId < 0) {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.getId", null);
@@ -1899,7 +1899,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	// işe sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteJob() {
 		boolean result = true;
-		if (getDbOperations().deleteJob(ConstantDefinitions.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
+		if (getDbOperations().deleteJob(CommonConstantDefinitions.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
 			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID());
 			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
 		} else {
