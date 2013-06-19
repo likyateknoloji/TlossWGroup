@@ -7,14 +7,6 @@
 
 package com.likya.tlossw.jmx.beans;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,21 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.fop.apps.FOPException;
-import org.apache.fop.apps.FOUserAgent;
-import org.apache.fop.apps.Fop;
-import org.apache.fop.apps.FopFactory;
-import org.apache.fop.apps.MimeConstants;
 import org.apache.xmlbeans.XmlException;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
@@ -112,9 +89,16 @@ import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
-import com.likya.tlossw.utils.transform.TransformUtils;
 
 public class RemoteDBOperator implements RemoteDBOperatorMBean {
+
+	String xQueryModuleUrl;
+	String xmlsUrl;
+	
+	public RemoteDBOperator() {
+		xQueryModuleUrl = TlosSpaceWide.getSpaceWideRegistry().getxQueryModuleUrl();
+		xmlsUrl = TlosSpaceWide.getSpaceWideRegistry().getXmlsUrl();
+	}
 
 	@Override
 	public int getNbChanges() {
@@ -155,7 +139,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + 
 				"hs:query_username(xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
 
 		ResourceSet result = service.query(xQueryStr);
@@ -214,7 +198,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + 
 				"hs:searchUser(" + personXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -250,7 +234,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:users()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:users()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -285,7 +269,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:insertUserLock(" + personXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:insertUserLock(" + personXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -311,7 +295,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:updateUserLock(" + personXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:updateUserLock(" + personXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -336,7 +320,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:deleteUserLock(" + personXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:deleteUserLock(" + personXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -367,7 +351,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUsername(" + "\"" + username + "\"" + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUsername(" + "\"" + username + "\"" + ")";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -422,7 +406,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(" + calendarPropertiesXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(" + calendarPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -452,7 +436,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendarNames()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendarNames()";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -498,7 +482,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -550,7 +534,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:insertJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -586,7 +570,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(" + calendarPropertiesXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(" + calendarPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -621,7 +605,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -656,7 +640,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:updateCalendarLock(" + calendarPropertiesXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:updateCalendarLock(" + calendarPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -681,7 +665,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:deleteCalendarLock(" + calendarPropertiesXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:deleteCalendarLock(" + calendarPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -711,7 +695,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getMaxScenarioId(" + "xs:string(\"" + documentName + "\")" + ")";
 
 		XPathQueryService service;
@@ -741,7 +725,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:deleteScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -767,7 +751,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:deleteJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -793,7 +777,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:updateJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -829,7 +813,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+			String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 					ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + ", xs:string(\"" + jobId + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
@@ -865,8 +849,8 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenario(" + "xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\")" + "," + scenariPath + ", \"" + scenarioName + "\" )";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenario(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenariPath + ", \"" + scenarioName + "\" )";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -894,7 +878,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleTlosManagementOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleTlosManagementOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsCon + "hs:updateTlosConfigInfoLock(" + tlosConfigInfoXML + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -931,7 +915,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + "hs:getPermisions()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + "hs:getPermisions()";
 
 		ResourceIterator i;
 		ArrayList<ResourcePermission> resourcePermission = new ArrayList<ResourcePermission>();
@@ -962,7 +946,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + 
 				ConstantDefinitions.decNsPer + ConstantDefinitions.decNsCom + "hs:updatePermissionsLock(" + permissionsXML + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -988,7 +972,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:updateScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioPath + "," + scenarioXML + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -1019,7 +1003,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleReportOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getJobs(" + jobPropertiesXML + "," + jobPath + " )";
 
 		ResourceSet result = service.query(xQueryStr);
@@ -1050,7 +1034,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:getAlarms(\"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:getAlarms(\"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1087,8 +1071,8 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\"))";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + xmlsUrl + documentName + "\"))";
 
 		XPathQueryService service;
 		try {
@@ -1117,58 +1101,58 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 	}
 
-	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException {
+//	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException {
+//
+//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+//			return null;
+//		}
+//
+//		try {
+//			return getHtmlContent();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return null;
+//	}
 
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return null;
-		}
-
-		try {
-			return getHtmlContent();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public byte[] getPdfDoc(JmxUser jmxUser, String str) throws XMLDBException {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return null;
-		}
-
-		try {
-			return getPdfContent();
-		} catch (FOPException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
-		// EnterpriseRegistery enterpriseRegistery = TlosEnterprise.getEnterpriseRegistery();
-		// Collection collection = enterpriseRegistery.getEXistColllection();
-		// XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		// service.setProperty("indent", "yes");
-		//
-		// String xQueryStr = "xquery version \"1.0\";" +
-		// "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOS/modules/moduleXslOperations.xquery\";" +
-		// "declare namespace fo = \"http://www.w3.org/1999/XSL/Format\";  "+
-		// "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";  "+
-		// "hs:generateXslDoc()";
-		//
-		// ResourceSet result = service.query(xQueryStr);
-		// String pdfDoc = (String) result.getResource(0).getContent();
-		//
-		// Base64Decoder base64Decoder = new Base64Decoder();
-		// base64Decoder.translate(pdfDoc);
-		//
-		// return base64Decoder.getByteArray();
-	}
+//	public byte[] getPdfDoc(JmxUser jmxUser, String str) throws XMLDBException {
+//
+//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+//			return null;
+//		}
+//
+//		try {
+//			return getPdfContent();
+//		} catch (FOPException e) {
+//			e.printStackTrace();
+//		} catch (TransformerException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return null;
+//
+//		// EnterpriseRegistery enterpriseRegistery = TlosEnterprise.getEnterpriseRegistery();
+//		// Collection collection = enterpriseRegistery.getEXistColllection();
+//		// XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+//		// service.setProperty("indent", "yes");
+//		//
+//		// String xQueryStr = "xquery version \"1.0\";" +
+//		// "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOS/modules/moduleXslOperations.xquery\";" +
+//		// "declare namespace fo = \"http://www.w3.org/1999/XSL/Format\";  "+
+//		// "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";  "+
+//		// "hs:generateXslDoc()";
+//		//
+//		// ResourceSet result = service.query(xQueryStr);
+//		// String pdfDoc = (String) result.getResource(0).getContent();
+//		//
+//		// Base64Decoder base64Decoder = new Base64Decoder();
+//		// base64Decoder.translate(pdfDoc);
+//		//
+//		// return base64Decoder.getByteArray();
+//	}
 
 	/*public int getNextTraceId(JmxUser jmxUser) throws XMLDBException {
 
@@ -1203,7 +1187,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 		// long startTime = System.currentTimeMillis();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleTraceOperations.xquery\";" + "hs:insertTrace(" + traceXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleTraceOperations.xquery\";" + "hs:insertTrace(" + traceXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1226,201 +1210,202 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 	// XML lerde transformasyon yapmak icin
 	// Hakan
-	public static StreamSource getTransformXslCode(String codeOfXSLT) throws IOException {
+//	public static StreamSource getTransformXslCode(String codeOfXSLT) throws IOException {
+//
+//		String tlosJobTransformXsl = null;
+//
+//		try {
+//			tlosJobTransformXsl = getDbDoc(codeOfXSLT);
+//
+//		} catch (XMLDBException e) {
+//			e.printStackTrace();
+//		} catch (XSLLoadException e) {
+//			e.printStackTrace();
+//		}
+//
+//		StringReader xslReader = new StringReader(tlosJobTransformXsl);
+//
+//		StreamSource streamSource = new StreamSource(xslReader);
+//
+//		return streamSource;
+//	}
 
-		String tlosJobTransformXsl = null;
+//	public static byte[] getHtmlContent() throws IOException {
+//
+//		String tlosDataXslDoc = null;
+//		String tlosData = null;
+//		String tlosCalendar = null;
+//		String tlosUser = null;
+//
+//		try {
+//			tlosDataXslDoc = getDbDoc("hs:tlosDataXsl()");
+//			tlosData = getDbDoc("hs:tlosData()");
+//			tlosCalendar = getDbDoc("hs:tlosCalendar()");
+//			tlosUser = getDbDoc("hs:tlosUser()");
+//		} catch (XMLDBException e) {
+//			e.printStackTrace();
+//		} catch (XSLLoadException e) {
+//			e.printStackTrace();
+//		}
+//
+//		StringReader xslReader = new StringReader(tlosDataXslDoc);
+//		StringReader tDataReader = new StringReader(tlosData);
+//
+//		File tlosCalendarFile = new File("tlosSWCalendar10.xml");
+//		FileOutputStream calendarFos = new FileOutputStream(tlosCalendarFile);
+//
+//		OutputStreamWriter calendarOsw = new OutputStreamWriter(calendarFos, "UTF8");
+//		BufferedWriter calendarBufferedWriter = new BufferedWriter(calendarOsw);
+//
+//		calendarBufferedWriter.write(tlosCalendar);
+//		calendarBufferedWriter.close();
+//
+//		File tlosUserFile = new File("tlosSWUser10.xml");
+//		FileOutputStream userFos = new FileOutputStream(tlosUserFile);
+//
+//		OutputStreamWriter userOsw = new OutputStreamWriter(userFos, "UTF8");
+//		BufferedWriter userBufferedWriter = new BufferedWriter(userOsw);
+//
+//		userBufferedWriter.write(tlosUser);
+//		userBufferedWriter.close();
+//
+//		TransformerFactory tFactory = TransformerFactory.newInstance();
+//
+//		StreamSource streamSource = new StreamSource(xslReader);
+//
+//		Transformer transformer = null;
+//		try {
+//			transformer = tFactory.newTransformer(streamSource);
+//		} catch (TransformerConfigurationException e) {
+//			e.printStackTrace();
+//		}
+//
+//		StreamSource xmlDoc = new StreamSource(tDataReader);
+//
+//		// FileOutputStream fileOutputStream = null;
+//		// try {
+//		// fileOutputStream = new FileOutputStream("tlosData.html");
+//		// } catch (FileNotFoundException e) {
+//		// e.printStackTrace();
+//		// }
+//		// StreamResult streamResult = new StreamResult(fileOutputStream);
+//
+//		StringWriter stringWriter = new StringWriter();
+//		StreamResult streamResult = new StreamResult(stringWriter);
+//
+//		try {
+//			transformer.transform(xmlDoc, streamResult);
+//		} catch (TransformerException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return stringWriter.toString().getBytes("utf-8");
+//	}
 
-		try {
-			tlosJobTransformXsl = getDbDoc(codeOfXSLT);
+	
+//	public static byte[] getPdfContent() throws TransformerException, FOPException, IOException {
+//
+//		String tlosDataXslDoc = null;
+//		String tlosDataTemp = null;
+//		String tlosCalendar = null;
+//		String tlosUser = null;
+//
+//		try {
+//			tlosDataXslDoc = getDbDoc("hs:tlosDataXslFo()");
+//			tlosDataTemp = getDbDoc("hs:tlosData()");
+//			tlosCalendar = getDbDoc("hs:tlosCalendar()");
+//			tlosUser = getDbDoc("hs:tlosUser()");
+//		} catch (XMLDBException e) {
+//			e.printStackTrace();
+//		} catch (XSLLoadException e) {
+//			e.printStackTrace();
+//		}
+//
+//		String tlosData = "<root>" + tlosDataTemp + "</root>";
+//		StringReader xslReader = new StringReader(tlosDataXslDoc);
+//		StringReader tDataReader = new StringReader(tlosData);
+//
+//		File tlosCalendarFile = new File("tlosSWCalendar10.xml");
+//		FileOutputStream calendarFos = new FileOutputStream(tlosCalendarFile);
+//
+//		OutputStreamWriter calendarOsw = new OutputStreamWriter(calendarFos, "UTF8");
+//		BufferedWriter calendarBufferedWriter = new BufferedWriter(calendarOsw);
+//
+//		calendarBufferedWriter.write(tlosCalendar);
+//		calendarBufferedWriter.close();
+//
+//		File tlosUserFile = new File("tlosSWUser10.xml");
+//		FileOutputStream userFos = new FileOutputStream(tlosUserFile);
+//
+//		OutputStreamWriter userOsw = new OutputStreamWriter(userFos, "UTF8");
+//		BufferedWriter userBufferedWriter = new BufferedWriter(userOsw);
+//
+//		userBufferedWriter.write(tlosUser);
+//		userBufferedWriter.close();
+//
+//		// the XML file from which we take the name
+//		StreamSource source = new StreamSource(tDataReader);
+//		// creation of transform source
+//		StreamSource transformSource = new StreamSource(xslReader);
+//		// create an instance of fop factory
+//		FopFactory fopFactory = FopFactory.newInstance();
+//		// a user agent is needed for transformation
+//		FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+//		// to store output
+//		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+//
+//		Transformer xslfoTransformer;
+//		try {
+//			xslfoTransformer = TransformUtils.getTransformer(transformSource);
+//			// Construct fop with desired output format
+//			Fop fop;
+//			try {
+//				fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStream);
+//				// Resulting SAX events (the generated FO)
+//				// must be piped through to FOP
+//				Result res = new SAXResult(fop.getDefaultHandler());
+//
+//				// Start XSLT transformation and FOP processing
+//				try {
+//					// everything will happen here..
+//					xslfoTransformer.transform(source, res);
+//					// if you want to get the PDF bytes, use the following code
+//					// return outStream.toByteArray();
+//
+//					// if you want to save PDF file use the following code
+//					// File pdffile = new File("TlosData.pdf");
+//					// OutputStream out = new java.io.FileOutputStream(pdffile);
+//					// out = new java.io.BufferedOutputStream(out);
+//					// FileOutputStream str = new FileOutputStream(pdffile);
+//					// str.write(outStream.toByteArray());
+//					// str.close();
+//					// out.close();
+//
+//					return outStream.toByteArray();
+//
+//					// to write the content to output stream
+//					/*
+//					 * byte[] pdfBytes = outStream.toByteArray();
+//					 * response.setContentLength(pdfBytes.length);
+//					 * response.setContentType("application/pdf");
+//					 * response.addHeader("Content-Disposition", "attachment;filename=pdffile.pdf");
+//					 * response.getOutputStream().write(pdfBytes);
+//					 * response.getOutputStream().flush();
+//					 */
+//				} catch (TransformerException e) {
+//					throw e;
+//				}
+//			} catch (FOPException e) {
+//				throw e;
+//			}
+//		} catch (TransformerConfigurationException e) {
+//			throw e;
+//		} catch (TransformerFactoryConfigurationError e) {
+//			throw e;
+//		}
+//	}
 
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		} catch (XSLLoadException e) {
-			e.printStackTrace();
-		}
-
-		StringReader xslReader = new StringReader(tlosJobTransformXsl);
-
-		StreamSource streamSource = new StreamSource(xslReader);
-
-		return streamSource;
-	}
-
-	public static byte[] getHtmlContent() throws IOException {
-
-		String tlosDataXslDoc = null;
-		String tlosData = null;
-		String tlosCalendar = null;
-		String tlosUser = null;
-
-		try {
-			tlosDataXslDoc = getDbDoc("hs:tlosDataXsl()");
-			tlosData = getDbDoc("hs:tlosData()");
-			tlosCalendar = getDbDoc("hs:tlosCalendar()");
-			tlosUser = getDbDoc("hs:tlosUser()");
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		} catch (XSLLoadException e) {
-			e.printStackTrace();
-		}
-
-		StringReader xslReader = new StringReader(tlosDataXslDoc);
-		StringReader tDataReader = new StringReader(tlosData);
-
-		File tlosCalendarFile = new File("tlosSWCalendar10.xml");
-		FileOutputStream calendarFos = new FileOutputStream(tlosCalendarFile);
-
-		OutputStreamWriter calendarOsw = new OutputStreamWriter(calendarFos, "UTF8");
-		BufferedWriter calendarBufferedWriter = new BufferedWriter(calendarOsw);
-
-		calendarBufferedWriter.write(tlosCalendar);
-		calendarBufferedWriter.close();
-
-		File tlosUserFile = new File("tlosSWUser10.xml");
-		FileOutputStream userFos = new FileOutputStream(tlosUserFile);
-
-		OutputStreamWriter userOsw = new OutputStreamWriter(userFos, "UTF8");
-		BufferedWriter userBufferedWriter = new BufferedWriter(userOsw);
-
-		userBufferedWriter.write(tlosUser);
-		userBufferedWriter.close();
-
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-
-		StreamSource streamSource = new StreamSource(xslReader);
-
-		Transformer transformer = null;
-		try {
-			transformer = tFactory.newTransformer(streamSource);
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		}
-
-		StreamSource xmlDoc = new StreamSource(tDataReader);
-
-		// FileOutputStream fileOutputStream = null;
-		// try {
-		// fileOutputStream = new FileOutputStream("tlosData.html");
-		// } catch (FileNotFoundException e) {
-		// e.printStackTrace();
-		// }
-		// StreamResult streamResult = new StreamResult(fileOutputStream);
-
-		StringWriter stringWriter = new StringWriter();
-		StreamResult streamResult = new StreamResult(stringWriter);
-
-		try {
-			transformer.transform(xmlDoc, streamResult);
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
-
-		return stringWriter.toString().getBytes("utf-8");
-	}
-
-	public static byte[] getPdfContent() throws TransformerException, FOPException, IOException {
-
-		String tlosDataXslDoc = null;
-		String tlosDataTemp = null;
-		String tlosCalendar = null;
-		String tlosUser = null;
-
-		try {
-			tlosDataXslDoc = getDbDoc("hs:tlosDataXslFo()");
-			tlosDataTemp = getDbDoc("hs:tlosData()");
-			tlosCalendar = getDbDoc("hs:tlosCalendar()");
-			tlosUser = getDbDoc("hs:tlosUser()");
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		} catch (XSLLoadException e) {
-			e.printStackTrace();
-		}
-
-		String tlosData = "<root>" + tlosDataTemp + "</root>";
-		StringReader xslReader = new StringReader(tlosDataXslDoc);
-		StringReader tDataReader = new StringReader(tlosData);
-
-		File tlosCalendarFile = new File("tlosSWCalendar10.xml");
-		FileOutputStream calendarFos = new FileOutputStream(tlosCalendarFile);
-
-		OutputStreamWriter calendarOsw = new OutputStreamWriter(calendarFos, "UTF8");
-		BufferedWriter calendarBufferedWriter = new BufferedWriter(calendarOsw);
-
-		calendarBufferedWriter.write(tlosCalendar);
-		calendarBufferedWriter.close();
-
-		File tlosUserFile = new File("tlosSWUser10.xml");
-		FileOutputStream userFos = new FileOutputStream(tlosUserFile);
-
-		OutputStreamWriter userOsw = new OutputStreamWriter(userFos, "UTF8");
-		BufferedWriter userBufferedWriter = new BufferedWriter(userOsw);
-
-		userBufferedWriter.write(tlosUser);
-		userBufferedWriter.close();
-
-		// the XML file from which we take the name
-		StreamSource source = new StreamSource(tDataReader);
-		// creation of transform source
-		StreamSource transformSource = new StreamSource(xslReader);
-		// create an instance of fop factory
-		FopFactory fopFactory = FopFactory.newInstance();
-		// a user agent is needed for transformation
-		FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-		// to store output
-		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
-		Transformer xslfoTransformer;
-		try {
-			xslfoTransformer = TransformUtils.getTransformer(transformSource);
-			// Construct fop with desired output format
-			Fop fop;
-			try {
-				fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStream);
-				// Resulting SAX events (the generated FO)
-				// must be piped through to FOP
-				Result res = new SAXResult(fop.getDefaultHandler());
-
-				// Start XSLT transformation and FOP processing
-				try {
-					// everything will happen here..
-					xslfoTransformer.transform(source, res);
-					// if you want to get the PDF bytes, use the following code
-					// return outStream.toByteArray();
-
-					// if you want to save PDF file use the following code
-					// File pdffile = new File("TlosData.pdf");
-					// OutputStream out = new java.io.FileOutputStream(pdffile);
-					// out = new java.io.BufferedOutputStream(out);
-					// FileOutputStream str = new FileOutputStream(pdffile);
-					// str.write(outStream.toByteArray());
-					// str.close();
-					// out.close();
-
-					return outStream.toByteArray();
-
-					// to write the content to output stream
-					/*
-					 * byte[] pdfBytes = outStream.toByteArray();
-					 * response.setContentLength(pdfBytes.length);
-					 * response.setContentType("application/pdf");
-					 * response.addHeader("Content-Disposition", "attachment;filename=pdffile.pdf");
-					 * response.getOutputStream().write(pdfBytes);
-					 * response.getOutputStream().flush();
-					 */
-				} catch (TransformerException e) {
-					throw e;
-				}
-			} catch (FOPException e) {
-				throw e;
-			}
-		} catch (TransformerConfigurationException e) {
-			throw e;
-		} catch (TransformerFactoryConfigurationError e) {
-			throw e;
-		}
-	}
-
-	public static String getDbDoc(String xqueryMethod) throws XMLDBException, XSLLoadException {
+	public String getDbDoc(String xqueryMethod) throws XMLDBException, XSLLoadException {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1428,7 +1413,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleXslOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleXslOperations.xquery\";" + 
 				ConstantDefinitions.decNsFo + ConstantDefinitions.decNsXslfo + xqueryMethod;
 
 		ResourceSet result = service.query(xQueryStr);
@@ -1464,7 +1449,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 
 		// 1.ve 2. parametreler hangi araliktaki datanin gelecegi, 3. parametre makine adi
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + "lk:nrpeOutput(0, 5, \"" + nagiosAgentInfoTypeClient.getResourceName() + "\")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + "lk:nrpeOutput(0, 5, \"" + nagiosAgentInfoTypeClient.getResourceName() + "\")";
 
 		try {
 			ResourceSet result = service.query(xQueryStr);
@@ -1580,7 +1565,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsRes + "lk:searchAgent(" + agentXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -1614,7 +1599,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarm(" + alarmXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarm(" + alarmXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1648,7 +1633,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSLA(" + slaXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSLA(" + slaXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1683,7 +1668,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:deleteSLALock(" + slaXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:deleteSLALock(" + slaXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1709,7 +1694,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:insertSlaLock(" + slaXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:insertSlaLock(" + slaXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1735,7 +1720,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:updateSLALock(" + slaXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:updateSLALock(" + slaXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1761,7 +1746,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:searchPP(" + provisionXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:searchPP(" + provisionXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1796,7 +1781,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:deletePpLock(" + provisionXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:deletePpLock(" + provisionXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1822,7 +1807,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:insertPpLock(" + provisionXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:insertPpLock(" + provisionXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1849,7 +1834,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:updatePpLock(" + provisionXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:updatePpLock(" + provisionXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1875,7 +1860,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsRes + "lk:deleteAgentLock(" + agentXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -1902,7 +1887,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsRes + "lk:insertAgentLock(" + agentXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -1930,7 +1915,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:deleteAlarmLock(" + alarmXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:deleteAlarmLock(" + alarmXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1956,7 +1941,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:insertAlarmLock(" + alarmXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:insertAlarmLock(" + alarmXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -1982,7 +1967,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsRes + "lk:updateAgentLock(" + agentXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2008,7 +1993,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:updateAlarmLock(" + alarmXML + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:updateAlarmLock(" + alarmXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2034,7 +2019,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.rscNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(1,10)";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(1,10)";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2092,7 +2077,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:ppList(1,10)";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:ppList(1,10)";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2127,7 +2112,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobList(1,5)";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobList(1,5)";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2163,7 +2148,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:slaList(1,2)";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:slaList(1,2)";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2198,7 +2183,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarmList(1,50)";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarmList(1,50)";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2238,7 +2223,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + ConstantDefinitions.decNsSt + "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ")";
 
 		XPathQueryService service;
@@ -2273,7 +2258,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(" + alarmHistoryId + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(" + alarmHistoryId + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2308,7 +2293,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 
 		// verilen isin son 5 rundaki alarmini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(5, 0, " + jobId + ", false())";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2346,7 +2331,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		alarmInfoTypeClient.setLevel(alarm.getLevel() + "");
 
 		// alarmin gerceklestigi kaynak ve agant id'sini set ediyor
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(" + alarm.getAgentId() + ")";
 
 		ResourceSet result = service.query(xQueryStr);
@@ -2396,7 +2381,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			alarmInfoTypeClient.setSubscriber(alarm.getSubscriber().getRole().toString());
 		} else {
 			// personid'ye gore kullanici adini db'den sorguluyor
-			xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUserId(" + alarm.getSubscriber().getPerson().getId() + ")";
+			xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUserId(" + alarm.getSubscriber().getPerson().getId() + ")";
 
 			result = service.query(xQueryStr);
 			i = result.getIterator();
@@ -2422,7 +2407,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 
 		// alarm id'ye gore alarmi dbden sorguluyor
-		xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(" + alarm.getAlarmId() + ")";
+		xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(" + alarm.getAlarmId() + ")";
 
 		result = service.query(xQueryStr);
 		i = result.getIterator();
@@ -2459,7 +2444,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		service.setProperty("indent", "yes");
 
 		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -2494,7 +2479,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		service.setProperty("indent", "yes");
 
 		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListByDates(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ", \"" + date1 + "\", \"" + date2 + "\", false())";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListByDates(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ", \"" + date1 + "\", \"" + date2 + "\", false())";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -2528,7 +2513,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListByDates(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ", \"" + date1 + "\", \"" + date2 + "\", false())";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListByDates(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ", \"" + date1 + "\", \"" + date2 + "\", false())";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -2636,8 +2621,8 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" +
-				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + ConstantDefinitions.xmlsUrl + documentName + "\")" + "," + scenarioId + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" +
+				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioId + ")";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -2665,7 +2650,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr1 = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,fn:boolean(0))";
+		String xQueryStr1 = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,fn:boolean(0))";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2676,7 +2661,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		// System.err.println(" dashboardReport1 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		// Latest Report Id
 		int reportId = -1;
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.sqNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getReportId()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getReportId()";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i1 = result.getIterator();
@@ -2687,7 +2672,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 		System.err.println(" dashboardReport2 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		// get Report
-		String xQueryStr2 = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleReportOperations.xquery\";" + "hs:searchStateReportById(" + reportId + ")";
+		String xQueryStr2 = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\";" + "hs:searchStateReportById(" + reportId + ")";
 
 		ResourceSet result2 = service.query(xQueryStr2);
 
@@ -2729,7 +2714,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSlaBySlaId(" + slaId + ")";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSlaBySlaId(" + slaId + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -2763,7 +2748,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:searchDbConnection(" + dbAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2798,7 +2783,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:getDbConnectionAll()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2824,7 +2809,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			}
 		}
 
-		xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:searchDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		result = service.query(xQueryStr);
@@ -2864,7 +2849,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:deleteDbConnection(" + dbAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2892,7 +2877,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:deleteDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2919,7 +2904,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:insertDbAccessProfile(" + dbAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2946,7 +2931,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:insertDbConnection(" + dbAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2973,7 +2958,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:updateDbAccessProfileLock(" + dbAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -2999,7 +2984,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:updateDbConnectionLock(" + dbAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3026,7 +3011,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:checkDbConnectionName(" + dbAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3105,7 +3090,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -3139,7 +3124,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsFtp + ConstantDefinitions.decNsCom + "fc:searchFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3175,7 +3160,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsFtp + ConstantDefinitions.decNsCom + "fc:checkFTPConnectionName(" + ftpAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3204,7 +3189,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsFtp + ConstantDefinitions.decNsCom + "fc:deleteFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3230,7 +3215,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return false;
 		}
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsFtp + ConstantDefinitions.decNsCom + "fc:insertFTPConnection(" + ftpAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3256,7 +3241,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return false;
 		}
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsFtp + ConstantDefinitions.decNsCom + "fc:updateFTPConnectionLock(" + ftpAccessPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3330,7 +3315,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:insertWSDefinition(" + wsPropertiesXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3357,7 +3342,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "wso:getWSDefinitionList()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + "wso:getWSDefinitionList()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -3391,7 +3376,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3426,7 +3411,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms()";
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
@@ -3485,7 +3470,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:insertWSAccessProfile(" + userAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3512,7 +3497,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:deleteWSAccessProfile(" + userAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3539,7 +3524,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return false;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:updateWSAccessProfileLock(" + userAccessProfileXML + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3566,7 +3551,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + 
 				ConstantDefinitions.decNsWs + ConstantDefinitions.decNsCom + "wso:getWSDefinitionListForActiveUser(" + userId + ")";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3601,7 +3586,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:getDbConnectionAll()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -3636,7 +3621,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + 
 				ConstantDefinitions.decNsDbc + ConstantDefinitions.decNsCom + "db:getDbProfileAll()";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
