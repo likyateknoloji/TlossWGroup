@@ -3390,7 +3390,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteJob(String documentName, String jobPath, String jobPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = "xquery version \"1.0\";" + "import module namespace hs=\"http://hs.tlos.com/\" at \"xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery\";" + "declare namespace com = \"http://www.likyateknoloji.com/XML_common_types\";  " + "declare namespace dat = \"http://www.likyateknoloji.com/XML_data_types\";  " + "hs:deleteJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + decNsCom + decNsDat + "hs:deleteJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		XPathQueryService service = null;
 		try {
