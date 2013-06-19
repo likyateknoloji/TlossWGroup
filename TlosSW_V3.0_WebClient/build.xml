@@ -1,6 +1,6 @@
 <project name="TlosSW_WebClient" default="build-all" basedir=".">
 
-	<property name="appname" value="TlosSW_WebClient" />
+	<property name="appname" value="tlossw-webclient" />
 
 	<property file="build.properties" />
 	
@@ -24,7 +24,7 @@
 	
 	<!-- war, jar, ear files -->
 	<target name="jar" depends="compile">
-		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="jar" value="${appname}-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${jar}">
 			<fileset dir="${build.classes.dir}">
 			</fileset>
@@ -34,7 +34,7 @@
 			</fileset>
 		</jar>
 		
-		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="src.jar" value="${appname}-src-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
 			</fileset>
@@ -71,7 +71,7 @@
 		
 		<mkdir dir="test"/>
 		<copy file="${jar}" todir="test"/>
-		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
 	</target>
 
 </project>
