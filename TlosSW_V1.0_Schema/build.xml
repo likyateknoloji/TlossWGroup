@@ -1,6 +1,6 @@
 <project name="TlosSW_V1.0_Schema" default="tlosSW_xsd.jar" basedir=".">
 
-	<property file="build.properties"/>
+	<property file="build.properties" />
 	<property name="home.dir" value="${basedir}/.." />
 
 	<property name="appname" value="tlosxmlbeans" />
@@ -10,17 +10,24 @@
 	<property name="webapp.dir" value="." />
 	<property name="build.classes.dir" value="${build.dir}" />
 	<property name="app.deploy.dir" value="${basedir}" />
-	<property name="version.num" value="1.0"/>
+	<property name="version.num" value="1.0" />
+
+	<property name="runningLocation" location="" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${home.dir}/${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
 
 	<target name="init" depends="init2" unless="minor.number">
 		<property name="minor.number" value="" />
 		<property name="buildchar" value="" />
 	</target>
-	
+
 	<target name="init2" if="minor.number">
 		<property name="buildchar" value="_b" />
 	</target>
-	
+
 	<path id="build.path">
 		<pathelement location="${build.classes.dir}" />
 	</path>
@@ -38,9 +45,9 @@
 
 	<target name="cleanUp">
 		<echo>Clearing up temporary directory...</echo>
-		<delete dir="${src.dir}/com"/>
+		<delete dir="${src.dir}/com" />
 		<echo>...temporary directory cleared OK</echo>
-		
+
 		<delete>
 			<fileset dir="." includes="**/*.jar" />
 		</delete>
@@ -68,8 +75,8 @@
 	<target name="tlosSW_xsd.jar" depends="init,initxmlbeans" unless="">
 		<mkdir dir="build/lib" />
 
-		<xmlbean schema="dbfiles/xsds" destfile="./TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" srcgendir="src/" classpathref="xmlbeans.path" debug="on" download="true"/>
-		
+		<xmlbean schema="dbfiles/xsds" destfile="./TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" srcgendir="src/" classpathref="xmlbeans.path" debug="on" download="true" />
+
 		<property name="src.jar" value="TlosSW_xsd_src_V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
@@ -79,9 +86,21 @@
 				<include name="lib/*.jar" />
 			</fileset>
 		</jar>
-		
-		<mkdir dir="test"/>
-		<copy file="TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" todir="test"/>
-		<move file="test/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" tofile="TlosSW_xsd.jar"/>
+
+		<mkdir dir="test" />
+		<copy file="TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" todir="test" />
+		<move file="test/TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" tofile="tlossw-xsd-1.0.0.jar" />
+
+		<if>
+			<equals arg1="${minor.number}" arg2="" />
+			<then>
+				<echo message="Tying to mavenize locally..." />
+				<copy file="TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" tofile="tlossw-xsd-1.0.0.jar" />
+				<copy file="tlossw-xsd-1.0.0.jar" todir="${user.home}/.m2/repository/tlossw/tlossw-schema/1.0.0/" />
+				<echo message="Tying to mavenize locally... completed !" />
+			</then>
+			<else>
+			</else>
+		</if>
 	</target>
 </project>
