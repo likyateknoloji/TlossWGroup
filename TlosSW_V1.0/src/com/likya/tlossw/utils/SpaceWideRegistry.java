@@ -41,7 +41,9 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private transient ResourceBundle applicationResources;
 	
 	private transient Collection eXistColllection;
-	
+
+	private String collectionName;
+
 	private String xQueryModuleUrl;
 	
 	private String xmlsUrl;
@@ -351,6 +353,14 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setXmlsUrl(String xmlsUrl) {
 		this.xmlsUrl = xmlsUrl;
+	}
+
+	public String getCollectionName() {
+		return collectionName;
+	}
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
 	}
 
 }
