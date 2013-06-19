@@ -357,6 +357,7 @@
 			<xs:sequence>
 				<xs:element name="name" type="xs:string" />
 				<xs:element name="connectionUrl" type="xs:string" />
+				<xs:element name="dbCollectionName" type="xs:string" />
 				<xs:element name="username" type="xs:string" />
 				<xs:element name="password" type="xs:string" />
 			</xs:sequence>

@@ -113,9 +113,10 @@
 	</con:performance>
 	<con:dbparams>
 		<con:name>eXist</con:name>
-		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db/tlossw-serkan</con:connectionUrl>
+		<con:connectionUrl>xmldb:exist://localhost:8093/exist/xmlrpc/db</con:connectionUrl>
+		<con:dbCollectionName>TLOSSW</con:dbCollectionName>
 		<con:username>admin</con:username>
-		<con:password>admin</con:password>
+		<con:password></con:password>
 	</con:dbparams>
 	<con:monitoringAgentParams>
 		<con:name>nagios</con:name>
