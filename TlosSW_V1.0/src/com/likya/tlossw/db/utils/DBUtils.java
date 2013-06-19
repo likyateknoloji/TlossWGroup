@@ -333,7 +333,15 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:doPlanAndSelectJobsAndScenarios(" + scenarioId + "," + planId + ")";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		
+		
+		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(" + dataFile + ", " + scnarioFile + ", " + planFile + ", " + calendarFile + ", " + planId + ")";
+		
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
 
 		XPathQueryService service;
 		try {
