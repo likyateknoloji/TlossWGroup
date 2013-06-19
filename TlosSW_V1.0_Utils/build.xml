@@ -30,7 +30,7 @@
 
 	<!-- war, jar, ear files -->
 	<target name="jar" depends="compile">
-		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="jar" value="${appname}-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${jar}">
 			<fileset dir="${build.classes.dir}">
 			</fileset>
@@ -40,7 +40,7 @@
 			</fileset>
 		</jar>
 
-		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="src.jar" value="${appname}-src-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
 			</fileset>
@@ -68,8 +68,8 @@
 			<pathelement location="${sharedlib.dir}/log4j/log4j-1.2.15.jar" />
 			<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
 			<pathelement location="${sharedlib.dir}/saxonb9-1-0-8j/saxon9.jar" />
-			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_model.dir}/tlossw-model_V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
 		</path>
 
@@ -82,7 +82,7 @@
 
 		<mkdir dir="test" />
 		<copy file="${jar}" todir="test" />
-		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
 
 		<if>
 			<equals arg1="${minor.number}" arg2="" />
