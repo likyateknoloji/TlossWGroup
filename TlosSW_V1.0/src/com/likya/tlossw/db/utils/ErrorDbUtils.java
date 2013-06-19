@@ -23,10 +23,11 @@ public class ErrorDbUtils {
 
 		String errorXML = error.xmlText(xmlOptions);
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleErrorOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleErrorOperations.xquery\";" + 
 				ConstantDefinitions.decNsErr + ConstantDefinitions.decNsRes + "lk:insertError("+ errorXML + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {

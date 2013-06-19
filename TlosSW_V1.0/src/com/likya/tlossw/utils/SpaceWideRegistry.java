@@ -42,6 +42,10 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	
 	private transient Collection eXistColllection;
 	
+	private String xQueryModuleUrl;
+	
+	private String xmlsUrl;
+	
 	private transient Cpc cpcReference;
 	
 	private static Logger globalLogger;
@@ -331,6 +335,22 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setAllParameters(HashMap<Integer, ArrayList<Parameter>> allParameters) {
 		this.allParameters = allParameters;
+	}
+
+	public String getxQueryModuleUrl() {
+		return xQueryModuleUrl;
+	}
+
+	public void setxQueryModuleUrl(String xQueryModuleUrl) {
+		this.xQueryModuleUrl = xQueryModuleUrl;
+	}
+
+	public String getXmlsUrl() {
+		return xmlsUrl;
+	}
+
+	public void setXmlsUrl(String xmlsUrl) {
+		this.xmlsUrl = xmlsUrl;
 	}
 
 }

@@ -33,6 +33,7 @@ import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.nagios.NagiosServer;
 import com.likya.tlossw.perfmng.PerformanceManager;
 import com.likya.tlossw.utils.ConfigLoader;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.InfoBus;
 import com.likya.tlossw.utils.PersistenceUtils;
@@ -71,10 +72,12 @@ public class TlosSpaceWideBase {
 			DatabaseManager.registerDatabase(database);
 
 			String dbUri = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getConnectionUrl();
+			String collectionName = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getDbCollectionName();
+			
 			String userName = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getUsername();
 			String password = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getPassword();
 
-			col = DatabaseManager.getCollection(dbUri, userName, password);
+			col = DatabaseManager.getCollection(dbUri + "/" + collectionName, userName, password);
 
 			if (col == null) {
 				errprintln("Collection is null, check your eXist DB if it is running !");
@@ -84,6 +87,12 @@ public class TlosSpaceWideBase {
 
 			col.setProperty(OutputKeys.INDENT, "no");
 			getSpaceWideRegistry().setEXistColllection(col);
+
+			String xQueryModuleUrl = " at \"" + ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + collectionName + "/modules";
+			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
+
+			String xmlsUrl = ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + collectionName + "/xmls/";
+			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
 
 		} catch (Exception e) {
 			e.printStackTrace();

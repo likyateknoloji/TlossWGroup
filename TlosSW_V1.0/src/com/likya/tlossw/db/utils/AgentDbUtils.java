@@ -23,10 +23,11 @@ public class AgentDbUtils {
 		String swAgentXML = jmxAgentUser.getSwAgentXML();
 		int checkJmx = -1;
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:checkAgent(" + swAgentXML + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -50,10 +51,11 @@ public class AgentDbUtils {
 	public static boolean updateAgentToAvailable(int agentId){
 		boolean returnValue = false;
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:updateAgentToAvailableLock(" + agentId + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -150,10 +152,11 @@ public class AgentDbUtils {
 			dbJmxValue = "true()";
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:updateJmxValueLock("+ agentId + "," + dbJmxValue + ",\"" + islem + "\")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -177,10 +180,11 @@ public class AgentDbUtils {
 	public static boolean updateUserStopRequestValue(int agentId, String userStopRequestValue){
 		boolean returnValue = false;
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:updateUserStopRequestValueLock("+ agentId + "," + userStopRequestValue + "\")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -205,10 +209,11 @@ public class AgentDbUtils {
 		
 		SWAgents swAgents = SWAgents.Factory.newInstance();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:getResorces()";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -248,10 +253,11 @@ public class AgentDbUtils {
 			dbNrpeValue = "false()";
 		}
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
 				ConstantDefinitions.decNsAgnt + ConstantDefinitions.decNsRes + "lk:updateNrpeValueLock("+ resourceXML + "," + dbNrpeValue + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {

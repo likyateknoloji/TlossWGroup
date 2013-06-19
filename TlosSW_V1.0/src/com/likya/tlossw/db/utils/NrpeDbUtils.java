@@ -31,9 +31,10 @@ public class NrpeDbUtils {
 
 		String nrpeCallXML = nrpeCall.xmlText(xmlOptions);
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + "lk:insertNrpe("+ nrpeCallXML + ")";
-
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleNrpeOperations.xquery\";" + "lk:insertNrpe("+ nrpeCallXML + ")";
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -52,10 +53,11 @@ public class NrpeDbUtils {
 
 	public static boolean deleteExpiredNrpeMessages(String currentTimeZone , int expireHour){
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleNrpeOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleNrpeOperations.xquery\";" + 
 				"lk:deleteExpiredNrpeMessagesLock("+ "'" + currentTimeZone + "'" + "," + expireHour + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {

@@ -28,7 +28,7 @@ public class DbTestUtils {
 		String xmlContent = null;
 		JobProperties jobProperties = null;
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleTestOperations.xquery\";" + 
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTestOperations.xquery\";" + 
 				ConstantDefinitions.decNsCom + ConstantDefinitions.decNsDat + "lk:getJob("+ jobPath + "," + jobName + " )";
 
 		XPathQueryService service = null;

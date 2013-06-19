@@ -51,10 +51,12 @@ public class DssDbUtils {
 		
 		ResourceAgentList resourceAgentList = ResourceAgentList.Factory.newInstance();
 		//System.out.println("  > jobPropFuncPassXML : " + jobPropFuncPassXML);
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dssNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleDSSOperations.xquery\";" + 
+		
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.dssNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDSSOperations.xquery\";" + 
 			standartNameSpaceDeclaritions + "dss:SWFindResourcesForAJob("+ jobPropFuncPassXML  +", fn:current-dateTime())";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -90,10 +92,11 @@ public class DssDbUtils {
 		
 		Alarm alarm= Alarm.Factory.newInstance();
 
-		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + ConstantDefinitions.xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + 
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		String xQueryStr = ConstantDefinitions.xQueryNsHeader + ConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
 				standartNameSpaceDeclaritions + ConstantDefinitions.decNsSt + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
