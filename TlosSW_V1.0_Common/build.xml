@@ -30,7 +30,7 @@
 
 	<!-- war, jar, ear files -->
 	<target name="jar" depends="compile">
-		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="jar" value="${appname}-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${jar}">
 			<fileset dir="${build.classes.dir}">
 			</fileset>
@@ -40,7 +40,7 @@
 			</fileset>
 		</jar>
 
-		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="src.jar" value="${appname}-src-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
 			</fileset>
@@ -81,7 +81,7 @@
 
 		<mkdir dir="test" />
 		<copy file="${jar}" todir="test" />
-		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
 
 		<if>
 			<equals arg1="${minor.number}" arg2="" />
