@@ -91,23 +91,20 @@ public class DBOperations implements Serializable {
 
 	private static final long serialVersionUID = 8575509360685840755L;
 
-	private static final String xQueryNsHeader = "xquery version \"1.0\";  import module namespace ";
+	private static final String xQueryNsHeader = ConstantDefinitions.xQueryNsHeader;
 
 	@ManagedProperty(value = "#{existConnectionHolder}")
 	private ExistConnectionHolder existConnectionHolder;
 
 	private String xQueryModuleUrl = null;
-	private String dbUrl = "xmldb:exist:";
-	private String rootUrl = "//db/";
 	private String dataDocUrl = "";
-
 	private String xmlsUrl = "";
 
 	@PostConstruct
 	public void init() {
-		xQueryModuleUrl = " at \"" + dbUrl + rootUrl + ExistClient.dbCollectionName + "/modules";
+		xQueryModuleUrl = " at \"" + ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/modules";
 		dataDocUrl = "//db/" + ExistClient.dbCollectionName + "/xmls/" + ConstantDefinitions.JOB_DEFINITION_DATA;
-		xmlsUrl = dbUrl + rootUrl + ExistClient.dbCollectionName + "/xmls/";
+		xmlsUrl = ConstantDefinitions.dbUrl + ConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/xmls/";
 	}
 
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
