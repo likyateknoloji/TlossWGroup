@@ -87,6 +87,7 @@ public class TlosSpaceWideBase {
 
 			col.setProperty(OutputKeys.INDENT, "no");
 			getSpaceWideRegistry().setEXistColllection(col);
+			getSpaceWideRegistry().setCollectionName(collectionName);
 
 			String xQueryModuleUrl = " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "/modules";
 			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
