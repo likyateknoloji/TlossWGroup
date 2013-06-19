@@ -28,5 +28,10 @@
 			<artifactId>xbean</artifactId>
 			<version>2.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>likyateknoloji</groupId>
+			<artifactId>tlossw-xsd</artifactId>
+			<version>1.0.0</version>
+		</dependency>			
 	</dependencies>
 </project>
