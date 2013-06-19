@@ -51,7 +51,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
-import com.likya.tlossw.jmx.beans.RemoteDBOperator;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -767,13 +766,13 @@ public class Spc extends SpcBase {
 		StreamSource transformCode = null;
 		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
 		try {
-			transformCode = RemoteDBOperator.getTransformXslCode("hs:tlosJobTransformXsl()");
+			transformCode = DBUtils.getTransformXslCode("hs:tlosJobTransformXsl()");
 		} catch (Exception e) {
 			throw new TransformCodeCreateException(e);
 		}
 		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
 		try {
-			scheduledJob.setRequestedStream(RemoteDBOperator.getTransformXslCode("hs:tlosXMLTransformXsl()"));
+			scheduledJob.setRequestedStream(DBUtils.getTransformXslCode("hs:tlosXMLTransformXsl()"));
 		} catch (Exception e) {
 			throw new TransformCodeCreateException(e);
 		}
