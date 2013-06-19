@@ -95,7 +95,7 @@
 			<then>
 				<echo message="Tying to mavenize locally..." />
 				<copy file="TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" tofile="tlossw-xsd-1.0.0.jar" />
-				<copy file="tlossw-xsd-1.0.0.jar" todir="${user.home}/.m2/repository/likyateknoloji/tlossw-schema/1.0.0/" />
+				<copy file="tlossw-xsd-1.0.0.jar" todir="${user.home}/.m2/repository/likyateknoloji/tlossw-xsd/1.0.0/" />
 				<echo message="Tying to mavenize locally... completed !" />
 			</then>
 			<else>
