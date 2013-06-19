@@ -25,7 +25,7 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.SftpPropertiesDocument.SftpPrope
 import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument.TransportProvider;
 import com.likya.tlossw.model.FTPAccessInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -266,11 +266,11 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 			return;
 		}
 
-		if (message.equals(ConstantDefinitions.FTP_SUCCESSFUL)) {
+		if (message.equals(CommonConstantDefinitions.FTP_SUCCESSFUL)) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_INFO, "tlos.success.ftpConnectionDef.test", null);
-		} else if (message.equals(ConstantDefinitions.FTP_LOGIN_ERROR)) {
+		} else if (message.equals(CommonConstantDefinitions.FTP_LOGIN_ERROR)) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.testLogin", null);
-		} else if (message.equals(ConstantDefinitions.FTP_CONNECTION_ERROR)) {
+		} else if (message.equals(CommonConstantDefinitions.FTP_CONNECTION_ERROR)) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.test", null);
 		}
 	}
