@@ -1,6 +1,6 @@
 <project name="TlosSW_V1.0_Agent" default="build-all" basedir=".">
 
-	<property name="appname" value="TlosSWAgent" />
+	<property name="appname" value="tlossw-agent" />
 
 	<property file="build.properties" />
 
@@ -23,11 +23,11 @@
 	<!-- war, jar, ear files -->
 
 	<target name="jar" depends="compile">
-		<property name="jar" value="${appname}_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="jar" value="${appname}-V${version.num}${buildchar}${minor.number}.jar" />
 		
 		<manifest file="MANIFEST.MF">
 			<attribute name="Main-Class" value="com.likya.tlosswagent.TlosSWAgent"/>
-			<attribute name="Class-Path" value="tlossw-model-V${version.num}${buildchar}${minor.number}.jar tlossw-common-V${version.num}${buildchar}${minor.number}.jar tlossw-utils-V${version.num}${buildchar}${minor.number}.jar TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar" />
+			<attribute name="Class-Path" value="tlossw-model-V${version.num}${buildchar}${minor.number}.jar tlossw-common-V${version.num}${buildchar}${minor.number}.jar tlossw-utils-V${version.num}${buildchar}${minor.number}.jar tlossw-clientlibs-V${version.num}${buildchar}${minor.number}.jar tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar" />
 		</manifest>  
 		
 		<jar jarfile="${jar}" manifest="MANIFEST.MF">
@@ -40,7 +40,7 @@
 			</fileset-->
 		</jar>
 		
-		<property name="src.jar" value="${appname}_src_V${version.num}${buildchar}${minor.number}.jar" />
+		<property name="src.jar" value="${appname}-src-V${version.num}${buildchar}${minor.number}.jar" />
 		<jar jarfile="${src.jar}">
 			<fileset dir="${src.dir}">
 				<include name="**/*" />
@@ -71,7 +71,7 @@
 			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_utils.dir}/tlossw-utils-V${version.num}${buildchar}${minor.number}.jar" />	
-			<pathelement location="${tlos_clientLibs.dir}/TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_clientLibs.dir}/tlossw-clientlibs-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${sharedlib.dir}/javamail/mail.jar" />
 			<pathelement location="${tlos_eval.dir}/eval-0.4.jar" />
@@ -103,7 +103,7 @@
 		
 		<mkdir dir="test"/>
 		<copy file="${jar}" todir="test"/>
-		<move file="test/${appname}_V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar"/>
 	</target>
 
 </project>
