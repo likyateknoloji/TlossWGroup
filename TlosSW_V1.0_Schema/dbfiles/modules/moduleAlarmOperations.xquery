@@ -1,8 +1,8 @@
 xquery version "1.0";
 module namespace lk = "http://likya.tlos.com/";
 
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
-import module namespace hs = "http://hs.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleScenarioOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "../modules/moduleSequenceOperations.xquery";
+import module namespace hs = "http://hs.tlos.com/" at "../modules/moduleScenarioOperations.xquery";
 
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace alm = "http://www.likyateknoloji.com/XML_alarm_types";
@@ -15,24 +15,22 @@ declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 declare namespace alm-history="http://www.likyateknoloji.com/XML_alarm_history";
 
 (:
-declare function lk:searchAlarm_ayhan($searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
-{
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
-		return if (
-                   (fn:contains(fn:lower-case($alarm/alm:level), fn:lower-case($searchAlarm/alm:level)) or data($searchAlarm/alm:level)="")
-             )
-		then $alarm
-		else  ( )
-};
+Mappings
+$documentHistory = Url = doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")
+$documentUrl = doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")
+$documentDataUrl = doc("//db/TLOSSW/xmls/tlosSWData10.xml")
+$documentUserUrl = doc("//db/TLOSSW/xmls/tlosSWUser10.xml")
+$documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
+
 :)
 
-declare function lk:getAlarms($date1 as xs:string, $date2 as xs:string, $level1 as xs:string, $alarm1 as xs:string, $per1 as xs:string) as node()*
+declare function lk:getAlarms($documentUrl as xs:string, $documentHistoryUrl as xs:string, $documentDataUrl as xs:string, $documentUserUrl as xs:string, $date1 as xs:string, $date2 as xs:string, $level1 as xs:string, $alarm1 as xs:string, $per1 as xs:string) as node()*
 {
 
-                let $sonuc := for $alarmHistory in doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory/alm-history:alarm, 
-                                  $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm,
-                                  $user in doc("//db/TLOSSW/xmls/tlosSWUser10.xml")/usr:user-infos/usr:userList/usr:person,
-                                  $job in doc("//db/TLOSSW/xmls/tlosSWData10.xml")/dat:TlosProcessData//dat:jobList/dat:jobProperties
+                let $sonuc := for $alarmHistory in doc($documentHistoryUrl)/alm-history:alarmHistory/alm-history:alarm, 
+                                  $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm,
+                                  $user in doc($documentUserUrl)/usr:user-infos/usr:userList/usr:person,
+                                  $job in doc($documentDataUrl)/dat:TlosProcessData//dat:jobList/dat:jobProperties
                               where $alarm[@ID = $alarmHistory/alm-history:alarmId] and 
                                     $user[@id = $alarmHistory/alm:subscriber/alm:person/@id] and 
                                     $job[@ID = /$alarmHistory/alm:focus/alm:jobs/alm:job/@id] and 
@@ -58,9 +56,9 @@ declare function lk:getAlarms($date1 as xs:string, $date2 as xs:string, $level1 
 }; 
 
 (:fn:empty($prs/com:role):)
-declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
+declare function lk:searchAlarm($documentUrl as xs:string, $searchAlarm as element(alm:alarm)) as element(alm:alarm)* 
 {
-      for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+      for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm
         let $itemStartDate  := data($alarm/alm:startDate)
         let $itemEndDate    := data($alarm/alm:endDate)
         let $searchedStartDate := data($searchAlarm/alm:startDate)
@@ -103,40 +101,40 @@ declare function lk:searchAlarm($searchAlarm as element(alm:alarm)) as element(a
 
 (: ornek kullanim lk:alarmList(1,2) ilk iki eleman :)
 (: Su anda kullanilmiyor :)
-declare function lk:alarmList($firstElement as xs:int, $lastElement as xs:int) as element(alm:alarm)* 
+declare function lk:alarmList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(alm:alarm)* 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm[position() = ($firstElement to $lastElement)]
+	for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm[position() = ($firstElement to $lastElement)]
 	return  $alarm
 };
 
-declare function lk:searchAlarmByName($alarmname as xs:string) as element(alm:alarm)? 
+declare function lk:searchAlarmByName($documentUrl as xs:string, $alarmname as xs:string) as element(alm:alarm)? 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm 
+	for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm 
 	where $alarm/alm:name = $alarmname
 	return $alarm
 };
 
  
-declare function lk:alarms() as element(alm:alarm)* 
+declare function lk:alarms($documentUrl as xs:string) as element(alm:alarm)* 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm 
+	for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm 
 	return  $alarm
 };
 
 (: son kac gun icerisinde arama yapilacaksa $numberOfDay kismina yaziliyor :)
-declare function lk:jobAlarmListbyRunId($numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $numberOfDay as xs:int) as element(alm:alarm)*
+declare function lk:jobAlarmListbyRunId($documentHistoryUrl as xs:string, $documentSeqUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $numberOfDay as xs:int) as element(alm:alarm)*
  {
     let $runIdFound := if ($runId != 0 ) 
 	                   then $runId 
-	                   else sq:getId("runId")
+	                   else sq:getId($documentSeqUrl, "runId")
 
-    let $posUpper := max(for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory/alm-history:alarm
+    let $posUpper := max(for $runx at $pos in doc($documentHistoryUrl)/alm-history:alarmHistory/alm-history:alarm
 	                 where ($runx[@runId = $runIdFound] or not($refRunIdBolean)) and $runx/alm:focus/alm:jobs/alm:job[@id = $jobId or $jobId = 0]
 	                 return $pos)
 
     let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
 
-	let $sonuc := for $runx at $pos in doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory/alm-history:alarm
+	let $sonuc := for $runx at $pos in doc($documentHistoryUrl)/alm-history:alarmHistory/alm-history:alarm
 					 where $pos > $posLower and $pos <=$posUpper and ($runx[@runId = $runIdFound] or not($refRunIdBolean)) 
 					       and $runx/alm:focus/alm:jobs/alm:job[@id = $jobId or $jobId = 0]
 					 order by $runx/@aHistoryId descending
@@ -146,37 +144,37 @@ declare function lk:jobAlarmListbyRunId($numberOfElement as xs:int, $runId as xs
 
 (: ornek kullanim lk:searchAlarmByAlarmName(xs:string('Failed alarmi')) :)
 (: Su anda kullanilmiyor :)
-declare function lk:searchAlarmByAlarmName($searchAlarmName as xs:string) as element(alm:alarm)? 
+declare function lk:searchAlarmByAlarmName($documentUrl as xs:string, $searchAlarmName as xs:string) as element(alm:alarm)? 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+	for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm
 	where fn:lower-case($alarm/alm:name)=fn:lower-case($searchAlarmName)
     return $alarm
 };
 
-declare function lk:searchAlarmByAlarmId($id as xs:integer) as element(alm:alarm)? 
+declare function lk:searchAlarmByAlarmId($documentUrl as xs:string, $id as xs:integer) as element(alm:alarm)? 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+	for $alarm in doc($documentUrl)/alm:alarmManagement/alm:alarm
 	where $alarm/@ID = $id
     return $alarm
 };
 
-declare function lk:searchAlarmHistoryById($id as xs:integer) as element(alm-history:alarm)? 
+declare function lk:searchAlarmHistoryById($documentHistoryUrl as xs:string, $id as xs:integer) as element(alm-history:alarm)? 
  {
-	for $alarm in doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory/alm-history:alarm
+	for $alarm in doc($documentHistoryUrl)/alm-history:alarmHistory/alm-history:alarm
 	where $alarm/@aHistoryId = $id
     return $alarm
 };
 
-declare function lk:insertAlarmLock($alarm as element(alm:alarm)) as xs:boolean
+declare function lk:insertAlarmLock($documentUrl as xs:string, $documentSeqUrl as xs:string, $alarm as element(alm:alarm)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement, lk:insertAlarm($alarm))     
+   let $sonuc := util:exclusive-lock(doc($documentUrl)/alm:alarmManagement, lk:insertAlarm($documentUrl, $documentSeqUrl, $alarm))     
    return true()
 };
 
-declare function lk:insertAlarm($alarm as element(alm:alarm)) as node()*
+declare function lk:insertAlarm($documentUrl as xs:string, $documentSeqUrl as xs:string, $alarm as element(alm:alarm)) as node()*
 {
     let $XXX := $alarm
-    let $nextId := sq:getNextId("alarmId")	
+    let $nextId := sq:getNextId($documentSeqUrl, "alarmId")	
 
 	return update insert 
 		<alm:alarm xmlns="http://www.likyateknoloji.com/XML_alarm_types" ID="{$nextId}"> 
@@ -194,41 +192,41 @@ declare function lk:insertAlarm($alarm as element(alm:alarm)) as node()*
                   <alm:focus>{$XXX/alm:focus/*}</alm:focus>
                   <alm:caseManagement>{$XXX/alm:caseManagement/*}</alm:caseManagement>	
                 </alm:alarm>	
-	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement
+	into doc($documentUrl)/alm:alarmManagement
 } ;
 
-declare function lk:updateAlarm($alarm as element(alm:alarm))
+declare function lk:updateAlarm($documentUrl as xs:string, $alarm as element(alm:alarm))
 {
-	for $alarmdon in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+	for $alarmdon in doc($documentUrl)/alm:alarmManagement/alm:alarm
 	where $alarmdon/@ID = $alarm/@ID
 	return  update replace $alarmdon with $alarm
 };
 
-declare function lk:updateAlarmLock($alarm as element(alm:alarm))
+declare function lk:updateAlarmLock($documentUrl as xs:string, $alarm as element(alm:alarm))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm, lk:updateAlarm($alarm))     
+   util:exclusive-lock(doc($documentUrl)/alm:alarmManagement/alm:alarm, lk:updateAlarm($documentUrl, $alarm))     
 };
 
-declare function lk:deleteAlarm($alarm as element(alm:alarm))
+declare function lk:deleteAlarm($documentUrl as xs:string, $alarm as element(alm:alarm))
  {
-	for $alarmdon in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+	for $alarmdon in doc($documentUrl)/alm:alarmManagement/alm:alarm
 	where $alarmdon/@ID = $alarm/@ID
 	return update delete $alarmdon
 };
 
-declare function lk:deleteAlarmLock($alarm as element(alm:alarm))
+declare function lk:deleteAlarmLock($documentUrl as xs:string, $alarm as element(alm:alarm))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm, lk:deleteAlarm($alarm))     
+   util:exclusive-lock(doc($documentUrl)/alm:alarmManagement/alm:alarm, lk:deleteAlarm($documentUrl, $alarm))     
 };
 
 (: ******************* Alarm History ****************************** :)
 
-declare function lk:SWFindAlarms($jobID as xs:string, $userID as xs:int, $agentId as xs:int, $liveStateInfoXML as element(state-types:LiveStateInfo)) as element(alm-history:alarm)?
+declare function lk:SWFindAlarms($documentUrl as xs:string, $documentHistoryUrl as xs:string, $documentDataUrl as xs:string, $jobID as xs:string, $userID as xs:int, $agentId as xs:int, $liveStateInfoXML as element(state-types:LiveStateInfo)) as element(alm-history:alarm)?
 {
 
-let $alarmPref := doc("//db/TLOSSW/xmls/tlosSWData10.xml")//dat:jobProperties[@ID=$jobID]/dat:alarmPreference
+let $alarmPref := doc($documentDataUrl)//dat:jobProperties[@ID=$jobID]/dat:alarmPreference
 let $alarmList := for $alarmx in $alarmPref/dat:alarmId,
-                      $herbiri in doc("//db/TLOSSW/xmls/tlosSWAlarm10.xml")/alm:alarmManagement/alm:alarm
+                      $herbiri in doc($documentUrl)/alm:alarmManagement/alm:alarm
                   where data($herbiri/@ID) = data($alarmx)
                   return $herbiri
 let $alarmParams := for $alarmx in $alarmList/alm:focus/alm:jobs/alm:job
@@ -301,7 +299,7 @@ let $sonuc2 :=
         </alm-history:caseOccured>
       </alm-history:alarm>
 
-    let $insertIt := lk:insertAlarmHistoryLock($sonuc) 
+    let $insertIt := lk:insertAlarmHistoryLock($documentHistoryUrl, $sonuc) 
 	return $sonuc
   else ()
 	
@@ -311,22 +309,22 @@ return $sonuc3
 
 };
 
-declare function lk:insertAlarmHistoryLock($alarm as element(alm-history:alarm)) as xs:boolean
+declare function lk:insertAlarmHistoryLock($documentHistoryUrl as xs:string, $documentSeqUrl as xs:string, $alarm as element(alm-history:alarm)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory, lk:insertAlarmHistory($alarm))     
+   let $sonuc := util:exclusive-lock(doc($documentHistoryUrl)/alm-history:alarmHistory, lk:insertAlarmHistory($documentHistoryUrl, $documentSeqUrl, $alarm))     
    return true()
 };
 
-declare function lk:insertAlarmHistory($alarm as element(alm-history:alarm)) as node()*
+declare function lk:insertAlarmHistory($documentHistoryUrl as xs:string, $documentSeqUrl as xs:string, $alarm as element(alm-history:alarm)) as node()*
 {
     let $islem := if (fn:exists($alarm)) then
-    let $nextId := sq:getNextId("aHistoryId")	
-    let $runId := sq:getId("runId")
+    let $nextId := sq:getNextId($documentSeqUrl, "aHistoryId")	
+    let $runId := sq:getId($documentSeqUrl, "runId")
 	  return update insert
       <alm-history:alarm aHistoryId="{$nextId}" agentId="{$alarm/@agentId}" runId="{$runId }">
         {$alarm/*}
       </alm-history:alarm>
-	  into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWAlarmHistory10.xml")/alm-history:alarmHistory
+	  into doc($documentHistoryUrl)/alm-history:alarmHistory
     else ()
     return  $islem
 };
