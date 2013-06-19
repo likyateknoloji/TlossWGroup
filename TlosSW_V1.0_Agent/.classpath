@@ -12,7 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Utils"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache/commons-vfs-1.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
-	<classpathentry kind="lib" path="/TlosSW_V1.0_Schema/TlosSW_xsd_V1.0.jar" sourcepath="/TlosSW_V1.0_Schema/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javaMail"/>
+	<classpathentry kind="lib" path="/TlosSW_V1.0_Schema/tlossw-xsd-1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
