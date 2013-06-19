@@ -27,7 +27,7 @@
 		
 		<manifest file="MANIFEST.MF">
 			<attribute name="Main-Class" value="com.likya.tlosswagent.TlosSWAgent"/>
-			<attribute name="Class-Path" value="TlosSW_Model_V${version.num}${buildchar}${minor.number}.jar TlosSW_Common_V${version.num}${buildchar}${minor.number}.jar TlosSW_Utils_V${version.num}${buildchar}${minor.number}.jar TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar TlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar" />
+			<attribute name="Class-Path" value="tlossw-model-V${version.num}${buildchar}${minor.number}.jar tlossw-common-V${version.num}${buildchar}${minor.number}.jar tlossw-utils-V${version.num}${buildchar}${minor.number}.jar TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar" />
 		</manifest>  
 		
 		<jar jarfile="${jar}" manifest="MANIFEST.MF">
@@ -68,11 +68,11 @@
 			<pathelement location="${sharedlib.dir}/apache/commons-collections-3.2.1.jar" />
 			<pathelement location="${sharedlib.dir}/apache/commons-logging-1.1.1.jar" />
 			<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
-			<pathelement location="${tlos_model.dir}/TlosSW_Model_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_commonDefinitions.dir}/TlosSW_Common_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_utils.dir}/TlosSW_Utils_V${version.num}${buildchar}${minor.number}.jar" />	
+			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_utils.dir}/tlossw-utils-V${version.num}${buildchar}${minor.number}.jar" />	
 			<pathelement location="${tlos_clientLibs.dir}/TlosSW_ClientLibs_V${version.num}${buildchar}${minor.number}.jar" />
-			<pathelement location="${tlos_schemaDefinitions.dir}/tlosSW_xsd_V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${sharedlib.dir}/javamail/mail.jar" />
 			<pathelement location="${tlos_eval.dir}/eval-0.4.jar" />
 			<pathelement location="${sharedlib.dir}/apache/commons-net-3.0.1.jar" />
