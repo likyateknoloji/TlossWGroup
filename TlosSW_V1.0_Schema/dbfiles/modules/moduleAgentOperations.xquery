@@ -1,21 +1,21 @@
 xquery version "1.0";
 module namespace lk = "http://likya.tlos.com/";
 
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "../modules/moduleSequenceOperations.xquery";
 
 declare namespace agnt = "http://www.likyateknoloji.com/XML_agent_types";
 declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
 declare namespace par = "http://www.likyateknoloji.com/XML_parameters_types";
 
-declare function lk:getAgents() as element()* 
+declare function lk:getAgents($documentUrl as xs:string) as element()* 
 {
-	for $agents in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents
+	for $agents in doc($documentUrl)/agnt:SWAgents
 	return  $agents
 };
 
-(:declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:boolean  
+(:declare function lk:checkAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean  
 {
-	let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxTlsPort)
+	let $swAgent := lk:searchAgent($documentUrl, $agent/agnt:ipAddress, $agent/agnt:jmxTlsPort)
 	let $checkUser := if($swAgent/agnt:jmxUser = $agent/agnt:jmxUser and $swAgent/agnt:jmxPassword = $agent/agnt:jmxPassword) 
         then true()
         else (false())
@@ -23,44 +23,24 @@ declare function lk:getAgents() as element()*
 };
 :)
 
-declare function lk:checkAgent($agent as element(agnt:SWAgent)) as xs:int  
+declare function lk:checkAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:int  
 {
-	(:let $swAgent := lk:searchAgent($agent/agnt:ipAddress, $agent/agnt:jmxTlsPort):)
-	let $swAgent := lk:searchAgent($agent/res:Resource, $agent/agnt:jmxTlsPort)
+	(:let $swAgent := lk:searchAgent($documentUrl, $agent/agnt:ipAddress, $agent/agnt:jmxTlsPort):)
+	let $swAgent := lk:searchAgent($documentUrl, $agent/res:Resource, $agent/agnt:jmxTlsPort)
 	let $checkUser := if($swAgent/agnt:jmxUser = $agent/agnt:jmxUser and $swAgent/agnt:jmxPassword = $agent/agnt:jmxPassword) 
         then $swAgent/@id
         else (-1)
     return $checkUser 
 };
 
-declare function lk:searchAgent($host as xs:string, $jmxport as xs:short)  as element(agnt:SWAgent)? 
+declare function lk:searchAgent($documentUrl as xs:string, $host as xs:string, $jmxport as xs:short)  as element(agnt:SWAgent)? 
 {
-   doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxTlsPort = $jmxport]
+   doc($documentUrl)/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxTlsPort = $jmxport]
 };
 
-(: eski versiyon , coklama hatasi veriyordu. hs. 10eylul2012
-declare function lk:searchAgent($host as element(res:Resource), $jmxport as as element(res:Resource))  as element(agnt:SWAgent)? 
-{
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
-        where $agent/res:Resource = $host and $agent/agnt:jmxTlsPort = $jmxport 
-    return $agent 
-};
-:)
-
-
-(:
-declare function lk:searchAgent($ip as xs:string, $jmxport as xs:int)  as element(agnt:SWAgent)? 
-{
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
-        where $agent/agnt:ipAddress = $ip and $agent/agnt:jmxTlsPort = $jmxport 
-    return $agent 
-};
-
-:)
-
-declare function lk:searchAgent($searchAgent as element(agnt:SWAgent)) as element(agnt:SWAgent)* 
+declare function lk:searchAgent($documentUrl as xs:string, $searchAgent as element(agnt:SWAgent)) as element(agnt:SWAgent)* 
  {
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+	for $agent in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
 	return if ((fn:contains(fn:lower-case($agent/res:Resource), fn:lower-case($searchAgent/res:Resource)) or data($searchAgent/res:Resource)="")
                    and
                    (fn:contains(fn:lower-case($agent/agnt:osType), fn:lower-case($searchAgent/agnt:osType)) or data($searchAgent/agnt:osType)="")
@@ -78,34 +58,34 @@ declare function lk:searchAgent($searchAgent as element(agnt:SWAgent)) as elemen
 };
 
 (: ornek kullanim lk:agentList(1,2) ilk iki eleman :)
-declare function lk:agentList($firstElement as xs:int, $lastElement as xs:int) as element(agnt:SWAgent)* 
+declare function lk:agentList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(agnt:SWAgent)* 
  {
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[position() = ($firstElement to $lastElement)]
+	for $agent in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent[position() = ($firstElement to $lastElement)]
 	return $agent
 };
 
 (: ornek kullanim lk:searchAgentByjmxPort('5555') :)
-declare function lk:searchAgentByjmxPort($searchjmxPort as xs:string) as element(agnt:SWAgent)* 
+declare function lk:searchAgentByjmxPort($documentUrl as xs:string, $searchjmxPort as xs:string) as element(agnt:SWAgent)* 
  {
-    for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+    for $agent in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
     where $agent/agnt:jmxTlsPort=$searchjmxPort
     return $agent
 };
 
-declare function lk:searchAgentByAgentId($id as xs:integer) as element(agnt:SWAgent)? 
+declare function lk:searchAgentByAgentId($documentUrl as xs:string, $id as xs:integer) as element(agnt:SWAgent)? 
  {
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+	for $agent in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
 	where $agent/@id = $id
     return $agent
 };
 
-declare function lk:insertAgentLock($agent as element(agnt:SWAgent)) as xs:boolean
+declare function lk:insertAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:insertAgent($agent))     
+   let $sonuc := util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:insertAgent($documentUrl, $agent))     
    return true()
 };
 
-declare function lk:insertAgent($agent as element(agnt:SWAgent)) as node()*
+declare function lk:insertAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as node()*
 {
     let $XXX := $agent
     let $nextId := sq:getNextId("agentId")	
@@ -145,29 +125,29 @@ declare function lk:insertAgent($agent as element(agnt:SWAgent)) as node()*
         <agnt:workspacePath>{data($XXX/agnt:workspacePath)}</agnt:workspacePath>
         { $locals }
       </agnt:SWAgent>	
-	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents
+	into doc($documentUrl)/agnt:SWAgents
 
 } ;
 
-declare function lk:deleteAgent($agent as element(agnt:SWAgent))
+declare function lk:deleteAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent))
  {
-	for $agentdon in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+	for $agentdon in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
 	where $agentdon/@id = $agent/@id
 	return update delete $agentdon
 };
 
-declare function lk:deleteAgentLock($agent as element(agnt:SWAgent))
+declare function lk:deleteAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent, lk:deleteAgent($agent))     
+   util:exclusive-lock(doc($documentUrl)/agnt:SWAgents/agnt:SWAgent, lk:deleteAgent($documentUrl, $agent))     
 };
 
-declare function lk:updateAgent($agent as element(agnt:SWAgent)) as xs:boolean
+declare function lk:updateAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
 {
-    let $varmi := 	for $agentdon in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+    let $varmi := 	for $agentdon in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
 	                where $agentdon/@id = $agent/@id
                     return count(1)
     let $update := 
-	  for $agentdon in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+	  for $agentdon in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent
 	  where $agentdon/@id = $agent/@id
 	  return update replace $agentdon with $agent
 
@@ -175,26 +155,26 @@ declare function lk:updateAgent($agent as element(agnt:SWAgent)) as xs:boolean
   return $sonuc
 };
 
-declare function lk:updateAgentLock($agent as element(agnt:SWAgent))
+declare function lk:updateAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent, lk:updateAgent($agent))     
+   util:exclusive-lock(doc($documentUrl)/agnt:SWAgents/agnt:SWAgent, lk:updateAgent($documentUrl, $agent))     
 };
 
-declare function lk:updateUserStopRequestValueLock($agentId as xs:int, $userStopRequestValue as xs:string)
+declare function lk:updateUserStopRequestValueLock($documentUrl as xs:string, $agentId as xs:int, $userStopRequestValue as xs:string)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateUserStopRequestValue($agentId, $userStopRequestValue))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateUserStopRequestValue($documentUrl, $agentId, $userStopRequestValue))
 };
 
-declare function lk:updateUserStopRequestValue($agentId as xs:int, $userStopRequestValue as xs:string)
+declare function lk:updateUserStopRequestValue($documentUrl as xs:string, $agentId as xs:int, $userStopRequestValue as xs:string)
 {
-	let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+	let $doc := doc($documentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:userStopRequest with $userStopRequestValue		
 	return true()
 };
 
-declare function lk:updateJmxValue($agentId as xs:int, $updateValue as xs:boolean, $islem as xs:string) as xs:boolean
+declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int, $updateValue as xs:boolean, $islem as xs:string) as xs:boolean
 {
-let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+let $doc := doc($documentUrl)
 let $sonuc := if ($islem = "outJMX" and data($doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:outJmxAvailable) != $updateValue) then
                update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:outJmxAvailable with $updateValue 
                else if ($islem = "inJMX" and data($doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:inJmxAvailable) != $updateValue) then
@@ -210,83 +190,83 @@ let $result := true() (: burasi sonuca gore degismeli. sonra yap :)
 (: Kullanim -> local:updateJmxValue(1, true(), xs:string("inJMX")) :)
 
 (:
-declare function lk:updateJmxValue($agentId as xs:int, $jmxValue as xs:boolean)
+declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int, $jmxValue as xs:boolean)
 {
-	let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+	let $doc := doc($documentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:jmxAvailable with $jmxValue		
 	return true()
 };
 :)
 
-declare function lk:updateJmxValueLock($agentId as xs:int, $jmxValue as xs:boolean, $islem as xs:string)
+declare function lk:updateJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $jmxValue as xs:boolean, $islem as xs:string)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateJmxValue($agentId, $jmxValue, $islem))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateJmxValue($documentUrl, $agentId, $jmxValue, $islem))
 };
 
 (:
-declare function lk:updateInJmxValue($agentId as xs:int, $inJmxValue as xs:boolean){
-	let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+declare function lk:updateInJmxValue($documentUrl as xs:string, $agentId as xs:int, $inJmxValue as xs:boolean){
+	let $doc := doc($documentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:inJmxAvailable with $inJmxValue		
 	return true()
 };
 
-declare function lk:updateInJmxValueLock($agentId as xs:int, $inJmxValue as xs:boolean)
+declare function lk:updateInJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $inJmxValue as xs:boolean)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateInJmxValue($agentId, $inJmxValue))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateInJmxValue($documentUrl, $agentId, $inJmxValue))
 };
 
-declare function lk:updateOutJmxValue($agentId as xs:int, $outJmxValue as xs:boolean){
-	let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+declare function lk:updateOutJmxValue($documentUrl as xs:string, $agentId as xs:int, $outJmxValue as xs:boolean){
+	let $doc := doc($documentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:outJmxAvailable with $outJmxValue		
 	return true()
 };
 
-declare function lk:updateOutJmxValueLock($agentId as xs:int, $outJmxValue as xs:boolean)
+declare function lk:updateOutJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $outJmxValue as xs:boolean)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateOutJmxValue($agentId, $outJmxValue))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateOutJmxValue($documentUrl, $agentId, $outJmxValue))
 };
 :)
 
-declare function lk:updateNrpeValue($host as element(res:Resource), $nrpeValue as xs:boolean){
-	let $doc := doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+declare function lk:updateNrpeValue($documentUrl as xs:string, $host as element(res:Resource), $nrpeValue as xs:boolean){
+	let $doc := doc($documentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[res:Resource=$host]/agnt:nrpeAvailable with $nrpeValue		
 	return true()
 };
 
-declare function lk:updateNrpeValueLock($host as element(res:Resource), $nrpeValue as xs:boolean)
+declare function lk:updateNrpeValueLock($documentUrl as xs:string, $host as element(res:Resource), $nrpeValue as xs:boolean)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateNrpeValue($host, $nrpeValue))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateNrpeValue($documentUrl, $host, $nrpeValue))
 };
 
-declare function lk:updateAgentToAvailable($agentId as xs:int){
-	let $updateJmx := lk:updateJmxValue($agentId, true(), xs:string("JMX"))
-	let $updateInJmx := lk:updateJmxValue($agentId, true(), xs:string("inJMX"))
-	let $updateOutJmx := lk:updateJmxValue($agentId, true(), xs:string("outJMX"))		
+declare function lk:updateAgentToAvailable($documentUrl as xs:string, $agentId as xs:int){
+	let $updateJmx := lk:updateJmxValue($documentUrl, $agentId, true(), xs:string("JMX"))
+	let $updateInJmx := lk:updateJmxValue($documentUrl, $agentId, true(), xs:string("inJMX"))
+	let $updateOutJmx := lk:updateJmxValue($documentUrl, $agentId, true(), xs:string("outJMX"))		
 	return true()
 };
 
-declare function lk:updateAgentToAvailableLock($agentId as xs:int)
+declare function lk:updateAgentToAvailableLock($documentUrl as xs:string, $agentId as xs:int)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateAgentToAvailable($agentId))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateAgentToAvailable($documentUrl, $agentId))
 };
 
-declare function lk:updateAgentToUnAvailable($agentId as xs:int){
-	let $updateJmx := lk:updateJmxValue($agentId, false(), xs:string("JMX"))
-	let $updateInJmx := lk:updateJmxValue($agentId, false(), xs:string("inJMX"))
-	let $updateOutJmx := lk:updateJmxValue($agentId, false(), xs:string("outJMX"))	
+declare function lk:updateAgentToUnAvailable($documentUrl as xs:string, $agentId as xs:int){
+	let $updateJmx := lk:updateJmxValue($documentUrl, $agentId, false(), xs:string("JMX"))
+	let $updateInJmx := lk:updateJmxValue($documentUrl, $agentId, false(), xs:string("inJMX"))
+	let $updateOutJmx := lk:updateJmxValue($documentUrl, $agentId, false(), xs:string("outJMX"))	
 	return true()
 };
 
-declare function lk:updateAgentToUnAvailableLock($agentId as xs:int)
+declare function lk:updateAgentToUnAvailableLock($documentUrl as xs:string, $agentId as xs:int)
 {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents, lk:updateAgentToUnAvailable($agentId))
+	util:exclusive-lock(doc($documentUrl)/agnt:SWAgents, lk:updateAgentToUnAvailable($documentUrl, $agentId))
 };
 
-declare function lk:getResorces() as element()*
+declare function lk:getResorces($documentUrl as xs:string) as element()*
 {
-	for $resources in distinct-values(doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent/res:Resource)
+	for $resources in distinct-values(doc($documentUrl)/agnt:SWAgents/agnt:SWAgent/res:Resource)
 	return
-	for $agent in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent[res:Resource=$resources]
+	for $agent in doc($documentUrl)/agnt:SWAgents/agnt:SWAgent[res:Resource=$resources]
 	where $agent/@id = min($agent/@id)
 	return $agent
 };
