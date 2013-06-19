@@ -6,8 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/TlosSW_V1.0_Schema/TlosSW_xsd_V1.0.jar" sourcepath="/TlosSW_V1.0_Schema/src/com/likya/tlos/model/xmlbeans/parameters/ParameterDocument.java"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Model"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
