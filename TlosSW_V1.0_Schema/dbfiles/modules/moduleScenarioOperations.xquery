@@ -1,7 +1,7 @@
 xquery version "1.0";
 module namespace hs = "http://hs.tlos.com/";
 
-import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "../modules/moduleSequenceOperations.xquery";
 
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
