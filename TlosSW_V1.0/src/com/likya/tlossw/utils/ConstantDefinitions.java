@@ -49,6 +49,9 @@ public class ConstantDefinitions {
 	public static final String decNsLrns = "declare namespace lrns   = \"www.likyateknoloji.com/XML_SWResourceNS_types\";";
 	public static final String decNsNrp = "declare namespace nrp   = \"www.likyateknoloji.com/XML_nrpe_types\";";
 	public static final String decNsErr = "declare namespace err = \"http://www.likyateknoloji.com/XML_error_types\";";
+	public static final String decNsPer = "declare namespace per = \"http://www.likyateknoloji.com/XML_permission_types\";";
+	public static final String decNsFo = "declare namespace fo = \"http://www.w3.org/1999/XSL/Format\";";
+	public static final String decNsXslfo = "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";";
 
 	public static final String dbUrl = "xmldb:exist:";
 	public static final String rootUrl = "//db/";

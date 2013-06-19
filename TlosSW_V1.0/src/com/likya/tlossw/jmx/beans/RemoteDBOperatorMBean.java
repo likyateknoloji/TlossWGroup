@@ -101,21 +101,21 @@ public interface RemoteDBOperatorMBean {
 
 	public Object deleteUser(JmxUser jmxUser, String personXML);
 
-	public int getNextUserId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextUserId(JmxUser jmxUser) throws XMLDBException;
 
 	public Person searchUserByUsername(JmxUser jmxUser, String username) throws XMLDBException;
 
-	public int getNextCalendarId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextCalendarId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertCalendar(JmxUser jmxUser, String calendarPropertiesXML);
 
 	public ArrayList<String> calendarNames(JmxUser jmxUser) throws XMLDBException;
 
-	public int getNextScenarioId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextScenarioId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertScenario(JmxUser jmxUser, String documentName, String scenarioXML, String scenarioPath);
 
-	public int getNextJobId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextJobId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertJob(JmxUser jmxUser, String documentName, String jobPropertiesXML, String jobPath);
 
@@ -157,7 +157,7 @@ public interface RemoteDBOperatorMBean {
 
 	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException;
 
-	public int getNextTraceId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextTraceId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertTrace(JmxUser jmxUser, String traceXML);
 
@@ -231,7 +231,7 @@ public interface RemoteDBOperatorMBean {
 
 	public boolean checkDBConnectionName(JmxUser jmxUser, String dbAccessPropertiesXML) throws XMLDBException;
 
-	public int getNextDbConnectionId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextDbConnectionId(JmxUser jmxUser) throws XMLDBException;
 
 	public ArrayList<JobInfoTypeClient> getJobResultListByDates(JmxUser jmxUser, String documentName, String jobId, String date1, String date2, Boolean transformToLocalTime) throws XMLDBException;
 
@@ -249,9 +249,9 @@ public interface RemoteDBOperatorMBean {
 
 	public Object updateFTPAccessConnection(JmxUser jmxUser, String ftpAccessPropertiesXML);
 
-	public int getNextFTPConnectionId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextFTPConnectionId(JmxUser jmxUser) throws XMLDBException;
 
-	public int getNextWSDefinitionId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextWSDefinitionId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertWSDefinition(JmxUser jmxUser, String wsPropertiesXML);
 
@@ -261,7 +261,7 @@ public interface RemoteDBOperatorMBean {
 
 	public ArrayList<UserAccessProfile> searchWSAccessProfiles(JmxUser jmxUser, String userAccessProfileXML) throws XMLDBException;
 
-	public int getNextWSUserProfileId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextWSUserProfileId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertWSAccessProfile(JmxUser jmxUser, String userAccessProfileXML);
 
@@ -277,7 +277,7 @@ public interface RemoteDBOperatorMBean {
 
 	public Object deleteDBAccessProfile(JmxUser jmxUser, String dbAccessProfileXML);
 
-	public int getNextDbAccessProfileId(JmxUser jmxUser) throws XMLDBException;
+//	public int getNextDbAccessProfileId(JmxUser jmxUser) throws XMLDBException;
 
 	public Object insertDBAccessProfile(JmxUser jmxUser, String dbAccessProfileXML);
 
