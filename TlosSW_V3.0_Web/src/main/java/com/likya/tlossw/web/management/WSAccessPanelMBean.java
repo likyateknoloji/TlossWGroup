@@ -26,9 +26,9 @@ import com.likya.tlos.model.xmlbeans.webservice.AllowedUsersDocument.AllowedUser
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.model.WSAccessInfoTypeClient;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "wsAccessPanelMBean")

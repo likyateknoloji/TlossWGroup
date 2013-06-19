@@ -22,9 +22,9 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProper
 import com.likya.tlos.model.xmlbeans.dbconnections.DeployedDocument.Deployed;
 import com.likya.tlos.model.xmlbeans.dbconnections.JdbcConnectionPoolParamsDocument.JdbcConnectionPoolParams;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.TestUtils;
 
 @ManagedBean(name = "dbAccessPanelMBean")

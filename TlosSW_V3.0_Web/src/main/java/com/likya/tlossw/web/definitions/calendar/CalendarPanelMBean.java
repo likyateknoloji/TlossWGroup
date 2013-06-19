@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -36,10 +35,9 @@ import com.likya.tlos.model.xmlbeans.calendar.WhichOnesDocument.WhichOnes;
 import com.likya.tlos.model.xmlbeans.common.DayDefDocument.DayDef;
 import com.likya.tlos.model.xmlbeans.common.DaySpecialDocument.DaySpecial;
 import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime.Enum;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 

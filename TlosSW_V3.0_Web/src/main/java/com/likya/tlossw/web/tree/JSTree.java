@@ -19,8 +19,8 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped

@@ -28,9 +28,9 @@ import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.common.Security;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DecorationUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 

@@ -19,7 +19,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 import com.likya.tlossw.webclient.TEJmxMpDBClient;
 

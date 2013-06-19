@@ -30,9 +30,9 @@ import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.Status;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "scenarioDefinitionMBean")

@@ -19,9 +19,9 @@ import org.apache.xmlbeans.XmlOptions;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.dbconnections.SqlClientAppNameDocument.SqlClientAppName;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "dbConnectionPanelMBean")
 @RequestScoped

@@ -12,8 +12,8 @@ import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "liveMBean")
 @ViewScoped

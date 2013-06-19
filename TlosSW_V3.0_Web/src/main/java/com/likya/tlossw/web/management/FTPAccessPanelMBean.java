@@ -25,9 +25,9 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.SftpPropertiesDocument.SftpPrope
 import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument.TransportProvider;
 import com.likya.tlossw.model.FTPAccessInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.utils.ConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 import com.likya.tlossw.webclient.TEJmxMpValidationClient;
 
