@@ -153,9 +153,9 @@ public interface RemoteDBOperatorMBean {
 
 	public TlosProcessData getTlosDataXml(JmxUser jmxUser, String documentName);
 
-	public byte[] getPdfDoc(JmxUser jmxUser, String str) throws XMLDBException;
+//	public byte[] getPdfDoc(JmxUser jmxUser, String str) throws XMLDBException;
 
-	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException;
+//	public byte[] getHtmlDoc(JmxUser jmxUser, String str) throws XMLDBException;
 
 //	public int getNextTraceId(JmxUser jmxUser) throws XMLDBException;
 
