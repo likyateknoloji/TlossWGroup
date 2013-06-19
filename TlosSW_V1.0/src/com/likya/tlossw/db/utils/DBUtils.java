@@ -199,6 +199,8 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:updateFirstLiveJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "'])";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -339,10 +341,12 @@ public class DBUtils {
 		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
 		
 		
-		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(" + dataFile + ", " + scnarioFile + ", " + planFile + ", " + calendarFile + ", " + planId + ")";
+		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + dataFile + "\", \"" + scnarioFile + "\", \"" + planFile + "\", \"" + calendarFile + "\", " + scenarioId + "," + planId + ")";
 		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
