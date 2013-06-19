@@ -1,9 +1,9 @@
 <project name="TlosSW_V1.0_Schema" default="tlosSW_xsd.jar" basedir=".">
 
+	<property name="appname" value="tlosxmlbeans" />
+	
 	<property file="build.properties" />
 	<property name="home.dir" value="${basedir}/.." />
-
-	<property name="appname" value="tlosxmlbeans" />
 
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="build.dir" value="${basedir}/build/classes" />
