@@ -1,5 +1,6 @@
 package com.likya.tlossw.utils;
 
+
 public class CommonConstantDefinitions {
 
 	/**
@@ -12,6 +13,8 @@ public class CommonConstantDefinitions {
 	public static final String CALENDAR_DEFINITION_DATA = "tlosSWCalendar10.xml";
 	public static final String SEQUENCE_DATA = "tlosSWSequenceData10.xml";
 	public static final String AGENT_DATA = "tlosSWAgents10.xml";
+	public static final String ALARM_DATA = "tlosSWAlarm10.xml";
+	public static final String ALARM_HISTORY_DATA = "tlosSWAlarmHistory10.xml";
 	
 	/**
 	 * Exist arabirimi tanımları
