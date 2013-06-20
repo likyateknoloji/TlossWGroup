@@ -3,6 +3,7 @@ package com.likya.tlossw.core.spc.jobs;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -12,11 +13,12 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProper
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
-public class JDBCOracleSQLSentenceExecuter extends DbJob {
+public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
 	private static final long serialVersionUID = -1947157346281291622L;
 
@@ -38,7 +40,8 @@ public class JDBCOracleSQLSentenceExecuter extends DbJob {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		DbProperties dbProperties = getJobRuntimeProperties().getDbProperties();
 		DbConnectionProfile dbConnectionProfile = getJobRuntimeProperties().getDbConnectionProfile();
-
+		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
+		
 		while (true) {
 
 			try {
@@ -53,15 +56,20 @@ public class JDBCOracleSQLSentenceExecuter extends DbJob {
 
 				Statement statement = getStatement();
 
-				ResultSet result = statement.executeQuery(sqlSentence);
+				ResultSet resultSet = statement.executeQuery(sqlSentence);
 
-				while (result.next()) {
-					myLogger.info(result.getString(1));
-					myLogger.info(result.getString(2));
-					myLogger.info(result.getString(3));
+				System.out.println("");
+				System.out.println("*****************************************");
+				System.out.println("Query'nizin sonucu ...");
 
-				}
+				fetchResultSet(resultSet);
+				
+				ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", resultSet);
+				myParamList.add(thisParam);
 
+				System.out.println("*****************************************");
+				System.out.println("");
+				
 				statement.close();
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
@@ -88,7 +96,7 @@ public class JDBCOracleSQLSentenceExecuter extends DbJob {
 
 			sendStatusChangeInfo();
 
-			if (processJobResult(retryFlag, myLogger)) {
+			if (processJobResult(retryFlag, myLogger, myParamList)) {
 				retryFlag = false;
 				continue;
 			}

@@ -18,7 +18,7 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
-public class JDBCPostgreSQLSentenceExecuter extends DbJob {
+public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
 	private static final long serialVersionUID = -1947157346281291622L;
 
@@ -28,8 +28,6 @@ public class JDBCPostgreSQLSentenceExecuter extends DbJob {
 	private boolean retryFlag = true;
 
 	transient protected Process process;
-
-	public final static String DB_RESULT = "dbResult";
 
 	public JDBCPostgreSQLSentenceExecuter(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
@@ -61,23 +59,20 @@ public class JDBCPostgreSQLSentenceExecuter extends DbJob {
 
 				Statement statement = getStatement();
 
-				ResultSet result = statement.executeQuery(sqlSentence);
-
-
+				ResultSet resultSet = statement.executeQuery(sqlSentence);
 				
 				System.out.println("");
 				System.out.println("*****************************************");
 				System.out.println("Query'nizin sonucu ...");
 
-				while (result.next()) {
-					System.out.println(result.getString(2));
-					ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", result.getString(2));
-					myParamList.add(thisParam);
-
-				}
+				fetchResultSet(resultSet);
+				
+				ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", resultSet);
+				myParamList.add(thisParam);
 
 				System.out.println("*****************************************");
 				System.out.println("");
+				
 				statement.close();
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
