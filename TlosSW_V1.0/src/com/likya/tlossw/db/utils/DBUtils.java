@@ -337,8 +337,8 @@ public class DBUtils {
 
 		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
 		String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
+		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
 		
 		
 		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + dataFile + "\", \"" + scnarioFile + "\", \"" + planFile + "\", \"" + calendarFile + "\", " + scenarioId + "," + planId + ")";
