@@ -2588,12 +2588,18 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<AlarmInfoTypeClient> getJobAlarmHistory(String jobId, Boolean transformToLocalTime) {
-		Collection collection = existConnectionHolder.getCollection();
 
+		Collection collection = existConnectionHolder.getCollection();
+		
+		String seqDataFile = xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA;
+		String hisDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
+		
+		String funcDef = "lk:jobAlarmListbyRunId(\""+ hisDataFile + "\", \"" + seqDataFile + "\", 3, 0, " + jobId + ", false(), 30)"; 
+	
 		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
 		// getiriyor
 		// son 30 gun icerisinde ariyor
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:jobAlarmListbyRunId(3, 0, " + jobId + ", false(), 30)";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
 
 		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
 
@@ -2788,8 +2794,14 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
-		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
-		jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
+		if(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+		}
+		
+		if(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
+			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
+		}
+		
 		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
 
 		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
