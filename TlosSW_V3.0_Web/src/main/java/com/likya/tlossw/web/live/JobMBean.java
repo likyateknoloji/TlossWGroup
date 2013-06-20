@@ -136,7 +136,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
-		job = getDbOperations().getJobFromId(CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(jobInTyCl.getJobId()));
+		job = getDbOperations().getJobFromId(CommonConstantDefinitions.JOB_DEFINITION_DATA, jobInTyCl.getJobId());
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {

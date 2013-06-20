@@ -700,7 +700,7 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<JobProperties> getJobList(int maxNumber) throws XMLDBException {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobList(1," + maxNumber + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobList(" + xmlsUrl + CommonConstantDefinitions.JOB_DEFINITION_DATA + ",1," + maxNumber + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -2291,7 +2291,7 @@ public class DBOperations implements Serializable {
 	public Scenario getScenarioFromId(String documentName, String scenarioId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + documentName + "\")" + ", " + scenarioId + " )";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", " + scenarioId + " )";
 
 		Scenario scenario = null;
 
@@ -2367,7 +2367,7 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioExistence(" + "xs:string(\"" + documentName + "\")" + "," + scenarioPath + ", xs:string(\"" + scenarioName + "\"))";
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioExistence(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioPath + ", xs:string(\"" + scenarioName + "\"))";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -2388,7 +2388,7 @@ public class DBOperations implements Serializable {
 	public boolean insertScenario(String documentName, String scenarioXML, String scenarioPath) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		XPathQueryService service;
 		try {
@@ -2727,7 +2727,7 @@ public class DBOperations implements Serializable {
 		Collection collection = existConnectionHolder.getCollection();
 
 		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
 
 		ArrayList<JobInfoTypeClient> jobs = new ArrayList<JobInfoTypeClient>();
 
@@ -2859,38 +2859,6 @@ public class DBOperations implements Serializable {
 		}
 
 		return null;
-	}
-
-	public JobProperties getJobFromId(String documentName, int jobId) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		JobProperties jobProperties = JobProperties.Factory.newInstance();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:getJobFromId(" + "xs:string(\"" + documentName + "\")" + "," + jobId + ")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return jobProperties;
 	}
 
 	public SLA getSlaBySlaId(int slaId) {
@@ -3328,7 +3296,7 @@ public class DBOperations implements Serializable {
 	public boolean updateScenario(String documentName, String scenarioPath, String scenarioXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + CommonConstantDefinitions.decNsDat + "hs:updateScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioPath + "," + scenarioXML + " )";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + CommonConstantDefinitions.decNsDat + "hs:updateScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioPath + "," + scenarioXML + " )";
 
 		XPathQueryService service;
 		try {
@@ -3348,7 +3316,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteScenario(String documentName, String scenarioPath, String scenarioXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		XPathQueryService service = null;
 		try {
@@ -3368,7 +3336,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteJob(String documentName, String jobPath, String jobPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteJobLock(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
 
 		XPathQueryService service = null;
 		try {
