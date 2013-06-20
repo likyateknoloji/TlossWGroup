@@ -1,6 +1,6 @@
 xquery version "1.0";
 module namespace hs = "http://hs.tlos.com/";
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace com="http://www.likyateknoloji.com/XML_common_types"; 
 declare namespace cal="http://www.likyateknoloji.com/XML_calendar_types";
