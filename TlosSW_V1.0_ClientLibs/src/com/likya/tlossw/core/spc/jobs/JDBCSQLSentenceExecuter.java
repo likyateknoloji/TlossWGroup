@@ -20,26 +20,30 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 
 	public String fetchResultSet(ResultSet resultSet) throws Exception {
 
+		StringBuffer resultData = new StringBuffer();
 		// Get the metadata
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
 		// Print the column labels
 		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-			System.out.print(resultSetMetaData.getColumnLabel(i) + " ");
+			// System.out.print(resultSetMetaData.getColumnLabel(i) + " ");
+			resultData.append(resultSetMetaData.getColumnLabel(i) + ", ");
 		}
-
-		System.out.println();
-
-		StringBuffer resultData = new StringBuffer();
 		
+		resultData.deleteCharAt(resultData.lastIndexOf(","));
+		resultData.append("\n");
+		
+		// System.out.println();
+
 		// Loop through the result set
 		while (resultSet.next()) {
 			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-				System.out.print(resultSet.getString(i) + " ");
+				// System.out.print(resultSet.getString(i) + " ");
 				resultData.append(resultSet.getString(i) + ", ");
 			}
+			resultData.deleteCharAt(resultData.lastIndexOf(","));
 			resultData.append("\n");
-			System.out.println();
+			// System.out.println();
 		}
 
 		return resultData.toString();
