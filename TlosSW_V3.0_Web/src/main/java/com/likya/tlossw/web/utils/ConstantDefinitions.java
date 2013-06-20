@@ -27,6 +27,7 @@ public class ConstantDefinitions {
 	public static final String USER_ID = "userId";
 	public static final String SCENARIO_ID = "scenarioId";
 	public static final String WSUSERPROFILE_ID = "wsUserProfileId";
+	public static final String FTPCONNECTION_ID = "ftpConnectionId";
 
 	/**
 	 * flex agaci sabitleri

@@ -183,7 +183,8 @@ public class DBOperations implements Serializable {
 	public int getNextId(String component) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"" + component + "\")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + 
+				"sq:getNextId(\"" + xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA + "\",\"" + component + "\")";
 
 		int id = -1;
 
@@ -1963,7 +1964,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<DbProperties> getDBConnections() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnectionAll()";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnectionAll(\"" + xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA + "\")";
 
 		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
 
@@ -2004,7 +2005,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<DbConnectionProfile> getDBProfiles() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbProfileAll()";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbProfileAll(\"" + xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA + "\")";
 
 		ArrayList<DbConnectionProfile> dbProfileList = new ArrayList<DbConnectionProfile>();
 
@@ -3237,31 +3238,6 @@ public class DBOperations implements Serializable {
 		}
 
 		return true;
-	}
-
-	public int getNextFTPConnectionId() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		int ftpConnectionId = -1;
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"ftpConnectionId\")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				ftpConnectionId = Integer.parseInt(r.getContent().toString());
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-
-		return ftpConnectionId;
 	}
 
 	public FtpProperties searchFTPConnectionById(int ftpConnectionId) {
