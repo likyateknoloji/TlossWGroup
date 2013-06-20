@@ -125,7 +125,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
-		jobBaseReportList = getDbOperations().getJobResultList(CommonConstantDefinitions.DAILY_SCENARIOS_DATA, jobInTyCl.getJobId(), 3, transformToLocalTime);
+		jobBaseReportList = getDbOperations().getJobResultList(jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
