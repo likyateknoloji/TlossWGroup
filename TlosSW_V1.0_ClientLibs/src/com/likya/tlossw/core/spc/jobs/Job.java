@@ -463,8 +463,7 @@ public abstract class Job implements Runnable, Serializable {
 				Iterator<ParamList> itr = paramList.iterator();
 				while (itr.hasNext()) {
 					ParamList element = itr.next();
-					OutputParameterPassing outputParameterPassing = new OutputParameterPassing();
-					boolean yapildimi = outputParameterPassing.setOutputParameter(jobProperties, element.getParamRef(), element.getParamName());
+					boolean yapildimi = OutputParameterPassing.setOutputParameter(jobProperties, element.getParamRef(), element.getParamName());
 					if (yapildimi) {
 						System.out.println("isin sonucu output parametreye yazildi !!");
 					} else {
