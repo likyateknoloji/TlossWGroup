@@ -15,6 +15,8 @@ public class CommonConstantDefinitions {
 	public static final String AGENT_DATA = "tlosSWAgents10.xml";
 	public static final String ALARM_DATA = "tlosSWAlarm10.xml";
 	public static final String ALARM_HISTORY_DATA = "tlosSWAlarmHistory10.xml";
+	public static final String DB_CONNECTION_PROFILES_DATA = "tlosSWDBConnectionProfiles10.xml";
+	public static final String DB_CONNECTIONS_DATA = "tlosSWDBConnections10.xml";
 	
 	/**
 	 * Exist arabirimi tanımları
