@@ -221,7 +221,7 @@ declare function lk:deleteAlarmLock($documentUrl as xs:string, $alarm as element
 
 (: ******************* Alarm History ****************************** :)
 
-declare function lk:SWFindAlarms($documentUrl as xs:string, $documentHistoryUrl as xs:string, $documentDataUrl as xs:string, $jobID as xs:string, $userID as xs:int, $agentId as xs:int, $liveStateInfoXML as element(state-types:LiveStateInfo)) as element(alm-history:alarm)?
+declare function lk:SWFindAlarms($documentUrl as xs:string, $documentHistoryUrl as xs:string, $documentDataUrl as xs:string, $documentSeqUrl as xs:string, $jobID as xs:string, $userID as xs:int, $agentId as xs:int, $liveStateInfoXML as element(state-types:LiveStateInfo)) as element(alm-history:alarm)?
 {
 
 let $alarmPref := doc($documentDataUrl)//dat:jobProperties[@ID=$jobID]/dat:alarmPreference
@@ -299,7 +299,7 @@ let $sonuc2 :=
         </alm-history:caseOccured>
       </alm-history:alarm>
 
-    let $insertIt := lk:insertAlarmHistoryLock($documentHistoryUrl, $sonuc) 
+    let $insertIt := lk:insertAlarmHistoryLock($documentHistoryUrl, $documentSeqUrl, $sonuc) 
 	return $sonuc
   else ()
 	
