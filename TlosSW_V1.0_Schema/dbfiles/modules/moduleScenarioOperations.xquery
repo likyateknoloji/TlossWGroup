@@ -330,12 +330,12 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $jobId as xs
                 return  $sonuc
 };
 
-declare function hs:jobResultListbyRunId($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
+declare function hs:jobResultListbyRunId($documentUrl as xs:string, $sequenceDocumentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
  {
 
     let $runIdFound := if ($runId != 0 ) 
 	                   then $runId 
-	                   else sq:getId("runId")
+	                   else sq:getId($sequenceDocumentUrl, "runId")
 
     let $posUpper := max(for $runx at $pos in doc($documentUrl)/TlosProcessDataAll/RUN
 	                 where $runx[@id = $runIdFound] or not($refRunIdBolean)
