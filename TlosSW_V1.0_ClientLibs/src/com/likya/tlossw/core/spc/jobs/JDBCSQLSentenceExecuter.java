@@ -42,7 +42,7 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 			System.out.println();
 		}
 
-		return null;
+		return resultData.toString();
 
 	}
 
