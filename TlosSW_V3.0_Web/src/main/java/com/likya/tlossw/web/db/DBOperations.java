@@ -623,7 +623,9 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Alarm> getAlarms() {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms()";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA; 
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms(\"" + dataFile + "\")";
 
 		ArrayList<Alarm> almList = new ArrayList<Alarm>();
 
@@ -1353,7 +1355,9 @@ public class DBOperations implements Serializable {
 
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars()";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA; 
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars(\"" + dataFile + "\")";
 
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
 
@@ -1801,7 +1805,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<SWAgent> getAgents() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + "lk:getAgents()";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + "lk:getAgents(\"" + dataFile + "\")";
 
 		ArrayList<SWAgent> agentList = new ArrayList<SWAgent>();
 
@@ -2723,11 +2729,17 @@ public class DBOperations implements Serializable {
 		return alarmInfoTypeClient;
 	}
 
-	public ArrayList<JobInfoTypeClient> getJobResultList(String documentName, String jobId, int runNumber, Boolean transformToLocalTime) {
+	public ArrayList<JobInfoTypeClient> getJobResultList(String jobId, int runNumber, Boolean transformToLocalTime) {
+		
 		Collection collection = existConnectionHolder.getCollection();
+		
+		String scenDocName = CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		String seqDocName = CommonConstantDefinitions.SEQUENCE_DATA;
+		
+		String funcName = "hs:jobResultListbyRunId(\"" + xmlsUrl + scenDocName + "\", " + "\"" + xmlsUrl + seqDocName + "\", " + runNumber + ", 0, " + jobId + ", false())";
 
 		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobResultListbyRunId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + runNumber + ", 0, " + jobId + ", false())";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + funcName;
 
 		ArrayList<JobInfoTypeClient> jobs = new ArrayList<JobInfoTypeClient>();
 
@@ -2776,8 +2788,8 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
-		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
-		jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), false, transformToLocalTime));
+		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+		jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
 		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
 
 		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
