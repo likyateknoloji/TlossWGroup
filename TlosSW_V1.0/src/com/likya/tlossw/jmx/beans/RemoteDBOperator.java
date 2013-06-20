@@ -2492,7 +2492,10 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		// System.err.println(" dashboardReport1 : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		// Latest Report Id
 		int reportId = -1;
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getReportId()";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + 
+				"sq:getReportId(" + spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA + ")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i1 = result.getIterator();
