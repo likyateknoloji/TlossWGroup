@@ -12,21 +12,21 @@
 			<com:ipAddress>192.168.1.39</com:ipAddress>
 		</ftp:connection>
 	</ftp:ftpProperties>
-	<!-- ftp:ftpProperties id="2">
+	<ftp:ftpProperties id="4">
 		<com:active>yes</com:active>
 		<ftp:connection>
-			<com:connName>Likya 2 numara</com:connName>
-			<com:userName>likya2</com:userName>
-			<com:userPassword>likya2</com:userPassword>
-			<ftp:ftpPortNumber>0</ftp:ftpPortNumber>
-			<com:ipAddress>192.168.1.41</com:ipAddress>
+			<com:connName>Centos</com:connName>
+			<com:userName>root</com:userName>
+			<com:userPassword>centos</com:userPassword>
+			<ftp:ftpPortNumber>21</ftp:ftpPortNumber>
+			<com:ipAddress>192.168.1.70</com:ipAddress>
 		</ftp:connection>
-		<ftp:ftpSecure>
-			<ftp:sftpProperties>
-				<ftp:authenticationType>PASSWORD</ftp:authenticationType>
-				<ftp:transportProvider>Socket</ftp:transportProvider>
-				<ftp:useProxy>false</ftp:useProxy>
-			</ftp:sftpProperties>
-		</ftp:ftpSecure>
-	</ftp:ftpProperties -->
+	</ftp:ftpProperties>
+	<!-- ftp:ftpProperties id="2"> <com:active>yes</com:active> <ftp:connection> 
+		<com:connName>Likya 2 numara</com:connName> <com:userName>likya2</com:userName> 
+		<com:userPassword>likya2</com:userPassword> <ftp:ftpPortNumber>0</ftp:ftpPortNumber> 
+		<com:ipAddress>192.168.1.41</com:ipAddress> </ftp:connection> <ftp:ftpSecure> 
+		<ftp:sftpProperties> <ftp:authenticationType>PASSWORD</ftp:authenticationType> 
+		<ftp:transportProvider>Socket</ftp:transportProvider> <ftp:useProxy>false</ftp:useProxy> 
+		</ftp:sftpProperties> </ftp:ftpSecure> </ftp:ftpProperties -->
 </ftp:ftpConnections>

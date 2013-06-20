@@ -31,18 +31,26 @@
 		<dbc:sqlClientAppPath>D:\instantclient-basic-windows.x64-11.2.0.3.0\instantclient_11_2\
 		</dbc:sqlClientAppPath>
 	</dbc:dbProperties>
-	<!-- dbc:dbProperties ID="1">
-        <dbc:connectionName>PostgreSQL Connection</dbc:connectionName>
-        <dbc:dbUrl>jdbc:postgresql://</dbc:dbUrl>
-        <dbc:dbType>PostgreSQL</dbc:dbType>
-        <dbc:dbVersion>9.1</dbc:dbVersion>
-        <dbc:driverName>JDBC</dbc:driverName>
-        <dbc:dbName>Carre</dbc:dbName>
-        <dbc:hostName>ayhan-laptop2</dbc:hostName>
-        <dbc:listenerPortNumber>5432</dbc:listenerPortNumber>
-        <com:ipAddress>127.0.0.1</com:ipAddress>
-        <dbc:jdbcClassName>className</dbc:jdbcClassName>
+	<dbc:dbProperties ID="6">
+		<dbc:connectionName>centos_postgres</dbc:connectionName>
+		<dbc:dbUrl>jdbc:postgresql://</dbc:dbUrl>
+		<dbc:dbType>PostgreSQL</dbc:dbType>
+		<dbc:dbVersion>9.1</dbc:dbVersion>
+		<dbc:driverName>JDBC</dbc:driverName>
+		<dbc:dbName>postgres</dbc:dbName>
+		<dbc:hostName>192.168.1.70</dbc:hostName>
+		<dbc:listenerPortNumber>5432</dbc:listenerPortNumber>
+		<com:ipAddress>192.168.1.70</com:ipAddress>
+		<dbc:jdbcClassName>className</dbc:jdbcClassName>
 		<dbc:sqlClientAppName>psql</dbc:sqlClientAppName>
-		<dbc:sqlClientAppPath>C:/Program Files/PostgreSQL/9.1/bin/</dbc:sqlClientAppPath>
-    </dbc:dbProperties -->
+		<dbc:sqlClientAppPath>D:\postgresql-9.2.4-1-windows-x64-binaries\pgsql\bin\</dbc:sqlClientAppPath>
+	</dbc:dbProperties>
+	<!-- dbc:dbProperties ID="1"> <dbc:connectionName>PostgreSQL Connection</dbc:connectionName> 
+		<dbc:dbUrl>jdbc:postgresql://</dbc:dbUrl> <dbc:dbType>PostgreSQL</dbc:dbType> 
+		<dbc:dbVersion>9.1</dbc:dbVersion> <dbc:driverName>JDBC</dbc:driverName> 
+		<dbc:dbName>Carre</dbc:dbName> <dbc:hostName>ayhan-laptop2</dbc:hostName> 
+		<dbc:listenerPortNumber>5432</dbc:listenerPortNumber> <com:ipAddress>127.0.0.1</com:ipAddress> 
+		<dbc:jdbcClassName>className</dbc:jdbcClassName> <dbc:sqlClientAppName>psql</dbc:sqlClientAppName> 
+		<dbc:sqlClientAppPath>C:/Program Files/PostgreSQL/9.1/bin/</dbc:sqlClientAppPath> 
+		</dbc:dbProperties -->
 </dbc:dbList>

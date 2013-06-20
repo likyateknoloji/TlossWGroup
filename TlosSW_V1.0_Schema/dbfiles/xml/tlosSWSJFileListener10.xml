@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<lstn:fileListener xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.likyateknoloji.com/XML_listener_types ../xsds/tlosSWSJFileListener_v_1_0.xsd">
-    <lstn:fileNameType>fullText</lstn:fileNameType>
+<lstn:fileListener xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_listener_types tlosSWSJFileListener_v_1_0.xsd">
+	<lstn:fileNameType>fullText</lstn:fileNameType>
 	<lstn:pollingProperties>
 		<lstn:triggerFile>lstn:triggerFile</lstn:triggerFile>
 		<lstn:triggerFileDirectory>lstn:triggerFileDirectory</lstn:triggerFileDirectory>

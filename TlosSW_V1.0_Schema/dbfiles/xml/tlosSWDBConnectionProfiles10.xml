@@ -44,4 +44,18 @@
 		<dbc:deployed>no</dbc:deployed>
 		<com:active>yes</com:active>
 	</dbc:dbConnectionProfile>
+	<dbc:dbConnectionProfile ID="4">
+		<dbc:dbDefinitionId>6</dbc:dbDefinitionId>
+		<com:userName>postgres</com:userName>
+		<com:userPassword>ad0215</com:userPassword>
+		<dbc:jdbcConnectionPoolParams>
+			<dbc:initialCapacity>3</dbc:initialCapacity>
+			<dbc:maxCapacity>10</dbc:maxCapacity>
+			<dbc:minIdle>0</dbc:minIdle>
+			<dbc:maxIdle>0</dbc:maxIdle>
+			<dbc:maxWait>10000</dbc:maxWait>
+		</dbc:jdbcConnectionPoolParams>
+		<dbc:deployed>no</dbc:deployed>
+		<com:active>yes</com:active>
+	</dbc:dbConnectionProfile>
 </dbc:dbConnectionProfiles>
