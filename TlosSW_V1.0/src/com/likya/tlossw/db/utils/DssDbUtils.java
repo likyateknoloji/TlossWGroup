@@ -94,9 +94,18 @@ public class DssDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
+		String docAlarmFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.ALARM_DATA;
+		String docHistoryFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.ALARM_HISTORY_DATA;
+		String docDataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		String seqDataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
+		
+		String funcDef = "lk:SWFindAlarms(\""+ docAlarmFile + "\", \"" + docHistoryFile + "\", \"" + docDataFile + "\", \"" + seqDataFile + "\", '" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
+		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
-				standartNameSpaceDeclaritions + CommonConstantDefinitions.decNsSt + "lk:SWFindAlarms("+ "'" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
+				standartNameSpaceDeclaritions + CommonConstantDefinitions.decNsSt + funcDef;
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
