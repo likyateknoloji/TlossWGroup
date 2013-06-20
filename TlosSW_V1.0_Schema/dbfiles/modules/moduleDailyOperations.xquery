@@ -130,9 +130,9 @@ declare function functx:last-day-of-month
 			:)
 
 (: declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:integer?) as xs:boolean? :)
-declare function hs:createPlanCalendars($planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string) as node()*
+declare function hs:createPlanCalendars($planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string) as node()*
  {	
-    let $nextPlanId := sq:getNextPlanId()
+    let $nextPlanId := sq:getNextPlanId($sequenceDocumentUrl)
     let $yeniPlan :=
 	(: for $calList in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters :)
 	for $calList in doc($planDocumentUrl)/AllPlanParameters
@@ -475,15 +475,15 @@ declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as 
 };
 
 (: declare function hs:queryDailyJobsAndScenarios() :)
-declare function hs:querySelectedJobsAndScenarios($scenarioDocumentUrl as xs:string, $dataDocumentUrl as xs:string, $plan as node()*)
+declare function hs:querySelectedJobsAndScenarios($scenarioDocumentUrl as xs:string, $dataDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $plan as node()*)
 {
-	(: for $calList in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll :)
+	(: for $calList in doc($scenarioDocumentUrl)/TlosProcessDataAll :)
 	for $calList in doc($scenarioDocumentUrl)/TlosProcessDataAll
 	return update insert
-           let $next := sq:getNextRunId()
+           let $next := sq:getNextRunId($sequenceDocumentUrl)
 		   return element RUN 
 		   { attribute id {$next},  
-	          (: hs:SelectedJobsAndScenarios(doc("//db/TLOSSW/xmls/tlosSWData10.xml"), $plan) :)
+	          (: hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan) :)
 	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan)
 	       }
     into $calList
@@ -504,8 +504,8 @@ declare function hs:getPlan($planDocumentUrl as xs:string, $planId as xs:integer
 (: declare function hs:getDailyJobsAndScenarios() :)
 declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl) else hs:getPlan($planDocumentUrl, $planId )
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $retDailyPlan)
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl, $sequenceDocumentUrl) else hs:getPlan($planDocumentUrl, $planId )
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $sequenceDocumentUrl, $retDailyPlan)
 
 	let $runId := sq:getRunId($sequenceDocumentUrl)
 	let $solsticeId := sq:getSolticeId($sequenceDocumentUrl)
@@ -522,8 +522,8 @@ declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:strin
 
 declare function hs:getSolsticeJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl) else $planId
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $retDailyPlan)
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl, $sequenceDocumentUrl) else $planId
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $sequenceDocumentUrl, $retDailyPlan)
 
 	let $runId := sq:getRunId($sequenceDocumentUrl)
 	let $solsticeId := sq:getNextSolticeId($sequenceDocumentUrl)
