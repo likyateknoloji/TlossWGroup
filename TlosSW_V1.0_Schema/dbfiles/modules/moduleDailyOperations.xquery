@@ -502,13 +502,13 @@ declare function hs:getPlan($planDocumentUrl as xs:string, $planId as xs:integer
 };
 
 (: declare function hs:getDailyJobsAndScenarios() :)
-declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
+declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
     let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl) else hs:getPlan($planDocumentUrl, $planId )
 	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $retDailyPlan)
 
-	let $runId := sq:getRunId()
-	let $solsticeId := sq:getSolticeId()
+	let $runId := sq:getRunId($sequenceDocumentUrl)
+	let $solsticeId := sq:getSolticeId($sequenceDocumentUrl)
 
 	let $insertInstanceId := hs:insertInstanceId($scenarioDocumentUrl, string($runId))
     let $insertSolsticeId := hs:insertSolsticeId($scenarioDocumentUrl, string($solsticeId),string($runId))
@@ -520,13 +520,13 @@ declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:strin
 
 };
 
-declare function hs:getSolsticeJobsAndScenarios($scenarioDocumentUrl as xs:string, $dataDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
+declare function hs:getSolsticeJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
     let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl) else $planId
 	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $retDailyPlan)
 
-	let $runId := sq:getRunId()
-	let $solsticeId := sq:getNextSolticeId()
+	let $runId := sq:getRunId($sequenceDocumentUrl)
+	let $solsticeId := sq:getNextSolticeId($sequenceDocumentUrl)
 
 	let $insertInstanceId := hs:insertInstanceId($scenarioDocumentUrl, string($runId))
     let $insertSolsticeId := hs:insertSolsticeId($scenarioDocumentUrl, string($solsticeId),string($runId))
