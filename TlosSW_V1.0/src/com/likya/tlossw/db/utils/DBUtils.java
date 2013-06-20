@@ -182,6 +182,8 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:updateLiveJobLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -238,6 +240,8 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertJobInTheBeginningLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + ")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
@@ -544,6 +548,8 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertFreeJobLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropertiesXML + "," + runId + ")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -604,6 +610,8 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertJobAgentIdLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + "'" + agentId + "'" + "," + "'" + jobId + "'" + "," + jobPath + ")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -655,6 +663,7 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:insertJobStateLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + liveStateInfoXML + "," + jobPath + ")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + xQueryStr);
 
