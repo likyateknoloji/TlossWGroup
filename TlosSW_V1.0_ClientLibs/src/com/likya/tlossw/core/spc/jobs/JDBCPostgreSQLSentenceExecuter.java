@@ -67,7 +67,7 @@ public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
 				String resultData = fetchResultSet(resultSet);
 				
-				ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", resultSet);
+				ParamList thisParam = new ParamList(DB_RESULT, "STRING", "VARIABLE", resultData);
 				myParamList.add(thisParam);
 
 				System.out.println("*****************************************");
