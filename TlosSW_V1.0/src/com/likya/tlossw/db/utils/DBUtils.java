@@ -72,7 +72,17 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getSolsticeJobsAndScenarios()";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		String scenarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
+		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
+
+		String functionDef = "hs:getSolsticeJobsAndScenarios(\"" + dataFile + "\", \"" + scenarioFile + "\", \"" + planFile + "\", \"" + calendarFile + "\", \"" + sequenceFile + "\", " + 0 + "," + 0 + ")";
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		XPathQueryService service;
 		try {
@@ -339,9 +349,9 @@ public class DBUtils {
 		String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
 		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
 		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
 		
-		
-		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + dataFile + "\", \"" + scnarioFile + "\", \"" + planFile + "\", \"" + calendarFile + "\", " + scenarioId + "," + planId + ")";
+		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + dataFile + "\", \"" + scnarioFile + "\", \"" + planFile + "\", \"" + calendarFile + "\", \"" + sequenceFile + "\", " + scenarioId + "," + planId + ")";
 		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
 
