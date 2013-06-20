@@ -154,9 +154,13 @@ public class AgentDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.AGENT_DATA;
+		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
-				CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsRes + "lk:updateJmxValueLock("+ agentId + "," + dbJmxValue + ",\"" + islem + "\")";
+				CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsRes + "lk:updateJmxValueLock(\""+ dataFile + "\", " + agentId + "," + dbJmxValue + ",\"" + islem + "\")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -211,9 +215,13 @@ public class AgentDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.AGENT_DATA;
+		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + 
-				CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsRes + "lk:getResorces()";
+				CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsRes + "lk:getResorces(\"" + dataFile + "\")";
 
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
