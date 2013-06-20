@@ -404,7 +404,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		}
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + 
-				CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+				CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
