@@ -105,7 +105,7 @@ declare function db:updateDbConnection($dbConnectionsDocumentUrl as xs:string, $
 
 declare function db:updateDbConnectionLock($dbConnectionsDocumentUrl as xs:string, $dbConnection as element(dbc:dbProperties))
 {
-   util:exclusive-lock(doc($dbConnectionsDocumentUrl)/dbc:dbList, db:updateDbConnection($dbConnection))     
+   util:exclusive-lock(doc($dbConnectionsDocumentUrl)/dbc:dbList, db:updateDbConnection($dbConnectionsDocumentUrl, $dbConnection))     
 };
 
 declare function db:updateDbAccessProfile($dbProfilesDocumentUrl as xs:string, $dbConnProfile as element(dbc:dbConnectionProfile))
@@ -117,10 +117,10 @@ declare function db:updateDbAccessProfile($dbProfilesDocumentUrl as xs:string, $
 
 declare function db:updateDbAccessProfileLock($dbProfilesDocumentUrl as xs:string, $dbConnProfile as element(dbc:dbConnectionProfile))
 {
-   util:exclusive-lock(doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles, db:updateDbAccessProfile($dbConnProfile))     
+   util:exclusive-lock(doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles, db:updateDbAccessProfile($dbProfilesDocumentUrl, $dbConnProfile))     
 };
 
-declare function db:getDbProfileAll()
+declare function db:getDbProfileAll($dbProfilesDocumentUrl as xs:string)
 {              
     for $dbConnProfile in doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles/dbc:dbConnectionProfile
 	return $dbConnProfile

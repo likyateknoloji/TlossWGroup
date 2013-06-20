@@ -97,7 +97,10 @@ declare function hs:insertSlaLock($sla as element(sla:SLA)) as xs:boolean
 declare function hs:insertSla($sla as element(sla:SLA)) as node()*
 {
     let $XXX := $sla
-    let $nextId := sq:getNextId("slaId")	
+    
+    (: hata verdigi icin gecici olarak bos parametre ekledim. merve :)
+    let $documentUrl := ""
+    let $nextId := sq:getNextId($documentUrl, "slaId")	
     (: 
      let $quote := "&#34;"
      let $yap := util:eval(concat("<sla:SLA ID=",$quote,$nextId,$quote,"/>"))
