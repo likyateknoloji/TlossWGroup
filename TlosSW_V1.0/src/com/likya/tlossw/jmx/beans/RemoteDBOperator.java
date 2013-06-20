@@ -2383,11 +2383,16 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		jobInfoTypeClient.setJobLogName(jobProperties.getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 
-		// TODO Ge�ici olarak tip d�n���m� yapt�m.
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
-		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), true, transformToLocalTime));
-		jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime(), false, transformToLocalTime));
+		if(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+		}
+
+		if(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
+			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
+		}
+		
 		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
 
 		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
