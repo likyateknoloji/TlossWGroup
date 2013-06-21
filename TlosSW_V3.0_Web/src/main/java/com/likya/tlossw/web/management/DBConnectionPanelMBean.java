@@ -19,9 +19,9 @@ import org.apache.xmlbeans.XmlOptions;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
 import com.likya.tlos.model.xmlbeans.dbconnections.SqlClientAppNameDocument.SqlClientAppName;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "dbConnectionPanelMBean")
 @RequestScoped
@@ -183,7 +183,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 	// veri tabaninda kayitli siradaki id degerini set ediyor
 	public boolean setDBConnectionID() {
-		int dbConnectionId = getDbOperations().getNextId(ConstantDefinitions.DBCONNECTION_ID);
+		int dbConnectionId = getDbOperations().getNextId(CommonConstantDefinitions.DBCONNECTION_ID);
 
 		if (dbConnectionId < 0) {
 			addMessage("insertDBConnection", FacesMessage.SEVERITY_ERROR, "tlos.info.dbConnection.getId", null);

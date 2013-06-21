@@ -30,9 +30,9 @@ import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.webservice.Function;
 import com.likya.tlossw.model.webservice.Parameter;
 import com.likya.tlossw.model.webservice.WebService;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpWSClient;
 
 @ManagedBean(name = "wsWizardPanelMBean")
@@ -147,7 +147,7 @@ public class WebServiceWizardPanelMBean extends TlosSWBaseBean implements Serial
 	}
 	
 	public boolean setWsDefinitionID() {
-		int wsDefinitionId = getDbOperations().getNextId(ConstantDefinitions.WSDEFINITION_ID);
+		int wsDefinitionId = getDbOperations().getNextId(CommonConstantDefinitions.WSDEFINITION_ID);
 
 		if (wsDefinitionId < 0) {
 			addMessage("wsKayit", FacesMessage.SEVERITY_ERROR, "tlos.error.wsDefinition.getId", null);

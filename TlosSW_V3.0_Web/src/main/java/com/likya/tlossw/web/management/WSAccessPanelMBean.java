@@ -26,9 +26,9 @@ import com.likya.tlos.model.xmlbeans.webservice.AllowedUsersDocument.AllowedUser
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
 import com.likya.tlossw.model.WSAccessInfoTypeClient;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "wsAccessPanelMBean")
@@ -246,7 +246,7 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	// veri tabaninda kayitli siradaki id degerini set ediyor
 	public boolean setAccessProfileID() {
-		int id = getDbOperations().getNextId(ConstantDefinitions.WSUSERPROFILE_ID);
+		int id = getDbOperations().getNextId(CommonConstantDefinitions.WSUSERPROFILE_ID);
 
 		if (id < 0) {
 			addMessage("insertWSAccessAction", FacesMessage.SEVERITY_INFO, "tlos.error.wsAccessDefinition.getId", null);

@@ -605,7 +605,9 @@ public class DBOperations implements Serializable {
 
 		ArrayList<DbProperties> dbConnectionList = new ArrayList<DbProperties>();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:searchDbConnection(" + dbConnectionXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:searchDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -964,7 +966,9 @@ public class DBOperations implements Serializable {
 	public boolean deleteDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbConnection(" + dbConnectionXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
 
 		XPathQueryService service;
 
@@ -985,7 +989,10 @@ public class DBOperations implements Serializable {
 	public boolean insertDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:insertDbConnection(" + dbConnectionXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + 
+					"db:insertDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
 
 		XPathQueryService service;
 
@@ -1006,7 +1013,9 @@ public class DBOperations implements Serializable {
 	public boolean updateDBConnection(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbConnectionLock(" + dbConnectionXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbConnectionLock(\"" + dataFile + "\", " + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -1026,7 +1035,9 @@ public class DBOperations implements Serializable {
 	public boolean checkDBConnectionName(String dbConnectionXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:checkDbConnectionName(" + dbConnectionXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:checkDbConnectionName(\"" + dataFile + "\", " + dbConnectionXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -1055,7 +1066,9 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnection(" + id + ")";
+			String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnection(\"" + dataFile + "\", " + id + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -1080,81 +1093,32 @@ public class DBOperations implements Serializable {
 		return dbProperties;
 	}
 
-	public ArrayList<DbProperties> getDbList() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnectionAll()";
-
-		try {
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				DbProperties dbProperties;
-				try {
-					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
-					dbList.add(dbProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
-			return null;
-		}
-
-		return dbList;
-	}
-
 	public ArrayList<DBAccessInfoTypeClient> searchDBAccessProfile(String dbAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnectionAll()";
+		Collection collection = existConnectionHolder.getCollection();
 
 		HashMap<BigInteger, DbProperties> dbDefinitionList = new HashMap<BigInteger, DbProperties>();
 
+		ArrayList<DbProperties> dbList = getDBConnections();
+		
+		for (DbProperties dbProperties : dbList) {
+			dbDefinitionList.put(dbProperties.getID(), dbProperties);
+		}
+		
 		XPathQueryService service = null;
 		ResourceSet result = null;
+
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + 
+					"db:searchDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
+
+		ArrayList<DBAccessInfoTypeClient> dbAccessInfoTypeClients = new ArrayList<DBAccessInfoTypeClient>();
 
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			result = service.query(xQueryStr);
-			ResourceIterator iterator = result.getIterator();
-
-			while (iterator.hasMoreResources()) {
-				Resource r = iterator.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				DbProperties dbProperties;
-				try {
-					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
-					dbDefinitionList.put(dbProperties.getID(), dbProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException exception) {
-			exception.printStackTrace();
-			return null;
-		}
-
-		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:searchDbAccessProfile(" + dbAccessProfileXML + ")";
-
-		ArrayList<DBAccessInfoTypeClient> dbAccessInfoTypeClients = new ArrayList<DBAccessInfoTypeClient>();
-
-		try {
 			result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 
@@ -1191,7 +1155,9 @@ public class DBOperations implements Serializable {
 	public boolean deleteDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbAccessProfile(" + dbAccessProfileXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -1212,7 +1178,9 @@ public class DBOperations implements Serializable {
 	public boolean insertDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:insertDbAccessProfile(" + dbAccessProfileXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:insertDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -1233,7 +1201,9 @@ public class DBOperations implements Serializable {
 	public boolean updateDBAccessProfile(String dbAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbAccessProfileLock(" + dbAccessProfileXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbAccessProfileLock(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -1259,7 +1229,10 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbCP(" + id + ")";
+			String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + 
+						"db:getDbCP(\"" + dataFile + "\", " + id + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();

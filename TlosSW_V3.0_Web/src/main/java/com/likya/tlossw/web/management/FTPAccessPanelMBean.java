@@ -28,7 +28,6 @@ import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 import com.likya.tlossw.webclient.TEJmxMpValidationClient;
 
@@ -237,7 +236,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 
 	// veri tabaninda kayitli siradaki id degerini set ediyor
 	public boolean setFtpConnectionID() {
-		int ftpConnectionId = getDbOperations().getNextId(ConstantDefinitions.FTPCONNECTION_ID);
+		int ftpConnectionId = getDbOperations().getNextId(CommonConstantDefinitions.FTPCONNECTION_ID);
 
 		if (ftpConnectionId < 0) {
 			addMessage("insertFtpConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.ftpConnection.getId", null);

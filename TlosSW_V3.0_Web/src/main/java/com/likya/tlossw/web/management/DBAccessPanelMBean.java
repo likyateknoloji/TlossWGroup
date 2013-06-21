@@ -91,7 +91,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	public void fillDBConnectionNameList() {
 		dbConnectionNameList = new ArrayList<SelectItem>();
 
-		for (DbProperties dbProperties : getDbOperations().getDbList()) {
+		for (DbProperties dbProperties : getDbOperations().getDBConnections()) {
 			SelectItem item = new SelectItem();
 			item.setValue(dbProperties.getID());
 			item.setLabel(dbProperties.getConnectionName());
