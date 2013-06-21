@@ -2200,7 +2200,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<CalendarProperties> searchCalendar(String calendarPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(" + calendarPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(\"" + dataFile + "\", " + calendarPropertiesXML + ")";
 
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
 
@@ -2276,7 +2278,9 @@ public class DBOperations implements Serializable {
 	public CalendarProperties searchCalendarByID(String calendarID) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendarByID(" + calendarID + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendarByID(\"" + dataFile + "\", " + calendarID + ")";
 
 		XPathQueryService service;
 		try {
