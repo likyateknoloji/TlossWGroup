@@ -1860,7 +1860,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<SLA> getSlaList() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:slaList(1,2)";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.SLA_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:slaList(\"" + dataFile + "\", " + "1,2)";
 
 		ArrayList<SLA> slaList = new ArrayList<SLA>();
 
@@ -1933,7 +1935,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<FtpProperties> getFtpConnectionList() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList()";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList(\"" + dataFile + "\")";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
