@@ -509,7 +509,11 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleParameterOperations.xquery\";" + "lk:parameterList(1,10)";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PARAMETER_DATA;
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleParameterOperations.xquery\";" + "lk:parameterList(\"" + dataFile + "\", " + "1,10)";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
 
