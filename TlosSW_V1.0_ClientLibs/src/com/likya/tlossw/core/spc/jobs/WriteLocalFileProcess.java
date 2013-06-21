@@ -73,6 +73,10 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 						} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
 							fileContent = parameter.getValueString();
 							break;
+
+						} else if (parameter.getName().equals(ProcessNode.PN_RESULT)) {
+							fileContent = parameter.getValueString();
+							break;
 						}
 					}
 				}
