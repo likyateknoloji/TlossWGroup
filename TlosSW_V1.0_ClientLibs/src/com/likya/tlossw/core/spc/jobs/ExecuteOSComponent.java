@@ -74,8 +74,11 @@ public abstract class ExecuteOSComponent extends Job {
 			if(indexOfSpace > 0) {
 				realCommand = jobCommand.substring(0, indexOfSpace).trim();
 				arguments = jobCommand.substring(jobCommand.indexOf(" ")).trim();
+				processBuilder = new ProcessBuilder(realCommand, arguments);
+			} else {
+				realCommand = jobCommand.trim();
+				processBuilder = new ProcessBuilder(realCommand);
 			}
-			processBuilder = new ProcessBuilder(realCommand, arguments);
 		}
 
 		processBuilder.directory(new File(jobPath));
