@@ -813,7 +813,12 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + "db:getDbConnection(" + dbPropertiesID + ")";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + 
+					"db:getDbConnection(\"" + dataFile + "\", " + dbPropertiesID + ")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -843,7 +848,12 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + "db:getDbCP(" + dbCPID + ")";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + 
+					"db:getDbCP(\"" + dataFile + "\", " + dbCPID + ")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
