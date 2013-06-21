@@ -30,6 +30,7 @@ public class CommonConstantDefinitions {
 	public static final String SLA_DATA = "tlosSWSLAs10.xml";
 	public static final String TRACE_DATA = "tlosSWTrace10.xml";
 	public static final String WEB_SERVICE_ACCESS_DATA = "tlosSWWebServiceAccessProfiles10.xml";
+	public static final String PERMISSION_DATA = "tlosSWPermission10.xml";
 
 	/**
 	 * Exist arabirimi tanımları
