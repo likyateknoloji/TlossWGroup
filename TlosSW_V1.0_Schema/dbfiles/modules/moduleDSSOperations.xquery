@@ -523,9 +523,9 @@ declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTim
   Return: Onay varsa True, yoksa False donulur.
 :)
 
-declare function dss:FindResourcesForAJob($jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:FindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
 {
-  let $AvailableResourceListx := dss:GetAvailableResourcesList(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/*,'root.') 
+  let $AvailableResourceListx := dss:GetAvailableResourcesList($nrpeDataDocumentUrl, doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/*,'root.') 
   (: let $AvailableResourceListy := $AvailableResourceListx[resource/@os = $jobPropertiesFuncPass/*/text()] :)
   let $par := $jobPropertiesFuncPass/*/text()
   let $AvailableResourceListy := for $d in $AvailableResourceListx/resource
@@ -674,9 +674,9 @@ declare function dss:FindResourcesForAJob($jobPropertiesFuncPass as node(), $gun
 };
 
 
-declare function dss:SWFindResourcesForAJob($jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
+declare function dss:SWFindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
 {
-	dss:FindResourcesForAJob($jobPropertiesFuncPass , $gunzaman, 'Result')
+	dss:FindResourcesForAJob($nrpeDataDocumentUrl, $jobPropertiesFuncPass , $gunzaman, 'Result')
 };
 
 
