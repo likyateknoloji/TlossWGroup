@@ -113,7 +113,9 @@ public class DBOperations implements Serializable {
 
 		try {
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(" + agentXML + ")";
+			String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + dataFile + "\", " + agentXML + ")";
 
 			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -209,7 +211,9 @@ public class DBOperations implements Serializable {
 
 	public boolean updateAgent(String agentXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:updateAgentLock(" + agentXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:updateAgentLock(\"" + dataFile + "\", " + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -258,7 +262,12 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertAgent(String agentXML) {
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:insertAgentLock(" + agentXML + ")";
+
+		String agentDataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+		String seqDataFile = xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + 
+					"lk:insertAgentLock(\"" + agentDataFile + "\", \"" + seqDataFile + "\", " + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -332,7 +341,10 @@ public class DBOperations implements Serializable {
 	public SWAgent searchAgentById(String id) {
 
 		SWAgent agent = null;
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(" + id + ")";
+
+		String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(\"" + dataFile + "\", " + id + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -401,7 +413,9 @@ public class DBOperations implements Serializable {
 
 	public boolean deleteAgent(String agentXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:deleteAgentLock(" + agentXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:deleteAgentLock(\"" + dataFile + "\", " + agentXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -2497,7 +2511,9 @@ public class DBOperations implements Serializable {
 	public SWAgent checkAgent(String resource, int jmxPort) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(" + "xs:string(\"" + resource + "\")," + jmxPort + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(\"" + dataFile + "\", " + "xs:string(\"" + resource + "\")," + jmxPort + ")";
 
 		SWAgent agent = null;
 
@@ -2644,7 +2660,10 @@ public class DBOperations implements Serializable {
 		ResourceSet result;
 		ResourceIterator i;
 		/*
-		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(" + alarm.getAgentId() + ")";
+		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor 
+		 * 
+		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+		 * xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + dataFile + "\", " + alarm.getAgentId() + ")";
 		 * 
 		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
 		 * 
