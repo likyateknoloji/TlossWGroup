@@ -13,7 +13,7 @@
 			<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
 			<com:jobTypeDef>TIME BASED</com:jobTypeDef>
 			<com:jobTypeDetails>
-				<com:jobCommandType></com:jobCommandType>
+				<com:jobCommandType>SYSTEM COMMAND</com:jobCommandType>
 				<com:jobCommand>open iPhoto.app</com:jobCommand>
 				<com:jobPath>/Applications</com:jobPath>
 			</com:jobTypeDetails>
