@@ -1,11 +1,19 @@
 xquery version "1.0";
+
 module namespace density = "http://density.tlos.com/";
 
-import module namespace hs="http://hs.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleReportOperations.xquery"; 
+import module namespace hs="http://hs.tlos.com/" at "moduleReportOperations.xquery"; 
+
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace stat="http://www.likyateknoloji.com/state-types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
+
+(:
+Mappings
+$dailyScenariosDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")
+$sequenceDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
+:)
 
 (:
 Programmed by : Hakan Saribiyik
@@ -44,10 +52,10 @@ let $stateName := xs:string("FINISHED")
 let $substateName := xs:string("COMPLETED")
 let $statusName := xs:string("SUCCESS")
 :)
-declare function density:focusedRecords($startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:focusedRecords($dailyScenariosDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
 {
 
-let $getJobs := hs:getJobsReport(1,0,0, true())
+let $getJobs := hs:getJobsReport($dailyScenariosDocumentUrl, $sequenceDocumentUrl, 1,0,0, true())
 
   let $sonuc := 
               for $jobProperties in $getJobs/dat:jobProperties
@@ -119,10 +127,10 @@ return $tektek
 
 } ;
 
-declare function density:recStat($stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
+declare function density:recStat($dailyScenariosDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
-  let $hepsi := hs:getJobArray(hs:getJobsReport(1,0,0, true()),"descending",1)
+  let $hepsi := hs:getJobArray(hs:getJobsReport($dailyScenariosDocumentUrl, $sequenceDocumentUrl, 1,0,0, true()),"descending",1)
   let $startDateTimex := xs:dateTime($hepsi/@overallStart)-xs:dayTimeDuration('PT2M')
   let $endDateTimex := xs:dateTime($hepsi/@overallStop)+xs:dayTimeDuration('PT2M')
 
