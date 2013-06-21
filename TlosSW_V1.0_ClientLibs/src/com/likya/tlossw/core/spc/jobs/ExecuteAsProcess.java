@@ -41,10 +41,17 @@ public class ExecuteAsProcess extends ExecuteOSComponent {
 
 				sendStatusChangeInfo();
 
-				// TODO Burası eksik kaldı, 3. parametre tamamlanmalı
-				// Serkan Taş 13.08.2012
-				// Map<String, String> env = new HashMap<String, String>();
-				// env.put("PGPASSWORD", password);
+				/**
+				 *  TODO Burası eksik kaldı, 3. parametre tamamlanmalı
+				 * Serkan Taş 13.08.2012
+				 * Map<String, String> env = new HashMap<String, String>();
+				 * env.put("PGPASSWORD", password);
+				 * 
+				 * Serkan Taş 21.06.2013
+				 * 
+				 * Bu değişkenin de JobPrroperties'e eklenmesi gerekir.
+				 * 
+				 */
 
 				startNativeProcess(jobPath, jobCommand, null, this.getClass().getName(), myLogger);
 
