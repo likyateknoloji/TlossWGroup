@@ -1,15 +1,21 @@
 xquery version "1.0";
+
 module namespace ks = "http://ks.tlos.com/";
 
 declare namespace pp = "http://www.likyateknoloji.com/XML_PP_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+(:
+Mappings
+$programProvisioningDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")
+$sequenceDataDocumentUrl = $documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
+:)
 
 (:fn:empty($prs/com:role):)
-declare function ks:searchPP($searchPp as element(pp:License)) as element(pp:License)* 
+declare function ks:searchPP($programProvisioningDocumentUrl as xs:string, $searchPp as element(pp:License)) as element(pp:License)* 
  {
-	for $pp in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License
+	for $pp in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License
 	  let $nedirx := if (count($searchPp/pp:ResourcePool/pp:Resource) eq 0 or
                             (count($pp/pp:ResourcePool/pp:Resource) eq 0 and count($searchPp/pp:ResourcePool/pp:Resource) > 0)) then true()
                           else 
@@ -51,37 +57,37 @@ declare function ks:searchPP($searchPp as element(pp:License)) as element(pp:Lic
 };
 
 (: ornek kullanim ks:ppList(1,2) ilk iki eleman :)
-declare function ks:ppList($firstElement as xs:int, $lastElement as xs:int) as element(pp:License)* 
+declare function ks:ppList($programProvisioningDocumentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(pp:License)* 
  {
-	for $pp in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License[position() = ($firstElement to $lastElement)]
+	for $pp in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License[position() = ($firstElement to $lastElement)]
 	return  $pp
 };
 
 (: ornek kullanim ks:searchPpByPpName(xs:string('Tlos SW')) :)
-declare function ks:searchPpByPpName($searchPpName as xs:string) as element(pp:License)? 
+declare function ks:searchPpByPpName($programProvisioningDocumentUrl as xs:string, $searchPpName as xs:string) as element(pp:License)? 
  {
-	for $pp in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License
+	for $pp in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License
 	where fn:lower-case($pp/pp:Name)=fn:lower-case($searchPpName)
     return $pp
 };
 
-declare function ks:searchPpByID($id as xs:integer) as element(pp:License)? 
+declare function ks:searchPpByID($programProvisioningDocumentUrl as xs:string, $id as xs:integer) as element(pp:License)? 
  {
-	for $pp in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License
+	for $pp in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License
 	where $pp/@licenseID = $id
     return $pp
 };
 
-declare function ks:insertPpLock($pp as element(pp:License)) as xs:boolean
+declare function ks:insertPpLock($programProvisioningDocumentUrl as xs:string, $pp as element(pp:License)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses, ks:insertPp($pp))     
+   let $sonuc := util:exclusive-lock(doc($programProvisioningDocumentUrl)/pp:Licenses, ks:insertPp($programProvisioningDocumentUrl, $pp))     
    return true()
 };
 
-declare function ks:insertPp($pp as element(pp:License)) as node()*
+declare function ks:insertPp($programProvisioningDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $pp as element(pp:License)) as node()*
 {
     let $XXX := $pp
-    let $nextId := sq:getNextId("ppId")	
+    let $nextId := sq:getNextId($sequenceDataDocumentUrl, "ppId")	
 
 	return update insert 
      <pp:License xmlns="http://www.likyateknoloji.com/XML_PP_types" licenseID="{$nextId}"> 
@@ -93,29 +99,29 @@ declare function ks:insertPp($pp as element(pp:License)) as node()*
         {$XXX/pp:Type}
         <com:userId>{data($XXX/com:userId)}</com:userId>
      </pp:License>
-	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses
+	into doc($programProvisioningDocumentUrl)/pp:Licenses
 } ;
 
-declare function ks:updatePp($pp as element(pp:License))
+declare function ks:updatePp($programProvisioningDocumentUrl as xs:string, $pp as element(pp:License))
 {
-	for $ppdon in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License
+	for $ppdon in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License
 	where $ppdon/@licenseID = $pp/@licenseID
 	return  update replace $ppdon with $pp
 };
 
-declare function ks:updatePpLock($pp as element(pp:License))
+declare function ks:updatePpLock($programProvisioningDocumentUrl as xs:string, $pp as element(pp:License))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License, ks:updatePp($pp))     
+   util:exclusive-lock(doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License, ks:updatePp($programProvisioningDocumentUrl, $pp))     
 };
 
-declare function ks:deletePp($pp as element(pp:License))
+declare function ks:deletePp($programProvisioningDocumentUrl as xs:string, $pp as element(pp:License))
  {
-	for $ppdon in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License
+	for $ppdon in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License
 	where $ppdon/@licenseID = $pp/@licenseID
 	return update delete $ppdon
 };
 
-declare function ks:deletePpLock($pp as element(pp:License))
+declare function ks:deletePpLock($programProvisioningDocumentUrl as xs:string, $pp as element(pp:License))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License, ks:deletePp($pp))     
+   util:exclusive-lock(doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License, ks:deletePp($programProvisioningDocumentUrl, $pp))     
 };
