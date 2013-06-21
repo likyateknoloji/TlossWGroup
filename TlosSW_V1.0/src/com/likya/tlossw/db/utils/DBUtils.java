@@ -689,7 +689,11 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"errorId\")";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"" + dataFile + "\", \"" + CommonConstantDefinitions.ERROR_ID + "\")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
