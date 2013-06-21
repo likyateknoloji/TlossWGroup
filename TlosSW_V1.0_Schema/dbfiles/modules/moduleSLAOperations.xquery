@@ -88,9 +88,9 @@ declare function hs:searchSlaBySlaId($id as xs:integer) as element(sla:SLA)?
     return $sla
 };
 
-declare function hs:insertSlaLock($sla as element(sla:SLA)) as xs:boolean
+declare function hs:insertSlaLock($documentUrl as xs:string, $sla as element(sla:SLA)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement, hs:insertSla($sla))     
+   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement, hs:insertSla($documentUrl, $sla))     
    return true()
 };
 
