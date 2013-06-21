@@ -64,4 +64,17 @@ public class CommonConstantDefinitions {
 	public static final String FTP_LOGIN_ERROR = "ftpLoginError";
 	public static final String FTP_SUCCESSFUL = "ftpSuccessful";
 
+	/**
+	 * eXist'teki sequenceData.xml'den sorgu icin kullanilan sabitler
+	 */
+	public static final String CALENDAR_ID = "calendarId";
+	public static final String DBCONNECTION_ID = "dbConnectionId";
+	public static final String DBUSER_ID = "dbUserId";
+	public static final String WSDEFINITION_ID = "wsDefinitionId";
+	public static final String JOB_ID = "jobId";
+	public static final String USER_ID = "userId";
+	public static final String SCENARIO_ID = "scenarioId";
+	public static final String WSUSERPROFILE_ID = "wsUserProfileId";
+	public static final String FTPCONNECTION_ID = "ftpConnectionId";
+	public static final String ERROR_ID = "errorId";
 }
