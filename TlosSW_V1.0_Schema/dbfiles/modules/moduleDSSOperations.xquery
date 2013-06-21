@@ -1,6 +1,6 @@
 xquery version "1.0";
 module namespace dss = "http://tlos.dss.com/";
-import module namespace lk = "http://likya.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleNrpeOperations.xquery";
+import module namespace lk = "http://likya.tlos.com/" at "moduleNrpeOperations.xquery";
 declare namespace dat = "http://www.likyateknoloji.com/XML_data_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace cal = "http://www.likyateknoloji.com/XML_calendar_types";
@@ -115,10 +115,10 @@ declare function dss:GetAvailableResourcesListxxx($n as node(), $prev as xs:stri
 };
 
 :)
-declare function dss:GetAvailableResourcesList($n as node(), $prev as xs:string) as node()*
+declare function dss:GetAvailableResourcesList($nrpeDataDocumentUrl as xs:string, $n as node(), $prev as xs:string) as node()*
 {
 	
-  let $nrpeOutput := lk:nrpeOutput(1, 1, "All")
+  let $nrpeOutput := lk:nrpeOutput($nrpeDataDocumentUrl, 1, 1, "All")
   let $liste1 := (for $tek in $nrpeOutput/nrpr:nrpeCall
                   return 
                    <nrpr:nrpeCall entry-name="{$tek/@entry-name}" port="{$tek/@port}" os="{$tek/@os}">
