@@ -104,6 +104,7 @@
 			<xs:sequence>
 				<xs:element ref="inParam" minOccurs="0" />
 				<xs:element ref="outParam" minOccurs="0" />
+				<xs:element ref="envVariables" minOccurs="0" />
 				<xs:choice minOccurs="0">
 					<xs:element ref="ftp:ftpAdapterProperties" />
 					<xs:element ref="file:fileAdapterProperties" />
@@ -116,6 +117,24 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:element name="envVariables">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="entry"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="entry">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:normalizedString">
+					<xs:attribute name="key" use="required" type="xs:NCName"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	
 	<xs:element name="localParameters">
 		<xs:complexType>
 			<xs:sequence>
