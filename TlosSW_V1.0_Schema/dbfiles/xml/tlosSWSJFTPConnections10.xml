@@ -16,8 +16,8 @@
 		<com:active>yes</com:active>
 		<ftp:connection>
 			<com:connName>Centos</com:connName>
-			<com:userName>root</com:userName>
-			<com:userPassword>centos</com:userPassword>
+			<com:userName>test</com:userName>
+			<com:userPassword>test</com:userPassword>
 			<ftp:ftpPortNumber>21</ftp:ftpPortNumber>
 			<com:ipAddress>192.168.1.70</com:ipAddress>
 		</ftp:connection>
