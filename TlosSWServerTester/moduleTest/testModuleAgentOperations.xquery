@@ -1,7 +1,7 @@
 xquery version "1.0";  
 import module namespace lk="http://likya.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleAgentOperations.xquery";
 declare namespace res="http://www.likyateknoloji.com/resource-extension-defs";
-lk:insertAgentLock(<agnt:SWAgent xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs">
+lk:insertAgentLock("xmldb:exist://db/TLOSSW/xmls/tlosSWAgents10.xml", "xmldb:exist://db/TLOSSW/xmls/tlosSWSequenceData10.xml", <agnt:SWAgent xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs">
   <res:Resource>merve-laptop</res:Resource>
   <agnt:osType>Windows</agnt:osType>
   <agnt:agentType>agent</agnt:agentType>
