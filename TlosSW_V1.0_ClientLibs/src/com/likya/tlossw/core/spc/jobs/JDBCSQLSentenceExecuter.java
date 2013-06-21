@@ -29,9 +29,26 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 			// System.out.print(resultSetMetaData.getColumnLabel(i) + " ");
 			resultData.append(resultSetMetaData.getColumnLabel(i) + ", ");
 		}
+
+		resultData.deleteCharAt(resultData.lastIndexOf(","));
+		resultData.append("\n");
+
+		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+			// System.out.print(resultSetMetaData.getColumnLabel(i) + " ");
+			resultData.append(resultSetMetaData.getColumnType(i) + ", ");
+		}
 		
 		resultData.deleteCharAt(resultData.lastIndexOf(","));
 		resultData.append("\n");
+
+		for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+			// System.out.print(resultSetMetaData.getColumnLabel(i) + " ");
+			resultData.append(resultSetMetaData.getColumnTypeName(i) + ", ");
+		}
+		
+		resultData.deleteCharAt(resultData.lastIndexOf(","));
+		resultData.append("\n");
+
 		
 		// System.out.println();
 
