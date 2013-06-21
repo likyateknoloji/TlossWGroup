@@ -94,12 +94,10 @@ declare function hs:insertSlaLock($sla as element(sla:SLA)) as xs:boolean
    return true()
 };
 
-declare function hs:insertSla($sla as element(sla:SLA)) as node()*
+declare function hs:insertSla($documentUrl as xs:string, $sla as element(sla:SLA)) as node()*
 {
     let $XXX := $sla
     
-    (: hata verdigi icin gecici olarak bos parametre ekledim. merve :)
-    let $documentUrl := ""
     let $nextId := sq:getNextId($documentUrl, "slaId")	
     (: 
      let $quote := "&#34;"
