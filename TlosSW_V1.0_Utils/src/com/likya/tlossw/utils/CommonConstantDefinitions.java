@@ -17,7 +17,20 @@ public class CommonConstantDefinitions {
 	public static final String ALARM_HISTORY_DATA = "tlosSWAlarmHistory10.xml";
 	public static final String DB_CONNECTION_PROFILES_DATA = "tlosSWDBConnectionProfiles10.xml";
 	public static final String DB_CONNECTIONS_DATA = "tlosSWDBConnections10.xml";
-	
+	public static final String USER_DATA = "tlosSWUser10.xml";
+	public static final String ERROR_DATA = "tlosSWErrors10.xml";
+	public static final String NRPE_DATA = "tlosSWNrpeData10.xml";
+	public static final String NRPE_RESULT_DATA = "tlosSWNrpeResult_v_1_0.xml";
+	public static final String PROGRAM_PROVISIONING_DATA = "tlosSWProgramProvisioning10.xml";
+	public static final String REPORTS_DATA = "tlosSWReports10.xml";
+	public static final String RESOURCES_DATA = "tlosSWResources10.xml";
+	public static final String FILE_LISTENER_DATA = "tlosSWSJFileListener10.xml";
+	public static final String FTP_DATA = "tlosSWSJFTPConnections10.xml";
+	public static final String WEB_SERVICES_DATA = "tlosSWSJWebServices10.xml";
+	public static final String SLA_DATA = "tlosSWSLAs10.xml";
+	public static final String TRACE_DATA = "tlosSWTrace10.xml";
+	public static final String WEB_SERVICE_ACCESS_DATA = "tlosSWWebServiceAccessProfiles10.xml";
+
 	/**
 	 * Exist arabirimi tanımları
 	 */
