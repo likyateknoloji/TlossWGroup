@@ -67,9 +67,9 @@ declare function hs:searchSLAtest($searchSla as element(sla:SLA)) as node()*
 };
 
 (: ornek kullanim hs:slaList(1,2) ilk iki eleman :)
-declare function hs:slaList($firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
+declare function hs:slaList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
  {
-	for $sla in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA[position() = ($firstElement to $lastElement)]
+	for $sla in doc($documentUrl)/sla:ServiceLevelAgreement/sla:SLA[position() = ($firstElement to $lastElement)]
 	return  $sla
 };
 
