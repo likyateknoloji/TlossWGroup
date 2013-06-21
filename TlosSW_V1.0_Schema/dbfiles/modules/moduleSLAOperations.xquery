@@ -6,7 +6,7 @@ declare namespace per = "http://www.likyateknoloji.com/XML_permission_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 
 declare namespace fn="http://www.w3.org/2005/xpath-functions";
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
 
 (:fn:empty($prs/com:role):)
 declare function hs:searchSLA($searchSla as element(sla:SLA)) as element(sla:SLA)* 
