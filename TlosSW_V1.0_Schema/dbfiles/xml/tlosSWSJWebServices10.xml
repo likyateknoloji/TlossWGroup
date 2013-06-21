@@ -32,19 +32,19 @@
 		<com:userId>1</com:userId>
 	</ws:webServiceDefinition>
 	<ws:webServiceDefinition ID="2">
-		<ws:serviceName>GlobalWeatherTest</ws:serviceName>
-		<ws:description>Türkiye'nin şehirleri</ws:description>
-		<ws:wsdlAddress>http://www.webservicex.net/globalweather.asmx?WSDL</ws:wsdlAddress>
+		<ws:serviceName>StockQuote</ws:serviceName>
+		<ws:description>Turkcell</ws:description>
+		<ws:wsdlAddress>http://www.webservicex.net/stockquote.asmx?WSDL</ws:wsdlAddress>
 		<ws:bindingList>
 			<ws:binding>
 				<ws:bindingName>SOAP1.1</ws:bindingName>
 				<ws:operation>
-					<ws:operationName>GetCitiesByCountry</ws:operationName>
+					<ws:operationName>GetQuote</ws:operationName>
 					<ws:parameterList>
 						<ws:parameter>
-							<ws:parameterName>countryName</ws:parameterName>
+							<ws:parameterName>symbol</ws:parameterName>
 							<ws:parameterType>class java.lang.String</ws:parameterType>
-							<ws:parameterValue>Turkey</ws:parameterValue>
+							<ws:parameterValue>TKC</ws:parameterValue>
 							<ws:isEnum>false</ws:isEnum>
 						</ws:parameter>
 					</ws:parameterList>
