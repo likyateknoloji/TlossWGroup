@@ -1,18 +1,25 @@
 xquery version "1.0";
+
 module namespace hs = "http://hs.tlos.com/";
+
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace con ="http://www.likyateknoloji.com/XML_config_types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
 
-declare function hs:getTlosConfig()
+(:
+Mappings
+$configDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWConfig10.xml")
+$globalStatesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWGlobalStates10.xml")
+:)
+declare function hs:getTlosConfig($configDocumentUrl as xs:string)
  {
-	for $config in doc("//db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo
+	for $config in doc($configDocumentUrl)/con:TlosConfigInfo
 	return $config
 };
 
-declare function hs:updateTlosConfigMailOptions($mailOption as element(con:mailOptions))
+declare function hs:updateTlosConfigMailOptions($configDocumentUrl as xs:string, $mailOption as element(con:mailOptions))
  {	
-	for $moption in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo/con:settings/con:mailOptions
+	for $moption in doc($configDocumentUrl)/con:TlosConfigInfo/con:settings/con:mailOptions
 	return  update replace $moption with 	
 	<con:mailOptions>
 		<con:useMail>
@@ -41,18 +48,18 @@ declare function hs:updateTlosConfigMailOptions($mailOption as element(con:mailO
 	</con:mailOptions>
 };
 
-declare function hs:updateTlosSmsOptions($smsOption as element(con:smsOptions))
+declare function hs:updateTlosSmsOptions($configDocumentUrl as xs:string, $smsOption as element(con:smsOptions))
  {	
-	for $soption in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo/con:settings/con:smsOptions
+	for $soption in doc($configDocumentUrl)/con:TlosConfigInfo/con:settings/con:smsOptions
 	return  update replace $soption with 	
 	<con:smsOptions>
 		<con:useSms>{data($smsOption/con:useSms)}</con:useSms>			
 	</con:smsOptions>
 };
 
-declare function hs:updateTlosConfigFrequency($tlosFreq as element(con:tlosFrequency))
+declare function hs:updateTlosConfigFrequency($configDocumentUrl as xs:string, $tlosFreq as element(con:tlosFrequency))
  {	
-	for $tFrequency in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo/con:settings/con:tlosFrequency
+	for $tFrequency in doc($configDocumentUrl)/con:TlosConfigInfo/con:settings/con:tlosFrequency
 	return  update replace $tFrequency with 	
 	<con:tlosFrequency>
 		<com:comment>{data($tlosFreq/com:comment)}</com:comment>
@@ -60,9 +67,9 @@ declare function hs:updateTlosConfigFrequency($tlosFreq as element(con:tlosFrequ
 	</con:tlosFrequency>
 };
 
-declare function hs:updateTlosConfigPerformance($perform as element(con:performance))
+declare function hs:updateTlosConfigPerformance($configDocumentUrl as xs:string, $perform as element(con:performance))
  {	
-	for $tPerformance in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo/con:performance
+	for $tPerformance in doc($configDocumentUrl)/con:TlosConfigInfo/con:performance
 	return  update replace $tPerformance with 	
 	<con:performance>
 		<con:threshold>
@@ -72,23 +79,23 @@ declare function hs:updateTlosConfigPerformance($perform as element(con:performa
 	</con:performance>
 };
 
-declare function hs:updateTlosConfigInfo($tlosConfigInfo as element(con:TlosConfigInfo))
+declare function hs:updateTlosConfigInfo($configDocumentUrl as xs:string, $tlosConfigInfo as element(con:TlosConfigInfo))
  {
-	let $retMailOption := hs:updateTlosConfigMailOptions($tlosConfigInfo/con:settings/con:mailOptions)
-	let $retSmsOption := hs:updateTlosSmsOptions($tlosConfigInfo/con:settings/con:smsOptions)
-	let $retSmsOption := hs:updateTlosConfigFrequency($tlosConfigInfo/con:settings/con:tlosFrequency)
-	let $retPerformance := hs:updateTlosConfigPerformance($tlosConfigInfo/con:performance)
+	let $retMailOption := hs:updateTlosConfigMailOptions($configDocumentUrl, $tlosConfigInfo/con:settings/con:mailOptions)
+	let $retSmsOption := hs:updateTlosSmsOptions($configDocumentUrl, $tlosConfigInfo/con:settings/con:smsOptions)
+	let $retSmsOption := hs:updateTlosConfigFrequency($configDocumentUrl, $tlosConfigInfo/con:settings/con:tlosFrequency)
+	let $retPerformance := hs:updateTlosConfigPerformance($configDocumentUrl, $tlosConfigInfo/con:performance)
 	return $retMailOption
 };
 
-declare function hs:updateTlosConfigInfoLock($tlosConfigInfo as element(con:TlosConfigInfo))
+declare function hs:updateTlosConfigInfoLock($configDocumentUrl as xs:string, $tlosConfigInfo as element(con:TlosConfigInfo))
  {
-	util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo, hs:updateTlosConfigInfo($tlosConfigInfo))
+	util:exclusive-lock(doc($configDocumentUrl)/con:TlosConfigInfo, hs:updateTlosConfigInfo($configDocumentUrl, $tlosConfigInfo))
 };
 
-declare function hs:updateTlosConfigInfo2($tlosConfigInfo as element(con:TlosConfigInfo))
+declare function hs:updateTlosConfigInfo2($configDocumentUrl as xs:string, $tlosConfigInfo as element(con:TlosConfigInfo))
  {	
-	for $config in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWConfig10.xml")/con:TlosConfigInfo
+	for $config in doc($configDocumentUrl)/con:TlosConfigInfo
 	return  update replace $config with 
 	<con:TlosConfigInfo>
 		<con:Product-info>
@@ -185,8 +192,8 @@ declare function hs:updateTlosConfigInfo2($tlosConfigInfo as element(con:TlosCon
  </con:TlosConfigInfo>
 };
 
-declare function hs:getTlosGlobalStates()
+declare function hs:getTlosGlobalStates($globalStatesDocumentUrl as xs:string)
  {
-	for $globalStates in doc("//db/TLOSSW/xmls/tlosSWGlobalStates10.xml")/state-types:GlobalStateDefinition
+	for $globalStates in doc($globalStatesDocumentUrl)/state-types:GlobalStateDefinition
 	return $globalStates
 };
