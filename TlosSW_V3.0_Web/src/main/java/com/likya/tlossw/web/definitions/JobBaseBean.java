@@ -1155,7 +1155,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean getJobId() {
-		int jobId = getDbOperations().getNextId(com.likya.tlossw.web.utils.ConstantDefinitions.JOB_ID);
+		int jobId = getDbOperations().getNextId(CommonConstantDefinitions.JOB_ID);
 
 		if (jobId < 0) {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.getId", null);

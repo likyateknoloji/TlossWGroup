@@ -35,9 +35,9 @@ import com.likya.tlos.model.xmlbeans.calendar.WhichOnesDocument.WhichOnes;
 import com.likya.tlos.model.xmlbeans.common.DayDefDocument.DayDef;
 import com.likya.tlos.model.xmlbeans.common.DaySpecialDocument.DaySpecial;
 import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
@@ -341,7 +341,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private boolean getCalendarId() {
-		int calendarId = getDbOperations().getNextId(ConstantDefinitions.CALENDAR_ID);
+		int calendarId = getDbOperations().getNextId(CommonConstantDefinitions.CALENDAR_ID);
 		if (calendarId < 0) {
 			addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.info.calendar.db.getId", null);
 			return false;

@@ -409,7 +409,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean getScenarioId() {
-		int scenarioId = getDbOperations().getNextId(com.likya.tlossw.web.utils.ConstantDefinitions.SCENARIO_ID);
+		int scenarioId = getDbOperations().getNextId(CommonConstantDefinitions.SCENARIO_ID);
 
 		if (scenarioId < 0) {
 			addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.getId", null);
