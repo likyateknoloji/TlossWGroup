@@ -31,6 +31,7 @@ public class CommonConstantDefinitions {
 	public static final String TRACE_DATA = "tlosSWTrace10.xml";
 	public static final String WEB_SERVICE_ACCESS_DATA = "tlosSWWebServiceAccessProfiles10.xml";
 	public static final String PERMISSION_DATA = "tlosSWPermission10.xml";
+	public static final String PARAMETER_DATA = "http://www.likyateknoloji.com/XML_parameters_types";
 
 	/**
 	 * Exist arabirimi tanımları
