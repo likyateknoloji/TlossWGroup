@@ -18,10 +18,10 @@ import com.likya.tlos.model.xmlbeans.common.EmailListDocument.EmailList;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.common.TelListDocument.TelList;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
-import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "userPanelMBean")
@@ -158,7 +158,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public boolean getUserId() {
-		int userId = dbOperations.getNextId(ConstantDefinitions.USER_ID);
+		int userId = dbOperations.getNextId(CommonConstantDefinitions.USER_ID);
 		if (userId < 0) {
 			addSuccessMessage("yeniKullanici", "tlos.info.user.db.getId", "Info");
 			return false;
