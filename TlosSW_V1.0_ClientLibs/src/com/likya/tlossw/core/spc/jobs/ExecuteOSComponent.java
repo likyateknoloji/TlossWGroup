@@ -66,8 +66,8 @@ public abstract class ExecuteOSComponent extends Job {
 			String[] cmd = ValidPlatforms.getCommand(jobCommand);
 			processBuilder = new ProcessBuilder(cmd);
 		} else {
-			String realCommand = jobCommand.substring(0, jobCommand.indexOf(" "));
-			String arguments = jobCommand.substring(jobCommand.indexOf(" "));
+			String realCommand = jobCommand.substring(0, jobCommand.indexOf(" ")).trim();
+			String arguments = jobCommand.substring(jobCommand.indexOf(" ")).trim();
 			processBuilder = new ProcessBuilder(realCommand, arguments);
 		}
 
