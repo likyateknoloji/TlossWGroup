@@ -3174,7 +3174,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<FtpProperties> searchFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:searchFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:searchFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
@@ -3211,7 +3213,9 @@ public class DBOperations implements Serializable {
 	public boolean deleteFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:deleteFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:deleteFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 
@@ -3232,7 +3236,9 @@ public class DBOperations implements Serializable {
 	public boolean checkFTPConnectionName(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:checkFTPConnectionName(" + ftpAccessPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:checkFTPConnectionName(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -3255,7 +3261,9 @@ public class DBOperations implements Serializable {
 	public boolean insertFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:insertFTPConnection(" + ftpAccessPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:insertFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -3275,7 +3283,9 @@ public class DBOperations implements Serializable {
 	public FtpProperties searchFTPConnectionById(int ftpConnectionId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(\"" + dataFile + "\", " + ftpConnectionId + ")";
 
 		XPathQueryService service;
 		try {
@@ -3308,7 +3318,9 @@ public class DBOperations implements Serializable {
 	public boolean updateFTPAccessConnection(String ftpAccessPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:updateFTPConnectionLock(" + ftpAccessPropertiesXML + ")";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:updateFTPConnectionLock(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
