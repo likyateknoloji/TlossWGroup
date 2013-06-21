@@ -783,7 +783,11 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(" + ftpConnectionId + ")";
+		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.FTP_DATA;
+
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(\"" + dataFile + "\", " + ftpConnectionId + ")";
+
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
