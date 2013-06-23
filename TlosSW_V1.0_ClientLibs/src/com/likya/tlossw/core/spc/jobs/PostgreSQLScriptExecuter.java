@@ -15,6 +15,7 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
+import com.likya.tlossw.utils.XmlBeansTransformer;
 
 public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 
@@ -68,8 +69,12 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 
 				sendStatusChangeInfo();
 
-				Map<String, String> env = new HashMap<String, String>();
-				env.put("PGPASSWORD", password);
+				
+				Map<String, String> envVars = new HashMap<String, String>();
+				envVars.put("PGPASSWORD", password);
+				
+				Map<String, String> env = XmlBeansTransformer.entryToMap(jobProperties);
+				envVars.putAll(env);
 
 				startShellProcess(psqlClientNamePath, psqlClientName, env, this.getClass().getName(), myLogger);
 
