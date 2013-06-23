@@ -784,10 +784,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<RNSEntryType> getResources() {
+		
 		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
 		ResourceListType resourceList = null;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(1,10)";
+		String dataFile = xmlsUrl + CommonConstantDefinitions.RESOURCES_DATA;
+		
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + dataFile + "\"1,10)";
 
 		Collection collection = existConnectionHolder.getCollection();
 
