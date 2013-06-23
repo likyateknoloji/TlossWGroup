@@ -1,10 +1,13 @@
 package com.likya.tlossw.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.xmlbeans.XmlCursor;
 
+import com.likya.tlos.model.xmlbeans.common.EntryDocument.Entry;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument.Permission;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
@@ -99,4 +102,17 @@ public class XmlBeansTransformer {
 		return resourcePermission;
 	}
 
+	public static Map<String, String> entryToMap(JobProperties jobProperties) {
+		
+		Map<String, String> envMap = new HashMap<String, String>();
+				
+		Entry [] envVars = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().getEntryArray();
+		
+		for(Entry myEntry : envVars) {
+			envMap.put(myEntry.getKey(), myEntry.getStringValue());
+		}
+		
+		return envMap;
+
+	}
 }
