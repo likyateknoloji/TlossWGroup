@@ -32,6 +32,7 @@ public class CommonConstantDefinitions {
 	public static final String WEB_SERVICE_ACCESS_DATA = "tlosSWWebServiceAccessProfiles10.xml";
 	public static final String PERMISSION_DATA = "tlosSWPermission10.xml";
 	public static final String PARAMETER_DATA = "http://www.likyateknoloji.com/XML_parameters_types";
+	public static final String META_DATA = "http://www.likyateknoloji.com/XML_metaData_types";
 
 	/**
 	 * Exist arabirimi tanımları
@@ -48,6 +49,7 @@ public class CommonConstantDefinitions {
 	public static final String wsoNsUrl = "wso=\"http://wso.tlos.com/\"";
 	public static final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
 	public static final String dssNsUrl = "dss=\"http://tlos.dss.com/\"";
+	public static final String metaNsUrl = "dss=\"http://meta.tlos.com/\"";
 
 	public static final String decNsRes = "declare namespace res = \"http://www.likyateknoloji.com/resource-extension-defs\";";
 	public static final String decNsDbc = "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";";
@@ -68,6 +70,8 @@ public class CommonConstantDefinitions {
 	public static final String decNsPer = "declare namespace per = \"http://www.likyateknoloji.com/XML_permission_types\";";
 	public static final String decNsFo = "declare namespace fo = \"http://www.w3.org/1999/XSL/Format\";";
 	public static final String decNsXslfo = "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";";
+	public static final String decNsMeta = "declare namespace  meta = \"http://www.likyateknoloji.com/XML_metaData_types\";";
+	
 
 	public static final String dbUrl = "xmldb:exist:";
 	public static final String rootUrl = "//db/";
