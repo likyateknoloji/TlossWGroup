@@ -1,17 +1,24 @@
 xquery version "1.0";
+
 module namespace hs = "http://hs.tlos.com/";
 
 declare namespace sla = "http://www.likyateknoloji.com/XML_SLA_types";
 declare namespace per = "http://www.likyateknoloji.com/XML_permission_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
-
 declare namespace fn="http://www.w3.org/2005/xpath-functions";
+
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
 
+(:
+Mappings
+$slaDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")
+$sequenceDataDocumentUrl = $documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
+:)
+
 (:fn:empty($prs/com:role):)
-declare function hs:searchSLA($searchSla as element(sla:SLA)) as element(sla:SLA)* 
+declare function hs:searchSLA($slaDocumentUrl as xs:string, $searchSla as element(sla:SLA)) as element(sla:SLA)* 
  {
-	  for $sla in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	  for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	  let $nedirx := if (count($searchSla/sla:ResourcePool/sla:Resource) eq 0 or
                             (count($sla/sla:ResourcePool/sla:Resource) eq 0 and count($searchSla/sla:ResourcePool/sla:Resource) > 0)) then true()
                           else 
@@ -36,11 +43,11 @@ declare function hs:searchSLA($searchSla as element(sla:SLA)) as element(sla:SLA
    return $sonuc
 };
 
-declare function hs:searchSLAtest($searchSla as element(sla:SLA)) as node()*
+declare function hs:searchSLAtest($slaDocumentUrl as xs:string, $searchSla as element(sla:SLA)) as node()*
  {
 
 
-	  for $sla in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	  for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	  let $nedirx := if (count($searchSla/sla:ResourcePool/sla:Resource) eq 0 or
                             (count($sla/sla:ResourcePool/sla:Resource) eq 0 and count($searchSla/sla:ResourcePool/sla:Resource) > 0)) then true()
                           else 
@@ -67,38 +74,38 @@ declare function hs:searchSLAtest($searchSla as element(sla:SLA)) as node()*
 };
 
 (: ornek kullanim hs:slaList(1,2) ilk iki eleman :)
-declare function hs:slaList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
+declare function hs:slaList($slaDocumentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
  {
-	for $sla in doc($documentUrl)/sla:ServiceLevelAgreement/sla:SLA[position() = ($firstElement to $lastElement)]
+	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA[position() = ($firstElement to $lastElement)]
 	return  $sla
 };
 
 (: ornek kullanim hs:searchSlaBySlaName(xs:string('Genel SLA')) :)
-declare function hs:searchSlaBySlaName($searchSlaName as xs:string) as element(sla:SLA)? 
+declare function hs:searchSlaBySlaName($slaDocumentUrl as xs:string, $searchSlaName as xs:string) as element(sla:SLA)? 
  {
-	for $sla in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where fn:lower-case($sla/sla:Name)=fn:lower-case($searchSlaName)
     return $sla
 };
 
-declare function hs:searchSlaBySlaId($id as xs:integer) as element(sla:SLA)? 
+declare function hs:searchSlaBySlaId($slaDocumentUrl as xs:string, $id as xs:integer) as element(sla:SLA)? 
  {
-	for $sla in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sla/@ID = $id
     return $sla
 };
 
-declare function hs:insertSlaLock($documentUrl as xs:string, $sla as element(sla:SLA)) as xs:boolean
+declare function hs:insertSlaLock($slaDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $sla as element(sla:SLA)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement, hs:insertSla($documentUrl, $sla))     
+   let $sonuc := util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement, hs:insertSla($slaDocumentUrl, $sequenceDataDocumentUrl, $sla))     
    return true()
 };
 
-declare function hs:insertSla($documentUrl as xs:string, $sla as element(sla:SLA)) as node()*
+declare function hs:insertSla($slaDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $sla as element(sla:SLA)) as node()*
 {
     let $XXX := $sla
     
-    let $nextId := sq:getNextId($documentUrl, "slaId")	
+    let $nextId := sq:getNextId($sequenceDataDocumentUrl, "slaId")	
     (: 
      let $quote := "&#34;"
      let $yap := util:eval(concat("<sla:SLA ID=",$quote,$nextId,$quote,"/>"))
@@ -122,29 +129,29 @@ declare function hs:insertSla($documentUrl as xs:string, $sla as element(sla:SLA
                   <sla:JobsInStatus>{$XXX/sla:JobsInStatus/*}</sla:JobsInStatus>
                   <com:userId>{data($XXX/com:userId)}</com:userId>		
                 </sla:SLA>	
-	into doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement
+	into doc($slaDocumentUrl)/sla:ServiceLevelAgreement
 } ;
 
-declare function hs:updateSLA($sla as element(sla:SLA))
+declare function hs:updateSLA($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
 {
-	for $sladon in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	for $sladon in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sladon/@ID = $sla/@ID
 	return  update replace $sladon with $sla
 };
 
-declare function hs:updateSLALock($sla as element(sla:SLA))
+declare function hs:updateSLALock($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA, hs:updateSLA($sla))     
+   util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:updateSLA($slaDocumentUrl, $sla))     
 };
 
-declare function hs:deleteSLA($sla as element(sla:SLA))
+declare function hs:deleteSLA($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
  {
-	for $sladon in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA
+	for $sladon in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sladon/@ID = $sla/@ID
 	return update delete $sladon
 };
 
-declare function hs:deleteSLALock($sla as element(sla:SLA))
+declare function hs:deleteSLALock($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
 {
-   util:exclusive-lock(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA, hs:deleteSLA($sla))     
+   util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:deleteSLA($slaDocumentUrl, $sla))     
 };
