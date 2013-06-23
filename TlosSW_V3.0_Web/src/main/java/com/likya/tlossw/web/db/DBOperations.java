@@ -98,13 +98,17 @@ public class DBOperations implements Serializable {
 
 	private String xQueryModuleUrl = null;
 	private String dataDocUrl = "";
+	private String resourceDocUrl = "";
 	private String xmlsUrl = "";
-
+	private String metaData ="";
+	
 	@PostConstruct
 	public void init() {
 		xQueryModuleUrl = " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/modules";
 		dataDocUrl = "//db/" + ExistClient.dbCollectionName + "/xmls/" + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		resourceDocUrl = "//db/" + ExistClient.dbCollectionName + "/xmls/" + CommonConstantDefinitions.RESOURCES_DATA;
 		xmlsUrl = CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/xmls/";
+		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
 	}
 
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
@@ -784,13 +788,10 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<RNSEntryType> getResources() {
-		
 		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
 		ResourceListType resourceList = null;
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.RESOURCES_DATA;
-		
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + dataFile + "\"1,10)";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + resourceDocUrl + "\", 1, 10)";
 
 		Collection collection = existConnectionHolder.getCollection();
 
@@ -1648,7 +1649,8 @@ public class DBOperations implements Serializable {
 	public boolean insertWSDefinition(String wsPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSDefinition(" + wsPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSDefinition(\"" + 
+				metaData  + "\", " + wsPropertiesXML + ")";
 
 		XPathQueryService service;
 
@@ -1901,7 +1903,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<WebServiceDefinition> getWebServiceListForActiveUser(int userId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionListForActiveUser(" + userId + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionListForActiveUser(\"" + metaData + "\", " + userId + ")";
 
 		ArrayList<WebServiceDefinition> webServiceList = new ArrayList<WebServiceDefinition>();
 
@@ -2978,7 +2980,7 @@ public class DBOperations implements Serializable {
 	public ArrayList<WSAccessInfoTypeClient> searchWSAccessProfiles(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionList()";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionList(\"" + metaData + "\")";
 
 		HashMap<BigInteger, WebServiceDefinition> wsDefinitionList = new HashMap<BigInteger, WebServiceDefinition>();
 
@@ -3010,7 +3012,7 @@ public class DBOperations implements Serializable {
 			return null;
 		}
 
-		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:searchWSAccessProfiles(" + userAccessProfileXML + ")";
+		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:searchWSAccessProfiles(\"" + metaData + "\", " +  userAccessProfileXML + ")";
 
 		ArrayList<WSAccessInfoTypeClient> wsAccessInfoTypeClients = new ArrayList<WSAccessInfoTypeClient>();
 
@@ -3080,7 +3082,7 @@ public class DBOperations implements Serializable {
 	public boolean deleteWSAccessProfile(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:deleteWSAccessProfile(" + userAccessProfileXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:deleteWSAccessProfile(\"" + metaData + "\", " +  userAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -3101,7 +3103,7 @@ public class DBOperations implements Serializable {
 	public boolean insertWSAccessProfile(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSAccessProfile(" + userAccessProfileXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSAccessProfile(\"" + metaData + "\", " + userAccessProfileXML + ")";
 
 		XPathQueryService service;
 
@@ -3128,7 +3130,7 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSAccessProfile(" + id + ")";
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSAccessProfile(\"" + metaData + "\", " + id + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -3156,7 +3158,7 @@ public class DBOperations implements Serializable {
 	public boolean updateWSAccessProfile(String userAccessProfileXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:updateWSAccessProfileLock(" + userAccessProfileXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:updateWSAccessProfileLock(\"" + metaData + "\", " + userAccessProfileXML + ")";
 
 		XPathQueryService service;
 
