@@ -1,13 +1,22 @@
 xquery version "1.0";
+
 module namespace hs = "http://hs.tlos.com/";
-import module namespace sq = "http://sq.tlos.com/" at "xmldb:exist://db/TLOSSW/modules/moduleSequenceOperations.xquery";
+
+import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+
 declare namespace trc = "http://www.likyateknoloji.com/XML_trace_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 
-declare function hs:insertTrace($trc as element(trc:trace))
+(:
+Mapping
+$traceDocumentUrl = doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWTrace10.xml")
+$sequenceDataDocumentUrl = $documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
+:)
+
+declare function hs:insertTrace($traceDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $trc as element(trc:trace))
 {	
-	let $nextTraceId := sq:getNextId("traceId")
-	for $trace in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWTrace10.xml")/trc:TlosTraceData
+	let $nextTraceId := sq:getNextId($sequenceDataDocumentUrl, "traceId")
+	for $trace in doc($traceDocumentUrl)/trc:TlosTraceData
 	return  update insert 
 		<trace xmlns="http://www.likyateknoloji.com/XML_trace_types" id="{$nextTraceId}"> 
 			<trcTime millis="{data($trc/trcTime/@millis)}">{data($trc/trcTime)}</trcTime>
