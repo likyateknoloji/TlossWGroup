@@ -1,21 +1,34 @@
 xquery version "1.0";
+
 module namespace dss = "http://tlos.dss.com/";
+
 import module namespace lk = "http://likya.tlos.com/" at "moduleNrpeOperations.xquery";
+
 declare namespace dat = "http://www.likyateknoloji.com/XML_data_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace cal = "http://www.likyateknoloji.com/XML_calendar_types";
 declare namespace agnt= "http://www.likyateknoloji.com/XML_agent_types";
 declare namespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
-declare namespace fn = "http://www.w3.org/2005/xpath-functions";
-declare namespace lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types";
-declare namespace nrp="http://www.likyateknoloji.com/XML_nrpe_types";
-declare namespace nrpr="http://www.likyateknoloji.com/XML_nrpe_results";
-declare namespace res="http://www.likyateknoloji.com/resource-extension-defs";
-declare namespace sla="http://www.likyateknoloji.com/XML_SLA_types";
-declare namespace pp="http://www.likyateknoloji.com/XML_PP_types";
-
-
+declare namespace fn  = "http://www.w3.org/2005/xpath-functions";
+declare namespace lrns= "http://www.likyateknoloji.com/XML_SWResourceNS_types";
+declare namespace nrp = "http://www.likyateknoloji.com/XML_nrpe_types";
+declare namespace nrpr= "http://www.likyateknoloji.com/XML_nrpe_results";
+declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
+declare namespace sla = "http://www.likyateknoloji.com/XML_SLA_types";
+declare namespace pp  = "http://www.likyateknoloji.com/XML_PP_types";
 declare namespace functx = "http://www.functx.com"; 
+
+(:
+Mappings
+$agentsDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")
+$dailyPlanDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")
+$slaDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")
+$programProvisioningDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")
+$resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
+$nrpeDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWNrpeData10.xml")
+:)
+
+
 declare function functx:repeat-string 
   ( $stringToRepeat as xs:string? ,
     $count as xs:integer )  as xs:string {
@@ -90,10 +103,10 @@ declare function dss:ResourceUnique($n as node()) as node()*
 };
 
 (:
-declare function dss:GetAvailableResourcesListxxx($n as node(), $prev as xs:string) as node()*
+declare function dss:GetAvailableResourcesListxxx($nrpeDataDocumentUrl as xs:string, $n as node(), $prev as xs:string) as node()*
 {
 	
-  let $nrpeOutput := lk:nrpeOutput()
+  let $nrpeOutput := lk:nrpeOutput($nrpeDataDocumentUrl, 1, 1, "All")
   let $liste1 := (for $tek in $nrpeOutput/nrp:nrpeCall
                   return 
                    <nrp:nrpeCall entry-name="{$tek/@entry-name}" port="{$tek/@port}">
@@ -115,7 +128,7 @@ declare function dss:GetAvailableResourcesListxxx($n as node(), $prev as xs:stri
 };
 
 :)
-declare function dss:GetAvailableResourcesList($nrpeDataDocumentUrl as xs:string, $n as node(), $prev as xs:string) as node()*
+declare function dss:GetAvailableResourcesList($nrpeDataDocumentUrl as xs:string, $agentsDocumentUrl as xs:string, $resourcesDocumentUrl as xs:string, $prev as xs:string) as node()*
 {
 	
   let $nrpeOutput := lk:nrpeOutput($nrpeDataDocumentUrl, 1, 1, "All")
@@ -132,7 +145,7 @@ declare function dss:GetAvailableResourcesList($nrpeDataDocumentUrl as xs:string
   
   let $liste2 := <yy> 
                      {
-                       for $kek in doc("//db/TLOSSW/xmls/tlosSWAgents10.xml")/agnt:SWAgents/agnt:SWAgent
+                       for $kek in doc($agentsDocumentUrl)/agnt:SWAgents/agnt:SWAgent
                        return 
                          <kk id="{data($kek/@id)}" 
 						 entry-name="{$kek/res:Resource/text()}"
@@ -151,7 +164,7 @@ declare function dss:GetAvailableResourcesList($nrpeDataDocumentUrl as xs:string
   let $results :=
    <lrns:ResourceList>
    {
-     for $cd in $n/lrns:Resource,
+     for $cd in doc($resourcesDocumentUrl)/lrns:Resource,
 	  $tek in $montoring_last_results/nrpr:nrpeCall,
 	  $de in $liste2/*
 	 where data($tek/@entry-name)=data($cd/@entry-name) and data($de/@entry-name)=data($cd/@entry-name)
@@ -198,13 +211,13 @@ declare function dss:GetAvailableResourcesListUnique($n as node()) as node()*
       return $kaynaklar
 };
 
-declare function dss:ResourceSLACheck($n as node(), $gununtarihi as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceSLACheck($dailyPlanDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $gununtarihi as xs:dateTime, $prev as xs:string) as node()*
 {
 
   (: let $maxid := 130 :)
-  
-  let $planCnt := count(doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan)
-  let $maxid := if($planCnt = 0) then 0 else max(doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan/@id)
+  let $dailyPlan := doc($dailyPlanDocumentUrl)
+  let $planCnt := count($dailyPlan/AllPlanParameters/plan)
+  let $maxid := if($planCnt = 0) then 0 else max($dailyPlan/AllPlanParameters/plan/@id)
   
   let $zaman := functx:time( fn:hours-from-dateTime($gununtarihi),
                              fn:minutes-from-dateTime($gununtarihi),
@@ -215,8 +228,8 @@ declare function dss:ResourceSLACheck($n as node(), $gununtarihi as xs:dateTime,
   return
     <ResourceSLACheck>
       {
-        for $tek in doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml")/sla:ServiceLevelAgreement/sla:SLA,
-            $calendar in doc("//db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan[@id = $maxid and data(calID) = data($tek/sla:calendarId)]
+        for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA,
+            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $maxid and data(calID) = data($tek/sla:calendarId)]
         (:    where data($calendar/calID)=data($tek/calendarId):)
         return
           <SLACheck>
@@ -242,7 +255,7 @@ declare function dss:ResourceSLACheck($n as node(), $gununtarihi as xs:dateTime,
 :)
 
 
-declare function dss:ResourceProvisioningCheck($n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceProvisioningCheck($dailyPlanDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $programProvisioningDocumentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
 {
   (: SLA kosullari kontrol ediliyor :)
   (: Software/license :)
@@ -255,7 +268,7 @@ declare function dss:ResourceProvisioningCheck($n as node(), $gunzaman as xs:dat
 
   let $sonuc := <ResourceProvisioningCheck> 
                 { (: SLA den kosullari alalim :)
-                  for $tek in dss:ResourceSLACheck(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml"), $gunzaman, "kk")/SLACheck
+                  for $tek in dss:ResourceSLACheck($dailyPlanDocumentUrl, $slaDocumentUrl, $gunzaman, "kk")/SLACheck
                          
                    (: --------------------- ATAMALAR ----------------------------------------:)
                    (: SLA den ilgili parametreleri degiskenlere aktaralim (Burada License)   :)
@@ -293,7 +306,7 @@ declare function dss:ResourceProvisioningCheck($n as node(), $gunzaman as xs:dat
 						   
                          let $ara := <hepsi>
 						             {
-									 for $donbaba in doc("//db/TLOSSW/xmls/tlosSWProgramProvisioning10.xml")/pp:Licenses/pp:License,
+									 for $donbaba in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License,
                                          $License in $License_list/sla:Program
                                      where $donbaba/@licenseID = $License/@licenseID
                                      return <ResourcePool>
@@ -365,7 +378,7 @@ declare function dss:ResourceProvisioningCheck($n as node(), $gunzaman as xs:dat
   Return :  Eger uygun ise XXX degilse false doner.
 :)
 
-declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceHardwareCheck($dailyPlanDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
 {
 	(:---------------------------- KAYNAK TANIMLA ----------------------------:)
 	(: kaynak ismi ve varsa kullanim parametresini alalim (burada disk) :)
@@ -376,7 +389,7 @@ declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTim
   (: SLA kosullari kontrol ediliyor :)
    (: Hardware/disk :)
    let $sonuc := <ResourceHardwareCheck> { (: SLA den kosullari alalim :)
-                         for $tek in dss:ResourceSLACheck(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml"), $gunzaman, "kk")/SLACheck
+                         for $tek in dss:ResourceSLACheck($dailyPlanDocumentUrl, $slaDocumentUrl, $gunzaman, "kk")/SLACheck
                          
 						 (: --------------------- ATAMALAR -----------------------------------:)
                          (: SLA den ilgili parametreleri degiskenlere aktaralim (Burada DISK) :)
@@ -523,9 +536,9 @@ declare function dss:ResourceHardwareCheck($n as node(), $gunzaman as xs:dateTim
   Return: Onay varsa True, yoksa False donulur.
 :)
 
-declare function dss:FindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:FindResourcesForAJob($resourcesDocumentUrl as xs:string, $agentsDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $dailyPlanDocumentUrl as xs:string, $nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
 {
-  let $AvailableResourceListx := dss:GetAvailableResourcesList($nrpeDataDocumentUrl, doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/*,'root.') 
+  let $AvailableResourceListx := dss:GetAvailableResourcesList($nrpeDataDocumentUrl, $agentsDocumentUrl, $resourcesDocumentUrl,'root.') 
   (: let $AvailableResourceListy := $AvailableResourceListx[resource/@os = $jobPropertiesFuncPass/*/text()] :)
   let $par := $jobPropertiesFuncPass/*/text()
   let $AvailableResourceListy := for $d in $AvailableResourceListx/resource
@@ -533,7 +546,7 @@ declare function dss:FindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jo
                                  return $d
   let $AvailableResourceList := if( not(fn:exists($AvailableResourceListy)) ) then <resource_list/> else <resource_list> { $AvailableResourceListy } </resource_list>
   
-  let $HardwareCheck         := dss:ResourceHardwareCheck(dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
+  let $HardwareCheck         := dss:ResourceHardwareCheck($dailyPlanDocumentUrl, $slaDocumentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
   let $HardwareCheckLogic    := <HardwareCheckLogic>
                                 { 
                                          for $sira in $HardwareCheck/*
@@ -561,7 +574,7 @@ declare function dss:FindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jo
 								} 
 								</HardwareCheckLogic>
 
-  let $ProvisioningCheck          := dss:ResourceProvisioningCheck(dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
+  let $ProvisioningCheck          := dss:ResourceProvisioningCheck($dailyPlanDocumentUrl, $slaDocumentUrl, $programProvisioningDocumentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
   let $ProvisioningCheckLogic    := <ProvisioningCheckLogic>
                                { 
                                  for $sira in $ProvisioningCheck/*
@@ -667,16 +680,16 @@ declare function dss:FindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jo
                                  else ()
   let $istesonuc := 
                              if($prev = "AllDetails") 
-							 then <sonuc>{($sonuc, $HardwareCheck, $ProvisioningCheck, $AgentCheck, dss:ResourceSLACheck(doc("//db/TLOSSW/xmls/tlosSWSLAs10.xml"), $gunzaman, "kk")/SLACheck)}</sonuc>
+							 then <sonuc>{($sonuc, $HardwareCheck, $ProvisioningCheck, $AgentCheck, dss:ResourceSLACheck($dailyPlanDocumentUrl, $slaDocumentUrl, $gunzaman, "kk")/SLACheck)}</sonuc>
                              else $iste_sonuc
 
   return $istesonuc
 };
 
 
-declare function dss:SWFindResourcesForAJob($nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
+declare function dss:SWFindResourcesForAJob($resourcesDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $nrpeDataDocumentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
 {
-	dss:FindResourcesForAJob($nrpeDataDocumentUrl, $jobPropertiesFuncPass , $gunzaman, 'Result')
+	dss:FindResourcesForAJob($resourcesDocumentUrl as xs:string, $slaDocumentUrl as xs:string, $nrpeDataDocumentUrl, $jobPropertiesFuncPass , $gunzaman, 'Result')
 };
 
 
