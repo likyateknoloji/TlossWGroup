@@ -3,7 +3,6 @@ package com.likya.tlossw.test.xquery;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -14,10 +13,8 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.ResourceSet;
-import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
-import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.web.db.DBOperations;
@@ -62,38 +59,43 @@ public class WebDBXquery {
 	public String getFile(String fileName) {
 		return ParsingUtils.getConcatenatedPathAndFileName("moduleTest" + File.separator, fileName);
 	}
-
+	@Ignore
 	@Test
-	public void getResources() {
+	public void moduleAgentOperationsGetResources() throws Exception {
 
 		String fileName = getFile("moduleAgentOperations.getResources.xquery");
 
 		StringBuffer xQueryStr = FileUtils.readFile(fileName);
 
 		ResourceSet result;
-		try {
-			result = service.query(xQueryStr.toString());
-			assertEquals("", true, result.getIterator().hasMoreResources());
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
+		result = service.query(xQueryStr.toString());
+		assertEquals("", true, result.getIterator().hasMoreResources());
 
 	}
-
+	@Ignore
 	@Test
-	public void searchAgent() {
-
-		ArrayList<SWAgent> myAgentList;
+	public void moduleAgentOperationsSearchAgent() throws Exception {
 
 		String fileName = getFile("moduleAgentOperations.searchAgent.xquery");
 
 		StringBuffer xQueryStr = FileUtils.readFile(fileName);
 
-		String agentXML = xQueryStr.toString();
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("", true, result.getIterator().hasMoreResources());
 
-		myAgentList = dbOperations.searchAgent(agentXML);
+	}
+	
+	@Test
+	public void moduleDailyOperationsDoPlanAndSelectJobsAndScenarios() throws Exception {
 
-		assertEquals("", 0, myAgentList.size());
+		String fileName = getFile("moduleDailyOperations.doPlanAndSelectJobsAndScenarios.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("", true, result.getIterator().hasMoreResources());
 
 	}
 
