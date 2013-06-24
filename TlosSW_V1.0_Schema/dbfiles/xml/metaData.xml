@@ -10,7 +10,7 @@
 		<meta:collection type="xsl">xsls</meta:collection>
 	</meta:dbInfo>
 	<meta:documentInfo>
-		<meta:document id="agentConfig" type="xml">tlosSWAgentConfig10</meta:document>
+		<meta:document id="agentConfig" type="xml">tlosSWAgentConfig10.xml</meta:document>
 		<meta:document id="agents" type="xml">tlosSWAgents10.xml</meta:document>
 		<meta:document id="alarms" type="xml">tlosSWAlarm10.xml</meta:document>
 		<meta:document id="alarmHistory" type="xml">tlosSWAlarmHistory10.xml</meta:document>
