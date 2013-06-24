@@ -650,9 +650,9 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Alarm> getAlarms() {
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA; 
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA; 
 		
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms(\"" + dataFile + "\")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms(\"" + metaData + "\")";
 
 		ArrayList<Alarm> almList = new ArrayList<Alarm>();
 
@@ -827,9 +827,9 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Alarm> searchAlarm(String alarmXML) throws XMLDBException {
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+		// String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarm(\"" + dataFile + "\", " + alarmXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarm(\"" + metaData + "\", " + alarmXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -857,9 +857,9 @@ public class DBOperations implements Serializable {
 
 	public Boolean deleteAlarm(String alarmXML) {
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:deleteAlarmLock(\"" + dataFile + "\", " + alarmXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:deleteAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		
@@ -885,12 +885,13 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<AlarmReport> getAlarmReportList(String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException {
 
-		String almDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+		/* String almDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 		String almHistDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
 		String jobDataFile = xmlsUrl + CommonConstantDefinitions.JOB_DEFINITION_DATA;
 		String userDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA;
+		*/
 
-		String funcDef = "lk:getAlarms(\"" + almDataFile + "\", \"" + almHistDataFile + "\", \"" + jobDataFile + "\", \"" + userDataFile + "\", \"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
+		String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
 
 		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
 
@@ -920,9 +921,9 @@ public class DBOperations implements Serializable {
 
 	public Boolean updateAlarm(String alarmXML) {
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:updateAlarmLock(\"" + dataFile + "\", " + alarmXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:updateAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -947,9 +948,9 @@ public class DBOperations implements Serializable {
 
 	public Boolean insertAlarm(String alarmXML) {
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:insertAlarmLock(\"" + dataFile + "\", " + alarmXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:insertAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -1415,9 +1416,9 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
+			// String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_DATA;
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByName(\"" + dataFile + "\", " + "\"" + alarmname + "\"" + ")";
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByName(\"" + metaData + "\", " + "\"" + alarmname + "\"" + ")";
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -2624,10 +2625,10 @@ public class DBOperations implements Serializable {
 
 		Collection collection = existConnectionHolder.getCollection();
 		
-		String seqDataFile = xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA;
-		String hisDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
+//		String seqDataFile = xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA;
+//		String hisDataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
 		
-		String funcDef = "lk:jobAlarmListbyRunId(\""+ hisDataFile + "\", \"" + seqDataFile + "\", 3, 0, " + jobId + ", false(), 30)"; 
+		String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId + ", false(), 30)"; 
 	
 		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
 		// getiriyor
@@ -2746,7 +2747,7 @@ public class DBOperations implements Serializable {
 		}
 
 		// alarm id'ye gore alarmi dbden sorguluyor
-		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(" + alarm.getAlarmId() + ")";
+		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(\"" + metaData + "\", " + alarm.getAlarmId() + ")";
 
 		result = service.query(xQueryStr);
 		i = result.getIterator();
@@ -2891,9 +2892,9 @@ public class DBOperations implements Serializable {
 	public com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm getAlarmHistoryById(int alarmHistoryId) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.ALARM_HISTORY_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(\"" + dataFile + "\", " + alarmHistoryId + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(\"" + metaData + "\", " + alarmHistoryId + ")";
 
 		XPathQueryService service;
 		try {
