@@ -16,8 +16,8 @@
 		<meta:document id="alarmHistory" type="xml">tlosSWAlarmHistory10.xml</meta:document>
 		<meta:document id="calendar" type="xml">tlosSWCalendar10.xml</meta:document>
 		<meta:document id="serverConfig" type="xml">tlosSWConfig10.xml</meta:document>
-		<meta:document id="dailyPlan" type="xml">tlosSWDailyPlan10.xml</meta:document>
-		<meta:document id="dailyScenarios" type="xml">tlosSWDailyScenarios10.xml</meta:document>
+		<meta:document id="plan" type="xml">tlosSWDailyPlan10.xml</meta:document>
+		<meta:document id="scenarios" type="xml">tlosSWDailyScenarios10.xml</meta:document>
 		<meta:document id="sjData" type="xml">tlosSWData10.xml</meta:document>
 		<meta:document id="dbConnectionProfiles" type="xml">tlosSWDBConnectionProfiles10.xml</meta:document>
 		<meta:document id="dbConnections" type="xml">tlosSWDBConnections10.xml</meta:document>
