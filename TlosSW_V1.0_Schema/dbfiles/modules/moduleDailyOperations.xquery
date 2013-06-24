@@ -1,6 +1,10 @@
 xquery version "1.0";
+
 module namespace hs = "http://hs.tlos.com/";
+
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace com="http://www.likyateknoloji.com/XML_common_types"; 
 declare namespace cal="http://www.likyateknoloji.com/XML_calendar_types";
@@ -125,21 +129,23 @@ declare function functx:last-day-of-month
 
 (: Calendar Selection Phase :)
 			(:
-			  ## IPTAL Calendar dan plan bilgilerini alalim ve bugun calisacak isleri belirleyelim. IPTAL ##
 			  Takvimi kullanarak planlamayi yapalim ve calisacak isleri belirleyelim.
 			:)
 
 (: declare function hs:queryDailyPlan($which_id as xs:integer?, $nextPlanId as xs:integer?) as xs:boolean? :)
-declare function hs:createPlanCalendars($planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string) as node()*
- {	
-    let $nextPlanId := sq:getNextPlanId($sequenceDocumentUrl)
+declare function hs:createPlanCalendars($documentUrl as xs:string) as node()*
+{
+    let $planDocumentUrl := met:getMetaData($documentUrl, "plan")
+	let $calendarsDocumentUrl := met:getMetaData($documentUrl, "calendar")
+	
+    let $nextPlanId := sq:getNextId($documentUrl, "planId")
     let $yeniPlan :=
-	(: for $calList in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters :)
+
 	for $calList in doc($planDocumentUrl)/AllPlanParameters
 	return update insert
 (:***************************************************************************:)
-		(: for $calendar in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWCalendar10.xml")/cal:calendarList//cal:calendarProperties :)
-		for $calendar in doc($calendarDocumentUrl)/cal:calendarList//cal:calendarProperties
+
+		for $calendar in doc($calendarsDocumentUrl)/cal:calendarList//cal:calendarProperties
 		  (: ################### PLAN KURALLARI HESAPLANSIN ################# :)
 		   let $date1  := data($calendar/cal:validFrom/com:date)
 		   let $time1  := data($calendar/cal:validFrom/com:time)
@@ -475,12 +481,11 @@ declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as 
 };
 
 (: declare function hs:queryDailyJobsAndScenarios() :)
-declare function hs:querySelectedJobsAndScenarios($scenarioDocumentUrl as xs:string, $dataDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $plan as node()*)
+declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $plan as node()*)
 {
-	(: for $calList in doc($scenarioDocumentUrl)/TlosProcessDataAll :)
 	for $calList in doc($scenarioDocumentUrl)/TlosProcessDataAll
 	return update insert
-           let $next := sq:getNextRunId($sequenceDocumentUrl)
+           let $next := sq:getNextId($documentUrl, "runId")
 		   return element RUN 
 		   { attribute id {$next},  
 	          (: hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan) :)
@@ -493,57 +498,64 @@ declare function hs:querySelectedJobsAndScenarios($scenarioDocumentUrl as xs:str
 
 (:************************** END OF PLANNING PHASE **********************************:) 
 
-declare function hs:getPlan($planDocumentUrl as xs:string, $planId as xs:integer ) as node()*
+declare function hs:getPlan($documentUrl as xs:string, $planId as xs:integer ) as node()*
 {    
-  	(: for $plan in doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWDailyPlan10.xml")/AllPlanParameters/plan :)
+    let $planDocumentUrl := met:getMetaData($documentUrl, "plan")
+	
   	for $plan in doc($planDocumentUrl)/AllPlanParameters/plan
     where $plan[xs:integer(@id) eq $planId]
 	return $plan
 };
 
 (: declare function hs:getDailyJobsAndScenarios() :)
-declare function hs:doPlanAndSelectJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
+declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl, $sequenceDocumentUrl) else hs:getPlan($planDocumentUrl, $planId )
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $sequenceDocumentUrl, $retDailyPlan)
-
-	let $runId := sq:getRunId($sequenceDocumentUrl)
-	let $solsticeId := sq:getSolticeId($sequenceDocumentUrl)
-
-	let $insertInstanceId := hs:insertInstanceId($scenarioDocumentUrl, string($runId))
-    let $insertSolsticeId := hs:insertSolsticeId($scenarioDocumentUrl, string($solsticeId),string($runId))
+    let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
-	(: for $dailyRun in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN :)
-	for $dailyRun in doc($scenarioDocumentUrl)/TlosProcessDataAll/RUN
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan)
+
+	let $runId := sq:getId($documentUrl, "runId")
+	let $solsticeId := sq:getId($documentUrl, "solsticeId")
+
+	let $insertInstanceId := hs:insertInstanceId($documentUrl, string($runId))
+    let $insertSolsticeId := hs:insertSolsticeId($documentUrl, string($solsticeId),string($runId))
+	
+	for $dailyRun in doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN
 	where $dailyRun/@id = $runId
 	return $dailyRun/dat:TlosProcessData
 
 };
 
-declare function hs:getSolsticeJobsAndScenarios($dataDocumentUrl as xs:string, $scenarioDocumentUrl as xs:string, $planDocumentUrl as xs:string, $calendarDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
+declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($planDocumentUrl, $calendarDocumentUrl, $sequenceDocumentUrl) else $planId
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($scenarioDocumentUrl, $dataDocumentUrl, $sequenceDocumentUrl, $retDailyPlan)
-
-	let $runId := sq:getRunId($sequenceDocumentUrl)
-	let $solsticeId := sq:getNextSolticeId($sequenceDocumentUrl)
-
-	let $insertInstanceId := hs:insertInstanceId($scenarioDocumentUrl, string($runId))
-    let $insertSolsticeId := hs:insertSolsticeId($scenarioDocumentUrl, string($solsticeId),string($runId))
+    let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
-	(: for $dailyRun in doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN :)
-	for $dailyRun in doc($scenarioDocumentUrl)/TlosProcessDataAll/RUN
+    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($documentUrl) else $planId
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan)
+
+	let $runId := sq:getId($documentUrl, "runId")
+	let $solsticeId := sq:getId($documentUrl, "solsticeId")
+
+	let $insertInstanceId := hs:insertInstanceId($documentUrl, string($runId))
+    let $insertSolsticeId := hs:insertSolsticeId($documentUrl, string($solsticeId), string($runId))
+	
+	for $dailyRun in doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN
 	where $dailyRun/@id = $runId
 	return $dailyRun/dat:TlosProcessData
 
 };
 
-declare function hs:insertInstanceId($scenarioDocumentUrl as xs:string, $instanceId as xs:string){
+declare function hs:insertInstanceId($documentUrl as xs:string, $instanceId as xs:string){
 	(: update insert attribute instanceId {data($instanceId)} into  doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN[@id=data($instanceId)]/dat:TlosProcessData :)
-	update insert attribute instanceId {data($instanceId)} into  doc($scenarioDocumentUrl)/TlosProcessDataAll/RUN[@id=data($instanceId)]/dat:TlosProcessData
+	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
+	
+	return update insert attribute instanceId {data($instanceId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($instanceId)]/dat:TlosProcessData
 };
 
-declare function hs:insertSolsticeId($scenarioDocumentUrl as xs:string, $solsticeId as xs:string,$runId as xs:string){
+declare function hs:insertSolsticeId($documentUrl as xs:string, $solsticeId as xs:string,$runId as xs:string){
 	(: update insert attribute solsticeId {data($solsticeId)} into  doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData :)
-	update insert attribute solsticeId {data($solsticeId)} into  doc($scenarioDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData
+	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
+	
+	return update insert attribute solsticeId {data($solsticeId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData
 };
