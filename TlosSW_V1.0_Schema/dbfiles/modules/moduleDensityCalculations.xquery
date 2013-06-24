@@ -3,6 +3,7 @@ xquery version "1.0";
 module namespace density = "http://density.tlos.com/";
 
 import module namespace hs="http://hs.tlos.com/" at "moduleReportOperations.xquery"; 
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
@@ -52,12 +53,11 @@ let $stateName := xs:string("FINISHED")
 let $substateName := xs:string("COMPLETED")
 let $statusName := xs:string("SUCCESS")
 :)
-declare function density:focusedRecords($dailyScenariosDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:focusedRecords($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
 {
+    let $getJobs := hs:getJobsReport($documentUrl, 1,0,0, true())
 
-let $getJobs := hs:getJobsReport($dailyScenariosDocumentUrl, $sequenceDocumentUrl, 1,0,0, true())
-
-  let $sonuc := 
+    let $sonuc := 
               for $jobProperties in $getJobs/dat:jobProperties
               let $liveStateInfos := $jobProperties/dat:stateInfos/state-types:LiveStateInfos
               let $liveStateInfosSorted := <state-types:LiveStateInfos> {
@@ -84,14 +84,12 @@ let $getJobs := hs:getJobsReport($dailyScenariosDocumentUrl, $sequenceDocumentUr
   return <focused>{ $sonuc } </focused>
 } ;
 
-declare function density:SSSInterval($startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:SSSInterval($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
 {
-let $focused := density:focusedRecords($startDateTime, $endDateTime)
+  let $focused := density:focusedRecords($documentUrl, $startDateTime, $endDateTime)
 
-let $tektek :=
+  let $tektek :=
   let $sonuc := for $liveStateInfo in $focused/rep:group
-
-                           
                return $liveStateInfo
  
   return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </rep:data>
@@ -99,9 +97,9 @@ return $tektek
 
 } ;
 
-declare function density:calcStat($stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:calcStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
 {
-let $focused := density:SSSInterval($startDateTime, $endDateTime)
+let $focused := density:SSSInterval($documentUrl, $startDateTime, $endDateTime)
 
 let $tektek :=
   let $sonuc := for $liveStateInfos in $focused/rep:group
@@ -127,10 +125,11 @@ return $tektek
 
 } ;
 
-declare function density:recStat($dailyScenariosDocumentUrl as xs:string, $sequenceDocumentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
+declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
-  let $hepsi := hs:getJobArray(hs:getJobsReport($dailyScenariosDocumentUrl, $sequenceDocumentUrl, 1,0,0, true()),"descending",1)
+	  
+  let $hepsi := hs:getJobArray($documentUrl, hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1)
   let $startDateTimex := xs:dateTime($hepsi/@overallStart)-xs:dayTimeDuration('PT2M')
   let $endDateTimex := xs:dateTime($hepsi/@overallStop)+xs:dayTimeDuration('PT2M')
 
@@ -148,7 +147,7 @@ declare function density:recStat($dailyScenariosDocumentUrl as xs:string, $seque
        let $kac := xs:integer($n)-1
        let $startDTime := $startDateTimex+ $kac*$step 
        let $endDTime := $startDateTimex+ $n*$step
-       let $fonk := density:calcStat($stateName, $substateName, $statusName, $startDTime, $endDTime)
+       let $fonk := density:calcStat($documentUrl, $stateName, $substateName, $statusName, $startDTime, $endDTime)
       return $fonk           
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
    else ()
@@ -160,7 +159,7 @@ declare function density:recStat($dailyScenariosDocumentUrl as xs:string, $seque
 let $startDateTime := xs:dateTime("2013-05-05T15:42:00+03:00")
 let $endDateTime   := xs:dateTime("2013-05-05T15:59:00+03:00")
 
-return  density:recStat(xs:string("RUNNING"), xs:string("ON-RESOURCE"), xs:string("TIME-IN") , $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S'))
+return  density:recStat($documentUrl, xs:string("RUNNING"), xs:string("ON-RESOURCE"), xs:string("TIME-IN") , $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S'))
 
 :)
 (:   density:recStat(<rep:statistics></rep:statistics>, $startDateTime, $endDateTime, xs:dayTimeDuration('PT60S')) :)
