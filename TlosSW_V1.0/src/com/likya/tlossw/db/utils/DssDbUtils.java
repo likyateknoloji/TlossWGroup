@@ -94,12 +94,14 @@ public class DssDbUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String docAlarmFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.ALARM_DATA;
+		/*String docAlarmFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.ALARM_DATA;
 		String docHistoryFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.ALARM_HISTORY_DATA;
 		String docDataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
 		String seqDataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
-		
-		String funcDef = "lk:SWFindAlarms(\""+ docAlarmFile + "\", \"" + docHistoryFile + "\", \"" + docDataFile + "\", \"" + seqDataFile + "\", '" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
+		*/
+		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
+
+		String funcDef = "lk:SWFindAlarms(\""+ metaData + "\", '" + jobId + "', " + userID + ", " + agentId + ", " + liveStateInfoXML + ")";
 		
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
 				standartNameSpaceDeclaritions + CommonConstantDefinitions.decNsSt + funcDef;
