@@ -1370,9 +1370,9 @@ public class DBOperations implements Serializable {
 
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA; 
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA; 
 		
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars(\"" + dataFile + "\")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars(\"" + metaData + "\")";
 
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
 
@@ -2189,9 +2189,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<CalendarProperties> searchCalendar(String calendarPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(\"" + dataFile + "\", " + calendarPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(\"" + metaData + "\", " + calendarPropertiesXML + ")";
 
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
 
@@ -2227,9 +2227,9 @@ public class DBOperations implements Serializable {
 	public boolean insertCalendar(String calendarPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA; 
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA; 
 		
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(\"" + dataFile + "\", " + calendarPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
 
 		XPathQueryService service;
 		try {
@@ -2249,9 +2249,9 @@ public class DBOperations implements Serializable {
 	public boolean deleteCalendar(String calendarPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:deleteCalendarLock(\"" + dataFile + "\", " + calendarPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:deleteCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
 
 		XPathQueryService service = null;
 		try {
@@ -2271,9 +2271,9 @@ public class DBOperations implements Serializable {
 	public CalendarProperties searchCalendarByID(String calendarID) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendarByID(\"" + dataFile + "\", " + calendarID + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendarByID(\"" + metaData + "\", " + calendarID + ")";
 
 		XPathQueryService service;
 		try {
@@ -2307,9 +2307,9 @@ public class DBOperations implements Serializable {
 	public boolean updateCalendar(String calendarPropertiesXML) {
 		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+//		String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:updateCalendarLock(\"" + dataFile + "\", " + calendarPropertiesXML + ")";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:updateCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
 
 		XPathQueryService service = null;
 		try {
