@@ -111,10 +111,9 @@ declare function lk:insertAgentLock($documentUrl as xs:string, $agent as element
 declare function lk:insertAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as node()*
 {
     let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
-	let $sequencesDocumentUrl := met:getMetaData($documentUrl, "sequenceData")
 	
     let $XXX := $agent
-    let $nextId := sq:getNextId($sequencesDocumentUrl, "agentId")	
+    let $nextId := sq:getNextId($documentUrl, "agentId")	
 	let $localParameters := count($XXX/agnt:locals)
     let $locals := 	for $loc in $XXX/agnt:locals
 	                  return 
