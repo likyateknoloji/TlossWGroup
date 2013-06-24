@@ -576,9 +576,9 @@ public class DBUtils {
 
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
-		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.AGENT_DATA;
+		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
 		
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsAgnt + "lk:getAgents(\"" + dataFile + "\")";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsAgnt + "lk:getAgents(\"" + metaData + "\")";
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
