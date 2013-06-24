@@ -77,7 +77,7 @@ declare function sq:getNextPermissionId($documentUrl as xs:string) as xs:int
 								<com:permissionId>{data($nextPermissionId)}</com:permissionId>)
    				return $nextPermissionId )
 };
-
+(:
 declare function sq:getNextRunId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
@@ -104,6 +104,7 @@ declare function sq:getNextSolticeId($documentUrl as xs:string) as xs:int
 								<com:solsticeId>{data($nextSolticeId)}</com:solsticeId>)
    				return $nextSolticeId )
 };
+:)
 (: iptal hs.
 declare function sq:getNextTraceId($documentUrl as xs:string) as xs:int
 {
@@ -165,7 +166,7 @@ declare function sq:getPermissionId($documentUrl as xs:string) as xs:int
 				let $permissionId := doc($documentUrl)/com:TlosSequenceData/com:permissionId
    				return $permissionId )
 };
-
+(:
 declare function sq:getRunId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
@@ -186,7 +187,7 @@ declare function sq:getSolticeId($documentUrl as xs:string) as xs:int
 				let $solticeId := doc($documentUrl)/com:TlosSequenceData/com:solsticeId
    				return $solticeId )
 };
-
+:)
 declare function sq:getTraceId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
