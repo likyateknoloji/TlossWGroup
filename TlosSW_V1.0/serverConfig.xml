@@ -1,0 +1,29 @@
+<con:serverConfig xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:con="http://www.likyateknoloji.com/XML_serverConfig_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_serverConfig_types /Users/serkan/programlar/dev/workspace/TlosSW_V1.0_Schema/dbfiles/xsds/serverConfig_v_1_0.xsd">
+
+	<con:serverParams>
+		<com:ipAddress>0.0.0.0</com:ipAddress>
+		<con:isPersistent>
+			<com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
+			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:isPersistent>
+		<con:logFile>TlosEkran.log</con:logFile>
+		<con:debugMode>
+			<com:comment>debug modu (true/false)</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:debugMode>
+	</con:serverParams>
+
+	<con:dbparams>
+		<con:name>eXist</con:name>
+		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:connectionUrl>
+		<con:metaDataFile>xmldb:exist:/db/tlossw-serkan</con:metaDataFile>
+		<con:username>admin</con:username>
+		<con:password>admin</con:password>
+	</con:dbparams>
+
+</con:serverConfig>
