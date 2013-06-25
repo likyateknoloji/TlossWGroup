@@ -3,6 +3,12 @@ package com.likya.tlossw.utils;
 
 public class CommonConstantDefinitions {
 
+	public static final String dbUrl = "xmldb:exist:";
+	public static final String rootUrl = "//db/";
+	
+	public static final String modulePath = "/modules/";
+	public static final String xmlsPath = "/xmls/";
+	
 	/**
 	 * eXist'teki xml dosyalari
 	 */
@@ -31,6 +37,8 @@ public class CommonConstantDefinitions {
 	public static final String TRACE_DATA = "tlosSWTrace10.xml";
 	public static final String WEB_SERVICE_ACCESS_DATA = "tlosSWWebServiceAccessProfiles10.xml";
 	public static final String PERMISSION_DATA = "tlosSWPermission10.xml";
+	public static final String CONFIG_DATA = "tlosSWConfig10.xml";
+
 	public static final String PARAMETER_DATA = "http://www.likyateknoloji.com/XML_parameters_types";
 	public static final String META_DATA = "metaData.xml";
 
@@ -38,8 +46,9 @@ public class CommonConstantDefinitions {
 	 * Exist arabirimi tanımları
 	 */
 
-	public static final String xQueryNsHeader = "xquery version \"1.0\";  import module namespace ";
-
+	public static final String xQueryNsHeader = "xquery version \"1.0\";";
+	public static final String moduleImport =  "import module namespace ";
+			
 	public static final String hsNsUrl = "hs=\"http://hs.tlos.com/\"";
 	public static final String sqNsUrl = "sq=\"http://sq.tlos.com/\"";
 	public static final String dbNsUrl = "db=\"http://db.tlos.com/\"";
@@ -71,10 +80,6 @@ public class CommonConstantDefinitions {
 	public static final String decNsFo = "declare namespace fo = \"http://www.w3.org/1999/XSL/Format\";";
 	public static final String decNsXslfo = "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";";
 	public static final String decNsMeta = "declare namespace  meta = \"http://www.likyateknoloji.com/XML_metaData_types\";";
-	
-
-	public static final String dbUrl = "xmldb:exist:";
-	public static final String rootUrl = "//db/";
 
 	/**
 	 * Validasyon testlerinde kullanılan tanımlamalar.
