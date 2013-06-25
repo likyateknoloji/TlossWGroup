@@ -31,7 +31,10 @@ public class WebDBXquery {
 
 	public static DBOperations dbOperations;
 
-	private static String dbUri = "xmldb:exist://localhost:8093/exist/xmlrpc/db/" + "tlossw".toUpperCase();
+	private static String dbUri = "xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db/";
+	// private static String dbUri = "xmldb:exist://localhost:8093/exist/xmlrpc/db/" + "tlossw".toUpperCase();
+	private static String collectionName = "tlossw-serkan";
+	
 	private static XPathQueryService service;
 	private static Collection root = null;
 	private static Database database = null;
@@ -48,7 +51,7 @@ public class WebDBXquery {
 			database = (Database) cl.newInstance();
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
-			root = DatabaseManager.getCollection(dbUri, "admin", "");
+			root = DatabaseManager.getCollection(dbUri + "/" + collectionName, "admin", "");
 			service = (XPathQueryService) root.getService("XQueryService", "1.0");
 
 		} catch (Exception e) {
