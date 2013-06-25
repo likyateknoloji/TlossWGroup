@@ -23,6 +23,7 @@ import com.likya.tlossw.infobus.servers.MailServer;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.nagios.NagiosServer;
 import com.likya.tlossw.perfmng.PerformanceManager;
+import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument.ServerConfig;
 
 public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	
@@ -63,6 +64,8 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private transient TlosProcessData tlosProcessData;
 	
 	private transient TlosConfigInfo tlosSWConfigInfo;
+	
+	private transient ServerConfig serverConfig;
 	
 	private transient MailServer mailServer;
 	
@@ -361,6 +364,14 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setCollectionName(String collectionName) {
 		this.collectionName = collectionName;
+	}
+
+	public ServerConfig getServerConfig() {
+		return serverConfig;
+	}
+
+	public void setServerConfig(ServerConfig serverConfig) {
+		this.serverConfig = serverConfig;
 	}
 
 }
