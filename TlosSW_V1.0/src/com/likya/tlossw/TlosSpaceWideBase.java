@@ -15,6 +15,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
@@ -32,16 +33,17 @@ import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.nagios.NagiosServer;
 import com.likya.tlossw.perfmng.PerformanceManager;
-import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ConfigLoader;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.InfoBus;
+import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.ValidPlatforms;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.i18n.ResourceMapper;
 import com.likya.tlossw.utils.i18n.ResourceReader;
+import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument.ServerConfig;
 
 public class TlosSpaceWideBase {
 
@@ -61,7 +63,7 @@ public class TlosSpaceWideBase {
 		logger.info(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.REMOTEDB_STARTING_INFO));
 
 		String driver = "org.exist.xmldb.DatabaseImpl";
-		Collection col = null;
+		Collection collection = null;
 
 		try {
 
@@ -71,29 +73,40 @@ public class TlosSpaceWideBase {
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
 
-			String dbUri = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getConnectionUrl();
-			String collectionName = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getDbCollectionName();
+			String dbUri = getSpaceWideRegistry().getServerConfig().getDbparams().getConnectionUrl();
+			String collectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getDbCollectionName();
 			
-			String userName = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getUsername();
-			String password = getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getPassword();
+			String userName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsername();
+			String password = getSpaceWideRegistry().getServerConfig().getDbparams().getPassword();
 
-			col = DatabaseManager.getCollection(dbUri + "/" + collectionName, userName, password);
+			collection = DatabaseManager.getCollection(dbUri + "/" + collectionName, userName, password);
 
-			if (col == null) {
+			if (collection == null) {
+				errprintln("Collection name : " + collectionName);
+				errprintln("db connection uri : " + dbUri + "/" + collectionName);
 				errprintln("Collection is null, check your eXist DB if it is running !");
 				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 				System.exit(-1);
 			}
+			
+			collection.setProperty(OutputKeys.INDENT, "no");
+			getSpaceWideRegistry().setEXistColllection(collection);
+			
+			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
 
-			col.setProperty(OutputKeys.INDENT, "no");
-			getSpaceWideRegistry().setEXistColllection(col);
 			getSpaceWideRegistry().setCollectionName(collectionName);
 
-			String xQueryModuleUrl = " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "/modules";
+			String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(collectionName);
 			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
 
-			String xmlsUrl = CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "/xmls/";
+			String xmlsUrl = ParsingUtils.getXmlsPath(collectionName);
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
+			
+			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
+			TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
+			
+			getSpaceWideRegistry().setTlosSWConfigInfo(tlosConfigInfo);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,7 +144,7 @@ public class TlosSpaceWideBase {
 		logger.info("************************************************************");
 		logger.info("*** Likya Bilgi Teknolojileri ve Iletisim Hiz. Ltd. Sti. ***");
 		logger.info("***      " + appName + " " + versionName + " " + getVersion() + "       ***");
-		logger.info("***           (c) 2011 " + rights + "                ***");
+		logger.info("***           (c) 2013 " + rights + "                ***");
 		logger.info("***                 Istanbul - Turkiye                   ***");
 		logger.info("************************************************************");
 		logger.info("");
@@ -144,30 +157,33 @@ public class TlosSpaceWideBase {
 		/**
 		 * Read configuration properties
 		 */
-		TlosConfigInfo tlosSWConfigInfo = ConfigLoader.readTlosConfig(resourceBaundle);
+		
+		// TlosConfigInfo tlosSWConfigInfo = ConfigLoader.readTlosConfig(resourceBaundle);
+		
+		ServerConfig serverConfig = ConfigLoader.readServerConfig(resourceBaundle);
 
 		/**
 		 * Redirect logging to appropriate destinations according to the config
 		 * values
 		 */
-		if (tlosSWConfigInfo.getSettings().getLogFile() != null) {
+		if (serverConfig.getServerParams().getLogFile() != null) {
 			RollingFileAppender appndr = (RollingFileAppender) Logger.getLogger("com.likya.tlos").getAppender("dosya");
 			if (appndr != null) {
-				appndr.setFile(tlosSWConfigInfo.getSettings().getLogFile());
+				appndr.setFile(serverConfig.getServerParams().getLogFile());
 				appndr.activateOptions();
 			}
 		}
 
-		getSpaceWideRegistry().setTlosSWConfigInfo(tlosSWConfigInfo);
+		getSpaceWideRegistry().setServerConfig(serverConfig);
 		getSpaceWideRegistry().setApplicationResources(resourceBaundle);
 
-		setPersistRecoverRules(tlosSWConfigInfo, resourceBaundle);
+		setPersistRecoverRules(serverConfig, resourceBaundle);
 
 	}
 
-	private void setPersistRecoverRules(TlosConfigInfo tlosSWConfigInfo, ResourceBundle resourceBaundle) {
+	private void setPersistRecoverRules(ServerConfig serverConfig, ResourceBundle resourceBaundle) {
 
-		boolean isPers = tlosSWConfigInfo.getSettings().getIsPersistent().getValueBoolean();
+		boolean isPers = serverConfig.getServerParams().getIsPersistent().getValueBoolean();
 
 		setPersistent(isPers);
 
