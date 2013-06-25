@@ -65,6 +65,32 @@ public class ParsingUtils {
 
 		return jobXPath;
 	}
+	
+	public static String getFunctionString(String xQueryModuleUrl, String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpaces, String... params) {
+
+		// String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + "hs:getTlosConfig()";
+
+		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append(CommonConstantDefinitions.xQueryNsHeader);
+		stringBuffer.append(declaredNameSpaces);
+		stringBuffer.append(CommonConstantDefinitions.moduleImport);
+		stringBuffer.append(moduleNamesSpaces);
+		stringBuffer.append(xQueryModuleUrl);
+		stringBuffer.append("/" + moduleName + "\";");
+		stringBuffer.append(functionName);
+
+		stringBuffer.append("(");
+
+		for (String param : params) {
+			stringBuffer.append("\"" + param + "\", ");
+			System.out.println(param);
+		}
+
+		stringBuffer.append(")");
+
+		return stringBuffer.toString();
+	}
 
 	public static String getXmlsPath(String collectionName) {
 		return CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.xmlsPath;
