@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_serverConfig_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:config-types="http://www.likyateknoloji.com/XML_config_types"
+	targetNamespace="http://www.likyateknoloji.com/XML_serverConfig_types"
+	elementFormDefault="qualified">
+
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+
+	<xs:element name="serverConfig">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="serverParams" />
+				<xs:element ref="dbparams" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="serverParams">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:ipAddress" />
+				<xs:element ref="debugMode" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="debugMode">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:value_boolean" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="dbparams">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="connectionUrl" type="xs:string" />
+				<xs:element name="metaDataFile" type="xs:string" />
+				<xs:element name="username" type="xs:string" />
+				<xs:element name="password" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
