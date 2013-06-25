@@ -59,7 +59,7 @@ public class WebDBXquery {
 	public String getFile(String fileName) {
 		return ParsingUtils.getConcatenatedPathAndFileName("moduleTest" + File.separator, fileName);
 	}
-	@Ignore
+	
 	@Test
 	public void moduleAgentOperationsGetResources() throws Exception {
 
@@ -69,10 +69,10 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("", true, result.getIterator().hasMoreResources());
+		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
 
 	}
-	@Ignore
+
 	@Test
 	public void moduleAgentOperationsSearchAgent() throws Exception {
 
@@ -82,7 +82,7 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("", true, result.getIterator().hasMoreResources());
+		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
 
 	}
 	
@@ -95,8 +95,21 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("", true, result.getIterator().hasMoreResources());
+		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
 
+	}
+	
+	@Test
+	public void moduleAgentOperationsGetAgents() throws Exception {
+		
+		String fileName = getFile("moduleAgentOperations.getAgents.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
+		
 	}
 
 	@Test
