@@ -21,7 +21,7 @@
 	<con:dbparams>
 		<con:name>eXist</con:name>
 		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:connectionUrl>
-		<con:metaDataFile>xmldb:exist:/db/tlossw-serkan</con:metaDataFile>
+		<con:dbCollectionName>tlossw-serkan</con:dbCollectionName>
 		<con:username>admin</con:username>
 		<con:password>admin</con:password>
 	</con:dbparams>
