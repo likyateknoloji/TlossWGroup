@@ -84,10 +84,12 @@ public class ParsingUtils {
 		stringBuffer.append("\"" + collectionName + "\", ");
 		
 		for (String param : params) {
-			stringBuffer.append("\"" + param + "\", ");
+			// stringBuffer.append("\"" + param + "\", ");
+			stringBuffer.append(param + ", ");
 			System.out.println(param);
 		}
 
+		stringBuffer.replace(stringBuffer.lastIndexOf(","), stringBuffer.length(), "");
 		stringBuffer.append(")");
 
 		return stringBuffer.toString();
