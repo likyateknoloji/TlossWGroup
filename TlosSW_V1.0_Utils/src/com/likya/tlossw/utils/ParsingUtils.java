@@ -66,7 +66,7 @@ public class ParsingUtils {
 		return jobXPath;
 	}
 	
-	public static String getFunctionString(String xQueryModuleUrl, String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpaces, String... params) {
+	public static String getFunctionString(String xQueryModuleUrl, String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... params) {
 
 		// String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + "hs:getTlosConfig()";
 
