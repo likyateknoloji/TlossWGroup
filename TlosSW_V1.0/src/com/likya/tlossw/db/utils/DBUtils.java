@@ -66,6 +66,11 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DBUtils {
 
+	private static String localFunctionConstructer(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
+	}
+	
 	// Test Function
 	public static TlosConfigInfo getTlosConfigInfo() {
 
@@ -482,7 +487,7 @@ public class DBUtils {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleStateOperations.xquery\";" + CommonConstantDefinitions.decNsSt + "lk:getTlosGlobalStates()";
 		System.out.println(xQueryStr);
-		xQueryStr = ParsingUtils.getFunctionString(spaceWideRegistry.getxQueryModuleUrl(), "moduleStateOperations.xquery", "lk:getTlosGlobalStates", CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl);
+		xQueryStr = localFunctionConstructer("moduleStateOperations.xquery", "lk:getTlosGlobalStates", CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl);
 		System.out.println(xQueryStr);
 		
 		XPathQueryService service;
@@ -523,7 +528,7 @@ public class DBUtils {
 		System.out.println(xQueryStr);
 		*/
 		
-		String xQueryStr = ParsingUtils.getFunctionString(spaceWideRegistry.getxQueryModuleUrl(), "moduleManagementOperations.xquery", "hs:getTlosConfig", CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl);
+		String xQueryStr = localFunctionConstructer("moduleManagementOperations.xquery", "hs:getTlosConfig", CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl);
 		System.out.println(xQueryStr);
 		
 		XPathQueryService service;
