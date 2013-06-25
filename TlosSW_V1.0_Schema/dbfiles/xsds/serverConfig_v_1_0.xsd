@@ -23,6 +23,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:ipAddress" />
+				<xs:element ref="isPersistent" />
+				<xs:element ref="logFile" />
 				<xs:element ref="debugMode" />
 			</xs:sequence>
 		</xs:complexType>
@@ -42,11 +44,29 @@
 			<xs:sequence>
 				<xs:element name="name" type="xs:string" />
 				<xs:element name="connectionUrl" type="xs:string" />
-				<xs:element name="metaDataFile" type="xs:string" />
+				<xs:element name="dbCollectionName" type="xs:string" />
 				<xs:element name="username" type="xs:string" />
 				<xs:element name="password" type="xs:string" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="isPersistent">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment" />
+				<xs:element ref="lt:value_boolean" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="logFile">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern
+					value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+			</xs:restriction>
+			<!-- <xs:restriction base="lt:filename"/> -->
+		</xs:simpleType>
+	</xs:element>
 </xs:schema>
