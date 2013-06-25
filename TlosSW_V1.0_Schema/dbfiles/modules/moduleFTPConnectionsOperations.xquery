@@ -48,9 +48,10 @@ declare function fc:checkFTPConnectionName($ftpConnnectionsDocumentUrl as xs:str
 };
 
 (: //TODO id ? :)
-declare function fc:insertFTPConnection($ftpConnnectionsDocumentUrl as xs:string, $ftpConnection as element(ftp:ftpProperties))
+declare function fc:insertFTPConnection($ftpConnnectionsDocumentUrl as xs:string, $ftpConnection as element(ftp:ftpProperties)) as xs:boolean?
 {	
-	update insert $ftpConnection into doc($ftpConnnectionsDocumentUrl)/ftp:ftpConnections
+	let $insert := update insert $ftpConnection into doc($ftpConnnectionsDocumentUrl)/ftp:ftpConnections
+	return true()
 } ;
 
 declare function fc:updateFTPConnection($ftpConnnectionsDocumentUrl as xs:string, $ftpConnection as element(ftp:ftpProperties))
