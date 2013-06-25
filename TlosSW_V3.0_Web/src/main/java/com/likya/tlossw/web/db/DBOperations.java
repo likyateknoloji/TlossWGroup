@@ -80,6 +80,7 @@ import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.exist.ExistClient;
@@ -104,11 +105,15 @@ public class DBOperations implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		xQueryModuleUrl = " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/modules";
-		dataDocUrl = "//db/" + ExistClient.dbCollectionName + "/xmls/" + CommonConstantDefinitions.JOB_DEFINITION_DATA;
-		resourceDocUrl = "//db/" + ExistClient.dbCollectionName + "/xmls/" + CommonConstantDefinitions.RESOURCES_DATA;
-		xmlsUrl = CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + ExistClient.dbCollectionName + "/xmls/";
+		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbCollectionName);
+		dataDocUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName) + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		resourceDocUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName)  + CommonConstantDefinitions.RESOURCES_DATA;
+		xmlsUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName);
 		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
+	}
+	
+	private String localFunctionConstructer(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
+		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
 
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
@@ -119,8 +124,11 @@ public class DBOperations implements Serializable {
 
 			// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + metaData + "\", " + agentXML + ")";
-
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + metaData + "\", " + agentXML + ")";
+			System.out.println(xQueryStr);
+			xQueryStr = localFunctionConstructer("moduleAgentOperations.xquery", "lk:searchAgent", CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, agentXML);
+			System.out.println(xQueryStr);
+			
 			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
@@ -489,7 +497,7 @@ public class DBOperations implements Serializable {
 
 			String funcDef = "hs:query_username(\"" + usrDataFile + "\", \"" + perDataFile + "\", xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef; 
+			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef; 
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
@@ -791,7 +799,7 @@ public class DBOperations implements Serializable {
 		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
 		ResourceListType resourceList = null;
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + resourceDocUrl + "\", 1, 10)";
+		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + resourceDocUrl + "\", 1, 10)";
 
 		Collection collection = existConnectionHolder.getCollection();
 
