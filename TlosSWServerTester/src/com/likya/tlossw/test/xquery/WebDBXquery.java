@@ -12,7 +12,9 @@ import org.junit.runners.JUnit4;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
+import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
+import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlossw.utils.FileUtils;
@@ -29,7 +31,7 @@ public class WebDBXquery {
 
 	public static DBOperations dbOperations;
 
-	private static String dbUri = "xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db/" + "tlossw-serkan";
+	private static String dbUri = "xmldb:exist://localhost:8093/exist/xmlrpc/db/" + "tlossw".toUpperCase();
 	private static XPathQueryService service;
 	private static Collection root = null;
 	private static Database database = null;
@@ -46,7 +48,7 @@ public class WebDBXquery {
 			database = (Database) cl.newInstance();
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
-			root = DatabaseManager.getCollection(dbUri, "admin", "admin");
+			root = DatabaseManager.getCollection(dbUri, "admin", "");
 			service = (XPathQueryService) root.getService("XQueryService", "1.0");
 
 		} catch (Exception e) {
@@ -69,7 +71,7 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
+		assertEquals("Boş !", true, result.getIterator().hasMoreResources());
 
 	}
 
@@ -82,7 +84,7 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
+		assertEquals("Boş !", true, result.getIterator().hasMoreResources());
 
 	}
 	
@@ -95,7 +97,7 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
+		assertEquals("Boş !", true, result.getIterator().hasMoreResources());
 
 	}
 	
@@ -108,8 +110,70 @@ public class WebDBXquery {
 
 		ResourceSet result;
 		result = service.query(xQueryStr.toString());
-		assertEquals("Başarılı !", true, result.getIterator().hasMoreResources());
 		
+		if (result.getIterator().hasMoreResources()) {
+			Resource resource = result.getIterator().nextResource();
+			String content = (String) resource.getContent();
+			
+			System.out.println(content);
+			
+			assertEquals("Agent listesi boş !", true, content != "");
+		} else {
+			assertEquals("Agent listesi boş !", true, false);
+		}
+		
+	}
+	
+	@Test
+	public void moduleAlarmOperationsAlarms() throws Exception {
+		
+		String fileName = getFile("moduleAlarmOperations.alarms.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("Alarm listesi boş !", true, result.getIterator().hasMoreResources());
+		
+	}
+	
+	@Test
+	public void moduleCalendarOperationsCalendars() throws Exception {
+		
+		String fileName = getFile("moduleCalendarOperations.calendars.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("Takvim listesi boş !", true, result.getIterator().hasMoreResources());
+		
+	}
+	
+	@Test
+	public void moduleFTPConnectionsOperationsInsertFTPConnection() {
+
+		String fileName = getFile("moduleFTPConnectionsOperations.insertFTPConnection.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		Boolean result = false;
+		ResourceSet resourceSet = null;
+		try {
+			resourceSet = service.query(xQueryStr.toString());
+		
+			if (resourceSet.getIterator().hasMoreResources()) {
+				Resource resource = resourceSet.getIterator().nextResource();
+				result = Boolean.valueOf(resource.getContent().toString());
+			}
+			
+		} catch (XMLDBException e) {
+			// e.printStackTrace();
+			
+			System.out.println(e.getMessage());
+		}
+		
+		assertEquals("FTP bağlantı tanımı kaydedilemedi !", true, result);
 	}
 
 	@Test
