@@ -11,9 +11,8 @@ import java.util.StringTokenizer;
 
 import com.likya.tlossw.model.engine.EngineeConstants;
 
-
 public class ParsingUtils {
-	
+
 	public static String getJobXPath(String jobURI) {
 		jobURI = jobURI.replaceFirst("root.", "");
 		String XPath = "/TlosProcessDataAll";
@@ -51,22 +50,28 @@ public class ParsingUtils {
 
 		return path + fileName;
 	}
-	
+
 	public static String getJobXFullPath(String jobURI, String jobId, String agentId, String LSIDateTime) {
 		String jobXPath = getJobXPath(jobURI);
-		
+
 		jobXPath = jobXPath + "/dat:jobProperties[@ID='" + jobId + "'" + " and @agentId='" + agentId + "' ";
-		
-		if ( LSIDateTime != null) {
+
+		if (LSIDateTime != null) {
 			jobXPath = jobXPath + "and @LSIDateTime='" + LSIDateTime + "'";
-		}
-		else {
+		} else {
 			jobXPath = jobXPath + "and not(exists(@LSIDateTime))";
 		}
 		jobXPath = jobXPath + "]";
-		
+
 		return jobXPath;
 	}
 
+	public static String getXmlsPath(String collectionName) {
+		return CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.xmlsPath;
+	}
+
+	public static String getXQueryModuleUrl(String collectionName) {
+		return " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.modulePath;
+	}
 
 }
