@@ -66,18 +66,84 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DBUtils {
 
+	private static String getFunctionString(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpaces, String... params) {
+
+		// String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + "hs:getTlosConfig()";
+
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+
+		StringBuffer stringBuffer = new StringBuffer();
+
+		stringBuffer.append(CommonConstantDefinitions.xQueryNsHeader);
+		stringBuffer.append(declaredNameSpaces);
+		stringBuffer.append(CommonConstantDefinitions.moduleImport);
+		stringBuffer.append(moduleNamesSpaces);
+		stringBuffer.append(spaceWideRegistry.getxQueryModuleUrl());
+		stringBuffer.append("/" + moduleName + "\";");
+		stringBuffer.append(functionName);
+
+		stringBuffer.append("(");
+
+		for (String param : params) {
+			stringBuffer.append("\"" + param + "\", ");
+			System.out.println(param);
+		}
+
+		stringBuffer.append(")");
+
+		return stringBuffer.toString();
+	}
+
+	// Test Function
+	public static TlosConfigInfo getTlosConfigInfo() {
+
+		TlosConfigInfo tlosConfigInfo = null;
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		Collection collection = spaceWideRegistry.getEXistColllection();
+
+		String xQueryStr = "doc(\"" + spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CONFIG_DATA + "\")";
+
+		XPathQueryService service;
+
+		try {
+			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr);
+			ResourceIterator i = result.getIterator();
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+				try {
+					tlosConfigInfo = TlosConfigInfoDocument.Factory.parse(xmlContent).getTlosConfigInfo();
+				} catch (XmlException e) {
+					e.printStackTrace();
+					return tlosConfigInfo;
+				}
+
+				System.out.println();
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+			return tlosConfigInfo;
+		}
+
+		return tlosConfigInfo;
+	}
+
 	private static TlosProcessData getTlosSolsticeDataXml() {
 
 		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		/* String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
-		String scenarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
-		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-		String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
-		*/
+		/*
+		 * String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		 * String scenarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		 * String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
+		 * String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		 * String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
+		 */
 		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
 
 		String functionDef = "hs:getSolsticeJobsAndScenarios(\"" + metaData + "\", " + 0 + "," + 0 + ")";
@@ -214,7 +280,7 @@ public class DBUtils {
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:updateFirstLiveJobLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropetiesXML + "," + jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "'])";
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-		
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -351,20 +417,21 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		/*String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
-		String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
-		String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-		String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
-		*/
+		/*
+		 * String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
+		 * String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
+		 * String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
+		 * String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		 * String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
+		 */
 		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
-		
+
 		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + metaData + "\", " + scenarioId + "," + planId + ")";
-		
+
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-		
+
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -477,8 +544,14 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + "hs:getTlosConfig()";
-
+		/*
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + "hs:getTlosConfig()";
+		System.out.println(xQueryStr);
+		*/
+		
+		String xQueryStr = getFunctionString("moduleManagementOperations.xquery", "hs:getTlosConfig", CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl);
+		System.out.println(xQueryStr);
+		
 		XPathQueryService service;
 		try {
 			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -495,7 +568,6 @@ public class DBUtils {
 					e.printStackTrace();
 					return null;
 				}
-				System.out.println();
 			}
 		} catch (XMLDBException e) {
 			e.printStackTrace();
@@ -581,11 +653,11 @@ public class DBUtils {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
 		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
-		
+
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsAgnt + "lk:getAgents(\"" + metaData + "\")";
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-		
+
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;
 		try {
@@ -827,8 +899,7 @@ public class DBUtils {
 
 		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + 
-					"db:getDbConnection(\"" + dataFile + "\", " + dbPropertiesID + ")";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + "db:getDbConnection(\"" + dataFile + "\", " + dbPropertiesID + ")";
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
@@ -862,8 +933,7 @@ public class DBUtils {
 
 		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + 
-					"db:getDbCP(\"" + dataFile + "\", " + dbCPID + ")";
+		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + "db:getDbCP(\"" + dataFile + "\", " + dbCPID + ")";
 
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
@@ -917,7 +987,7 @@ public class DBUtils {
 		Collection collection = spaceWideRegistry.getEXistColllection();
 
 		String xQueryModuleUrl = spaceWideRegistry.getxQueryModuleUrl();
-		
+
 		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 		service.setProperty("indent", "yes");
 
