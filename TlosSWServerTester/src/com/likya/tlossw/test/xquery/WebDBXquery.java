@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.Resource;
+import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
@@ -51,7 +54,7 @@ public class WebDBXquery {
 			database = (Database) cl.newInstance();
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
-			root = DatabaseManager.getCollection(dbUri + "/" + collectionName, "admin", "");
+			root = DatabaseManager.getCollection(dbUri + collectionName, "admin", "admin");
 			service = (XPathQueryService) root.getService("XQueryService", "1.0");
 
 		} catch (Exception e) {
@@ -63,6 +66,38 @@ public class WebDBXquery {
 
 	public String getFile(String fileName) {
 		return ParsingUtils.getConcatenatedPathAndFileName("moduleTest" + File.separator, fileName);
+	}
+	
+	@Test
+	public void moduleGeneric() throws Exception {
+
+		String fileName = getFile("moduleAgentOperations.getResources.xquery");
+
+		XmlObject ftpProperties = null;
+		
+		try {
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(fileName);
+			ResourceIterator i = result.getIterator();
+			
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					ftpProperties = XmlObject.Factory.parse(xmlContent);
+
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(ftpProperties.toString());
 	}
 	
 	@Test
