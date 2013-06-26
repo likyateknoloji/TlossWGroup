@@ -1,5 +1,9 @@
 xquery version "1.0";
+
 module namespace lk = "http://likya.tlos.com/";
+
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+
 declare namespace err = "http://www.likyateknoloji.com/XML_error_types";
 declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
 

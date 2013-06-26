@@ -2,6 +2,8 @@ xquery version "1.0";
 
 module namespace fc = "http://fc.tlos.com/";
 
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+
 declare namespace ftp = "http://www.likyateknoloji.com/XML_ftp_adapter_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 
