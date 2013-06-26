@@ -2,31 +2,41 @@ xquery version "1.0";
 
 module namespace hs = "http://hs.tlos.com/";
 
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+
 declare namespace per = "http://www.likyateknoloji.com/XML_permission_types";
 (:
 Mapping
 $permissionsDocumentUrl = doc('xmldb:exist:///db/TLOSSW/xmls/tlosSWPermission10.xml')
 :)
 
-declare function hs:getPermisions($permissionsDocumentUrl as xs:string)
+declare function hs:getPermisions($documentUrl as xs:string)
 {
+   let $permissionsDocumentUrl := met:getMetaData($documentUrl, "permissions")
+   
 	for $permission in doc(permissionsDocumentUrl)/per:permissions/per:permission 
 	return $permission
 };
 
-declare function hs:updatePermissionsLock($permissionsDocumentUrl as xs:string, $permissions as element(per:permissions))
- {
-	util:exclusive-lock(doc(permissionsDocumentUrl)/per:permissions, hs:updatePermissions($permissions))
+declare function hs:updatePermissionsLock($documentUrl as xs:string, $permissions as element(per:permissions))
+{
+   let $permissionsDocumentUrl := met:getMetaData($documentUrl, "permissions")
+   
+   return util:exclusive-lock(doc(permissionsDocumentUrl)/per:permissions, hs:updatePermissions($documentUrl, $permissions))
 };
 
-declare function hs:updatePermissions($permissionsDocumentUrl as xs:string, $permissions as element(per:permissions))
- {
+declare function hs:updatePermissions($documentUrl as xs:string, $permissions as element(per:permissions))
+{
+   let $permissionsDocumentUrl := met:getMetaData($documentUrl, "permissions")
+   
 	for $i in 1 to count($permissions/per:permission)
-	return	hs:updatePermission($permissionsDocumentUrl, $permissions/per:permission[$i])
+	return	hs:updatePermission($documentUrl, $permissions/per:permission[$i])
 };
 
-declare function hs:updatePermission($permissionsDocumentUrl as xs:string, $permission as element(per:permission))
- {
+declare function hs:updatePermission($documentUrl as xs:string, $permission as element(per:permission))
+{
+   let $permissionsDocumentUrl := met:getMetaData($documentUrl, "permissions")
+   
 		for $per in doc($permissionsDocumentUrl)/per:permissions/per:permission
 		where $per/@id = $permission/@id
 		return  update replace $per with 
