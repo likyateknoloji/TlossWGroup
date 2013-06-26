@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -65,11 +66,6 @@ import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DBUtils extends DBBase {
-
-	private static String localFunctionConstructer(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
-	}
 	
 	// Test Function
 	public static TlosConfigInfo getTlosConfigInfo() {
@@ -487,7 +483,7 @@ public class DBUtils extends DBBase {
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleStateOperations.xquery\";" + CommonConstantDefinitions.decNsSt + "lk:getTlosGlobalStates()";
 		System.out.println(xQueryStr);
-		xQueryStr = localFunctionConstructer("moduleStateOperations.xquery", "lk:getTlosGlobalStates", CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl);
+		xQueryStr = localFunctionConstructor("moduleStateOperations.xquery", "lk:getTlosGlobalStates", CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl);
 		System.out.println(xQueryStr);
 		
 		XPathQueryService service;
@@ -518,41 +514,23 @@ public class DBUtils extends DBBase {
 
 	public static TlosConfigInfo getTlosConfig() {
 
-		TlosConfigInfo tlosConfigInfo = TlosConfigInfo.Factory.newInstance();
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
+		TlosConfigInfo tlosConfigInfo = null;
 
 		/*
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + "hs:getTlosConfig()";
 		System.out.println(xQueryStr);
 		*/
 		
-		String xQueryStr = localFunctionConstructer("moduleManagementOperations.xquery", "hs:getTlosConfig", CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl);
-		System.out.println(xQueryStr);
+		String xQueryStr = localFunctionConstructorNS("moduleManagementOperations.xquery", "hs:getTlosConfig", CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl);
 		
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					tlosConfigInfo = TlosConfigInfoDocument.Factory.parse(xmlContent).getTlosConfigInfo();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for(XmlObject currentObject : objectList) {
+			tlosConfigInfo = ((TlosConfigInfoDocument) currentObject).getTlosConfigInfo();
 		}
-
+		
 		return tlosConfigInfo;
 
 	}

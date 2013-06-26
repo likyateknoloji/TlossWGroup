@@ -12,29 +12,37 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public abstract class DBBase {
 
+	protected static String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
+		
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		
+		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, moduleNamesSpace, param);
+	}
+	
+	protected static String agentFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
+	}
+	
+	protected static String localFunctionConstructorNS(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
+		
+		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		
+		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
+	}
+
 	/*
-	private String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
-		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, moduleNamesSpace, param);
-	}
-
-	private String localFunctionConstructor(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
-		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
-	}
-
-	private String agentFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructor("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
-	}
-
 	private String alarmFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
 	*/
 	
-	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
+	protected static ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
 		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
 		XmlObject objectProperties = null;
@@ -65,7 +73,7 @@ public abstract class DBBase {
 			e.printStackTrace();
 		}
 
-		System.out.println(objectProperties.toString());
+		// System.out.println(objectProperties.toString());
 
 		return returnObjectArray;
 	}
