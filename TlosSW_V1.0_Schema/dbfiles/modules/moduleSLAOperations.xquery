@@ -8,6 +8,7 @@ declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace fn="http://www.w3.org/2005/xpath-functions";
 
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 
 (:
 Mappings
@@ -16,8 +17,10 @@ $sequenceDataDocumentUrl = $documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenc
 :)
 
 (:fn:empty($prs/com:role):)
-declare function hs:searchSLA($slaDocumentUrl as xs:string, $searchSla as element(sla:SLA)) as element(sla:SLA)* 
- {
+declare function hs:searchSLA($documentUrl as xs:string, $searchSla as element(sla:SLA)) as element(sla:SLA)* 
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
 	  for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	  let $nedirx := if (count($searchSla/sla:ResourcePool/sla:Resource) eq 0 or
                             (count($sla/sla:ResourcePool/sla:Resource) eq 0 and count($searchSla/sla:ResourcePool/sla:Resource) > 0)) then true()
@@ -43,9 +46,9 @@ declare function hs:searchSLA($slaDocumentUrl as xs:string, $searchSla as elemen
    return $sonuc
 };
 
-declare function hs:searchSLAtest($slaDocumentUrl as xs:string, $searchSla as element(sla:SLA)) as node()*
- {
-
+declare function hs:searchSLAtest($documentUrl as xs:string, $searchSla as element(sla:SLA)) as node()*
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
 
 	  for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	  let $nedirx := if (count($searchSla/sla:ResourcePool/sla:Resource) eq 0 or
@@ -74,38 +77,48 @@ declare function hs:searchSLAtest($slaDocumentUrl as xs:string, $searchSla as el
 };
 
 (: ornek kullanim hs:slaList(1,2) ilk iki eleman :)
-declare function hs:slaList($slaDocumentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
- {
+declare function hs:slaList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(sla:SLA)* 
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
 	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA[position() = ($firstElement to $lastElement)]
 	return  $sla
 };
 
 (: ornek kullanim hs:searchSlaBySlaName(xs:string('Genel SLA')) :)
-declare function hs:searchSlaBySlaName($slaDocumentUrl as xs:string, $searchSlaName as xs:string) as element(sla:SLA)? 
- {
+declare function hs:searchSlaBySlaName($documentUrl as xs:string, $searchSlaName as xs:string) as element(sla:SLA)? 
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
 	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where fn:lower-case($sla/sla:Name)=fn:lower-case($searchSlaName)
     return $sla
 };
 
-declare function hs:searchSlaBySlaId($slaDocumentUrl as xs:string, $id as xs:integer) as element(sla:SLA)? 
- {
-	for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
+declare function hs:searchSlaBySlaId($documentUrl as xs:string, $id as xs:integer) as element(sla:SLA)? 
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+
+   for $sla in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sla/@ID = $id
     return $sla
 };
 
-declare function hs:insertSlaLock($slaDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $sla as element(sla:SLA)) as xs:boolean
+declare function hs:insertSlaLock($documentUrl as xs:string, $sla as element(sla:SLA)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement, hs:insertSla($slaDocumentUrl, $sequenceDataDocumentUrl, $sla))     
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
+   let $sonuc := util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement, hs:insertSla($documentUrl, $sla))     
    return true()
 };
 
-declare function hs:insertSla($slaDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $sla as element(sla:SLA)) as node()*
+declare function hs:insertSla($documentUrl as xs:string, $sla as element(sla:SLA)) as node()*
 {
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
     let $XXX := $sla
     
-    let $nextId := sq:getNextId($sequenceDataDocumentUrl, "slaId")	
+    let $nextId := sq:getNextId($documentUrl, "slaId")	
     (: 
      let $quote := "&#34;"
      let $yap := util:eval(concat("<sla:SLA ID=",$quote,$nextId,$quote,"/>"))
@@ -132,26 +145,34 @@ declare function hs:insertSla($slaDocumentUrl as xs:string, $sequenceDataDocumen
 	into doc($slaDocumentUrl)/sla:ServiceLevelAgreement
 } ;
 
-declare function hs:updateSLA($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
+declare function hs:updateSLA($documentUrl as xs:string, $sla as element(sla:SLA))
 {
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
 	for $sladon in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sladon/@ID = $sla/@ID
 	return  update replace $sladon with $sla
 };
 
-declare function hs:updateSLALock($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
+declare function hs:updateSLALock($documentUrl as xs:string, $sla as element(sla:SLA))
 {
-   util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:updateSLA($slaDocumentUrl, $sla))     
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
+   return util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:updateSLA($documentUrl, $sla))     
 };
 
-declare function hs:deleteSLA($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
- {
+declare function hs:deleteSLA($documentUrl as xs:string, $sla as element(sla:SLA))
+{
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
 	for $sladon in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA
 	where $sladon/@ID = $sla/@ID
 	return update delete $sladon
 };
 
-declare function hs:deleteSLALock($slaDocumentUrl as xs:string, $sla as element(sla:SLA))
+declare function hs:deleteSLALock($documentUrl as xs:string, $sla as element(sla:SLA))
 {
-   util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:deleteSLA($slaDocumentUrl, $sla))     
+   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+   
+   return util:exclusive-lock(doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA, hs:deleteSLA($documentUrl, $sla))     
 };
