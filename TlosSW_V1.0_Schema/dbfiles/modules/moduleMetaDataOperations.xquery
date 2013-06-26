@@ -39,7 +39,7 @@ declare function met:insertMetaData($documentUrl as xs:string, $doc as element(m
 {	
     let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
 	
-	update insert $doc into doc($metaDataDocumentUrl)/meta:metaData/meta:dbInfo
+	return update insert $doc into doc($metaDataDocumentUrl)/meta:metaData/meta:dbInfo
 } ;
 
 declare function met:insertMetaLock($documentUrl as xs:string, $doc as element(meta:document))
