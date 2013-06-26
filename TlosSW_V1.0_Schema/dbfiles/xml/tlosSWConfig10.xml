@@ -1,4 +1,3 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <con:TlosConfigInfo xmlns:com="http://www.likyateknoloji.com/XML_common_types"
 	xmlns:con="http://www.likyateknoloji.com/XML_config_types"
 	xmlns:state-types="http://www.likyateknoloji.com/state-types"
@@ -15,7 +14,7 @@
 		</con:company>
 	</con:Product-info>
 	<con:settings>
-		<com:ipAddress>127.0.0.1</com:ipAddress>
+		<!-- com:ipAddress>127.0.0.1</com:ipAddress-->
 		<con:machine-info>
 			<com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
 			<com:name>SUN</com:name>
@@ -26,11 +25,11 @@
 			<con:tlos-jobs>/home/tlosSW/jobs/</con:tlos-jobs>
 			<con:tlos-logs>/home/tlosSW/logs/</con:tlos-logs>
 		</con:paths>
-		<con:isPersistent>
+		<!-- con:isPersistent>
 			<com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
 			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
 			<com:value_boolean>false</com:value_boolean>
-		</con:isPersistent>
+		</con:isPersistent-->
 		<con:solstice>
 			<com:comment>gundonumu</com:comment>
 			<com:time>23:55:40</com:time>
@@ -57,7 +56,7 @@
 		<con:smsOptions>
 			<con:useSms>true</con:useSms>
 		</con:smsOptions>
-		<con:logFile>TlosEkran.log</con:logFile>
+		<!-- con:logFile>TlosEkran.log</con:logFile-->
 		<con:tlosFrequency>
 			<com:comment>Scheduler'ın calisma sikiligi (sn)</com:comment>
 			<com:frequency>1</com:frequency>
@@ -88,10 +87,10 @@
 				<con:periodValue>200</con:periodValue>
 			</con:period>
 		</con:infoBusOptions>
-		<con:debugMode>
+		<!-- con:debugMode>
 			<com:comment>debug modu (true/false)</com:comment>
 			<com:value_boolean>false</com:value_boolean>
-		</con:debugMode>
+		</con:debugMode-->
 	</con:settings>
 	<con:scenario-all>
 		<con:scenario name="senaryo1.sen">
@@ -111,13 +110,13 @@
 			<con:low>5</con:low>
 		</con:threshold>
 	</con:performance>
-	<con:dbparams>
+	<!-- con:dbparams>
 		<con:name>eXist</con:name>
 		<con:connectionUrl>xmldb:exist://localhost:8093/exist/xmlrpc/db</con:connectionUrl>
 		<con:dbCollectionName>TLOSSW</con:dbCollectionName>
 		<con:username>admin</con:username>
 		<con:password></con:password>
-	</con:dbparams>
+	</con:dbparams-->
 	<con:monitoringAgentParams>
 		<con:name>nagios</con:name>
 		<con:frequency>24</con:frequency>
