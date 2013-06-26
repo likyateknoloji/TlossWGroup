@@ -117,29 +117,30 @@ public class DBOperations implements Serializable {
 		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, moduleNamesSpace, param);
 	}
 
-	private String localFunctionConstructor(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
+	private String localFunctionConstructorNS(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
 		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
 
 	private String agentFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructor("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
+		return localFunctionConstructorNS("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
 	}
 
 	private String alarmFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
-
+	
+	private String calendarFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructor("moduleCalendarOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
+	}
+	
 	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
 		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
 		XmlObject objectProperties = null;
 
 		try {
-
 			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
 			service.setProperty("indent", "yes");
 
 			ResourceSet result = service.query(xQueryStr.toString());
@@ -539,6 +540,22 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXML) {
+		
+		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
+		
+		String xQueryStr = calendarFunctionConstructor("hs:searchCalendar", calendarPropertiesXML);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		
+		for (XmlObject calendarObject : objectList) {
+			CalendarProperties calendar = ((CalendarPropertiesDocument) calendarObject).getCalendarProperties();
+			calendarList.add(calendar);
+		}
+
+		return calendarList;
+	}
+
 	public Object checkUser(JmxAppUser jmxAppUser) {
 
 		try {
@@ -555,13 +572,16 @@ public class DBOperations implements Serializable {
 
 			service.setProperty("indent", "yes");
 
-			String usrDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA;
+			/*String usrDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA;
 			String perDataFile = xmlsUrl + CommonConstantDefinitions.PERMISSION_DATA;
 
 			String funcDef = "hs:query_username(\"" + usrDataFile + "\", \"" + perDataFile + "\", xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
 
 			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef;
-
+			*/
+			
+			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
+			
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 			while (i.hasMoreResources()) {
@@ -2254,38 +2274,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<CalendarProperties> searchCalendar(String calendarPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendar(\"" + metaData + "\", " + calendarPropertiesXML + ")";
-
+		
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				CalendarProperties calendar;
-				try {
-					calendar = CalendarPropertiesDocument.Factory.parse(xmlContent).getCalendarProperties();
-					calendarList.add(calendar);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		
+		String xQueryStr = calendarFunctionConstructor("hs:searchCalendar", calendarPropertiesXML);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		
+		for (XmlObject calendarObject : objectList) {
+			CalendarProperties calendar = ((CalendarPropertiesDocument) calendarObject).getCalendarProperties();
+			calendarList.add(calendar);
 		}
 
 		return calendarList;
