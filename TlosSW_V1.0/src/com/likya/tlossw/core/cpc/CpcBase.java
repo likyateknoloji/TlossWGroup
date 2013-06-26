@@ -181,12 +181,12 @@ public abstract class CpcBase implements Runnable {
 
 			if (jobCommandType != null && jobCommandType.equals(JobCommandType.SYSTEM_COMMAND) && !FileUtils.checkFile(fileNameWtihPath)) {
 				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : " + jobKey + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
+				myLogger.fatal("HATA : " + jobKey + " iï¿½in belirtilen is dosyasi bulunamadi -> " + jobCommandType);
 
 				return false;
 			} else if (jobCommandType.equals(JobCommandType.BATCH_PROCESS) && (!FileUtils.checkFile(fileNameWtihPath) && jobPropertiesType.getBaseJobInfos().getOSystem().toString().equals("Windows"))) {
 				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : " + jobKey + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
+				myLogger.fatal("HATA : " + jobKey + " iï¿½in belirtilen is dosyasi bulunamadi -> " + jobCommandType);
 
 				return false;
 			} else {
@@ -336,7 +336,7 @@ public abstract class CpcBase implements Runnable {
 			myLogger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
 		}
 
-		// Senaryo listesi içindeki senaryolar ## LINEERLESTIRME ##
+		// Senaryo listesi iï¿½indeki senaryolar ## LINEERLESTIRME ##
 		// System.out.println(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
 		myLogger.info("");
 		myLogger.info(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
@@ -428,10 +428,10 @@ public abstract class CpcBase implements Runnable {
 
 			scpLookupTable.put(scenarioId, spcInfoType);
 
-			if (!getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+			if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 				if (!spc.initScenarioInfo() /*|| spc.getJobQueue().size() == 0*/) {
-					myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
-					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
+					myLogger.warn(scenarioId + " isimli senaryo bilgileri yï¿½klenemedi ya da is listesi bos geldi !");
+					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yï¿½klenemedi ya da is listesi bos geldi !");
 
 					System.exit(-1);
 				}

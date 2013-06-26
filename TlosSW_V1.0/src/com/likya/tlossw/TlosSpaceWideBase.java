@@ -372,7 +372,7 @@ public class TlosSpaceWideBase {
 
 		boolean isEmbedded = false;
 
-		if (getSpaceWideRegistry().getTlosSWConfigInfo().getDbparams().getConnectionUrl().indexOf("xmldb:exist:///") > 0) {
+		if (getSpaceWideRegistry().getServerConfig().getDbparams().getConnectionUrl().indexOf("xmldb:exist:///") > 0) {
 			isEmbedded = true;
 		}
 

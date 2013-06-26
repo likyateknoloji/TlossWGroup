@@ -95,7 +95,7 @@ public class JMXTLSServer {
 
 			logger.info("Using port number : " + port);
 
-			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIpAddress();
+			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIpAddress();
 			if (ipAddress == null || ipAddress.equals("")) {
 				ipAddress = null;
 			}

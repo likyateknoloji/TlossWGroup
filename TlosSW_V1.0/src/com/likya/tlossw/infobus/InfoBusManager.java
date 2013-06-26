@@ -64,7 +64,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 	public InfoBusManager() throws TlosRecoverException {
 
 		timeout = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getInfoBusOptions().getPeriod().getPeriodValue().intValue();
-		debug = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getDebugMode().getValueBoolean();
+		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
 
 		if (TlosSpaceWide.isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistInfoQueueFile, EngineeConstants.tempDir)) {
 			infoQueue = PersistenceUtils.recoverInfoQueue();
@@ -76,7 +76,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 	}
 
 	/**
-	 * infoQueue kuyrugunun saðlýklý bir sekilde temizlenmesi icin kullanilir.
+	 * infoQueue kuyrugunun saï¿½lï¿½klï¿½ bir sekilde temizlenmesi icin kullanilir.
 	 * 
 	 * @author tlosSW Dev Team
 	 * @param forcedTerminate

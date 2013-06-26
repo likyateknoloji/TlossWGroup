@@ -50,7 +50,7 @@ public class JMXServer {
 			
 			System.out.println("Using port number : " + port);
 			
-			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIpAddress();
+			String ipAddress = TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIpAddress();
 			if(ipAddress == null || ipAddress.equals("")) {
 				ipAddress = null;
 			}

@@ -152,7 +152,7 @@ public class Spc extends SpcBase {
 				// isler icin yapilacaklari kapsiyor.
 
 				// Persistent icin talep varsa, bunu yerine getirmek icin operasyonu diske bir dosyaya kaydet.
-				if (getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getIsPersistent().getValueBoolean() && !JobQueueOperations.persistJobQueue(getSpcId(), getJobQueue(), getJobQueueIndex())) {
+				if (getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() && !JobQueueOperations.persistJobQueue(getSpcId(), getJobQueue(), getJobQueueIndex())) {
 					getMyLogger().error("Jobqueue persist error : scenario id : " + getSpcId());
 					getMyLogger().error("Continue the execution with persistency feature disabled !");
 				}
