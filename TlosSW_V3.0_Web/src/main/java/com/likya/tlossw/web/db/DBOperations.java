@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.ogf.schemas.rns.x2009.x12.rns.RNSEntryType;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -128,7 +129,59 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
 
+	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
+
+		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
+		XmlObject objectProperties = null;
+
+		try {
+
+			Collection collection = existConnectionHolder.getCollection();
+			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+			service.setProperty("indent", "yes");
+
+			service.setProperty("indent", "yes");
+
+			ResourceSet result = service.query(xQueryStr.toString());
+			ResourceIterator i = result.getIterator();
+
+			while (i.hasMoreResources()) {
+				Resource r = i.nextResource();
+				String xmlContent = (String) r.getContent();
+
+				try {
+					objectProperties = XmlObject.Factory.parse(xmlContent);
+					returnObjectArray.add(objectProperties);
+				} catch (XmlException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (XMLDBException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(objectProperties.toString());
+
+		return returnObjectArray;
+	}
+
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
+
+		ArrayList<SWAgent> agentList = new ArrayList<SWAgent>();
+
+		String xQueryStr = agentFunctionConstructor("lk:searchAgent", agentXML);
+
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		
+		for (XmlObject agentObject : objectList) {
+			SWAgent agent = ((SWAgentDocument) agentObject).getSWAgent();
+			agentList.add(agent);
+		}
+
+		return agentList;
+	}
+
+	public ArrayList<SWAgent> searchAgentOld(String agentXML) {
 
 		ArrayList<SWAgent> agentList = null;
 
@@ -284,7 +337,9 @@ public class DBOperations implements Serializable {
 	public boolean insertAgent(String agentXML) {
 
 		/*
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
+		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl +
+		 * "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes +
+		 * "lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
 		 */
 
 		String xQueryStr = agentFunctionConstructor("lk:insertAgentLock", agentXML);
@@ -902,9 +957,11 @@ public class DBOperations implements Serializable {
 	public ArrayList<AlarmReport> getAlarmReportList(String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException {
 
 		/*
-		 * String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
+		 * String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 +
+		 * "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
 		 * 
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
+		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl +
+		 * "/moduleAlarmOperations.xquery\";" + funcDef;
 		 */
 
 		String xQueryStr = alarmFunctionConstructor("lk:getAlarms", date1, date2, alarmLevel, alarmName, alarmUser);
@@ -2511,27 +2568,38 @@ public class DBOperations implements Serializable {
 	}
 
 	/*
-	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
+	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int
+	 * jobCount) throws XMLDBException {
 	 * 
 	 * TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 	 * 
 	 * SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 	 * 
-	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; decNsRep + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
+	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl +
+	 * "/moduleReportOperations.xquery\"; decNsRep + "
+	 * hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType +
+	 * "\"," + jobCount + ")";
 	 * 
-	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0"); service.setProperty("indent", "yes");
+	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service =
+	 * (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+	 * service.setProperty("indent", "yes");
 	 * 
 	 * ResourceSet result = service.query(xQueryStr); ResourceIterator i = result.getIterator();
 	 * 
 	 * ArrayList<Job> jobs = new ArrayList<Job>(); JobArray jobArray = null;
 	 * 
-	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String)
+	 * r.getContent();
 	 * 
 	 * try {
 	 * 
-	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); // xmlOption.setLoadSubstituteNamespaces(map);
+	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new
+	 * HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); //
+	 * xmlOption.setLoadSubstituteNamespaces(map);
 	 * 
-	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) { jobs.add(job); }
+	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException
+	 * e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) {
+	 * jobs.add(job); }
 	 * 
 	 * return jobs; }
 	 */
@@ -2636,7 +2704,9 @@ public class DBOperations implements Serializable {
 		Collection collection = existConnectionHolder.getCollection();
 
 		/*
-		 * String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId + ", false(), 30)"; String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
+		 * String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId +
+		 * ", false(), 30)"; String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl +
+		 * xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
 		 */
 
 		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
@@ -2688,13 +2758,20 @@ public class DBOperations implements Serializable {
 		/*
 		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor
 		 * 
-		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + alarm.getAgentId() + ")";
+		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr =
+		 * xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl +
+		 * "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData +
+		 * "\", " + alarm.getAgentId() + ")";
 		 * 
 		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
 		 * 
-		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent =
+		 * (String) r.getContent();
 		 * 
-		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch (XmlException e) { e.printStackTrace(); } } alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());
+		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch
+		 * (XmlException e) { e.printStackTrace(); } }
+		 * alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." +
+		 * alarm.getAgentId());
 		 */
 
 		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
@@ -2891,7 +2968,10 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setAgentId(jobProperties.getAgentId());
 
 		/*
-		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
+		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent =
+		 * TlosSpaceWide.getSpaceWideRegistry
+		 * ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() +
+		 * "");
 		 * 
 		 * jobInfoTypeClient.setResourceName(agent.getResource().getStringValue()); }
 		 */
