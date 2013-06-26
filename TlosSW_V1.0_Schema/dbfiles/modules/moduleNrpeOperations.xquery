@@ -2,6 +2,8 @@ xquery version "1.0";
 
 module namespace lk = "http://likya.tlos.com/";
 
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+
 declare namespace nrp   = "http://www.likyateknoloji.com/XML_nrpe_types";
 declare namespace xpath = "http://www.w3.org/2005/xpath-functions";
 declare namespace xs    = "http://www.w3.org/2001/XMLSchema";
@@ -11,54 +13,67 @@ Mapping
 $nrpeDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWNrpeData10.xml")
 
 :)
-declare function lk:nrpes($nrpeDataDocumentUrl as xs:string) as element()* 
+
+declare function lk:nrpes($documentUrl as xs:string) as element()* 
 {
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 	for $nrpes in doc($nrpeDataDocumentUrl)/nrp:NrpeData/nrp:nrpeCall
 	return $nrpes
 };
 
-declare function lk:searchNrpeCall($nrpeDataDocumentUrl as xs:string, $entry-name as xs:string, $port as xs:int) 
+declare function lk:searchNrpeCall($documentUrl as xs:string, $entry-name as xs:string, $port as xs:int) 
 {
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 	for $nrpeCall in doc($nrpeDataDocumentUrl)/nrp:NrpeData/nrp:nrpeCall
         where $nrpeCall/@entry-name = $entry-name and $nrpeCall/@port = $port
     return $nrpeCall 
 };
 
-declare function lk:countNrpeCall($nrpeDataDocumentUrl as xs:string, $entry-name as xs:string, $port as xs:int) 
+declare function lk:countNrpeCall($documentUrl as xs:string, $entry-name as xs:string, $port as xs:int) 
 {
-	let $call := lk:searchNrpeCall($nrpeDataDocumentUrl, $entry-name, $port)
+	let $call := lk:searchNrpeCall($documentUrl, $entry-name, $port)
     let $cnt := count($call)
     return $cnt 
 };
 
-declare function lk:insertNrpeCallLock($nrpeDataDocumentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
+declare function lk:insertNrpeCallLock($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
 {
-   util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeCall($nrpeDataDocumentUrl, $nrpeCall))     
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   return util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeCall($documentUrl, $nrpeCall))     
 };
 
-declare function lk:insertNrpeCall($nrpeDataDocumentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
+declare function lk:insertNrpeCall($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
 {	
-    update insert $nrpeCall into doc($nrpeDataDocumentUrl)/nrp:NrpeData
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   return update insert $nrpeCall into doc($nrpeDataDocumentUrl)/nrp:NrpeData
 };
 
-declare function lk:insertNrpeMessageLock($nrpeDataDocumentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
+declare function lk:insertNrpeMessageLock($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
 {
-   util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeMessage($nrpeDataDocumentUrl, $nrpeCall))     
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeMessage($documentUrl, $nrpeCall))     
 };
 
-declare function lk:insertNrpeMessage($nrpeDataDocumentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
+declare function lk:insertNrpeMessage($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
 {	
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 	let $doc := doc($nrpeDataDocumentUrl)
 	for $call in doc($nrpeDataDocumentUrl)/nrp:NrpeData/nrp:nrpeCall
         where $call/@entry-name = $nrpeCall/@entry-name and $call/@port = $nrpeCall/@port
 		return  update insert $nrpeCall/nrp:message into $call
 };
 
-declare function lk:insertNrpe($nrpeDataDocumentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall)) 
+declare function lk:insertNrpe($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall)) 
 {
-   let $nrpeCount := lk:countNrpeCall($nrpeDataDocumentUrl, $nrpeCall/@entry-name, $nrpeCall/@port)
-   let $nrpeInsert := if($nrpeCount > 0) then lk:insertNrpeMessage($nrpeDataDocumentUrl, $nrpeCall)
-   else if($nrpeCount = 0) then lk:insertNrpeCallLock($nrpeDataDocumentUrl, $nrpeCall) 
+   let $nrpeCount := lk:countNrpeCall($documentUrl, $nrpeCall/@entry-name, $nrpeCall/@port)
+   let $nrpeInsert := if($nrpeCount > 0) then lk:insertNrpeMessage($documentUrl, $nrpeCall)
+   else if($nrpeCount = 0) then lk:insertNrpeCallLock($documentUrl, $nrpeCall) 
    else ()
    return $nrpeCount 
 };
@@ -85,34 +100,44 @@ declare function lk:dateTimeDifference($time1 as xs:string, $time2 as xs:string,
    return $diffResult
 };
 
-declare function lk:deleteExpiredNrpeMessages($nrpeDataDocumentUrl as xs:string, $currentTime as xs:string, $expireHour as xs:int)
+declare function lk:deleteExpiredNrpeMessages($documentUrl as xs:string, $currentTime as xs:string, $expireHour as xs:int)
 {	
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 	let $doc := doc($nrpeDataDocumentUrl)
 	for $message in doc($nrpeDataDocumentUrl)/nrp:NrpeData/nrp:nrpeCall/nrp:message
         where lk:dateTimeDifference($message/@time, $currentTime, $expireHour)
 		return  update delete $message
 };
 
-declare function lk:deleteExpiredNrpeMessagesLock($nrpeDataDocumentUrl as xs:string, $currentTime as xs:string, $expireHour as xs:int)
+declare function lk:deleteExpiredNrpeMessagesLock($documentUrl as xs:string, $currentTime as xs:string, $expireHour as xs:int)
 {
-   util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:deleteExpiredNrpeMessages($nrpeDataDocumentUrl, $currentTime, $expireHour))     
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   return util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:deleteExpiredNrpeMessages($documentUrl, $currentTime, $expireHour))     
 };
 
 (:******************************OLDIES*******************************************:)
-declare function lk:nrpes2($nrpeDataDocumentUrl as xs:string ) as element()* 
+declare function lk:nrpes2($documentUrl as xs:string ) as element()* 
 {
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 	for $nrpe in doc($nrpeDataDocumentUrl)/NrpeData/nrpeCall
 	return  $nrpe
 };
 
-declare function lk:insertNrpeCall2($nrpeDataDocumentUrl as xs:string, $nrpe as element())
+declare function lk:insertNrpeCall2($documentUrl as xs:string, $nrpe as element())
 {	
-	update insert $nrpe into doc($nrpeDataDocumentUrl)/NrpeData
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   return update insert $nrpe into doc($nrpeDataDocumentUrl)/NrpeData
 } ;
 
-declare function lk:insertNrpeLock2($nrpeDataDocumentUrl as xs:string, $nrpe as element())
+declare function lk:insertNrpeLock2($documentUrl as xs:string, $nrpe as element())
 {
-   util:exclusive-lock(doc($nrpeDataDocumentUrl)/NrpeData, lk:insertNrpeCall($nrpeDataDocumentUrl, $nrpe))     
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
+   return util:exclusive-lock(doc($nrpeDataDocumentUrl)/NrpeData, lk:insertNrpeCall($documentUrl, $nrpe))     
 };
 
 (:**********************************OLDIES END*************************************:)
@@ -186,8 +211,10 @@ declare function lk:substring-after-last-match
    replace($arg,concat('^.*',$regex),'')
  } ;
 
-declare function lk:nrpeOutput($nrpeDataDocumentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int, $agentName as xs:string) as node()*
+declare function lk:nrpeOutput($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int, $agentName as xs:string) as node()*
 {
+   let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
+   
 let $nrpeData :=
 <nrpr:NrpeData xmlns:nrpr="http://www.likyateknoloji.com/XML_nrpe_results" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_results ../xsds/tlosSWNrpeResult_v_1_0.xsd">
   {
