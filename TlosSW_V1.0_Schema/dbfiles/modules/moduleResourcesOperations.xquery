@@ -9,6 +9,7 @@ declare namespace wsa = "http://www.w3.org/2005/08/addressing";
 declare namespace jsdl = "http://schemas.ggf.org/jsdl/2005/11/jsdl";
 
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 
 (:
 Mappings
@@ -17,8 +18,10 @@ $resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
 
 (:fn:empty($prs/com:role):)
 
-declare function rsc:searchResources($resourcesDocumentUrl as xs:string, $searchResource as element(lrns:ResourceType)) as element(lrns:ResourceList)* 
+declare function rsc:searchResources($documentUrl as xs:string, $searchResource as element(lrns:ResourceType)) as element(lrns:ResourceList)* 
  {
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+	 
    <lrns:ResourceList>
    {
    for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
@@ -30,8 +33,10 @@ declare function rsc:searchResources($resourcesDocumentUrl as xs:string, $search
 };
 
 (: eskisi mart 2013 Hakan
-declare function rsc:searchResources($resourcesDocumentUrl as xs:string, $searchResource as element(lrns:Resource)) as element(lrns:Resource)* 
- {
+declare function rsc:searchResources($documentUrl as xs:string, $searchResource as element(lrns:Resource)) as element(lrns:Resource)* 
+{
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
    for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
    let $sonuc := if ((fn:contains(fn:lower-case($rsc/@entry-name), fn:lower-case($searchResource/@entry-name)) or data($searchResource/@entry-name)=""))
                  then $rsc else ()
@@ -40,8 +45,10 @@ declare function rsc:searchResources($resourcesDocumentUrl as xs:string, $search
 
 :)
 (: ornek kullanim rsc:resourcesList(1,2) ilk iki eleman :)
-declare function rsc:resourcesList($resourcesDocumentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(lrns:Resource)* 
- {
+declare function rsc:resourcesList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(lrns:Resource)* 
+{
+    let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+	
    <lrns:ResourceList>
    {
 	for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource[position() = ($firstElement to $lastElement)]
@@ -51,8 +58,10 @@ declare function rsc:resourcesList($resourcesDocumentUrl as xs:string, $firstEle
 };
 
 (: ornek kullanim rsc:searchResourcesByResourceName(xs:string('Tlos SW')) :)
-declare function rsc:searchResourcesByResourceName($resourcesDocumentUrl as xs:string, $searchResourceName as xs:string) as element(lrns:Resource)? 
- {
+declare function rsc:searchResourcesByResourceName($documentUrl as xs:string, $searchResourceName as xs:string) as element(lrns:Resource)? 
+{
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
    <lrns:ResourceList>
    {
 	for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
@@ -62,14 +71,18 @@ declare function rsc:searchResourcesByResourceName($resourcesDocumentUrl as xs:s
    </lrns:ResourceList>
 };
 
-declare function rsc:insertResourceLock($resourcesDocumentUrl as xs:string, $resource as element(lrns:Resource)) as xs:boolean
+declare function rsc:insertResourceLock($documentUrl as xs:string, $resource as element(lrns:Resource)) as xs:boolean
 {
-   let $sonuc := util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList, rsc:insertResource($resourcesDocumentUrl, $resource))     
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
+   let $sonuc := util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList, rsc:insertResource($documentUrl, $resource))     
    return true()
 };
 (: //TODO id ??? :)
-declare function rsc:insertResource($resourcesDocumentUrl as xs:string, $resource as element(lrns:Resource)) as node()*
+declare function rsc:insertResource($documentUrl as xs:string, $resource as element(lrns:Resource)) as node()*
 {
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
     let $XXX := $resource
 
 	return update insert 
@@ -81,26 +94,34 @@ declare function rsc:insertResource($resourcesDocumentUrl as xs:string, $resourc
 	into doc($resourcesDocumentUrl)/lrns:ResourceList
 } ;
 
-declare function rsc:updateResource($resourcesDocumentUrl as xs:string, $resource as element(lrns:Resource))
+declare function rsc:updateResource($documentUrl as xs:string, $resource as element(lrns:Resource))
 {
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
 	for $resourcedon in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
 	where $resourcedon/@entry-name = $resource/@entry-name
 	return  update replace $resourcedon with $resource
 };
 
-declare function rsc:updateResourceLock($resourcesDocumentUrl as xs:string, $resource as element(lrns:Resource))
+declare function rsc:updateResourceLock($documentUrl as xs:string, $resource as element(lrns:Resource))
 {
-   util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource, rsc:updateResource($resourcesDocumentUrl, $resource))     
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
+   return util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource, rsc:updateResource($documentUrl, $resource))     
 };
 
-declare function rsc:deleteResource($resourcesDocumentUrl as xs:string, $resource as element(lrns:ResourceType))
- {
+declare function rsc:deleteResource($documentUrl as xs:string, $resource as element(lrns:ResourceType))
+{
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
 	for $resourcedon in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
 	where $resourcedon/@entry-name = $resource/@entry-name
 	return update delete $resourcedon
 };
 
-declare function rsc:deleteResourceLock($resourcesDocumentUrl as xs:string, $resource as element(lrns:ResourceType))
+declare function rsc:deleteResourceLock($documentUrl as xs:string, $resource as element(lrns:ResourceType))
 {
-   util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource, rsc:deleteResource($resourcesDocumentUrl, $resource))     
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+   
+   return util:exclusive-lock(doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource, rsc:deleteResource($documentUrl, $resource))     
 };
