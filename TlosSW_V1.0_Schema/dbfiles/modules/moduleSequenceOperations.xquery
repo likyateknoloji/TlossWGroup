@@ -12,7 +12,7 @@ declare function sq:getTlosSequenceData($documentUrl as xs:string)
 {
     let $sequenceDocumentUrl := met:getMetaData($documentUrl, "sequenceData")
 	
-	for $sequences in doc($$sequenceDocumentUrl)/com:TlosSequenceData
+	for $sequences in doc($sequenceDocumentUrl)/com:TlosSequenceData
 	return  $sequences
 };
 
@@ -21,7 +21,7 @@ declare function sq:getNextId($documentUrl as xs:string, $node as xs:string) as 
     let $sequenceDocumentUrl := met:getMetaData($documentUrl, "sequenceData")
 	
 	let $doc := doc($sequenceDocumentUrl)
-    util:exclusive-lock($doc/com:TlosSequenceData, 
+    return util:exclusive-lock($doc/com:TlosSequenceData, 
 				let $nextId := $doc/com:TlosSequenceData/com:*[local-name() eq $node] + 1
 				let $atama := $doc/com:TlosSequenceData/com:*[local-name() eq $node]
 				let $ata:= local-name($atama)
