@@ -9,7 +9,8 @@ $errorsDocumentUrl = doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWErrors10.xml")
 :)
 
 (: //TODO seq id arttirimi ? :)
-declare function lk:insertError($errorsDocumentUrl as xs:string, $error as element(err:SWError))
+declare function lk:insertError($documentUrl as xs:string, $error as element(err:SWError))
 {	
- update insert $error into doc($errorsDocumentUrl)/err:SWErrors
+   let $errorsDocumentUrl := met:getMetaData($documentUrl, "errors")
+   return update insert $error into doc($errorsDocumentUrl)/err:SWErrors
 };
