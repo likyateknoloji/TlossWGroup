@@ -2,21 +2,12 @@ package com.likya.tlossw.db.utils;
 
 import java.util.ArrayList;
 
-import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Resource;
-import org.xmldb.api.base.ResourceIterator;
-import org.xmldb.api.base.ResourceSet;
-import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
-import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class AgentDbUtils extends DBBase {
@@ -38,7 +29,7 @@ public class AgentDbUtils extends DBBase {
 
 		return checkJmx;
 	}
-
+	/*
 	public static int checkJmxUserOld(JmxAgentUser jmxAgentUser) {
 
 		String swAgentXML = jmxAgentUser.getSwAgentXML();
@@ -71,6 +62,7 @@ public class AgentDbUtils extends DBBase {
 
 		return checkJmx;
 	}
+	
 
 	public static boolean updateAgentToAvailable(int agentId) {
 		boolean returnValue = false;
@@ -103,6 +95,26 @@ public class AgentDbUtils extends DBBase {
 		return returnValue;
 	}
 
+    */
+	
+	public static boolean updateAgentToAvailable(int agentId) {
+		
+		boolean returnValue = false;
+
+		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
+		}
+
+		return returnValue;
+	}
+
+	
 	/*
 	 * public static boolean updateAgentOutJmxValue(int agentId, boolean outJmxValue){
 	 * boolean returnValue = false;
@@ -182,6 +194,8 @@ public class AgentDbUtils extends DBBase {
 	 * return returnValue;
 	 * }
 	 */
+	
+	/*	
 	public static boolean updateAgentJmxValue(int agentId, boolean jmxValue, String islem) {
 		boolean returnValue = false;
 		String dbJmxValue = "false()";
@@ -217,7 +231,31 @@ public class AgentDbUtils extends DBBase {
 
 		return returnValue;
 	}
+	*/
+	
+	public static boolean updateAgentJmxValue(int agentId, boolean jmxValue, String islem) {
+		
+		boolean returnValue = false;
+		String dbJmxValue = "false()";
 
+		if (jmxValue) {
+			dbJmxValue = "true()";
+		}
+
+		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId, "", dbJmxValue, "" + islem);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
+		}
+		
+		return returnValue;
+	}
+
+	/*
 	public static boolean updateUserStopRequestValue(int agentId, String userStopRequestValue) {
 		boolean returnValue = false;
 
@@ -248,7 +286,26 @@ public class AgentDbUtils extends DBBase {
 
 		return returnValue;
 	}
+	*/
+	
+	public static boolean updateUserStopRequestValue(int agentId, String userStopRequestValue) {
+		
+		boolean returnValue = false;
 
+		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId, "" + userStopRequestValue);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
+		}
+
+		return returnValue;
+	}
+
+	/*
 	public static SWAgents getResorces() {
 
 		SWAgents swAgents = SWAgents.Factory.newInstance();
@@ -289,7 +346,28 @@ public class AgentDbUtils extends DBBase {
 
 		return swAgents;
 	}
+	*/
+	
+	public static SWAgents getResorces() {
 
+		SWAgents swAgents = SWAgents.Factory.newInstance();
+		
+		String xQueryStr = agentFunctionConstructor("lk:getResorces");
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			SWAgent swAgent = ((SWAgentDocument) currentObject).getSWAgent();
+			swAgents.addNewSWAgent();
+			swAgents.setSWAgentArray(swAgents.getSWAgentArray().length - 1, swAgent);
+		}
+
+		return swAgents;
+	}
+
+	/*
 	public static boolean updateResourceNrpeValues(String resourceXML, boolean nrpeValue) {
 		boolean returnValue = false;
 		String dbNrpeValue = "";
@@ -323,6 +401,31 @@ public class AgentDbUtils extends DBBase {
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 			return false;
+		}
+
+		return returnValue;
+	}
+	*/
+	
+	public static boolean updateResourceNrpeValues(String resourceXML, boolean nrpeValue) {
+		
+		boolean returnValue = false;
+		String dbNrpeValue = "";
+
+		if (nrpeValue) {
+			dbNrpeValue = "true()";
+		} else {
+			dbNrpeValue = "false()";
+		}
+		
+		String xQueryStr = agentFunctionConstructor("lk:checkAgent", resourceXML, dbNrpeValue);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 
 		return returnValue;
