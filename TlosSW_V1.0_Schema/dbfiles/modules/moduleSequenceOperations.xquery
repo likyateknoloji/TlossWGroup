@@ -68,7 +68,7 @@ declare function sq:getNextUserId($documentUrl as xs:string) as xs:int
 								<com:userId>{data($nextUserId)}</com:userId>)
    				return $nextUserId )
 };
-:)
+
 declare function sq:getNextPermissionId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
@@ -77,7 +77,7 @@ declare function sq:getNextPermissionId($documentUrl as xs:string) as xs:int
 								<com:permissionId>{data($nextPermissionId)}</com:permissionId>)
    				return $nextPermissionId )
 };
-(:
+
 declare function sq:getNextRunId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
@@ -152,7 +152,7 @@ declare function sq:getUserId($documentUrl as xs:string) as xs:int
 				let $userId := doc($documentUrl)/com:TlosSequenceData/com:userId
    				return $userId )
 };
-
+(:
 declare function sq:getReportId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
@@ -166,7 +166,7 @@ declare function sq:getPermissionId($documentUrl as xs:string) as xs:int
 				let $permissionId := doc($documentUrl)/com:TlosSequenceData/com:permissionId
    				return $permissionId )
 };
-(:
+
 declare function sq:getRunId($documentUrl as xs:string) as xs:int
 {
    util:exclusive-lock(doc($documentUrl)/com:TlosSequenceData, 
