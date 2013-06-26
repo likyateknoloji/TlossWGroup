@@ -128,11 +128,11 @@ public class DBOperations implements Serializable {
 	private String alarmFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
-	
+
 	private String calendarFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleCalendarOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
 	}
-	
+
 	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
 		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
@@ -173,9 +173,9 @@ public class DBOperations implements Serializable {
 		String xQueryStr = agentFunctionConstructor("lk:searchAgent", agentXML);
 
 		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
-		
-		for (XmlObject agentObject : objectList) {
-			SWAgent agent = ((SWAgentDocument) agentObject).getSWAgent();
+
+		for (XmlObject currentObject : objectList) {
+			SWAgent agent = ((SWAgentDocument) currentObject).getSWAgent();
 			agentList.add(agent);
 		}
 
@@ -338,9 +338,7 @@ public class DBOperations implements Serializable {
 	public boolean insertAgent(String agentXML) {
 
 		/*
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl +
-		 * "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes +
-		 * "lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
+		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
 		 */
 
 		String xQueryStr = agentFunctionConstructor("lk:insertAgentLock", agentXML);
@@ -540,22 +538,6 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXML) {
-		
-		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
-		
-		String xQueryStr = calendarFunctionConstructor("hs:searchCalendar", calendarPropertiesXML);
-		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
-		
-		for (XmlObject calendarObject : objectList) {
-			CalendarProperties calendar = ((CalendarPropertiesDocument) calendarObject).getCalendarProperties();
-			calendarList.add(calendar);
-		}
-
-		return calendarList;
-	}
-
 	public Object checkUser(JmxAppUser jmxAppUser) {
 
 		try {
@@ -572,35 +554,24 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 
 			service.setProperty("indent", "yes");
 
-			/*String usrDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA;
-			String perDataFile = xmlsUrl + CommonConstantDefinitions.PERMISSION_DATA;
+			/*
+			 * String usrDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA; String perDataFile = xmlsUrl + CommonConstantDefinitions.PERMISSION_DATA;
+			 * 
+			 * String funcDef = "hs:query_username(\"" + usrDataFile + "\", \"" + perDataFile + "\", xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
+			 * 
+			 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef;
+			 */
 
-			String funcDef = "hs:query_username(\"" + usrDataFile + "\", \"" + perDataFile + "\", xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef;
-			*/
-			
 			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
-			
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
 
-				UserResourceMap myUserPermission;
-				try {
-					myUserPermission = UserResourceMapDocument.Factory.parse(xmlContent).getUserResourceMap();
-					if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
-						jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
-						return jmxAppUser;
-					}
-				} catch (XmlException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+			for (XmlObject currentObject : objectList) {
+				UserResourceMap myUserPermission = ((UserResourceMapDocument) currentObject).getUserResourceMap();
+				if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
+					jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
+					return jmxAppUser;
 				}
-
 			}
 
 		} catch (XMLDBException xmldbException) {
@@ -977,11 +948,9 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	public ArrayList<AlarmReport> getAlarmReportList(String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException {
 
 		/*
-		 * String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 +
-		 * "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
+		 * String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
 		 * 
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl +
-		 * "/moduleAlarmOperations.xquery\";" + funcDef;
+		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
 		 */
 
 		String xQueryStr = alarmFunctionConstructor("lk:getAlarms", date1, date2, alarmLevel, alarmName, alarmUser);
@@ -1456,39 +1425,15 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 
 	public ArrayList<CalendarProperties> getCalendars() {
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:calendars(\"" + metaData + "\")";
-
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = calendarFunctionConstructor("hs:calendars");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				CalendarProperties calendar;
-				try {
-					calendar = CalendarPropertiesDocument.Factory.parse(xmlContent).getCalendarProperties();
-					calendarList.add(calendar);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
+			calendarList.add(calendar);
 		}
 
 		return calendarList;
@@ -2274,15 +2219,15 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	}
 
 	public ArrayList<CalendarProperties> searchCalendar(String calendarPropertiesXML) {
-		
+
 		ArrayList<CalendarProperties> calendarList = new ArrayList<CalendarProperties>();
-		
+
 		String xQueryStr = calendarFunctionConstructor("hs:searchCalendar", calendarPropertiesXML);
-		
+
 		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
-		
-		for (XmlObject calendarObject : objectList) {
-			CalendarProperties calendar = ((CalendarPropertiesDocument) calendarObject).getCalendarProperties();
+
+		for (XmlObject currentObject : objectList) {
+			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
 			calendarList.add(calendar);
 		}
 
@@ -2290,20 +2235,13 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	}
 
 	public boolean insertCalendar(String calendarPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		String xQueryStr = calendarFunctionConstructor("hs:insertCalendarLock", calendarPropertiesXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:insertCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2312,20 +2250,12 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	}
 
 	public boolean deleteCalendar(String calendarPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
+		String xQueryStr = calendarFunctionConstructor("hs:deleteCalendarLock", calendarPropertiesXML);
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:deleteCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
-
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2334,56 +2264,28 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	}
 
 	public CalendarProperties searchCalendarByID(String calendarID) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		String xQueryStr = calendarFunctionConstructor("hs:searchCalendarByID", calendarID);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:searchCalendarByID(\"" + metaData + "\", " + calendarID + ")";
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		for (XmlObject currentObject : objectList) {
+			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			CalendarProperties calendar = null;
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					calendar = CalendarPropertiesDocument.Factory.parse(xmlContent).getCalendarProperties();
-
-					return calendar;
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return calendar;
 		}
 
 		return null;
 	}
 
 	public boolean updateCalendar(String calendarPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
+		String xQueryStr = calendarFunctionConstructor("hs:updateCalendarLock", calendarPropertiesXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleCalendarOperations.xquery\";" + "hs:updateCalendarLock(\"" + metaData + "\", " + calendarPropertiesXML + ")";
-
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2566,38 +2468,27 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 	}
 
 	/*
-	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int
-	 * jobCount) throws XMLDBException {
+	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
 	 * 
 	 * TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 	 * 
 	 * SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 	 * 
-	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl +
-	 * "/moduleReportOperations.xquery\"; decNsRep + "
-	 * hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType +
-	 * "\"," + jobCount + ")";
+	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; decNsRep + " hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
 	 * 
-	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service =
-	 * (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-	 * service.setProperty("indent", "yes");
+	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0"); service.setProperty("indent", "yes");
 	 * 
 	 * ResourceSet result = service.query(xQueryStr); ResourceIterator i = result.getIterator();
 	 * 
 	 * ArrayList<Job> jobs = new ArrayList<Job>(); JobArray jobArray = null;
 	 * 
-	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String)
-	 * r.getContent();
+	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
 	 * 
 	 * try {
 	 * 
-	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new
-	 * HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); //
-	 * xmlOption.setLoadSubstituteNamespaces(map);
+	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); // xmlOption.setLoadSubstituteNamespaces(map);
 	 * 
-	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException
-	 * e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) {
-	 * jobs.add(job); }
+	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) { jobs.add(job); }
 	 * 
 	 * return jobs; }
 	 */
@@ -2702,9 +2593,7 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 		Collection collection = existConnectionHolder.getCollection();
 
 		/*
-		 * String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId +
-		 * ", false(), 30)"; String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl +
-		 * xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
+		 * String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId + ", false(), 30)"; String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
 		 */
 
 		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
@@ -2756,20 +2645,13 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 		/*
 		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor
 		 * 
-		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr =
-		 * xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl +
-		 * "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData +
-		 * "\", " + alarm.getAgentId() + ")";
+		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + alarm.getAgentId() + ")";
 		 * 
 		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
 		 * 
-		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent =
-		 * (String) r.getContent();
+		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
 		 * 
-		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch
-		 * (XmlException e) { e.printStackTrace(); } }
-		 * alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." +
-		 * alarm.getAgentId());
+		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch (XmlException e) { e.printStackTrace(); } } alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());
 		 */
 
 		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
@@ -2966,10 +2848,7 @@ public ArrayList<CalendarProperties> searchCalendar2(String calendarPropertiesXM
 		jobInfoTypeClient.setAgentId(jobProperties.getAgentId());
 
 		/*
-		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent =
-		 * TlosSpaceWide.getSpaceWideRegistry
-		 * ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() +
-		 * "");
+		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent = TlosSpaceWide.getSpaceWideRegistry ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
 		 * 
 		 * jobInfoTypeClient.setResourceName(agent.getResource().getStringValue()); }
 		 */
