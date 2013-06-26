@@ -7,7 +7,7 @@ declare namespace util = "http://exist-db.org/xquery/util";
 declare namespace  meta = "http://www.likyateknoloji.com/XML_metaData_types";
 
 (: doc(local:getMetaData("//db/TLOSSW/xmls/metaData.xml", "dbConnectionProfiles")) :)
-
+(: eski versiyon
 declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string
 {    
     let $docXml := doc($documentUrl)
@@ -16,6 +16,23 @@ declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string)
     let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"]
     let $docName := $docXml/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
 	return concat($prefix, $rootCol, '/', $subCol, '/', $docName)
+};
+:)
+declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string
+{    
+    let $seperator := "/"
+    let $metaDataFile := xs:string("metaData.xml")
+    let $xmlCollection := xs:string("xmls")
+    (: let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"] :)
+    
+    let $metaDataFileFull := xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $metaDataFile))
+    (:
+    let $prefix := $docXml/meta:metaData/meta:dbInfo/meta:prefix/text()
+    let $rootCol := $docXml/meta:metaData/meta:dbInfo/meta:rootCollection/text()
+    :)
+    
+    let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
+	return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $docFullName))
 };
 
 declare function met:insertMetaData($documentUrl as xs:string, $doc as element(meta:document))
