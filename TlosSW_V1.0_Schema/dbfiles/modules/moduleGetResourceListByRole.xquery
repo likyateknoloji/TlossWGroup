@@ -15,7 +15,7 @@ $userDocumentUrl = doc('xmldb:exist:///db/TLOSSW/xmls/tlosSWUser10.xml')
 $permissionDocumentUrl = doc('xmldb:exist:///db/TLOSSW/xmls/tlosSWPermission10.xml')
 :)
 
-declare function hs:query_username($userDocumentUrl as xs:string, $permissionDocumentUrl as xs:string, $in_username as xs:string) as element(out:UserResourceMap)* 
+declare function hs:query_username($documentUrl as xs:string, $in_username as xs:string) as element(out:UserResourceMap)* 
 {
     let $userDocumentUrl := met:getMetaData($documentUrl, "user")
 	let $permissionDocumentUrl := met:getMetaData($documentUrl, "permissions")
