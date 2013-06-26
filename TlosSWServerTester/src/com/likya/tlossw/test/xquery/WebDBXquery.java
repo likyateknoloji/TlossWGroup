@@ -71,14 +71,16 @@ public class WebDBXquery {
 	@Test
 	public void moduleGeneric() throws Exception {
 
-		String fileName = getFile("moduleAgentOperations.getResources.xquery");
+		String fileName = getFile("moduleAgentOperations.searchAgent.xquery");
 
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+		
 		XmlObject ftpProperties = null;
 		
 		try {
 			service.setProperty("indent", "yes");
 
-			ResourceSet result = service.query(fileName);
+			ResourceSet result = service.query(xQueryStr.toString());
 			ResourceIterator i = result.getIterator();
 			
 
