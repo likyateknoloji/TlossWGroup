@@ -478,34 +478,15 @@ public class DBUtils extends DBBase {
 	public static GlobalStateDefinition getGlobalStateDefinitions() {
 
 		GlobalStateDefinition globalStateDefinition = null;
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleStateOperations.xquery\";" + CommonConstantDefinitions.decNsSt + "lk:getTlosGlobalStates()";
-		System.out.println(xQueryStr);
-		xQueryStr = localFunctionConstructor("moduleStateOperations.xquery", "lk:getTlosGlobalStates", CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl);
-		System.out.println(xQueryStr);
 		
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = stateFunctionConstructor("lk:getTlosGlobalStates");
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					globalStateDefinition = GlobalStateDefinitionDocument.Factory.parse(xmlContent).getGlobalStateDefinition();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+
+		for(XmlObject currentObject : objectList) {
+			globalStateDefinition = ((GlobalStateDefinitionDocument) currentObject).getGlobalStateDefinition();
 		}
 
 		return globalStateDefinition;
@@ -604,40 +585,19 @@ public class DBUtils extends DBBase {
 	}
 
 	public static SWAgents initAgentList() {
-
+		
 		SWAgents swAgents = null;
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsAgnt + "lk:getAgents(\"" + metaData + "\")";
-
+		
+		String xQueryStr = agentFunctionConstructor("lk:getAgents");
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					swAgents = SWAgentsDocument.Factory.parse(xmlContent).getSWAgents();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for(XmlObject currentObject : objectList) {
+			swAgents =   ((SWAgentsDocument) currentObject).getSWAgents();
 		}
-
+		
 		return swAgents;
 	}
 

@@ -25,10 +25,6 @@ public abstract class DBBase {
 		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, moduleNamesSpace, param);
 	}
 	
-	protected static String agentFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructorNS("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
-	}
-	
 	protected static String localFunctionConstructorNS(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -41,6 +37,14 @@ public abstract class DBBase {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
 	*/
+
+	protected static String agentFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
+	}
+
+	protected static String stateFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleStateOperations.xquery", functionName, CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl, param);
+	}
 	
 	protected static ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
