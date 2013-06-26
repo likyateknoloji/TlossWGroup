@@ -27,7 +27,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 
 
-public class DssDbUtils {
+public class DssDbUtils extends DBBase {
 	
 	private static final String standartNameSpaceDeclaritions = CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCal
 			   + CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsXsi + CommonConstantDefinitions.decNsFn 

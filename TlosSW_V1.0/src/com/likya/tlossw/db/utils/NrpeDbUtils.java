@@ -22,7 +22,7 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 
-public class NrpeDbUtils {
+public class NrpeDbUtils extends DBBase {
 	
 	public static boolean insertNrpe(NrpeCall nrpeCall){
 		

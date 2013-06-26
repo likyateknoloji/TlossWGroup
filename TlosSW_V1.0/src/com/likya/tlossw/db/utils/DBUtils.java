@@ -64,7 +64,7 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
-public class DBUtils {
+public class DBUtils extends DBBase {
 
 	private static String localFunctionConstructer(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();

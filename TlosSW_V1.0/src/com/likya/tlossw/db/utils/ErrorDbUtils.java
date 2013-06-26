@@ -14,7 +14,7 @@ import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
-public class ErrorDbUtils {
+public class ErrorDbUtils extends DBBase {
 	
 	public static boolean insertSWError(SWError error){
 		

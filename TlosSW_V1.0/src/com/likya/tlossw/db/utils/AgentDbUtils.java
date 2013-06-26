@@ -16,7 +16,7 @@ import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
-public class AgentDbUtils {
+public class AgentDbUtils extends DBBase {
 
 	public static int checkJmxUser(JmxAgentUser jmxAgentUser){
 		
