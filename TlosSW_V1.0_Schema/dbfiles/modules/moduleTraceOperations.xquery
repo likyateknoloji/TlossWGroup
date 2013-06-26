@@ -3,6 +3,7 @@ xquery version "1.0";
 module namespace hs = "http://hs.tlos.com/";
 
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 
 declare namespace trc = "http://www.likyateknoloji.com/XML_trace_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
@@ -13,9 +14,11 @@ $traceDocumentUrl = doc("xmldb:exist:///db/TLOSSW/xmls/tlosSWTrace10.xml")
 $sequenceDataDocumentUrl = $documentSeqUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
 :)
 
-declare function hs:insertTrace($traceDocumentUrl as xs:string, $sequenceDataDocumentUrl as xs:string, $trc as element(trc:trace))
+declare function hs:insertTrace($documentUrl as xs:string, $trc as element(trc:trace))
 {	
-	let $nextTraceId := sq:getNextId($sequenceDataDocumentUrl, "traceId")
+   let $traceDocumentUrl := met:getMetaData($documentUrl, "trace")
+   
+	let $nextTraceId := sq:getNextId($documentUrl, "traceId")
 	for $trace in doc($traceDocumentUrl)/trc:TlosTraceData
 	return  update insert 
 		<trace xmlns="http://www.likyateknoloji.com/XML_trace_types" id="{$nextTraceId}"> 
