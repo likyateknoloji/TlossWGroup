@@ -39,6 +39,7 @@
 		<meta:document id="trace" type="xml">tlosSWTrace10.xml</meta:document>
 		<meta:document id="user" type="xml">tlosSWUser10.xml</meta:document>
 		<meta:document id="wsAccessProfiles" type="xml">tlosSWWebServiceAccessProfiles10.xml</meta:document>
+		<meta:document id="metaData" type="xml">metaData.xml</meta:document>
 		<meta:document id="xmlTransformXsl" type="xsl">tlosXMLTransformXsl.xsl</meta:document>
 		<meta:document id="jobTransform" type="xsl">tlosJobTransform.xsl</meta:document>
 		<meta:document id="dataFo" type="xsl">tlosDataFo.xsl</meta:document>
