@@ -112,22 +112,23 @@ public class DBOperations implements Serializable {
 		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
 	}
 	
-	private String localFunctionConstructer(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
+	private String localFunctionConstructor(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String ...param) {
 		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
 
+	private String agentFunctionConstructor(String functionName, String ...param) {
+		return localFunctionConstructor("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);		
+	}
+	
 	public ArrayList<SWAgent> searchAgent(String agentXML) {
 
 		ArrayList<SWAgent> agentList = null;
 
 		try {
 
-			// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + metaData + "\", " + agentXML + ")";
-			System.out.println(xQueryStr);
-			xQueryStr = localFunctionConstructer("moduleAgentOperations.xquery", "lk:searchAgent", CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, agentXML);
-			System.out.println(xQueryStr);
+			// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + metaData + "\", " + agentXML + ")";
+			
+			String xQueryStr = agentFunctionConstructor("lk:searchAgent", agentXML);
 			
 			Collection collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
@@ -223,10 +224,10 @@ public class DBOperations implements Serializable {
 
 	public boolean updateAgent(String agentXML) {
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+//		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:updateAgentLock(\"" + metaData + "\", " + agentXML + ")";
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:updateAgentLock(\"" + metaData + "\", " + agentXML + ")";
-
+		String xQueryStr = agentFunctionConstructor("lk:updateAgentLock", agentXML);
+		
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
 		try {
@@ -275,11 +276,10 @@ public class DBOperations implements Serializable {
 
 	public boolean insertAgent(String agentXML) {
 
-		// String agentDataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
-		// String seqDataFile = xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA;
+		/* String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + 
+					"lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")"; */
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + 
-					"lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
+		String xQueryStr = agentFunctionConstructor("lk:insertAgentLock", agentXML);
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -354,9 +354,9 @@ public class DBOperations implements Serializable {
 
 		SWAgent agent = null;
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+//		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + id + ")";
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + id + ")";
+		String xQueryStr = agentFunctionConstructor("lk:searchAgentByAgentId", id);
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -425,9 +425,9 @@ public class DBOperations implements Serializable {
 
 	public boolean deleteAgent(String agentXML) {
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+//		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:deleteAgentLock(\"" + metaData + "\", " + agentXML + ")";
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:deleteAgentLock(\"" + metaData + "\", " + agentXML + ")";
+		String xQueryStr = agentFunctionConstructor("lk:deleteAgentLock", agentXML);
 
 		Collection collection = existConnectionHolder.getCollection();
 		XPathQueryService service;
@@ -1831,9 +1831,9 @@ public class DBOperations implements Serializable {
 	public ArrayList<SWAgent> getAgents() {
 		Collection collection = existConnectionHolder.getCollection();
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
-		
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + "lk:getAgents(\"" + metaData + "\")";
+//		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + "lk:getAgents(\"" + metaData + "\")";
+
+		String xQueryStr = localFunctionConstructor("moduleAgentOperations.xquery", "lk:getAgents", CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl);
 
 		ArrayList<SWAgent> agentList = new ArrayList<SWAgent>();
 
