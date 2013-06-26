@@ -133,6 +133,10 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructor("moduleCalendarOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
+	private String dbFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleDBConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.dbNsUrl, param);
+	}
+
 	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
 		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
@@ -673,41 +677,18 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<DbProperties> searchDBConnection(String dbConnectionXML) {
-		Collection collection = existConnectionHolder.getCollection();
+		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
 
-		ArrayList<DbProperties> dbConnectionList = new ArrayList<DbProperties>();
+		String xQueryStr = dbFunctionConstructor("db:searchDbConnection", dbConnectionXML);
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:searchDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				DbProperties dbProperties;
-				try {
-					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
-					dbConnectionList.add(dbProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e1) {
-			e1.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			DbProperties dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
+			dbList.add(dbProperties);
 		}
 
-		return dbConnectionList;
+		return dbList;
 	}
 
 	public ArrayList<Alarm> getAlarms() {
@@ -1035,21 +1016,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean deleteDBConnection(String dbConnectionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = dbFunctionConstructor("db:deleteDbConnection", dbConnectionXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1081,20 +1054,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean updateDBConnection(String dbConnectionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+		String xQueryStr = dbFunctionConstructor("db:updateDbConnectionLock", dbConnectionXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbConnectionLock(\"" + dataFile + "\", " + dbConnectionXML + ")";
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1103,24 +1069,12 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean checkDBConnectionName(String dbConnectionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
+		String xQueryStr = dbFunctionConstructor("db:checkDbConnectionName", dbConnectionXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:checkDbConnectionName(\"" + dataFile + "\", " + dbConnectionXML + ")";
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			if (result.getSize() > 0) {
-				return false;
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		if (objectList != null && objectList.size() > 0) {
 			return false;
 		}
 
@@ -1128,44 +1082,21 @@ public class DBOperations implements Serializable {
 	}
 
 	public DbProperties searchDBByID(String id) {
-		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = dbFunctionConstructor("db:getDbConnection", id);
+
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
 		DbProperties dbProperties = null;
 
-		try {
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnection(\"" + dataFile + "\", " + id + ")";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (XmlObject currentObject : objectList) {
+			dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
 		}
 
 		return dbProperties;
 	}
 
 	public ArrayList<DBAccessInfoTypeClient> searchDBAccessProfile(String dbAccessProfileXML) {
-
-		Collection collection = existConnectionHolder.getCollection();
 
 		HashMap<BigInteger, DbProperties> dbDefinitionList = new HashMap<BigInteger, DbProperties>();
 
@@ -1175,68 +1106,36 @@ public class DBOperations implements Serializable {
 			dbDefinitionList.put(dbProperties.getID(), dbProperties);
 		}
 
-		XPathQueryService service = null;
-		ResourceSet result = null;
-
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:searchDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
-
 		ArrayList<DBAccessInfoTypeClient> dbAccessInfoTypeClients = new ArrayList<DBAccessInfoTypeClient>();
 
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = dbFunctionConstructor("db:searchDbAccessProfile", dbAccessProfileXML);
 
-			result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+		for (XmlObject currentObject : objectList) {
+			DbConnectionProfile dbConnectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
 
-				DbConnectionProfile dbConnectionProfile;
+			DbProperties dbProperties = dbDefinitionList.get(dbConnectionProfile.getDbDefinitionId());
 
-				try {
-					dbConnectionProfile = DbConnectionProfileDocument.Factory.parse(xmlContent).getDbConnectionProfile();
+			DBAccessInfoTypeClient dbInfoTypeClient = new DBAccessInfoTypeClient();
+			dbInfoTypeClient.setDbConnectionProfile(dbConnectionProfile);
+			dbInfoTypeClient.setConnectionName(dbProperties.getConnectionName());
+			dbInfoTypeClient.setDbType(dbProperties.getDbType().toString());
 
-					DbProperties dbProperties = dbDefinitionList.get(dbConnectionProfile.getDbDefinitionId());
-
-					DBAccessInfoTypeClient dbInfoTypeClient = new DBAccessInfoTypeClient();
-					dbInfoTypeClient.setDbConnectionProfile(dbConnectionProfile);
-					dbInfoTypeClient.setConnectionName(dbProperties.getConnectionName());
-					dbInfoTypeClient.setDbType(dbProperties.getDbType().toString());
-
-					dbAccessInfoTypeClients.add(dbInfoTypeClient);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException exception) {
-			exception.printStackTrace();
-			return null;
+			dbAccessInfoTypeClients.add(dbInfoTypeClient);
 		}
 
 		return dbAccessInfoTypeClients;
 	}
 
 	public boolean deleteDBAccessProfile(String dbAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:deleteDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = dbFunctionConstructor("db:deleteDbAccessProfile", dbAccessProfileXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1245,21 +1144,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertDBAccessProfile(String dbAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:insertDbAccessProfile(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = dbFunctionConstructor("db:insertDbAccessProfile", dbAccessProfileXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1268,20 +1159,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean updateDBAccessProfile(String dbAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
+		String xQueryStr = dbFunctionConstructor("db:updateDbAccessProfileLock", dbAccessProfileXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:updateDbAccessProfileLock(\"" + dataFile + "\", " + dbAccessProfileXML + ")";
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1290,36 +1174,14 @@ public class DBOperations implements Serializable {
 	}
 
 	public DbConnectionProfile searchDBAccessByID(String id) {
-		Collection collection = existConnectionHolder.getCollection();
+		String xQueryStr = dbFunctionConstructor("db:getDbCP", id);
+
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
 		DbConnectionProfile dbConnectionProfile = null;
 
-		try {
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA;
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbCP(\"" + dataFile + "\", " + id + ")";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					dbConnectionProfile = DbConnectionProfileDocument.Factory.parse(xmlContent).getDbConnectionProfile();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (XmlObject currentObject : objectList) {
+			dbConnectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
 		}
 
 		return dbConnectionProfile;
@@ -2015,36 +1877,16 @@ public class DBOperations implements Serializable {
 	 * @return veri tabani tanimlari listesini donuyor
 	 */
 	public ArrayList<DbProperties> getDBConnections() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbConnectionAll(\"" + xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA + "\")";
 
 		ArrayList<DbProperties> dbList = new ArrayList<DbProperties>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = dbFunctionConstructor("db:getDbConnectionAll");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				DbProperties dbProperties;
-				try {
-					dbProperties = DbPropertiesDocument.Factory.parse(xmlContent).getDbProperties();
-					dbList.add(dbProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			DbProperties dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
+			dbList.add(dbProperties);
 		}
 
 		return dbList;
@@ -2056,36 +1898,16 @@ public class DBOperations implements Serializable {
 	 * @return veri tabani erisim profilleri listesini donuyor
 	 */
 	public ArrayList<DbConnectionProfile> getDBProfiles() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:getDbProfileAll(\"" + xmlsUrl + CommonConstantDefinitions.DB_CONNECTION_PROFILES_DATA + "\")";
 
 		ArrayList<DbConnectionProfile> dbProfileList = new ArrayList<DbConnectionProfile>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = dbFunctionConstructor("db:getDbProfileAll");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				DbConnectionProfile connectionProfile;
-				try {
-					connectionProfile = DbConnectionProfileDocument.Factory.parse(xmlContent).getDbConnectionProfile();
-					dbProfileList.add(connectionProfile);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			DbConnectionProfile connectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
+			dbProfileList.add(connectionProfile);
 		}
 
 		return dbProfileList;
