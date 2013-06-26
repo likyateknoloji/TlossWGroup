@@ -97,21 +97,21 @@
 	<xs:element name="settings">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:ipAddress"/>
+				<!-- xs:element ref="lt:ipAddress"/ -->
 				<xs:element ref="machine-info" />
 				<xs:element ref="paths" />
-				<xs:element ref="isPersistent" />
+				<!-- xs:element ref="isPersistent" /-->
 				<xs:element ref="solstice" />
 				<xs:element ref="period" />
 				<xs:element ref="mailOptions" />
 				<xs:element ref="smsOptions" />
-				<xs:element ref="logFile" />
+				<!--  xs:element ref="logFile" /-->
 				<xs:element ref="tlosFrequency" />
 				<xs:element ref="remoteManagerProperties" />
 				<xs:element ref="httpManagerProperties" />
 				<xs:element ref="agentOptions" />
 				<xs:element ref="infoBusOptions" />
-				<xs:element ref="debugMode" />
+				<!-- xs:element ref="debugMode" /-->
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -212,14 +212,14 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="debugMode">
+	<!-- xs:element name="debugMode">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment" />
 				<xs:element ref="lt:value_boolean" />
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
+	</xs:element-->
 
 	<xs:element name="agentOptions">
 		<xs:complexType>
@@ -253,24 +253,24 @@
 		</xs:simpleType>
 	</xs:element>
 
-	<xs:element name="logFile">
+	<!-- xs:element name="logFile">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern
 					value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-			</xs:restriction>
+			</xs:restriction-->
 			<!-- <xs:restriction base="lt:filename"/> -->
-		</xs:simpleType>
-	</xs:element>
+		<!-- /xs:simpleType>
+	</xs:element-->
 
-	<xs:element name="isPersistent">
+	<!--  xs:element name="isPersistent">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="lt:comment" />
 				<xs:element ref="lt:value_boolean" />
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
+	</xs:element-->
 
 	<xs:element name="httpManagerProperties">
 		<xs:complexType>
@@ -298,7 +298,7 @@
 				<xs:element ref="settings" />
 				<xs:element ref="scenario-all" />
 				<xs:element ref="performance" />
-				<xs:element ref="dbparams" />
+				<!--  xs:element ref="dbparams" /-->
 				<xs:element ref="monitoringAgentParams" />
 				<xs:element ref="jmxParams" />
 			</xs:sequence>
@@ -352,7 +352,7 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="dbparams">
+	<!--  xs:element name="dbparams">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="name" type="xs:string" />
@@ -362,7 +362,7 @@
 				<xs:element name="password" type="xs:string" />
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
+	</xs:element-->
 
 	<xs:element name="monitoringAgentParams">
 		<xs:complexType>
