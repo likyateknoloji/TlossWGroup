@@ -7,6 +7,7 @@ declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace com="http://www.likyateknoloji.com/XML_common_types";
 
 import module namespace transform="http://exist-db.org/xquery/transform";
+import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 
 (:
 Mapping
@@ -19,44 +20,58 @@ $calendarDocumentUrl = doc("xmldb:exist://db/TLOSSW/xmls/tlosSWCalendar10.xml")
 $userDocumentUrl = doc("xmldb:exist://db/TLOSSW/xmls/tlosSWUser10.xml")
 :)
 
-declare function hs:tlosXMLTransformXsl($xmlTransformXslDocumentUrl as xs:string)
+declare function hs:tlosXMLTransformXsl($documentUrl as xs:string)
 {
+   let $xmlTransformXslDocumentUrl := met:getMetaData($documentUrl, "xmlTransformXsl")
+   
 	let $table := doc($xmlTransformXslDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosJobTransformXsl($jobTransformDocumentUrl as xs:string)
+declare function hs:tlosJobTransformXsl($documentUrl as xs:string)
 {
+   let $jobTransformDocumentUrl := met:getMetaData($documentUrl, "jobTransform")
+   
 	let $table := doc($jobTransformDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosDataXslFo($dataFoDocumentUrl as xs:string)
+declare function hs:tlosDataXslFo($documentUrl as xs:string)
 {
+   let $dataFoDocumentUrl := met:getMetaData($documentUrl, "dataFo")
+   
 	let $table := doc($dataFoDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosDataXsl($dataXslDocumentUrl as xs:string)
+declare function hs:tlosDataXsl($documentUrl as xs:string)
 {
+   let $dataXslDocumentUrl := met:getMetaData($documentUrl, "dataXsl")
+   
 	let $table := doc($dataXslDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosData($dataDocumentUrl as xs:string)
+declare function hs:tlosData($documentUrl as xs:string)
 {
+   let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+   
 	let $table := doc($dataDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosCalendar($calendarDocumentUrl as xs:string)
+declare function hs:tlosCalendar($documentUrl as xs:string)
 {
+   let $calendarDocumentUrl := met:getMetaData($documentUrl, "calendar")
+   
 	let $table := doc($calendarDocumentUrl)
 	return $table
 };
 
-declare function hs:tlosUser($userDocumentUrl as xs:string)
+declare function hs:tlosUser($documentUrl as xs:string)
 {
+   let $userDocumentUrl := met:getMetaData($documentUrl, "user")
+   
 	let $table := doc($userDocumentUrl)
 	return $table
 };
