@@ -16,10 +16,8 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.config.AgentOptionsDocument;
-import com.likya.tlos.model.xmlbeans.config.DebugModeDocument;
 import com.likya.tlos.model.xmlbeans.config.InOutJmxDurationForUnavailabilityDocument;
 import com.likya.tlos.model.xmlbeans.config.InfoBusOptionsDocument;
-import com.likya.tlos.model.xmlbeans.config.IsPersistentDocument;
 import com.likya.tlos.model.xmlbeans.config.PerformanceDocument;
 import com.likya.tlos.model.xmlbeans.config.PeriodDocument;
 import com.likya.tlos.model.xmlbeans.config.ResourceListDurationDocument;
@@ -53,6 +51,10 @@ import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.i18n.ResourceMapper;
+import com.likyateknoloji.xmlServerConfigTypes.DebugModeDocument;
+import com.likyateknoloji.xmlServerConfigTypes.IsPersistentDocument;
+import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument;
+import com.likyateknoloji.xmlServerConfigTypes.ServerParamsDocument;
 
 public abstract class TestSuit {
 
@@ -66,8 +68,8 @@ public abstract class TestSuit {
 		SpaceWideRegistry.setGlobalLogger(TestSuit.testLogger);
 
 		/**
-		 * TlosConfig nesnesi oluﬂturup Global Kay›t defterine
-		 * tan›maln›yor
+		 * TlosConfig nesnesi oluÔøΩturup Global KayÔøΩt defterine
+		 * tanÔøΩmalnÔøΩyor
 		 */
 
 		TlosConfigInfoDocument tlosConfigInfoDocument = TlosConfigInfoDocument.Factory.newInstance();
@@ -76,7 +78,7 @@ public abstract class TestSuit {
 		TlosConfigInfo tlosConfigInfo = tlosConfigInfoDocument.getTlosConfigInfo();
 
 		/**
-		 * InfoBus için gerekli olan bilgiler tan›ml› TlosConfig nesnesine ekleniyor
+		 * InfoBus iÔøΩin gerekli olan bilgiler tanÔøΩmlÔøΩ TlosConfig nesnesine ekleniyor
 		 */
 
 		ThresholdDocument thresholdDocument = ThresholdDocument.Factory.newInstance();
@@ -115,15 +117,22 @@ public abstract class TestSuit {
 		infoBusOptionsDocument.getInfoBusOptions().setPeriod(periodDocument.getPeriod());
 
 		settingsDocument.getSettings().setInfoBusOptions(infoBusOptionsDocument.getInfoBusOptions());
-		settingsDocument.getSettings().setDebugMode(debugModeDocument.getDebugMode());
-		settingsDocument.getSettings().setIsPersistent(isPersistentDocument.getIsPersistent());
 		settingsDocument.getSettings().setTlosFrequency(tlosFrequencyDocument.getTlosFrequency());
 
 		tlosConfigInfoDocument.getTlosConfigInfo().setSettings(settingsDocument.getSettings());
 
+		ServerParamsDocument serverParamsDocument = ServerParamsDocument.Factory.newInstance();
+		serverParamsDocument.addNewServerParams();
+		serverParamsDocument.getServerParams().setDebugMode(debugModeDocument.getDebugMode());
+		serverParamsDocument.getServerParams().setIsPersistent(isPersistentDocument.getIsPersistent());
+		
+		ServerConfigDocument serverConfigDocument = ServerConfigDocument.Factory.newInstance();
+		serverConfigDocument.getServerConfig().setServerParams(serverParamsDocument.getServerParams());
+		
+		spaceWideRegistry.setServerConfig(serverConfigDocument.getServerConfig());
 		spaceWideRegistry.setTlosSWConfigInfo(tlosConfigInfo);
-
-		TlosSpaceWide.setSpaceWideRegistry(spaceWideRegistry);
+		
+		TlosSpaceWide.setSpaceWideRegistry(spaceWideRegistry); 
 
 	}
 
