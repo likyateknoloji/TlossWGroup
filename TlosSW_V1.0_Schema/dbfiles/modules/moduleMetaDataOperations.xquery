@@ -37,34 +37,46 @@ declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string)
 
 declare function met:insertMetaData($documentUrl as xs:string, $doc as element(meta:document))
 {	
-	update insert $doc into doc($documentUrl)/meta:metaData/meta:dbInfo
+    let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+	
+	update insert $doc into doc($metaDataDocumentUrl)/meta:metaData/meta:dbInfo
 } ;
 
 declare function met:insertMetaLock($documentUrl as xs:string, $doc as element(meta:document))
 {
-   util:exclusive-lock(doc($documentUrl)/meta:metaData/documentInfo, met:insertMetaData($documentUrl, $doc))     
+   let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+	
+   return util:exclusive-lock(doc($metaDataDocumentUrl)/meta:metaData/documentInfo, met:insertMetaData($documentUrl, $doc))     
 };
 
 declare function met:updateMeta($documentUrl as xs:string, $doc as element(meta:document))
 {
-	for $d in doc($documentUrl)/meta:metaData/documentInfo/document
+   let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+   
+	for $d in doc($metaDataDocumentUrl)/meta:metaData/documentInfo/document
 	where $d/@id = $doc/@id
 	return update replace $d with $doc
 };
 
 declare function met:updateMetaLock($documentUrl as xs:string, $doc as element(meta:document))
 {
-   util:exclusive-lock(doc($documentUrl)/meta:metaData/documentInfo/document, met:updateMeta($documentUrl, $doc))     
+   let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+   
+   return util:exclusive-lock(doc($metaDataDocumentUrl)/meta:metaData/documentInfo/document, met:updateMeta($documentUrl, $doc))     
 };
 
 declare function met:deleteMeta($documentUrl as xs:string, $doc as element(meta:document))
- {
-	for $d in doc($documentUrl)/meta:metaData/documentInfo/document
+{
+   let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+   
+	for $d in doc($metaDataDocumentUrl)/meta:metaData/documentInfo/document
 	where $d/@id = $doc/@id
 	return update delete $d
 };
 
 declare function met:deleteMetaLock($documentUrl as xs:string, $doc as element(meta:document))
 {
-   util:exclusive-lock(doc($documentUrl)/meta:metaData/documentInfo/document, met:deleteMeta($documentUrl, $doc))     
+   let $metaDataDocumentUrl := met:getMetaData($documentUrl, "metaData")
+   
+   return util:exclusive-lock(doc($metaDataDocumentUrl)/meta:metaData/documentInfo/document, met:deleteMeta($documentUrl, $doc))     
 };
