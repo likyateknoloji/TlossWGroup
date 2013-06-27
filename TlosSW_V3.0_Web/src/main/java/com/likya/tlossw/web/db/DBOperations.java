@@ -137,6 +137,10 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructorNS("moduleDBConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.dbNsUrl, param);
 	}
 
+	private String ftpFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleFTPConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.fcNsUrl, param);
+	}
+
 	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
 		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
@@ -1833,39 +1837,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<FtpProperties> getFtpConnectionList() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:getFTPConnectionList(\"" + dataFile + "\")";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = ftpFunctionConstructor("fc:getFTPConnectionList");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				FtpProperties ftpProperties;
-				try {
-					ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
-					ftpConnectionList.add(ftpProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			FtpProperties ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
+			ftpConnectionList.add(ftpProperties);
 		}
 
 		return ftpConnectionList;
@@ -2352,30 +2333,17 @@ public class DBOperations implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = xQueryNsHeader + "density=\"http://density.tlos.com/\"" + xQueryModuleUrl + "/moduleDensityCalculations.xquery\";" + "density:recStat(" + state + "," + substate + "," + status + "," + startDateTime + "," + endDateTime + "," + step + ")";
+		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, state, substate, status, startDateTime, endDateTime, step);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		ResourceSet result = service.query(xQueryStr);
-
-		ResourceIterator i = result.getIterator();
 		Statistics stat = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				stat = StatisticsDocument.Factory.parse(xmlContent).getStatistics();
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
-
+		for (XmlObject currentObject : objectList) {
+			stat = ((StatisticsDocument) currentObject).getStatistics();
 		}
+
 		System.err.println(" dashboardReport : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+
 		return stat;
 	}
 
@@ -2967,60 +2935,29 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<FtpProperties> searchFTPAccessConnection(String ftpAccessPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:searchFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
 
-		XPathQueryService service;
+		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnection", ftpAccessPropertiesXML);
 
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				FtpProperties ftpProperties;
-				try {
-					ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
-					ftpConnectionList.add(ftpProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			FtpProperties ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
+			ftpConnectionList.add(ftpProperties);
 		}
 
 		return ftpConnectionList;
 	}
 
 	public boolean deleteFTPAccessConnection(String ftpAccessPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:deleteFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = ftpFunctionConstructor("fc:deleteFTPConnection", ftpAccessPropertiesXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -3029,24 +2966,12 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean checkFTPConnectionName(String ftpAccessPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+		String xQueryStr = ftpFunctionConstructor("fc:checkFTPConnectionName", ftpAccessPropertiesXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:checkFTPConnectionName(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			if (result.getSize() > 0) {
-				return false;
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		if (objectList != null && objectList.size() > 0) {
 			return false;
 		}
 
@@ -3054,20 +2979,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertFTPAccessConnection(String ftpAccessPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+		String xQueryStr = ftpFunctionConstructor("fc:insertFTPConnection", ftpAccessPropertiesXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:insertFTPConnection(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -3076,55 +2994,29 @@ public class DBOperations implements Serializable {
 	}
 
 	public FtpProperties searchFTPConnectionById(int ftpConnectionId) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnectionById", ftpConnectionId + "");
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(\"" + dataFile + "\", " + ftpConnectionId + ")";
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		FtpProperties ftpProperties = null;
+		for (XmlObject currentObject : objectList) {
+			ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			FtpProperties ftpProperties = null;
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
-
-					return ftpProperties;
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return ftpProperties;
 		}
 
 		return null;
 	}
 
 	public boolean updateFTPAccessConnection(String ftpAccessPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.FTP_DATA;
+		String xQueryStr = ftpFunctionConstructor("fc:updateFTPConnectionLock", ftpAccessPropertiesXML);
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + xQueryModuleUrl + "/moduleFTPConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom + "fc:updateFTPConnectionLock(\"" + dataFile + "\", " + ftpAccessPropertiesXML + ")";
-
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
