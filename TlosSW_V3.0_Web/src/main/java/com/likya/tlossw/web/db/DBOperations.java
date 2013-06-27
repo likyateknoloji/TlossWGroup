@@ -1892,7 +1892,7 @@ public class DBOperations implements Serializable {
 
 	public Scenario getScenario(String documentName, String scenarioPath, String scenarioName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", scenarioPath, scenarioName);
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", "\"" + scenarioPath + "\"", "\"" + scenarioName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1906,7 +1906,7 @@ public class DBOperations implements Serializable {
 
 	public String getScenarioExistence(String documentName, String scenarioPath, String scenarioName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", scenarioPath, scenarioName);
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", "\"" + scenarioPath + "\"", "\"" + scenarioName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
