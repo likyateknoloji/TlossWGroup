@@ -99,14 +99,12 @@ public class DBOperations implements Serializable {
 	private ExistConnectionHolder existConnectionHolder;
 
 	private String xQueryModuleUrl = null;
-	private String dataDocUrl = "";
 	private String xmlsUrl = "";
 	private String metaData = "";
 
 	@PostConstruct
 	public void init() {
 		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbCollectionName);
-		dataDocUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName) + CommonConstantDefinitions.JOB_DEFINITION_DATA;
 		xmlsUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName);
 		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
 	}
@@ -153,6 +151,10 @@ public class DBOperations implements Serializable {
 
 	private String scenarioFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructorNS("moduleScenarioOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	private String userFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleUserOperations.xquery", functionName, CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
 	public ArrayList<Object> moduleGeneric(String xQueryStr) {
@@ -589,10 +591,9 @@ public class DBOperations implements Serializable {
 		return false;
 	}
 
-	public TlosProcessData getTlosDataXml(String documentName) {
+	public TlosProcessData getTlosDataXml() {
 
-		// TODO documentName ??
-		String xQueryStr = scenarioFunctionConstructor("hs:getTlosDataXml", documentName);
+		String xQueryStr = scenarioFunctionConstructor("hs:getTlosDataXml");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -601,12 +602,21 @@ public class DBOperations implements Serializable {
 			tlosProcessData = ((TlosProcessDataDocument) currentObject).getTlosProcessData();
 		}
 
-		/*
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + xmlsUrl + documentName + "\"))";
-		 */
+		return tlosProcessData;
+	}
+
+	public TlosProcessData getTlosTemplateDataXml() {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getTlosTemplateDataXml");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
+		for (Object currentObject : objectList) {
+			tlosProcessData = ((TlosProcessDataDocument) currentObject).getTlosProcessData();
+		}
 
 		return tlosProcessData;
-
 	}
 
 	public ArrayList<ResourcePermission> getPermissions() {
@@ -698,37 +708,15 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Person> getUsers() {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:users()";
-
-		Collection collection = existConnectionHolder.getCollection();
-
 		ArrayList<Person> prsList = new ArrayList<Person>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = userFunctionConstructor("hs:users");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				Person prs;
-				try {
-					prs = PersonDocument.Factory.parse(xmlContent).getPerson();
-					prsList.add(prs);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (Object currentObject : objectList) {
+			Person prs = ((PersonDocument) currentObject).getPerson();
+			prsList.add(prs);
 		}
 
 		return prsList;
@@ -766,29 +754,16 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Scenario> getScenarioList() throws XMLDBException {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:scenarioList(" + dataDocUrl + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
 		ArrayList<Scenario> scenarioList = new ArrayList<Scenario>();
 
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
+		String xQueryStr = scenarioFunctionConstructor("hs:scenarioList");
 
-			Scenario scenario;
-			try {
-				scenario = ScenarioDocument.Factory.parse(xmlContent).getScenario();
-				scenarioList.add(scenario);
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		Scenario scenario = null;
+		for (Object currentObject : objectList) {
+			scenario = ((ScenarioDocument) currentObject).getScenario();
+			scenarioList.add(scenario);
 		}
 
 		return scenarioList;
@@ -798,7 +773,8 @@ public class DBOperations implements Serializable {
 
 		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
 
-		String xQueryStr = resourceFunctionConstructor("rsc:searchResources");
+		// ilk 20 kaynağı getiriyor
+		String xQueryStr = resourceFunctionConstructor("rsc:resourcesList", "1", "20");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1781,7 +1757,7 @@ public class DBOperations implements Serializable {
 
 	public ResourceType searchResourceByResourceName(String resourceName) {
 
-		String xQueryStr = resourceFunctionConstructor("rsc:searchResourcesByResourceName", resourceName);
+		String xQueryStr = resourceFunctionConstructor("rsc:searchResourcesByResourceName", "\"" + resourceName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1901,100 +1877,45 @@ public class DBOperations implements Serializable {
 	}
 
 	public Scenario getScenarioFromId(String documentName, String scenarioId) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioFromId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", " + scenarioId + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioFromId", scenarioId);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		Scenario scenario = null;
-
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					scenario = ScenarioDocument.Factory.parse(xmlContent).getScenario();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		for (Object currentObject : objectList) {
+			scenario = ((ScenarioDocument) currentObject).getScenario();
 		}
 
 		return scenario;
 	}
 
 	public Scenario getScenario(String documentName, String scenarioPath, String scenarioName) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenario(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioPath + ", \"" + scenarioName + "\" )";
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", scenarioPath, scenarioName);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		Scenario scenario = null;
-
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					scenario = ScenarioDocument.Factory.parse(xmlContent).getScenario();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		for (Object currentObject : objectList) {
+			scenario = ((ScenarioDocument) currentObject).getScenario();
 		}
 
 		return scenario;
 	}
 
 	public String getScenarioExistence(String documentName, String scenarioPath, String scenarioName) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String sonuc = null;
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", scenarioPath, scenarioName);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getScenarioExistence(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioPath + ", xs:string(\"" + scenarioName + "\"))";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				sonuc = xmlContent.toString();
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		String result = null;
+		for (Object currentObject : objectList) {
+			result = currentObject.toString();
 		}
-		return sonuc;
+
+		return result;
 	}
 
 	public boolean insertScenario(String documentName, String scenarioXML, String scenarioPath) {
