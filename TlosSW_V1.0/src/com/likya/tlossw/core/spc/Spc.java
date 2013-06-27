@@ -766,13 +766,13 @@ public class Spc extends SpcBase {
 		StreamSource transformCode = null;
 		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
 		try {
-			transformCode = DBUtils.getTransformXslCode("hs:tlosJobTransformXsl()");
+			transformCode = DBUtils.getTransformXslCode();
 		} catch (Exception e) {
 			throw new TransformCodeCreateException(e);
 		}
 		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
 		try {
-			scheduledJob.setRequestedStream(DBUtils.getTransformXslCode("hs:tlosXMLTransformXsl()"));
+			scheduledJob.setRequestedStream(DBUtils.getTransformXslCode());
 		} catch (Exception e) {
 			throw new TransformCodeCreateException(e);
 		}
