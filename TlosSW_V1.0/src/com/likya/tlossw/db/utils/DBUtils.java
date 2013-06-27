@@ -18,7 +18,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -385,49 +384,16 @@ public class DBUtils extends DBBase {
 
 	private static TlosProcessData getTlosDailyDataXml(int scenarioId, int planId) {
 
-		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-
-		/*
-		 * String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.JOB_DEFINITION_DATA;
-		 * String scnarioFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		 * String planFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PLAN_DEFINITION_DATA;
-		 * String calendarFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.CALENDAR_DEFINITION_DATA;
-		 * String sequenceFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
-		 */
-		String metaData = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.META_DATA;
-
-		String functionDef = "hs:doPlanAndSelectJobsAndScenarios(\"" + metaData + "\", " + scenarioId + "," + planId + ")";
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDailyOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + functionDef;
-
+		TlosProcessData tlosProcessData = null;
+		
+		String xQueryStr = dailyFunctionConstructor("hs:doPlanAndSelectJobsAndScenarios", "" + scenarioId, "" + planId);
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					tlosProcessData = TlosProcessDataDocument.Factory.parse(xmlContent).getTlosProcessData();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-				System.out.println();
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for(Object currentObject : objectList) {
+			tlosProcessData = ((TlosProcessDataDocument) currentObject).getTlosProcessData();
 		}
 
 		return tlosProcessData;
@@ -483,9 +449,9 @@ public class DBUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			globalStateDefinition = ((GlobalStateDefinitionDocument) currentObject).getGlobalStateDefinition();
 		}
 
@@ -506,9 +472,9 @@ public class DBUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			tlosConfigInfo = ((TlosConfigInfoDocument) currentObject).getTlosConfigInfo();
 		}
 		
@@ -519,69 +485,38 @@ public class DBUtils extends DBBase {
 	public static ArrayList<Parameter> getTlosParameters() {
 
 		Parameter tlosParameter = Parameter.Factory.newInstance();
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-		Collection collection = spaceWideRegistry.getEXistColllection();
-
-		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.PARAMETER_DATA;
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleParameterOperations.xquery\";" + "lk:parameterList(\"" + dataFile + "\", " + "1,10)";
-
+		ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+		
+		String xQueryStr = parameterFunctionConstructor("lk:parameterList", "1", "10");
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-		ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					tlosParameter = ParameterDocument.Factory.parse(xmlContent).getParameter();
-					parameterList.add(tlosParameter);
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-				System.out.println();
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for(Object currentObject : objectList) {
+			tlosParameter = ((ParameterDocument) currentObject).getParameter();
+			parameterList.add(tlosParameter);
 		}
 
 		return parameterList;
 
 	}
 
-	public static boolean insertFreeJobToDailyXML(String documentName, String jobPropertiesXML, String runId) {
+	public static boolean insertFreeJobToDailyXML(String jobPropertiesXML, String runId) {
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertFreeJobLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropertiesXML + "," + runId + ")";
-
+		boolean returnValue = false;
+		
+		String xQueryStr = scenarioFunctionConstructor("hs:insertFreeJobLock", jobPropertiesXML, runId);
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			@SuppressWarnings("unused")
-			ResourceSet result = service.query(xQueryStr);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return false;
+		for(Object currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 
-		return true;
+		return returnValue;
 	}
 
 	public static SWAgents initAgentList() {
@@ -592,222 +527,88 @@ public class DBUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			swAgents =   ((SWAgentsDocument) currentObject).getSWAgents();
 		}
 		
 		return swAgents;
 	}
 
-	public static boolean insertJobAgentId(String documentName, String agentId, String jobId, String jobPath) {
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertJobAgentIdLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + "'" + agentId + "'" + "," + "'" + jobId + "'" + "," + jobPath + ")";
-
+	public static boolean insertJob(JobProperties jobProperties, String jobPath) {
+		
+		boolean returnValue = false;
+		
+		String jobPropertiesXML = XmlUtils.getJobPropertiesXML(jobProperties);
+		
+		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", jobPropertiesXML, jobPath);
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			@SuppressWarnings("unused")
-			ResourceSet result = service.query(xQueryStr);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return false;
+		for(Object currentObject : objectList) {
+			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
-
-		return true;
+		
+		return returnValue;
 	}
 
-	public static boolean insertJob(String documentName, JobProperties jobProperties, String jobPath) {
-
-		String jobPropertiesXML = XmlUtils.getJobPropertiesXML(jobProperties);
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertLiveJobLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + ")";
-
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			@SuppressWarnings("unused")
-			ResourceSet result = service.query(xQueryStr);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-	}
-
-	public static LiveStateInfo insertJobState(Collection collection, String documentName, LiveStateInfo liveStateInfo, String jobPath) {
+	public static LiveStateInfo insertJobState(LiveStateInfo liveStateInfo, String jobPath) {
 
 		QName qName = LiveStateInfo.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:insertJobStateLock(" + "xs:string(\"" + spaceWideRegistry.getXmlsUrl() + documentName + "\")" + "," + liveStateInfoXML + "," + jobPath + ")";
-
+		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", liveStateInfoXML, jobPath);
+		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + xQueryStr);
 
-		XPathQueryService service = null;
-
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			SpaceWideRegistry.getGlobalLogger().debug(" >> Query Result >> " + result);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		
+		for(Object currentObject : objectList) {
+			SpaceWideRegistry.getGlobalLogger().debug(" >> Query Result >> " + currentObject);
 		}
 
 		return liveStateInfo;
-	}
-
-	public int getNextErrorId() throws XMLDBException {
-
-		int errorId = -1;
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA;
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"" + dataFile + "\", \"" + CommonConstantDefinitions.ERROR_ID + "\")";
-
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return -1;
-		}
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			errorId = Integer.parseInt(r.getContent().toString());
-		}
-
-		return errorId;
 	}
 
 	public static Person getSubscribers(int userId, String role) throws XMLDBException {
 
 		Person person = null;
 
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
+		String xQueryStr = userFunctionConstructor("hs:getSubscribers", "" + userId, role);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleUserOperations.xquery\";" + "hs:getSubscribers(" + userId + ",'" + role + "')";
-
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for(Object currentObject : objectList) {
+			person = ((PersonDocument) currentObject).getPerson();
 		}
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-			try {
-				person = PersonDocument.Factory.parse(xmlContent).getPerson();
-			} catch (XmlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// errorId = Integer.parseInt(r.getContent().toString());
-		}
+		
 		return person;
 	}
 
-	public static boolean insertLogFileNameForJob(String documentName, JobProperties jobProperties, String jobPath, String logFileName) {
-
-		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
-		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
-
-		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		// TODO dailyscenarios.xml'de gerekli kisma logname yazilacak
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:??????(" + "xs:string(\"" + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + "," + logFileName + " )";
-
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = null;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			@SuppressWarnings("unused")
-			ResourceSet result = service.query(xQueryStr);
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-	}
-
 	public static FtpProperties searchFTPConnectionById(int ftpConnectionId) throws XMLDBException {
-
-		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
-
-		String dataFile = spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.FTP_DATA;
-
-		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.fcNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleFTPConnectionsOperations.xquery\";" + "fc:searchFTPConnectionById(\"" + dataFile + "\", " + ftpConnectionId + ")";
-
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-
-		Collection collection = spaceWideRegistry.getEXistColllection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
+		
 		FtpProperties ftpProperties = null;
+		
+		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnectionById", "" + ftpConnectionId);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				ftpProperties = FtpPropertiesDocument.Factory.parse(xmlContent).getFtpProperties();
-
-				return ftpProperties;
-			} catch (XmlException e) {
-				e.printStackTrace();
-			}
+		for(Object currentObject : objectList) {
+			ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
 		}
 
-		return null;
+		return ftpProperties;
 	}
 
 	public static DbProperties searchDBPropertiesById(int dbPropertiesID) throws XMLDBException {

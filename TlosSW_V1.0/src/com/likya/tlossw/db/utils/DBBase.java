@@ -31,12 +31,10 @@ public abstract class DBBase {
 		
 		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
-
-	/*
-	private String alarmFunctionConstructor(String functionName, String... param) {
+	
+	protected static String alarmFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
 	}
-	*/
 
 	protected static String agentFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructorNS("moduleAgentOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
@@ -45,10 +43,30 @@ public abstract class DBBase {
 	protected static String stateFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructorNS("moduleStateOperations.xquery", functionName, CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.lkNsUrl, param);
 	}
-	
-	protected static ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
 
-		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
+	protected static String dailyFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleDailyOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	protected static String parameterFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructor("moduleParameterOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
+	}
+
+	protected static String scenarioFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleScenarioOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	protected static String userFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructor("moduleUserOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
+	}
+	
+	protected static String ftpFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleFTPConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.fcNsUrl, param);
+	}
+	
+	protected static ArrayList<Object> moduleGeneric(String xQueryStr) {
+
+		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
 		XmlObject objectProperties = null;
 
 		try {
@@ -64,13 +82,14 @@ public abstract class DBBase {
 
 			while (i.hasMoreResources()) {
 				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+				String xmlContent = r.getContent().toString();
 
 				try {
 					objectProperties = XmlObject.Factory.parse(xmlContent);
 					returnObjectArray.add(objectProperties);
 				} catch (XmlException e) {
-					e.printStackTrace();
+					returnObjectArray.add(xmlContent);
+					// e.printStackTrace();
 				}
 			}
 		} catch (XMLDBException e) {

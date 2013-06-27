@@ -2,8 +2,6 @@ package com.likya.tlossw.db.utils;
 
 import java.util.ArrayList;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
@@ -21,9 +19,9 @@ public class AgentDbUtils extends DBBase {
 				
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			checkJmx = Integer.parseInt(currentObject.toString());
 		}
 
@@ -105,9 +103,9 @@ public class AgentDbUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 
@@ -242,13 +240,13 @@ public class AgentDbUtils extends DBBase {
 			dbJmxValue = "true()";
 		}
 
-		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId, "", dbJmxValue, "" + islem);
+		String xQueryStr = agentFunctionConstructor("lk:updateJmxValueLock", "" + agentId, dbJmxValue, "\"" + islem + "\"");
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 		
@@ -296,9 +294,9 @@ public class AgentDbUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 
@@ -356,9 +354,9 @@ public class AgentDbUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			SWAgent swAgent = ((SWAgentDocument) currentObject).getSWAgent();
 			swAgents.addNewSWAgent();
 			swAgents.setSWAgentArray(swAgents.getSWAgentArray().length - 1, swAgent);
@@ -422,9 +420,9 @@ public class AgentDbUtils extends DBBase {
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for(XmlObject currentObject : objectList) {
+		for(Object currentObject : objectList) {
 			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
 		}
 
