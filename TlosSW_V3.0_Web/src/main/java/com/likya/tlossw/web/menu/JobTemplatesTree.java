@@ -19,7 +19,6 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.db.DBOperations;
 
 @ManagedBean
@@ -41,7 +40,7 @@ public class JobTemplatesTree implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(CommonConstantDefinitions.JOB_TEMPLATES_DATA);
+		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml();
 
 		System.out.println("Job Template Tree olusturuluyor ..");
 
