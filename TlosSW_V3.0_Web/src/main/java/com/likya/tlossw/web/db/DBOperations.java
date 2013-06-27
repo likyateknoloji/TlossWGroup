@@ -1227,7 +1227,7 @@ public class DBOperations implements Serializable {
 
 			// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByName(\"" + metaData + "\", " + "\"" + alarmname + "\"" + ")";
 
-			String xQueryStr = alarmFunctionConstructor("lk:searchAlarmByName", alarmName);
+			String xQueryStr = alarmFunctionConstructor("lk:searchAlarmByName", "\"" + alarmName + "\"");
 
 			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
