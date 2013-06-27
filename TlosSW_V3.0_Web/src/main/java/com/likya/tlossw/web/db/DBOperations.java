@@ -169,8 +169,6 @@ public class DBOperations implements Serializable {
 			e.printStackTrace();
 		}
 
-		System.out.println(objectProperties.toString());
-
 		return returnObjectArray;
 	}
 
@@ -627,52 +625,29 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<ResourcePermission> getPermissions() {
-		Collection collection = existConnectionHolder.getCollection();
 
 		ArrayList<ResourcePermission> resourcePermission = new ArrayList<ResourcePermission>();
 
-		XPathQueryService service = null;
+		String xQueryStr = localFunctionConstructor("modulePermissionOperations.xquery", "hs:getPermisions", CommonConstantDefinitions.hsNsUrl);
 
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + "hs:getPermisions()";
-
-			ResourceIterator i;
-
-			ResourceSet result = service.query(xQueryStr);
-			i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				Permission permission = PermissionDocument.Factory.parse(xmlContent).getPermission();
-				resourcePermission.add(XmlBeansTransformer.permissionsToResourcePermissions(permission));
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
-		} catch (XmlException e) {
-			e.printStackTrace();
-			return null;
+		for (XmlObject currentObject : objectList) {
+			Permission permission = ((PermissionDocument) currentObject).getPermission();
+			resourcePermission.add(XmlBeansTransformer.permissionsToResourcePermissions(permission));
 		}
 
 		return resourcePermission;
 	}
 
 	public boolean updatePermissions(String permissionsXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/modulePermissionOperations.xquery\";" + "declare namespace per = \"http://www.likyateknoloji.com/XML_permission_types\";  " + CommonConstantDefinitions.decNsCom + "hs:updatePermissionsLock(" + permissionsXML + " )";
+		String xQueryStr = localFunctionConstructorNS("modulePermissionOperations.xquery", "hs:getPermisions", CommonConstantDefinitions.decNsPer + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, permissionsXML);
 
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
 			@SuppressWarnings("unused")
-			ResourceSet result = service.query(xQueryStr);
-		} catch (XMLDBException e) {
+			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
