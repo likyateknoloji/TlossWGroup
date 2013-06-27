@@ -59,6 +59,7 @@ public class CommonConstantDefinitions {
 	public static final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
 	public static final String dssNsUrl = "dss=\"http://tlos.dss.com/\"";
 	public static final String metaNsUrl = "dss=\"http://meta.tlos.com/\"";
+	public static final String densityNsUrl = "density=\"http://density.tlos.com/\"";
 
 	public static final String decNsRes = "declare namespace res = \"http://www.likyateknoloji.com/resource-extension-defs\";";
 	public static final String decNsDbc = "declare namespace dbc = \"http://www.likyateknoloji.com/XML_dbconnection_types\";";
