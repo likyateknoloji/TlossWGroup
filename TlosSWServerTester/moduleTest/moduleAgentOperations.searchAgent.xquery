@@ -1,7 +1,7 @@
 xquery version "1.0";
 declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
-import module namespace lk="http://likya.tlos.com/" at "xmldb:exist://db/TLOSSW/modules//moduleAgentOperations.xquery";
-lk:searchAgent("//db/TLOSSW", <agnt:SWAgent xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+import module namespace lk="http://likya.tlos.com/" at "xmldb:exist://db/tlossw-serkan/modules//moduleAgentOperations.xquery";
+lk:searchAgent("//db/tlossw-serkan", <agnt:SWAgent xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <res:Resource xsi:nil="true"/>
   <agnt:osType xsi:nil="true"/>
   <agnt:nrpePort>0</agnt:nrpePort>
