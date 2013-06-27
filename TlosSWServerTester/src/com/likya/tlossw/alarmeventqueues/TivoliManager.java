@@ -118,7 +118,7 @@ public class TivoliManager implements Runnable {
 						synchronized (this) {
 							JobInfo jobInfo = (JobInfo) infoType;
 							LiveStateInfo liveStateInfo = jobInfo.getLiveLiveStateInfo();
-							DBUtils.insertJobState(spaceWideRegistry.getEXistColllection(), "", liveStateInfo, jobInfo.getTreePath());
+							DBUtils.insertJobState(liveStateInfo, jobInfo.getTreePath());
 							DssDbUtils.swFindAlarms(jobInfo.getJobID(), jobInfo.getUserID(), jobInfo.getAgentID(), liveStateInfo);
 
 							logger.info("  > ");
