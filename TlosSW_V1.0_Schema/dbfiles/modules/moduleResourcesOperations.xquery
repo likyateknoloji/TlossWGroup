@@ -19,11 +19,10 @@ $resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
 (:fn:empty($prs/com:role):)
 
 declare function rsc:searchResources($documentUrl as xs:string, $searchResource as element(lrns:ResourceType)) as element(lrns:ResourceList)* 
- {
-   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
-	 
+ {	 
    <lrns:ResourceList>
    {
+   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
    for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
    let $sonuc := if ((fn:contains(fn:lower-case($rsc/@entry-name), fn:lower-case($searchResource/@entry-name)) or data($searchResource/@entry-name)="" or not(fn:exists($searchResource/@entry-name))))
                  then $rsc else ()
@@ -47,10 +46,9 @@ declare function rsc:searchResources($documentUrl as xs:string, $searchResource 
 (: ornek kullanim rsc:resourcesList(1,2) ilk iki eleman :)
 declare function rsc:resourcesList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(lrns:Resource)* 
 {
-    let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
-	
    <lrns:ResourceList>
    {
+    let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
 	for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource[position() = ($firstElement to $lastElement)]
 	return  $rsc
    }
@@ -60,10 +58,9 @@ declare function rsc:resourcesList($documentUrl as xs:string, $firstElement as x
 (: ornek kullanim rsc:searchResourcesByResourceName(xs:string('Tlos SW')) :)
 declare function rsc:searchResourcesByResourceName($documentUrl as xs:string, $searchResourceName as xs:string) as element(lrns:Resource)? 
 {
-   let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
-   
    <lrns:ResourceList>
    {
+    let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
 	for $rsc in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource
 	where fn:lower-case($rsc/@entry-name)=fn:lower-case($searchResourceName)
     return $rsc
