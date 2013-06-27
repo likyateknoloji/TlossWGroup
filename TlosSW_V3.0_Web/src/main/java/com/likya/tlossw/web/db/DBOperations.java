@@ -977,21 +977,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertDBConnection(String dbConnectionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String dataFile = xmlsUrl + CommonConstantDefinitions.DB_CONNECTIONS_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.dbNsUrl + xQueryModuleUrl + "/moduleDBConnectionsOperations.xquery\";" + CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + "db:insertDbConnection(\"" + dataFile + "\", " + dbConnectionXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = dbFunctionConstructor("db:insertDbConnection", dbConnectionXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
