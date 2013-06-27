@@ -59,7 +59,7 @@ declare function fc:checkFTPConnectionName($documentUrl as xs:string, $ftpConnec
 		else  ( )
 };
 
-(: //TODO id ? :)
+(: bu fonksiyon cagrilmadan once id alma fonksiyonu cagriliyor, buraya gelen $ftpConnection datasi icinde id var :)
 declare function fc:insertFTPConnection($documentUrl as xs:string, $ftpConnection as element(ftp:ftpProperties)) as xs:boolean?
 {	
     let $ftpConnnectionsDocumentUrl := met:getMetaData($documentUrl, "ftpConnnections")
