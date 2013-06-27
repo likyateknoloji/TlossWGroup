@@ -83,7 +83,7 @@ public class ParsingUtils {
 		stringBuffer.append(CommonConstantDefinitions.moduleImport);
 		stringBuffer.append(moduleNamesSpace);
 		stringBuffer.append(xQueryModuleUrl);
-		stringBuffer.append("/" + moduleName + "\";");
+		stringBuffer.append(moduleName + "\";");
 		stringBuffer.append(functionName);
 
 		stringBuffer.append("(");
