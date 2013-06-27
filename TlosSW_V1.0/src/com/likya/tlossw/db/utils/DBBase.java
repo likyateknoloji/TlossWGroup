@@ -64,6 +64,18 @@ public abstract class DBBase {
 		return localFunctionConstructorNS("moduleFTPConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.fcNsUrl, param);
 	}
 	
+	protected static String managementFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleManagementOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	protected static String dbConnFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleDBConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsDbc + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.dbNsUrl, param);
+	}
+
+	protected static String xslConnFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleXslOperations.xquery", functionName, CommonConstantDefinitions.decNsFo + CommonConstantDefinitions.decNsXslfo, CommonConstantDefinitions.hsNsUrl, param);
+	}
+	
 	protected static ArrayList<Object> moduleGeneric(String xQueryStr) {
 
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
