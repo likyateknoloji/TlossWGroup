@@ -100,7 +100,6 @@ public class DBOperations implements Serializable {
 
 	private String xQueryModuleUrl = null;
 	private String dataDocUrl = "";
-	private String resourceDocUrl = "";
 	private String xmlsUrl = "";
 	private String metaData = "";
 
@@ -108,7 +107,6 @@ public class DBOperations implements Serializable {
 	public void init() {
 		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbCollectionName);
 		dataDocUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName) + CommonConstantDefinitions.JOB_DEFINITION_DATA;
-		resourceDocUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName) + CommonConstantDefinitions.RESOURCES_DATA;
 		xmlsUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName);
 		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
 	}
@@ -141,10 +139,26 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructorNS("moduleFTPConnectionsOperations.xquery", functionName, CommonConstantDefinitions.decNsFtp + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.fcNsUrl, param);
 	}
 
-	public ArrayList<XmlObject> moduleGeneric(String xQueryStr) {
+	private String ppFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructor("moduleProgramProvisioningOperations.xquery", functionName, CommonConstantDefinitions.ksNsUrl, param);
+	}
 
-		ArrayList<XmlObject> returnObjectArray = new ArrayList<XmlObject>();
-		XmlObject objectProperties = null;
+	private String reportFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleReportOperations.xquery", functionName, CommonConstantDefinitions.decNsRep, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	private String resourceFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleResourcesOperations.xquery", functionName, CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.rscNsUrl, param);
+	}
+
+	private String scenarioFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleScenarioOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
+	public ArrayList<Object> moduleGeneric(String xQueryStr) {
+
+		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
+		Object objectProperties = null;
 
 		try {
 			Collection collection = existConnectionHolder.getCollection();
@@ -162,7 +176,8 @@ public class DBOperations implements Serializable {
 					objectProperties = XmlObject.Factory.parse(xmlContent);
 					returnObjectArray.add(objectProperties);
 				} catch (XmlException e) {
-					e.printStackTrace();
+					// e.printStackTrace();
+					returnObjectArray.add(xmlContent);
 				}
 			}
 		} catch (XMLDBException e) {
@@ -178,9 +193,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = agentFunctionConstructor("lk:searchAgent", agentXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			SWAgent agent = ((SWAgentDocument) currentObject).getSWAgent();
 			agentList.add(agent);
 		}
@@ -264,26 +279,14 @@ public class DBOperations implements Serializable {
 	}
 
 	public int getNextId(String component) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + "sq:getNextId(\"" + xmlsUrl + CommonConstantDefinitions.SEQUENCE_DATA + "\",\"" + component + "\")";
+		String xQueryStr = localFunctionConstructor("moduleSequenceOperations.xquery", "sq:getNextId", CommonConstantDefinitions.sqNsUrl, "\"" + component + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		int id = -1;
-
-		try {
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				id = Integer.parseInt(r.getContent().toString());
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (Object currentObject : objectList) {
+			id = Integer.parseInt(currentObject.toString());
 		}
 
 		return id;
@@ -477,7 +480,6 @@ public class DBOperations implements Serializable {
 				try {
 					person = PersonDocument.Factory.parse(xmlContent).getPerson();
 				} catch (XmlException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return null;
 				}
@@ -570,9 +572,9 @@ public class DBOperations implements Serializable {
 
 			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
 
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			for (XmlObject currentObject : objectList) {
+			for (Object currentObject : objectList) {
 				UserResourceMap myUserPermission = ((UserResourceMapDocument) currentObject).getUserResourceMap();
 				if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
 					jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
@@ -589,36 +591,19 @@ public class DBOperations implements Serializable {
 
 	public TlosProcessData getTlosDataXml(String documentName) {
 
+		// TODO documentName ??
+		String xQueryStr = scenarioFunctionConstructor("hs:getTlosDataXml", documentName);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
-
-		try {
-
-			Collection collection = existConnectionHolder.getCollection();
-
-			XPathQueryService service;
-
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + xmlsUrl + documentName + "\"))";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					tlosProcessData = TlosProcessDataDocument.Factory.parse(xmlContent).getTlosProcessData();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-				System.out.println();
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (Object currentObject : objectList) {
+			tlosProcessData = ((TlosProcessDataDocument) currentObject).getTlosProcessData();
 		}
+
+		/*
+		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:getTlosDataXml(xs:string(\"" + xmlsUrl + documentName + "\"))";
+		 */
 
 		return tlosProcessData;
 
@@ -630,9 +615,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = localFunctionConstructor("modulePermissionOperations.xquery", "hs:getPermisions", CommonConstantDefinitions.hsNsUrl);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			Permission permission = ((PermissionDocument) currentObject).getPermission();
 			resourcePermission.add(XmlBeansTransformer.permissionsToResourcePermissions(permission));
 		}
@@ -646,7 +631,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -660,9 +645,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:searchDbConnection", dbConnectionXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			DbProperties dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
 			dbList.add(dbProperties);
 		}
@@ -810,34 +795,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<RNSEntryType> getResources() {
+
 		ArrayList<RNSEntryType> resources = new ArrayList<RNSEntryType>();
+
+		String xQueryStr = resourceFunctionConstructor("rsc:searchResources");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		ResourceListType resourceList = null;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:resourcesList(\"" + resourceDocUrl + "\", 1, 10)";
-
-		Collection collection = existConnectionHolder.getCollection();
-
-		try {
-
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (Object currentObject : objectList) {
+			resourceList = ((ResourceListDocument) currentObject).getResourceList();
 		}
 
 		for (RNSEntryType resource : resourceList.getResourceArray()) {
@@ -1000,7 +967,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -1038,7 +1005,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -1051,7 +1018,7 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:checkDbConnectionName", dbConnectionXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		if (objectList != null && objectList.size() > 0) {
 			return false;
@@ -1064,11 +1031,11 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:getDbConnection", id);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		DbProperties dbProperties = null;
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
 		}
 
@@ -1089,9 +1056,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:searchDbAccessProfile", dbAccessProfileXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			DbConnectionProfile dbConnectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
 
 			DbProperties dbProperties = dbDefinitionList.get(dbConnectionProfile.getDbDefinitionId());
@@ -1113,7 +1080,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -1128,7 +1095,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -1143,7 +1110,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -1155,11 +1122,11 @@ public class DBOperations implements Serializable {
 	public DbConnectionProfile searchDBAccessByID(String id) {
 		String xQueryStr = dbFunctionConstructor("db:getDbCP", id);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		DbConnectionProfile dbConnectionProfile = null;
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			dbConnectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
 		}
 
@@ -1270,9 +1237,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = calendarFunctionConstructor("hs:calendars");
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
 			calendarList.add(calendar);
 		}
@@ -1304,7 +1271,6 @@ public class DBOperations implements Serializable {
 				try {
 					alarm = AlarmDocument.Factory.parse(xmlContent).getAlarm();
 				} catch (XmlException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return null;
 				}
@@ -1320,37 +1286,15 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<String> getSoftwareList() {
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:ppList(1,10)";
-
 		ArrayList<String> softwareList = new ArrayList<String>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = ppFunctionConstructor("ks:ppList", "1", "10");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				License license;
-				try {
-					license = LicenseDocument.Factory.parse(xmlContent).getLicense();
-					softwareList.add(license.getName());
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (Object currentObject : objectList) {
+			License license = ((LicenseDocument) currentObject).getLicense();
+			softwareList.add(license.getName());
 		}
 
 		return softwareList;
@@ -1391,75 +1335,44 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<License> searchProvision(String provisionXML) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:searchPP(" + provisionXML + ")";
 
 		ArrayList<License> provisionList = new ArrayList<License>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = ppFunctionConstructor("ks:searchPP", provisionXML);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				License provision;
-				try {
-					provision = LicenseDocument.Factory.parse(xmlContent).getLicense();
-					provisionList.add(provision);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (Object currentObject : objectList) {
+			License provision = ((LicenseDocument) currentObject).getLicense();
+			provisionList.add(provision);
 		}
 
 		return provisionList;
 	}
 
 	public boolean deleteProvision(String provisionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:deletePpLock(" + provisionXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = ppFunctionConstructor("ks:deletePpLock", provisionXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
 	public boolean insertProvision(String provisionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:insertPpLock(" + provisionXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = ppFunctionConstructor("ks:insertPpLock", provisionXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1468,18 +1381,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean updateProvision(String provisionXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:updatePpLock(" + provisionXML + ")";
+		String xQueryStr = ppFunctionConstructor("ks:updatePpLock", provisionXML);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1488,34 +1396,15 @@ public class DBOperations implements Serializable {
 	}
 
 	public License searchProvisionByID(String provisionId) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.ksNsUrl + xQueryModuleUrl + "/moduleProgramProvisioningOperations.xquery\";" + "ks:searchPpByID(" + provisionId + ")";
+		String xQueryStr = ppFunctionConstructor("ks:searchPpByID", provisionId);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			License license = null;
+		for (Object currentObject : objectList) {
+			License license = ((LicenseDocument) currentObject).getLicense();
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					license = LicenseDocument.Factory.parse(xmlContent).getLicense();
-
-					return license;
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return license;
 		}
 
 		return null;
@@ -1817,9 +1706,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = ftpFunctionConstructor("fc:getFTPConnectionList");
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			FtpProperties ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
 			ftpConnectionList.add(ftpProperties);
 		}
@@ -1838,9 +1727,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:getDbConnectionAll");
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			DbProperties dbProperties = ((DbPropertiesDocument) currentObject).getDbProperties();
 			dbList.add(dbProperties);
 		}
@@ -1859,9 +1748,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = dbFunctionConstructor("db:getDbProfileAll");
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			DbConnectionProfile connectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
 			dbProfileList.add(connectionProfile);
 		}
@@ -1871,104 +1760,57 @@ public class DBOperations implements Serializable {
 
 	public ResourceListType searchResource(String resourceXML) {
 
+		String xQueryStr = resourceFunctionConstructor("rsc:searchResources", resourceXML);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		ResourceListType resourceList = null;
-
-		try {
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:searchResources(" + resourceXML + ")";
-
-			Collection collection = existConnectionHolder.getCollection();
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (Object currentObject : objectList) {
+			resourceList = ((ResourceListDocument) currentObject).getResourceList();
 		}
+
 		return resourceList;
 	}
 
 	public boolean deleteResource(String resourceXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:deleteResourceLock(" + resourceXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = resourceFunctionConstructor("rsc:deleteResourceLock", resourceXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
 	public ResourceType searchResourceByResourceName(String resourceName) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:searchResourcesByResourceName(\"" + resourceName + "\")";
+		String xQueryStr = resourceFunctionConstructor("rsc:searchResourcesByResourceName", resourceName);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			ResourceListType resourceList = null;
+		ResourceListType resourceList = null;
+		for (Object currentObject : objectList) {
+			resourceList = ((ResourceListDocument) currentObject).getResourceList();
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					resourceList = ResourceListDocument.Factory.parse(xmlContent).getResourceList();
-
-					return resourceList.getResourceArray(0);
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return resourceList.getResourceArray(0);
 		}
 
 		return null;
 	}
 
 	public boolean insertResource(String resourceXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:insertResourceLock(" + resourceXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = resourceFunctionConstructor("rsc:insertResourceLock", resourceXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1977,18 +1819,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean updateResource(String resourceXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.rscNsUrl + xQueryModuleUrl + "/moduleResourcesOperations.xquery\";" + "rsc:updateResourceLock(" + resourceXML + ")";
+		String xQueryStr = resourceFunctionConstructor("rsc:updateResourceLock", resourceXML);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2002,9 +1839,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = calendarFunctionConstructor("hs:searchCalendar", calendarPropertiesXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
 			calendarList.add(calendar);
 		}
@@ -2018,7 +1855,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -2032,7 +1869,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -2045,9 +1882,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = calendarFunctionConstructor("hs:searchCalendarByID", calendarID);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			CalendarProperties calendar = ((CalendarPropertiesDocument) currentObject).getCalendarProperties();
 
 			return calendar;
@@ -2062,7 +1899,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -2190,32 +2027,19 @@ public class DBOperations implements Serializable {
 
 	public LocalStats getStatsReport(int derinlik, int runId, int jobId, String refPoint) throws XMLDBException {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\";" + CommonConstantDefinitions.decNsRep + "hs:calculateBaseStats(" + derinlik + "," + runId + "," + jobId + "," + refPoint + "())";
+		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
 		LocalStats localStats = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				localStats = LocalStatsDocument.Factory.parse(xmlContent).getLocalStats();
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
-
+		for (Object currentObject : objectList) {
+			localStats = ((LocalStatsDocument) currentObject).getLocalStats();
 		}
 
 		return localStats;
 	}
 
+	// TODO merve: iç içe db fonksiyonları çağrıldığı için sonraya bırakıldı
 	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
 		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; " + CommonConstantDefinitions.decNsRep + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + "," + jobId + "," + refPoint + "()),\"" + orderType + "\"," + jobCount + ")";
@@ -2310,10 +2134,10 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, state, substate, status, startDateTime, endDateTime, step);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		Statistics stat = null;
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			stat = ((StatisticsDocument) currentObject).getStatistics();
 		}
 
@@ -2326,29 +2150,15 @@ public class DBOperations implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\";" + "hs:jobStateListbyRunId(" + derinlik + ",0,0,true())";
+		String xQueryStr = reportFunctionConstructor("hs:jobStateListbyRunId", derinlik + "", "0", "0", "true()");
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		ResourceSet result = service.query(xQueryStr);
-
-		ResourceIterator i = result.getIterator();
 		Report report = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				report = ReportDocument.Factory.parse(xmlContent).getReport();
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
-
+		for (Object currentObject : objectList) {
+			report = ((ReportDocument) currentObject).getReport();
 		}
+
 		System.err.println(" dashboardReport : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		return report;
 	}
@@ -2915,9 +2725,9 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnection", ftpAccessPropertiesXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			FtpProperties ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
 			ftpConnectionList.add(ftpProperties);
 		}
@@ -2931,7 +2741,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -2944,7 +2754,7 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = ftpFunctionConstructor("fc:checkFTPConnectionName", ftpAccessPropertiesXML);
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		if (objectList != null && objectList.size() > 0) {
 			return false;
@@ -2959,7 +2769,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -2972,10 +2782,10 @@ public class DBOperations implements Serializable {
 
 		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnectionById", ftpConnectionId + "");
 
-		ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		FtpProperties ftpProperties = null;
-		for (XmlObject currentObject : objectList) {
+		for (Object currentObject : objectList) {
 			ftpProperties = ((FtpPropertiesDocument) currentObject).getFtpProperties();
 
 			return ftpProperties;
@@ -2990,7 +2800,7 @@ public class DBOperations implements Serializable {
 
 		try {
 			@SuppressWarnings("unused")
-			ArrayList<XmlObject> objectList = moduleGeneric(xQueryStr);
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
