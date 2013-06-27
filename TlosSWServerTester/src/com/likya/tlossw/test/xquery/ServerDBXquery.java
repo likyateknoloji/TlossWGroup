@@ -243,6 +243,19 @@ public class ServerDBXquery {
 	}
 
 	@Test
+	public void moduleAgentOperationsUpdateJmxValueLock() throws Exception {
+
+		String fileName = getFile("moduleAgentOperations.updateJmxValueLock.xquery");
+
+		StringBuffer xQueryStr = FileUtils.readFile(fileName);
+
+		ResourceSet result;
+		result = service.query(xQueryStr.toString());
+		assertEquals("Boş !", true, result.getIterator().hasMoreResources());
+
+	}
+	
+	@Test
 	public void thisAlwaysPasses() {
 	}
 
