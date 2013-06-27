@@ -24,10 +24,10 @@
 		<meta:document id="errors" type="xml">tlosSWErrors10.xml</meta:document>
 		<meta:document id="globalStates" type="xml">tlosSWGlobalStates10.xml</meta:document>
 		<meta:document id="jobTemplates" type="xml">tlosSWJobTemplates10.xml</meta:document>
-		<meta:document id="nrpeData" type="xsl">tlosSWNrpeData10.xml</meta:document>
-		<meta:document id="nrpeResult" type="xsl">tlosSWNrpeResult_v_1_0.xml</meta:document>
-		<meta:document id="parameters" type="xsl">tlosSWParameters10.xml</meta:document>
-		<meta:document id="permissions" type="xsl">tlosSWPermission10.xml</meta:document>
+		<meta:document id="nrpeData" type="xml">tlosSWNrpeData10.xml</meta:document>
+		<meta:document id="nrpeResult" type="xml">tlosSWNrpeResult_v_1_0.xml</meta:document>
+		<meta:document id="parameters" type="xml">tlosSWParameters10.xml</meta:document>
+		<meta:document id="permissions" type="xml">tlosSWPermission10.xml</meta:document>
 		<meta:document id="programProvisioning" type="xml">tlosSWProgramProvisioning10.xml</meta:document>
 		<meta:document id="reports" type="xml">tlosSWReports10.xml</meta:document>
 		<meta:document id="resources" type="xml">tlosSWResources10.xml</meta:document>
