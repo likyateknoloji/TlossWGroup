@@ -92,7 +92,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		if (spcInfoType != null) {
 			spcInfoType.getSpcReferance().addJob(jobProperties);
-			DBUtils.insertFreeJobToDailyXML("tlosSWDailyScenarios10.xml", jobPropertiesXML, maxInstanceId);
+			DBUtils.insertFreeJobToDailyXML(jobPropertiesXML, maxInstanceId);
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.ENGINE_FREEJOB_INSERT_SUCESS), null);
 		} else {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.ENGINE_FREEJOB_INSERT_ERROR), null);

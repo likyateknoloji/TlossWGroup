@@ -139,7 +139,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 						JobInfo jobInfo = (JobInfo) infoType;
 						LiveStateInfo liveStateInfo = jobInfo.getLiveLiveStateInfo();
-						DBUtils.insertJobState(spaceWideRegistry.getEXistColllection(), "tlosSWDailyScenarios10.xml", liveStateInfo, jobInfo.getTreePath());
+						DBUtils.insertJobState(liveStateInfo, jobInfo.getTreePath());
 						Alarm alarm = DssDbUtils.swFindAlarms(jobInfo.getJobID(), jobInfo.getUserID(), jobInfo.getAgentID(), liveStateInfo);
 
 						if (alarm.getSubscriber() != null) {

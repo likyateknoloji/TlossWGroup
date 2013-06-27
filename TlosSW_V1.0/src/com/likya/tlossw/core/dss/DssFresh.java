@@ -278,7 +278,7 @@ public class DssFresh {
 
 				job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getW3CDateTime());
 
-				DBUtils.insertJob("tlosSWDailyScenarios10.xml", jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
+				DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
 
 				/* TRANSFERING state i ekle */
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
