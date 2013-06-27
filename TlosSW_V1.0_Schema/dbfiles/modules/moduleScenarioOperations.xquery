@@ -12,6 +12,7 @@ declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 (:
 Mapping
 $dataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWData10.xml")
+$templateDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWJobTemplates10.xml")
 :)
 
 (:-----------------------------------------------------------------------------------------------------------:)
