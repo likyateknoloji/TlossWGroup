@@ -76,6 +76,10 @@ public abstract class DBBase {
 		return localFunctionConstructorNS("moduleXslOperations.xquery", functionName, CommonConstantDefinitions.decNsFo + CommonConstantDefinitions.decNsXslfo, CommonConstantDefinitions.hsNsUrl, param);
 	}
 	
+	protected static String errorFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleErrorOperations.xquery", functionName, CommonConstantDefinitions.decNsErr + CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
+	}
+	
 	protected static ArrayList<Object> moduleGeneric(String xQueryStr) {
 
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
