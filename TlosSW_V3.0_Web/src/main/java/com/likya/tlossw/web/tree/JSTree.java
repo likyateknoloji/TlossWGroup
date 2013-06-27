@@ -19,7 +19,6 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -37,7 +36,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(CommonConstantDefinitions.JOB_DEFINITION_DATA);
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml();
 		System.out.println("Tree has been loaded !!");
 
 		System.out.println("Job Tree olusturuluyor ..");
