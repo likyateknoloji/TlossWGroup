@@ -26,6 +26,14 @@ declare function hs:getTlosDataXml($documentUrl as xs:string) as element(dat:Tlo
 	return $tlosProcessData 
 };
 
+declare function hs:getTlosTemplateDataXml($documentUrl as xs:string) as element(dat:TlosProcessData)?
+{
+   let $templateDataDocumentUrl := met:getMetaData($documentUrl, "jobTemplates")
+   
+	for $tlosProcessData in doc($templateDataDocumentUrl)/dat:TlosProcessData
+	return $tlosProcessData 
+};
+
 (:-----------------------------------------------------------------------------------------------------------:)
 (:----------------------------------------- Senaryo operasyonlari -------------------------------------------:)
 
