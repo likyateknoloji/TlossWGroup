@@ -483,9 +483,10 @@ declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as 
 (: declare function hs:queryDailyJobsAndScenarios() :)
 declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $plan as node()*)
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenario")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
     
-	for $calList in doc($scenarioDocumentUrl)/TlosProcessDataAll
+	for $calList in doc($scenariosDocumentUrl)/TlosProcessDataAll
 	return update insert
            let $next := sq:getNextId($documentUrl, "runId")
 		   return element RUN 
