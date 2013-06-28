@@ -154,11 +154,11 @@ public class DBOperations implements Serializable {
 	}
 
 	private String userFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructorNS("moduleUserOperations.xquery", functionName, CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, param);
+		return localFunctionConstructor("moduleUserOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
 	private String slaFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructorNS("moduleSLAOperations.xquery", functionName, CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, param);
+		return localFunctionConstructor("moduleSLAOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
 	public ArrayList<Object> moduleGeneric(String xQueryStr) {
@@ -248,37 +248,16 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Person> searchUser(String personXML) {
 
-		ArrayList<Person> prsList = null;
+		ArrayList<Person> prsList = new ArrayList<Person>();
 
-		try {
+		String xQueryStr = userFunctionConstructor("hs:searchUser", personXML);
 
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUser(" + personXML + ")";
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			Collection collection = existConnectionHolder.getCollection();
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			prsList = new ArrayList<Person>();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				Person prs;
-				try {
-					prs = PersonDocument.Factory.parse(xmlContent).getPerson();
-					prsList.add(prs);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		Person prs;
+		for (Object currentObject : objectList) {
+			prs = ((PersonDocument) currentObject).getPerson();
+			prsList.add(prs);
 		}
 
 		return prsList;
@@ -327,22 +306,12 @@ public class DBOperations implements Serializable {
 
 	public boolean updateUser(String personXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:updateUserLock(" + personXML + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
+		String xQueryStr = userFunctionConstructor("hs:updateUserLock", personXML);
 
 		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -377,23 +346,12 @@ public class DBOperations implements Serializable {
 
 	public boolean insertUser(String personXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:insertUserLock(" + personXML + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
+		String xQueryStr = userFunctionConstructor("hs:insertUserLock", personXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -466,34 +424,13 @@ public class DBOperations implements Serializable {
 
 	public Person searchUserByUsername(String username) {
 
+		String xQueryStr = userFunctionConstructor("hs:searchUserByUsername", "\"" + username + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		Person person = null;
-
-		try {
-
-			Collection collection = existConnectionHolder.getCollection();
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUsername(" + "\"" + username + "\"" + ")";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					person = PersonDocument.Factory.parse(xmlContent).getPerson();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (Object currentObject : objectList) {
+			person = ((PersonDocument) currentObject).getPerson();
 		}
 
 		return person;
@@ -528,23 +465,12 @@ public class DBOperations implements Serializable {
 
 	public boolean deleteUser(String personXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:deleteUserLock(" + personXML + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
+		String xQueryStr = userFunctionConstructor("hs:deleteUserLock", personXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -718,8 +644,9 @@ public class DBOperations implements Serializable {
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
+		Person prs;
 		for (Object currentObject : objectList) {
-			Person prs = ((PersonDocument) currentObject).getPerson();
+			prs = ((PersonDocument) currentObject).getPerson();
 			prsList.add(prs);
 		}
 
@@ -2005,22 +1932,14 @@ public class DBOperations implements Serializable {
 			alarmInfoTypeClient.setSubscriber(alarm.getSubscriber().getRole().toString());
 		} else {
 			// personid'ye gore kullanici adini db'den sorguluyor
-			xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleUserOperations.xquery\";" + "hs:searchUserByUserId(" + alarm.getSubscriber().getPerson().getId() + ")";
+			xQueryStr = userFunctionConstructor("hs:searchUserByUserId", alarm.getSubscriber().getPerson().getId().toString());
 
-			result = service.query(xQueryStr);
-			i = result.getIterator();
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 			Person user = null;
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					user = PersonDocument.Factory.parse(xmlContent).getPerson();
-					break;
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
+			for (Object currentObject : objectList) {
+				user = ((PersonDocument) currentObject).getPerson();
+				break;
 			}
 
 			if (user != null) {
