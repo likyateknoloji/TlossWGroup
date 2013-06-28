@@ -80,6 +80,10 @@ public abstract class DBBase {
 		return localFunctionConstructorNS("moduleErrorOperations.xquery", functionName, CommonConstantDefinitions.decNsErr + CommonConstantDefinitions.decNsRes, CommonConstantDefinitions.lkNsUrl, param);
 	}
 	
+	protected static String nrpeFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructor("moduleNrpeOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
+	}
+	
 	protected static ArrayList<Object> moduleGeneric(String xQueryStr) {
 
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
