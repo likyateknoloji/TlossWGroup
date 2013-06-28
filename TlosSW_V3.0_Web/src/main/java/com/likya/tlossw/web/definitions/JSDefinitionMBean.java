@@ -45,6 +45,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
 
+	@ManagedProperty(value = "#{remoteShellPanelMBean}")
+	private RemoteShellPanelMBean remoteShellPanelMBean;
+
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
@@ -57,6 +60,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String FILE_LISTENER_PAGE = "/inc/definitionPanels/fileListenerJobDef.xhtml";
 	public final static String DB_JOBS_PAGE = "/inc/definitionPanels/dbJobDef.xhtml";
 	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
+	public final static String REMOTE_SHELL_PAGE = "/inc/definitionPanels/remoteJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
@@ -72,11 +76,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private JobProperties jobProperties;
 	private Scenario scenario;
-	
+
 	private Object currentPanelMBeanRef;
 
 	public void onNodeSelect(NodeSelectEvent event) {
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO, event.getTreeNode().toString() + " selected", null);
 
 		String selectedJS = event.getTreeNode().toString();
 
@@ -138,42 +141,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleJobDropAction(ActionEvent ae) {
-		
-		((JobBaseBean)currentPanelMBeanRef).setDraggedJobName(draggedJobNameForDependency);
-		((JobBaseBean)currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
-		
-		/*
-		if (jobDefCenterPanel.equals(BATCH_PROCESS_PAGE)) {
-			getBatchProcessPanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getBatchProcessPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
 
-		} else if (jobDefCenterPanel.equals(WEB_SERVICE_PAGE)) {
-			getWebServicePanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getWebServicePanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-
-		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
-			getFtpPanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getFtpPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-
-		} else if (jobDefCenterPanel.equals(FILE_PROCESS_PAGE)) {
-			getFileProcessPanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getFileProcessPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-
-		} else if (jobDefCenterPanel.equals(FILE_LISTENER_PAGE)) {
-			getFileListenerPanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getFileListenerPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-
-		} else if (jobDefCenterPanel.equals(DB_JOBS_PAGE)) {
-			getDbJobsPanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getDbJobsPanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-
-		} else if (jobDefCenterPanel.equals(PROCESS_NODE_PAGE)) {
-			getProcessNodePanelMBean().setDraggedJobName(draggedJobNameForDependency);
-			getProcessNodePanelMBean().setDraggedJobPath(draggedJobPathForDependency);
-		}
-		*/
+		((JobBaseBean) currentPanelMBeanRef).setDraggedJobName(draggedJobNameForDependency);
+		((JobBaseBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
 	}
-	
+
 	private void initializeJobPanel(int jobType, boolean insert) {
 		switch (jobType) {
 
@@ -227,22 +199,27 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			jobDefCenterPanel = FILE_PROCESS_PAGE;
 			break;
 
+		case JobCommandType.INT_REMOTE_SHELL:
+			currentPanelMBeanRef = getRemoteShellPanelMBean();
+			jobDefCenterPanel = REMOTE_SHELL_PAGE;
+			break;
+
 		default:
 			break;
 		}
-		
+
 		if (jobProperties != null) {
-			((JobBaseBean)currentPanelMBeanRef).setJobProperties(jobProperties);
-			
-			((JobBaseBean)currentPanelMBeanRef).setJsInsertButton(insert);
-			((JobBaseBean)currentPanelMBeanRef).setJsUpdateButton(!insert);
-			((JobBaseBean)currentPanelMBeanRef).resetPanelInputs();
-			((JobBaseBean)currentPanelMBeanRef).fillTabs();
+			((JobBaseBean) currentPanelMBeanRef).setJobProperties(jobProperties);
+
+			((JobBaseBean) currentPanelMBeanRef).setJsInsertButton(insert);
+			((JobBaseBean) currentPanelMBeanRef).setJsUpdateButton(!insert);
+			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
+			((JobBaseBean) currentPanelMBeanRef).fillTabs();
 
 			if (insert) {
-				((JobBaseBean)currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
+				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
 			} else {
-				((JobBaseBean)currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
+				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
 			}
 		}
 
@@ -261,49 +238,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void deleteJobAction(ActionEvent actionEvent) {
-		
-		//boolean result = false;
-		
-		/*
-		if (jobDefCenterPanel.equals(BATCH_PROCESS_PAGE)) {
-			if (getBatchProcessPanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(WEB_SERVICE_PAGE)) {
-			if (getWebServicePanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(FTP_PAGE)) {
-			if (getFtpPanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(FILE_PROCESS_PAGE)) {
-			if (getFileProcessPanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(FILE_LISTENER_PAGE)) {
-			if (getFileListenerPanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(DB_JOBS_PAGE)) {
-			if (getDbJobsPanelMBean().deleteJob()) {
-				result = true;
-			}
-		} else if (jobDefCenterPanel.equals(PROCESS_NODE_PAGE)) {
-			if (getProcessNodePanelMBean().deleteJob()) {
-				result = true;
-			}
-		}
-		*/
-		
-		if (((JobBaseBean)currentPanelMBeanRef).deleteJob()) {
+
+		if (((JobBaseBean) currentPanelMBeanRef).deleteJob()) {
 			cancelJsAction();
 		}
-		/*
-		if (result) {
-			cancelJsAction();
-		}
-		*/
 	}
 
 	public String getJobDefCenterPanel() {
@@ -432,6 +370,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setScenarioDefinitionMBean(ScenarioDefinitionMBean scenarioDefinitionMBean) {
 		this.scenarioDefinitionMBean = scenarioDefinitionMBean;
+	}
+
+	public RemoteShellPanelMBean getRemoteShellPanelMBean() {
+		return remoteShellPanelMBean;
+	}
+
+	public void setRemoteShellPanelMBean(RemoteShellPanelMBean remoteShellPanelMBean) {
+		this.remoteShellPanelMBean = remoteShellPanelMBean;
 	}
 
 }
