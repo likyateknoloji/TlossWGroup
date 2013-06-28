@@ -1,5 +1,7 @@
 package com.likya.tlossw.db.utils;
 
+import java.util.ArrayList;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
@@ -52,6 +54,38 @@ public class DssDbUtils extends DBBase {
 		ResourceAgentList resourceAgentList = ResourceAgentList.Factory.newInstance();
 		//System.out.println("  > jobPropFuncPassXML : " + jobPropFuncPassXML);
 		
+		String xQueryStr = dssFunctionConstructor("dss:SWFindResourcesForAJob", jobPropFuncPassXML, " fn:current-dateTime() ");
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		for(Object currentObject : objectList) {
+			resourceAgentList = ((ResourceAgentListDocument) currentObject).getResourceAgentList();
+		}
+
+		return resourceAgentList;
+	}
+
+	public static ResourceAgentList swFindResourcesForAJobOld(JobProperties jobProperties){
+
+		JobPropFuncPass jobPropFuncPass = JobPropFuncPass.Factory.newInstance();
+		String OSystemType = jobProperties.getBaseJobInfos().getOSystem().toString();
+		
+		jobPropFuncPass.setOSystem(OSystem.Enum.forString(OSystemType));
+		jobPropFuncPass.setID(jobProperties.getID());
+		if(jobPropFuncPass.getSLAId()>0) jobPropFuncPass.setSLAId(jobProperties.getAdvancedJobInfos().getSLAId());
+		
+		if( jobPropFuncPass.getResourceRequirement() != null ) jobPropFuncPass.setResourceRequirement((ResourceRequirement) jobProperties.getAdvancedJobInfos().getResourceRequirement());
+		
+		QName qName = JobPropFuncPass.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String jobPropFuncPassXML = jobPropFuncPass.xmlText(xmlOptions);
+		
+		ResourceAgentList resourceAgentList = ResourceAgentList.Factory.newInstance();
+		//System.out.println("  > jobPropFuncPassXML : " + jobPropFuncPassXML);
+		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.dssNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleDSSOperations.xquery\";" + 
@@ -82,8 +116,30 @@ public class DssDbUtils extends DBBase {
 		
 		return resourceAgentList;
 	}
-
+	
 	public static Alarm swFindAlarms(String jobId, int userID, int agentId, LiveStateInfo liveStateInfo) throws XmlException{
+
+		QName qName = LiveStateInfo.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
+		
+		Alarm alarm= Alarm.Factory.newInstance();
+
+		String xQueryStr = alarmFunctionConstructor("lk:SWFindAlarms", jobId, "" + userID, "" + agentId, liveStateInfoXML);
+		
+		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		for(Object currentObject : objectList) {
+			alarm = ((AlarmDocument) currentObject).getAlarm();
+		}
+
+		return alarm;
+	}
+
+	public static Alarm swFindAlarmsOld(String jobId, int userID, int agentId, LiveStateInfo liveStateInfo) throws XmlException{
 
 		QName qName = LiveStateInfo.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
@@ -130,5 +186,4 @@ public class DssDbUtils extends DBBase {
 		
 		return alarm;
 	}
-
 }
