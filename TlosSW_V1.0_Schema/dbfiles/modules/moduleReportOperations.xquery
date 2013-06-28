@@ -108,7 +108,7 @@ declare function hs:getJobsReport($documentUrl as xs:string, $numberOfElement as
    For example, to indicate a duration of 3 days, 10 hours and 30 minutes, one would write: P3DT10H30M.
 :)
 
-declare function hs:getJobArray($n as node()*, $order as xs:string, $maxNumOfListedJobs) as node()*
+declare function hs:getJobArray($n as node()*, $order as xs:string, $maxNumOfListedJobs as xs:int) as node()*
 {
   let $resultArrayAsc := <rep:jobArray> {
     for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
@@ -163,7 +163,15 @@ declare function hs:getJobArray($n as node()*, $order as xs:string, $maxNumOfLis
     else <rep:jobArray>-1</rep:jobArray>   
 };
 
-declare function hs:getJobArrayXX($n as node()?, $order as xs:string, $maxNumOfListedJobs) as node()*
+
+declare function hs:getOverallReport($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $order as xs:string, $maxNumOfListedJobs as xs:int) as node()*
+{
+  let $jobsReport := hs:getJobsReport($documentUrl, $numberOfElement, $runId , $jobId, $refRunIdBolean)
+  let $result     := hs:getJobArray($jobsReport , $order, $maxNumOfListedJobs)
+  return $result
+};
+
+declare function hs:getJobArrayXX($n as node()?, $order as xs:string, $maxNumOfListedJobs as xs:int) as node()*
 {
   let $resultArrayAsc := <rep:jobArray> {
     for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
