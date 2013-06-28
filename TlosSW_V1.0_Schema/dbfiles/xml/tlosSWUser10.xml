@@ -25,7 +25,7 @@
                 <com:email>hakan.saribiyik@likyateknoloji.com</com:email>
             </com:EmailList>
             <com:role>ADMIN</com:role>
-            <com:userName>admin</com:userName>
+            <com:userName>hakan</com:userName>
             <com:userPassword>admin</com:userPassword>
             <com:transformToLocalTime>false</com:transformToLocalTime>
         </usr:person>
