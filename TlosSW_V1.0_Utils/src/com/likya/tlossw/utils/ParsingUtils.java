@@ -87,7 +87,7 @@ public class ParsingUtils {
 		stringBuffer.append(functionName);
 
 		stringBuffer.append("(");
-		stringBuffer.append("\"" + CommonConstantDefinitions.rootUrl + collectionName + "\", ");
+		stringBuffer.append("\"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + "\", ");
 
 		for (String param : params) {
 			// stringBuffer.append("\"" + param + "\", ");
