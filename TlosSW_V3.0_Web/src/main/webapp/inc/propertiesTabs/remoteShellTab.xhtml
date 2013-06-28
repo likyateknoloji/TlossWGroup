@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="remoteShellTab" title="#{msgs['tlos.workspace.pannel.job.remoteShellProperties']}">
+			<p:panel id="remoteShellInfosPanel">
+				<p:panelGrid columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobPath']}" />
+					<p:inputText value="#{backingBean.jobPath}" required="true" 
+						requiredMessage="#{msgs['tlos.validation.job.path']}">
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobCommandFile']}" />
+					<p:inputText value="#{backingBean.jobCommand}" required="true" 
+						requiredMessage="#{msgs['tlos.validation.job.command']}">
+					</p:inputText>
+					
+					
+
+
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
