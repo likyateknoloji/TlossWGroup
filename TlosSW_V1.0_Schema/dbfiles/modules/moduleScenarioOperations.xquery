@@ -334,6 +334,16 @@ declare function hs:getJobFromJobName($documentUrl as xs:string, $jobName as xs:
         return $job
 };
 
+declare function hs:getTemplateJobFromJobName($documentUrl as xs:string, $jobName as xs:string) as element(dat:jobProperties)?
+{	
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "jobTemplates")
+	
+	let $doc := doc($dataDocumentUrl)
+	for $job in $doc//dat:jobProperties
+        where $job/dat:baseJobInfos/com:jsName = $jobName
+        return $job
+};
+
 (: ornek kullanim lk:jobList(1,2) ilk uc eleman :)
 declare function hs:jobList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(dat:jobProperties)* 
  {
