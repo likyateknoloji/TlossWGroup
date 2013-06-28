@@ -171,7 +171,7 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			ResourceSet result = service.query(xQueryStr.toString());
+			ResourceSet result = service.query(xQueryStr);
 			ResourceIterator i = result.getIterator();
 
 			while (i.hasMoreResources()) {
@@ -1432,8 +1432,22 @@ public class DBOperations implements Serializable {
 		return localStats;
 	}
 
-	// TODO merve: iç içe db fonksiyonları çağrıldığı için sonraya bırakıldı
 	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
+
+		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint + "()", "xs:string(\""+orderType+"\")" , "" + jobCount);
+		
+		JobArray jobArray = null;
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		for (Object currentObject : objectList) {
+			jobArray = ((JobArrayDocument) currentObject).getJobArray1();
+		}
+
+		return jobArray;
+	}
+
+	public JobArray getOverallReportOld(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
 		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; " + CommonConstantDefinitions.decNsRep + "hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + "," + jobId + "," + refPoint + "()),\"" + orderType + "\"," + jobCount + ")";
 
@@ -1461,7 +1475,7 @@ public class DBOperations implements Serializable {
 
 		return jobArray;
 	}
-
+	
 	/*
 	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
 	 * 
