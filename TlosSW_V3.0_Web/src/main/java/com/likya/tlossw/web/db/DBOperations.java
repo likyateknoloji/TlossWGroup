@@ -724,29 +724,16 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<JobProperties> getJobList(int maxNumber) throws XMLDBException {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + "hs:jobList(" + xmlsUrl + CommonConstantDefinitions.JOB_DEFINITION_DATA + ",1," + maxNumber + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
 		ArrayList<JobProperties> jobList = new ArrayList<JobProperties>();
 
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
+		String xQueryStr = scenarioFunctionConstructor("hs:jobList", "1", maxNumber + "");
 
-			JobProperties jobProperties;
-			try {
-				jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-				jobList.add(jobProperties);
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		JobProperties jobProperties = null;
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
+			jobList.add(jobProperties);
 		}
 
 		return jobList;
@@ -1399,86 +1386,42 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public JobProperties getTemplateJobFromName(String documentName, String jobName) {
-		Collection collection = existConnectionHolder.getCollection();
+	public JobProperties getTemplateJobFromName(String jobName) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getTemplateJobFromJobName", "\"" + jobName + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		JobProperties jobProperties = JobProperties.Factory.newInstance();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + "hs:getJobFromJobName(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", \"" + jobName + "\")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-				try {
-					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
 		}
 
 		return jobProperties;
 	}
 
-	public JobProperties getJob(String documentName, String jobPath, String jobName) {
-		Collection collection = existConnectionHolder.getCollection();
+	public JobProperties getJob(String jobPath, String jobName) {
 
-		JobProperties jobProperties = null;
+		String xQueryStr = scenarioFunctionConstructor("hs:getJob", jobPath, "\"" + jobName + "\"");
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getJob(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		JobProperties jobProperties = JobProperties.Factory.newInstance();
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
 		}
+
 		return jobProperties;
 	}
 
-	public boolean insertJob(String documentName, String jobPropertiesXML, String jobPath) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean insertJob(String jobPropertiesXML, String jobPath) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:insertJobLock", jobPropertiesXML, jobPath);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1486,67 +1429,31 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public String getJobExistence(String documentName, String jobPath, String jobName) {
-		Collection collection = existConnectionHolder.getCollection();
+	public String getJobExistence(String jobPath, String jobName) {
 
-		String sonuc = null;
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistence", jobPath, "\"" + jobName + "\"");
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getJobExistence(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPath + ", xs:string(\"" + jobName + "\"))";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				sonuc = xmlContent.toString();
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		String result = null;
+		for (Object currentObject : objectList) {
+			result = currentObject.toString();
 		}
-		return sonuc;
+
+		return result;
 	}
 
-	public JobProperties getJobFromId(String documentName, String jobId) {
-		Collection collection = existConnectionHolder.getCollection();
+	public JobProperties getJobFromId(String jobId) {
 
-		JobProperties jobProperties = null;
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobFromId", jobId);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:getJobFromId(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + ", " + jobId + ")";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		JobProperties jobProperties = JobProperties.Factory.newInstance();
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
 		}
+
 		return jobProperties;
 	}
 
@@ -1876,7 +1783,7 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public Scenario getScenarioFromId(String documentName, String scenarioId) {
+	public Scenario getScenarioFromId(String scenarioId) {
 
 		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioFromId", scenarioId);
 
@@ -1890,9 +1797,9 @@ public class DBOperations implements Serializable {
 		return scenario;
 	}
 
-	public Scenario getScenario(String documentName, String scenarioPath, String scenarioName) {
+	public Scenario getScenario(String scenarioPath, String scenarioName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", "\"" + scenarioPath + "\"", "\"" + scenarioName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", scenarioPath, "\"" + scenarioName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1904,9 +1811,9 @@ public class DBOperations implements Serializable {
 		return scenario;
 	}
 
-	public String getScenarioExistence(String documentName, String scenarioPath, String scenarioName) {
+	public String getScenarioExistence(String scenarioPath, String scenarioName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", "\"" + scenarioPath + "\"", "\"" + scenarioName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", scenarioPath, "\"" + scenarioName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1918,19 +1825,14 @@ public class DBOperations implements Serializable {
 		return result;
 	}
 
-	public boolean insertScenario(String documentName, String scenarioXML, String scenarioPath) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean insertScenario(String scenarioXML, String scenarioPath) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:insertScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:insertScenarioLock", scenarioXML, scenarioPath);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2229,43 +2131,16 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<JobInfoTypeClient> getJobResultList(String jobId, int runNumber, Boolean transformToLocalTime) {
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		String scenDocName = CommonConstantDefinitions.DAILY_SCENARIOS_DATA;
-		String seqDocName = CommonConstantDefinitions.SEQUENCE_DATA;
-
-		String funcName = "hs:jobResultListbyRunId(\"" + xmlsUrl + scenDocName + "\", " + "\"" + xmlsUrl + seqDocName + "\", " + runNumber + ", 0, " + jobId + ", false())";
-
-		// verilen isin son runNumber sayisi kadar ki calisma listesini runid'den bagimsiz olarak getiriyor
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + funcName;
+		String xQueryStr = scenarioFunctionConstructor("hs:jobResultListbyRunId", runNumber + "", "0", jobId, "false()");
 
 		ArrayList<JobInfoTypeClient> jobs = new ArrayList<JobInfoTypeClient>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			JobProperties jobProperties = null;
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					jobProperties = JobPropertiesDocument.Factory.parse(xmlContent).getJobProperties();
-					jobs.add(fillJobInfoTypeClient(jobProperties, jobs.size(), transformToLocalTime));
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		JobProperties jobProperties = null;
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
+			jobs.add(fillJobInfoTypeClient(jobProperties, jobs.size(), transformToLocalTime));
 		}
 
 		return jobs;
@@ -2413,19 +2288,14 @@ public class DBOperations implements Serializable {
 		return null;
 	}
 
-	public boolean updateJob(String documentName, String jobPropertiesXML, String jobPath) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean updateJob(String jobPropertiesXML, String jobPath) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:updateJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:updateJobLock", jobPropertiesXML, jobPath);
 
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2722,19 +2592,14 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public boolean updateScenario(String documentName, String scenarioPath, String scenarioXML) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean updateScenario(String scenarioPath, String scenarioXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsSt + CommonConstantDefinitions.decNsDat + "hs:updateScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioPath + "," + scenarioXML + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:updateScenarioLock", scenarioPath, scenarioXML);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2742,19 +2607,14 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public boolean deleteScenario(String documentName, String scenarioPath, String scenarioXML) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean deleteScenario(String scenarioPath, String scenarioXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteScenarioLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + scenarioXML + "," + scenarioPath + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:deleteScenarioLock", scenarioXML, scenarioPath);
 
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2762,19 +2622,14 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public boolean deleteJob(String documentName, String jobPath, String jobPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
+	public boolean deleteJob(String jobPath, String jobPropertiesXML) {
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleScenarioOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + "hs:deleteJobLock(" + "xs:string(\"" + xmlsUrl + documentName + "\")" + "," + jobPropertiesXML + "," + jobPath + " )";
+		String xQueryStr = scenarioFunctionConstructor("hs:deleteJobLock", jobPropertiesXML, jobPath);
 
-		XPathQueryService service = null;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.toString();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
