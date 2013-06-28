@@ -119,6 +119,10 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void updateDBAccessAction(ActionEvent e) {
+		dbConnectionProfile.setDbDefinitionId(new BigInteger(getDbConnectionName()));
+		dbConnectionProfile.setActive(Active.Enum.forString(getActive()));
+		dbConnectionProfile.setDeployed(Deployed.NO);
+
 		if (getDbOperations().updateDBAccessProfile(getDBAccessXML())) {
 			addMessage("insertDBAccess", FacesMessage.SEVERITY_INFO, "tlos.success.dbAccessDef.update", null);
 		} else {
