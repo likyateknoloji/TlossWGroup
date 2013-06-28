@@ -14,7 +14,7 @@ declare function hs:getPermisions($documentUrl as xs:string)
 {
    let $permissionsDocumentUrl := met:getMetaData($documentUrl, "permissions")
    
-	for $permission in doc(permissionsDocumentUrl)/per:permissions/per:permission 
+	for $permission in doc($permissionsDocumentUrl)/per:permissions/per:permission 
 	return $permission
 };
 
