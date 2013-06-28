@@ -3,7 +3,7 @@
 	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.likyateknoloji.com/XML_dbconnection_types ../xsds/tlosSWDBConnections_v_1_0.xsd">
 	<dbc:dbConnectionProfile ID="1">
-		<dbc:dbDefinitionId>1</dbc:dbDefinitionId>
+		<dbc:dbDefinitionId>6</dbc:dbDefinitionId>
 		<com:userName>postgres</com:userName>
 		<com:userPassword>ad0215</com:userPassword>
 		<dbc:jdbcConnectionPoolParams>
