@@ -48,8 +48,8 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		System.out.println(parameter_value);
 		
-		curDurationModel = createCurCategoryModel(1, 0, 0, "true", "descending", 12);
-		prevDurationModel = createCurCategoryModel(1, -1, 0, "true", "descending", 10);
+		curDurationModel = createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 12);
+		prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
 
@@ -65,11 +65,11 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	
 	public void refreshCurDurationChart() {
 
-		createCurCategoryModel(1, 0, 0, "true", "descending", 10);
+		createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
 	}
 
 	public void refreshPrevDurationChart() {
-		createCurCategoryModel(1, -1, 0, "true", "descending", 10);
+		createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 	}
 /**
  * 	get related Jobs with getJobsReport(
@@ -96,16 +96,18 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-
 		ChartSeries jobs = new ChartSeries();
 		jobs.setLabel("Jobs");
 
 		BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
-		for (Job job : jobsArray.getJobArray()) {
+		  
+		if(jobsArray!=null) {
+		  for (Job job : jobsArray.getJobArray()) {
 			BigDecimal figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
 			jobs.set(job.getJname(), figure);
+		  }
 		}
-		
+		System.out.println(jobs.getData().size() + " adet data var");
 		curDurationModel.addSeries(jobs);
         return curDurationModel;
 	}
