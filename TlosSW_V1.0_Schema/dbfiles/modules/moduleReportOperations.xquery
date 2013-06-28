@@ -66,9 +66,15 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $numberOfEleme
                      $temiz
     }
                      </arasonuc>
-    let $max :=  round-half-to-even( max($temizArasonuc/stat/@totalDurationInSec), 2)
-    let $min := round-half-to-even( min($temizArasonuc/stat/@totalDurationInSec), 2)
-    let $ortalama := round-half-to-even( avg($temizArasonuc/stat/@totalDurationInSec), 2)
+	
+	let $maxx := round-half-to-even( max($temizArasonuc/stat/@totalDurationInSec), 2)
+	let $minn := round-half-to-even( min($temizArasonuc/stat/@totalDurationInSec), 2)
+	let $ortalamaa := round-half-to-even( avg($temizArasonuc/stat/@totalDurationInSec), 2)
+	
+    let $max :=  if(empty($maxx)) then 0 else $maxx
+    let $min := if(empty($minn)) then 0 else $minn
+    let $ortalama := if(empty($ortalamaa)) then 0 else $ortalamaa
+	
     return <rep:localStats> <rep:max> { $max } </rep:max><rep:min> { $min } </rep:min><rep:avg>{ $ortalama } </rep:avg> 
            </rep:localStats>
 
