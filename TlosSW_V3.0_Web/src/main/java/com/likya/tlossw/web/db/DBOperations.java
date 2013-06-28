@@ -171,7 +171,7 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			ResourceSet result = service.query(xQueryStr);
+			ResourceSet result = service.query(xQueryStr.toString());
 			ResourceIterator i = result.getIterator();
 
 			while (i.hasMoreResources()) {
@@ -374,19 +374,13 @@ public class DBOperations implements Serializable {
 
 	public Object checkUser(JmxAppUser jmxAppUser) {
 
-		try {
+		//try {
 
-			// if ((jmxAppUser.getAppUser() == null) ||
-			// (jmxAppUser.getAppUser().getUsername() == null) ||
-			// (jmxAppUser.getAppUser().getPassword() == null)) {
-			// return false;
-			// }
-
-			Collection collection = existConnectionHolder.getCollection();
-
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-
-			service.setProperty("indent", "yes");
+			 if ((jmxAppUser.getAppUser() == null) ||
+			 (jmxAppUser.getAppUser().getUsername() == null) ||
+			 (jmxAppUser.getAppUser().getPassword() == null)) {
+			 return false;
+			 }
 
 			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
 
@@ -400,9 +394,9 @@ public class DBOperations implements Serializable {
 				}
 			}
 
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
-		}
+		//} catch (XMLDBException xmldbException) {
+		//	xmldbException.printStackTrace();
+		//}
 
 		return false;
 	}
@@ -1420,7 +1414,7 @@ public class DBOperations implements Serializable {
 
 	public LocalStats getStatsReport(int derinlik, int runId, int jobId, String refPoint) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint);
+		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint );
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1434,7 +1428,7 @@ public class DBOperations implements Serializable {
 
 	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint + "()", "xs:string(\""+orderType+"\")" , "" + jobCount);
+		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint , orderType , "" + jobCount);
 		
 		JobArray jobArray = null;
 
