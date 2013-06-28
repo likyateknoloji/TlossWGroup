@@ -56,7 +56,7 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 
 		System.out.println(parameter_value);
 
-		createOhlcModel(1, 0, 0, "true", "descending", 10);
+		createOhlcModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
 
@@ -79,7 +79,7 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		}
 	
 	public void refreshOhlcChart() {
-		createOhlcModel(1, 0, 0, "true", "descending", 10);
+		createOhlcModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
 
 	}
 
