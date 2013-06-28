@@ -139,7 +139,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
-				slaName = getDbOperations().getSlaBySlaId(job.getAdvancedJobInfos().getSLAId()).getName();
+				slaName = getDbOperations().searchSlaByID(job.getAdvancedJobInfos().getSLAId() + "").getName();
 			}
 		}
 	}

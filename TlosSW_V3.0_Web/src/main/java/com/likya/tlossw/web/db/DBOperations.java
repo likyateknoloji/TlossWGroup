@@ -157,6 +157,10 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructorNS("moduleUserOperations.xquery", functionName, CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
+	private String slaFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleSLAOperations.xquery", functionName, CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.hsNsUrl, param);
+	}
+
 	public ArrayList<Object> moduleGeneric(String xQueryStr) {
 
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
@@ -1089,55 +1093,30 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<SLA> searchSla(String slaXML) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSLA(" + slaXML + ")";
 
 		ArrayList<SLA> slaList = new ArrayList<SLA>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = slaFunctionConstructor("hs:searchSLA", slaXML);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				SLA sla;
-				try {
-					sla = SLADocument.Factory.parse(xmlContent).getSLA();
-					slaList.add(sla);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e1) {
-			e1.printStackTrace();
+		SLA sla;
+		for (Object currentObject : objectList) {
+			sla = ((SLADocument) currentObject).getSLA();
+			slaList.add(sla);
 		}
 
 		return slaList;
 	}
 
 	public boolean deleteSla(String slaXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:deleteSLALock(" + slaXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = slaFunctionConstructor("hs:deleteSLALock", slaXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1146,19 +1125,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertSla(String slaXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:insertSlaLock(" + slaXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = slaFunctionConstructor("hs:insertSlaLock", slaXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1167,18 +1140,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean updateSla(String slaXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:updateSLALock(" + slaXML + ")";
+		String xQueryStr = slaFunctionConstructor("hs:updateSLALock", slaXML);
 
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1256,34 +1224,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public SLA searchSlaByID(String slaId) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSlaBySlaId(" + slaId + ")";
+		String xQueryStr = slaFunctionConstructor("hs:searchSlaBySlaId", slaId);
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			SLA sla = null;
+		SLA sla;
+		for (Object currentObject : objectList) {
+			sla = ((SLADocument) currentObject).getSLA();
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					sla = SLADocument.Factory.parse(xmlContent).getSLA();
-
-					return sla;
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return sla;
 		}
 
 		return null;
@@ -1501,38 +1451,17 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<SLA> getSlaList() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String dataFile = xmlsUrl + CommonConstantDefinitions.SLA_DATA;
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:slaList(\"" + dataFile + "\", " + "1,2)";
 
 		ArrayList<SLA> slaList = new ArrayList<SLA>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = slaFunctionConstructor("hs:slaList", "1", "2");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				SLA sla;
-				try {
-					sla = SLADocument.Factory.parse(xmlContent).getSLA();
-					slaList.add(sla);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		SLA sla;
+		for (Object currentObject : objectList) {
+			sla = ((SLADocument) currentObject).getSLA();
+			slaList.add(sla);
 		}
 
 		return slaList;
@@ -2249,40 +2178,6 @@ public class DBOperations implements Serializable {
 			}
 		} catch (XMLDBException e) {
 			e.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public SLA getSlaBySlaId(int slaId) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleSLAOperations.xquery\";" + "hs:searchSlaBySlaId(" + slaId + ")";
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			SLA sla = null;
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					sla = SLADocument.Factory.parse(xmlContent).getSLA();
-
-					return sla;
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
 		}
 
 		return null;
