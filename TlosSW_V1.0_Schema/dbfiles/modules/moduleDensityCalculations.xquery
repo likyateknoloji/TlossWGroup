@@ -129,9 +129,9 @@ declare function density:recStat($documentUrl as xs:string, $stateName as xs:str
 {
   (: Otomatik zaman penceresi hesabi icin :)
 	  
-  let $hepsi := hs:getJobArray($documentUrl, hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1)
-  let $startDateTimex := xs:dateTime($hepsi/@overallStart)-xs:dayTimeDuration('PT2M')
-  let $endDateTimex := xs:dateTime($hepsi/@overallStop)+xs:dayTimeDuration('PT2M')
+  let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1)
+  let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT2M')
+  let $endDateTimex := xs:dateTime(if($hepsi/@overallStop  eq '') then current-dateTime() else $hepsi/@overallStop)+xs:dayTimeDuration('PT2M')
 
   (:
     let $startDateTime := xs:dateTime("2013-05-05T15:52:00+03:00")
