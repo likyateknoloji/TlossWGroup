@@ -99,14 +99,10 @@ public class DBOperations implements Serializable {
 	private ExistConnectionHolder existConnectionHolder;
 
 	private String xQueryModuleUrl = null;
-	private String xmlsUrl = "";
-	private String metaData = "";
 
 	@PostConstruct
 	public void init() {
 		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbCollectionName);
-		xmlsUrl = ParsingUtils.getXmlsPath(ExistClient.dbCollectionName);
-		metaData = xmlsUrl + CommonConstantDefinitions.META_DATA;
 	}
 
 	private String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
@@ -161,6 +157,10 @@ public class DBOperations implements Serializable {
 		return localFunctionConstructor("moduleSLAOperations.xquery", functionName, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
+	private String wsFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleWebServiceOperations.xquery", functionName, CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom, CommonConstantDefinitions.wsoNsUrl, param);
+	}
+
 	public ArrayList<Object> moduleGeneric(String xQueryStr) {
 
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
@@ -209,43 +209,6 @@ public class DBOperations implements Serializable {
 		return agentList;
 	}
 
-	public ArrayList<SWAgent> searchAgentOld(String agentXML) {
-
-		ArrayList<SWAgent> agentList = null;
-
-		try {
-
-			// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgent(\"" + metaData + "\", " + agentXML + ")";
-
-			String xQueryStr = agentFunctionConstructor("lk:searchAgent", agentXML);
-
-			Collection collection = existConnectionHolder.getCollection();
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			agentList = new ArrayList<SWAgent>();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				SWAgent agent;
-				try {
-					agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
-					agentList.add(agent);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
-		}
-		return agentList;
-	}
-
 	public ArrayList<Person> searchUser(String personXML) {
 
 		ArrayList<Person> prsList = new ArrayList<Person>();
@@ -279,24 +242,12 @@ public class DBOperations implements Serializable {
 
 	public boolean updateAgent(String agentXML) {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:updateAgentLock(\"" + metaData + "\", " + agentXML + ")";
-
 		String xQueryStr = agentFunctionConstructor("lk:updateAgentLock", agentXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -321,22 +272,12 @@ public class DBOperations implements Serializable {
 
 	public boolean insertAgent(String agentXML) {
 
-		/*
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:insertAgentLock(\"" + metaData + "\", " + agentXML + ")";
-		 */
-
 		String xQueryStr = agentFunctionConstructor("lk:insertAgentLock", agentXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
-
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -361,62 +302,27 @@ public class DBOperations implements Serializable {
 
 	public SWAgent searchAgentByResource(String resourcename) throws XMLDBException {
 
+		String xQueryStr = agentFunctionConstructor("lk:searchAgentByResource", "\"" + resourcename + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		SWAgent agent = null;
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByResource(" + "\"" + resourcename + "\"" + ")";
-
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
-
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		for (Object currentObject : objectList) {
+			agent = ((SWAgentDocument) currentObject).getSWAgent();
 		}
+
 		return agent;
 	}
 
 	public SWAgent searchAgentById(String id) {
 
-		SWAgent agent = null;
-
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + id + ")";
-
 		String xQueryStr = agentFunctionConstructor("lk:searchAgentByAgentId", id);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		SWAgent agent = null;
+		for (Object currentObject : objectList) {
+			agent = ((SWAgentDocument) currentObject).getSWAgent();
 		}
 
 		return agent;
@@ -438,28 +344,16 @@ public class DBOperations implements Serializable {
 
 	public boolean deleteAgent(String agentXML) {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "lk:deleteAgentLock(\"" + metaData + "\", " + agentXML + ")";
-
 		String xQueryStr = agentFunctionConstructor("lk:deleteAgentLock", agentXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
-
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
@@ -493,14 +387,6 @@ public class DBOperations implements Serializable {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 
 			service.setProperty("indent", "yes");
-
-			/*
-			 * String usrDataFile = xmlsUrl + CommonConstantDefinitions.USER_DATA; String perDataFile = xmlsUrl + CommonConstantDefinitions.PERMISSION_DATA;
-			 * 
-			 * String funcDef = "hs:query_username(\"" + usrDataFile + "\", \"" + perDataFile + "\", xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
-			 * 
-			 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.moduleImport + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + funcDef;
-			 */
 
 			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
 
@@ -597,40 +483,16 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Alarm> getAlarms() {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:alarms(\"" + metaData + "\")";
+		ArrayList<Alarm> almList = new ArrayList<Alarm>();
 
 		String xQueryStr = alarmFunctionConstructor("lk:alarms");
 
-		ArrayList<Alarm> almList = new ArrayList<Alarm>();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				Alarm alm;
-				try {
-					alm = AlarmDocument.Factory.parse(xmlContent).getAlarm();
-					almList.add(alm);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException e1) {
-			e1.printStackTrace();
-			return null;
+		Alarm alarm;
+		for (Object currentObject : objectList) {
+			alarm = ((AlarmDocument) currentObject).getAlarm();
+			almList.add(alarm);
 		}
 
 		return almList;
@@ -710,116 +572,61 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<Alarm> searchAlarm(String alarmXML) throws XMLDBException {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarm(\"" + metaData + "\", " + alarmXML + ")";
+		ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
 
 		String xQueryStr = alarmFunctionConstructor("lk:searchAlarm", alarmXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-		ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			Alarm alarm;
-			try {
-				alarm = AlarmDocument.Factory.parse(xmlContent).getAlarm();
-				alarmList.add(alarm);
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		Alarm alarm;
+		for (Object currentObject : objectList) {
+			alarm = ((AlarmDocument) currentObject).getAlarm();
+			alarmList.add(alarm);
 		}
+
 		return alarmList;
 	}
 
 	public Boolean deleteAlarm(String alarmXML) {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:deleteAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
-
 		String xQueryStr = alarmFunctionConstructor("lk:deleteAlarmLock", alarmXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		XPathQueryService service;
-
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
+
 		return true;
 	}
 
 	public ArrayList<AlarmReport> getAlarmReportList(String date1, String date2, String alarmLevel, String alarmName, String alarmUser) throws XMLDBException {
 
-		/*
-		 * String funcDef = "lk:getAlarms(\"" + metaData + "\", \"" + date1 + "\", \"" + date2 + "\", \"" + alarmLevel + "\", \"" + alarmName + "\", \"" + alarmUser + "\")";
-		 * 
-		 * String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
-		 */
+		ArrayList<AlarmReport> alarmList = new ArrayList<AlarmReport>();
 
 		String xQueryStr = alarmFunctionConstructor("lk:getAlarms", date1, date2, alarmLevel, alarmName, alarmUser);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-		service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		ResourceSet result = service.query(xQueryStr);
-		ResourceIterator i = result.getIterator();
-		ArrayList<AlarmReport> alarmList = new ArrayList<AlarmReport>();
 		AlarmReport alarmReport = null;
-
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
-
-			try {
-				alarmReport = AlarmReportDocument.Factory.parse(xmlContent).getAlarmReport();
-				alarmList.add(alarmReport);
-			} catch (XmlException e) {
-				e.printStackTrace();
-				return null;
-			}
+		for (Object currentObject : objectList) {
+			alarmReport = ((AlarmReportDocument) currentObject).getAlarmReport();
+			alarmList.add(alarmReport);
 		}
+
 		return alarmList;
 	}
 
 	public Boolean updateAlarm(String alarmXML) {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:updateAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
-
 		String xQueryStr = alarmFunctionConstructor("lk:updateAlarmLock", alarmXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -829,25 +636,12 @@ public class DBOperations implements Serializable {
 
 	public Boolean insertAlarm(String alarmXML) {
 
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:insertAlarmLock(\"" + metaData + "\", " + alarmXML + ")";
-
 		String xQueryStr = alarmFunctionConstructor("lk:insertAlarmLock", alarmXML);
 
-		Collection collection = existConnectionHolder.getCollection();
-		XPathQueryService service;
-
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-		} catch (XMLDBException e2) {
-			e2.printStackTrace();
-			return false;
-		}
-
-		try {
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1099,36 +893,13 @@ public class DBOperations implements Serializable {
 
 	public Alarm searchAlarmByName(String alarmName) {
 
+		String xQueryStr = alarmFunctionConstructor("lk:searchAlarmByName", "\"" + alarmName + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		Alarm alarm = null;
-
-		try {
-
-			Collection collection = existConnectionHolder.getCollection();
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByName(\"" + metaData + "\", " + "\"" + alarmname + "\"" + ")";
-
-			String xQueryStr = alarmFunctionConstructor("lk:searchAlarmByName", "\"" + alarmName + "\"");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					alarm = AlarmDocument.Factory.parse(xmlContent).getAlarm();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException xmldbException) {
-			xmldbException.printStackTrace();
+		for (Object currentObject : objectList) {
+			alarm = ((AlarmDocument) currentObject).getAlarm();
 		}
 
 		return alarm;
@@ -1243,19 +1014,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertWSDefinition(String wsPropertiesXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSDefinition(\"" + metaData + "\", " + wsPropertiesXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = wsFunctionConstructor("wso:insertWSDefinition", wsPropertiesXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -1335,43 +1100,20 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<SWAgent> getAgents() {
-		Collection collection = existConnectionHolder.getCollection();
-
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + "lk:getAgents(\"" + metaData + "\")";
-
-		String xQueryStr = agentFunctionConstructor("lk:getAgents");
 
 		ArrayList<SWAgent> agentList = new ArrayList<SWAgent>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = agentFunctionConstructor("lk:getAgents");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+		SWAgents agents;
+		for (Object currentObject : objectList) {
+			agents = ((SWAgentsDocument) currentObject).getSWAgents();
 
-				SWAgents agents;
-				try {
-					agents = SWAgentsDocument.Factory.parse(xmlContent).getSWAgents();
-
-					for (SWAgent agent : agents.getSWAgentArray()) {
-						agentList.add(agent);
-					}
-
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
+			for (SWAgent agent : agents.getSWAgentArray()) {
+				agentList.add(agent);
 			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
 		}
 
 		return agentList;
@@ -1395,37 +1137,17 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<WebServiceDefinition> getWebServiceListForActiveUser(int userId) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionListForActiveUser(\"" + metaData + "\", " + userId + ")";
 
 		ArrayList<WebServiceDefinition> webServiceList = new ArrayList<WebServiceDefinition>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = wsFunctionConstructor("wso:getWSDefinitionListForActiveUser", userId + "");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				WebServiceDefinition webServiceDefinition;
-				try {
-					webServiceDefinition = WebServiceDefinitionDocument.Factory.parse(xmlContent).getWebServiceDefinition();
-					webServiceList.add(webServiceDefinition);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-			return null;
+		WebServiceDefinition webServiceDefinition;
+		for (Object currentObject : objectList) {
+			webServiceDefinition = ((WebServiceDefinitionDocument) currentObject).getWebServiceDefinition();
+			webServiceList.add(webServiceDefinition);
 		}
 
 		return webServiceList;
@@ -1765,37 +1487,18 @@ public class DBOperations implements Serializable {
 	 * 
 	 * return jobs; }
 	 */
+
 	public SWAgent checkAgent(String resource, int jmxPort) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		// String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA;
+		String xQueryStr = agentFunctionConstructor("lk:searchAgent", "xs:string(\"" + resource + "\")", jmxPort + "");
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + CommonConstantDefinitions.decNsRes + "declare namespace agnt = \"http://www.likyateknoloji.com/XML_agent_types\";" + "lk:searchAgent(\"" + metaData + "\", " + "xs:string(\"" + resource + "\")," + jmxPort + ")";
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		SWAgent agent = null;
-
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		for (Object currentObject : objectList) {
+			agent = ((SWAgentDocument) currentObject).getSWAgent();
 		}
+
 		return agent;
 	}
 
@@ -1836,48 +1539,27 @@ public class DBOperations implements Serializable {
 
 	public ArrayList<AlarmInfoTypeClient> getJobAlarmHistory(String jobId, Boolean transformToLocalTime) {
 
-		Collection collection = existConnectionHolder.getCollection();
-
-		/*
-		 * String funcDef = "lk:jobAlarmListbyRunId(\""+ metaData + "\", 3, 0, " + jobId + ", false(), 30)"; String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + funcDef;
-		 */
-
-		// verilen isin son 3 rundaki alarmini runid'den bagimsiz olarak
-		// getiriyor
-		// son 30 gun icerisinde ariyor
-		String xQueryStr = alarmFunctionConstructor("lk:jobAlarmListbyRunId", "3", "0", jobId, "false()", "30");
-
 		ArrayList<AlarmInfoTypeClient> alarmList = new ArrayList<AlarmInfoTypeClient>();
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		String xQueryStr = alarmFunctionConstructor("lk:jobAlarmListbyRunId", "3", "0", jobId, "false()", "30");
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+		com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm;
+		for (Object currentObject : objectList) {
+			alarm = ((com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument) currentObject).getAlarm();
 
-				com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm;
-				try {
-					alarm = com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Factory.parse(xmlContent).getAlarm();
-
-					alarmList.add(fillAlarmInfoTypeClient(service, alarm, jobId, transformToLocalTime));
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
+			try {
+				alarmList.add(fillAlarmInfoTypeClient(alarm, jobId, transformToLocalTime));
+			} catch (XMLDBException e) {
+				e.printStackTrace();
 			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
 		}
 
 		return alarmList;
 	}
 
-	private AlarmInfoTypeClient fillAlarmInfoTypeClient(XPathQueryService service, com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm, String jobId, Boolean transformToLocalTime) throws XMLDBException {
+	private AlarmInfoTypeClient fillAlarmInfoTypeClient(com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm, String jobId, Boolean transformToLocalTime) throws XMLDBException {
 
 		AlarmInfoTypeClient alarmInfoTypeClient = new AlarmInfoTypeClient();
 		alarmInfoTypeClient.setAlarmId(alarm.getAlarmId() + "");
@@ -1886,8 +1568,6 @@ public class DBOperations implements Serializable {
 		alarmInfoTypeClient.setLevel(alarm.getLevel() + "");
 
 		String xQueryStr;
-		ResourceSet result;
-		ResourceIterator i;
 		/*
 		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor
 		 * 
@@ -1950,28 +1630,18 @@ public class DBOperations implements Serializable {
 		}
 
 		// alarm id'ye gore alarmi dbden sorguluyor
-		// xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmByAlarmId(\"" + metaData + "\", " + alarm.getAlarmId() + ")";
-
 		xQueryStr = alarmFunctionConstructor("lk:searchAlarmByAlarmId", alarm.getAlarmId().toString());
 
-		result = service.query(xQueryStr);
-		i = result.getIterator();
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
 		Alarm alarmDefinition = null;
+		for (Object currentObject : objectList) {
+			alarmDefinition = ((AlarmDocument) currentObject).getAlarm();
 
-		while (i.hasMoreResources()) {
-			Resource r = i.nextResource();
-			String xmlContent = (String) r.getContent();
+			alarmInfoTypeClient.setAlarmName(alarmDefinition.getName());
+			alarmInfoTypeClient.setDescription(alarmDefinition.getDesc());
 
-			try {
-				alarmDefinition = AlarmDocument.Factory.parse(xmlContent).getAlarm();
-
-				alarmInfoTypeClient.setAlarmName(alarmDefinition.getName());
-				alarmInfoTypeClient.setDescription(alarmDefinition.getDesc());
-
-				break;
-			} catch (XmlException e) {
-				e.printStackTrace();
-			}
+			break;
 		}
 
 		return alarmInfoTypeClient;
@@ -2068,35 +1738,16 @@ public class DBOperations implements Serializable {
 	}
 
 	public com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm getAlarmHistoryById(int alarmHistoryId) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		// String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + xQueryModuleUrl + "/moduleAlarmOperations.xquery\";" + "lk:searchAlarmHistoryById(\"" + metaData + "\", " + alarmHistoryId + ")";
 
 		String xQueryStr = alarmFunctionConstructor("lk:searchAlarmHistoryById", alarmHistoryId + "");
 
-		XPathQueryService service;
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-			com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm = null;
+		com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm alarm = null;
+		for (Object currentObject : objectList) {
+			alarm = ((com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument) currentObject).getAlarm();
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					alarm = com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Factory.parse(xmlContent).getAlarm();
-
-					return alarm;
-				} catch (XmlException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+			return alarm;
 		}
 
 		return null;
@@ -2118,121 +1769,79 @@ public class DBOperations implements Serializable {
 	}
 
 	public ArrayList<WSAccessInfoTypeClient> searchWSAccessProfiles(String userAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
-
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSDefinitionList(\"" + metaData + "\")";
 
 		HashMap<BigInteger, WebServiceDefinition> wsDefinitionList = new HashMap<BigInteger, WebServiceDefinition>();
 
-		XPathQueryService service = null;
-		ResourceSet result = null;
+		String xQueryStr = wsFunctionConstructor("wso:getWSDefinitionList");
 
-		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			result = service.query(xQueryStr);
-			ResourceIterator iterator = result.getIterator();
-
-			while (iterator.hasMoreResources()) {
-				Resource r = iterator.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				WebServiceDefinition wsProperties;
-				try {
-					wsProperties = WebServiceDefinitionDocument.Factory.parse(xmlContent).getWebServiceDefinition();
-					wsDefinitionList.put(wsProperties.getID(), wsProperties);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-			}
-		} catch (XMLDBException exception) {
-			exception.printStackTrace();
-			return null;
+		WebServiceDefinition webServiceDefinition;
+		for (Object currentObject : objectList) {
+			webServiceDefinition = ((WebServiceDefinitionDocument) currentObject).getWebServiceDefinition();
+			wsDefinitionList.put(webServiceDefinition.getID(), webServiceDefinition);
 		}
-
-		xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:searchWSAccessProfiles(\"" + metaData + "\", " + userAccessProfileXML + ")";
 
 		ArrayList<WSAccessInfoTypeClient> wsAccessInfoTypeClients = new ArrayList<WSAccessInfoTypeClient>();
 
-		try {
-			result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
+		xQueryStr = wsFunctionConstructor("wso:searchWSAccessProfiles", userAccessProfileXML);
 
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+		ArrayList<Object> wsObjectList = moduleGeneric(xQueryStr);
 
-				UserAccessProfile userAccessProfile;
+		UserAccessProfile userAccessProfile;
+		for (Object currentObject : wsObjectList) {
+			userAccessProfile = ((UserAccessProfileDocument) currentObject).getUserAccessProfile();
 
-				try {
-					userAccessProfile = UserAccessProfileDocument.Factory.parse(xmlContent).getUserAccessProfile();
+			WebServiceDefinition wsDefinition = wsDefinitionList.get(userAccessProfile.getWebServiceID());
 
-					WebServiceDefinition wsDefinition = wsDefinitionList.get(userAccessProfile.getWebServiceID());
+			WSAccessInfoTypeClient wsInfoTypeClient = new WSAccessInfoTypeClient();
+			wsInfoTypeClient.setWsAccessProfile(userAccessProfile);
+			wsInfoTypeClient.setServiceName(wsDefinition.getServiceName());
+			wsInfoTypeClient.setDescription(wsDefinition.getDescription());
 
-					WSAccessInfoTypeClient wsInfoTypeClient = new WSAccessInfoTypeClient();
-					wsInfoTypeClient.setWsAccessProfile(userAccessProfile);
-					wsInfoTypeClient.setServiceName(wsDefinition.getServiceName());
-					wsInfoTypeClient.setDescription(wsDefinition.getDescription());
+			String userOrRoleStr = "";
 
-					String userOrRoleStr = "";
+			if (userAccessProfile.getAllowedRoles() != null) {
+				AllowedRoles roles = userAccessProfile.getAllowedRoles();
+				for (int j = 0; j < roles.getRoleArray().length; j++) {
+					userOrRoleStr += roles.getRoleArray(j).toString() + ", ";
+				}
+			} else if (userAccessProfile.getAllowedUsers() != null) {
+				ArrayList<Person> userList = getUsers();
 
-					if (userAccessProfile.getAllowedRoles() != null) {
-						AllowedRoles roles = userAccessProfile.getAllowedRoles();
-						for (int j = 0; j < roles.getRoleArray().length; j++) {
-							userOrRoleStr += roles.getRoleArray(j).toString() + ", ";
-						}
-					} else if (userAccessProfile.getAllowedUsers() != null) {
-						ArrayList<Person> userList = getUsers();
+				AllowedUsers users = userAccessProfile.getAllowedUsers();
+				for (int j = 0; j < users.getUserIdArray().length; j++) {
 
-						AllowedUsers users = userAccessProfile.getAllowedUsers();
-						for (int j = 0; j < users.getUserIdArray().length; j++) {
+					int userId = users.getUserIdArray(j);
+					for (Person user : userList) {
 
-							int userId = users.getUserIdArray(j);
-							for (Person user : userList) {
-
-								if (user.getId() == userId) {
-									userOrRoleStr += user.getUserName() + ", ";
-									break;
-								}
-							}
+						if (user.getId() == userId) {
+							userOrRoleStr += user.getUserName() + ", ";
+							break;
 						}
 					}
-
-					if (!userOrRoleStr.equals("")) {
-						userOrRoleStr = userOrRoleStr.substring(0, userOrRoleStr.length() - 2);
-					}
-					wsInfoTypeClient.setUserOrRoleList(userOrRoleStr);
-
-					wsAccessInfoTypeClients.add(wsInfoTypeClient);
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
 				}
 			}
-		} catch (XMLDBException exception) {
-			exception.printStackTrace();
-			return null;
+
+			if (!userOrRoleStr.equals("")) {
+				userOrRoleStr = userOrRoleStr.substring(0, userOrRoleStr.length() - 2);
+			}
+			wsInfoTypeClient.setUserOrRoleList(userOrRoleStr);
+
+			wsAccessInfoTypeClients.add(wsInfoTypeClient);
 		}
 
 		return wsAccessInfoTypeClients;
 	}
 
 	public boolean deleteWSAccessProfile(String userAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:deleteWSAccessProfile(\"" + metaData + "\", " + userAccessProfileXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = wsFunctionConstructor("wso:deleteWSAccessProfile", userAccessProfileXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2241,19 +1850,13 @@ public class DBOperations implements Serializable {
 	}
 
 	public boolean insertWSAccessProfile(String userAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:insertWSAccessProfile(\"" + metaData + "\", " + userAccessProfileXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = wsFunctionConstructor("wso:insertWSAccessProfile", userAccessProfileXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -2262,53 +1865,27 @@ public class DBOperations implements Serializable {
 	}
 
 	public UserAccessProfile searchWSAccessByID(String id) {
-		Collection collection = existConnectionHolder.getCollection();
+
+		String xQueryStr = wsFunctionConstructor("wso:getWSAccessProfile", id);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		UserAccessProfile userAccessProfile = null;
-
-		try {
-			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:getWSAccessProfile(\"" + metaData + "\", " + id + ")";
-
-			ResourceSet result = service.query(xQueryStr);
-			ResourceIterator i = result.getIterator();
-
-			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
-
-				try {
-					userAccessProfile = UserAccessProfileDocument.Factory.parse(xmlContent).getUserAccessProfile();
-				} catch (XmlException e) {
-					e.printStackTrace();
-					return null;
-				}
-
-			}
-
-		} catch (XMLDBException e) {
-			e.printStackTrace();
+		for (Object currentObject : objectList) {
+			userAccessProfile = ((UserAccessProfileDocument) currentObject).getUserAccessProfile();
 		}
 
 		return userAccessProfile;
 	}
 
 	public boolean updateWSAccessProfile(String userAccessProfileXML) {
-		Collection collection = existConnectionHolder.getCollection();
 
-		String xQueryStr = xQueryNsHeader + CommonConstantDefinitions.wsoNsUrl + xQueryModuleUrl + "/moduleWebServiceOperations.xquery\";" + CommonConstantDefinitions.decNsWs + CommonConstantDefinitions.decNsCom + "wso:updateWSAccessProfileLock(\"" + metaData + "\", " + userAccessProfileXML + ")";
-
-		XPathQueryService service;
+		String xQueryStr = wsFunctionConstructor("wso:updateWSAccessProfileLock", userAccessProfileXML);
 
 		try {
-			service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-			service.setProperty("indent", "yes");
-
-			ResourceSet result = service.query(xQueryStr);
-			result.getSize();
-		} catch (XMLDBException e) {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
