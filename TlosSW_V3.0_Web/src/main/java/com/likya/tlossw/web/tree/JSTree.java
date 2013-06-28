@@ -130,16 +130,22 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		ArrayList<String> scenarioNameList = new ArrayList<>();
 		StringTokenizer pathTokenizer = new StringTokenizer(jobPath, "/");
+
+		// ilk gelen senaryo root oldugu icin onu listeye eklemiyor
+		if (pathTokenizer.hasMoreTokens()) {
+			pathTokenizer.nextToken();
+		}
+
 		while (pathTokenizer.hasMoreTokens()) {
 			scenarioNameList.add(pathTokenizer.nextToken());
 		}
-		scenarioNameList.add(jobName);
+		// scenarioNameList.add(jobName);
 
 		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
-		deleteJobNode(scenarioNameList, 0, nodeList);
+		deleteJobNode(scenarioNameList, 0, nodeList, jobName);
 	}
 
-	private void deleteJobNode(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList) {
+	private void deleteJobNode(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList, String jobName) {
 		boolean result = false;
 		for (TreeNode node : nodeList) {
 
@@ -148,13 +154,19 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 				if (scenarioNameList.size() == index + 1) {
 					result = true;
 				} else {
-					deleteSubtree(scenarioNameList, ++index, node.getChildren());
+					deleteJobNode(scenarioNameList, ++index, node.getChildren(), jobName);
 				}
 			}
 
 			if (result) {
-				TreeNode parent = node.getParent();
-				parent.getChildren().remove(node);
+				for (TreeNode jobNode : node.getChildren()) {
+					if (jobNode.getData().equals(jobName)) {
+						TreeNode parent = jobNode.getParent();
+						parent.getChildren().remove(jobNode);
+
+						break;
+					}
+				}
 
 				break;
 			}

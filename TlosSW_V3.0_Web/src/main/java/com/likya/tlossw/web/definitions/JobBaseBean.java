@@ -1900,7 +1900,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public boolean deleteJob() {
 		boolean result = true;
 		if (getDbOperations().deleteJob(DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
-			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID());
+			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID());
 			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
 		} else {
 			addMessage("jobDelete", FacesMessage.SEVERITY_ERROR, "tlos.error.job.delete", null);
