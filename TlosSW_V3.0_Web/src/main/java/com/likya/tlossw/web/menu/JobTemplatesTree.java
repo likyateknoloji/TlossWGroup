@@ -40,7 +40,7 @@ public class JobTemplatesTree implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml();
+		TlosProcessData tlosProcessData = dbOperations.getTlosTemplateDataXml();
 
 		System.out.println("Job Template Tree olusturuluyor ..");
 
