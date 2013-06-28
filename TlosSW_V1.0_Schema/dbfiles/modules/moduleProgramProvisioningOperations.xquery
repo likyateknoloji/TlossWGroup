@@ -148,5 +148,5 @@ declare function ks:deletePpLock($documentUrl as xs:string, $pp as element(pp:Li
 {
    let $programProvisioningDocumentUrl := met:getMetaData($documentUrl, "programProvisioning")
    
-   util:exclusive-lock(doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License, ks:deletePp($documentUrl, $pp))     
+   return util:exclusive-lock(doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License, ks:deletePp($documentUrl, $pp))     
 };
