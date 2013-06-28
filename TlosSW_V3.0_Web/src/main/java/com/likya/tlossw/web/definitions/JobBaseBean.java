@@ -1120,7 +1120,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jsNameConfirmDialog = false;
 		}
 
-		if (getDbOperations().insertJob(JSDefinitionMBean.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		if (getDbOperations().insertJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
 			jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 
@@ -1142,7 +1142,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jsNameConfirmDialog = false;
 		}
 
-		if (getDbOperations().updateJob(CommonConstantDefinitions.JOB_DEFINITION_DATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		if (getDbOperations().updateJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
@@ -1193,7 +1193,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean jobCheckUpForUpdate() {
-		String jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+		String jobCheckResult = getDbOperations().getJobExistence(DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 		// bu isimde bir iş yoksa 0
 		// ayni path de aynı isimde bir iş varsa 1
@@ -1202,7 +1202,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
 
-				JobProperties job = getDbOperations().getJob(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+				JobProperties job = getDbOperations().getJob(DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
 				if (!job.getID().equals(jobProperties.getID())) {
@@ -1227,7 +1227,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean jobCheckUp() {
-		String jobCheckResult = getDbOperations().getJobExistence(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+		String jobCheckResult = getDbOperations().getJobExistence(DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 		// bu isimde bir iş yoksa 0
 		// ayni path de aynı isimde bir iş varsa 1
@@ -1271,7 +1271,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJobFromId(JSDefinitionMBean.JOB_DEFINITION_DATA, DefinitionUtils.getXFromNameId(draggedJobName, "Id"));
+		JobProperties draggedJobProperties = getDbOperations().getJobFromId(DefinitionUtils.getXFromNameId(draggedJobName, "Id"));
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
@@ -1899,7 +1899,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	// işe sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteJob() {
 		boolean result = true;
-		if (getDbOperations().deleteJob(CommonConstantDefinitions.JOB_DEFINITION_DATA, DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
+		if (getDbOperations().deleteJob(DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
 			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID());
 			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
 		} else {

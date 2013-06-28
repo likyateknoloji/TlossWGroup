@@ -50,9 +50,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private String jobDefCenterPanel = DEFAULT_DEF_PAGE;
 
-	public final static String JOB_TEMPLATES_DATA = "tlosSWJobTemplates10.xml";
-	public final static String JOB_DEFINITION_DATA = "tlosSWData10.xml";
-
 	public final static String BATCH_PROCESS_PAGE = "/inc/definitionPanels/batchProcessJobDef.xhtml";
 	public final static String WEB_SERVICE_PAGE = "/inc/definitionPanels/webServiceJobDef.xhtml";
 	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
@@ -109,7 +106,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 			jobProperties = null;
-			jobProperties = getDbOperations().getJobFromId(JOB_DEFINITION_DATA, jsId);
+			jobProperties = getDbOperations().getJobFromId(jsId);
 
 			if (jobProperties != null) {
 				int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
@@ -118,7 +115,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			}
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
-			scenario = getDbOperations().getScenarioFromId(JOB_DEFINITION_DATA, jsId);
+			scenario = getDbOperations().getScenarioFromId(jsId);
 
 			if (scenario != null) {
 				switchToScenarioPanel();
@@ -133,7 +130,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleDropAction(ActionEvent ae) {
-		jobProperties = getDbOperations().getTemplateJobFromName(JOB_TEMPLATES_DATA, draggedTemplateName);
+		jobProperties = getDbOperations().getTemplateJobFromName(draggedTemplateName);
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
