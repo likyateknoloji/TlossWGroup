@@ -122,7 +122,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		int derinlik = 1;
 		int runId = 0;
 		int jobId =0;
-		String refRunIdBolean = "true";
+		String refRunIdBolean = "true()";
 		
 		LocalStats localStats = null;
 		try {
@@ -203,7 +203,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		
 		try {
-			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true", "descending", 1);
+			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true()", "xs:string(\"descending\")", 1);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
