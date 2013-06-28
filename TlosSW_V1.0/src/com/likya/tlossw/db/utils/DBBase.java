@@ -18,6 +18,10 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public abstract class DBBase {
 
+	private static final String standartNameSpaceDeclaritions = CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCal
+			   + CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsXsi + CommonConstantDefinitions.decNsFn 
+			   + CommonConstantDefinitions.decNsLrns + CommonConstantDefinitions.decNsNrp + CommonConstantDefinitions.decNsRes;
+	
 	protected static String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
@@ -33,7 +37,7 @@ public abstract class DBBase {
 	}
 	
 	protected static String alarmFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructor("moduleAlarmOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
+		return localFunctionConstructorNS("moduleAlarmOperations.xquery", functionName, standartNameSpaceDeclaritions, CommonConstantDefinitions.lkNsUrl, param);
 	}
 
 	protected static String agentFunctionConstructor(String functionName, String... param) {
@@ -82,6 +86,10 @@ public abstract class DBBase {
 	
 	protected static String nrpeFunctionConstructor(String functionName, String... param) {
 		return localFunctionConstructor("moduleNrpeOperations.xquery", functionName, CommonConstantDefinitions.lkNsUrl, param);
+	}
+	
+	protected static String dssFunctionConstructor(String functionName, String... param) {
+		return localFunctionConstructorNS("moduleDSSOperations.xquery", functionName, standartNameSpaceDeclaritions, CommonConstantDefinitions.dssNsUrl, param);
 	}
 	
 	protected static ArrayList<Object> moduleGeneric(String xQueryStr) {
