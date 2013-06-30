@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -38,6 +39,8 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 	private int derinlik;
 	
 	private Long maxValue;
+	
+	private BigInteger sizeOfReport;
 	
 	private String pieColorList;
 	
@@ -115,6 +118,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 		}
         Integer counter = new Integer(0);
         int maxval = 0;
+        setSizeOfReport( densityJobCountList.getDataArray(0).getCount() );
 		for(Integer i=0; i<densityJobCountList.sizeOfDataArray(); i++) {
 
 			String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
@@ -183,6 +187,14 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 
 	public void setMaxValue(Long maxValue) {
 		this.maxValue = maxValue;
+	}
+
+	public BigInteger getSizeOfReport() {
+		return sizeOfReport;
+	}
+
+	public void setSizeOfReport(BigInteger sizeOfReport) {
+		this.sizeOfReport = sizeOfReport;
 	}
 
 }
