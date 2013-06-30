@@ -106,7 +106,7 @@ public class ParsingUtils {
 	}
 
 	public static String getXQueryModuleUrl(String collectionName) {
-		return " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.modulePath;
+		return " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.dbHost + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.modulePath;
 	}
 
 }
