@@ -99,7 +99,10 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 
 		
 		//BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
-		Calendar overallStart = jobsArray.getOverallStart();
+		Calendar overallStart = Calendar.getInstance();
+		if(jobsArray.sizeOfJobArray() > 0) {
+		  overallStart = jobsArray.getOverallStart();
+		}
 		//Calendar overallStop = jobsArray.getOverallStop();
 
 				// and here's how to get the String representation
