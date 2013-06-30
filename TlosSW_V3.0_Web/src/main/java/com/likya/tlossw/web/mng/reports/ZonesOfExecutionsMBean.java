@@ -194,23 +194,34 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		}
 
 		int index = ticks.size()== 0 ? 0 : ticks.size() - 1;
-		for(int j=1; ticks.get(index).doubleValue() < maxmaxTolWorkingTime; j++) {
+		
+		if(!ticks.isEmpty()) {
+		  for(int j=1; ticks.get(index).doubleValue() < maxmaxTolWorkingTime; j++) {
 			ticks.add( ticks.get(index).doubleValue() + step*j);
 			index = ticks.size()== 0 ? 0 : ticks.size() - 1;
+		  }
+		  maxmaxTolWorkingTime = ticks.get(index).doubleValue();
+		  int intervalIndex = (intervals.size() == 0) ? 0 : intervals.size()-1;
+		  intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		}
-		maxmaxTolWorkingTime = ticks.get(index).doubleValue();
-		int intervalIndex = (intervals.size() == 0) ? 0 : intervals.size()-1;
-		intervals.set(intervalIndex, maxmaxTolWorkingTime);
-		
 		try {
 			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true()", "xs:string(\"descending\")", 1);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-
-		Double totalDuration = jobsArray.getTotalDurationInSec().doubleValue();
-		BigDecimal totalDurationBD = jobsArray.getTotalDurationInSec();
-		Double totalDurationNormalized = totalDuration; 
+		Double totalDuration = new Double(0.0);
+		BigDecimal totalDurationBD = new BigDecimal(0);
+		Double totalDurationNormalized = new Double(0.0);
+		String overallStart = "N/A";
+		String overallStop = "N/A";
+		
+		if(jobsArray.sizeOfJobArray() > 0) {
+		  totalDuration = jobsArray.getTotalDurationInSec().doubleValue();
+		  totalDurationBD = jobsArray.getTotalDurationInSec();
+		  totalDurationNormalized = totalDuration;
+		  overallStart = jobsArray.getOverallStart().toString();
+		  overallStop = jobsArray.getOverallStop().toString();
+		}
 		//ibre sinirlari asmasin ..
 		if(totalDuration.compareTo(sifir)<0) {
 			totalDurationNormalized = sifir;
@@ -228,8 +239,8 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		setExpWorkingTimeStat(numberToTimeFormat(localStats.getAvg()));
 		setJobCount(jobsArray.getNumberOfJobs());
 		//setScenarioCount(jobsArray.getNumberOfScenarios());
-		setOverallStartTime(jobsArray.getOverallStart().toString());
-		setOverallEndTime(jobsArray.getOverallStop().toString());
+		setOverallStartTime(overallStart);
+		setOverallEndTime(overallStop);
 		
 	}
 
