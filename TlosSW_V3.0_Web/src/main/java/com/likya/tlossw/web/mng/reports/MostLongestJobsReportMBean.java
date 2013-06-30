@@ -36,6 +36,8 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	private CartesianChartModel curDurationModel;
 	private CartesianChartModel prevDurationModel;
  
+	private int sizeOfReport;
+	
 	private JobArray jobsArray;
 	
 	@PostConstruct
@@ -48,8 +50,8 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		System.out.println(parameter_value);
 		
-		curDurationModel = createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 12);
-		prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
+		curDurationModel = createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
 
@@ -107,7 +109,13 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 			jobs.set(job.getJname(), figure);
 		  }
 		}
+		setSizeOfReport(jobs.getData().size());
 		System.out.println(jobs.getData().size() + " adet data var");
+		if (getSizeOfReport()>0) {
+			addMessage("Job Duration Statistics", FacesMessage.SEVERITY_INFO, "tlos.success.dbAccessDef.update", null);
+		} else {
+			addMessage("Job Duration Statistics", FacesMessage.SEVERITY_ERROR, "tlos.error.dbConnection.update", null);
+		}
 		curDurationModel.addSeries(jobs);
         return curDurationModel;
 	}
@@ -143,5 +151,13 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	public void setJobsArray(JobArray jobsArray) {
 		this.jobsArray = jobsArray;
 	}
+	
+	public int getSizeOfReport() {
+		return sizeOfReport;
+	}
+
+	public void setSizeOfReport(int sizeOfReport) {
+		this.sizeOfReport = sizeOfReport;
+	} 
 
 }
