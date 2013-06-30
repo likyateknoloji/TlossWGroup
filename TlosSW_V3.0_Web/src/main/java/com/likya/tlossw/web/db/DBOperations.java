@@ -166,17 +166,20 @@ public class DBOperations implements Serializable {
 		ArrayList<Object> returnObjectArray = new ArrayList<Object>();
 		Object objectProperties = null;
 
+		Collection collection = null;
 		try {
-			Collection collection = existConnectionHolder.getCollection();
+			collection = existConnectionHolder.getCollection();
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
 			ResourceSet result = service.query(xQueryStr.toString());
 			ResourceIterator i = result.getIterator();
-
+			Resource r = null;
+			String xmlContent = null;
+			
 			while (i.hasMoreResources()) {
-				Resource r = i.nextResource();
-				String xmlContent = (String) r.getContent();
+				r = i.nextResource();
+				xmlContent = (String) r.getContent();
 
 				try {
 					objectProperties = XmlObject.Factory.parse(xmlContent);
