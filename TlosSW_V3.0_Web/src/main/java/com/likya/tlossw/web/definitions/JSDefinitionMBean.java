@@ -220,6 +220,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
 			} else {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
+				((JobBaseBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
 			}
 		}
 

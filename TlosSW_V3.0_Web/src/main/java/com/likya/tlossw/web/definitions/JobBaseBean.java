@@ -128,6 +128,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private boolean jsActive = false;
 
 	// baseJsInfos
+	private String jsName;
+
 	private Collection<SelectItem> jsCalendarList = null;
 	private String jsCalendar;
 
@@ -1144,6 +1146,12 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		if (getDbOperations().updateJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
+			
+			// isin adi degistirildiyse agactaki adini degistiriyor
+			if (!jsName.equals(jobProperties.getBaseJobInfos().getJsName())) {
+				jSTree.initJSTree();
+			}
+			
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
 		}
@@ -2848,6 +2856,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setJsCalendar(String jsCalendar) {
 		this.jsCalendar = jsCalendar;
+	}
+
+	public String getJsName() {
+		return jsName;
+	}
+
+	public void setJsName(String jsName) {
+		this.jsName = jsName;
 	}
 
 }
