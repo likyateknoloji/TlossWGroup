@@ -126,7 +126,7 @@ public class DssDbUtils extends DBBase {
 		
 		Alarm alarm= Alarm.Factory.newInstance();
 
-		String xQueryStr = alarmFunctionConstructor("lk:SWFindAlarms", jobId, "" + userID, "" + agentId, liveStateInfoXML);
+		String xQueryStr = alarmFunctionConstructor("lk:SWFindAlarms", "xs:string(" + jobId + ")", "" + userID, "" + agentId, liveStateInfoXML);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
