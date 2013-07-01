@@ -1148,6 +1148,8 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
 			
 			// isin adi degistirildiyse agactaki adini degistiriyor
+			// merve: TreeNode uzerinde datasini degistirmeye calistim, ama adini degistirme ile ilgili bir fonksiyonu yok. javascript kullanarak yapanlar var bu isi.
+			// Simdilik agaci bastan olusturarak bu problemi gectim. Adini degistirecegim zaman jsName alanindan eski adini kullanacagim.
 			if (!jsName.equals(jobProperties.getBaseJobInfos().getJsName())) {
 				jSTree.initJSTree();
 			}
