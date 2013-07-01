@@ -20,8 +20,8 @@
 
 	<con:dbparams>
 		<con:name>eXist</con:name>
-		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:connectionUrl>
-		<con:dbCollectionName>tlossw-serkan</con:dbCollectionName>
+		<con:connectionUrl>xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db</con:connectionUrl>
+		<con:dbCollectionName>TLOSSW</con:dbCollectionName>
 		<con:username>admin</con:username>
 		<con:password>admin</con:password>
 	</con:dbparams>
