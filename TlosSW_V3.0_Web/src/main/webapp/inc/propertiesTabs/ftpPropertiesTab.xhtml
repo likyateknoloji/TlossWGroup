@@ -269,88 +269,90 @@
 					</p:inputText>
 				</p:panelGrid>
 
-				<p:panelGrid id="fileName" columns="2">
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.sourceFileNameType']}" />
-					<p:selectOneMenu value="#{backingBean.sourceFileNameType}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.sourceFileNameType']}">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-							itemValue="" />
-						<f:selectItem
-							itemLabel="#{msgs['tlos.workspace.pannel.job.fullTextFileName']}"
-							itemValue="fullText" />
-						<f:selectItem
-							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileName']}"
-							itemValue="regex" />
-						<f:selectItem
-							itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileNameWithExclude']}"
-							itemValue="regexWithExclude" />
-						<f:selectItem
-							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileName']}"
-							itemValue="wildcard" />
-						<f:selectItem
-							itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileNameWithExclude']}"
-							itemValue="wildcardWithExclude" />
-						<p:ajax update="fileName"></p:ajax>
-					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.sourceFileName']}"
-						rendered="#{backingBean.sourceFileNameType eq 'fullText'}" />
-					<p:inputText value="#{backingBean.sourceFileName}"
-						rendered="#{backingBean.sourceFileNameType eq 'fullText'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.sourceFileName']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.sourceFileName.regex']}">
-						<f:validateRegex
-							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.includeRegex']}"
-						rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}" />
-					<p:inputText value="#{backingBean.includeFiles}"
-						rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.includeFiles']}" />
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.excludeRegex']}"
-						rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}" />
-					<p:inputText value="#{backingBean.excludeFiles}"
-						rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.excludeFiles']}" />
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.includeWildcard']}"
-						rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
-					<p:inputText value="#{backingBean.includeWildcard}"
-						rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.includeWildcard']}" />
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.excludeWildcard']}"
-						rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
-					<p:inputText value="#{backingBean.excludeWildcard}"
-						rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.excludeWildcard']}" />
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.targetFileName']}"
-						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
-					<p:inputText value="#{backingBean.targetFileName}"
-						rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.ftp.targetFileName']}"
-						validatorMessage="#{msgs['tlos.validation.ftp.targetFileName.regex']}">
-						<f:validateRegex
-							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
-					</p:inputText>
-				</p:panelGrid>
+				<h:panelGrid id="fileName" columns="1" >
+					<p:panelGrid columns="2" rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" >
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.sourceFileNameType']}" />
+						<p:selectOneMenu value="#{backingBean.sourceFileNameType}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.sourceFileNameType']}">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.fullTextFileName']}"
+								itemValue="fullText" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileName']}"
+								itemValue="regex" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.regexFileNameWithExclude']}"
+								itemValue="regexWithExclude" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileName']}"
+								itemValue="wildcard" />
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.wildcardFileNameWithExclude']}"
+								itemValue="wildcardWithExclude" />
+							<p:ajax update="fileName"></p:ajax>
+						</p:selectOneMenu>
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.sourceFileName']}"
+							rendered="#{backingBean.sourceFileNameType eq 'fullText'}" />
+						<p:inputText value="#{backingBean.sourceFileName}"
+							rendered="#{backingBean.sourceFileNameType eq 'fullText'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.sourceFileName']}"
+							validatorMessage="#{msgs['tlos.validation.ftp.sourceFileName.regex']}">
+							<f:validateRegex
+								pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+						</p:inputText>
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.includeRegex']}"
+							rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}" />
+						<p:inputText value="#{backingBean.includeFiles}"
+							rendered="#{backingBean.sourceFileNameType eq 'regex' or backingBean.sourceFileNameType eq 'regexWithExclude'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.includeFiles']}" />
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.excludeRegex']}"
+							rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}" />
+						<p:inputText value="#{backingBean.excludeFiles}"
+							rendered="#{backingBean.sourceFileNameType eq 'regexWithExclude'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.excludeFiles']}" />
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.includeWildcard']}"
+							rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+						<p:inputText value="#{backingBean.includeWildcard}"
+							rendered="#{backingBean.sourceFileNameType eq 'wildcard' or backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.includeWildcard']}" />
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.excludeWildcard']}"
+							rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}" />
+						<p:inputText value="#{backingBean.excludeWildcard}"
+							rendered="#{backingBean.sourceFileNameType eq 'wildcardWithExclude'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.excludeWildcard']}" />
+	
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.targetFileName']}"
+							rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}" />
+						<p:inputText value="#{backingBean.targetFileName}"
+							rendered="#{backingBean.operationType eq 'Read File' or backingBean.operationType eq 'Write File'}"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.ftp.targetFileName']}"
+							validatorMessage="#{msgs['tlos.validation.ftp.targetFileName.regex']}">
+							<f:validateRegex
+								pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
+						</p:inputText>
+					</p:panelGrid>
+				</h:panelGrid>
 
 				<br />
 				<h:outputText

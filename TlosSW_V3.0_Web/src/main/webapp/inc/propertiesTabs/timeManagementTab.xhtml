@@ -54,14 +54,14 @@
 					style="width:80%;">
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
-					<p:selectOneMenu id="TZone"  style="text-align: center;"
+					<p:selectOneMenu id="TZone"  style="width: 150pt"
 					    value="#{backingBean.selectedTZone}"
 						filter="true" filterMatchMode="startsWith">
 						<f:selectItems value="#{backingBean.TZList}" />
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
-					<p:selectOneMenu id="typeOfTime" style="text-align: center;"
+					<p:selectOneMenu id="typeOfTime" style="width: 100pt"
 					    value="#{backingBean.selectedTypeOfTime}"
 						filter="true" filterMatchMode="startsWith">
 						<f:selectItems value="#{backingBean.typeOfTimeList}" />
@@ -73,6 +73,9 @@
 						style="width: 100pt">
 						<f:selectItems value="#{backingBean.relativeTimeOptionList}" />
 					</p:selectOneMenu>
+
+					<h:outputText value="" />
+					<h:outputText value="" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timeOut']}" />
 					<p:inputText value="#{backingBean.jobTimeOutValue}"
