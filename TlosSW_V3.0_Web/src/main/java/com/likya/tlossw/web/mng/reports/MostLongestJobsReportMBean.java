@@ -13,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
@@ -116,6 +117,10 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		} else {
 			addMessage("Job Duration Statistics", FacesMessage.SEVERITY_ERROR, "tlos.error.dbConnection.update", null);
 		}
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update(":dashboardReports");
+		
 		curDurationModel.addSeries(jobs);
         return curDurationModel;
 	}
