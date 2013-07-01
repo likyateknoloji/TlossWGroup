@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likyateknoloji.xmlExecuteRShellTypes.ExecuteRShellParamsDocument.ExecuteRShellParams;
 
 @ManagedBean
 @ViewScoped
@@ -20,13 +21,14 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 
 	private String jobPath;
 	private String jobCommand;
-	
+
 	private String ipAddress;
 	private String port;
 	private String userName;
 	private String password;
 	private String confirmPassword;
-	
+	private String fileSeperator;
+
 	public void dispose() {
 
 	}
@@ -41,7 +43,7 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 		resetRemoteShellProperties();
 		fillRemoteShellProperties();
 	}
-	
+
 	private void resetRemoteShellProperties() {
 		jobPath = "";
 		jobCommand = "";
@@ -50,6 +52,7 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 		userName = "";
 		password = "";
 		confirmPassword = "";
+		fileSeperator = "";
 	}
 
 	private void fillRemoteShellProperties() {
@@ -58,8 +61,14 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 
 			jobPath = jobTypeDetails.getJobPath();
 			jobCommand = jobTypeDetails.getJobCommand();
-			
-			//TODO doldur
+
+			ExecuteRShellParams executeRShellParams = jobTypeDetails.getSpecialParameters().getExecuteRShellParams();
+			ipAddress = executeRShellParams.getIpAddress();
+			port = executeRShellParams.getPort() + "";
+			userName = executeRShellParams.getUserName();
+			password = executeRShellParams.getUserPassword();
+			confirmPassword = password;
+			fileSeperator = executeRShellParams.getFileSeperator();
 		} else {
 			System.out.println("getJobProperties() is NULL in fillRemoteShellProperties !!");
 		}
@@ -85,8 +94,15 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);
-		
-		//TODO doldur
+
+		ExecuteRShellParams executeRShellParams = jobTypeDetails.getSpecialParameters().getExecuteRShellParams();
+		executeRShellParams.setIpAddress(ipAddress);
+		executeRShellParams.setPort(Integer.parseInt(port));
+
+		userName = executeRShellParams.getUserName();
+		password = executeRShellParams.getUserPassword();
+		confirmPassword = password;
+		fileSeperator = executeRShellParams.getFileSeperator();
 	}
 
 	public static Logger getLogger() {
@@ -147,6 +163,14 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 
 	public void setPort(String port) {
 		this.port = port;
+	}
+
+	public String getFileSeperator() {
+		return fileSeperator;
+	}
+
+	public void setFileSeperator(String fileSeperator) {
+		this.fileSeperator = fileSeperator;
 	}
 
 }

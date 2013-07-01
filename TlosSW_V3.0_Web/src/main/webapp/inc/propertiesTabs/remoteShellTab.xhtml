@@ -9,17 +9,46 @@
 			<p:panel id="remoteShellInfosPanel">
 				<p:panelGrid columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobPath']}" />
-					<p:inputText value="#{backingBean.jobPath}" required="true" 
+					<p:inputText value="#{backingBean.jobPath}" required="true" style="width: 130pt"
 						requiredMessage="#{msgs['tlos.validation.job.path']}">
 					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobCommandFile']}" />
-					<p:inputText value="#{backingBean.jobCommand}" required="true" 
+					<p:inputText value="#{backingBean.jobCommand}" required="true"
 						requiredMessage="#{msgs['tlos.validation.job.command']}">
 					</p:inputText>
 					
-					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.ipAddress']}" />
+					<p:inputText value="#{backingBean.ipAddress}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
 
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.port']}" />
+					<p:inputText value="#{backingBean.port}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.userName']}" />
+					<p:inputText id="ftpUserName" value="#{backingBean.userName}">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.password']}" />
+					<p:password id="password" value="#{backingBean.password}" label="#{msgs['tlos.workspace.pannel.job.password']}" feedback="false" required="true"
+						redisplay="true" match="repeatPassword" requiredMessage="#{msgs['tlos.validation.db.password']}">
+					</p:password>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.confirmPassword']}" />
+					<p:password id="repeatPassword" value="#{backingBean.confirmPassword}" label="#{msgs['tlos.workspace.pannel.job.confirmPassword']}" feedback="false" required="true"
+						redisplay="true" requiredMessage="#{msgs['tlos.validation.db.confirmPassword']}">
+					</p:password>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.fileSeperator']}" />
+					<p:selectOneMenu value="#{backingBean.fileSeperator}" style="width: 100pt">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItem itemLabel="/" itemValue="/" />
+						<f:selectItem itemLabel="\" itemValue="\" />
+					</p:selectOneMenu>
 
 				</p:panelGrid>
 			</p:panel>
