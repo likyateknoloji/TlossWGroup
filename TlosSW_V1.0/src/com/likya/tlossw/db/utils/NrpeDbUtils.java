@@ -103,7 +103,7 @@ public class NrpeDbUtils extends DBBase {
 
 		boolean returnValue = false;
 		
-		String xQueryStr = nrpeFunctionConstructor("lk:deleteExpiredNrpeMessagesLock", currentTimeZone, "" + expireHour);
+		String xQueryStr = nrpeFunctionConstructor("lk:deleteExpiredNrpeMessagesLock", "xs:string(\"" + currentTimeZone + "\")", "" + expireHour);
 				
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
