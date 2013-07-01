@@ -56,7 +56,7 @@ declare function lk:insertNrpeMessageLock($documentUrl as xs:string, $nrpeCall a
 {
    let $nrpeDataDocumentUrl := met:getMetaData($documentUrl, "nrpeData")
    
-   util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeMessage($documentUrl, $nrpeCall))     
+   return util:exclusive-lock(doc($nrpeDataDocumentUrl)/nrp:NrpeData, lk:insertNrpeMessage($documentUrl, $nrpeCall))     
 };
 
 declare function lk:insertNrpeMessage($documentUrl as xs:string, $nrpeCall as element(nrp:nrpeCall))
