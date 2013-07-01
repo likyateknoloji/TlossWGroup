@@ -696,7 +696,7 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
 
 declare function dss:SWFindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
 {
-	dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass , $gunzaman, 'Result')
+	dss:FindResourcesForAJob($documentUrl, $jobPropertiesFuncPass , $gunzaman, 'Result')
 };
 
 
