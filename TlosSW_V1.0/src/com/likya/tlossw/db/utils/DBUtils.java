@@ -110,7 +110,7 @@ public class DBUtils extends DBBase {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", jobPropetiesXML, jobPath, "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
+		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
