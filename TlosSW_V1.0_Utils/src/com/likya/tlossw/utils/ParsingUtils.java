@@ -111,4 +111,17 @@ public class ParsingUtils {
 		return " at \"" + dbUri + CommonConstantDefinitions.modulePath;
 	}
 
+	public static String getDbUri(String dbType, String dbId, String dbIp, int dbPort, String dbXmlRpcPath, String rootCollectionName, String userCollectionName) {
+		
+		String dbUri = null;
+		
+		if(dbIp == null || dbIp.equals("")) {
+			dbUri = dbType + ":" + dbId + ":///" + rootCollectionName + "/" + userCollectionName;				
+		} else {
+			dbUri = dbType + ":" + dbId + "://" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
+		}
+		
+		return dbUri;
+		
+	}
 }
