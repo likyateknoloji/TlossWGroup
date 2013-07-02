@@ -18,19 +18,21 @@
 		</con:debugMode>
 	</con:serverParams>
 
-	<!-- 
-	 http://exist-db.org/exist/apps/doc/devguide_xmldb.xml açıklaması var
-	 xmldb:[DATABASE-ID]://[HOST-ADDRESS]/db/collection
-	 xmldb:exist://localhost:8080/exist/xmlrpc/db/shakespeare/plays
-	 xmldb:exist:///db/shakespeare/plays
-	 -->
+	<!-- http://exist-db.org/exist/apps/doc/devguide_xmldb.xml açıklaması var 
+		xmldb:[DATABASE-ID]://[HOST-ADDRESS]/db/collection xmldb:exist://localhost:8080/exist/xmlrpc/db/shakespeare/plays 
+		xmldb:exist:///db/shakespeare/plays -->
+	<!--
+		Eğer lokal erişim yapılacak ise, ipAddress alanını boş bırakmak yeterlidir.
+		Bu durumda, ipAddress, portNumber ve xmlrpcpath değerleri okunMAmaktadır.
+		Sonuç : [type]:[id]:///[rootcollection]/[usercollection] şeklinde olacaktır.
+	-->
 	<con:dbparams>
 		<con:name>eXist</con:name>
 		<con:type>xmldb</con:type>
 		<con:id>exist</con:id>
-		<com:ipAddress></com:ipAddress>
+		<com:ipAddress>192.168.1.71</com:ipAddress>
 		<con:portNumber>8094</con:portNumber>
-		<!-- con:xmlrpcpath>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:xmlrpcpath-->
+		<!-- con:xmlrpcpath>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:xmlrpcpath -->
 		<con:xmlrpcpath>/exist/xmlrpc</con:xmlrpcpath>
 		<con:rootcollection>db</con:rootcollection>
 		<con:usercollection>tlossw-serkan</con:usercollection>
