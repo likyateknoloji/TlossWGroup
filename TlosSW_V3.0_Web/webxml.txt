@@ -1,12 +1,42 @@
 	<env-entry>
-    	<description>exist db uri definition</description>
-    	<env-entry-name>dbUri</env-entry-name>
+    	<description>exist db type</description>
+    	<env-entry-name>dbType</env-entry-name>
     	<env-entry-type>java.lang.String</env-entry-type>
-    	<env-entry-value>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</env-entry-value>
+    	<env-entry-value>xmldb</env-entry-value>
 	</env-entry>
 	<env-entry>
-    	<description>exist db collection name</description>
-    	<env-entry-name>dbCollectionName</env-entry-name>
+    	<description>exist db id</description>
+    	<env-entry-name>dbId</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>exist</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db ip</description>
+    	<env-entry-name>dbIpAddress</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>192.168.1.71</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db port number</description>
+    	<env-entry-name>dbPortNumber</env-entry-name>
+    	<env-entry-type>java.lang.Integer</env-entry-type>
+    	<env-entry-value>8094</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db xmlrpc path</description>
+    	<env-entry-name>dbXmlRpcPath</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>/exist/xmlrpc</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db root collection name</description>
+    	<env-entry-name>dbRootCollectionName</env-entry-name>
+    	<env-entry-type>java.lang.String</env-entry-type>
+    	<env-entry-value>db</env-entry-value>
+	</env-entry>
+	<env-entry>
+    	<description>exist db user collection name</description>
+    	<env-entry-name>dbUserCollectionName</env-entry-name>
     	<env-entry-type>java.lang.String</env-entry-type>
     	<env-entry-value>tlossw-serkan</env-entry-value>
 	</env-entry>
