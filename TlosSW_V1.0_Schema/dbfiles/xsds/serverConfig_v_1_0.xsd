@@ -43,8 +43,13 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="name" type="xs:string" />
-				<xs:element name="connectionUrl" type="xs:string" />
-				<xs:element name="dbCollectionName" type="xs:string" />
+				<xs:element name="type" type="xs:string" />
+				<xs:element name="id" type="xs:string" />
+				<xs:element ref="lt:ipAddress" />
+				<xs:element name="portNumber" type="lt:portType" />
+				<xs:element name="xmlrpcpath" type="xs:string" />
+				<xs:element name="rootcollection" type="xs:string" />
+				<xs:element name="usercollection" type="xs:string" />
 				<xs:element name="username" type="xs:string" />
 				<xs:element name="password" type="xs:string" />
 			</xs:sequence>
