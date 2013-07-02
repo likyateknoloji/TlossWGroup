@@ -66,11 +66,11 @@ public class ParsingUtils {
 		return jobXPath;
 	}
 
-	public static String getFunctionString(String collectionName, String xQueryModuleUrl, String moduleName, String functionName, String moduleNamesSpace, String... params) {
-		return getFunctionString(collectionName, xQueryModuleUrl, moduleName, functionName, null, moduleNamesSpace, params);
+	public static String getFunctionString(String dbUri, String xQueryModuleUrl, String moduleName, String functionName, String moduleNamesSpace, String... params) {
+		return getFunctionString(dbUri, xQueryModuleUrl, moduleName, functionName, null, moduleNamesSpace, params);
 	}
 
-	public static String getFunctionString(String collectionName, String xQueryModuleUrl, String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... params) {
+	public static String getFunctionString(String dbUri, String xQueryModuleUrl, String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... params) {
 
 		// String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleTlosManagementOperations.xquery\";" + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCon + "hs:getTlosConfig()";
 
@@ -87,7 +87,9 @@ public class ParsingUtils {
 		stringBuffer.append(functionName);
 
 		stringBuffer.append("(");
-		stringBuffer.append("\"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.dbHost + CommonConstantDefinitions.rootUrl + collectionName + "\", ");
+		// stringBuffer.append("\"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.dbHost + CommonConstantDefinitions.rootUrl + collectionName + "\", ");
+		stringBuffer.append("\"" + dbUri + "\", ");
+		
 
 		for (String param : params) {
 			// stringBuffer.append("\"" + param + "\", ");
@@ -101,12 +103,12 @@ public class ParsingUtils {
 		return stringBuffer.toString();
 	}
 
-	public static String getXmlsPath(String collectionName) {
-		return CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.xmlsPath;
+	public static String getXmlsPath(String dbUri) {
+		return dbUri + CommonConstantDefinitions.xmlsPath;
 	}
 
-	public static String getXQueryModuleUrl(String collectionName) {
-		return " at \"" + CommonConstantDefinitions.dbUrl + CommonConstantDefinitions.dbHost + CommonConstantDefinitions.rootUrl + collectionName + CommonConstantDefinitions.modulePath;
+	public static String getXQueryModuleUrl(String dbUri) {
+		return " at \"" + dbUri + CommonConstantDefinitions.modulePath;
 	}
 
 }
