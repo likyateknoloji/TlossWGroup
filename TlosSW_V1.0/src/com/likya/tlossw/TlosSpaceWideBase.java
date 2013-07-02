@@ -72,18 +72,32 @@ public class TlosSpaceWideBase {
 			Database database = (Database) cl.newInstance();
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
-
-			String dbUri = getSpaceWideRegistry().getServerConfig().getDbparams().getConnectionUrl();
-			String collectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getDbCollectionName();
+			
+			String dbType = getSpaceWideRegistry().getServerConfig().getDbparams().getType();
+			String dbId = getSpaceWideRegistry().getServerConfig().getDbparams().getId();
+			String dbIp = getSpaceWideRegistry().getServerConfig().getDbparams().getIpAddress();
+			int dbPort = getSpaceWideRegistry().getServerConfig().getDbparams().getPortNumber();
+			String dbXmlRpcPath = getSpaceWideRegistry().getServerConfig().getDbparams().getXmlrpcpath();
+			String rootCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getRootcollection();
+			String userCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsercollection();
+			
+			String dbUri = null;
+			
+			if(dbIp == null || dbIp.equals("")) {
+				dbUri = dbType + ":" + dbId + "///" + rootCollectionName + "/" + userCollectionName;				
+			} else {
+				dbUri = dbType + ":" + dbId + "//" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
+			}
+			getSpaceWideRegistry().setDbUri(dbUri);
 			
 			String userName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsername();
 			String password = getSpaceWideRegistry().getServerConfig().getDbparams().getPassword();
 
-			collection = DatabaseManager.getCollection(dbUri + "/" + collectionName, userName, password);
+			collection = DatabaseManager.getCollection(dbUri, userName, password);
 
 			if (collection == null) {
-				errprintln("Collection name : " + collectionName);
-				errprintln("db connection uri : " + dbUri + "/" + collectionName);
+				errprintln("Collection name : " + userCollectionName);
+				errprintln("db connection uri : " + dbUri);
 				errprintln("Collection is null, check your eXist DB if it is running !");
 				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 				System.exit(-1);
@@ -95,12 +109,10 @@ public class TlosSpaceWideBase {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			getSpaceWideRegistry().setCollectionName(collectionName);
-
-			String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(collectionName);
+			String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(userCollectionName);
 			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
 
-			String xmlsUrl = ParsingUtils.getXmlsPath(collectionName);
+			String xmlsUrl = ParsingUtils.getXmlsPath(userCollectionName);
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
 			
 			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
@@ -372,7 +384,7 @@ public class TlosSpaceWideBase {
 
 		boolean isEmbedded = false;
 
-		if (getSpaceWideRegistry().getServerConfig().getDbparams().getConnectionUrl().indexOf("xmldb:exist:///") > 0) {
+		if (getSpaceWideRegistry().getServerConfig().getDbparams().getIpAddress() == null) {
 			isEmbedded = true;
 		}
 
