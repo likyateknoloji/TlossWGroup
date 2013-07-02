@@ -636,8 +636,10 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		return;
 	}
 	
-	public static WebSpaceWideRegistery retrieveWebSpaceWideRegistery(JMXConnector jmxConnector, JmxUser jmxUser) {
+	public static WebSpaceWideRegistery retrieveWebSpaceWideRegistery(JmxUser jmxUser) {
 
+		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
+		
 		Object[] paramList = { jmxUser };
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser" };
 		Object o;
