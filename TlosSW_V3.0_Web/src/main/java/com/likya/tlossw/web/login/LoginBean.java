@@ -26,19 +26,18 @@ public class LoginBean extends LoginBase implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(LoginBean.class);
 
-
 	public static final String LOGIN_SUCCESS = "/inc/index.jsf?faces-redirect=true";
 	public static final String LOGIN_FAILURE = "/login.jsf?faces-redirect=true";
 	public static final String LOGIN_ENGINE_DIRECTOR = "/inc/index.jsf?faces-redirect=true";
-	
+
 	protected Person loggedUser;
-	
+
 	private String userName;
 	private String userPassword;
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
-	
+
 	public String login() {
 
 		logger.info("start : MyLoginBean : login");
@@ -49,31 +48,33 @@ public class LoginBean extends LoginBase implements Serializable {
 
 		WebSpaceWideRegistery webSpaceWideRegistery = getSessionMediator().getWebSpaceWideRegistery();
 
-		
 		if (LOGIN_FAILURE.equals(validated)) {
 			returnValue = LOGIN_FAILURE;
-		} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
-			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.authorization", null);
-			returnValue = LOGIN_FAILURE;
-		} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() == Role.ADMIN) {
-			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.waitMode", null);
-			returnValue = LOGIN_ENGINE_DIRECTOR;
-		} else if (!webSpaceWideRegistery.getWaitConfirmOfGUI() && LOGIN_SUCCESS.equals(validated)) {
-			addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
-			returnValue = LOGIN_SUCCESS;
-		} else {
-			addMessage("loginForm", "errorMessage", "invalid Mode", null);
-			returnValue = LOGIN_FAILURE;
+		} else if (webSpaceWideRegistery != null) {
+			if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
+
+				addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.authorization", null);
+				returnValue = LOGIN_FAILURE;
+			} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() == Role.ADMIN) {
+				addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.waitMode", null);
+				returnValue = LOGIN_ENGINE_DIRECTOR;
+			} else if (!webSpaceWideRegistery.getWaitConfirmOfGUI() && LOGIN_SUCCESS.equals(validated)) {
+				addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
+				returnValue = LOGIN_SUCCESS;
+			} else {
+				addMessage("loginForm", "errorMessage", "invalid Mode", null);
+				returnValue = LOGIN_FAILURE;
+			}
 		}
-		 
+
 		logger.info("end : RegisteredLoginBean : login");
 
 		setSessionLoginParam(true);
-		
+
 		return returnValue;
 
 	}
-	
+
 	public String verifyUserDB() {
 
 		// ManagerMediator mm = (ManagerMediator)
@@ -81,7 +82,7 @@ public class LoginBean extends LoginBase implements Serializable {
 		// ServletContext webAppContext = (ServletContext)
 		// FacesContext.getCurrentInstance().getExternalContext().getContext();
 		// JmxUser jmxUserApp = (JmxUser) webAppContext.getAttribute("JmxUser");
-		
+
 		JmxAppUser jmxAppUser = new JmxAppUser();
 		AppUser appUser = new AppUser();
 		appUser.setUsername(userName);
@@ -94,13 +95,13 @@ public class LoginBean extends LoginBase implements Serializable {
 		if (o instanceof JmxAppUser) {
 
 			setSessionLoginParam(true);
-			//jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
+			// jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
 			if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
 				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
 				return LOGIN_FAILURE;
 			}
-			
+
 			getSessionMediator().setJmxAppUser(jmxAppUser);
 
 			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
@@ -110,8 +111,7 @@ public class LoginBean extends LoginBase implements Serializable {
 
 			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
 			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
-			
-			
+
 			return LOGIN_SUCCESS;
 
 		}
@@ -125,57 +125,45 @@ public class LoginBean extends LoginBase implements Serializable {
 	}
 
 	/*
-	public String verifyUserJmx() {
+	 * public String verifyUserJmx() {
+	 * 
+	 * // ManagerMediator mm = (ManagerMediator) // FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("managerMediator"); // ServletContext webAppContext = (ServletContext) // FacesContext.getCurrentInstance().getExternalContext().getContext(); // JmxUser jmxUserApp = (JmxUser) webAppContext.getAttribute("JmxUser");
+	 * 
+	 * JmxAppUser jmxAppUser = new JmxAppUser(); AppUser appUser = new AppUser(); appUser.setUsername(userName); appUser.setPassword(userPassword);
+	 * 
+	 * jmxAppUser.setAppUser(appUser);
+	 * 
+	 * Object o = TEJmxMpDBClient.checkUser(jmxConnector, jmxAppUser);
+	 * 
+	 * if (o instanceof JmxUser) {
+	 * 
+	 * setSessionLoginParam(true); jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
+	 * 
+	 * if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
+	 * 
+	 * logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
+	 * 
+	 * return LOGIN_FAILURE;
+	 * 
+	 * }
+	 * 
+	 * getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper()); loggedUser = Person.Factory.newInstance(); copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser); appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
+	 * 
+	 * WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxConnector, jmxAppUser); getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+	 * 
+	 * return LOGIN_SUCCESS;
+	 * 
+	 * }
+	 * 
+	 * logger.info("setting login error message ");
+	 * 
+	 * addMessage(null, FacesMessage.SEVERITY_ERROR, "Kullanıcı adı ya da şifresi hatalı !", "Kullanıcı adı ya da şifresi hatalı !");
+	 * 
+	 * return LOGIN_FAILURE;
+	 * 
+	 * }
+	 */
 
-		// ManagerMediator mm = (ManagerMediator)
-		// FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("managerMediator");
-		// ServletContext webAppContext = (ServletContext)
-		// FacesContext.getCurrentInstance().getExternalContext().getContext();
-		// JmxUser jmxUserApp = (JmxUser) webAppContext.getAttribute("JmxUser");
-		
-		JmxAppUser jmxAppUser = new JmxAppUser();
-		AppUser appUser = new AppUser();
-		appUser.setUsername(userName);
-		appUser.setPassword(userPassword);
-
-		jmxAppUser.setAppUser(appUser);
-
-		Object o = TEJmxMpDBClient.checkUser(jmxConnector, jmxAppUser);
-
-		if (o instanceof JmxUser) {
-
-			setSessionLoginParam(true);
-			jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
-
-			if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
-
-				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
-
-				return LOGIN_FAILURE;
-
-			}
-
-			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
-			loggedUser = Person.Factory.newInstance();
-			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
-			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
-
-			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxConnector, jmxAppUser);
-			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
-			
-			return LOGIN_SUCCESS;
-
-		}
-
-		logger.info("setting login error message ");
-
-		addMessage(null, FacesMessage.SEVERITY_ERROR, "Kullanıcı adı ya da şifresi hatalı !", "Kullanıcı adı ya da şifresi hatalı !");
-
-		return LOGIN_FAILURE;
-
-	}
-	*/
-	
 	public static void copyAppUserToPerson(AppUser appUser, Person person) {
 		person.setId(appUser.getId());
 		person.setName(appUser.getName());
@@ -185,7 +173,7 @@ public class LoginBean extends LoginBase implements Serializable {
 		person.setUserName(appUser.getUsername());
 		person.setTransformToLocalTime(appUser.isTransformToLocalTime());
 	}
-	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -201,15 +189,12 @@ public class LoginBean extends LoginBase implements Serializable {
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
-	/*
-	public JMXConnector getJmxConnector() {
-		return jmxConnector;
-	}
 
-	public void setJmxConnector(JMXConnector jmxConnector) {
-		this.jmxConnector = jmxConnector;
-	}
-	*/
+	/*
+	 * public JMXConnector getJmxConnector() { return jmxConnector; }
+	 * 
+	 * public void setJmxConnector(JMXConnector jmxConnector) { this.jmxConnector = jmxConnector; }
+	 */
 
 	public DBOperations getDbOperations() {
 		return dbOperations;
