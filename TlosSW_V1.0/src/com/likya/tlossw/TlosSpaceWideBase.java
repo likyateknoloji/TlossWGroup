@@ -81,13 +81,8 @@ public class TlosSpaceWideBase {
 			String rootCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getRootcollection();
 			String userCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsercollection();
 			
-			String dbUri = null;
+			String dbUri = ParsingUtils.getDbUri(dbType, dbId, dbIp, dbPort, dbXmlRpcPath, rootCollectionName, userCollectionName);
 			
-			if(dbIp == null || dbIp.equals("")) {
-				dbUri = dbType + ":" + dbId + ":///" + rootCollectionName + "/" + userCollectionName;				
-			} else {
-				dbUri = dbType + ":" + dbId + "://" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
-			}
 			getSpaceWideRegistry().setDbUri(dbUri);
 			
 			String userName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsername();
