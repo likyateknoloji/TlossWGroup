@@ -26,14 +26,14 @@ public abstract class DBBase {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		
-		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, moduleNamesSpace, param);
+		return ParsingUtils.getFunctionString(spaceWideRegistry.getDbUri(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, moduleNamesSpace, param);
 	}
 	
 	protected static String localFunctionConstructorNS(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
 		
 		SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 		
-		return ParsingUtils.getFunctionString(spaceWideRegistry.getCollectionName(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
+		return ParsingUtils.getFunctionString(spaceWideRegistry.getDbUri(), spaceWideRegistry.getxQueryModuleUrl(), moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
 	
 	protected static String alarmFunctionConstructor(String functionName, String... param) {
