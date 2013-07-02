@@ -2,7 +2,7 @@
 	xmlns:con="http://www.likyateknoloji.com/XML_serverConfig_types"
 	xmlns:state-types="http://www.likyateknoloji.com/state-types"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_serverConfig_types ../xsds/serverConfig_v_1_0.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_serverConfig_types /Users/serkan/programlar/dev/workspace/TlosSW_V1.0_Schema/dbfiles/xsds/serverConfig_v_1_0.xsd">
 
 	<con:serverParams>
 		<com:ipAddress>0.0.0.0</com:ipAddress>
@@ -20,8 +20,8 @@
 
 	<con:dbparams>
 		<con:name>eXist</con:name>
-		<con:connectionUrl>xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db</con:connectionUrl>
-		<con:dbCollectionName>TLOSSW</con:dbCollectionName>
+		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:connectionUrl>
+		<con:dbCollectionName>tlossw-serkan</con:dbCollectionName>
 		<con:username>admin</con:username>
 		<con:password>admin</con:password>
 	</con:dbparams>
