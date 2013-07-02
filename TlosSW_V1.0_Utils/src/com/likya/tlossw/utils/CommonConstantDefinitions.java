@@ -3,15 +3,10 @@ package com.likya.tlossw.utils;
 
 public class CommonConstantDefinitions {
 
-	public static final String dbUrl = "xmldb:exist:";
-	/*
-	 * http://exist-db.org/exist/apps/doc/devguide_xmldb.xml açıklaması var
-	 * xmldb:[DATABASE-ID]://[HOST-ADDRESS]/db/collection
-	 * xmldb:exist://localhost:8080/exist/xmlrpc/db/shakespeare/plays
-	 * xmldb:exist:///db/shakespeare/plays
-	 */
-	public static final String rootUrl = "//db/";
-	public static final String dbHost = "/";
+	// public static final String dbUrl = "xmldb:exist:";
+	
+	// public static final String rootUrl = "//db/";
+	// public static final String dbHost = "/";
 	
 	public static final String modulePath = "/modules/";
 	public static final String xmlsPath = "/xmls/";
