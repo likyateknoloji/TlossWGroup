@@ -18,10 +18,22 @@
 		</con:debugMode>
 	</con:serverParams>
 
+	<!-- 
+	 http://exist-db.org/exist/apps/doc/devguide_xmldb.xml açıklaması var
+	 xmldb:[DATABASE-ID]://[HOST-ADDRESS]/db/collection
+	 xmldb:exist://localhost:8080/exist/xmlrpc/db/shakespeare/plays
+	 xmldb:exist:///db/shakespeare/plays
+	 -->
 	<con:dbparams>
 		<con:name>eXist</con:name>
-		<con:connectionUrl>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:connectionUrl>
-		<con:dbCollectionName>tlossw-serkan</con:dbCollectionName>
+		<con:type>xmldb</con:type>
+		<con:id>exist</con:id>
+		<com:ipAddress></com:ipAddress>
+		<con:portNumber>8094</con:portNumber>
+		<!-- con:xmlrpcpath>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:xmlrpcpath-->
+		<con:xmlrpcpath>/exist/xmlrpc</con:xmlrpcpath>
+		<con:rootcollection>db</con:rootcollection>
+		<con:usercollection>tlossw-serkan</con:usercollection>
 		<con:username>admin</con:username>
 		<con:password>admin</con:password>
 	</con:dbparams>
