@@ -14,8 +14,8 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.jmx.JmxAppUser;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = LoginBean.BEAN_NAME)
 @ViewScoped
@@ -39,11 +39,6 @@ public class LoginBean extends LoginBase implements Serializable {
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 	
-	/**
-	@ManagedProperty(value = "#{jmxConnectionHolder.jmxConnector}")
-	public JMXConnector jmxConnector;
-	**/
-	
 	public String login() {
 
 		logger.info("start : MyLoginBean : login");
@@ -55,7 +50,7 @@ public class LoginBean extends LoginBase implements Serializable {
 		WebSpaceWideRegistery webSpaceWideRegistery = getSessionMediator().getWebSpaceWideRegistery();
 
 		
-		/*if (LOGIN_FAILURE.equals(validated)) {
+		if (LOGIN_FAILURE.equals(validated)) {
 			returnValue = LOGIN_FAILURE;
 		} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
 			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.authorization", null);
@@ -64,12 +59,12 @@ public class LoginBean extends LoginBase implements Serializable {
 			addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.waitMode", null);
 			returnValue = LOGIN_ENGINE_DIRECTOR;
 		} else if (!webSpaceWideRegistery.getWaitConfirmOfGUI() && LOGIN_SUCCESS.equals(validated)) {
-		*/	addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
+			addMessage("loginForm", "loadingMessage", "tlos.login.status", null);
 			returnValue = LOGIN_SUCCESS;
-		/*} else {
+		} else {
 			addMessage("loginForm", "errorMessage", "invalid Mode", null);
 			returnValue = LOGIN_FAILURE;
-		}*/
+		}
 		 
 		logger.info("end : RegisteredLoginBean : login");
 
@@ -96,23 +91,26 @@ public class LoginBean extends LoginBase implements Serializable {
 
 		Object o = dbOperations.checkUser(jmxAppUser);
 
-		if (o instanceof JmxUser) {
+		if (o instanceof JmxAppUser) {
 
 			setSessionLoginParam(true);
-			jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
+			//jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
 			if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
 				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
 				return LOGIN_FAILURE;
 			}
+			
+			getSessionMediator().setJmxAppUser(jmxAppUser);
 
 			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
 			loggedUser = Person.Factory.newInstance();
 			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
 			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
 
-			// WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxConnector, jmxAppUser);
-			// getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
+			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+			
 			
 			return LOGIN_SUCCESS;
 

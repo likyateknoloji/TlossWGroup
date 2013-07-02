@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
+import com.likya.tlossw.model.jmx.JmxAppUser;
 
 @ManagedBean(name = "sessionMediator")
 @SessionScoped
@@ -19,7 +20,8 @@ public class SessionMediator implements Serializable {
 
 	private static final long serialVersionUID = -6537744626412275191L;
 
-
+	private JmxAppUser jmxAppUser;
+	
 	private ResourceMapper resourceMapper;
 	
 	private WebSpaceWideRegistery webSpaceWideRegistery;
@@ -79,6 +81,14 @@ public class SessionMediator implements Serializable {
 
 	public void setLocaleBean(LocaleBean localeBean) {
 		this.localeBean = localeBean;
+	}
+
+	public JmxAppUser getJmxAppUser() {
+		return jmxAppUser;
+	}
+
+	public void setJmxAppUser(JmxAppUser jmxAppUser) {
+		this.jmxAppUser = jmxAppUser;
 	}
 
 }

@@ -102,15 +102,15 @@ public class DBOperations implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbCollectionName);
+		xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(ExistClient.dbUri);
 	}
 
 	private String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
-		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, moduleNamesSpace, param);
+		return ParsingUtils.getFunctionString(ExistClient.dbUri, xQueryModuleUrl, moduleName, functionName, moduleNamesSpace, param);
 	}
 
 	private String localFunctionConstructorNS(String moduleName, String functionName, String declaredNameSpaces, String moduleNamesSpace, String... param) {
-		return ParsingUtils.getFunctionString(ExistClient.dbCollectionName, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
+		return ParsingUtils.getFunctionString(ExistClient.dbUri, xQueryModuleUrl, moduleName, functionName, declaredNameSpaces, moduleNamesSpace, param);
 	}
 
 	private String agentFunctionConstructor(String functionName, String... param) {
@@ -176,7 +176,7 @@ public class DBOperations implements Serializable {
 			ResourceIterator i = result.getIterator();
 			Resource r = null;
 			String xmlContent = null;
-			
+
 			while (i.hasMoreResources()) {
 				r = i.nextResource();
 				xmlContent = (String) r.getContent();
@@ -377,29 +377,21 @@ public class DBOperations implements Serializable {
 
 	public Object checkUser(JmxAppUser jmxAppUser) {
 
-		//try {
+		if ((jmxAppUser.getAppUser() == null) || (jmxAppUser.getAppUser().getUsername() == null) || (jmxAppUser.getAppUser().getPassword() == null)) {
+			return false;
+		}
 
-			 if ((jmxAppUser.getAppUser() == null) ||
-			 (jmxAppUser.getAppUser().getUsername() == null) ||
-			 (jmxAppUser.getAppUser().getPassword() == null)) {
-			 return false;
-			 }
+		String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
 
-			String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
-
-			for (Object currentObject : objectList) {
-				UserResourceMap myUserPermission = ((UserResourceMapDocument) currentObject).getUserResourceMap();
-				if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
-					jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
-					return jmxAppUser;
-				}
+		for (Object currentObject : objectList) {
+			UserResourceMap myUserPermission = ((UserResourceMapDocument) currentObject).getUserResourceMap();
+			if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
+				jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
+				return jmxAppUser;
 			}
-
-		//} catch (XMLDBException xmldbException) {
-		//	xmldbException.printStackTrace();
-		//}
+		}
 
 		return false;
 	}
@@ -1417,7 +1409,7 @@ public class DBOperations implements Serializable {
 
 	public LocalStats getStatsReport(int derinlik, int runId, int jobId, String refPoint) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint );
+		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1431,8 +1423,8 @@ public class DBOperations implements Serializable {
 
 	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint , orderType , "" + jobCount);
-		
+		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint, orderType, "" + jobCount);
+
 		JobArray jobArray = null;
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
@@ -1472,29 +1464,40 @@ public class DBOperations implements Serializable {
 
 		return jobArray;
 	}
-	
+
 	/*
-	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
+	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int
+	 * jobCount) throws XMLDBException {
 	 * 
 	 * TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 	 * 
 	 * SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 	 * 
-	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; decNsRep + " hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
+	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl +
+	 * "/moduleReportOperations.xquery\"; decNsRep + "
+	 * hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType +
+	 * "\"," + jobCount + ")";
 	 * 
-	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0"); service.setProperty("indent", "yes");
+	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service =
+	 * (XPathQueryService) collection.getService("XPathQueryService", "1.0");
+	 * service.setProperty("indent", "yes");
 	 * 
 	 * ResourceSet result = service.query(xQueryStr); ResourceIterator i = result.getIterator();
 	 * 
 	 * ArrayList<Job> jobs = new ArrayList<Job>(); JobArray jobArray = null;
 	 * 
-	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String)
+	 * r.getContent();
 	 * 
 	 * try {
 	 * 
-	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); // xmlOption.setLoadSubstituteNamespaces(map);
+	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new
+	 * HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); //
+	 * xmlOption.setLoadSubstituteNamespaces(map);
 	 * 
-	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) { jobs.add(job); }
+	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException
+	 * e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) {
+	 * jobs.add(job); }
 	 * 
 	 * return jobs; }
 	 */
@@ -1582,13 +1585,20 @@ public class DBOperations implements Serializable {
 		/*
 		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor
 		 * 
-		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + alarm.getAgentId() + ")";
+		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr =
+		 * xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl +
+		 * "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData +
+		 * "\", " + alarm.getAgentId() + ")";
 		 * 
 		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
 		 * 
-		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
+		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent =
+		 * (String) r.getContent();
 		 * 
-		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch (XmlException e) { e.printStackTrace(); } } alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());
+		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch
+		 * (XmlException e) { e.printStackTrace(); } }
+		 * alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." +
+		 * alarm.getAgentId());
 		 */
 
 		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
@@ -1740,7 +1750,10 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setAgentId(jobProperties.getAgentId());
 
 		/*
-		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent = TlosSpaceWide.getSpaceWideRegistry ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
+		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent =
+		 * TlosSpaceWide.getSpaceWideRegistry
+		 * ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() +
+		 * "");
 		 * 
 		 * jobInfoTypeClient.setResourceName(agent.getResource().getStringValue()); }
 		 */

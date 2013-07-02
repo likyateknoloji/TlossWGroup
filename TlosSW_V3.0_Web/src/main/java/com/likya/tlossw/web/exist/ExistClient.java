@@ -16,6 +16,8 @@ import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 
+import com.likya.tlossw.utils.ParsingUtils;
+
 public class ExistClient {
 
 	private static final Logger logger = Logger.getLogger(ExistClient.class);
@@ -23,10 +25,17 @@ public class ExistClient {
 	public static boolean tryReconnect = true;
 	public static boolean isEnvRead = false;
 
-	public static String existDbUri = null;
-	public static String dbCollectionName = null;
+	public static String dbType = null;
+	public static String dbId = null;
+	public static String dbIpAddress = null;
+	public static int dbPortNumber = 0;
+	public static String dbXmlRpcPath = null;
+	public static String dbRootCollectionName = null;
+	public static String dbUserCollectionName = null;
 	public static String userName = null;
 	public static String password = null;
+
+	public static String dbUri = null;
 
 	public static Database database;
 
@@ -54,30 +63,38 @@ public class ExistClient {
 				if (!isEnvRead) {
 					javax.naming.Context ctx;
 					try {
+					
 						ctx = new javax.naming.InitialContext();
-						existDbUri = (String) ctx.lookup("java:comp/env/dbUri");
+
+						dbType = (String) ctx.lookup("java:comp/env/dbType");
+						dbId = (String) ctx.lookup("java:comp/env/dbId");
+						dbIpAddress = (String) ctx.lookup("java:comp/env/dbIpAddress");
+						dbPortNumber = ((Integer) ctx.lookup("java:comp/env/dbPortNumber"));
+						dbXmlRpcPath = (String) ctx.lookup("java:comp/env/dbXmlRpcPath");
+						dbRootCollectionName = (String) ctx.lookup("java:comp/env/dbRootCollectionName");
+						dbUserCollectionName = (String) ctx.lookup("java:comp/env/dbUserCollectionName");
 						userName = (String) ctx.lookup("java:comp/env/dbUserName");
 						password = (String) ctx.lookup("java:comp/env/dbPassword");
-						dbCollectionName = (String) ctx.lookup("java:comp/env/dbCollectionName");
-						existDbUri = existDbUri + "/" + dbCollectionName;
+						
+						dbUri = ParsingUtils.getDbUri(dbType, dbId, dbIpAddress, dbPortNumber, dbXmlRpcPath, dbRootCollectionName, dbUserCollectionName);
 						isEnvRead = true;
 					} catch (NamingException e1) {
 						e1.printStackTrace();
 					}
 				}
 				
-				logger.debug("Getting collection on " + existDbUri + "...");
+				logger.debug("Getting collection on " + dbUri + "...");
 				
-				collection = DatabaseManager.getCollection(existDbUri, userName, password);
+				collection = DatabaseManager.getCollection(dbUri, userName, password);
 
 				if (collection != null) {
-					logger.info(">> Collection successfully obtained to " + existDbUri);
+					logger.info(">> Collection successfully obtained to " + dbUri);
 					collection.setProperty(OutputKeys.INDENT, "no");
 					tryReconnect = false;
 					break;
 				}
 
-				errprintln("Collection is null, check your eXist DB if it is running for uri : " + existDbUri);
+				errprintln("Collection is null, check your eXist DB if it is running for uri : " + dbUri);
 
 			} catch (XMLDBException xException) {
 				xException.printStackTrace();
