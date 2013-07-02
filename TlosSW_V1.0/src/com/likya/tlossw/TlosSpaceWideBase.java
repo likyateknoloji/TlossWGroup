@@ -84,9 +84,9 @@ public class TlosSpaceWideBase {
 			String dbUri = null;
 			
 			if(dbIp == null || dbIp.equals("")) {
-				dbUri = dbType + ":" + dbId + "///" + rootCollectionName + "/" + userCollectionName;				
+				dbUri = dbType + ":" + dbId + ":///" + rootCollectionName + "/" + userCollectionName;				
 			} else {
-				dbUri = dbType + ":" + dbId + "//" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
+				dbUri = dbType + ":" + dbId + "://" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
 			}
 			getSpaceWideRegistry().setDbUri(dbUri);
 			
@@ -109,10 +109,10 @@ public class TlosSpaceWideBase {
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
-			String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(userCollectionName);
+			String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(dbUri);
 			getSpaceWideRegistry().setxQueryModuleUrl(xQueryModuleUrl);
 
-			String xmlsUrl = ParsingUtils.getXmlsPath(userCollectionName);
+			String xmlsUrl = ParsingUtils.getXmlsPath(dbUri);
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
 			
 			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
