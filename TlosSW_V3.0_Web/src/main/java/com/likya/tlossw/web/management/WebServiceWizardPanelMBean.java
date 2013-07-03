@@ -217,8 +217,7 @@ public class WebServiceWizardPanelMBean extends TlosSWBaseBean implements Serial
 
 		webServiceDefinition.setBindingList(bindingList);
 
-		// TODO login kismi olmadigi icin simdilik userid degerini sabit verdim
-		webServiceDefinition.setUserId(1);
+		webServiceDefinition.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
 
 	public static Logger getLogger() {

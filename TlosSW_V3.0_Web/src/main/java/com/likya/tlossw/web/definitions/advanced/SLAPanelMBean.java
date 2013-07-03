@@ -379,9 +379,7 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 		sla.getResourceReq().setSoftware(software);
 
-		// TODO ekranlara login sayfasi eklendikten sonra sla'deki userId
-		// kismina login olan kullanicinin id degeri set edilecek
-		sla.setUserId(1);
+		sla.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
 
 	private void fillPanelFromSla() {

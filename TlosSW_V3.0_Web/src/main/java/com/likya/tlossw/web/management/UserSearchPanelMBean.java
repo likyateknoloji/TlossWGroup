@@ -128,8 +128,7 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public boolean checkDeleteUser() {
-		// TODO login kullanıcının id değerine göre kontrol edilmeli, 1'e göre değil.
-		if (person.getId() == 1) {
+		if (person.getId() == getSessionMediator().getJmxAppUser().getAppUser().getId()) {
 			addMessage("searchUser", FacesMessage.SEVERITY_ERROR, "tlos.error.user.delete.defaultUser", null);
 			return false;
 		}

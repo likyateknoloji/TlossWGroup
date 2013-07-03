@@ -42,9 +42,7 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 		webServiceDefinition = "";
 		selectedWebService = null;
 
-		// TODO kullanici giris ekrani yapildiktan sonra
-		// giris yapan kullanicinin id'si alinacak
-		int userId = 1;
+		int userId = getSessionMediator().getJmxAppUser().getAppUser().getId();
 
 		webServiceList = getDbOperations().getWebServiceListForActiveUser(userId);
 		setWebServiceDefinitionList(WebInputUtils.fillWebServiceDefinitionList(webServiceList));

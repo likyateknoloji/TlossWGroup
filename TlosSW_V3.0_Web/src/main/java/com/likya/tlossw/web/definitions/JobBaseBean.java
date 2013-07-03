@@ -808,9 +808,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jobInfos.getJobTypeDetails().setEventTypeDef(EventTypeDef.Enum.forString(eventTypeDef));
 		}
 
-		// TODO login ekrani olmadigi icin simdilik 1 id'li kullaniciyi
-		// ayarladim
-		baseJobInfos.setUserId(1);
+		baseJobInfos.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
 
 	protected void fillTimeManagement() {

@@ -159,9 +159,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			baseScenarioInfos.setCalendarId(Integer.parseInt(getJsCalendar()));
 		}
 
-		// TODO login ekrani olmadigi icin simdilik 1 id'li kullaniciyi
-		// ayarladim
-		baseScenarioInfos.setUserId(1);
+		baseScenarioInfos.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
 
 	private void fillDependencyDefinitions() {

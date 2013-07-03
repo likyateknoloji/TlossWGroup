@@ -413,9 +413,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			calendar.setWhichOnes(whichOnes);
 		}
 
-		// TODO ekranlara login sayfasi eklendikten sonra userId kismina login
-		// olan kullanicinin id degeri set edilecek
-		calendar.setUserId(1);
+		calendar.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
 
 	public void addSpecificDayAction() {

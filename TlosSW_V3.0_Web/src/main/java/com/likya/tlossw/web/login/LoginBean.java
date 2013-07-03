@@ -15,11 +15,14 @@ import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.web.db.DBOperations;
-import com.likya.tlossw.webclient.TEJmxMpClient;
+import com.likya.tlossw.web.exist.ExistConnectionHolder;
 
 @ManagedBean(name = LoginBean.BEAN_NAME)
 @ViewScoped
 public class LoginBean extends LoginBase implements Serializable {
+
+	@ManagedProperty(value = "#{existConnectionHolder}")
+	private ExistConnectionHolder existConnectionHolder;
 
 	public static final String BEAN_NAME = "loginBean";
 	private static final long serialVersionUID = -5124116113489857945L;
@@ -203,6 +206,14 @@ public class LoginBean extends LoginBase implements Serializable {
 
 	public void setDbOperations(DBOperations dbOperations) {
 		this.dbOperations = dbOperations;
+	}
+
+	public ExistConnectionHolder getExistConnectionHolder() {
+		return existConnectionHolder;
+	}
+
+	public void setExistConnectionHolder(ExistConnectionHolder existConnectionHolder) {
+		this.existConnectionHolder = existConnectionHolder;
 	}
 
 }
