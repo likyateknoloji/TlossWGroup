@@ -21,7 +21,7 @@ public class UserManager implements Serializable {
 
 	private static final long serialVersionUID = -7948774998363534929L;
 
-	private HashMap<String, Object> userList;
+	private HashMap<Integer, Object> userList;
 
 	@PostConstruct
 	public void startUp() {
@@ -32,12 +32,25 @@ public class UserManager implements Serializable {
 	public void dispose() {
 		userList.clear();
 	}
+	
+	private void confirmUnicity(JmxAppUser jmxAppUser) {
+		
+		if(userList.containsKey(jmxAppUser.getAppUser().getId())) {
+			((UserInfo) userList.get(jmxAppUser.getAppUser().getId())).getHttpSession().invalidate();
+			removeUser(jmxAppUser.getAppUser().getId());
+		}
+		
+		return;
+		
+	}
 
 	public synchronized void addUser(JmxAppUser jmxAppUser) {
 		
+		confirmUnicity(jmxAppUser);
+		
 		UserInfo userInfo = new UserInfo();
 		
-		userInfo.setUserId(jmxAppUser.getAppUser().getUsername());
+		userInfo.setUserId(jmxAppUser.getAppUser().getId());
 		
 		userInfo.setJmxAppUser(jmxAppUser);
 		
@@ -46,7 +59,7 @@ public class UserManager implements Serializable {
 		HttpSession currentSession = (HttpSession) externalContext.getSession(false);
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		
-		userInfo.setSessionId(currentSession.getId());
+		userInfo.setHttpSession(currentSession);
 		userInfo.setIpAddress(request.getRemoteAddr());
 		userInfo.setHostName(request.getRemoteHost());
 		userInfo.setUserAgent(request.getHeader("User-Agent"));
@@ -55,6 +68,7 @@ public class UserManager implements Serializable {
 	}
 	
 	public synchronized void addUser(UserInfo userInfo) {
+		confirmUnicity(userInfo.getJmxAppUser());
 		userList.put(userInfo.getUserId(), userInfo);
 	}
 
@@ -62,7 +76,7 @@ public class UserManager implements Serializable {
 		userList.remove(userInfo.getUserId());
 	}
 
-	public synchronized void removeUser(String userId) {
+	public synchronized void removeUser(int userId) {
 		userList.remove(userId);
 	}
 }
