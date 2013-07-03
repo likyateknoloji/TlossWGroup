@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.jmx.JmxAppUser;
+import com.likya.tlossw.web.appmng.UserManager;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
 
@@ -41,6 +42,9 @@ public class LoginBean extends LoginBase implements Serializable {
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
+	@ManagedProperty(value = "#{userManager}")
+	private UserManager userManager;
+	
 	public String login() {
 
 		logger.info("start : MyLoginBean : login");
@@ -118,6 +122,8 @@ public class LoginBean extends LoginBase implements Serializable {
 //			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
 //			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
 
+			userManager.addUser(jmxAppUser);
+			
 			return LOGIN_SUCCESS;
 
 		}
@@ -214,6 +220,14 @@ public class LoginBean extends LoginBase implements Serializable {
 
 	public void setExistConnectionHolder(ExistConnectionHolder existConnectionHolder) {
 		this.existConnectionHolder = existConnectionHolder;
+	}
+
+	public UserManager getUserManager() {
+		return userManager;
+	}
+
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
 	}
 
 }
