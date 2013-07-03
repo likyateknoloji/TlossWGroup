@@ -115,11 +115,11 @@ public class ParsingUtils {
 		
 		String dbUri = null;
 		
-		if(dbIp == null || dbIp.equals("")) {
-			dbUri = dbType + ":" + dbId + ":///" + rootCollectionName + "/" + userCollectionName;				
-		} else {
+		// if(dbIp == null || dbIp.equals("")) {
+		//	dbUri = dbType + ":" + dbId + ":///" + rootCollectionName + "/" + userCollectionName;				
+		// } else {
 			dbUri = dbType + ":" + dbId + "://" + dbIp + ":" + dbPort + dbXmlRpcPath + "/" + rootCollectionName + "/" + userCollectionName;
-		}
+		// }
 		
 		return dbUri;
 		
