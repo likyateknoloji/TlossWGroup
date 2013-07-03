@@ -15,7 +15,7 @@
             <com:userPassword>admin</com:userPassword>
             <com:transformToLocalTime>false</com:transformToLocalTime>
         </usr:person>
-        <usr:person id="4">
+        <usr:person id="3">
             <com:name>hakan</com:name>
             <com:surname>saribiyik</com:surname>
             <com:TelList>
@@ -27,6 +27,48 @@
             <com:role>ADMIN</com:role>
             <com:userName>hakan</com:userName>
             <com:userPassword>admin</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="4">
+            <com:name>Murat</com:name>
+            <com:surname>Kahraman</com:surname>
+            <com:TelList>
+                <com:tel>5414265310</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>murat.kahraman@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>murat</com:userName>
+            <com:userPassword>murat</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="5">
+            <com:name>Kursad</com:name>
+            <com:surname>Tas</com:surname>
+            <com:TelList>
+                <com:tel>2164718155</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>kursat.tas@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>kursat</com:userName>
+            <com:userPassword>kursat</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="6">
+            <com:name>Nurkan</com:name>
+            <com:surname>Kurt</com:surname>
+            <com:TelList>
+                <com:tel>2164718155</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>nurkan.kurt@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>nurkan</com:userName>
+            <com:userPassword>nurkan</com:userPassword>
             <com:transformToLocalTime>false</com:transformToLocalTime>
         </usr:person>
     </usr:userList>
