@@ -446,7 +446,7 @@ public class DBUtils extends DBBase {
 
 		String tlosData = null;
 		
-		String xQueryStr = ftpFunctionConstructor("hs:tlosXMLTransformXsl");
+		String xQueryStr = xslConnFunctionConstructor("hs:tlosJobTransformXsl");
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
