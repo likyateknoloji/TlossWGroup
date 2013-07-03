@@ -49,7 +49,7 @@ public class LoginBean extends LoginBase implements Serializable {
 		WebSpaceWideRegistery webSpaceWideRegistery = getSessionMediator().getWebSpaceWideRegistery();
 
 		if (LOGIN_FAILURE.equals(validated)) {
-			returnValue = LOGIN_FAILURE;
+			addMessage("loginForm", FacesMessage.SEVERITY_ERROR, "tlos.login.invalidLogin", null);
 		} else if (webSpaceWideRegistery != null) {
 			if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
 
@@ -119,8 +119,6 @@ public class LoginBean extends LoginBase implements Serializable {
 		}
 
 		logger.info("setting login error message ");
-
-		addMessage(null, FacesMessage.SEVERITY_ERROR, "Kullanıcı adı ya da şifresi hatalı !", "Kullanıcı adı ya da şifresi hatalı !");
 
 		return LOGIN_FAILURE;
 
