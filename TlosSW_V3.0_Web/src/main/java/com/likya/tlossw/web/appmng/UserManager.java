@@ -33,20 +33,35 @@ public class UserManager implements Serializable {
 		userList.clear();
 	}
 	
-	private void confirmUnicity(JmxAppUser jmxAppUser) {
+	private boolean confirmUnicity(JmxAppUser jmxAppUser, HttpSession currentSession) {
 		
 		if(userList.containsKey(jmxAppUser.getAppUser().getId())) {
-			((UserInfo) userList.get(jmxAppUser.getAppUser().getId())).getHttpSession().invalidate();
-			removeUser(jmxAppUser.getAppUser().getId());
+
+			HttpSession userSession = ((UserInfo) userList.get(jmxAppUser.getAppUser().getId())).getHttpSession();
+			
+			if(currentSession != null && !currentSession.equals(userSession)) {
+				currentSession.invalidate();
+				removeUser(jmxAppUser.getAppUser().getId());
+				
+				return true;
+			} 
+			
+			return false;
 		}
 		
-		return;
+		return true;
 		
 	}
 
 	public synchronized void addUser(JmxAppUser jmxAppUser) {
 		
-		confirmUnicity(jmxAppUser);
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		
+		HttpSession currentSession = (HttpSession) externalContext.getSession(false);
+		
+		if(!confirmUnicity(jmxAppUser, currentSession)) {
+			return;
+		}
 		
 		UserInfo userInfo = new UserInfo();
 		
@@ -54,9 +69,7 @@ public class UserManager implements Serializable {
 		
 		userInfo.setJmxAppUser(jmxAppUser);
 		
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		
-		HttpSession currentSession = (HttpSession) externalContext.getSession(false);
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		
 		userInfo.setHttpSession(currentSession);
@@ -64,11 +77,6 @@ public class UserManager implements Serializable {
 		userInfo.setHostName(request.getRemoteHost());
 		userInfo.setUserAgent(request.getHeader("User-Agent"));
 		
-		userList.put(userInfo.getUserId(), userInfo);
-	}
-	
-	public synchronized void addUser(UserInfo userInfo) {
-		confirmUnicity(userInfo.getJmxAppUser());
 		userList.put(userInfo.getUserId(), userInfo);
 	}
 
