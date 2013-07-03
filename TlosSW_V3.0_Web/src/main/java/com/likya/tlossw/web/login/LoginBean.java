@@ -111,8 +111,9 @@ public class LoginBean extends LoginBase implements Serializable {
 			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
 			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
 
-			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
-			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+			// TODO incelenmesi gerekiyor merve
+//			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
+//			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
 
 			return LOGIN_SUCCESS;
 
