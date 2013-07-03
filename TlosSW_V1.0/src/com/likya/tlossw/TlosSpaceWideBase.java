@@ -70,7 +70,7 @@ public class TlosSpaceWideBase {
 			// initialize database driver
 			Class<?> cl = Class.forName(driver);
 			Database database = (Database) cl.newInstance();
-			// database.setProperty("create-database", "true");
+			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
 			
 			String dbType = getSpaceWideRegistry().getServerConfig().getDbparams().getType();
