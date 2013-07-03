@@ -167,7 +167,7 @@ declare function dss:GetAvailableResourcesList($documentUrl as xs:string, $prev 
   let $results :=
    <lrns:ResourceList>
    {
-     for $cd in doc($resourcesDocumentUrl)/lrns:Resource,
+     for $cd in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource,
 	  $tek in $montoring_last_results/nrpr:nrpeCall,
 	  $de in $liste2/*
 	 where data($tek/@entry-name)=data($cd/@entry-name) and data($de/@entry-name)=data($cd/@entry-name)
@@ -177,8 +177,7 @@ declare function dss:GetAvailableResourcesList($documentUrl as xs:string, $prev 
 		 id="{$de/@id}"
 		 inJmxAvailable="{ $de/@inJmxAvailable }"
 	     JmxAvailable="{ $de/@JmxAvailable }"
-         os="{$tek/@os}"
-	   > { $tek/nrpr:message } </nrpr:nrpeCall>
+         os="{$tek/@os}"> { $tek/nrpr:message } </nrpr:nrpeCall>
 
    }
    </lrns:ResourceList>

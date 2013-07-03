@@ -18,11 +18,12 @@ declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string)
 	return concat($prefix, $rootCol, '/', $subCol, '/', $docName)
 };
 :)
-declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string
+declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string?
 {    
     let $seperator := "/"
     let $metaDataFile := xs:string("metaData.xml")
     let $xmlCollection := xs:string("xmls")
+    let $xslCollection := xs:string("xsls")
     (: let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"] :)
     
     let $metaDataFileFull := xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $metaDataFile))
@@ -31,8 +32,17 @@ declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string)
     let $rootCol := $docXml/meta:metaData/meta:dbInfo/meta:rootCollection/text()
     :)
     
-    let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
-	return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $docFullName))
+    let $result := if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]) 
+    	then 
+    		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
+    		return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $docFullName)) 
+    	else if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"])
+    	then 
+    		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"]
+    		return xs:string(concat($documentUrl, $seperator, $xslCollection, $seperator, $docFullName))
+    	else ()
+    
+	return $result
 };
 
 declare function met:insertMetaData($documentUrl as xs:string, $doc as element(meta:document))
