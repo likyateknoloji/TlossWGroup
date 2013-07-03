@@ -65,6 +65,8 @@ public class LoginBean extends LoginBase implements Serializable {
 				addMessage("loginForm", "errorMessage", "invalid Mode", null);
 				returnValue = LOGIN_FAILURE;
 			}
+		} else {
+			returnValue = LOGIN_SUCCESS;
 		}
 
 		logger.info("end : RegisteredLoginBean : login");
