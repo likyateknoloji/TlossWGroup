@@ -3,7 +3,7 @@
 	<meta:dbInfo>
 		<meta:name>Exist Db</meta:name>
 		<meta:prefix>//db/</meta:prefix>
-		<meta:rootCollection>TLOSSW</meta:rootCollection>
+		<meta:rootCollection>tlossw-test</meta:rootCollection>
 		<meta:collection type="module">modules</meta:collection>
 		<meta:collection type="xml">xmls</meta:collection>
 		<meta:collection type="xsd">xsds</meta:collection>
