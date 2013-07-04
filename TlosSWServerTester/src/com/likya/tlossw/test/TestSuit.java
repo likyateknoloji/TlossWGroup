@@ -127,6 +127,7 @@ public abstract class TestSuit {
 		serverParamsDocument.getServerParams().setIsPersistent(isPersistentDocument.getIsPersistent());
 		
 		ServerConfigDocument serverConfigDocument = ServerConfigDocument.Factory.newInstance();
+		serverConfigDocument.addNewServerConfig();
 		serverConfigDocument.getServerConfig().setServerParams(serverParamsDocument.getServerParams());
 		
 		spaceWideRegistry.setServerConfig(serverConfigDocument.getServerConfig());
