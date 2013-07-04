@@ -36,8 +36,8 @@
 		<con:xmlrpcpath>/exist/xmlrpc</con:xmlrpcpath>
 		<con:rootcollection>db</con:rootcollection>
 		<con:usercollection>tlossw-serkan</con:usercollection>
-		<con:username>admin</con:username>
-		<con:password>admin</con:password>
+		<con:username>tlossw</con:username>
+		<con:password>tlossw</con:password>
 	</con:dbparams>
 
 </con:serverConfig>
