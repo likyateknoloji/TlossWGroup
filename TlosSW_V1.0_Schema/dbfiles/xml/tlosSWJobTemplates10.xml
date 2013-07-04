@@ -464,6 +464,75 @@
 	                <dat:minPercentage>10</dat:minPercentage>
 	            </dat:timeManagement>
 	        </dat:jobProperties>
+	        <dat:jobProperties agentId="0" ID="24">
+	            <jsdl:JobDescription/>
+	            <dat:baseJobInfos>
+	                <com:jsName>Shell Script</com:jsName>
+	                <com:comment>Shell Script</com:comment>
+	                <dat:jobInfos>
+	                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+	                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
+	                    <com:jobTypeDetails>
+	                        <com:jobCommandType>SHELL SCRIPT</com:jobCommandType>
+	                        <com:jobCommand>calc.exe</com:jobCommand>
+	                        <com:jobPath>C:\Windows\System32</com:jobPath>
+	                    </com:jobTypeDetails>
+	                </dat:jobInfos>
+	                <dat:calendarId>1</dat:calendarId>
+	                <dat:jobLogFile>executeinshell.log</dat:jobLogFile>
+	                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+	                <dat:oSystem>Windows</dat:oSystem>
+	                <dat:jobPriority>1</dat:jobPriority>
+	                <dat:jsIsActive>YES</dat:jsIsActive>
+	                <com:userId>4</com:userId>
+	            </dat:baseJobInfos>
+	            <dat:cascadingConditions>
+	                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+	                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+	                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
+	            </dat:cascadingConditions>
+	            <dat:stateInfos>
+	                <state-types:LiveStateInfos>
+	                    <state-types:LiveStateInfo LSIDateTime="2012-08-12T18:15:39.908+0300">
+	                        <state-types:StateName>PENDING</state-types:StateName>
+	                        <state-types:SubstateName>VALIDATED</state-types:SubstateName>
+	                    </state-types:LiveStateInfo>
+	                    <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+	                        <state-types:StateName>PENDING</state-types:StateName>
+	                        <state-types:SubstateName>CREATED</state-types:SubstateName>
+	                    </state-types:LiveStateInfo>
+	                </state-types:LiveStateInfos>
+	            </dat:stateInfos>
+	            <dat:advancedJobInfos>
+	                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+	            </dat:advancedJobInfos>
+	            <dat:concurrencyManagement>
+	                <com:instanceId>11</com:instanceId>
+	                <com:concurrent>true</com:concurrent>
+	            </dat:concurrencyManagement>
+	            <dat:alarmPreference/>
+	            <dat:timeManagement>
+	                <dat:jsPlannedTime>
+	                    <dat:startTime>
+	                        <com:time>08:00:00</com:time>
+	                    </dat:startTime>
+	                    <dat:stopTime>
+	                        <com:time>23:00:00</com:time>
+	                    </dat:stopTime>
+	                </dat:jsPlannedTime>
+	                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+	                <dat:jsTimeOut>
+	                    <com:value_integer>1</com:value_integer>
+	                    <com:unit>MINUTES</com:unit>
+	                </dat:jsTimeOut>
+	                <dat:expectedTime>
+	                    <com:value_integer>100</com:value_integer>
+	                    <com:unit>MINUTES</com:unit>
+	                </dat:expectedTime>
+	                <dat:tolerancePercentage>10</dat:tolerancePercentage>
+	                <dat:minPercentage>10</dat:minPercentage>
+	            </dat:timeManagement>
+	        </dat:jobProperties>
 		</dat:jobList>
 		<dat:timeManagement>
 			<dat:jsPlannedTime>
