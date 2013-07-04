@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="jobDefinitionForm">
+
+		<p:fieldset id="jobDef"
+			legend="#{msgs['tlos.workspace.pannel.job.systemCommandJobs']}"
+			style="width: 96%;">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:tabView effect="blind" effectDuration="normal" id="tabView">
+
+				<ui:include src="/inc/propertiesTabs/baseJobInfosTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<p:tab id="systemCommandPropertiesTab"
+					title="#{msgs['tlos.workspace.pannel.job.systemCommandTab']}">
+					<p:panel>
+						<p:panelGrid columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobPath']}" />
+							<p:inputText value="#{systemCommandPanelMBean.jobPath}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.path']}">
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.jobCommandFile']}" />
+							<p:inputText value="#{systemCommandPanelMBean.jobCommand}"
+								required="true"
+								requiredMessage="#{msgs['tlos.validation.job.command']}">
+							</p:inputText>
+						</p:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/dependencyDefinitionsTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/cascadingConditionsTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/stateInfosTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/alarmPreferenceTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/localParametersTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+				<ui:include src="/inc/propertiesTabs/advancedJobInfosTab.xhtml">
+					<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+				</ui:include>
+
+			</p:tabView>
+
+			<br />
+
+			<ui:include src="/inc/propertiesTabs/bottomJSPanel.xhtml">
+				<ui:param name="backingBean" value="#{systemCommandPanelMBean}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>
