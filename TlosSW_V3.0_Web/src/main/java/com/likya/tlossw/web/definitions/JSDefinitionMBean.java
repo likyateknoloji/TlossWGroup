@@ -48,6 +48,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{remoteShellPanelMBean}")
 	private RemoteShellPanelMBean remoteShellPanelMBean;
 
+	@ManagedProperty(value = "#{systemCommandPanelMBean}")
+	private SystemCommandPanelMBean systemCommandPanelMBean;
+
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
@@ -61,6 +64,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String DB_JOBS_PAGE = "/inc/definitionPanels/dbJobDef.xhtml";
 	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
 	public final static String REMOTE_SHELL_PAGE = "/inc/definitionPanels/remoteJobDef.xhtml";
+	public final static String SYSTEM_COMMAND_PAGE = "/inc/definitionPanels/systemCommandJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
@@ -150,6 +154,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
+			currentPanelMBeanRef = getSystemCommandPanelMBean();
+			jobDefCenterPanel = SYSTEM_COMMAND_PAGE;
 			break;
 
 		case JobCommandType.INT_BATCH_PROCESS:
@@ -379,6 +385,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setRemoteShellPanelMBean(RemoteShellPanelMBean remoteShellPanelMBean) {
 		this.remoteShellPanelMBean = remoteShellPanelMBean;
+	}
+
+	public SystemCommandPanelMBean getSystemCommandPanelMBean() {
+		return systemCommandPanelMBean;
+	}
+
+	public void setSystemCommandPanelMBean(SystemCommandPanelMBean systemCommandPanelMBean) {
+		this.systemCommandPanelMBean = systemCommandPanelMBean;
 	}
 
 }
