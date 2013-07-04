@@ -21,7 +21,7 @@ public class TestExecuteInShell extends TestSuit {
 	public void startTest() {
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "ExecuteAsProcess.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "ExecuteInShell.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
 		
 		JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
