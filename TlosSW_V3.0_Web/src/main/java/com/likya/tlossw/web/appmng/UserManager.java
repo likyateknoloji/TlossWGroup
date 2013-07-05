@@ -32,52 +32,58 @@ public class UserManager implements Serializable {
 	public void dispose() {
 		userList.clear();
 	}
-	
+
 	private boolean confirmUnicity(JmxAppUser jmxAppUser, HttpSession currentSession) {
-		
-		if(userList.containsKey(jmxAppUser.getAppUser().getId())) {
+
+		if (userList.containsKey(jmxAppUser.getAppUser().getId())) {
 
 			HttpSession userSession = ((UserInfo) userList.get(jmxAppUser.getAppUser().getId())).getHttpSession();
-			
-			if(currentSession != null && !currentSession.equals(userSession)) {
-				currentSession.invalidate();
+
+			if (currentSession != null && !currentSession.equals(userSession)) {
+
+				try {
+					userSession.invalidate();
+				} catch (IllegalStateException ise) {
+					// it's invalid
+				}
+
 				removeUser(jmxAppUser.getAppUser().getId());
-				
+
 				return true;
-			} 
-			
+			}
+
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
 
 	public synchronized void addUser(JmxAppUser jmxAppUser) {
-		
+
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		
+
 		HttpSession currentSession = (HttpSession) externalContext.getSession(false);
-		
-		if(!confirmUnicity(jmxAppUser, currentSession)) {
+
+		if (!confirmUnicity(jmxAppUser, currentSession)) {
 			return;
 		}
-		
+
 		UserInfo userInfo = new UserInfo();
-		
+
 		userInfo.setUserId(jmxAppUser.getAppUser().getId());
-		
+
 		userInfo.setJmxAppUser(jmxAppUser);
-		
-		
+
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-		
+
 		userInfo.setHttpSession(currentSession);
 		userInfo.setIpAddress(request.getRemoteAddr());
 		userInfo.setHostName(request.getRemoteHost());
 		userInfo.setUserAgent(request.getHeader("User-Agent"));
-		
+
 		userList.put(userInfo.getUserId(), userInfo);
+
 	}
 
 	public synchronized void removeUser(UserInfo userInfo) {
