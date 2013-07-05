@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.appmng;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
@@ -84,6 +85,26 @@ public class UserManager implements Serializable {
 
 		userList.put(userInfo.getUserId(), userInfo);
 
+		cleanupSessionQueue();
+	}
+
+	/**
+	 * Timeout süresi dolan sessionların kullanıcılarını kullanıcı listesinden çıkartıyor.
+	 */
+	private void cleanupSessionQueue() {
+		ArrayList<Integer> timeoutList = new ArrayList<Integer>();
+		for (int userId : userList.keySet()) {
+			try {
+				@SuppressWarnings("unused")
+				long time = ((UserInfo) userList.get(userId)).httpSession.getCreationTime();
+			} catch (IllegalStateException ise) {
+				timeoutList.add(userId);
+			}
+		}
+
+		for (int userId : timeoutList) {
+			userList.remove(userId);
+		}
 	}
 
 	public synchronized void removeUser(UserInfo userInfo) {
