@@ -418,7 +418,7 @@ declare function hs:deleteJob($documentUrl as xs:string, $jobProperty as element
 
 declare function hs:jobResultListByDates($documentUrl as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
                 let $sonuc := for $runx in doc($dataDocumentUrl)/TlosProcessDataAll/RUN//dat:jobProperties
                               where $runx[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
@@ -432,7 +432,7 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $jobId as xs
 
 declare function hs:jobResultListbyRunId($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     let $runIdFound := if ($runId != 0 ) 
 	                   then $runId 
@@ -453,7 +453,7 @@ declare function hs:jobResultListbyRunId($documentUrl as xs:string, $numberOfEle
 
 declare function hs:jobResultListByDates($documentUrl as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
                 let $sonuc := for $runx in doc($dataDocumentUrl)/TlosProcessDataAll/RUN//dat:jobProperties
                               where $runx[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
@@ -469,7 +469,7 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $jobId as xs
 
 declare function hs:insertLiveJob($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
 	let $doc := doc($dataDocumentUrl)
 	for $xmlJobList in $doc//$jobPath
@@ -478,14 +478,14 @@ declare function hs:insertLiveJob($documentUrl as xs:string, $jobProperty as ele
 
 declare function hs:insertLiveJobLock($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertLiveJob($documentUrl, $jobProperty, $jobPath))   
 };
 (: kullanilmiyor :)
 declare function hs:insertJobInTheBeginning($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
 	let $doc := doc($dataDocumentUrl)
 	for $xmlJobList in $doc//$jobPath
@@ -494,28 +494,28 @@ declare function hs:insertJobInTheBeginning($documentUrl as xs:string, $jobPrope
 
 declare function hs:insertJobInTheBeginningLock($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobInTheBeginning($documentUrl, $jobProperty, $jobPath))   
 };
 
 declare function hs:insertFreeJob($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return update insert $jobProperty into  doc($dataDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData/dat:jobList  
 };
 
 declare function hs:insertFreeJobLock($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertFreeJob($documentUrl, $jobProperty, $runId))     
 };
 
 declare function hs:insertJobAgentId($documentUrl as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
 {
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
 	let $doc := doc($dataDocumentUrl)	
 	let $doc := update insert attribute agentId {data($agentId)} into  $doc//$jobPath/dat:jobProperties[@ID=data($jobId) and @agentId='0']
@@ -524,14 +524,14 @@ declare function hs:insertJobAgentId($documentUrl as xs:string, $agentId as xs:s
 
 declare function hs:insertJobAgentIdLock($documentUrl as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobAgentId($documentUrl, $agentId, $jobId, $jobPath))   
 };
 
 declare function hs:insertJobState($documentUrl as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
 	let $doc := doc($dataDocumentUrl)
 	for $jobLiveStateInfos in $doc//$jobPath/dat:stateInfos/state-types:LiveStateInfos
@@ -540,7 +540,7 @@ declare function hs:insertJobState($documentUrl as xs:string, $liveStateInfo as 
 
 declare function hs:insertJobStateLock($documentUrl as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobState($documentUrl, $liveStateInfo, $jobPath))   
 };
@@ -549,14 +549,14 @@ declare function hs:insertJobStateLock($documentUrl as xs:string, $liveStateInfo
 
 declare function hs:updateLiveJobLock($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateLiveJob($documentUrl, $jobProperty, $jobPath))   
 };
 
 declare function hs:updateLiveJob($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     let $doc := doc($dataDocumentUrl)
     let $state := if ( exists($doc//$jobPath/@LSIDateTime) and $doc//$jobPath[@ID=data($jobProperty/@ID) and @agentId=data($jobProperty/@agentId) and @LSIDateTime=data($jobProperty/@LSIDateTime)]) then 
@@ -567,14 +567,14 @@ declare function hs:updateLiveJob($documentUrl as xs:string, $jobProperty as ele
 
 declare function hs:updateFirstLiveJobLock($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateFirstLiveJob($documentUrl, $jobProperty, $jobPath))   
 };
 
 declare function hs:updateFirstLiveJob($documentUrl as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     let $doc := doc($dataDocumentUrl)
     let $arasonuc := update delete $doc//$jobPath//dat:stateInfos/state-types:LiveStateInfos
