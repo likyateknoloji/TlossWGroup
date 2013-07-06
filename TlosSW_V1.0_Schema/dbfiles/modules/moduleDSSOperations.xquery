@@ -233,14 +233,14 @@ declare function dss:ResourceSLACheck($documentUrl as xs:string, $gununtarihi as
     <ResourceSLACheck>
       {
         for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA,
-            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $maxid and data(calID) = data($tek/sla:calendarId)]
+            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $maxid]
         (:    where data($calendar/calID)=data($tek/calendarId):)
         return
           <SLACheck>
-		  {
+    	  {
             $tek, 
             <result>{
-                     if((data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi) and data($calendar/calID) = data($tek/sla:calendarId)
+                     if(data($calendar/calID) = data($tek/sla:calendarId) and (data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi) and data($calendar/calID) = data($tek/sla:calendarId)
 					     and (xs:time($tek/sla:SInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:SInterval/sla:stopTime) > xs:time($zaman))
 					 )  
 					 then "TRUE"
