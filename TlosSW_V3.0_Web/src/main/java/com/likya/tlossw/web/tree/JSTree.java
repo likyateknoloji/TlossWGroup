@@ -19,7 +19,10 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.tree.WsJobNode;
+import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
@@ -36,6 +39,9 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
+		
+		long startTime = System.currentTimeMillis();
+		
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml();
 		System.out.println("Tree has been loaded !!");
 
@@ -45,13 +51,18 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// "Job Tree olusturuldu !", null);
-		System.out.println("Job Tree olusturuldu !");
+		System.out.println("Job Tree olusturuldu ! Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, null);
-		TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
+		
+		WsScenarioNode wsScenarioNode = new WsScenarioNode();
+		
+		wsScenarioNode.setName(resolveMessage("tlos.workspace.tree.scenario.root"));
+		
+		TreeNode scenarioRootNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, root);
 		scenarioRootNode.setExpanded(true);
 		setSelectedTreeNode(scenarioRootNode);
 
@@ -64,8 +75,21 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
-		@SuppressWarnings("unused")
-		TreeNode jobNode = new DefaultTreeNode("job", jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
+		
+		WsJobNode wsJobNode = new WsJobNode();
+		wsJobNode.setId(jobProperties.getID());
+		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
+		
+		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
+		
+		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
+		
+	}
+	
+	public void addJobNodeOld(JobProperties jobProperties, TreeNode selectedNode) {
+		
+		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID(), selectedNode);
+		
 	}
 
 	// Yeni tanimlanan isi agacta ilgili kisma ekliyor
@@ -187,7 +211,13 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public TreeNode addScenario(Scenario scenario) {
-		TreeNode scenarioNode = new DefaultTreeNode("scenario", scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID(), selectedTreeNode);
+		
+		WsScenarioNode wsScenarioNode = new WsScenarioNode();
+		
+		wsScenarioNode.setName(scenario.getBaseScenarioInfos().getJsName());
+		wsScenarioNode.setId(scenario.getID());
+		
+		TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, selectedTreeNode);
 
 		scenarioNode.setExpanded(true);
 
