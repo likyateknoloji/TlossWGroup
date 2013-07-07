@@ -13,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.chart.CartesianChartModel;
@@ -106,7 +107,15 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		  
 		if(jobsArray!=null) {
 		  for (Job job : jobsArray.getJobArray()) {
-			BigDecimal figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
+			BigDecimal figure = null;
+			try {
+			   figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
+			}
+			catch(XmlValueOutOfRangeException e){
+	            //do something clever with the exception
+				figure = new BigDecimal(0);
+	            System.out.println(e.getMessage());				
+			}
 			jobs.set(job.getJname(), figure);
 		  }
 		}
