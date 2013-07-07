@@ -67,7 +67,7 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 			menuitems.add(new MenuItems(null, "ui-icon-document", "Help", "#"));
 			
 			MenuItems logoutMenuItem = new MenuItems(null, "ui-icon-document", "Logout", "#");
-			logoutMenuItem.setValueExpression("#{loginBean.logout}");
+			logoutMenuItem.setValueExpression("#{logoutBean.logout}");
 			menuitems.add(logoutMenuItem);
 
 			menuitems.add(new MenuItems(" ", "ui-icon-home", "Home", "/"));
