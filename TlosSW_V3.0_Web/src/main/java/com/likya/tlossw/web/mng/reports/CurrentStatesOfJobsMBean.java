@@ -47,6 +47,10 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 	private int pieWaitingCount;
 	private int pieSuccessCount;
 	private int pieLook4RCount;
+	private int pieUserChooseResourceCount;
+	private int pieUserWaitingCount;
+	private int pieCancelledCount;
+	private int pieTimeoutCount;
 
 	private String pieColorList;
 
@@ -109,7 +113,13 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 		pieFailedCount = 0;
 		pieReadyCount = 0;
 		pieWaitingCount = 0;
-
+		pieSuccessCount = 0;
+		pieLook4RCount = 0;
+		pieUserChooseResourceCount = 0;
+		pieUserWaitingCount = 0;
+		pieCancelledCount = 0;
+		pieTimeoutCount = 0;
+		
 		try {
 			reportBaseList = getDbOperations().getDashboardReport(derinlik);
 		} catch (XMLDBException e) {
@@ -118,19 +128,47 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 
 		pieDashboardModel = new PieChartModel();
 
+		int running = 0,
+		    failed = 0,
+		    waiting = 0,
+		    ready = 0,
+		    success = 0,
+		    lookForResource = 0,
+		    userChooseResource = 0,
+		    userWaiting = 0,
+		    cancelled = 0,
+		    timeout = 0;
+		
 		if (reportBaseList != null) {
-
-			setPieRunningCount(reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().intValue());
-			setPieFailedCount(reportBaseList.getFINISHED().getCOMPLETED().getFAILED().intValue());
-			setPieReadyCount(reportBaseList.getPENDING().getREADY().getWAITING().intValue());
-			setPieWaitingCount(reportBaseList.getPENDING().getIDLED().getBYTIME().intValue());
-			setPieSuccessCount(reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().intValue());
-			setPieLook4RCount(reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().intValue());
-
+			
+			running = reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().intValue() + reportBaseList.getRUNNING().getSTAGEIN().intValue() + reportBaseList.getRUNNING().getSTAGEOUT().intValue();
+			failed = reportBaseList.getFINISHED().getCOMPLETED().getFAILED().intValue();
+			waiting = reportBaseList.getPENDING().getIDLED().getBYTIME().intValue();
+			ready = reportBaseList.getPENDING().getREADY().getWAITING().intValue();
+			success = reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().intValue();
+			lookForResource = reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().intValue();
+			userChooseResource = reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE().intValue();
+			userWaiting = reportBaseList.getPENDING().getREADY().getUSERWAITING().intValue();
+			cancelled = reportBaseList.getCANCELLED().intValue();
+			timeout = reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().intValue();
+			
+			setPieRunningCount( running );
+			setPieFailedCount( failed );
+			setPieReadyCount( ready );
+			setPieWaitingCount( waiting );
+			setPieSuccessCount( success );
+			setPieLook4RCount( lookForResource );
+			setPieUserChooseResourceCount( userChooseResource );
+			setPieUserWaitingCount( userWaiting );
+			setPieCancelledCount( cancelled );
+			setPieTimeoutCount( timeout );
+			
 			int i = 0;
 
-			if ((reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN() != null)
-					&& (reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().compareTo(BigInteger.valueOf(0))) != 0) {
+			if (
+				(reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN() != null)
+				  && (running > 0 )
+			   ) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Running"),
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().doubleValue());
@@ -139,7 +177,7 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 			}
 
 			if ((reportBaseList.getPENDING().getIDLED().getBYTIME() != null)
-					&& (reportBaseList.getPENDING().getIDLED().getBYTIME().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (waiting > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Waiting"),
 						reportBaseList.getPENDING().getIDLED().getBYTIME().doubleValue());
@@ -151,7 +189,7 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 			}
 
 			if ((reportBaseList.getPENDING().getREADY().getWAITING() != null)
-					&& (reportBaseList.getPENDING().getREADY().getWAITING().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (ready > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Ready"),
 						reportBaseList.getPENDING().getREADY().getWAITING().doubleValue());
@@ -163,7 +201,7 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 			}
 
 			if ((reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE() != null)
-					&& (reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (lookForResource > 0 )) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Look"),
 						reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().doubleValue());
@@ -174,21 +212,20 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 				i++;
 			}
 			if ((reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE() != null)
-					&& (reportBaseList.getPENDING().getREADY()
-							.getUSERCHOOSERESOURCE().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (userChooseResource > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUR"),
 						reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE().doubleValue());
 			}
 
 			if ((reportBaseList.getPENDING().getREADY().getUSERWAITING() != null)
-					&& (reportBaseList.getPENDING().getREADY().getUSERWAITING().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (userWaiting > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUW"),
 						reportBaseList.getPENDING().getREADY().getUSERWAITING().doubleValue());
 			}
 			if ((reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS() != null)
-					&& (reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (success > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Success"),
 						reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().doubleValue());
@@ -199,7 +236,7 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 				i++;
 			}
 			if ((reportBaseList.getFINISHED().getCOMPLETED().getFAILED() != null)
-					&& (reportBaseList.getFINISHED().getCOMPLETED().getFAILED().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (failed > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Failed"),
 						reportBaseList.getFINISHED().getCOMPLETED().getFAILED().doubleValue());
@@ -210,13 +247,13 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 				i++;
 			}
 			if ((reportBaseList.getCANCELLED() != null)
-					&& (reportBaseList.getCANCELLED().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (cancelled > 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Cancelled"),
 						reportBaseList.getCANCELLED().doubleValue());
 			}
 			if ((reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT() != null)
-					&& (reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().compareTo(BigInteger.valueOf(0))) != 0) {
+					&& (timeout != 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.TimeOut"),
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
@@ -317,4 +354,36 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 		this.pieColorList = pieColorList;
 	}
 
+	public int getPieUserChooseResourceCount() {
+		return pieUserChooseResourceCount;
+	}
+
+	public void setPieUserChooseResourceCount(int pieUserChooseResourceCount) {
+		this.pieUserChooseResourceCount = pieUserChooseResourceCount;
+	}
+
+	public int getPieUserWaitingCount() {
+		return pieUserWaitingCount;
+	}
+
+	public void setPieUserWaitingCount(int pieUserWaitingCount) {
+		this.pieUserWaitingCount = pieUserWaitingCount;
+	}
+
+	public int getPieCancelledCount() {
+		return pieCancelledCount;
+	}
+
+	public void setPieCancelledCount(int pieCancelledCount) {
+		this.pieCancelledCount = pieCancelledCount;
+	}
+
+	public int getPieTimeoutCount() {
+		return pieTimeoutCount;
+	}
+
+	public void setPieTimeoutCount(int pieTimeoutCount) {
+		this.pieTimeoutCount = pieTimeoutCount;
+	}
+	
 }
