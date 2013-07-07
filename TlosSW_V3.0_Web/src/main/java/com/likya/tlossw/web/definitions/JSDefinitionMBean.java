@@ -70,7 +70,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
 
-	public String draggedTemplateName;
+	public WsNode draggedTemplateName = new WsNode();
 	public String draggedTemplatePath;
 
 	public String selectedJSPath;
@@ -138,7 +138,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleDropAction(ActionEvent ae) {
-		jobProperties = getDbOperations().getTemplateJobFromName(draggedTemplateName);
+		jobProperties = getDbOperations().getTemplateJobFromName(draggedTemplateName.getName());
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
@@ -258,14 +258,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJobDefCenterPanel(String jobDefCenterPanel) {
 		this.jobDefCenterPanel = jobDefCenterPanel;
-	}
-
-	public String getDraggedTemplateName() {
-		return draggedTemplateName;
-	}
-
-	public void setDraggedTemplateName(String draggedTemplateName) {
-		this.draggedTemplateName = draggedTemplateName;
 	}
 
 	public JobProperties getJobProperties() {
@@ -394,6 +386,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDraggedWsNodeForDependency(WsJobNode draggedWsNodeForDependency) {
 		this.draggedWsNodeForDependency = draggedWsNodeForDependency;
+	}
+
+	public WsNode getDraggedTemplateName() {
+		return draggedTemplateName;
+	}
+
+	public void setDraggedTemplateName(WsNode draggedTemplateName) {
+		this.draggedTemplateName = draggedTemplateName;
 	}
 
 }
