@@ -19,7 +19,10 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.tree.WsJobNode;
+import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
@@ -64,8 +67,12 @@ public class JobTemplatesTree implements Serializable {
 	}
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
-		@SuppressWarnings("unused")
-		TreeNode jobNode = new DefaultTreeNode("job", jobProperties.getBaseJobInfos().getJsName(), selectedNode);
+		
+		WsJobNode wsJobNode = new WsJobNode();
+		
+		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
+		
+		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
 	}
 
 	public void constructTree(Scenario[] scenario) {
@@ -80,7 +87,12 @@ public class JobTemplatesTree implements Serializable {
 	}
 
 	public TreeNode addScenario(Scenario scenario) {
-		TreeNode scenarioNode = new DefaultTreeNode("jobGroup", scenario.getBaseScenarioInfos().getJsName(), selectedTreeNode);
+		
+		WsScenarioNode wsScenarioNode = new WsScenarioNode();
+		
+		wsScenarioNode.setName(scenario.getBaseScenarioInfos().getJsName());
+		
+		TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_JOBGROUP, wsScenarioNode, selectedTreeNode);
 
 		scenarioNode.setExpanded(true);
 
