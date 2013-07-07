@@ -12,6 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.chart.OhlcChartModel;
 import org.primefaces.model.chart.OhlcChartSeries;
@@ -115,12 +116,21 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 				    getMilliSec(job.getStartTime().getTimeInMillis())
 				);
 			System.out.println(result);
-
+			Calendar figure = null;
+			try {
+			   figure = job.getStopTime();
+			}
+			catch(XmlValueOutOfRangeException e){
+	            //do something clever with the exception
+				figure = job.getStartTime();
+	            System.out.println(e.getMessage());				
+			}
+			
 			ohlcModel.add(new OhlcChartSeries(TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()), 
 					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
-					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStopTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
+					(double) TimeUnit.MILLISECONDS.toSeconds(figure.getTimeInMillis() - overallStart.getTimeInMillis()) ,
 					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
-					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStopTime().getTimeInMillis() - overallStart.getTimeInMillis())
+					(double) TimeUnit.MILLISECONDS.toSeconds(figure.getTimeInMillis() - overallStart.getTimeInMillis())
 					));
 			
 		}
