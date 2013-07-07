@@ -30,6 +30,7 @@ import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.Status;
+import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
@@ -161,7 +162,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		baseScenarioInfos.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
 	}
-
+/*
 	private void fillDependencyDefinitions() {
 		// son durumda bagimlik tanimlanmamissa senaryo icindeki ilgili kismi
 		// kaldiriyor
@@ -170,7 +171,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			xmlCursor.removeXml();
 		}
 	}
-
+*/
 	private void fillStateInfos() {
 		// son durumda statu kodu tanimlanmamissa senaryo icindeki
 		// ilgili kismi kaldiriyor
@@ -214,7 +215,12 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		}
 
 		if (getDbOperations().insertScenario(getScenarioXML(), scenarioPath)) {
-			TreeNode scenarioNode = new DefaultTreeNode("scenario", scenarioName + " | " + getScenario().getID(), getJsTree().getSelectedJS());
+
+			WsScenarioNode swScenarioNode = new WsScenarioNode();
+			swScenarioNode.setName(scenarioName);
+			swScenarioNode.setId(getScenario().getID());
+			
+			TreeNode scenarioNode = new DefaultTreeNode("scenario", swScenarioNode, getJsTree().getSelectedJS());
 			scenarioNode.setExpanded(true);
 
 			RequestContext context = RequestContext.getCurrentInstance();
@@ -434,8 +440,8 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibaren path'i tutuyor
 		if (isJsUpdateButton()) {
-			scenarioPathInScenario = scenarioNode.getData().toString();
-			scenarioName = DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
+			scenarioPathInScenario = ((WsScenarioNode) scenarioNode.getData()).getPath();
+			scenarioName = ((WsScenarioNode) scenarioNode.getData()).getName(); // DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
 
 			scenarioNode = scenarioNode.getParent();
 		}
@@ -535,6 +541,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	public void fillTabs() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getScenId() {
+		return getScenario().getID();
 	}
 
 }
