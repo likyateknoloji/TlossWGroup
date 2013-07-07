@@ -15,6 +15,12 @@
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
 					<p:inputText
+						value="#{backingBean.jobProperties.ID}" disabled="true">
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputText>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
+					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.name']}" >
