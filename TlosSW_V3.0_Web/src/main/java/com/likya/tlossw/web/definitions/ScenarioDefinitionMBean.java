@@ -34,7 +34,6 @@ import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
-import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
@@ -435,25 +434,26 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	private void setScenarioTreePath(TreeNode scenarioNode) {
 		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root");
 
+		WsScenarioNode wsScenarioNode = (WsScenarioNode) scenarioNode.getData();
 		String path = "";
 		scenarioPathInScenario = "";
 
 		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibaren path'i tutuyor
 		if (isJsUpdateButton()) {
-			scenarioPathInScenario = ((WsScenarioNode) scenarioNode.getData()).getPath();
-			scenarioName = ((WsScenarioNode) scenarioNode.getData()).getName(); // DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
+			scenarioPathInScenario = wsScenarioNode.getPath();
+			scenarioName = wsScenarioNode.getName(); // DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
 
 			scenarioNode = scenarioNode.getParent();
 		}
 		if (!scenarioNode.getParent().getData().equals(com.likya.tlossw.web.utils.ConstantDefinitions.TREE_ROOT)) {
-			scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/..";
+			scenarioPathInScenario = wsScenarioNode.getPath() + "/" + scenarioPathInScenario;
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + wsScenarioNode.getName() + "']/..";
 
 			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
 
-				scenarioPathInScenario = scenarioNode.getData().toString() + "/" + scenarioPathInScenario;
-				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + DefinitionUtils.getXFromNameId(scenarioNode.getData().toString(), "Name") + "']/.." + path;
+				scenarioPathInScenario = wsScenarioNode.getPath() + "/" + scenarioPathInScenario;
+				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + wsScenarioNode.getName() + "']/.." + path;
 			}
 		}
 
