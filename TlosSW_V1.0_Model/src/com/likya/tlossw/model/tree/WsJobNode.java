@@ -10,8 +10,8 @@ package com.likya.tlossw.model.tree;
 import java.io.Serializable;
 
 /**
- * Thia model class is designed to carry the job information 
- * for workspace operations that are related to database.
+ * Thia model class is designed to carry the job information for workspace operations that are
+ * related to database.
  * 
  * @author serkan
  * 
@@ -21,10 +21,9 @@ public class WsJobNode implements Serializable {
 	private static final long serialVersionUID = 3493229044094671923L;
 
 	private String leafIcon;
-	private String jobId;
-	private String jobPath;
-	private String jobName;
-
+	private String id;
+	private String path;
+	private String name;
 	private String labelText;
 
 	public String getLabelText() {
@@ -43,28 +42,28 @@ public class WsJobNode implements Serializable {
 		this.leafIcon = leafIcon;
 	}
 
-	public String getJobPath() {
-		return jobPath;
+	public String getId() {
+		return id;
 	}
 
-	public void setJobPath(String jobPath) {
-		this.jobPath = jobPath;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String getJobName() {
-		return jobName;
+	public String getPath() {
+		return path;
 	}
 
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
-	public String getJobId() {
-		return jobId;
+	public String getName() {
+		return name;
 	}
 
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
