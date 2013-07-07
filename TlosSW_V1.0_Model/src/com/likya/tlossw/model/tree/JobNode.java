@@ -7,14 +7,12 @@
 
 package com.likya.tlossw.model.tree;
 
-import java.io.Serializable;
-
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 
-public class JobNode extends WsJobNode implements Serializable {
+public class JobNode extends WsJobNode {
 
-	private static final long serialVersionUID = 3493229044094671923L;
-	
+	private static final long serialVersionUID = 134596769724656392L;
+
 	private JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
 	
 	public JobInfoTypeClient getJobInfoTypeClient() {
