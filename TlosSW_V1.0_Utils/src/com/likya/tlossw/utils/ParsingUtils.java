@@ -94,7 +94,7 @@ public class ParsingUtils {
 		for (String param : params) {
 			// stringBuffer.append("\"" + param + "\", ");
 			stringBuffer.append(param + ", ");
-			System.out.println(param);
+			// System.out.println(param);
 		}
 
 		stringBuffer.replace(stringBuffer.lastIndexOf(","), stringBuffer.length(), "");
