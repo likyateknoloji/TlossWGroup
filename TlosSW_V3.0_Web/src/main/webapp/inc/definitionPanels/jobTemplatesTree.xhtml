@@ -34,12 +34,12 @@
 
 			<p:treeNode id="jobGroupNode" type="jobGroup"
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
-				<h:outputText value="#{node}" id="jobGroupName"
+				<h:outputText value="#{node.name}" id="jobGroupName"
 					style="font-weight: bold;font-size: 115%;" />
 			</p:treeNode>
 
 			<p:treeNode id="jobTemplateNode" type="job" icon="ui-icon-carat-1-e">
-				<h:outputText value="#{node}" id="jobTemplateName" />
+				<h:outputText value="#{node.name}" id="jobTemplateName" />
 			</p:treeNode>
 
 		</p:tree>
@@ -47,7 +47,7 @@
 		<p:resizable for="templateTree" />
 
 		<h:inputHidden id="draggedTemplateName"
-			value="#{jsDefinitionMBean.draggedTemplateName}" />
+			value="#{jsDefinitionMBean.draggedTemplateName.name}" />
 
 		<h:inputHidden id="draggedTemplatePath"
 			value="#{jsDefinitionMBean.draggedTemplatePath}" />
