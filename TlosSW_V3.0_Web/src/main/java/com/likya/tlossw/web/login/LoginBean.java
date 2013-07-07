@@ -2,6 +2,7 @@ package com.likya.tlossw.web.login;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -30,10 +31,6 @@ public class LoginBean extends LoginBase implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(LoginBean.class);
 
-	public static final String LOGIN_SUCCESS = "/inc/index.jsf?faces-redirect=true";
-	public static final String LOGIN_FAILURE = "/login.jsf?faces-redirect=true";
-	public static final String LOGIN_ENGINE_DIRECTOR = "/inc/index.jsf?faces-redirect=true";
-
 	protected Person loggedUser;
 
 	private String userName;
@@ -44,6 +41,13 @@ public class LoginBean extends LoginBase implements Serializable {
 
 	@ManagedProperty(value = "#{userManager}")
 	private UserManager userManager;
+	
+	@PostConstruct
+	public void checkLoggedIn() {
+		if(getSessionLoginParam()) {
+			redirect(LOGIN_FORWARD);
+		}
+	}
 	
 	public String login() {
 
