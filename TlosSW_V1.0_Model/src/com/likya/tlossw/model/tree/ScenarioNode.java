@@ -33,4 +33,12 @@ public class ScenarioNode extends WsScenarioNode implements Serializable {
 		return spcInfoTypeClient;
 	}
 
+	public void setSpcInfoTypeClient(SpcInfoTypeClient spcInfoTypeClient) {
+		this.spcInfoTypeClient = spcInfoTypeClient;
+	}
+
+	public void setScenarioNodes(ArrayList<ScenarioNode> scenarioNodes) {
+		this.scenarioNodes = scenarioNodes;
+	}
+
 }
