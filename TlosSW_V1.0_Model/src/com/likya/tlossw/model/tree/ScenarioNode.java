@@ -7,14 +7,13 @@
 
 package com.likya.tlossw.model.tree;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 
-public class ScenarioNode extends WsScenarioNode implements Serializable {
+public class ScenarioNode extends WsScenarioNode {
 
-	private static final long serialVersionUID = 1676608004368003714L;
+	private static final long serialVersionUID = 2001950248328974205L;
 
 	private SpcInfoTypeClient spcInfoTypeClient;
 
