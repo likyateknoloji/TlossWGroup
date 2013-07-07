@@ -78,10 +78,12 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -96,6 +98,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private JobProperties jobProperties;
 
 	private Scenario scenario;
+	
 	private boolean isScenario = false;
 
 	private boolean jsInsertButton = false;
@@ -182,7 +185,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private String minPercentage;
 
 	// dependencyDefinitions
-	private String draggedJobName;
+	private WsNode draggedWsNode;
 	private String draggedJobPath;
 
 	private String dependencyTreePath;
@@ -638,6 +641,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void initJobPanel() {
+		
+		long startTime = System.currentTimeMillis();
+		
 		fillAllLists();
 
 		jobProperties = JobProperties.Factory.newInstance();
@@ -661,6 +667,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setConcurrencyManagement(concurrencyManagement);
 
 		resetPanelInputs();
+		
+		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		
+		System.out.println(getClass().getName());
+		
 	}
 
 	public void resetPanelInputs() {
@@ -1268,7 +1279,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
-		dependencyItem.setJsName(DefinitionUtils.getXFromNameId(draggedJobName, "Name"));
+		dependencyItem.setJsName(draggedWsNode.getName());
 
 		depStateName = "";
 		depSubstateName = "";
@@ -1279,7 +1290,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJobFromId(DefinitionUtils.getXFromNameId(draggedJobName, "Id"));
+		JobProperties draggedJobProperties = getDbOperations().getJobFromId(draggedWsNode.getId());
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
@@ -1321,7 +1332,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		composeDependencyExpression();
 
-		String depJobName = DefinitionUtils.getXFromNameId(draggedJobName, "Name");
+		String depJobName = draggedWsNode.getName();
 
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
@@ -2642,14 +2653,6 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		this.dependencyExpression = dependencyExpression;
 	}
 
-	public String getDraggedJobName() {
-		return draggedJobName;
-	}
-
-	public void setDraggedJobName(String draggedJobName) {
-		this.draggedJobName = draggedJobName;
-	}
-
 	public boolean isDependencyDialogShow() {
 		return dependencyDialogShow;
 	}
@@ -2864,6 +2867,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 	public void setJsName(String jsName) {
 		this.jsName = jsName;
+	}
+
+	public WsNode getDraggedWsNode() {
+		return draggedWsNode;
+	}
+
+	public void setDraggedWsJobNode(WsNode draggedWsNode) {
+		this.draggedWsNode = draggedWsNode;
 	}
 
 }
