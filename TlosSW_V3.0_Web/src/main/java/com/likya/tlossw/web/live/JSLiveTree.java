@@ -326,13 +326,13 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			ScenarioNode scenarioNode = new ScenarioNode();
 
-			scenarioNode.setScenarioId(spcInfoTypeClient.getJsName());
+			scenarioNode.setId(spcInfoTypeClient.getJsName());
 
 			if (spcInfoTypeClient.isSerbestFolder()) {
-				scenarioNode.setScenarioId(resolveMessage("tlos.live.tree.free"));
+				scenarioNode.setId(resolveMessage("tlos.live.tree.free"));
 			}
 			if (spcInfoTypeClient.getJsName() == null) {
-				scenarioNode.setScenarioId(spcInfoTypeClient.getSpcId());
+				scenarioNode.setId(spcInfoTypeClient.getSpcId());
 			}
 
 			scenarioNode.setInstanceId(((InstanceNode) instanceNode.getData()).getInstanceId());
@@ -386,12 +386,12 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			jobNode.setLabelText(jobText);
 			
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
-			jobNode.setJobName(jobInfoTypeClient.getJobKey());
+			jobNode.setName(jobInfoTypeClient.getJobKey());
 			if (jobInfoTypeClient.getLiveStateInfo() == null) {
 				System.out.println("jobInfoTypeClient.getLiveStateInfo() == null");
 			}
 			jobNode.setLeafIcon(DecorationUtils.jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
-			jobNode.setJobPath(jobInfoTypeClient.getTreePath());
+			jobNode.setPath(jobInfoTypeClient.getTreePath());
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, scenarioNode);
 			scenarioNodeTree.setExpanded(false);
 
