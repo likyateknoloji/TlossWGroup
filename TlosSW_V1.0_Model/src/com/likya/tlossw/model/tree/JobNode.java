@@ -18,5 +18,9 @@ public class JobNode extends WsJobNode {
 	public JobInfoTypeClient getJobInfoTypeClient() {
 		return jobInfoTypeClient;
 	}
+
+	public void setJobInfoTypeClient(JobInfoTypeClient jobInfoTypeClient) {
+		this.jobInfoTypeClient = jobInfoTypeClient;
+	}
 	
 }
