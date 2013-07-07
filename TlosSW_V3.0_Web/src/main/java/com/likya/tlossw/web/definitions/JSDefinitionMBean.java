@@ -14,9 +14,10 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlossw.model.tree.WsJobNode;
+import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
-import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "jsDefinitionMBean")
 @ViewScoped
@@ -75,7 +76,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public String selectedJSPath;
 	public String selectedType;
 
-	public String draggedJobNameForDependency;
+	public WsNode draggedWsNodeForDependency = new WsNode();
 	public String draggedJobPathForDependency;
 
 	private JobProperties jobProperties;
@@ -85,12 +86,12 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void onNodeSelect(NodeSelectEvent event) {
 
-		String selectedJS = event.getTreeNode().toString();
-
-		if (selectedJS.equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
+		WsNode wsNode = (WsNode) event.getTreeNode().getData();
+		
+		if(wsNode!= null && wsNode.getName() !=null && wsNode.getName().toString().equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
 			return;
 		}
-
+		
 		TreeNode treeNode = event.getTreeNode();
 
 		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
@@ -109,7 +110,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		event.getTreeNode().getParent().getParent().toString();
 
-		String jsId = DefinitionUtils.getXFromNameId(selectedJS, "Id");
+		String jsId = wsNode.getId();
 
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 			jobProperties = null;
@@ -146,7 +147,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void handleJobDropAction(ActionEvent ae) {
 
-		((JobBaseBean) currentPanelMBeanRef).setDraggedJobName(draggedJobNameForDependency);
+		((JobBaseBean) currentPanelMBeanRef).setDraggedWsJobNode(draggedWsNodeForDependency);
 		((JobBaseBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
 	}
 
@@ -291,14 +292,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		this.draggedTemplatePath = draggedTemplatePath;
 	}
 
-	public String getDraggedJobNameForDependency() {
-		return draggedJobNameForDependency;
-	}
-
-	public void setDraggedJobNameForDependency(String draggedJobNameForDependency) {
-		this.draggedJobNameForDependency = draggedJobNameForDependency;
-	}
-
 	public String getDraggedJobPathForDependency() {
 		return draggedJobPathForDependency;
 	}
@@ -393,6 +386,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSystemCommandPanelMBean(SystemCommandPanelMBean systemCommandPanelMBean) {
 		this.systemCommandPanelMBean = systemCommandPanelMBean;
+	}
+
+	public WsNode getDraggedWsNodeForDependency() {
+		return draggedWsNodeForDependency;
+	}
+
+	public void setDraggedWsNodeForDependency(WsJobNode draggedWsNodeForDependency) {
+		this.draggedWsNodeForDependency = draggedWsNodeForDependency;
 	}
 
 }
