@@ -101,7 +101,7 @@ public class DBUtils extends DBBase {
 		return returnValue;
 	}
 
-	public static boolean updateFirstJob(String documentName, JobProperties jobProperties, String jobPath) {
+	public static boolean updateFirstJob(JobProperties jobProperties, String jobPath) {
 
 		boolean returnValue = false;
 		
