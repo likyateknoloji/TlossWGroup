@@ -13,6 +13,8 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
+import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument;
+import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
@@ -27,6 +29,7 @@ import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.test.GenericTestSuit;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -39,22 +42,24 @@ import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument.ServerConfig
  * 
  * @author serkan.tas@likyateknoloji.com (Serkan Taş)
  */
-public class CpcBaseTester {
+public class CpcBaseTester extends GenericTestSuit {
 
 	protected Logger myLogger = Logger.getLogger(CpcBaseTester.class);
 
 	public static String filePath;
 
-	public SpaceWideRegistry initSpscTest() throws XmlException, IOException {
+	public SpaceWideRegistry initSpcTest() throws XmlException, IOException {
 		
 		TlosProcessData tlosProcessData = getTlosProcessData();
-
 		ServerConfig serverConfig = getServerConfig();
+		TlosConfigInfo tlocConfigInfo = getTlosConfigInfo();
+		
 
 		SpaceWideRegistry spaceWideRegistry = SpaceWideRegistry.getInstance();
 
 		spaceWideRegistry.setServerConfig(serverConfig);
 		spaceWideRegistry.setTlosProcessData(tlosProcessData);
+		spaceWideRegistry.setTlosSWConfigInfo(tlocConfigInfo);
 
 		return spaceWideRegistry;
 	}
@@ -63,6 +68,16 @@ public class CpcBaseTester {
 		return ParsingUtils.getConcatenatedPathAndFileName("xmls" + File.separator, fileName);
 	}
 
+	public TlosConfigInfo getTlosConfigInfo() throws XmlException, IOException {
+
+		String fileName = getFile("tlosConfigInfo.xml");
+
+		File tlosDataFile = new File(fileName);
+
+		TlosConfigInfo tlosConfigInfo = TlosConfigInfoDocument.Factory.parse(tlosDataFile).getTlosConfigInfo();
+		return tlosConfigInfo;
+	}
+	
 	public ServerConfig getServerConfig() throws XmlException, IOException {
 
 		String fileName = getFile("serverConfig.xml");
@@ -277,15 +292,15 @@ public class CpcBaseTester {
 				myLogger.error("Cpc failed, terminating !");
 				break;
 			}
-			
-			Spc spc = new Spc(scenarioId, spaceWideRegistry, transformJobList(jobList));
 
-			if(spc.getJobQueue().size() == 0) {
-				myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
-				myLogger.warn(scenarioId + " isimli senaryo için spc başlatılmıyor !");
+			if(jobList.getJobPropertiesArray().length == 0) {
+				myLogger.info(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
+				myLogger.info(scenarioId + " isimli senaryo için spc başlatılmıyor !");
 				continue;
 			}
 			
+			Spc spc = new Spc(scenarioId, spaceWideRegistry, transformJobList(jobList));
+
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
 			myLiveStateInfo.setStateName(StateName.PENDING);
