@@ -363,17 +363,26 @@ public abstract class CpcBase implements Runnable {
 				// System.out.println("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.info("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.error("Cpc Scenario jobs validation failed, process state changed to WAITING !");
-				throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
+				
+				continue; // 08.07.2013 Serkan
+				// throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
 				/*
 				 * eski hali buydu. hakan
 				 * myLogger.error("Cpc failed, terminating !"); break;
 				 */
 			}
+			
 			// if(addToJobLookupTable(scenarioId, jobList,jobLookupTable)) {
 			// }
 
 			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
 
+			if(spc.getJobQueue().size() == 0) {
+				myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
+				myLogger.warn(scenarioId + " isimli senaryo için spc başlatılmıyor !");
+				continue;
+			}
+			
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 			myLiveStateInfo.setStateName(StateName.PENDING);
 			myLiveStateInfo.setSubstateName(SubstateName.IDLED);
@@ -429,7 +438,7 @@ public abstract class CpcBase implements Runnable {
 			scpLookupTable.put(scenarioId, spcInfoType);
 
 			if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
-				if (!spc.initScenarioInfo() /*|| spc.getJobQueue().size() == 0*/) {
+				if (!spc.initScenarioInfo()) {
 					myLogger.warn(scenarioId + " isimli senaryo bilgileri y�klenemedi ya da is listesi bos geldi !");
 					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri y�klenemedi ya da is listesi bos geldi !");
 
