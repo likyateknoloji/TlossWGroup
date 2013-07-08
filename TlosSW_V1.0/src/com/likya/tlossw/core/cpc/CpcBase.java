@@ -372,17 +372,14 @@ public abstract class CpcBase implements Runnable {
 				 */
 			}
 			
-			// if(addToJobLookupTable(scenarioId, jobList,jobLookupTable)) {
-			// }
+			if(jobList.getJobPropertiesArray().length == 0) {
+				myLogger.error(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
+				myLogger.error(scenarioId + " isimli senaryo için spc başlatılmıyor !");
+				continue;
+			}
 
 			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
 
-			if(spc.getJobQueue().size() == 0) {
-				myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
-				myLogger.warn(scenarioId + " isimli senaryo için spc başlatılmıyor !");
-				continue;
-			}
-			
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 			myLiveStateInfo.setStateName(StateName.PENDING);
 			myLiveStateInfo.setSubstateName(SubstateName.IDLED);
