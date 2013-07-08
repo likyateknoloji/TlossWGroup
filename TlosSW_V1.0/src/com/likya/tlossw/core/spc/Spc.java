@@ -399,7 +399,7 @@ public class Spc extends SpcBase {
 					 * InfoQueue ya ilk uc state i koyamadigim icin burada bir kerede guncelleme yapiyorum. Eger infoQueue kullanabilirsek bunu kaldiracagiz ama is gorur bu hali.
 					 */
 					if (scheduledJob.getFirstLoop()) {
-						DBUtils.updateFirstJob("tlosSWDailyScenarios10.xml", jobProperties, ParsingUtils.getJobXPath(getSpcId()));
+						DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(getSpcId()));
 					}
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
