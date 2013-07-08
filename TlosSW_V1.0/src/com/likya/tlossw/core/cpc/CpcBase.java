@@ -279,10 +279,8 @@ public abstract class CpcBase implements Runnable {
 
 	}
 
-	protected HashMap<String, SpcInfoType> prepareSpcLookupTable() throws TlosException {
+	protected HashMap<String, SpcInfoType> prepareSpcLookupTable(TlosProcessData tlosProcessData) throws TlosException {
 
-		TlosProcessData tlosProcessData = getSpaceWideRegistry().getTlosProcessData();
-		
 		HashMap<String, SpcInfoType> scpLookupTable = new HashMap<String, SpcInfoType>();
 
 		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
