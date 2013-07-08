@@ -395,7 +395,7 @@ public abstract class CpcBase implements Runnable {
 			spc.setUserName(null);
 			// spc.setUserName(tmpScenario.getID());
 
-			tmpScenario.getConcurrencyManagement().setInstanceId(getSpaceWideRegistry().getTlosProcessData().getInstanceId());
+			tmpScenario.getConcurrencyManagement().setInstanceId(tlosProcessData.getInstanceId());
 
 			spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 			spc.setDependencyList(tmpScenario.getDependencyList());
