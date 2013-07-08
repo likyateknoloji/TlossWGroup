@@ -19,6 +19,7 @@ import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
+import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalStateDefinition;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
@@ -72,7 +73,7 @@ public class TlosSpaceWideBase {
 			Database database = (Database) cl.newInstance();
 			// database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
-			
+
 			String dbType = getSpaceWideRegistry().getServerConfig().getDbparams().getType();
 			String dbId = getSpaceWideRegistry().getServerConfig().getDbparams().getId();
 			String dbIp = getSpaceWideRegistry().getServerConfig().getDbparams().getIpAddress();
@@ -80,11 +81,11 @@ public class TlosSpaceWideBase {
 			String dbXmlRpcPath = getSpaceWideRegistry().getServerConfig().getDbparams().getXmlrpcpath();
 			String rootCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getRootcollection();
 			String userCollectionName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsercollection();
-			
+
 			String dbUri = ParsingUtils.getDbUri(dbType, dbId, dbIp, dbPort, dbXmlRpcPath, rootCollectionName, userCollectionName);
-			
+
 			getSpaceWideRegistry().setDbUri(dbUri);
-			
+
 			String userName = getSpaceWideRegistry().getServerConfig().getDbparams().getUsername();
 			String password = getSpaceWideRegistry().getServerConfig().getDbparams().getPassword();
 
@@ -97,10 +98,10 @@ public class TlosSpaceWideBase {
 				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 				System.exit(-1);
 			}
-			
+
 			collection.setProperty(OutputKeys.INDENT, "no");
 			getSpaceWideRegistry().setEXistColllection(collection);
-			
+
 			XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0");
 			service.setProperty("indent", "yes");
 
@@ -109,10 +110,10 @@ public class TlosSpaceWideBase {
 
 			String xmlsUrl = ParsingUtils.getXmlsPath(dbUri);
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
-			
+
 			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
 			TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
-			
+
 			getSpaceWideRegistry().setTlosSWConfigInfo(tlosConfigInfo);
 
 		} catch (Exception e) {
@@ -164,9 +165,9 @@ public class TlosSpaceWideBase {
 		/**
 		 * Read configuration properties
 		 */
-		
+
 		// TlosConfigInfo tlosSWConfigInfo = ConfigLoader.readTlosConfig(resourceBaundle);
-		
+
 		ServerConfig serverConfig = ConfigLoader.readServerConfig(resourceBaundle);
 
 		/**
@@ -420,7 +421,10 @@ public class TlosSpaceWideBase {
 			logger.info("   > is listesi KDS nden sorgulaniyor ...");
 
 			try {
-				getSpaceWideRegistry().setTlosProcessData(DBUtils.getTlosDailyData( 0 , 0 ));
+
+				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
+				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
+
 			} catch (TlosFatalException e) {
 				e.printStackTrace();
 				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
@@ -637,82 +641,82 @@ public class TlosSpaceWideBase {
 	}
 
 	/*
-	public void startWebSystem() {
-		
-		try {
-			Server server = new Server();
-			getSpaceWideRegistry().setHttpServer(server);
-
-			Connector connector = new SelectChannelConnector();
-			int portNum = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getHttpManagerProperties().getPortNumber();
-
-			String hostName = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getHttpManagerProperties().getIpAddress();
-
-			try {
-				InetAddress addr = InetAddress.getLocalHost();
-				println("************************************************************");
-				println("***         Kullanici Arabirimi Parametreleri            ***");
-				println("************************************************************");
-				// Get IP Address
-				print("Getting ip address : ");
-				String ipAddr = addr.getHostAddress();
-				print(ipAddr);
-				println("");
-				// Get hostname
-				print("Getting hostname : ");
-				hostName = addr.getHostName();
-				println("" + hostName);
-			} catch (UnknownHostException e) {
-				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-				System.exit(-1);
-			}
-
-			connector.setHost(hostName);
-
-			if (portNum <= 0) {
-				portNum = 8080;
-			}
-
-			connector.setPort(Integer.getInteger("jetty.port", portNum).intValue());
-
-			println("Getting portNumber : " + connector.getPort());
-			println("************************************************************");
-			println();
-
-			server.setConnectors(new Connector[] { connector });
-			WebAppContext webapp = new WebAppContext();
-			webapp.setContextPath("/");
-
-			if (System.getProperty("tlos.webapp") == null) {
-				errprintln("System property \"tlos.webapp\" is not defined ! " + getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-				System.exit(-1);
-			}
-			webapp.setWar(System.getProperty("tlos.base") + "/webapp/" + System.getProperty("tlos.webapp"));
-			webapp.setDefaultsDescriptor(System.getProperty("tlos.base") + "/webapp/etc/webdefault.xml");
-			webapp.setAttribute("JmxUser", getSpaceWideRegistry().getJmxUser());
-
-			server.setHandler(webapp);
-			server.start();
-
-		} catch (RuntimeException re) {
-			re.printStackTrace();
-			System.exit(-1);
-		} catch (NoClassDefFoundError re) {
-			re.printStackTrace();
-			System.exit(-1);
-		} catch (BindException be1) {
-			be1.printStackTrace();
-			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-			System.exit(-1);
-		} catch (NoSuchMethodError nsme) {
-			nsme.printStackTrace();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			System.exit(-1);
-		}
-		
-	}
-	*/
+	 * public void startWebSystem() {
+	 * 
+	 * try {
+	 * Server server = new Server();
+	 * getSpaceWideRegistry().setHttpServer(server);
+	 * 
+	 * Connector connector = new SelectChannelConnector();
+	 * int portNum = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getHttpManagerProperties().getPortNumber();
+	 * 
+	 * String hostName = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getHttpManagerProperties().getIpAddress();
+	 * 
+	 * try {
+	 * InetAddress addr = InetAddress.getLocalHost();
+	 * println("************************************************************");
+	 * println("***         Kullanici Arabirimi Parametreleri            ***");
+	 * println("************************************************************");
+	 * // Get IP Address
+	 * print("Getting ip address : ");
+	 * String ipAddr = addr.getHostAddress();
+	 * print(ipAddr);
+	 * println("");
+	 * // Get hostname
+	 * print("Getting hostname : ");
+	 * hostName = addr.getHostName();
+	 * println("" + hostName);
+	 * } catch (UnknownHostException e) {
+	 * errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+	 * System.exit(-1);
+	 * }
+	 * 
+	 * connector.setHost(hostName);
+	 * 
+	 * if (portNum <= 0) {
+	 * portNum = 8080;
+	 * }
+	 * 
+	 * connector.setPort(Integer.getInteger("jetty.port", portNum).intValue());
+	 * 
+	 * println("Getting portNumber : " + connector.getPort());
+	 * println("************************************************************");
+	 * println();
+	 * 
+	 * server.setConnectors(new Connector[] { connector });
+	 * WebAppContext webapp = new WebAppContext();
+	 * webapp.setContextPath("/");
+	 * 
+	 * if (System.getProperty("tlos.webapp") == null) {
+	 * errprintln("System property \"tlos.webapp\" is not defined ! " + getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+	 * System.exit(-1);
+	 * }
+	 * webapp.setWar(System.getProperty("tlos.base") + "/webapp/" + System.getProperty("tlos.webapp"));
+	 * webapp.setDefaultsDescriptor(System.getProperty("tlos.base") + "/webapp/etc/webdefault.xml");
+	 * webapp.setAttribute("JmxUser", getSpaceWideRegistry().getJmxUser());
+	 * 
+	 * server.setHandler(webapp);
+	 * server.start();
+	 * 
+	 * } catch (RuntimeException re) {
+	 * re.printStackTrace();
+	 * System.exit(-1);
+	 * } catch (NoClassDefFoundError re) {
+	 * re.printStackTrace();
+	 * System.exit(-1);
+	 * } catch (BindException be1) {
+	 * be1.printStackTrace();
+	 * errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+	 * System.exit(-1);
+	 * } catch (NoSuchMethodError nsme) {
+	 * nsme.printStackTrace();
+	 * } catch (Exception e1) {
+	 * e1.printStackTrace();
+	 * System.exit(-1);
+	 * }
+	 * 
+	 * }
+	 */
 
 	public void shutDownHttpServer() {
 
