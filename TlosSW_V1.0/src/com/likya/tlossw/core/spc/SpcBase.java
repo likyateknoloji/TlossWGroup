@@ -257,8 +257,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private Job getMyJob(JobRuntimeProperties jobRuntimeProperties) {
 
-		SpaceWideRegistry.getInstance().getTlosProcessData();
-
 		Job myJob = extractJobTypes(jobRuntimeProperties);
 
 		return myJob;
