@@ -117,7 +117,7 @@ public class DBUtils extends DBBase {
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		for(Object currentObject : objectList) {
-			returnValue = ((Boolean.parseBoolean(currentObject.toString())));
+			returnValue = Boolean.parseBoolean(currentObject.toString());
 		}
 
 		return returnValue;
