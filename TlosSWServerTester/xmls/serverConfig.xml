@@ -1,0 +1,43 @@
+<con:serverConfig xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:con="http://www.likyateknoloji.com/XML_serverConfig_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_serverConfig_types /Users/serkan/programlar/dev/workspace/TlosSW_V1.0_Schema/dbfiles/xsds/serverConfig_v_1_0.xsd">
+
+	<con:serverParams>
+		<com:ipAddress>0.0.0.0</com:ipAddress>
+		<con:isPersistent>
+			<com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
+			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:isPersistent>
+		<con:logFile>TlosEkran.log</con:logFile>
+		<con:debugMode>
+			<com:comment>debug modu (true/false)</com:comment>
+			<com:value_boolean>false</com:value_boolean>
+		</con:debugMode>
+	</con:serverParams>
+
+	<!-- http://exist-db.org/exist/apps/doc/devguide_xmldb.xml açıklaması var 
+		xmldb:[DATABASE-ID]://[HOST-ADDRESS]/db/collection xmldb:exist://localhost:8080/exist/xmlrpc/db/shakespeare/plays 
+		xmldb:exist:///db/shakespeare/plays -->
+	<!--
+		Eğer lokal erişim yapılacak ise, ipAddress alanını boş bırakmak yeterlidir.
+		Bu durumda, ipAddress, portNumber ve xmlrpcpath değerleri okunMAmaktadır.
+		Sonuç : [type]:[id]:///[rootcollection]/[usercollection] şeklinde olacaktır.
+	-->
+	<con:dbparams>
+		<con:name>eXist</con:name>
+		<con:type>xmldb</con:type>
+		<con:id>exist</con:id>
+		<com:ipAddress>192.168.1.71</com:ipAddress>
+		<con:portNumber>8094</con:portNumber>
+		<!-- con:xmlrpcpath>xmldb:exist://192.168.1.71:8094/exist/xmlrpc/db</con:xmlrpcpath -->
+		<con:xmlrpcpath>/exist/xmlrpc</con:xmlrpcpath>
+		<con:rootcollection>db</con:rootcollection>
+		<con:usercollection>tlossw-serkan</con:usercollection>
+		<con:username>tlossw</con:username>
+		<con:password>tlossw</con:password>
+	</con:dbparams>
+
+</con:serverConfig>
