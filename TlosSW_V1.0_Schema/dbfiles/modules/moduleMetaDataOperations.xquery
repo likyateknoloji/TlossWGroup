@@ -5,41 +5,83 @@ module namespace met = "http://meta.tlos.com/";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace util = "http://exist-db.org/xquery/util";
 declare namespace  meta = "http://www.likyateknoloji.com/XML_metaData_types";
+declare namespace  dat="http://www.likyateknoloji.com/XML_data_types";
 
 (: doc(local:getMetaData("//db/TLOSSW/xmls/metaData.xml", "dbConnectionProfiles")) :)
-(: eski versiyon
-declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string
-{    
-    let $docXml := doc($documentUrl)
-    let $prefix := $docXml/meta:metaData/meta:dbInfo/meta:prefix/text()
-    let $rootCol := $docXml/meta:metaData/meta:dbInfo/meta:rootCollection/text()
-    let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"]
-    let $docName := $docXml/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
-	return concat($prefix, $rootCol, '/', $subCol, '/', $docName)
+
+declare function met:getScenariosDocument($documentUrl as xs:string, $userId as xs:string) as xs:string?
+{
+  let $initialDoc :=
+   <TlosProcessDataAll>
+   </TlosProcessDataAll>
+
+  let $docName := met:getMetaData($documentUrl, "scenarios")
+  let $result := if( $userId eq "0") 
+                 then
+	               $docName
+                 else
+                   let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
+				   let $exist := if(doc-available($userDoc)) 
+                                 then () 
+                                 else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
+                   return $userDoc
+
+  return $result
 };
-:)
+
+declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string) as xs:string?
+{
+  let $initialDoc :=
+   <dat:TlosProcessData>
+   </dat:TlosProcessData>
+   
+  let $docName := met:getMetaData($documentUrl, "sjData")
+  let $result := if( $userId eq "0") 
+                 then
+                   $docName
+                 else
+                   let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
+				   let $exist := if(doc-available($userDoc)) 
+                                 then () 
+                                 else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
+                   return $userDoc
+  return $result
+};
+
+
+declare function met:xmlCollectionLocation($documentUrl as xs:string) as xs:string
+{
+  let $seperator := "/"
+  let $xmlCollection := xs:string("xmls")
+  return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator))
+};
+
+declare function met:xslCollectionLocation($documentUrl as xs:string) as xs:string
+{
+  let $seperator := "/"
+  let $xslCollection := xs:string("xsls")
+  return xs:string(concat($documentUrl, $seperator, $xslCollection, $seperator))
+};
+
 declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string?
 {    
-    let $seperator := "/"
     let $metaDataFile := xs:string("metaData.xml")
-    let $xmlCollection := xs:string("xmls")
-    let $xslCollection := xs:string("xsls")
     (: let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"] :)
     
-    let $metaDataFileFull := xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $metaDataFile))
+    let $metaDataFileFull := xs:string(concat( met:xmlCollectionLocation($documentUrl), $metaDataFile))
     (:
     let $prefix := $docXml/meta:metaData/meta:dbInfo/meta:prefix/text()
     let $rootCol := $docXml/meta:metaData/meta:dbInfo/meta:rootCollection/text()
     :)
     
     let $result := if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]) 
-    	then 
+        then 
     		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
-    		return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator, $docFullName)) 
+    		return xs:string(concat( met:xmlCollectionLocation($documentUrl), $docFullName))
     	else if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"])
     	then 
     		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"]
-    		return xs:string(concat($documentUrl, $seperator, $xslCollection, $seperator, $docFullName))
+    		return xs:string(concat( met:xslCollectionLocation($documentUrl), $docFullName))
     	else ()
     
 	return $result
