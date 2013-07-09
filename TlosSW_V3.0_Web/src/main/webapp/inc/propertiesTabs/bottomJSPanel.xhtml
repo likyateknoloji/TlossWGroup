@@ -23,7 +23,7 @@
 		<p:commandButton style="float:right;" immediate="true"
 			value="#{msgs['tlos.button.cancel']}" 
 			action="#{jsDefinitionMBean.cancelJsAction}"
-			update=":jobDefinitionForm :jsTreeForm :jobTemplatesForm" 
+			update=":jobDefinitionForm :jsTreeForm"
 			oncomplete="activateDraggable()"/>
 
 		<p:dialog id="jsActiveDialog" widgetVar="jsActiveDialog" resizable="false" showEffect="show">
