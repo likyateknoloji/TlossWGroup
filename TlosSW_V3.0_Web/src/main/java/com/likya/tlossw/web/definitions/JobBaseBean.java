@@ -1133,7 +1133,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		if (getDbOperations().insertJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
-			jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
+			// addJobNodeToScenarioPath();
 
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
 
@@ -1919,7 +1919,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public boolean deleteJob() {
 		boolean result = true;
 		if (getDbOperations().deleteJob(DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
-			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID());
+			jSTree.removeJobNode(jobPathInScenario, jobProperties.getBaseJobInfos().getJsName());
 			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
 		} else {
 			addMessage("jobDelete", FacesMessage.SEVERITY_ERROR, "tlos.error.job.delete", null);
@@ -1927,6 +1927,10 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		}
 
 		return result;
+	}
+	
+	public void addJobNodeToScenarioPath() {
+		jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 	}
 
 	public String getJobPropertiesXML() {

@@ -87,11 +87,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public void onNodeSelect(NodeSelectEvent event) {
 
 		WsNode wsNode = (WsNode) event.getTreeNode().getData();
-		
-		if(wsNode!= null && wsNode.getName() !=null && wsNode.getName().toString().equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
+
+		if (wsNode != null && wsNode.getName() != null && wsNode.getName().toString().equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
 			return;
 		}
-		
+
 		TreeNode treeNode = event.getTreeNode();
 
 		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
@@ -116,7 +116,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			jobProperties = null;
 			jobProperties = getDbOperations().getJobFromId(jsId);
 
-			if (jobProperties != null) {
+			if (jobProperties != null && jobProperties.getBaseJobInfos() != null) {
 				int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 				initializeJobPanel(jobType, false);
@@ -135,6 +135,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void switchToScenarioPanel() {
 		jobDefCenterPanel = JSDefinitionMBean.SCENARIO_PAGE;
+
+		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
 
 	public void handleDropAction(ActionEvent ae) {
@@ -223,32 +225,40 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
 			((JobBaseBean) currentPanelMBeanRef).fillTabs();
 
+			RequestContext context = RequestContext.getCurrentInstance();
+
 			if (insert) {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
+				((JobBaseBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
+
+				context.update("jsTreeForm");
 			} else {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
 				((JobBaseBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
 			}
-		}
 
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm");
+			context.update("jobDefinitionForm");
+		}
 	}
 
 	public void cancelJsAction() {
 		jobDefCenterPanel = DEFAULT_DEF_PAGE;
+
+		if (((JobBaseBean) currentPanelMBeanRef).isJsInsertButton()) {
+			((JobBaseBean) currentPanelMBeanRef).deleteJob();
+		}
 	}
 
 	public void deleteScenarioAction() {
 		if (getScenarioDefinitionMBean().deleteScenario()) {
-			cancelJsAction();
+			jobDefCenterPanel = DEFAULT_DEF_PAGE;
 		}
 	}
 
 	public void deleteJobAction(ActionEvent actionEvent) {
 
 		if (((JobBaseBean) currentPanelMBeanRef).deleteJob()) {
-			cancelJsAction();
+			jobDefCenterPanel = DEFAULT_DEF_PAGE;
 		}
 	}
 
