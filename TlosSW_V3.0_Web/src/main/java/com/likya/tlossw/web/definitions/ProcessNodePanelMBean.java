@@ -176,7 +176,7 @@ public class ProcessNodePanelMBean extends JobBaseBean implements Serializable {
 	public void insertJsAction() {
 		if (validateTimeManagement()) {
 			fillJobProperties();
-			fillProcessNodePropertyDetails();
+			fillJobPropertyDetails();
 	
 			insertJobDefinition();
 		}
@@ -184,12 +184,12 @@ public class ProcessNodePanelMBean extends JobBaseBean implements Serializable {
 	
 	public void updateJsAction() {
 		fillJobProperties();
-		fillProcessNodePropertyDetails();
+		fillJobPropertyDetails();
 
 		updateJobDefinition();
 	}
 
-	private void fillProcessNodePropertyDetails() {
+	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 

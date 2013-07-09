@@ -54,7 +54,7 @@ public class SystemCommandPanelMBean extends JobBaseBean implements Serializable
 	public void insertJsAction() {
 		if (validateTimeManagement()) {
 			fillJobProperties();
-			fillSystemCommandPropertyDetails();
+			fillJobPropertyDetails();
 
 			insertJobDefinition();
 		}
@@ -62,12 +62,12 @@ public class SystemCommandPanelMBean extends JobBaseBean implements Serializable
 
 	public void updateJsAction() {
 		fillJobProperties();
-		fillSystemCommandPropertyDetails();
+		fillJobPropertyDetails();
 
 		updateJobDefinition();
 	}
 
-	private void fillSystemCommandPropertyDetails() {
+	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);

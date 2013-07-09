@@ -80,6 +80,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public String draggedJobPathForDependency;
 
 	private JobProperties jobProperties;
+	private JobProperties jobPropertiesTemp;
+
 	private Scenario scenario;
 
 	private Object currentPanelMBeanRef;
@@ -113,13 +115,30 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		String jsId = wsNode.getId();
 
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+
+			boolean isInsert = false;
+
+			if (currentPanelMBeanRef != null && ((JobBaseBean) currentPanelMBeanRef).getJobProperties().getID().equals("0")) {
+				((JobBaseBean) currentPanelMBeanRef).fillJobProperties();
+				((JobBaseBean) currentPanelMBeanRef).fillJobPropertyDetails();
+
+				jobPropertiesTemp = ((JobBaseBean) currentPanelMBeanRef).getJobProperties();
+			}
+
 			jobProperties = null;
-			jobProperties = getDbOperations().getJobFromId(jsId);
+
+			if (Integer.parseInt(jsId) > 0) {
+				jobProperties = getDbOperations().getJobFromId(jsId);
+			} else {
+				jobProperties = jobPropertiesTemp;
+
+				isInsert = true;
+			}
 
 			if (jobProperties != null && jobProperties.getBaseJobInfos() != null) {
 				int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
-				initializeJobPanel(jobType, false);
+				initializeSelectedJobPanel(jobType, isInsert);
 			}
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
@@ -141,10 +160,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void handleDropAction(ActionEvent ae) {
 		jobProperties = getDbOperations().getTemplateJobFromName(draggedTemplateName.getName());
+		jobProperties.setID("0");
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
-		initializeJobPanel(jobType, true);
+		initializeJobPanel(jobType);
 	}
 
 	public void handleJobDropAction(ActionEvent ae) {
@@ -153,7 +173,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		((JobBaseBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
 	}
 
-	private void initializeJobPanel(int jobType, boolean insert) {
+	private void setCurrentPanel(int jobType) {
+
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
@@ -216,6 +237,32 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		default:
 			break;
 		}
+	}
+
+	private void initializeJobPanel(int jobType) {
+
+		setCurrentPanel(jobType);
+
+		if (jobProperties != null) {
+			((JobBaseBean) currentPanelMBeanRef).setJobProperties(jobProperties);
+
+			((JobBaseBean) currentPanelMBeanRef).setJsInsertButton(true);
+			((JobBaseBean) currentPanelMBeanRef).setJsUpdateButton(false);
+			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
+			((JobBaseBean) currentPanelMBeanRef).fillTabs();
+
+			((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
+			((JobBaseBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
+
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.update("jsTreeForm");
+			context.update("jobDefinitionForm");
+		}
+	}
+
+	private void initializeSelectedJobPanel(int jobType, boolean insert) {
+
+		setCurrentPanel(jobType);
 
 		if (jobProperties != null) {
 			((JobBaseBean) currentPanelMBeanRef).setJobProperties(jobProperties);
@@ -225,18 +272,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
 			((JobBaseBean) currentPanelMBeanRef).fillTabs();
 
-			RequestContext context = RequestContext.getCurrentInstance();
-
 			if (insert) {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
-				((JobBaseBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
-
-				context.update("jsTreeForm");
 			} else {
 				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
 				((JobBaseBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
 			}
 
+			RequestContext context = RequestContext.getCurrentInstance();
 			context.update("jobDefinitionForm");
 		}
 	}
@@ -404,6 +447,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDraggedTemplateName(WsNode draggedTemplateName) {
 		this.draggedTemplateName = draggedTemplateName;
+	}
+
+	public JobProperties getJobPropertiesTemp() {
+		return jobPropertiesTemp;
+	}
+
+	public void setJobPropertiesTemp(JobProperties jobPropertiesTemp) {
+		this.jobPropertiesTemp = jobPropertiesTemp;
 	}
 
 }

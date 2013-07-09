@@ -77,7 +77,7 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 	public void insertJsAction() {
 		if (validateTimeManagement()) {
 			fillJobProperties();
-			fillRemoteShellPropertyDetails();
+			fillJobPropertyDetails();
 
 			insertJobDefinition();
 		}
@@ -85,12 +85,12 @@ public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
 
 	public void updateJsAction() {
 		fillJobProperties();
-		fillRemoteShellPropertyDetails();
+		fillJobPropertyDetails();
 
 		updateJobDefinition();
 	}
 
-	private void fillRemoteShellPropertyDetails() {
+	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);

@@ -49,13 +49,16 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 		}
 	}
 
+	public void fillJobPropertyDetails() {
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		jobTypeDetails.setJobCommand(jobCommand);
+		jobTypeDetails.setJobPath(jobPath);
+	}
+
 	public void insertJsAction() {
 		if (validateTimeManagement()) {
 			fillJobProperties();
-
-			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
-			jobTypeDetails.setJobCommand(jobCommand);
-			jobTypeDetails.setJobPath(jobPath);
+			fillJobPropertyDetails();
 
 			insertJobDefinition();
 		}
@@ -63,10 +66,7 @@ public class BatchProcessPanelMBean extends JobBaseBean implements Serializable 
 
 	public void updateJsAction() {
 		fillJobProperties();
-
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
-		jobTypeDetails.setJobCommand(jobCommand);
-		jobTypeDetails.setJobPath(jobPath);
+		fillJobPropertyDetails();
 
 		updateJobDefinition();
 	}

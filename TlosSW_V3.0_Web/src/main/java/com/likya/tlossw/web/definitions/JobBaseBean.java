@@ -98,7 +98,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	private JobProperties jobProperties;
 
 	private Scenario scenario;
-	
+
 	private boolean isScenario = false;
 
 	private boolean jsInsertButton = false;
@@ -304,7 +304,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	public static final String OUTER_DUPLICATE_NAME = "3";
 
 	abstract public void fillTabs();
-	
+
+	abstract public void fillJobPropertyDetails();
+
 	public void fillJobPanel() {
 		fillBaseInfosTab();
 		fillTimeManagementTab();
@@ -428,9 +430,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				minPercentage = timeManagement.getMinPercentage() + "";
 			}
 
-			if( timeManagement.getTimeZone() !=null ) selectedTZone = timeManagement.getTimeZone();
-			
-			if( timeManagement.getTypeOfTime() != null ) selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
+			if (timeManagement.getTimeZone() != null)
+				selectedTZone = timeManagement.getTimeZone();
+
+			if (timeManagement.getTypeOfTime() != null)
+				selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
 
 		} else {
 			useTimeManagement = false;
@@ -459,17 +463,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 				selectItem.setValue(depPathAndName);
 
 				/*
-				 * bir iş aynı isimli ama farklı pathlerdeki iki işe bağımlı olarak tanımlanabiliyor, db ye de kaydediliyor 
-				 * ama aşağıdaki kontrol olunca güncellemek istendiğinde sadece bir tanesi görüntülendiği için commentledim.
+				 * bir iş aynı isimli ama farklı pathlerdeki iki işe bağımlı olarak tanımlanabiliyor, db ye de kaydediliyor ama aşağıdaki kontrol olunca güncellemek istendiğinde sadece bir tanesi görüntülendiği için commentledim.
 				 * 
-				 * 	boolean var = false; 
-				 * 	for (SelectItem temp : manyJobDependencyList) { 
-				 * 		if (temp.getLabel().equals(selectItem.getLabel())) 
-				 * 			var = true; 
-				 * 	} 
-				 * 	
-				 * 	if (!var) 
-				 * 		manyJobDependencyList.add(selectItem);
+				 * boolean var = false; for (SelectItem temp : manyJobDependencyList) { if (temp.getLabel().equals(selectItem.getLabel())) var = true; }
+				 * 
+				 * if (!var) manyJobDependencyList.add(selectItem);
 				 */
 
 				manyJobDependencyList.add(selectItem);
@@ -641,9 +639,9 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 	}
 
 	public void initJobPanel() {
-		
+
 		long startTime = System.currentTimeMillis();
-		
+
 		fillAllLists();
 
 		jobProperties = JobProperties.Factory.newInstance();
@@ -667,11 +665,11 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 		jobProperties.setConcurrencyManagement(concurrencyManagement);
 
 		resetPanelInputs();
-		
+
 		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
+
 		System.out.println(getClass().getName());
-		
+
 	}
 
 	public void resetPanelInputs() {
@@ -1155,14 +1153,14 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		if (getDbOperations().updateJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
-			
+
 			// isin adi degistirildiyse agactaki adini degistiriyor
 			// merve: TreeNode uzerinde datasini degistirmeye calistim, ama adini degistirme ile ilgili bir fonksiyonu yok. javascript kullanarak yapanlar var bu isi.
 			// Simdilik agaci bastan olusturarak bu problemi gectim. Adini degistirecegim zaman jsName alanindan eski adini kullanacagim.
 			if (!jsName.equals(jobProperties.getBaseJobInfos().getJsName())) {
 				jSTree.initJSTree();
 			}
-			
+
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
 		}
@@ -1928,7 +1926,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 
 		return result;
 	}
-	
+
 	public void addJobNodeToScenarioPath() {
 		jSTree.addJobNodeToScenarioPath(jobProperties, jobPathInScenario);
 	}

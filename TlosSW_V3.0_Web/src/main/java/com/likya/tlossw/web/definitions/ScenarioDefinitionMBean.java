@@ -547,4 +547,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		return getScenario().getID();
 	}
 
+	@Override
+	public void fillJobPropertyDetails() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

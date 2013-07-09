@@ -81,7 +81,7 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 	public void insertJsAction() {
 		if (validateTimeManagement()) {
 			fillJobProperties();
-			fillWebServicePropertyDetails();
+			fillJobPropertyDetails();
 	
 			insertJobDefinition();
 		}
@@ -89,12 +89,12 @@ public class WebServicePanelMBean extends JobBaseBean implements Serializable {
 
 	public void updateJsAction() {
 		fillJobProperties();
-		fillWebServicePropertyDetails();
+		fillJobPropertyDetails();
 
 		updateJobDefinition();
 	}
 
-	private void fillWebServicePropertyDetails() {
+	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 
 		if (jobTypeDetails.getSpecialParameters() == null) {
