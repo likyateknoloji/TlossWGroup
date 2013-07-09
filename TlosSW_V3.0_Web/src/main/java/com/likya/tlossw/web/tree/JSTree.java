@@ -20,6 +20,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.model.tree.WsJobNode;
+import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
@@ -39,9 +40,9 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		
+
 		long startTime = System.currentTimeMillis();
-		
+
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml();
 		System.out.println("Tree has been loaded !!");
 
@@ -57,11 +58,11 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	public void constructJSTree(TlosProcessData tlosProcessData) {
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, null);
-		
+
 		WsScenarioNode wsScenarioNode = new WsScenarioNode();
-		
+
 		wsScenarioNode.setName(resolveMessage("tlos.workspace.tree.scenario.root"));
-		
+
 		TreeNode scenarioRootNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, root);
 		scenarioRootNode.setExpanded(true);
 		setSelectedTreeNode(scenarioRootNode);
@@ -75,21 +76,21 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
-		
+
 		WsJobNode wsJobNode = new WsJobNode();
 		wsJobNode.setId(jobProperties.getID());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
-		
+
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
-		
+
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
-		
+
 	}
-	
+
 	public void addJobNodeOld(JobProperties jobProperties, TreeNode selectedNode) {
-		
+
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobProperties.getBaseJobInfos().getJsName() + "|" + jobProperties.getID(), selectedNode);
-		
+
 	}
 
 	// Yeni tanimlanan isi agacta ilgili kisma ekliyor
@@ -102,7 +103,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 			String scenarioName = pathTokenizer.nextToken();
 
 			for (TreeNode node : selectedNode.getChildren()) {
-				if (node.getData().equals(scenarioName)) {
+				if (((WsNode) node.getData()).getName().equals(scenarioName)) {
 					selectedNode = node;
 					break;
 				}
@@ -131,7 +132,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		for (TreeNode node : nodeList) {
 
 			String scenarioName = scenarioNameList.get(index);
-			if (node.getData().equals(scenarioName)) {
+			if (((WsNode) node.getData()).getName().equals(scenarioName)) {
 				if (scenarioNameList.size() == index + 1) {
 					result = true;
 				} else {
@@ -174,7 +175,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		for (TreeNode node : nodeList) {
 
 			String scenarioName = scenarioNameList.get(index);
-			if (node.getData().equals(scenarioName)) {
+			if (((WsNode) node.getData()).getName().equals(scenarioName)) {
 				if (scenarioNameList.size() == index + 1) {
 					result = true;
 				} else {
@@ -184,7 +185,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 			if (result) {
 				for (TreeNode jobNode : node.getChildren()) {
-					if (jobNode.getData().equals(jobName)) {
+					if (((WsNode) jobNode.getData()).getName().equals(jobName)) {
 						TreeNode parent = jobNode.getParent();
 						parent.getChildren().remove(jobNode);
 
@@ -211,12 +212,12 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public TreeNode addScenario(Scenario scenario) {
-		
+
 		WsScenarioNode wsScenarioNode = new WsScenarioNode();
-		
+
 		wsScenarioNode.setName(scenario.getBaseScenarioInfos().getJsName());
 		wsScenarioNode.setId(scenario.getID());
-		
+
 		TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, selectedTreeNode);
 
 		scenarioNode.setExpanded(true);
