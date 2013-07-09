@@ -119,6 +119,8 @@ public class FtpUtils {
 		try {
 			is = new FileInputStream(sourceFile);
 			
+			ftpClient.enterLocalPassiveMode();
+			
 			boolean put = ftpClient.storeFile(targetFile, is);
 
 			if(put) {
