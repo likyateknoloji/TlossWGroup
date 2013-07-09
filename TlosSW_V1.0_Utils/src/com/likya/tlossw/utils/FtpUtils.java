@@ -28,6 +28,9 @@ public class FtpUtils {
 	public static FTPFile[] listRemoteFiles(FTPClient ftpClient, String directory, Writer outputFile, Logger myLogger) {
 		
 		try {
+			
+			ftpClient.enterLocalPassiveMode();
+			
 			FTPFile[] files = ftpClient.listFiles(directory);
 			
 			outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya Listesi:" + System.getProperty( "line.separator" ));
@@ -72,6 +75,9 @@ public class FtpUtils {
 	public static boolean deleteRemoteFile(FTPClient ftpClient, String sourceFile, Writer outputFile, Logger myLogger) {
 		
 		try {
+			
+			ftpClient.enterLocalPassiveMode();
+			
 			boolean isDeleted = ftpClient.deleteFile(sourceFile);
 			
 			if(isDeleted) {
@@ -184,6 +190,8 @@ public class FtpUtils {
 		
 		try {
 			os = new FileOutputStream(new File(targetFile));
+			
+			ftpClient.enterLocalPassiveMode();
 			
 	        boolean get = ftpClient.retrieveFile(sourceFile, os);
 
