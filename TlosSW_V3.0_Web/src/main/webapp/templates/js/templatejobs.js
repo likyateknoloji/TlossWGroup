@@ -107,6 +107,9 @@ function applyDragDrop() {
 						elw.setAttribute("data-rowkey", newUniqueId);
 
 						var node = elw.cloneNode(true);
+
+						renameJobID(node, newUniqueId);
+
 						var list=this.querySelector('.ui-treenode-children');
 						list.insertBefore(node,list.childNodes[0]);
 						//(this.querySelector('.ui-treenode-children')).appendChild(elw.cloneNode(true));
@@ -132,6 +135,17 @@ function applyDragDrop() {
 						callHandleDropByName(jobName, jobPath);
 
 						return false;
+					}
+
+					function renameJobID(job, newUniqueId) {
+						var jobID = "";
+
+						if (newUniqueId.lastIndexOf(":") > 0)
+							jobID = newUniqueId.substring(newUniqueId.lastIndexOf(":") + 1, newUniqueId.length);
+
+						job.id = "jsTreeForm:tree:" + jobID;
+						job.setAttribute("data-rowkey", jobID);
+						job.firstChild.lastChild.lastChild.id = "jsTreeForm:tree:" + jobID + ":jobName";
 					}
 
 				    function handleDragEnd(e) {
