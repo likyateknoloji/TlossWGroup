@@ -1,6 +1,5 @@
 package com.likya.tlossw.core.cpc;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,7 +7,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
@@ -19,19 +17,16 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.db.utils.DBUtils;
-import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 /**
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * 
  */
 public class Cpc extends CpcBase {
@@ -146,83 +141,6 @@ public class Cpc extends CpcBase {
 
 	}
 
-	private ArrayList<Parameter> prepareParameterList() throws GlobalParameterLoadException {
-
-		logger.info(" 3,5 - Global Parametreler Yukleniyor..");
-
-		ArrayList<Parameter> parameterList = DBUtils.getTlosParameters();
-
-		if (parameterList != null) {
-
-			for (int i = 0; i < parameterList.size(); i++) {
-				String paramName = parameterList.get(i).getName();
-				// String paramValueString = parameterList.get(i).getValueString();
-				String paramPreValueString = parameterList.get(i).getPreValue().getStringValue();
-				BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
-				String paramDesc = parameterList.get(i).getDesc();
-
-				System.out.println(paramName + paramPreValueString + paramPreValueType + paramDesc);
-			}
-
-			logger.info("   > Yuklendi !");
-
-		} else {
-			logger.info("   > YukleneMEdi  parameterList = null ! ");
-			throw new GlobalParameterLoadException("YukleneMEdi  parameterList = null ! ");
-		}
-
-		return parameterList;
-	}
-
-	private void arrangeParameters() {
-		ArrayList<Parameter> parameterList = TlosSpaceWide.getSpaceWideRegistry().getParameters();
-		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
-
-		HashMap<Integer, ArrayList<Parameter>> allParameter = new HashMap<Integer, ArrayList<Parameter>>();
-
-		HashMap<String, SWAgent> SwAgentsCache = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache();
-
-		for (String agentId : SwAgentsCache.keySet()) {
-
-			// LOCAL
-			// SWAgent swAgent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentCache(agentId);
-			ArrayList<Parameter> parameterListLocal = new ArrayList<Parameter>();
-
-			//if (!agentManagerRef.isServer(Integer.parseInt(agentId))) {
-				boolean varmi;
-				for (Parameter parameterGlobalElement : parameterList) {
-					varmi = false;
-					if (agentManagerRef.getSwAgentCache(agentId + "").getLocals() != null)
-						for (Parameter parameterLocalElement : agentManagerRef.getSwAgentCache(agentId + "").getLocals().getParameterArray()) {
-							if (parameterLocalElement.getName().toLowerCase().equals(parameterGlobalElement.getName().toLowerCase())) {
-								// Globaldekinin aynisi var mi?
-								varmi = true;
-								parameterListLocal.add(parameterLocalElement);
-								break;
-							}
-						}
-					if (!varmi)
-						parameterListLocal.add(parameterGlobalElement);
-				}
-				if (agentManagerRef.getSwAgentCache(agentId + "").getLocals() != null)
-					for (Parameter parameterLocalElement : agentManagerRef.getSwAgentCache(agentId + "").getLocals().getParameterArray()) {
-						varmi = false;
-						for (Parameter parameterGlobalElement : parameterList) {
-							if (parameterLocalElement.getName().toLowerCase().equals(parameterGlobalElement.getName().toLowerCase())) {
-								// Globaldekinin aynisi var mi?
-								varmi = true;
-								break;
-							}
-						}
-						if (!varmi)
-							parameterListLocal.add(parameterLocalElement);
-					}
-				allParameter.put(Integer.parseInt(agentId), parameterListLocal);
-			//}
-		}
-		TlosSpaceWide.getSpaceWideRegistry().setAllParameters(allParameter);
-	}
-
 	private void handleNormalExecution() throws TlosException {
 
 		logger.info("   > Hayir, recover islemi gerekli degil !");
@@ -243,7 +161,7 @@ public class Cpc extends CpcBase {
 
 		getSpaceWideRegistry().setParameters(myPramList);
 
-		arrangeParameters();
+		arrangeParameters(myPramList);
 		/*
 		 * logger.info(" 3,5 - Global Parametreler Yukleniyor..");
 		 * ArrayList<Parameter> parameterList = DBUtils.getTlosParameters();
@@ -262,7 +180,7 @@ public class Cpc extends CpcBase {
 		// logger.info(" 4 - isPersistent ozelligi konulu kontroller yapilacak.");
 		//
 		// /**
-		// * @author serkan TODO Persist edemezse ne yapýlacaðý konusunda bir
+		// * @author serkan TODO Persist edemezse ne yapï¿½lacaï¿½ï¿½ konusunda bir
 		// * karar vermek gerekir.
 		// */
 		//
@@ -444,7 +362,7 @@ public class Cpc extends CpcBase {
 				if (!spcInfoTypeNew.getSpcReferance().getConcurrencyManagement().getConcurrent()) {
 					// if (!spcInfoTypeNew.getSpcReferance().isConcurrent()) {
 					if ((spcInfoTypeNew.getSpcReferance().getDependencyList() != null) && spcInfoTypeNew.getSpcReferance().getDependencyList().getItemArray().length > 0) {
-						// ** Biraz parsing lazým :( *//*
+						// ** Biraz parsing lazï¿½m :( *//*
 						Item mydependencyItem = Item.Factory.newInstance();
 						mydependencyItem.setDependencyID("VD1");
 						mydependencyItem.setComment("Bu sanal bir bagimlilik tanimidir. Bagli oldugu senaryo  ise budur : " + spcInfoTypeMaster.getSpcReferance().getSpcId());
