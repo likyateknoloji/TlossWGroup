@@ -505,11 +505,11 @@ public class DBOperations implements Serializable {
 		return prsList;
 	}
 
-	public ArrayList<JobProperties> getJobList(int maxNumber) throws XMLDBException {
+	public ArrayList<JobProperties> getJobList(int userId, String dataId, int maxNumber) throws XMLDBException {
 
 		ArrayList<JobProperties> jobList = new ArrayList<JobProperties>();
 
-		String xQueryStr = scenarioFunctionConstructor("hs:jobList", "1", maxNumber + "");
+		String xQueryStr = scenarioFunctionConstructor("hs:jobList", toXSString(userId), toXSString(dataId), "1", maxNumber + "");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -522,11 +522,11 @@ public class DBOperations implements Serializable {
 		return jobList;
 	}
 
-	public ArrayList<Scenario> getScenarioList() throws XMLDBException {
+	public ArrayList<Scenario> getScenarioList(int userId, String dataId) throws XMLDBException {
 
 		ArrayList<Scenario> scenarioList = new ArrayList<Scenario>();
 
-		String xQueryStr = scenarioFunctionConstructor("hs:scenarioList");
+		String xQueryStr = scenarioFunctionConstructor("hs:scenarioList", toXSString(userId), toXSString(dataId));
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1032,9 +1032,9 @@ public class DBOperations implements Serializable {
 		return jobProperties;
 	}
 
-	public JobProperties getJob(String jobPath, String jobName) {
+	public JobProperties getJob(int userId, String dataId, String jobPath, String jobName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getJob", jobPath, "\"" + jobName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getJob", toXSString(userId), toXSString(dataId), jobPath, "\"" + jobName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1046,9 +1046,9 @@ public class DBOperations implements Serializable {
 		return jobProperties;
 	}
 
-	public boolean insertJob(String jobPropertiesXML, String jobPath) {
+	public boolean insertJob(int userId, String dataId, String jobPropertiesXML, String jobPath) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:insertJobLock", jobPropertiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertJobLock", toXSString(userId), toXSString(dataId), jobPropertiesXML, jobPath);
 
 		try {
 			@SuppressWarnings("unused")
@@ -1061,9 +1061,9 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public String getJobExistence(String jobPath, String jobName) {
+	public String getJobExistence(int userId, String dataId, String jobPath, String jobName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistence", jobPath, "\"" + jobName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistence", toXSString(userId), toXSString(dataId), jobPath, "\"" + jobName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1075,9 +1075,9 @@ public class DBOperations implements Serializable {
 		return result;
 	}
 
-	public JobProperties getJobFromId(String jobId) {
+	public JobProperties getJobFromId(int userId, String dataId, String jobId) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getJobFromId", jobId);
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobFromId", toXSString(userId), toXSString(dataId), jobId);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1351,23 +1351,9 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public Scenario getScenarioFromId(String scenarioId) {
+	public Scenario getScenarioFromId(int userId, String dataId, String scenarioId) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioFromId", scenarioId);
-
-		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
-
-		Scenario scenario = null;
-		for (Object currentObject : objectList) {
-			scenario = ((ScenarioDocument) currentObject).getScenario();
-		}
-
-		return scenario;
-	}
-
-	public Scenario getScenario(String scenarioPath, String scenarioName) {
-
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", scenarioPath, "\"" + scenarioName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioFromId", toXSString(userId), toXSString(dataId), scenarioId);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1379,9 +1365,23 @@ public class DBOperations implements Serializable {
 		return scenario;
 	}
 
-	public String getScenarioExistence(String scenarioPath, String scenarioName) {
+	public Scenario getScenario(int userId, String dataId, String scenarioPath, String scenarioName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", scenarioPath, "\"" + scenarioName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenario", toXSString(userId), toXSString(dataId), scenarioPath, "\"" + scenarioName + "\"");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		Scenario scenario = null;
+		for (Object currentObject : objectList) {
+			scenario = ((ScenarioDocument) currentObject).getScenario();
+		}
+
+		return scenario;
+	}
+
+	public String getScenarioExistence(int userId, String dataId, String scenarioPath, String scenarioName) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getScenarioExistence", toXSString(userId), toXSString(dataId), scenarioPath, "\"" + scenarioName + "\"");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1393,9 +1393,9 @@ public class DBOperations implements Serializable {
 		return result;
 	}
 
-	public boolean insertScenario(String scenarioXML, String scenarioPath) {
+	public boolean insertScenario(int userId, String dataId, String scenarioXML, String scenarioPath) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:insertScenarioLock", scenarioXML, scenarioPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertScenarioLock", toXSString(userId), toXSString(dataId), scenarioXML, scenarioPath);
 
 		try {
 			@SuppressWarnings("unused")
@@ -1669,9 +1669,9 @@ public class DBOperations implements Serializable {
 		return alarmInfoTypeClient;
 	}
 
-	public ArrayList<JobInfoTypeClient> getJobResultList(String jobId, int runNumber, Boolean transformToLocalTime) {
+	public ArrayList<JobInfoTypeClient> getJobResultList(int userId, String dataId, String jobId, int runNumber, Boolean transformToLocalTime) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:jobResultListbyRunId", runNumber + "", "0", jobId, "false()");
+		String xQueryStr = scenarioFunctionConstructor("hs:jobResultListbyRunId", toXSString(userId), toXSString(dataId), runNumber + "", "0", jobId, "false()");
 
 		ArrayList<JobInfoTypeClient> jobs = new ArrayList<JobInfoTypeClient>();
 
@@ -1778,9 +1778,9 @@ public class DBOperations implements Serializable {
 		return null;
 	}
 
-	public boolean updateJob(String jobPropertiesXML, String jobPath) {
+	public boolean updateJob(int userId, String dataId, String jobPropertiesXML, String jobPath) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:updateJobLock", jobPropertiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:updateJobLock", toXSString(userId), toXSString(dataId), jobPropertiesXML, jobPath);
 
 		try {
 			@SuppressWarnings("unused")
@@ -2008,24 +2008,9 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public boolean updateScenario(String scenarioPath, String scenarioXML) {
+	public boolean updateScenario(int userId, String dataId, String scenarioPath, String scenarioXML) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:updateScenarioLock", scenarioPath, scenarioXML);
-
-		try {
-			@SuppressWarnings("unused")
-			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-	}
-
-	public boolean deleteScenario(String scenarioPath, String scenarioXML) {
-
-		String xQueryStr = scenarioFunctionConstructor("hs:deleteScenarioLock", scenarioXML, scenarioPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:updateScenarioLock", toXSString(userId), toXSString(dataId), scenarioPath, scenarioXML);
 
 		try {
 			@SuppressWarnings("unused")
@@ -2038,9 +2023,24 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public boolean deleteJob(String jobPath, String jobPropertiesXML) {
+	public boolean deleteScenario(int userId, String dataId, String scenarioPath, String scenarioXML) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:deleteJobLock", jobPropertiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:deleteScenarioLock", toXSString(userId), toXSString(dataId), scenarioXML, scenarioPath);
+
+		try {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean deleteJob(int userId, String dataId, String jobPath, String jobPropertiesXML) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:deleteJobLock", toXSString(userId), toXSString(dataId), jobPropertiesXML, jobPath);
 
 		try {
 			@SuppressWarnings("unused")
