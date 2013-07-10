@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -21,6 +22,9 @@ public abstract class TlosSWBaseBean {
 	
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
+	
+	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
+	private AppUser appUser;
 	
 	public String resolveMessage(String errorMessage) {
 	
@@ -89,5 +93,13 @@ public abstract class TlosSWBaseBean {
 
 	public void setDbOperations(DBOperations dbOperations) {
 		this.dbOperations = dbOperations;
+	}
+	
+	public AppUser getAppUser() {
+		return appUser;
+	}
+
+	public void setAppUser(AppUser appUser) {
+		this.appUser = appUser;
 	}
 }
