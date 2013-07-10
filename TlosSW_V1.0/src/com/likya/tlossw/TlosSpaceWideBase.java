@@ -430,9 +430,13 @@ public class TlosSpaceWideBase {
 				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
 
 			} catch (TlosFatalException e) {
-				e.printStackTrace();
-				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-				System.exit(-1);
+				if(getSpaceWideRegistry().getCpcReference() == null) {
+					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+					System.exit(-1);
+				} else {
+					errprintln("Gün dönümü sonrasý çalýþma listesi alýnamadý !");
+					return;
+				}
 			}
 
 			int numOfScenarios = getSpaceWideRegistry().getTlosProcessData().getScenarioArray().length;
