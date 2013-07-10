@@ -6,22 +6,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
-
-import com.likya.tlos.model.xmlbeans.alarm.DescDocument;
-import com.likya.tlos.model.xmlbeans.alarm.EndDateDocument;
-import com.likya.tlos.model.xmlbeans.alarm.LevelDocument;
-import com.likya.tlos.model.xmlbeans.alarm.StartDateDocument;
-import com.likya.tlos.model.xmlbeans.alarm.AlarmDocument.Alarm;
-import com.likya.tlos.model.xmlbeans.alarm.CaseManagementDocument.CaseManagement;
-import com.likya.tlos.model.xmlbeans.alarm.SystemManagementDocument.SystemManagement;
-import com.likya.tlos.model.xmlbeans.alarm.TimeManagementDocument.TimeManagement;
-import com.likya.tlos.model.xmlbeans.calendar.ValidFromDocument.ValidFrom;
-import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
-import com.likya.tlos.model.xmlbeans.common.DateDocument.Date;
-import com.likya.tlos.model.xmlbeans.common.TimeDocument.Time;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -31,6 +17,19 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
+
+import com.likya.tlos.model.xmlbeans.alarm.AlarmDocument.Alarm;
+import com.likya.tlos.model.xmlbeans.alarm.CaseManagementDocument.CaseManagement;
+import com.likya.tlos.model.xmlbeans.alarm.DescDocument;
+import com.likya.tlos.model.xmlbeans.alarm.EndDateDocument;
+import com.likya.tlos.model.xmlbeans.alarm.LevelDocument;
+import com.likya.tlos.model.xmlbeans.alarm.StartDateDocument;
+import com.likya.tlos.model.xmlbeans.alarm.SystemManagementDocument.SystemManagement;
+import com.likya.tlos.model.xmlbeans.alarm.TimeManagementDocument.TimeManagement;
+import com.likya.tlos.model.xmlbeans.calendar.ValidFromDocument.ValidFrom;
+import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
+import com.likya.tlos.model.xmlbeans.common.DateDocument.Date;
+import com.likya.tlos.model.xmlbeans.common.TimeDocument.Time;
 
 public class DefinitionUtils {
 
@@ -429,6 +428,15 @@ public class DefinitionUtils {
 		if(X.equalsIgnoreCase("Name")) return name;
 		else if(X.equalsIgnoreCase("Id"))return id;
 		else return null;
+	}
+
+	public static String toXSString(int intData) {
+		return toXSString("" + intData);
+	}
+
+	
+	public static String toXSString(String stringData) {
+		return "xs:string(\"" + stringData + "\"";
 	}
 	
 }
