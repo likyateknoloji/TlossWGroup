@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeCollapseEvent;
@@ -19,6 +20,7 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
@@ -38,12 +40,15 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	private TreeNode selectedTreeNode;
 
+	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
+	private AppUser appUser;
+	
 	@PostConstruct
 	public void initJSTree() {
 
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml();
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getAppUser().getId(), ConstantDefinitions.EXIST_GLOBALDATA);
 		System.out.println("Tree has been loaded !!");
 
 		System.out.println("Job Tree olusturuluyor ..");
@@ -273,6 +278,14 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
 		this.selectedTreeNode = selectedTreeNode;
+	}
+
+	public AppUser getAppUser() {
+		return appUser;
+	}
+
+	public void setAppUser(AppUser appUser) {
+		this.appUser = appUser;
 	}
 
 }
