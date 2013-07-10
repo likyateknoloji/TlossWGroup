@@ -13,12 +13,10 @@ public class AppUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int id;
 	private String name;
 	private String surname;
 	private String username;
 	private String password;
-	private Role role;
 	private String email;
 	private String lastlogin;
 	private boolean transformToLocalTime;
@@ -57,14 +55,6 @@ public class AppUser implements Serializable {
 		this.lastlogin = lastlogin;
 	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -87,14 +77,6 @@ public class AppUser implements Serializable {
 
 	public void setResourceMapper(ResourceMapper resourceMapper) {
 		this.resourceMapper = resourceMapper;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public void setTransformToLocalTime(boolean transformToLocalTime) {
