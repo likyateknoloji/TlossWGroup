@@ -1,5 +1,6 @@
 package com.likya.tlossw.core.cpc;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -9,19 +10,25 @@ import java.util.Iterator;
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.log4j.Logger;
 
+import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.db.utils.DBUtils;
+import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.utils.FileUtils;
@@ -99,23 +106,23 @@ public abstract class CpcBase implements Runnable {
 
 		Hashtable<String, String> testTable = new Hashtable<String, String>();
 
-		//for (int index = 0; index < jobList.sizeOfJobPropertiesArray(); index++) {
+		// for (int index = 0; index < jobList.sizeOfJobPropertiesArray(); index++) {
 
 		// jobList.setJobPropertiesArray(index,
 		// ApplyXslt.transform(jobList.getJobPropertiesArray(index)));
-		//try {
+		// try {
 		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
 		// "/dat:jobProperties/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
 		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
 		// "/dat:jobProperties[@ID=\"2\" and @agentId=\"0\"]/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
-		//System.out.println("xpath");
+		// System.out.println("xpath");
 		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
 		// "//dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
-		//} catch (Exception e) {
-		//	e.printStackTrace();
-		//}
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 
-		//}
+		// }
 
 		ArrayIterator jobListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
 		String validationRequired = "NO";
@@ -128,7 +135,7 @@ public abstract class CpcBase implements Runnable {
 
 			String jobKey = jobPropertiesType.getBaseJobInfos().getJsName();
 
-			//if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals("BATCH PROCESS")) {
+			// if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals("BATCH PROCESS")) {
 			// jobPropertiesType.getJobDescription().getApplication().getPOSIXApplication().getArgumentArray(1);
 			// jobPropertiesType.getSweep().getAssignmentArray(0).getParameterArray(0);
 			// String inputs[] = null;
@@ -141,7 +148,7 @@ public abstract class CpcBase implements Runnable {
 			// } catch (Exception e) {
 			// e.printStackTrace();
 			// }
-			//}
+			// }
 
 			if (validationRequired.equalsIgnoreCase("NO")) {
 				break;
@@ -363,7 +370,7 @@ public abstract class CpcBase implements Runnable {
 				// System.out.println("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.info("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.error("Cpc Scenario jobs validation failed, process state changed to WAITING !");
-				
+
 				continue; // 08.07.2013 Serkan
 				// throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
 				/*
@@ -371,8 +378,8 @@ public abstract class CpcBase implements Runnable {
 				 * myLogger.error("Cpc failed, terminating !"); break;
 				 */
 			}
-			
-			if(jobList.getJobPropertiesArray().length == 0) {
+
+			if (jobList.getJobPropertiesArray().length == 0) {
 				myLogger.error(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
 				myLogger.error(scenarioId + " isimli senaryo için spc başlatılmıyor !");
 				continue;
@@ -451,6 +458,83 @@ public abstract class CpcBase implements Runnable {
 		myLogger.info(" > Senaryolarin ve islerin SPC (spcLookUpTable) senaryo agacina yuklenme islemi bitti !");
 
 		return scpLookupTable;
+	}
+
+	protected ArrayList<Parameter> prepareParameterList() throws GlobalParameterLoadException {
+
+		myLogger.info(" 3,5 - Global Parametreler Yukleniyor..");
+
+		ArrayList<Parameter> parameterList = DBUtils.getTlosParameters();
+
+		if (parameterList != null) {
+
+			for (int i = 0; i < parameterList.size(); i++) {
+				String paramName = parameterList.get(i).getName();
+				// String paramValueString = parameterList.get(i).getValueString();
+				String paramPreValueString = parameterList.get(i).getPreValue().getStringValue();
+				BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
+				String paramDesc = parameterList.get(i).getDesc();
+
+				System.out.println(paramName + paramPreValueString + paramPreValueType + paramDesc);
+			}
+
+			myLogger.info("   > Yuklendi !");
+
+		} else {
+			myLogger.info("   > YukleneMEdi  parameterList = null ! ");
+			throw new GlobalParameterLoadException("YukleneMEdi  parameterList = null ! ");
+		}
+
+		return parameterList;
+	}
+
+	protected void arrangeParameters(ArrayList<Parameter> myPramList) {
+
+		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
+
+		HashMap<Integer, ArrayList<Parameter>> allParameter = new HashMap<Integer, ArrayList<Parameter>>();
+
+		HashMap<String, SWAgent> SwAgentsCache = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache();
+
+		for (String agentId : SwAgentsCache.keySet()) {
+
+			// LOCAL
+			// SWAgent swAgent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentCache(agentId);
+			ArrayList<Parameter> parameterListLocal = new ArrayList<Parameter>();
+
+			// if (!agentManagerRef.isServer(Integer.parseInt(agentId))) {
+			boolean varmi;
+			for (Parameter parameterGlobalElement : myPramList) {
+				varmi = false;
+				if (agentManagerRef.getSwAgentCache(agentId + "").getLocals() != null)
+					for (Parameter parameterLocalElement : agentManagerRef.getSwAgentCache(agentId + "").getLocals().getParameterArray()) {
+						if (parameterLocalElement.getName().toLowerCase().equals(parameterGlobalElement.getName().toLowerCase())) {
+							// Globaldekinin aynisi var mi?
+							varmi = true;
+							parameterListLocal.add(parameterLocalElement);
+							break;
+						}
+					}
+				if (!varmi)
+					parameterListLocal.add(parameterGlobalElement);
+			}
+			if (agentManagerRef.getSwAgentCache(agentId + "").getLocals() != null)
+				for (Parameter parameterLocalElement : agentManagerRef.getSwAgentCache(agentId + "").getLocals().getParameterArray()) {
+					varmi = false;
+					for (Parameter parameterGlobalElement : myPramList) {
+						if (parameterLocalElement.getName().toLowerCase().equals(parameterGlobalElement.getName().toLowerCase())) {
+							// Globaldekinin aynisi var mi?
+							varmi = true;
+							break;
+						}
+					}
+					if (!varmi)
+						parameterListLocal.add(parameterLocalElement);
+				}
+			allParameter.put(Integer.parseInt(agentId), parameterListLocal);
+			// }
+		}
+		TlosSpaceWide.getSpaceWideRegistry().setAllParameters(allParameter);
 	}
 
 	public Thread getExecuterThread() {
