@@ -74,7 +74,7 @@ public class CustomFileListener implements FileListener {
 				String excludeRegex = fileListener.getReadAndListFileProperties().getExcludeFiles();
 				String fileName = arg0.getFile().getURL().toString().substring(arg0.getFile().getParent().toString().length() + 1);
 
-				if (fileName.matches(includeRegex) && !fileName.matches(excludeRegex)) {
+				if (fileName.matches(includeRegex) && (excludeRegex == null || !fileName.matches(excludeRegex))) {
 					myLogger.info("\"" + fileName + "\" olusturuldu");
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " \"" + fileName + "\" olusturuldu" + System.getProperty("line.separator"));
 
