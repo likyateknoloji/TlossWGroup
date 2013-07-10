@@ -52,6 +52,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{systemCommandPanelMBean}")
 	private SystemCommandPanelMBean systemCommandPanelMBean;
 
+	@ManagedProperty(value = "#{shellScriptPanelMBean}")
+	private ShellScriptPanelMBean shellScriptPanelMBean;
+
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
@@ -66,6 +69,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
 	public final static String REMOTE_SHELL_PAGE = "/inc/definitionPanels/remoteJobDef.xhtml";
 	public final static String SYSTEM_COMMAND_PAGE = "/inc/definitionPanels/systemCommandJobDef.xhtml";
+	public final static String SHELL_SCRIPT_PAGE = "/inc/definitionPanels/shellScriptJobDef.xhtml";
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
@@ -177,6 +181,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_SHELL_SCRIPT:
+			currentPanelMBeanRef = getShellScriptPanelMBean();
+			jobDefCenterPanel = SHELL_SCRIPT_PAGE;
 			break;
 
 		case JobCommandType.INT_SAP:
@@ -436,6 +442,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDraggedTemplateName(WsNode draggedTemplateName) {
 		this.draggedTemplateName = draggedTemplateName;
+	}
+
+	public ShellScriptPanelMBean getShellScriptPanelMBean() {
+		return shellScriptPanelMBean;
+	}
+
+	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
+		this.shellScriptPanelMBean = shellScriptPanelMBean;
 	}
 
 }
