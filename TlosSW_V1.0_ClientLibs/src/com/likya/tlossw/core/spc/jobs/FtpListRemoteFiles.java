@@ -6,6 +6,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.ftpadapter.FtpAdapterPropertiesDocument.FtpAdapterProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
@@ -33,6 +34,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 		initializeFtpJob();
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
+		FtpAdapterProperties ftpJobProperties = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFtpAdapterProperties();
 
 		while (true) {
 
@@ -51,7 +53,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 					return;
 				}
 
-				String directory = "";
+				String directory = ftpJobProperties.getFilenameAndDirectory().getSourceDirectory().getPath();
 
 				FTPFile[] fileList = FtpUtils.listRemoteFiles(getFtpClient(), directory, getOutputFile(), myLogger);
 
