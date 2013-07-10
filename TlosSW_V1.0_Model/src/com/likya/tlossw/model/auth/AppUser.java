@@ -7,9 +7,8 @@
 
 package com.likya.tlossw.model.auth;
 
-import java.io.Serializable;
 
-public class AppUser implements Serializable {
+public class AppUser extends User {
 
 	private static final long serialVersionUID = 1L;
 
