@@ -436,7 +436,7 @@ public class DefinitionUtils {
 
 	
 	public static String toXSString(String stringData) {
-		return "xs:string(\"" + stringData + "\"";
+		return "xs:string(\"" + stringData + "\")";
 	}
 	
 }
