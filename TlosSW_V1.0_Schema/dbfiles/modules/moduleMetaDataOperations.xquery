@@ -9,39 +9,38 @@ declare namespace  dat="http://www.likyateknoloji.com/XML_data_types";
 
 (: doc(local:getMetaData("//db/TLOSSW/xmls/metaData.xml", "dbConnectionProfiles")) :)
 
-declare function met:getScenariosDocument($documentUrl as xs:string, $userId as xs:string) as xs:string?
+declare function met:getScenariosDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
 {
   let $initialDoc :=
    <TlosProcessDataAll>
    </TlosProcessDataAll>
 
   let $docName := met:getMetaData($documentUrl, "scenarios")
-  let $result := if( $userId eq "0") 
+  let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
                  then
-	               $docName
+                   $docName
                  else
                    let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
-				   let $exist := if(doc-available($userDoc)) 
+    			   let $exist := if(doc-available($userDoc)) 
                                  then () 
                                  else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
                    return $userDoc
-
   return $result
 };
 
-declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string) as xs:string?
+declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
 {
   let $initialDoc :=
    <dat:TlosProcessData>
    </dat:TlosProcessData>
    
   let $docName := met:getMetaData($documentUrl, "sjData")
-  let $result := if( $userId eq "0") 
+  let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
                  then
                    $docName
                  else
                    let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
-				   let $exist := if(doc-available($userDoc)) 
+    			   let $exist := if(doc-available($userDoc)) 
                                  then () 
                                  else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
                    return $userDoc
