@@ -1129,7 +1129,7 @@ public abstract class JobBaseBean extends TlosSWBaseBean implements Serializable
 			jsNameConfirmDialog = false;
 		}
 
-		if (getDbOperations().insertJob(getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		if (getDbOperations().insertJob(getAppUser().getId(), getDocumentId(), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
 			// addJobNodeToScenarioPath();
 
