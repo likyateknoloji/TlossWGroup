@@ -19,9 +19,9 @@ $templateDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWJobTemplates10.xml")
 (:--------------------------------------- TlosProcessData operasyonlari-------------------------------------:)
 
 (: READ :)
-declare function hs:getTlosDataXml($documentUrl as xs:string, $userId as xs:string) as element(dat:TlosProcessData)?
+declare function hs:getTlosDataXml($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as element(dat:TlosProcessData)?
 {
-   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	for $tlosProcessData in doc($dataDocumentUrl)/dat:TlosProcessData
 	return $tlosProcessData 
