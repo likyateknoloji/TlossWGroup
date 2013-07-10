@@ -39,9 +39,9 @@ declare function hs:getTlosTemplateDataXml($documentUrl as xs:string) as element
 (:----------------------------------------- Senaryo operasyonlari -------------------------------------------:)
 
 (: READ :)
-declare function hs:getScenario($documentUrl as xs:string, $userId as xs:string, $scenarioPath, $scenarioName as xs:string) as element(dat:scenario)?
+declare function hs:getScenario($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath, $scenarioName as xs:string) as element(dat:scenario)?
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl)
 	for $scenario in $doc//$scenarioPath 
@@ -49,9 +49,9 @@ declare function hs:getScenario($documentUrl as xs:string, $userId as xs:string,
 		return $scenario
 };
 
-declare function hs:getScenarioExistence($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node()*, $scenarioName as xs:string) as xs:integer
+declare function hs:getScenarioExistence($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node()*, $scenarioName as xs:string) as xs:integer
 {    
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
     let $doc := doc($dataDocumentUrl) 
     let $refPath := $doc//$scenarioPath
@@ -67,9 +67,9 @@ declare function hs:getScenarioExistence($documentUrl as xs:string, $userId as x
     return $sonuc
 };
 
-declare function hs:getScenarioFromId($documentUrl as xs:string, $userId as xs:string, $id as xs:integer) as element(dat:scenario)?
+declare function hs:getScenarioFromId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $id as xs:integer) as element(dat:scenario)?
 {	
-   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl) 
 	for $scenario in $doc//dat:scenario
@@ -77,48 +77,48 @@ declare function hs:getScenarioFromId($documentUrl as xs:string, $userId as xs:s
         return $scenario
 };
 
-declare function hs:scenarioList($documentUrl as xs:string, $userId as xs:string) as element(dat:scenario)* 
+declare function hs:scenarioList($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as element(dat:scenario)* 
  {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	for $scenario in doc($dataDocumentUrl)/dat:TlosProcessData//dat:scenario
 	return  $scenario
 };
 
 (: INSERT :)
-declare function hs:insertScenarioLock($documentUrl as xs:string, $userId as xs:string, $scenario as element(dat:scenario), $scenarioPath )
+declare function hs:insertScenarioLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenario as element(dat:scenario), $scenarioPath )
 {
-   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
-   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:insertScenario($documentUrl, $userId, $scenario,$scenarioPath))     
+   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:insertScenario($documentUrl, $userId, $whichData, $scenario,$scenarioPath))     
 };
 
-declare function hs:insertScenario($documentUrl as xs:string, $userId as xs:string, $scenario as element(dat:scenario), $scenarioPath)
+declare function hs:insertScenario($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenario as element(dat:scenario), $scenarioPath)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl)
 	for $xmlScenario in $doc//$scenarioPath
 		return  update insert $scenario into $xmlScenario
 };
 
-declare function hs:insertScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $scenarioPath, $calendarId)
+declare function hs:insertScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath, $calendarId)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
     let $doc := doc($dataDocumentUrl)
 	return update insert $calendarId following  $doc//$scenarioPath/dat:baseScenarioInfos/com:comment
 };
 
-declare function hs:insertScnCalendar($documentUrl as xs:string, $userId as xs:string, $scenarioPath, $scenario)
+declare function hs:insertScnCalendar($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath, $scenario)
 {
-    let $calIdInsert :=  hs:insertScenarioCalendarId($documentUrl, $userId, $scenarioPath, $scenario/dat:calendarId)
+    let $calIdInsert :=  hs:insertScenarioCalendarId($documentUrl, $userId, $whichData, $scenarioPath, $scenario/dat:calendarId)
     return $calIdInsert
 };
 
-declare function hs:insertScenarioDepList($documentUrl as xs:string, $userId as xs:string, $scenarioPath, $dependencyList as element())
+declare function hs:insertScenarioDepList($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath, $dependencyList as element())
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
     let $doc := doc($dataDocumentUrl)
 	return update insert $dependencyList preceding $doc//$scenarioPath/dat:jobList
@@ -126,16 +126,16 @@ declare function hs:insertScenarioDepList($documentUrl as xs:string, $userId as 
 
 
 (: DELETE :)
-declare function hs:deleteScenarioLock($documentUrl as xs:string, $userId as xs:string, $scenario as element(dat:scenario), $scenarioPath )
+declare function hs:deleteScenarioLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenario as element(dat:scenario), $scenarioPath )
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
-	return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:deleteScenario($documentUrl, $userId, $scenario,$scenarioPath))
+	return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:deleteScenario($documentUrl, $userId, $whichData, $scenario,$scenarioPath))
 };
 
-declare function hs:deleteScenario($documentUrl as xs:string, $userId as xs:string, $scenario as element(dat:scenario),$scenarioPath )
+declare function hs:deleteScenario($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenario as element(dat:scenario),$scenarioPath )
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl)
 	for $senaryo in $doc//$scenarioPath 
@@ -143,24 +143,24 @@ declare function hs:deleteScenario($documentUrl as xs:string, $userId as xs:stri
         return update delete $senaryo
 };
 
-declare function hs:deleteScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $scenarioPath)
+declare function hs:deleteScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl)
 	for $calendarId in $doc//$scenarioPath/dat:baseScenarioInfos/dat:calendarId 
         return update delete $calendarId
 };
 
-declare function hs:deleteScnCalendar($documentUrl as xs:string, $userId as xs:string, $scenarioPath)
+declare function hs:deleteScnCalendar($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath)
 {
-    let $calIdInsert :=  hs:deleteScenarioCalendarId($documentUrl, $userId, $scenarioPath)
+    let $calIdInsert :=  hs:deleteScenarioCalendarId($documentUrl, $userId, $whichData, $scenarioPath)
     return $calIdInsert
 };
 
-declare function hs:deleteScenarioDep($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node())
+declare function hs:deleteScenarioDep($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node())
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $depList in $doc//$scenarioPath/dat:DependencyList 
@@ -168,65 +168,65 @@ declare function hs:deleteScenarioDep($documentUrl as xs:string, $userId as xs:s
 };
 
 (: UPDATE :)
-declare function hs:updateScenarioName($documentUrl as xs:string, $userId as xs:string, $scenarioPath, $name)
+declare function hs:updateScenarioName($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath, $name)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
     return update replace $doc//$scenarioPath/dat:baseScenarioInfos/com:jsName with <com:jsName>{data($name)}</com:jsName>
 };
 
-declare function hs:updateScenarioComment($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$comment)
+declare function hs:updateScenarioComment($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$comment)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
     return update replace $doc//$scenarioPath/dat:baseScenarioInfos/com:comment with <com:comment>{data($comment)}</com:comment>
 };
 
-declare function hs:updateScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$calendarId)
+declare function hs:updateScenarioCalendarId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$calendarId)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
     return update replace $doc//$scenarioPath/dat:baseScenarioInfos/dat:calendarId with <dat:calendarId>{data($calendarId)}</dat:calendarId>
 };
 
-declare function hs:updateScnCalendar($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$scenario)
+declare function hs:updateScnCalendar($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$scenario)
 {
-    let $calIdUpdate :=  hs:updateScenarioCalendarId($documentUrl, $userId, $scenarioPath,$scenario/dat:calendarId)
+    let $calIdUpdate :=  hs:updateScenarioCalendarId($documentUrl, $userId, $whichData, $scenarioPath,$scenario/dat:calendarId)
     return $calIdUpdate 	
 };
 
-declare function hs:updateScenarioUser($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$user)
+declare function hs:updateScenarioUser($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$user)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
     return update replace $doc//$scenarioPath/dat:baseScenarioInfos/com:userId with <com:userId>{data($user)}</com:userId>
 };
 
-declare function hs:updateScenarioDepList($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$dependencyList as element())
+declare function hs:updateScenarioDepList($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$dependencyList as element())
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	return update replace $doc//$scenarioPath/dat:DependencyList with $dependencyList 		
 };
 
 (: Kullanilmiyor 
-declare function hs:updateScenarioSuccessCodes($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$successCodeList as element())
+declare function hs:updateScenarioSuccessCodes($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$successCodeList as element())
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	return update replace $doc//$scenarioPath/com:jsSuccessCodeList with $successCodeList 		
 };
 :)
 
-declare function hs:updateScenario($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$scenario as element(dat:scenario))
+declare function hs:updateScenario($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$scenario as element(dat:scenario))
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
     let $XXX := $scenario
 	let $doc :=  doc($dataDocumentUrl)
@@ -265,26 +265,26 @@ declare function hs:updateScenario($documentUrl as xs:string, $userId as xs:stri
 							     $sdon2 in $scenario/scenario
 							 where $sdon1/@ID = $sdon2/@ID
 	                         return update replace $doc//$scenarioPath/scenario with 
-	                                 <scenario>{hs:updateScenario($documentUrl, $userId, $scenarioPath/scenario, $scenario/scenario)}</scenario>
+	                                 <scenario>{hs:updateScenario($documentUrl, $userId, $whichData, $scenarioPath/scenario, $scenario/scenario)}</scenario>
 	                       else ()
 
 	return <ok/>
 };
 
-declare function hs:updateScenarioLock($documentUrl as xs:string, $userId as xs:string, $scenarioPath as node(),$scenario as element(dat:scenario))
+declare function hs:updateScenarioLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $scenarioPath as node(),$scenario as element(dat:scenario))
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
-	return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:updateScenario($documentUrl, $userId, $scenarioPath,$scenario))
+	return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:updateScenario($documentUrl, $userId, $whichData, $scenarioPath,$scenario))
 };
 
 (:-----------------------------------------------------------------------------------------------------------:)
 (:---------------------------------------- Job operasyonlari ------------------------------------------------:)
 
 (: READ :)
-declare function hs:getJob($documentUrl as xs:string, $userId as xs:string, $jobPath ,$jobName as xs:string) as element(dat:jobProperties)?
+declare function hs:getJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobPath ,$jobName as xs:string) as element(dat:jobProperties)?
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl) 
 
@@ -293,9 +293,9 @@ declare function hs:getJob($documentUrl as xs:string, $userId as xs:string, $job
         return $job
 };
 
-declare function hs:getJobFromId($documentUrl as xs:string, $userId as xs:string, $id as xs:integer) as element(dat:jobProperties)?
+declare function hs:getJobFromId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $id as xs:integer) as element(dat:jobProperties)?
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $job in $doc//dat:jobProperties
@@ -304,9 +304,9 @@ declare function hs:getJobFromId($documentUrl as xs:string, $userId as xs:string
 };
 
 
-declare function hs:getJobExistence($documentUrl as xs:string, $userId as xs:string, $jobPath as node()*, $jobName as xs:string) as xs:integer
+declare function hs:getJobExistence($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobPath as node()*, $jobName as xs:string) as xs:integer
 {    
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
     let $doc := doc($dataDocumentUrl)
     let $refPath := $doc//$jobPath
@@ -324,9 +324,9 @@ declare function hs:getJobExistence($documentUrl as xs:string, $userId as xs:str
 
 (:hs:getJobExistence(xs:string("tlosSWData10.xml"), /dat:TlosProcessData/dat:scenario/dat:jobList, xs:string("job1.bat"), 13) :)
 
-declare function hs:getJobFromJobName($documentUrl as xs:string, $userId as xs:string, $jobName as xs:string) as element(dat:jobProperties)?
+declare function hs:getJobFromJobName($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobName as xs:string) as element(dat:jobProperties)?
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $job in $doc//dat:jobProperties
@@ -345,25 +345,25 @@ declare function hs:getTemplateJobFromJobName($documentUrl as xs:string, $jobNam
 };
 
 (: ornek kullanim lk:jobList(1,2) ilk uc eleman :)
-declare function hs:jobList($documentUrl as xs:string, $userId as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(dat:jobProperties)* 
+declare function hs:jobList($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(dat:jobProperties)* 
  {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	 
 	for $jobd in doc($dataDocumentUrl)/dat:TlosProcessData//dat:jobProperties[position() = ($firstElement to $lastElement)]
 	return  $jobd
 };
 
 (: INSERT :)
-declare function hs:insertJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:insertJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {
-   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
-   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:insertJob($documentUrl, $userId, $jobProperty,$jobPath))     
+   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:insertJob($documentUrl, $userId, $whichData, $jobProperty,$jobPath))     
 };
 
-declare function hs:insertJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:insertJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $xmlJobList in $doc//$jobPath
@@ -371,15 +371,15 @@ declare function hs:insertJob($documentUrl as xs:string, $userId as xs:string, $
 };
 
 (: UPDATE :)
-declare function hs:updateJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
-    return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:updateJob($documentUrl, $userId, $jobProperty,$jobPath))     
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
+    return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:updateJob($documentUrl, $userId, $whichData, $jobProperty,$jobPath))     
 };
 
-declare function hs:updateJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $job in $doc//$jobPath/dat:jobProperties            
@@ -388,16 +388,16 @@ declare function hs:updateJob($documentUrl as xs:string, $userId as xs:string, $
 };
 
 (: DELETE :)
-declare function hs:deleteJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:deleteJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {
-   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+   let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
-   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:deleteJob($documentUrl, $userId, $jobProperty,$jobPath))     
+   return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, hs:deleteJob($documentUrl, $userId, $whichData, $jobProperty,$jobPath))     
 };
 
-declare function hs:deleteJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:deleteJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
 	
 	let $jobCount := count($jobPath)
     let $doc := doc($dataDocumentUrl)
@@ -416,9 +416,9 @@ declare function hs:deleteJob($documentUrl as xs:string, $userId as xs:string, $
 
 (: READ :)
 
-declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
+declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
                 let $sonuc := for $runx in doc($dataDocumentUrl)/TlosProcessDataAll/RUN//dat:jobProperties
                               where $runx[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
@@ -430,9 +430,9 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as x
                 return  $sonuc
 };
 
-declare function hs:jobResultListbyRunId($documentUrl as xs:string, $userId as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
+declare function hs:jobResultListbyRunId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
     let $runIdFound := if ($runId != 0 ) 
 	                   then $runId 
@@ -451,9 +451,9 @@ declare function hs:jobResultListbyRunId($documentUrl as xs:string, $userId as x
 	return $sonuc
 };
 
-declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
+declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
                 let $sonuc := for $runx in doc($dataDocumentUrl)/TlosProcessDataAll/RUN//dat:jobProperties
                               where $runx[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
@@ -467,96 +467,96 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $userId as x
 
 (: INSERT :)
 
-declare function hs:insertLiveJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:insertLiveJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $xmlJobList in $doc//$jobPath
 		return  update insert $jobProperty into $xmlJobList
 };
 
-declare function hs:insertLiveJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:insertLiveJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertLiveJob($documentUrl, $userId, $jobProperty, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertLiveJob($documentUrl, $userId, $whichData, $jobProperty, $jobPath))   
 };
 (: kullanilmiyor :)
-declare function hs:insertJobInTheBeginning($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:insertJobInTheBeginning($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $xmlJobList in $doc//$jobPath
 		return  update insert $jobProperty into $xmlJobList
 };
 
-declare function hs:insertJobInTheBeginningLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
+declare function hs:insertJobInTheBeginningLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobInTheBeginning($documentUrl, $userId, $jobProperty, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobInTheBeginning($documentUrl, $userId, $whichData, $jobProperty, $jobPath))   
 };
 
-declare function hs:insertFreeJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
+declare function hs:insertFreeJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
     return update insert $jobProperty into  doc($dataDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData/dat:jobList  
 };
 
-declare function hs:insertFreeJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
+declare function hs:insertFreeJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$runId as xs:int)
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertFreeJob($documentUrl, $userId, $jobProperty, $runId))     
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertFreeJob($documentUrl, $userId, $whichData, $jobProperty, $runId))     
 };
 
-declare function hs:insertJobAgentId($documentUrl as xs:string, $userId as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
+declare function hs:insertJobAgentId($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
 {
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)	
 	let $doc := update insert attribute agentId {data($agentId)} into  $doc//$jobPath/dat:jobProperties[@ID=data($jobId) and @agentId='0']
 	return true()
 };
 
-declare function hs:insertJobAgentIdLock($documentUrl as xs:string, $userId as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
+declare function hs:insertJobAgentIdLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $agentId as xs:string, $jobId as xs:string, $jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobAgentId($documentUrl, $userId, $agentId, $jobId, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobAgentId($documentUrl, $userId, $whichData, $agentId, $jobId, $jobPath))   
 };
 
-declare function hs:insertJobState($documentUrl as xs:string, $userId as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
+declare function hs:insertJobState($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
 	let $doc := doc($dataDocumentUrl)
 	for $jobLiveStateInfos in $doc//$jobPath/dat:stateInfos/state-types:LiveStateInfos
 		return  update insert $liveStateInfo into $jobLiveStateInfos
 };
 
-declare function hs:insertJobStateLock($documentUrl as xs:string, $userId as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
+declare function hs:insertJobStateLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $liveStateInfo as element(state-types:LiveStateInfo),$jobPath )
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobState($documentUrl, $userId, $liveStateInfo, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:insertJobState($documentUrl, $userId, $whichData, $liveStateInfo, $jobPath))   
 };
 
 (: UPDATE :)
 
-declare function hs:updateLiveJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateLiveJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateLiveJob($documentUrl, $userId, $jobProperty, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateLiveJob($documentUrl, $userId, $whichData, $jobProperty, $jobPath))   
 };
 
-declare function hs:updateLiveJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateLiveJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
     let $doc := doc($dataDocumentUrl)
     let $state := if ( exists($doc//$jobPath/@LSIDateTime) and $doc//$jobPath[@ID=data($jobProperty/@ID) and @agentId=data($jobProperty/@agentId) and @LSIDateTime=data($jobProperty/@LSIDateTime)]) then 
@@ -565,16 +565,16 @@ declare function hs:updateLiveJob($documentUrl as xs:string, $userId as xs:strin
 	return update value $doc//$jobPath with $jobProperty/*
 };
 
-declare function hs:updateFirstLiveJobLock($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateFirstLiveJobLock($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
-    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateFirstLiveJob($documentUrl, $userId, $jobProperty, $jobPath))   
+    return util:exclusive-lock(doc($dataDocumentUrl)/TlosProcessDataAll, hs:updateFirstLiveJob($documentUrl, $userId, $whichData, $jobProperty, $jobPath))   
 };
 
-declare function hs:updateFirstLiveJob($documentUrl as xs:string, $userId as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
+declare function hs:updateFirstLiveJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId)
+    let $dataDocumentUrl := met:getScenariosDocument($documentUrl, $userId, $whichData)
 	
     let $doc := doc($dataDocumentUrl)
     let $arasonuc := update delete $doc//$jobPath//dat:stateInfos/state-types:LiveStateInfos
