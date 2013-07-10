@@ -86,6 +86,7 @@ import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
+import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "dbOperations")
 @SessionScoped
@@ -396,9 +397,9 @@ public class DBOperations implements Serializable {
 		return false;
 	}
 
-	public TlosProcessData getTlosDataXml() {
+	public TlosProcessData getTlosDataXml(int userId, String dataId) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getTlosDataXml");
+		String xQueryStr = scenarioFunctionConstructor("hs:getTlosDataXml", toXSString(userId), toXSString(dataId));
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -2058,6 +2059,14 @@ public class DBOperations implements Serializable {
 
 	public void setExistConnectionHolder(ExistConnectionHolder existConnectionHolder) {
 		this.existConnectionHolder = existConnectionHolder;
+	}
+
+	private String toXSString(int i) {
+		return DefinitionUtils.toXSString(i);
+	}
+	
+	private String toXSString(String s) {
+		return DefinitionUtils.toXSString(s);
 	}
 
 }
