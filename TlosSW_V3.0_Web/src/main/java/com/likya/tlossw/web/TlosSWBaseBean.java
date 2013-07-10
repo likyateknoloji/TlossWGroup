@@ -1,5 +1,6 @@
 package com.likya.tlossw.web;
 
+import java.util.HashMap;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -19,17 +20,19 @@ public abstract class TlosSWBaseBean {
 
 	@ManagedProperty(value = "#{sessionMediator}")
 	private SessionMediator sessionMediator;
-	
+
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
-	
+
 	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
 	private AppUser appUser;
 	
+	private String documentId;
+
 	public String resolveMessage(String errorMessage) {
-	
+
 		ResourceBundle messages = sessionMediator.getMessageBundle();
-		
+
 		if (errorMessage != null) {
 			try {
 				errorMessage = messages.getString(errorMessage);
@@ -44,14 +47,14 @@ public abstract class TlosSWBaseBean {
 		} else {
 			errorMessage = "";
 		}
-		
+
 		return errorMessage;
 	}
-	
+
 	public void addMessage(String formName, String fieldName, String errorMessage, String miscText) {
 
 		errorMessage = resolveMessage(errorMessage);
-		
+
 		FacesContext context = FacesContext.getCurrentInstance();
 		FacesMessage message;
 
@@ -63,17 +66,27 @@ public abstract class TlosSWBaseBean {
 		// report the message.
 		context.addMessage(formName + ":" + fieldName, message);
 	}
-	
+
+	public HashMap<String, String> getPassedParameter() {
+		
+		HashMap<String, String> parameterMap = new HashMap<String, String>();
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		parameterMap.putAll(facesContext.getExternalContext().getRequestParameterMap());
+
+		return parameterMap;
+	}
+
 	public void addMessage(String fieldName, FacesMessage.Severity severity, String errorMessage, String miscText) {
 		errorMessage = resolveMessage(errorMessage);
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, errorMessage, miscText));
 	}
-	
+
 	public void addSuccessMessage(String fieldName, String errorMessage, String miscText) {
 		errorMessage = resolveMessage(errorMessage);
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, errorMessage, miscText));
 	}
-	
+
 	public void addFailMessage(String fieldName, String errorMessage, String miscText) {
 		errorMessage = resolveMessage(errorMessage);
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, miscText));
@@ -94,12 +107,20 @@ public abstract class TlosSWBaseBean {
 	public void setDbOperations(DBOperations dbOperations) {
 		this.dbOperations = dbOperations;
 	}
-	
+
 	public AppUser getAppUser() {
 		return appUser;
 	}
 
 	public void setAppUser(AppUser appUser) {
 		this.appUser = appUser;
+	}
+
+	public String getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(String documentId) {
+		this.documentId = documentId;
 	}
 }

@@ -27,6 +27,8 @@ public class ConstantDefinitions {
 	 * Exist için tanımlı sabitler
 	 */
 
+	public static final String EXIST_DOCID = "docId";
 	public static final String EXIST_MYDATA = "mydata";
 	public static final String EXIST_GLOBALDATA = "globaldata";
+	
 }
