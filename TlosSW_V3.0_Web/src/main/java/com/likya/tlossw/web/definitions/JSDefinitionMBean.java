@@ -80,8 +80,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public String draggedJobPathForDependency;
 
 	private JobProperties jobProperties;
-	private JobProperties jobPropertiesTemp;
-
 	private Scenario scenario;
 
 	private Object currentPanelMBeanRef;
@@ -118,20 +116,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 			boolean isInsert = false;
 
-			if (currentPanelMBeanRef != null && ((JobBaseBean) currentPanelMBeanRef).getJobProperties().getID().equals("0")) {
-				((JobBaseBean) currentPanelMBeanRef).fillJobProperties();
-				((JobBaseBean) currentPanelMBeanRef).fillJobPropertyDetails();
-
-				jobPropertiesTemp = ((JobBaseBean) currentPanelMBeanRef).getJobProperties();
-			}
-
 			jobProperties = null;
 
 			if (Integer.parseInt(jsId) > 0) {
 				jobProperties = getDbOperations().getJobFromId(jsId);
 			} else {
-				jobProperties = jobPropertiesTemp;
-
 				isInsert = true;
 			}
 
@@ -447,14 +436,6 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDraggedTemplateName(WsNode draggedTemplateName) {
 		this.draggedTemplateName = draggedTemplateName;
-	}
-
-	public JobProperties getJobPropertiesTemp() {
-		return jobPropertiesTemp;
-	}
-
-	public void setJobPropertiesTemp(JobProperties jobPropertiesTemp) {
-		this.jobPropertiesTemp = jobPropertiesTemp;
 	}
 
 }
