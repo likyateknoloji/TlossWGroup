@@ -423,6 +423,10 @@ public class TlosSpaceWideBase {
 			try {
 
 				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
+				
+				if (tlosProcessData == null) {
+					throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null");
+				}
 				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
 
 			} catch (TlosFatalException e) {
