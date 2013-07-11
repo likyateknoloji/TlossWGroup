@@ -10,7 +10,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlossw.model.auth.AppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -25,7 +25,7 @@ public abstract class TlosSWBaseBean {
 	private DBOperations dbOperations;
 
 	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
-	private AppUser appUser;
+	private WebAppUser webAppUser;
 	
 	public String resolveMessage(String errorMessage) {
 
@@ -106,16 +106,16 @@ public abstract class TlosSWBaseBean {
 		this.dbOperations = dbOperations;
 	}
 
-	public AppUser getAppUser() {
-		return appUser;
-	}
-
-	public void setAppUser(AppUser appUser) {
-		this.appUser = appUser;
-	}
-
 	public String getDocumentId() {
 		return getSessionMediator().getDocumentId();
+	}
+
+	public WebAppUser getWebAppUser() {
+		return webAppUser;
+	}
+
+	public void setWebAppUser(WebAppUser webAppUser) {
+		this.webAppUser = webAppUser;
 	}
 
 }
