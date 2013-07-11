@@ -39,7 +39,6 @@ public class CpcTester extends CpcBase {
 
 	public synchronized void addTestData(TlosProcessData tlosProcessData) throws TlosException {
 		spcLookupTable.putAll(prepareTestTable(tlosProcessData));
-		this.notifyAll();
 	}
 
 	public void run() {
@@ -49,6 +48,8 @@ public class CpcTester extends CpcBase {
 		while (loop) {
 
 			try {
+				
+				logger.info(" 1 - İşlem başlasın !");
 
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
