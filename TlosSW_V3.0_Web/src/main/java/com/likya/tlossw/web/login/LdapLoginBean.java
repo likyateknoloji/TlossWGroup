@@ -14,8 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-import com.likya.tlossw.model.WebSpaceWideRegistery;
-import com.likya.tlossw.model.auth.AppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.utils.LdapClient;
 
@@ -62,7 +61,7 @@ public class LdapLoginBean extends LoginBase implements Serializable {
 
 		String validated = verifyUserBean();
 
-		WebSpaceWideRegistery webSpaceWideRegistery = sessionMediator.getWebSpaceWideRegistery();
+		// WebSpaceWideRegistery webSpaceWideRegistery = sessionMediator.getWebSpaceWideRegistery();
 
 		if (LOGIN_FAILURE.equals(validated)) {
 			returnValue = LOGIN_FAILURE;
@@ -91,19 +90,19 @@ public class LdapLoginBean extends LoginBase implements Serializable {
 		String host = "Localhost";
 		String port = "10389";
 		String rootdn = "cn=carol,ou=Users,dc=likya,dc=com";
-		String username = "carol";
+		// String username = "carol";
 		String password = "hakan123";
 
-		String INITCTX = "com.sun.jndi.ldap.LdapCtxFactory";
-		String MY_HOST = "ldap://Localhost:10389";
+		// String INITCTX = "com.sun.jndi.ldap.LdapCtxFactory";
+		// String MY_HOST = "ldap://Localhost:10389";
 		String MGR_DN = "cn=carol,ou=Users,dc=likya,dc=com";
-		String MGR_PW = "hakan123";
+		// String MGR_PW = "hakan123";
 
 		String identifier = "carol";
 
 		String MY_SEARCHBASE = "";
 		String MY_FILTER = "(&(cn=" + identifier + "))";
-		String MY_ATTRS[] = { "cn", "mail" };
+		// String MY_ATTRS[] = { "cn", "mail" };
 
 		LdapClient ldapClient = new LdapClient();
 		try {
@@ -131,7 +130,7 @@ public class LdapLoginBean extends LoginBase implements Serializable {
 
 	}
 
-	public static void copyAppUserToPerson(AppUser appUser, Person person) {
+	public static void copyAppUserToPerson(WebAppUser appUser, Person person) {
 		person.setId(appUser.getId());
 		person.setName(appUser.getName());
 		person.setSurname(appUser.getSurname());
