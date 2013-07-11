@@ -124,7 +124,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
-		jobBaseReportList = getDbOperations().getJobResultList(getAppUser().getId(), getDocumentId(), jobInTyCl.getJobId(), 3, transformToLocalTime);
+		jobBaseReportList = getDbOperations().getJobResultList(getWebAppUser().getId(), getDocumentId(), jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -135,7 +135,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
-		job = getDbOperations().getJobFromId(getAppUser().getId(), getDocumentId(), jobInTyCl.getJobId());
+		job = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), jobInTyCl.getJobId());
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
