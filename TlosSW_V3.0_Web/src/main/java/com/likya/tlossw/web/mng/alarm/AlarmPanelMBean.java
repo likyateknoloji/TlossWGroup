@@ -125,9 +125,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		try {
 			// ilk 20 iş ekranda görünecek
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(20)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getAppUser().getId(), getDocumentId(), 20)));
 
-			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList()));
+			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList(getAppUser().getId(), getDocumentId())));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
