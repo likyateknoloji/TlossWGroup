@@ -1,5 +1,5 @@
 /*
-  * TlosFaz_V2.0
+ * TlosFaz_V2.0
  * com.likya.tlos.jmx.mp.helper : ProcessInfoProvider.java
  * @author Serkan Taş
  * Tarih : Apr 6, 2009 2:19:17 PM
@@ -67,6 +67,7 @@ import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.InstanceUtils;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
@@ -331,14 +332,32 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			return null;
 		}
 
-		return retrieveSpcLookupTable(instanceId, treePath);
+		if(CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
+			return retrieveSpcLookupTable(instanceId, treePath);
+		}
+		
+		return retrieveSpcLookupTableForUser("" + jmxUser.getId(), treePath);
 	}
 
+	
+	private SpcLookUpTableTypeClient retrieveSpcLookupTableForUser(String userId, String treePath) {
+
+		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
+
+		return retrieveSpcLookupTableGeneric(spcLookUpTable, userId, treePath);
+	}
+	
 	private SpcLookUpTableTypeClient retrieveSpcLookupTable(String instanceId, String treePath) {
+
+		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
+
+		return retrieveSpcLookupTableGeneric(spcLookUpTable, instanceId, treePath);
+	}
+
+	private SpcLookUpTableTypeClient retrieveSpcLookupTableGeneric(HashMap<String, SpcInfoType> spcLookUpTable, String instanceId, String treePath) {
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
 
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
 		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
@@ -403,9 +422,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	public ArrayList<String> retrieveInstanceIds(JmxUser jmxUser) {
 
-//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-//			return null;
-//		}
+		// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+		// return null;
+		// }
 
 		return retrieveInstanceIds();
 
@@ -600,24 +619,29 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	 * web ekranindaki senaryo ve joblarin oldugu agac render edilmeden once bu metodu cagirip guncel senaryo ve job bilgilerini aliyor
 	 */
 	public TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode) {
-//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-//			return null;
-//		}
+		// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+		// return null;
+		// }
 
 		TlosSpaceWideNode tlosSpaceWideServerNode = new TlosSpaceWideNode();
 
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-			InstanceNode instanceNode = new InstanceNode(instanceId);
-			gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
+		if(CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
+			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+				InstanceNode instanceNode = new InstanceNode(instanceId);
+				gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
+			}
+		} else {
+			InstanceNode instanceNode = new InstanceNode("" + jmxUser.getId());
+			gunlukIslerNode.getInstanceNodes().put("" + jmxUser.getId(), instanceNode);
 		}
 
 		tlosSpaceWideServerNode.setGunlukIslerNode(gunlukIslerNode);
 
 		// ekranda instance dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, yoksa icinde instance gelmedigi icin girmiyor
 		GunlukIslerNode gunlukIslerNodeClient = tlosSpaceWideNode.getGunlukIslerNode();
-		if (gunlukIslerNodeClient!=null) {
+		if (gunlukIslerNodeClient != null) {
 			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
 
 				InstanceNode currentServerInstance = tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes().get(instanceId);
@@ -739,33 +763,33 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
-		
+
 		TlosSWResourceNode responseResourceNode = new TlosSWResourceNode();
 
 		ResourceListNode resourceListNode = new ResourceListNode();
-		
+
 		HashMap<String, ResourceNode> resourceList = AgentOperations.getResources(TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache());
-		
+
 		// ekranda ilgili makinenin dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, yoksa icinde makine gelmedigi icin girmiyor
 		// bunun amaci acilan dugumlerin agent bilgilerini de tlosSpaceWideServerNode'daki kaynak listesindeki ilgili kaynaklara eklemek
-		
+
 		Iterator<ResourceNode> resourceIterator = requestResourceNode.getResourceListNode().getResourceNodes().iterator();
-		
-		while(resourceIterator.hasNext()) {
-			
+
+		while (resourceIterator.hasNext()) {
+
 			ResourceNode currentResourceNode = resourceIterator.next();
 			String resourceName = currentResourceNode.getResourceInfoTypeClient().getResourceName();
-			
-			if(resourceList.containsKey(resourceName)) {
-				
+
+			if (resourceList.containsKey(resourceName)) {
+
 				ResourceNode tmpResourceNode = resourceList.get(resourceName);
-				
+
 				// makinenin altindaki tum agentlarin (hem tlos hem monitor) datasini AgentLookUpTableTypeClient nesnesi icine atiyor
 				AgentLookUpTableTypeClient agentLookUpTableTypeClient = retrieveAgentLookupTable(resourceName);
 
 				// tlos agentlarini aliyor
 				HashMap<Integer, TlosAgentInfoTypeClient> tlosAgentInfoTypeClientList = agentLookUpTableTypeClient.getTAgentInfoTypeClientList();
-				
+
 				// Her bir tlosAgentNodu da makinenin TlosAgentNodes listesine atiyor
 				for (Integer agentId : tlosAgentInfoTypeClientList.keySet()) {
 
@@ -776,13 +800,13 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 					tlosAgentNode.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
 
 					//
-					if(currentResourceNode.getTlosAgentNodes().containsKey(agentId)) {
+					if (currentResourceNode.getTlosAgentNodes().containsKey(agentId)) {
 						tlosAgentNode.getJobInfoTypeClientList().addAll(getAgentsJobList(jmxUser, agentId, false));
 					}
-					
+
 					tmpResourceNode.getTlosAgentNodes().put(agentId, tlosAgentNode);
 				}
-				
+
 				// makinedeki monitor agent kullanilir durumdaysa ozelliklerini set ediyor
 				if (agentLookUpTableTypeClient.getNAgentInfoTypeClient().isNrpeAvailable()) {
 					MonitorAgentNode monitorAgentNode = new MonitorAgentNode();
@@ -790,22 +814,21 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 					tmpResourceNode.setMonitorAgentNode(monitorAgentNode);
 				}
-				
+
 			} else {
 				// TODO Ekranlardan gelen ile motorda bulunan kaynak listesi arasında veri tutarsızlığı var ??????
 				System.out.println("Ekranlardan gelen ile motorda bulunan kaynak listesi arasında veri tutarsızlığı var ??????");
 			}
 		}
-		
+
 		resourceListNode.setResourceNodes(new ArrayList<ResourceNode>(resourceList.values()));
 
 		// iclerinde sadece makine bilgileri olan ama agent bilgileri olmayan resourceListNode, tlosSpaceWideServerNode'un kaynak listesine set ediliyor
 		responseResourceNode.setResourceListNode(resourceListNode);
-		
+
 		return responseResourceNode;
 	}
 
-	
 	/**
 	 * web ekranindaki kaynak listesinin oldugu agac render edilmeden once bu metodu cagirip guncel kaynak bilgilerini aliyor
 	 */
