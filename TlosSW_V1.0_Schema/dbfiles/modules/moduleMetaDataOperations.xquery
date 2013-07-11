@@ -9,6 +9,11 @@ declare namespace  dat="http://www.likyateknoloji.com/XML_data_types";
 
 (: doc(local:getMetaData("//db/TLOSSW/xmls/metaData.xml", "dbConnectionProfiles")) :)
 
+(: TODO hakan
+   xmldb:store a fullpath verdigimizde collection i bulamiyor. o yuzden simdilik xmlrpc den sonraki kismi aliyorum.
+   esas       : xmldb:exist://localhost:8093/exist/xmlrpc/db/TLOSSW/xmls/tlosSWData10id5.xml
+   kullanilan : /db/TLOSSW/xmls/tlosSWData10id5.xml
+:)
 declare function met:getScenariosDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
 {
   let $initialDoc :=
@@ -20,10 +25,10 @@ declare function met:getScenariosDocument($documentUrl as xs:string, $userId as 
                  then
                    $docName
                  else
-                   let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
+				   let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
     			   let $exist := if(doc-available($userDoc)) 
                                  then () 
-                                 else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
+                                 else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
                    return $userDoc
   return $result
 };
@@ -31,18 +36,33 @@ declare function met:getScenariosDocument($documentUrl as xs:string, $userId as 
 declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
 {
   let $initialDoc :=
-   <dat:TlosProcessData>
-   </dat:TlosProcessData>
+<dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
+    <dat:baseScenarioInfos>
+        <com:jsName>Serbest isler</com:jsName>
+        <com:comment>Serbest isler burada yer alir</com:comment>
+        <dat:jsIsActive>YES</dat:jsIsActive>
+        <com:userId>4</com:userId>
+    </dat:baseScenarioInfos>
+	<!--dependencyList-->
+    <dat:jobList/>
+    <dat:timeManagement/>
+    <dat:advancedScenarioInfos>
+        <com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+    </dat:advancedScenarioInfos>
+    <dat:concurrencyManagement>
+        <com:concurrent>true</com:concurrent>
+    </dat:concurrencyManagement>
+</dat:TlosProcessData>
    
   let $docName := met:getMetaData($documentUrl, "sjData")
   let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
                  then
                    $docName
                  else
-                   let $userDoc := replace( $docName, "\.", concat("id", $userId, "."))
+                   let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
     			   let $exist := if(doc-available($userDoc)) 
                                  then () 
-                                 else xmldb:store(met:xmlCollectionLocation($documentUrl), $userDoc, $initialDoc)
+                                 else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
                    return $userDoc
   return $result
 };
