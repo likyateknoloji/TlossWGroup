@@ -18,7 +18,6 @@ import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalTime;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPeriodDocument.CalendarPeriod;
@@ -233,7 +232,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		// Calendar validFromTimeCal = calendar.getValidFrom().getTime();
 		// Calendar validToTimeCal = calendar.getValidTo().getTime();
-		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+		// DateTimeZone zone = DateTimeZone.forID(selectedTZone);
 		LocalTime validFromTimeLT = new LocalTime(calendar.getValidFrom().getTime());
 		LocalTime validToTimeLT = new LocalTime(calendar.getValidTo().getTime());
 
@@ -389,9 +388,9 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		Calendar dateToXmlTimeValue = DefinitionUtils.dateToXmlTime(validFrom, validFromTime, selectedTZone);
-		Calendar dateToXmlDateWithoutZoneValue = DefinitionUtils.dateToXmlDateWithoutZone(validFrom);
+		// Calendar dateToXmlDateWithoutZoneValue = DefinitionUtils.dateToXmlDateWithoutZone(validFrom);
 		Calendar dateToXmlTimeValue2 = DefinitionUtils.dateToXmlTime(validTo, validToTime, selectedTZone);
-		Calendar dateToXmlDateWithoutZoneValue2 = DefinitionUtils.dateToXmlDateWithoutZone(validTo);
+		// Calendar dateToXmlDateWithoutZoneValue2 = DefinitionUtils.dateToXmlDateWithoutZone(validTo);
 
 		calendar.getValidFrom().setTime(dateToXmlTimeValue);
 		calendar.getValidFrom().setDate(dateToXmlTimeValue);
@@ -413,7 +412,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			calendar.setWhichOnes(whichOnes);
 		}
 
-		calendar.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
+		calendar.setUserId(getWebAppUser().getId());
 	}
 
 	public void addSpecificDayAction() {
