@@ -84,6 +84,10 @@ public class CommonConstantDefinitions {
 	public static final String decNsXslfo = "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";";
 	public static final String decNsMeta = "declare namespace  meta = \"http://www.likyateknoloji.com/XML_metaData_types\";";
 
+	public static final String EXIST_DOCID = "docId";
+	public static final String EXIST_MYDATA = "mydata";
+	public static final String EXIST_GLOBALDATA = "globaldata";
+
 	/**
 	 * Validasyon testlerinde kullanılan tanımlamalar.
 	 */
