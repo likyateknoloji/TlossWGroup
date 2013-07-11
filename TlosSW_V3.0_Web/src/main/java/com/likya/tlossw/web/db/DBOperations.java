@@ -382,7 +382,7 @@ public class DBOperations implements Serializable {
 			return false;
 		}
 
-		String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + webAppUser.getUsername() + "\")");
+		String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, TransformUtils.toXSString(webAppUser.getUsername()));
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
