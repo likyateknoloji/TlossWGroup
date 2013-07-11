@@ -39,7 +39,6 @@ import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 
 /**
@@ -87,7 +86,7 @@ public interface RemoteDBOperatorMBean {
 	 */
 	public void reset();
 
-	public Object checkUser(JmxAppUser jmxAppUser) throws XMLDBException;
+	//public Object checkUser(JmxUser jmxUser) throws XMLDBException;
 
 	public ArrayList<Person> searchUser(JmxUser jmxUser, String personXML) throws XMLDBException;
 

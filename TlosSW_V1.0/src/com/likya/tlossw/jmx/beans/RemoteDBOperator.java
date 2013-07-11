@@ -64,8 +64,6 @@ import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument;
-import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument;
 import com.likya.tlos.model.xmlbeans.webservice.UserAccessProfileDocument.UserAccessProfile;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument;
@@ -82,7 +80,6 @@ import com.likya.tlossw.model.client.resource.MemoryInfoTypeClient;
 import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -119,14 +116,19 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 	}
 
+	/**
+	 * Bu işlem artık web üzerinden direk db'ye gittiğinden kullanılmıyor.
+	 * 
+	 */
+	/*
 	@Override
-	public Object checkUser(JmxAppUser jmxAppUser) throws XMLDBException {
+	public Object checkUser(JmxUser jmxUser) throws XMLDBException {
 
-		if (!JMXTLSServer.authorizeWeb(jmxAppUser)) {
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return false;
 		}
 
-		if ((jmxAppUser.getAppUser() == null) || (jmxAppUser.getAppUser().getUsername() == null) || (jmxAppUser.getAppUser().getPassword() == null)) {
+		if ((jmxUser.getUsername() == null) || (jmxUser.getPassword() == null)) {
 			return false;
 		}
 
@@ -139,7 +141,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		service.setProperty("indent", "yes");
 
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.hsNsUrl + xQueryModuleUrl + "/moduleGetResourceListByRole.xquery\";" + 
-				"hs:query_username(xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\"))";
+				"hs:query_username(xs:string(\"" + jmxUser.getUsername() + "\"))";
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i = result.getIterator();
@@ -164,6 +166,8 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		return false;
 	}
+	
+	*/
 
 	public ArrayList<Person> searchUser(JmxUser jmxUser, String personXML) throws XMLDBException {
 
