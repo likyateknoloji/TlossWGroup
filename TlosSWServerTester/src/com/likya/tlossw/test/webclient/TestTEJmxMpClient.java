@@ -2,8 +2,7 @@ package com.likya.tlossw.test.webclient;
 
 import javax.management.remote.JMXConnector;
 
-import com.likya.tlossw.model.auth.AppUser;
-import com.likya.tlossw.model.jmx.JmxAppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
@@ -46,12 +45,9 @@ public class TestTEJmxMpClient {
 		JmxConnectionHolder jmxConnectionHolder = new JmxConnectionHolder();
 		jmxConnectionHolder.startUp();
 
-		JmxAppUser jmxAppUser = new JmxAppUser();
-		AppUser appUser = new AppUser();
-		appUser.setUsername(userName);
-		appUser.setPassword(userPassword);
-
-		jmxAppUser.setAppUser(appUser);
+		WebAppUser webAppUser = new WebAppUser();
+		webAppUser.setUsername(userName);
+		webAppUser.setPassword(userPassword);
 
 		int i = 0;
 		
@@ -59,7 +55,7 @@ public class TestTEJmxMpClient {
 			
 			jmxConnector = jmxConnectionHolder.getJmxConnector();
 
-			Object o = TEJmxMpDBClient.checkUser(jmxConnector, jmxAppUser);
+			Object o = TEJmxMpDBClient.checkUser(jmxConnector, webAppUser);
 
 			if (o instanceof JmxUser) {
 				//System.out.println("Authanticated !");
