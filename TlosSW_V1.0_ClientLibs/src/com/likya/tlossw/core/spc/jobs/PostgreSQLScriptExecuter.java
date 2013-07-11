@@ -76,7 +76,7 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 				Map<String, String> env = XmlBeansTransformer.entryToMap(jobProperties);
 				envVars.putAll(env);
 
-				startShellProcess(psqlClientNamePath, psqlClientName, env, this.getClass().getName(), myLogger);
+				startShellProcess(psqlClientNamePath, psqlClientName, envVars, this.getClass().getName(), myLogger);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
