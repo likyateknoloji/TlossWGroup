@@ -354,14 +354,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.localParameters = localParameters;
 	}
 
-	public String getUserName() {
-		return userId;
-	}
-
-	public void setUserName(String userName) {
-		this.userId = userName;
-	}
-
 	public String getInstanceId() {
 		return instanceId;
 	}
@@ -412,5 +404,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public void setLiveStateInfo(LiveStateInfo liveStateInfo) {
 		this.liveStateInfo = liveStateInfo;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }
