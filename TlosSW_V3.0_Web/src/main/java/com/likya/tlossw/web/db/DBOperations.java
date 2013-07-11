@@ -84,6 +84,7 @@ import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
+import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
 
@@ -2061,11 +2062,11 @@ public class DBOperations implements Serializable {
 	}
 
 	private String toXSString(int i) {
-		return XmlBeansTransformer.toXSString(i);
+		return TransformUtils.toXSString(i);
 	}
 	
 	private String toXSString(String s) {
-		return XmlBeansTransformer.toXSString(s);
+		return TransformUtils.toXSString(s);
 	}
 
 }
