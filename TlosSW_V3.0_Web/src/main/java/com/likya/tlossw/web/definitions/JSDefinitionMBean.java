@@ -16,6 +16,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -73,6 +74,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
+	
+	public final static String DEFAULT_TEST_PAGE = "/inc/livePanels/testLiveJS.xhtml";
 
 	public WsNode draggedTemplateName = new WsNode();
 	public String draggedTemplatePath;
@@ -149,6 +152,11 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		jobDefCenterPanel = JSDefinitionMBean.SCENARIO_PAGE;
 
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
+	}
+	
+	public String switchToTestPage() {
+		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
+		return DEFAULT_TEST_PAGE;
 	}
 
 	public void handleDropAction(ActionEvent ae) {
