@@ -99,10 +99,11 @@ public class LoginBean extends LoginBase implements Serializable {
 		webAppUser.setUsername(userName);
 		webAppUser.setPassword(userPassword);
 
-		Object o = dbOperations.checkUser(webAppUser);
+		Object returnObject = dbOperations.checkUser(webAppUser);
 
-		if (o instanceof WebAppUser) {
+		if (returnObject instanceof WebAppUser) {
 
+			webAppUser = (WebAppUser) returnObject;
 			setSessionLoginParam(true);
 			// jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
