@@ -317,7 +317,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 			spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 			spc.setInstanceId(instanceId);
-			spc.setUserName(null);
+			spc.setUserId(null);
 
 			tmpScenario.getConcurrencyManagement().setInstanceId(spaceWideRegistry.getTlosProcessData().getInstanceId());
 
@@ -335,7 +335,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
 			spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 			spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
-			spcInfoType.setUserName(spc.getUserName());
+			spcInfoType.setUserId(spc.getUserId());
 
 			Scenario scenario = Scenario.Factory.newInstance();
 
