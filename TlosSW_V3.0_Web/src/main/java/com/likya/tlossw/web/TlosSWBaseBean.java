@@ -24,7 +24,7 @@ public abstract class TlosSWBaseBean {
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
-	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
+	@ManagedProperty(value = "#{sessionMediator.webAppUser}")
 	private WebAppUser webAppUser;
 	
 	public String resolveMessage(String errorMessage) {
