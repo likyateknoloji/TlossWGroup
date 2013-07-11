@@ -8,6 +8,7 @@ import org.apache.xmlbeans.XmlCursor;
 
 import com.likya.tlos.model.xmlbeans.common.EntryDocument.Entry;
 import com.likya.tlos.model.xmlbeans.common.EnvVariablesDocument.EnvVariables;
+import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument.Permission;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
@@ -107,10 +108,10 @@ public class XmlBeansTransformer {
 		
 		Map<String, String> envMap = new HashMap<String, String>();
 		
-		EnvVariables envVariables = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables();
+		SpecialParameters specialParameters = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
 		
-		if (envVariables != null) {
-			Entry [] envVars = envVariables.getEntryArray();
+		if (specialParameters != null && specialParameters.getEnvVariables() != null) {
+			Entry [] envVars = specialParameters.getEnvVariables().getEntryArray();
 			
 			for(Entry myEntry : envVars) {
 				envMap.put(myEntry.getKey(), myEntry.getStringValue());
