@@ -45,7 +45,7 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
 			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(5)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getAppUser().getId(), getDocumentId(), 5)));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -115,7 +115,7 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
 			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(5)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getAppUser().getId(), getDocumentId(), 5)));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
