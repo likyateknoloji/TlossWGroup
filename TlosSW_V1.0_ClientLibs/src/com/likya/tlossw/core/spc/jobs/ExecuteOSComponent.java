@@ -1,6 +1,7 @@
 package com.likya.tlossw.core.spc.jobs;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -16,6 +17,7 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ValidPlatforms;
+import com.likya.tlossw.utils.XmlBeansTransformer;
 
 public abstract class ExecuteOSComponent extends Job {
 
@@ -83,11 +85,16 @@ public abstract class ExecuteOSComponent extends Job {
 
 		processBuilder.directory(new File(jobPath));
 
+		Map<String, String> tempEnv = new HashMap<String, String>();
+				
 		if (environmentVariables != null && environmentVariables.size() > 0) {
-			Map<String, String> env = processBuilder.environment();
-			env.putAll(environmentVariables);
+			tempEnv.putAll(environmentVariables);
 		}
+		
+		tempEnv.putAll(XmlBeansTransformer.entryToMap(jobProperties));
 
+		processBuilder.environment().putAll(tempEnv);;
+		
 		setProcess(processBuilder.start());
 
 		Process process = getProcess();
