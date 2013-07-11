@@ -1,6 +1,5 @@
 package com.likya.tlossw.core.cpc;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,17 +9,14 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 /**
@@ -35,7 +31,7 @@ public class CpcTester extends CpcBase {
 
 	private HashMap<String, SpcInfoType> spcLookupTable = new HashMap<String, SpcInfoType>();
 
-	private boolean isRegular = true;
+	private boolean loop = true;
 
 	public CpcTester(SpaceWideRegistry spaceWideRegistry) {
 		super(spaceWideRegistry);
@@ -43,23 +39,28 @@ public class CpcTester extends CpcBase {
 
 	public synchronized void addTestData(TlosProcessData tlosProcessData) throws TlosException {
 		spcLookupTable.putAll(prepareTestTable(tlosProcessData));
+		this.notifyAll();
 	}
 
 	public void run() {
 
 		Thread.currentThread().setName(this.getClass().getName());
 
-		while (isExecutionPermission()) {
+		while (loop) {
 
 			try {
 
-				handleNormalExecution();
-
-				// Her bir instance icin senaryolari aktive et !
-
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
-					break;
+					try {
+						synchronized (this.getExecuterThread()) {
+							this.getExecuterThread().wait();
+						}
+						logger.info(" >> Cpc notified !");
+					} catch (InterruptedException e) {
+						logger.error("Cpc failed, terminating !");
+						break;
+					}
 				}
 
 				logger.info("");
@@ -74,8 +75,8 @@ public class CpcTester extends CpcBase {
 
 					if (mySpcInfoType.isVirgin() && !spc.getExecuterThread().isAlive()) {
 
-						mySpcInfoType.setVirgin(false); 
-						
+						mySpcInfoType.setVirgin(false);
+
 						spc.getLiveStateInfo().setStateName(StateName.RUNNING);
 						spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
 
@@ -90,44 +91,10 @@ public class CpcTester extends CpcBase {
 				break;
 			}
 
-			logger.info("");
-
-			try {
-
-				if (TlosSpaceWide.isPersistent()) {
-					if (!PersistenceUtils.persistSWRegistry()) {
-						logger.error("Cpc persist failed, terminating !");
-						break;
-					}
-				}
-				// Cpc.dumpSpcLookupTables(getSpaceWideRegistry());
-				synchronized (this.getExecuterThread()) {
-					this.getExecuterThread().wait();
-				}
-
-				logger.info(" >> Cpc notified !");
-
-			} catch (InterruptedException e) {
-				logger.error("Cpc failed, terminating !");
-				break;
-			}
 		}
 
-		terminateAllJobs(CpcTester.FORCED);
+		logger.info("Exited CpcTester notified !");
 
-		logger.info("Exited Cpc notified !");
-
-	}
-
-	private void handleNormalExecution() throws TlosException {
-
-		ArrayList<Parameter> myPramList = prepareParameterList();
-
-		arrangeParameters(myPramList);
-
-		logger.info("   > Hayir, ilk eleman olacak !");
-
-		return;
 	}
 
 	protected HashMap<String, SpcInfoType> prepareTestTable(TlosProcessData tlosProcessData) throws TlosException {
@@ -141,7 +108,7 @@ public class CpcTester extends CpcBase {
 		if (userId == null || userId.equals("")) {
 			userId = "" + Calendar.getInstance().getTimeInMillis();
 		}
-		
+
 		logger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
 		String localRoot = getRootPath() + "." + userId;
 		logger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
@@ -149,17 +116,16 @@ public class CpcTester extends CpcBase {
 		JobList lonelyJobList = tlosProcessData.getJobList();
 
 		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
-			
-			Scenario myScenario = CpcUtils.getScenario(tlosProcessData);
+
+			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, "");
 
 			tmpScenarioList.put(localRoot + "." + EngineeConstants.LONELY_JOBS, myScenario);
 
 			logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
 		}
 
-
 		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
-		
+
 		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
 
 		logger.info("");
@@ -175,10 +141,10 @@ public class CpcTester extends CpcBase {
 			JobList jobList = tmpScenarioList.get(scenarioId).getJobList();
 
 			if (!validateJobList(jobList)) {
-				continue; 
+				continue;
 			}
-			
-			if(jobList.getJobPropertiesArray().length == 0) {
+
+			if (jobList.getJobPropertiesArray().length == 0) {
 				logger.error(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
 				logger.error(scenarioId + " isimli senaryo için spc başlatılmıyor !");
 				continue;
@@ -208,12 +174,13 @@ public class CpcTester extends CpcBase {
 
 		return scpLookupTable;
 	}
-	
-	public boolean isRegular() {
-		return isRegular;
+
+	public boolean isLoop() {
+		return loop;
 	}
 
-	public void setRegular(boolean isRegular) {
-		this.isRegular = isRegular;
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
+
 }

@@ -17,7 +17,6 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
@@ -31,6 +30,7 @@ import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -319,20 +319,7 @@ public abstract class CpcBase implements Runnable {
 			 */
 			// Bu joblari, serbest olarak ekliyoruz listeye
 
-			Scenario myScenario = Scenario.Factory.newInstance();
-			myScenario.setJobList(lonelyJobList);
-
-			// myScenario.getConcurrencyManagement().setInstanceId(instanceId.toString());
-			tlosProcessData.getConcurrencyManagement().setInstanceId(instanceId);
-
-			myScenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
-			myScenario.setDependencyList(tlosProcessData.getDependencyList());
-			myScenario.setScenarioStatusList(tlosProcessData.getScenarioStatusList());
-			myScenario.setAlarmPreference(tlosProcessData.getAlarmPreference());
-			myScenario.setTimeManagement(tlosProcessData.getTimeManagement());
-			myScenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
-			myScenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
-			myScenario.setLocalParameters(tlosProcessData.getLocalParameters());
+			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, instanceId);
 
 			// *** root sonrasina instanceid eklendi. *//*
 
@@ -386,58 +373,8 @@ public abstract class CpcBase implements Runnable {
 			}
 
 			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
-
-			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
-			myLiveStateInfo.setStateName(StateName.PENDING);
-			myLiveStateInfo.setSubstateName(SubstateName.IDLED);
-			spc.setLiveStateInfo(myLiveStateInfo);
-			Thread thread = new Thread(spc);
-			/* thread.setName("SPC"); */
-			spc.setExecuterThread(thread);
-
-			Scenario tmpScenario = tmpScenarioList.get(scenarioId);
-
-			spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
-			spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
-			spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
-			spc.setInstanceId(instanceId);
-			// spc.setDependencyList(tmpScenario.getDependencyList());
-			// spc.setScenarioStatusList(tmpScenario.getScenarioStatusList());
-			spc.setUserName(null);
-			// spc.setUserName(tmpScenario.getID());
-
-			tmpScenario.getConcurrencyManagement().setInstanceId(tlosProcessData.getInstanceId());
-
-			spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
-			spc.setDependencyList(tmpScenario.getDependencyList());
-			spc.setScenarioStatusList(tmpScenario.getScenarioStatusList());
-			spc.setAlarmPreference(tmpScenario.getAlarmPreference());
-			spc.setTimeManagement(tmpScenario.getTimeManagement());
-			spc.setAdvancedScenarioInfos(tmpScenario.getAdvancedScenarioInfos());
-			spc.setConcurrencyManagement(tmpScenario.getConcurrencyManagement());
-			spc.setLocalParameters(tmpScenario.getLocalParameters());
-
-			SpcInfoType spcInfoType = new SpcInfoType();
-
-			spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
-			spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
-			spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
-			spcInfoType.setUserName(null);
-			// spcInfoType.setUserName(spc.getUserName());
-
-			Scenario scenario = Scenario.Factory.newInstance();
-
-			scenario.setBaseScenarioInfos(spc.getBaseScenarioInfos());
-			scenario.setDependencyList(spc.getDependencyList());
-			scenario.setScenarioStatusList(spc.getScenarioStatusList());
-			scenario.setAlarmPreference(spc.getAlarmPreference());
-			scenario.setTimeManagement(spc.getTimeManagement());
-			scenario.setAdvancedScenarioInfos(spc.getAdvancedScenarioInfos());
-			scenario.setConcurrencyManagement(spc.getConcurrencyManagement());
-			scenario.setLocalParameters(spc.getLocalParameters());
-
-			spcInfoType.setScenario(scenario);
-			spcInfoType.setSpcReferance(spc);
+			
+			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 
 			scpLookupTable.put(scenarioId, spcInfoType);
 
