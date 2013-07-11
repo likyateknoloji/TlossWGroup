@@ -118,12 +118,4 @@ public class XmlBeansTransformer {
 
 	}
 
-	public static String toXSString(int intData) {
-		return toXSString("" + intData);
-	}
-
-	public static String toXSString(String stringData) {
-		return "xs:string(\"" + stringData + "\")";
-	}
-
 }
