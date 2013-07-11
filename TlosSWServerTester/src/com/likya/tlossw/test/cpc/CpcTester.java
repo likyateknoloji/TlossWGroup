@@ -28,7 +28,7 @@ public class CpcTester extends CpcBaseTester {
 	@Test
 	public void runPrep() throws Exception {
 
-		SpaceWideRegistry spaceWideRegistry = initSpcTest();
+		SpaceWideRegistry spaceWideRegistry = initTest();
 
 		HashMap<String, SpcInfoType> spcLookUpTable = prepareSpcLookupTable(spaceWideRegistry, "root");
 
@@ -40,7 +40,7 @@ public class CpcTester extends CpcBaseTester {
 	public void runTable() {
 
 		try {
-			SpaceWideRegistry spaceWideRegistry = initSpcTest();
+			SpaceWideRegistry spaceWideRegistry = initTest();
 
 			startInfoBusSystem(myLogger, spaceWideRegistry);
 

@@ -48,7 +48,7 @@ public class CpcBaseTester extends GenericTestSuit {
 
 	public static String filePath;
 
-	public SpaceWideRegistry initSpcTest() throws XmlException, IOException {
+	public SpaceWideRegistry initTest() throws XmlException, IOException {
 		
 		TlosProcessData tlosProcessData = getTlosProcessData();
 		ServerConfig serverConfig = getServerConfig();
