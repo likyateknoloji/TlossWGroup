@@ -1,7 +1,5 @@
 package com.likya.tlossw.core.spc.jobs;
 
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -11,7 +9,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
-import com.likya.tlossw.utils.XmlBeansTransformer;
 
 public class ExecuteInShell extends ExecuteOSComponent {
 
@@ -43,7 +40,6 @@ public class ExecuteInShell extends ExecuteOSComponent {
 
 				String jobPath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath();
 				String jobCommand = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand();
-				Map<String, String> env = XmlBeansTransformer.entryToMap(jobProperties);
 				
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
@@ -54,7 +50,7 @@ public class ExecuteInShell extends ExecuteOSComponent {
 				// Map<String, String> env = new HashMap<String, String>();
 				// env.put("PGPASSWORD", password);
 
-				startShellProcess(jobPath, jobCommand, env, this.getClass().getName(), myLogger);
+				startShellProcess(jobPath, jobCommand, null, this.getClass().getName(), myLogger);
 
 			} catch (Exception err) {
 				handleException(err, myLogger);
