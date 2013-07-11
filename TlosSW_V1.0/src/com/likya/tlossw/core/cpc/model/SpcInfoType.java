@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.core.cpc.model : SpcInfoType.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Nov 27, 2008 4:20:39 PM
  */
 
@@ -20,7 +20,7 @@ public class SpcInfoType implements Serializable {
 	private boolean concurrent;
 	private String comment;
 
-	private String userName;
+	private String userId;
 
 	private Scenario scenario;
 	
@@ -87,11 +87,11 @@ public class SpcInfoType implements Serializable {
 	}
 
 	public String getUserName() {
-		return userName;
+		return userId;
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		this.userId = userName;
 	}
 
 	public Scenario getScenario() {
