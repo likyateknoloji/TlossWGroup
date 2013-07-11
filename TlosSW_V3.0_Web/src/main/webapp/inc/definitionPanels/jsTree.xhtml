@@ -46,6 +46,9 @@
 				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
 				action="#{jsDefinitionMBean.switchToScenarioPanel}"
 				icon="ui-icon-plus" />
+			<p:menuitem value="Run Test"
+				action="#{jsDefinitionMBean.switchToTestPage}"
+				icon="ui-icon-plus" />
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">
