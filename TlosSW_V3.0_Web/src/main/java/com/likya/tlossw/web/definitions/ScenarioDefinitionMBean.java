@@ -213,7 +213,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().insertScenario(getScenarioXML(), scenarioPath)) {
+		if (getDbOperations().insertScenario(getAppUser().getId(), getDocumentId(), getScenarioXML(), scenarioPath)) {
 
 			WsScenarioNode swScenarioNode = new WsScenarioNode();
 			swScenarioNode.setName(scenarioName);
@@ -243,7 +243,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().updateScenario(scenarioPath, getScenarioXML())) {
+		if (getDbOperations().updateScenario(getAppUser().getId(), getDocumentId(), scenarioPath, getScenarioXML())) {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
 		} else {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.update", null);
@@ -350,7 +350,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean scenarioCheckUpForUpdate() {
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(treePath, scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(getAppUser().getId(), getDocumentId(), treePath, scenarioName);
 
 		// bu isimde bir senaryo yoksa 0
 		// ayni path de aynı isimde bir senaryo varsa 1
@@ -359,7 +359,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		if (scenarioCheckResult != null) {
 			if (scenarioCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
 
-				Scenario scenarioDefinition = getDbOperations().getScenario(scenarioPath, scenarioName);
+				Scenario scenarioDefinition = getDbOperations().getScenario(getAppUser().getId(), getDocumentId(), scenarioPath, scenarioName);
 
 				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
 				if (scenarioDefinition == null || !scenarioDefinition.getID().equals(getScenario().getID())) {
@@ -384,7 +384,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private boolean scenarioCheckUp() {
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(scenarioPath, scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(getAppUser().getId(), getDocumentId(), scenarioPath, scenarioName);
 
 		// bu isimde bir senaryo yoksa 0
 		// ayni path de aynı isimde bir senaryo varsa 1
@@ -470,7 +470,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteScenario() {
 		boolean result = true;
-		if (getDbOperations().deleteScenario(scenarioPath, getScenarioXML())) {
+		if (getDbOperations().deleteScenario(getAppUser().getId(), getDocumentId(), scenarioPath, getScenarioXML())) {
 			removeScenarioSubtree(scenarioPathInScenario);
 			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 		} else {
