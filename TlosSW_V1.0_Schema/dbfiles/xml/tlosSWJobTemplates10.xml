@@ -1191,7 +1191,7 @@
 				</dat:baseJobInfos>
 				<dat:DependencyList>
 					<dat:Item dependencyID="DEP1">
-						<com:jsName>file_process_job</com:jsName>
+						<com:jsName>Read Text File</com:jsName>
 						<com:jsType>JOB</com:jsType>
 						<com:jsPath/>
 						<com:comment>file_process_job</com:comment>
