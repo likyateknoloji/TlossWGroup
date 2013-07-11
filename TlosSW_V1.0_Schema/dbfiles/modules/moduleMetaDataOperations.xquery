@@ -36,14 +36,13 @@ declare function met:getScenariosDocument($documentUrl as xs:string, $userId as 
 declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
 {
   let $initialDoc :=
-<dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
+<dat:TlosProcessData xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
     <dat:baseScenarioInfos>
         <com:jsName>Serbest isler</com:jsName>
         <com:comment>Serbest isler burada yer alir</com:comment>
         <dat:jsIsActive>YES</dat:jsIsActive>
         <com:userId>4</com:userId>
     </dat:baseScenarioInfos>
-	<!--dependencyList-->
     <dat:jobList/>
     <dat:timeManagement/>
     <dat:advancedScenarioInfos>
