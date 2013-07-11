@@ -13,8 +13,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
-import com.likya.tlossw.model.auth.AppUser;
-import com.likya.tlossw.model.jmx.JmxAppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.UserManager;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
@@ -96,37 +95,34 @@ public class LoginBean extends LoginBase implements Serializable {
 		// FacesContext.getCurrentInstance().getExternalContext().getContext();
 		// JmxUser jmxUserApp = (JmxUser) webAppContext.getAttribute("JmxUser");
 
-		JmxAppUser jmxAppUser = new JmxAppUser();
-		AppUser appUser = new AppUser();
-		appUser.setUsername(userName);
-		appUser.setPassword(userPassword);
+		WebAppUser webAppUser = new WebAppUser();
+		webAppUser.setUsername(userName);
+		webAppUser.setPassword(userPassword);
 
-		jmxAppUser.setAppUser(appUser);
+		Object o = dbOperations.checkUser(webAppUser);
 
-		Object o = dbOperations.checkUser(jmxAppUser);
-
-		if (o instanceof JmxAppUser) {
+		if (o instanceof WebAppUser) {
 
 			setSessionLoginParam(true);
 			// jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
-			if (jmxAppUser.getAppUser().getResourceMapper().size() == 0) {
-				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + jmxAppUser.getAppUser().getRole().getRoleId());
+			if (webAppUser.getResourceMapper().size() == 0) {
+				logger.error("Kullanicinin Rolune Uygun Kaynak Bulunamadi ==> " + webAppUser.getRole().getRoleId());
 				return LOGIN_FAILURE;
 			}
 
-			getSessionMediator().setJmxAppUser(jmxAppUser);
+			getSessionMediator().setWebAppUser(webAppUser);
 
-			getSessionMediator().setResourceMapper(jmxAppUser.getAppUser().getResourceMapper());
+			getSessionMediator().setResourceMapper(webAppUser.getResourceMapper());
 			loggedUser = Person.Factory.newInstance();
-			copyAppUserToPerson(jmxAppUser.getAppUser(), loggedUser);
-			appUser.setTransformToLocalTime((jmxAppUser.getAppUser()).isTransformToLocalTime());
+			copyAppUserToPerson(webAppUser, loggedUser);
+			webAppUser.setTransformToLocalTime((webAppUser).isTransformToLocalTime());
 
 			// TODO incelenmesi gerekiyor merve
 //			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
 //			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
 
-			userManager.addUser(jmxAppUser);
+			userManager.addUser(webAppUser);
 			
 			return LOGIN_SUCCESS;
 
@@ -178,14 +174,14 @@ public class LoginBean extends LoginBase implements Serializable {
 	 * }
 	 */
 
-	public static void copyAppUserToPerson(AppUser appUser, Person person) {
-		person.setId(appUser.getId());
-		person.setName(appUser.getName());
-		person.setSurname(appUser.getSurname());
-		person.setRole(Role.Enum.forString(appUser.getRole().getRoleId()));
-		person.setUserPassword(appUser.getPassword());
-		person.setUserName(appUser.getUsername());
-		person.setTransformToLocalTime(appUser.isTransformToLocalTime());
+	public static void copyAppUserToPerson(WebAppUser webAppUser, Person person) {
+		person.setId(webAppUser.getId());
+		person.setName(webAppUser.getName());
+		person.setSurname(webAppUser.getSurname());
+		person.setRole(Role.Enum.forString(webAppUser.getRole().getRoleId()));
+		person.setUserPassword(webAppUser.getPassword());
+		person.setUserName(webAppUser.getUsername());
+		person.setTransformToLocalTime(webAppUser.isTransformToLocalTime());
 	}
 
 	public String getUserName() {
