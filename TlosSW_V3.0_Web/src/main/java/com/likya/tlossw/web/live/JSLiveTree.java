@@ -22,7 +22,6 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
@@ -192,7 +191,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				TlosSpaceWideNode tlosSpaceWideInputNode = preparePreRenderLiveTreeData(calisanIsler);
 				
 				//sunucudan guncel is listelerini aliyor
-				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(new JmxUser(), tlosSpaceWideInputNode);
+				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				if (tlosSpaceWideNode == null) {
 					System.out.println("tlosSpaceWideNode == null");
 				}
