@@ -339,6 +339,12 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		}
 
 		logger.info("#############################################");
+		logger.info("Startign CpcTester...");
+		startCpcTester();
+		logger.info("Startign CpcTester...Done");
+		logger.info("#############################################");
+
+		logger.info("#############################################");
 		logger.info("");
 
 	}
