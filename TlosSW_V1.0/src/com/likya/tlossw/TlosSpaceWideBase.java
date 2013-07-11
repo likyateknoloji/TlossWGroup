@@ -510,7 +510,7 @@ public class TlosSpaceWideBase {
 			Thread cpcTesterExecuterThread = new Thread(cpcTester);
 
 			getSpaceWideRegistry().setCpcTesterReference(cpcTester);
-			getSpaceWideRegistry().getCpcReference().setExecuterThread(cpcTesterExecuterThread);
+			getSpaceWideRegistry().getCpcTesterReference().setExecuterThread(cpcTesterExecuterThread);
 
 			cpcTesterExecuterThread.setDaemon(true);
 
