@@ -7,23 +7,22 @@ import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.xmlbeans.XmlCursor;
 
 import com.likya.tlos.model.xmlbeans.common.EntryDocument.Entry;
-import com.likya.tlos.model.xmlbeans.common.EnvVariablesDocument.EnvVariables;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument.Permission;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.useroutput.UserResourceMapDocument.UserResourceMap;
-import com.likya.tlossw.model.auth.AppUser;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
 import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.auth.Role;
+import com.likya.tlossw.model.auth.WebAppUser;
 
 public class XmlBeansTransformer {
 
-	public static AppUser personToAppUser(UserResourceMap userResourceMap) {
+	public static WebAppUser personToAppUser(UserResourceMap userResourceMap) {
 
-		AppUser appUser = new AppUser();
+		WebAppUser appUser = new WebAppUser();
 
 		Person person = userResourceMap.getPerson();
 		ResourceMapper resourceMapper = resourcesToResourceMapper(userResourceMap.getResources().getResourceArray(), person.getRole().toString());
