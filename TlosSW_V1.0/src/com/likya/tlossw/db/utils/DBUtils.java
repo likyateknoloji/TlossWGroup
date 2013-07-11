@@ -393,7 +393,7 @@ public class DBUtils extends DBBase {
 		
 		DbProperties dbProperties = null;
 		
-		String xQueryStr = ftpFunctionConstructor("db:getDbConnection", "" + dbPropertiesId);
+		String xQueryStr = dbConnFunctionConstructor("db:getDbConnection", "" + dbPropertiesId);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
@@ -410,7 +410,7 @@ public class DBUtils extends DBBase {
 
 		DbConnectionProfile dbConnectionProfile = null;
 		
-		String xQueryStr = ftpFunctionConstructor("db:getDbCP", "" + dbCPID);
+		String xQueryStr = dbConnFunctionConstructor("db:getDbCP", "" + dbCPID);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
