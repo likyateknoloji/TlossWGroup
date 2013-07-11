@@ -13,7 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.likya.tlossw.model.jmx.JmxAppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.utils.UserInfo;
 
 @ManagedBean(name = "userManager")
@@ -34,11 +34,11 @@ public class UserManager implements Serializable {
 		userList.clear();
 	}
 
-	private boolean confirmUnicity(JmxAppUser jmxAppUser, HttpSession currentSession) {
+	private boolean confirmUnicity(WebAppUser webAppUser, HttpSession currentSession) {
 
-		if (userList.containsKey(jmxAppUser.getAppUser().getId())) {
+		if (userList.containsKey(webAppUser.getId())) {
 
-			HttpSession userSession = ((UserInfo) userList.get(jmxAppUser.getAppUser().getId())).getHttpSession();
+			HttpSession userSession = ((UserInfo) userList.get(webAppUser.getId())).getHttpSession();
 
 			if (currentSession != null && !currentSession.equals(userSession)) {
 
@@ -48,7 +48,7 @@ public class UserManager implements Serializable {
 					// it's invalid
 				}
 
-				removeUser(jmxAppUser.getAppUser().getId());
+				removeUser(webAppUser.getId());
 
 				return true;
 			}
@@ -60,21 +60,21 @@ public class UserManager implements Serializable {
 
 	}
 
-	public synchronized void addUser(JmxAppUser jmxAppUser) {
+	public synchronized void addUser(WebAppUser webAppUser) {
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
 		HttpSession currentSession = (HttpSession) externalContext.getSession(false);
 
-		if (!confirmUnicity(jmxAppUser, currentSession)) {
+		if (!confirmUnicity(webAppUser, currentSession)) {
 			return;
 		}
 
 		UserInfo userInfo = new UserInfo();
 
-		userInfo.setUserId(jmxAppUser.getAppUser().getId());
+		userInfo.setUserId(webAppUser.getId());
 
-		userInfo.setJmxAppUser(jmxAppUser);
+		userInfo.setWebAppUser(webAppUser);
 
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 
@@ -96,7 +96,7 @@ public class UserManager implements Serializable {
 		for (int userId : userList.keySet()) {
 			try {
 				@SuppressWarnings("unused")
-				long time = ((UserInfo) userList.get(userId)).httpSession.getCreationTime();
+				long time = ((UserInfo) userList.get(userId)).getHttpSession().getCreationTime();
 			} catch (IllegalStateException ise) {
 				timeoutList.add(userId);
 			}
