@@ -1930,7 +1930,7 @@
 				<com:userId>1</com:userId>
 			</dat:baseScenarioInfos>
 			<dat:jobList>
-			     <dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="9" agentId="0">
+			     <dat:jobProperties ID="9" agentId="0">
 		            <jsdl:JobDescription/>
 		            <dat:baseJobInfos>
 		                <com:jsName>Postgre SQL Script</com:jsName>
@@ -2008,7 +2008,7 @@
 		                <dat:minPercentage>10</dat:minPercentage>
 		            </dat:timeManagement>
 		        </dat:jobProperties>
-		        <dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="10" agentId="0">
+		        <dat:jobProperties ID="10" agentId="0">
 		            <jsdl:JobDescription/>
 		            <dat:baseJobInfos>
 		                <com:jsName>Store Procedure</com:jsName>
@@ -2206,7 +2206,7 @@
 				<com:userId>1</com:userId>
 			</dat:baseScenarioInfos>
 			<dat:jobList>
-				<dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="19" agentId="0">
+				<dat:jobProperties ID="19" agentId="0">
 					<jsdl:JobDescription/>
 					<dat:baseJobInfos>
 						<com:jsName>Oracle SQL Query</com:jsName>
@@ -2217,17 +2217,17 @@
 							<com:jobTypeDetails>
 								<com:jobCommandType>DB JOBS</com:jobCommandType>
 								<com:specialParameters>
-									<dbJobDefinition>
-										<dbConnectionProperties>
-											<dbPropertiesId>5</dbPropertiesId>
-											<dbUserId>3</dbUserId>
-										</dbConnectionProperties>
-										<dbJobType>Free SQL</dbJobType>
+									<db:dbJobDefinition>
+										<db:dbConnectionProperties>
+											<db:dbPropertiesId>5</db:dbPropertiesId>
+											<db:dbUserId>3</db:dbUserId>
+										</db:dbConnectionProperties>
+										<db:dbJobType>Free SQL</db:dbJobType>
 										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
 										<db:freeSQLProperties>
-											<sqlSentence>select * from personel</sqlSentence>
+											<db:sqlSentence>select * from personel</db:sqlSentence>
 										</db:freeSQLProperties>
-									</dbJobDefinition>
+									</db:dbJobDefinition>
 								</com:specialParameters>
 							</com:jobTypeDetails>
 						</dat:jobInfos>
@@ -2283,7 +2283,7 @@
 						<dat:minPercentage>10</dat:minPercentage>
 					</dat:timeManagement>
 				</dat:jobProperties>
-				<dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="20" agentId="0">
+				<dat:jobProperties ID="20" agentId="0">
 		            <jsdl:JobDescription/>
 		            <dat:baseJobInfos>
 		                <com:jsName>Oracle Store Procedure</com:jsName>
@@ -2362,7 +2362,7 @@
 		                <dat:minPercentage>10</dat:minPercentage>
 		            </dat:timeManagement>
 		        </dat:jobProperties>
-				<dat:jobProperties xmlns="http://www.likyateknoloji.com/XML_db_job_types" ID="21" agentId="0">
+				<dat:jobProperties ID="21" agentId="0">
 		            <jsdl:JobDescription/>
 		            <dat:baseJobInfos>
 		                <com:jsName>Oracle SQL Script</com:jsName>
