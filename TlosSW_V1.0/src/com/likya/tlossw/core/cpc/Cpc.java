@@ -297,7 +297,7 @@ public class Cpc extends CpcBase {
 				spc.setConcurrent(spcInfoType.isConcurrent());
 				spc.setComment(spcInfoType.getComment());
 				spc.setInstanceId(instanceId);
-				spc.setUserName(spcInfoType.getUserName());
+				spc.setUserId(spcInfoType.getUserId());
 
 				spcInfoType.setSpcReferance(spc);
 				spcLookupTable.put(spcId, spcInfoType);
