@@ -10,11 +10,12 @@ import com.likya.tlossw.core.spc.Spc;
 
 public class CpcUtils {
 
-	public static Scenario getScenario(TlosProcessData tlosProcessData) {
-
+	public static Scenario getScenario(TlosProcessData tlosProcessData, String instanceId) {
+		
 		Scenario scenario = Scenario.Factory.newInstance();
-
 		scenario.setJobList(tlosProcessData.getJobList());
+
+		tlosProcessData.getConcurrencyManagement().setInstanceId(instanceId);
 
 		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
 		scenario.setDependencyList(tlosProcessData.getDependencyList());
@@ -24,7 +25,7 @@ public class CpcUtils {
 		scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
 		scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
 		scenario.setLocalParameters(tlosProcessData.getLocalParameters());
-
+		
 		return scenario;
 	}
 
@@ -43,17 +44,17 @@ public class CpcUtils {
 
 		return scenario;
 	}
-
+	
 	public static SpcInfoType getSpcInfo(Spc spc, String userId, String instanceId, Scenario tmpScenario) {
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
-		
+
 		myLiveStateInfo.setStateName(StateName.PENDING);
 		myLiveStateInfo.setSubstateName(SubstateName.IDLED);
 		spc.setLiveStateInfo(myLiveStateInfo);
-		
+
 		Thread thread = new Thread(spc);
-		
+
 		spc.setExecuterThread(thread);
 
 		spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
@@ -77,14 +78,15 @@ public class CpcUtils {
 		spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
-		spcInfoType.setUserName(null);
-		// spcInfoType.setUserName(spc.getUserName());
+		spc.setInstanceId(instanceId);
+		spc.setUserName(userId);
 
 		Scenario scenario = CpcUtils.getScenario(spc);
 
 		spcInfoType.setScenario(scenario);
 		spcInfoType.setSpcReferance(spc);
-		
+
 		return spcInfoType;
 	}
+
 }
