@@ -1,6 +1,8 @@
 package com.likya.tlossw.test.cpc;
 
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -20,8 +22,9 @@ public class TestCpcTester extends CpcBaseTester {
 	public static void setUp() {
 	}
 
+	@Ignore
 	@Test
-	public void runPrep() throws Exception {
+	public void starter() throws Exception {
 
 		SpaceWideRegistry spaceWideRegistry = initTest();
 
@@ -29,7 +32,32 @@ public class TestCpcTester extends CpcBaseTester {
 		Thread cpcTesterExecuterThread = new Thread(cpcTester);
 
 		cpcTesterExecuterThread.start();
+		
+		System.out.println("Deneme");
 
 	}
 
+	@Test
+	public void executer() throws Exception {
+
+		SpaceWideRegistry spaceWideRegistry = initTest();
+		startInfoBusSystem(Logger.getLogger(getClass()), spaceWideRegistry);
+
+		CpcTester cpcTester = new CpcTester(spaceWideRegistry);
+		Thread cpcTesterExecuterThread = new Thread(cpcTester);
+		cpcTester.setExecuterThread(cpcTesterExecuterThread);
+		cpcTesterExecuterThread.setDaemon(true);
+		cpcTesterExecuterThread.start();
+		
+		cpcTester.addTestData(getTlosProcessData());
+		
+		synchronized (cpcTesterExecuterThread) {
+			cpcTesterExecuterThread.notifyAll();
+		}
+
+		System.out.println("Deneme");
+
+	}
+
+	
 }
