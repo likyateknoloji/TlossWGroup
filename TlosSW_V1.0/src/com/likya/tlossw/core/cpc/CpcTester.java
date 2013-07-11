@@ -184,4 +184,17 @@ public class CpcTester extends CpcBase {
 		this.loop = loop;
 	}
 
+	public HashMap<String, SpcInfoType> getSpcLookupTable(String userId) {
+		
+		HashMap<String, SpcInfoType> tmpMap = new HashMap<String, SpcInfoType>();
+		
+		for(String key : spcLookupTable.keySet()) {
+			if(userId.equals(spcLookupTable.get(key).getUserId())) {
+				tmpMap.put(key, spcLookupTable.get(key));
+			}
+		}
+		
+		return tmpMap;
+	}
+
 }
