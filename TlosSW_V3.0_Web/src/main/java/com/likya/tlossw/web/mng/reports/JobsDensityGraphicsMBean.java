@@ -21,6 +21,7 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.report.StatisticsDocument.Statistics;
+import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -112,7 +113,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements Serializ
 		dense.setLabel("Number of Jobs");
 
 		try {
-			densityJobCountList = getDbOperations().getDensityReport("xs:string(\"RUNNING\")", "xs:string(\"ON-RESOURCE\")", "xs:string(\"TIME-IN\")" , "xs:dateTime(\"2013-05-15T16:26:25+03:00\")", "xs:dateTime(\"2013-05-15T16:49:27+03:00\")", "xs:dayTimeDuration('PT10S')");
+			densityJobCountList = getDbOperations().getDensityReport(TransformUtils.toXSString("RUNNING"), TransformUtils.toXSString("ON-RESOURCE"), TransformUtils.toXSString("TIME-IN"), "xs:dateTime(\"2013-05-15T16:26:25+03:00\")", "xs:dateTime(\"2013-05-15T16:49:27+03:00\")", "xs:dayTimeDuration('PT10S')");
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
