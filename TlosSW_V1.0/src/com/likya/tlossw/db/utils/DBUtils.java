@@ -93,7 +93,7 @@ public class DBUtils extends DBBase {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 		
-		String xQueryStr = scenarioFunctionConstructor("hs:updateLiveJobLock", jobPropetiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:updateLiveJobLock", dbUserId, dbDocId, jobPropetiesXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
@@ -325,7 +325,7 @@ public class DBUtils extends DBBase {
 		
 		String jobPropertiesXML = XmlUtils.getJobPropertiesXML(jobProperties);
 		
-		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", jobPropertiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", dbUserId, dbDocId, jobPropertiesXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
@@ -345,7 +345,7 @@ public class DBUtils extends DBBase {
 
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", liveStateInfoXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", dbUserId, dbDocId, liveStateInfoXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
