@@ -123,7 +123,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			jobProperties = null;
 
 			if (Integer.parseInt(jsId) > 0) {
-				jobProperties = getDbOperations().getJobFromId(getAppUser().getId(), getDocumentId(), jsId);
+				jobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), jsId);
 			} else {
 				isInsert = true;
 			}
@@ -135,7 +135,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			}
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
-			scenario = getDbOperations().getScenarioFromId(getAppUser().getId(), getDocumentId(), jsId);
+			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
 
 			if (scenario != null) {
 				switchToScenarioPanel();
