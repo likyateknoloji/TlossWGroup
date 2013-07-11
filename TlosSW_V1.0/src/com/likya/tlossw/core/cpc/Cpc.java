@@ -26,7 +26,7 @@ import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 /**
- * @author Serkan Ta�
+ * @author Serkan Taş
  * 
  */
 public class Cpc extends CpcBase {
