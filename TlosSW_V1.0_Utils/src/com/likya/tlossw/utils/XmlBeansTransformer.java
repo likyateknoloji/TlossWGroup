@@ -105,11 +105,13 @@ public class XmlBeansTransformer {
 	public static Map<String, String> entryToMap(JobProperties jobProperties) {
 		
 		Map<String, String> envMap = new HashMap<String, String>();
-				
-		Entry [] envVars = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().getEntryArray();
 		
-		for(Entry myEntry : envVars) {
-			envMap.put(myEntry.getKey(), myEntry.getStringValue());
+		if (jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables() != null) {
+			Entry [] envVars = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().getEntryArray();
+			
+			for(Entry myEntry : envVars) {
+				envMap.put(myEntry.getKey(), myEntry.getStringValue());
+			}
 		}
 		
 		return envMap;
