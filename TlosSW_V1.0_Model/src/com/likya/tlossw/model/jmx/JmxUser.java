@@ -7,9 +7,9 @@
 
 package com.likya.tlossw.model.jmx;
 
-import java.io.Serializable;
+import com.likya.tlossw.model.auth.User;
 
-public class JmxUser implements Serializable {
+public class JmxUser extends User {
 
 	private static final long serialVersionUID = 1L;
 
