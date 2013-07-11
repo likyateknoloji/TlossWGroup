@@ -86,12 +86,12 @@ public class SpcInfoType implements Serializable {
 		this.comment = comment;
 	}
 
-	public String getUserName() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserName(String userName) {
-		this.userId = userName;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public Scenario getScenario() {
