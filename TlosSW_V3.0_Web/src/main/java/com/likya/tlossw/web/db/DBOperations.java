@@ -86,7 +86,6 @@ import com.likya.tlossw.utils.XmlBeansTransformer;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
-import com.likya.tlossw.web.utils.DefinitionUtils;
 
 @ManagedBean(name = "dbOperations")
 @SessionScoped
@@ -2062,11 +2061,11 @@ public class DBOperations implements Serializable {
 	}
 
 	private String toXSString(int i) {
-		return DefinitionUtils.toXSString(i);
+		return XmlBeansTransformer.toXSString(i);
 	}
 	
 	private String toXSString(String s) {
-		return DefinitionUtils.toXSString(s);
+		return XmlBeansTransformer.toXSString(s);
 	}
 
 }

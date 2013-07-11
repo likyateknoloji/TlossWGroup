@@ -25,7 +25,7 @@ import org.primefaces.component.submenu.Submenu;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
-import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
@@ -76,8 +76,8 @@ public class DynamicMenuItem extends DefaultMenuModel implements ActionListener,
 
 //			menuitems.add(new MenuItems("Tlos SW", "ui-icon-document", "File", "#"));
 
-			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Global Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf?" + ConstantDefinitions.EXIST_DOCID + "=" + ConstantDefinitions.EXIST_GLOBALDATA));
-			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "My Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf?" + ConstantDefinitions.EXIST_DOCID + "=" + ConstantDefinitions.EXIST_MYDATA));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Global Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf?" + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "My Jobs & Scenarios", "/inc/definitionPanels/jobsDef.jsf?" + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_MYDATA));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Calendars", "/inc/definitionPanels/calendarSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Alarms", "/inc/definitionPanels/alarmSearchPanel.jsf"));
 			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "Agents", "/inc/definitionPanels/agentSearchPanel.jsf"));

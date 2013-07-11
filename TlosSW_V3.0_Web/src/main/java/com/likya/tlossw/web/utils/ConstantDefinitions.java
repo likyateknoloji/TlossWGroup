@@ -23,12 +23,4 @@ public class ConstantDefinitions {
 	public static final String LIVE_TREE = "live";
 	public static final String DEFINITION_TREE = "workspace";
 	
-	/**
-	 * Exist için tanımlı sabitler
-	 */
-
-	public static final String EXIST_DOCID = "docId";
-	public static final String EXIST_MYDATA = "mydata";
-	public static final String EXIST_GLOBALDATA = "globaldata";
-	
 }

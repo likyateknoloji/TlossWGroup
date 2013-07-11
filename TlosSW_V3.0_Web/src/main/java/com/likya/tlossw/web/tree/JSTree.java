@@ -22,6 +22,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -43,7 +44,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 		
-		setDocumentId(getPassedParameter().get(ConstantDefinitions.EXIST_DOCID));
+		setDocumentId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
 
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getAppUser().getId(), getDocumentId());
 		System.out.println("Tree has been loaded !!");
