@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpSession;
 
-import com.likya.tlossw.model.jmx.JmxAppUser;
+import com.likya.tlossw.model.auth.WebAppUser;
 
 public class UserInfo implements Serializable {
 
 	private static final long serialVersionUID = -6661653607676377510L;
 
-	public int userId;
-	public HttpSession httpSession;
-	public String ipAddress;
-	public String hostName;
-	public String userAgent;
-	public JmxAppUser jmxAppUser;
+	private int userId;
+	private HttpSession httpSession;
+	private String ipAddress;
+	private String hostName;
+	private String userAgent;
+	private WebAppUser webAppUser;
 
 	public String getIpAddress() {
 		return ipAddress;
@@ -23,14 +23,6 @@ public class UserInfo implements Serializable {
 
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
-	}
-
-	public JmxAppUser getJmxAppUser() {
-		return jmxAppUser;
-	}
-
-	public void setJmxAppUser(JmxAppUser jmxAppUser) {
-		this.jmxAppUser = jmxAppUser;
 	}
 
 	public String getHostName() {
@@ -63,6 +55,14 @@ public class UserInfo implements Serializable {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public WebAppUser getWebAppUser() {
+		return webAppUser;
+	}
+
+	public void setWebAppUser(WebAppUser webAppUser) {
+		this.webAppUser = webAppUser;
 	}
 
 }
