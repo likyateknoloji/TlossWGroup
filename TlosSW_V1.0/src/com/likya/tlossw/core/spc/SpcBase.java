@@ -45,7 +45,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private boolean concurrent;
 	// private DependencyList dependencyList;
 	// private ScenarioStatusList scenarioStatusList;
-	private String userName;
+	private String userId;
 
 	private BaseScenarioInfos baseScenarioInfos;
 	private DependencyList dependencyList;
@@ -355,11 +355,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 
 	public String getUserName() {
-		return userName;
+		return userId;
 	}
 
 	public void setUserName(String userName) {
-		this.userName = userName;
+		this.userId = userName;
 	}
 
 	public String getInstanceId() {
