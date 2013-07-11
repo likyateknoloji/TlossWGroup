@@ -31,7 +31,6 @@ import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
 import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 
 public class TEJmxMpDBClient extends TEJmxMpClientBase {
@@ -58,10 +57,10 @@ public class TEJmxMpDBClient extends TEJmxMpClientBase {
 		return timeDiff;
 	}
 
-	public static Object checkUser(JMXConnector jmxConnector, JmxAppUser jmxUser) {
+	public static Object checkUser(JMXConnector jmxConnector, JmxUser jmxUser) {
 
 		Object[] paramList = { jmxUser };
-		String[] signature = { "com.likya.tlossw.model.jmx.JmxAppUser" };
+		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser" };
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
