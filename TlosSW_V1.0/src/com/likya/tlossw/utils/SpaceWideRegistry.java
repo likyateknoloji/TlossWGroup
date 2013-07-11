@@ -16,6 +16,7 @@ import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalS
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
+import com.likya.tlossw.core.cpc.CpcTester;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.exceptions.TlosException;
@@ -50,7 +51,9 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private String xmlsUrl;
 	
 	private transient Cpc cpcReference;
-	
+
+	private transient CpcTester cpcTesterReference;
+
 	private static Logger globalLogger;
 	
 	private transient GlobalStateDefinition globalStateDefinition;
@@ -372,6 +375,14 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setDbUri(String dbUri) {
 		this.dbUri = dbUri;
+	}
+
+	public CpcTester getCpcTesterReference() {
+		return cpcTesterReference;
+	}
+
+	public void setCpcTesterReference(CpcTester cpcTesterReference) {
+		this.cpcTesterReference = cpcTesterReference;
 	}
 
 }

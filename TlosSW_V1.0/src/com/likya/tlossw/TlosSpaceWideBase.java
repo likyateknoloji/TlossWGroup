@@ -23,6 +23,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalStateDefinition;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
+import com.likya.tlossw.core.cpc.CpcTester;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.TlosFatalException;
@@ -423,14 +424,14 @@ public class TlosSpaceWideBase {
 			try {
 
 				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
-				
+
 				if (tlosProcessData == null || !tlosProcessData.validate()) {
 					throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
 				}
 				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
 
 			} catch (TlosFatalException e) {
-				if(getSpaceWideRegistry().getCpcReference() == null) {
+				if (getSpaceWideRegistry().getCpcReference() == null) {
 					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 					System.exit(-1);
 				} else {
@@ -490,6 +491,32 @@ public class TlosSpaceWideBase {
 				// System.exit(-1);
 			}
 		}
+
+		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
+		logger.info("");
+
+	}
+
+	public void startCpcTester() {
+
+		if (getSpaceWideRegistry().getCpcTesterReference() != null && getSpaceWideRegistry().getCpcTesterReference().getExecuterThread().getState().equals(State.RUNNABLE)) {
+			logger.info("CpcTester is working, can not accept notify command !!!!!!");
+			return;
+		}
+
+		if (getSpaceWideRegistry().getCpcReference() == null) {
+
+			CpcTester cpcTester = new CpcTester(getSpaceWideRegistry());
+			Thread cpcTesterExecuterThread = new Thread(cpcTester);
+
+			getSpaceWideRegistry().setCpcTesterReference(cpcTester);
+			getSpaceWideRegistry().getCpcReference().setExecuterThread(cpcTesterExecuterThread);
+
+			cpcTesterExecuterThread.setDaemon(true);
+
+			cpcTesterExecuterThread.start();
+
+		} 
 
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
 		logger.info("");
