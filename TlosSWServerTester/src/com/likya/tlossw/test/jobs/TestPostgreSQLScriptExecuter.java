@@ -1,5 +1,7 @@
 package com.likya.tlossw.test.jobs;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -23,15 +25,15 @@ public class TestPostgreSQLScriptExecuter extends TestSuit {
 
 
 		// JobProperties jobProperties = getJobPropertiesFromExist();
-		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "PostgreSQLScriptExecuter.xml");
+		String fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "PostgreSQLScriptExecuter.xml");
 		JobProperties jobProperties = getJobPropertiesFromFile(fileName);
  
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBPostGreConnection.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "DBPostGreConnection.xml");
 		DbProperties dbProperties = null;
 		dbProperties = getDbPropertiesFromFile(fileName);
 		
-		fileName = ParsingUtils.getConcatenatedPathAndFileName("src\\", "DBPostgreConnectionProfile.xml");
+		fileName = ParsingUtils.getConcatenatedPathAndFileName("src" + File.separator, "DBPostgreConnectionProfile.xml");
 		DbConnectionProfile dbConnectionProfile = null;
 		dbConnectionProfile = getDbConnectionProfileFromFile(fileName);
 		
