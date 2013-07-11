@@ -233,7 +233,7 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 			license.getType().setMinUser(new BigInteger(minUser));
 		}
 
-		license.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
+		license.setUserId(getSessionMediator().getWebAppUser().getId());
 	}
 
 	public boolean isInsertButton() {
