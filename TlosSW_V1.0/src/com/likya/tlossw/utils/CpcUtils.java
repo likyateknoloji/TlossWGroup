@@ -60,7 +60,7 @@ public class CpcUtils {
 		spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 		spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
-		spc.setUserName(userId);
+		spc.setUserId(userId);
 
 		tmpScenario.getConcurrencyManagement().setInstanceId(instanceId);
 
@@ -79,7 +79,7 @@ public class CpcUtils {
 		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
 		spc.setInstanceId(instanceId);
-		spc.setUserName(userId);
+		spc.setUserId(userId);
 
 		Scenario scenario = CpcUtils.getScenario(spc);
 
