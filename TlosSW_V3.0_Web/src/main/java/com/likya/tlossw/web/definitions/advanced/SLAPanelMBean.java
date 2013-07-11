@@ -379,7 +379,7 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 		sla.getResourceReq().setSoftware(software);
 
-		sla.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
+		sla.setUserId(getSessionMediator().getWebAppUser().getId());
 	}
 
 	private void fillPanelFromSla() {

@@ -217,7 +217,7 @@ public class WebServiceWizardPanelMBean extends TlosSWBaseBean implements Serial
 
 		webServiceDefinition.setBindingList(bindingList);
 
-		webServiceDefinition.setUserId(getSessionMediator().getJmxAppUser().getAppUser().getId());
+		webServiceDefinition.setUserId(getSessionMediator().getWebAppUser().getId());
 	}
 
 	public static Logger getLogger() {
