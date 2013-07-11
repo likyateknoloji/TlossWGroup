@@ -50,13 +50,18 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.XSLLoadException;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.XmlUtils;
+import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 public class DBUtils extends DBBase {
+	
+	private static final String dbUserId = TransformUtils.toXSString("0");
+	private static final String dbDocId = TransformUtils.toXSString(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
@@ -110,7 +115,7 @@ public class DBUtils extends DBBase {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
+		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", dbUserId, dbDocId, jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
