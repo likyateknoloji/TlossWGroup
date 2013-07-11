@@ -27,8 +27,6 @@ public abstract class TlosSWBaseBean {
 	@ManagedProperty(value = "#{sessionMediator.jmxAppUser.appUser}")
 	private AppUser appUser;
 	
-	private String documentId;
-
 	public String resolveMessage(String errorMessage) {
 
 		ResourceBundle messages = sessionMediator.getMessageBundle();
@@ -117,10 +115,7 @@ public abstract class TlosSWBaseBean {
 	}
 
 	public String getDocumentId() {
-		return documentId;
+		return getSessionMediator().getDocumentId();
 	}
 
-	public void setDocumentId(String documentId) {
-		this.documentId = documentId;
-	}
 }

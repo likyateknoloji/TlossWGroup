@@ -30,6 +30,8 @@ public class SessionMediator implements Serializable {
 	@ManagedProperty(value = "#{localeBean}")
 	private LocaleBean localeBean;
 	
+	private String documentId;
+	
 	public ResourceBundle getMessageBundle() {
 		initMessageBundle();
 		return messageBundle;
@@ -89,6 +91,14 @@ public class SessionMediator implements Serializable {
 
 	public void setJmxAppUser(JmxAppUser jmxAppUser) {
 		this.jmxAppUser = jmxAppUser;
+	}
+
+	public String getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(String documentId) {
+		this.documentId = documentId;
 	}
 
 }
