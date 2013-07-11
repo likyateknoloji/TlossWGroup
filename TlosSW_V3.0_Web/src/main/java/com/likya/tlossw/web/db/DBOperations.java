@@ -78,8 +78,8 @@ import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.WSAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxAppUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.XmlBeansTransformer;
@@ -376,21 +376,21 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public Object checkUser(JmxAppUser jmxAppUser) {
+	public Object checkUser(WebAppUser webAppUser) {
 
-		if ((jmxAppUser.getAppUser() == null) || (jmxAppUser.getAppUser().getUsername() == null) || (jmxAppUser.getAppUser().getPassword() == null)) {
+		if ((webAppUser.getUsername() == null) || (webAppUser.getPassword() == null)) {
 			return false;
 		}
 
-		String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + jmxAppUser.getAppUser().getUsername() + "\")");
+		String xQueryStr = localFunctionConstructor("moduleGetResourceListByRole.xquery", "hs:query_username", CommonConstantDefinitions.hsNsUrl, "xs:string(\"" + webAppUser.getUsername() + "\")");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
 		for (Object currentObject : objectList) {
 			UserResourceMap myUserPermission = ((UserResourceMapDocument) currentObject).getUserResourceMap();
-			if (myUserPermission.getPerson().getUserPassword().equals(jmxAppUser.getAppUser().getPassword())) {
-				jmxAppUser.setAppUser(XmlBeansTransformer.personToAppUser(myUserPermission));
-				return jmxAppUser;
+			if (myUserPermission.getPerson().getUserPassword().equals(webAppUser.getPassword())) {
+				webAppUser = XmlBeansTransformer.personToAppUser(myUserPermission);
+				return webAppUser;
 			}
 		}
 
