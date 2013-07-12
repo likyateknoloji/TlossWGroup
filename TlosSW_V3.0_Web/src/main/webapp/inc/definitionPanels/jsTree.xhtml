@@ -55,6 +55,9 @@
 			<p:menuitem value="#{msgs['tlos.button.delete']}"
 				onclick="deleteJobConfirmation.show()" icon="ui-icon-close" >
 			</p:menuitem>
+			<p:menuitem value="Run Test"
+				action="#{jsDefinitionMBean.switchToTestPage}"
+				icon="ui-icon-plus" />
 		</p:contextMenu>
 
 		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
