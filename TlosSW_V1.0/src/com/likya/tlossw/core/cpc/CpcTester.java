@@ -48,42 +48,44 @@ public class CpcTester extends CpcBase {
 		while (loop) {
 
 			try {
-				
+
 				logger.info(" 1 - İşlem başlasın !");
 
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
-					try {
-						synchronized (this.getExecuterThread()) {
-							this.getExecuterThread().wait();
+				} else {
+
+					logger.info("");
+					logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
+
+					for (String spcId : spcLookupTable.keySet()) {
+
+						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
+
+						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
+						Spc spc = mySpcInfoType.getSpcReferance();
+
+						if (mySpcInfoType.isVirgin() && !spc.getExecuterThread().isAlive()) {
+
+							mySpcInfoType.setVirgin(false);
+
+							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
+							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
+
+							spc.getExecuterThread().start();
+
 						}
-						logger.info(" >> Cpc notified !");
-					} catch (InterruptedException e) {
-						logger.error("Cpc failed, terminating !");
-						break;
 					}
 				}
-
-				logger.info("");
-				logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
-
-				for (String spcId : spcLookupTable.keySet()) {
-
-					logger.info("   > Senaryo " + spcId + " calistiriliyor !");
-
-					SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
-					Spc spc = mySpcInfoType.getSpcReferance();
-
-					if (mySpcInfoType.isVirgin() && !spc.getExecuterThread().isAlive()) {
-
-						mySpcInfoType.setVirgin(false);
-
-						spc.getLiveStateInfo().setStateName(StateName.RUNNING);
-						spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
-
-						spc.getExecuterThread().start();
-
+				
+				try {
+					synchronized (this.getExecuterThread()) {
+						this.getExecuterThread().wait();
 					}
+					logger.info(" >> Cpc notified !");
+				} catch (InterruptedException e) {
+					logger.error("Cpc failed, terminating !");
+					break;
 				}
 
 			} catch (Exception e) {
@@ -185,15 +187,15 @@ public class CpcTester extends CpcBase {
 	}
 
 	public HashMap<String, SpcInfoType> getSpcLookupTable(String userId) {
-		
+
 		HashMap<String, SpcInfoType> tmpMap = new HashMap<String, SpcInfoType>();
-		
-		for(String key : spcLookupTable.keySet()) {
-			if(userId.equals(spcLookupTable.get(key).getUserId())) {
+
+		for (String key : spcLookupTable.keySet()) {
+			if (userId.equals(spcLookupTable.get(key).getUserId())) {
 				tmpMap.put(key, spcLookupTable.get(key));
 			}
 		}
-		
+
 		return tmpMap;
 	}
 
