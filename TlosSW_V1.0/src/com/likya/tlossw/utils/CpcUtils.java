@@ -78,8 +78,9 @@ public class CpcUtils {
 		spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
+		spcInfoType.setUserId(userId);
+
 		spc.setInstanceId(instanceId);
-		spc.setUserId(userId);
 
 		Scenario scenario = CpcUtils.getScenario(spc);
 
