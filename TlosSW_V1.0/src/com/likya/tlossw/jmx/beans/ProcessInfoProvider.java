@@ -209,14 +209,15 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			return null;
 		}
 
-		return retrieveJobListDetails(groupId, transformToLocalTime);
-	}
-
-	private ArrayList<JobInfoTypeClient> retrieveJobListDetails(String groupId, Boolean transformToLocalTime) {
-
 		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = new ArrayList<JobInfoTypeClient>();
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		SpcInfoType spcInfoType = null;
+
+		if (isTester(jmxUser)) {
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
+		} else {
+			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		}
 
 		Iterator<SortType> jobQueueIndexIterator = spcInfoType.getSpcReferance().getJobQueueIndex().iterator();
 		while (jobQueueIndexIterator.hasNext()) {
@@ -300,60 +301,45 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	}
 
-	public SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String treePath) {
+	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String treePath) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
 
-		return retrieveSpcLookupTable(treePath);
-	}
-
-	private SpcLookUpTableTypeClient retrieveSpcLookupTable(String treePath) {
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = null;
 
-		HashMap<String, InstanceInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable();
-		Iterator<String> isntanceKeyIterator = instanceLookUpTable.keySet().iterator();
-
-		while (isntanceKeyIterator.hasNext()) {
-			String tmpInstanceId = isntanceKeyIterator.next();
-			spcLookUpTableTypeClient = retrieveSpcLookupTable(tmpInstanceId, treePath);
+		if (isTester(jmxUser)) {
+			spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, "" + jmxUser.getId(), treePath);
 			if (spcLookUpTableTypeClient.getSpcInfoTypeClientList().size() > 0) {
 				return spcLookUpTableTypeClient;
+			}
+		} else {
+
+			HashMap<String, InstanceInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable();
+			Iterator<String> instanceKeyIterator = instanceLookUpTable.keySet().iterator();
+
+			while (instanceKeyIterator.hasNext()) {
+				String tmpInstanceId = instanceKeyIterator.next();
+				spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, tmpInstanceId, treePath);
+				if (spcLookUpTableTypeClient.getSpcInfoTypeClientList().size() > 0) {
+					return spcLookUpTableTypeClient;
+				}
 			}
 		}
 
 		return spcLookUpTableTypeClient;
 	}
 
-	public SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath) {
+	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath) {
 
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return null;
+		HashMap<String, SpcInfoType> spcLookUpTable = null;
+
+		if (isTester(jmxUser)) {
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId());
+		} else {
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
 		}
-
-		if (CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
-			return retrieveSpcLookupTable(instanceId, treePath);
-		}
-
-		return retrieveSpcLookupTableForUser("" + jmxUser.getId(), treePath);
-	}
-
-	private SpcLookUpTableTypeClient retrieveSpcLookupTableForUser(String userId, String treePath) {
-
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
-
-		return retrieveSpcLookupTableGeneric(spcLookUpTable, userId, treePath);
-	}
-
-	private SpcLookUpTableTypeClient retrieveSpcLookupTable(String instanceId, String treePath) {
-
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
-
-		return retrieveSpcLookupTableGeneric(spcLookUpTable, instanceId, treePath);
-	}
-
-	private SpcLookUpTableTypeClient retrieveSpcLookupTableGeneric(HashMap<String, SpcInfoType> spcLookUpTable, String instanceId, String treePath) {
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
 
@@ -652,12 +638,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
-					spcInfoTypeClientList = retrieveSpcLookupTableForUser(instanceId, "root." + instanceId).getSpcInfoTypeClientList();			
-				} else {
-					// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
-					spcInfoTypeClientList = retrieveSpcLookupTable(instanceId, "root." + instanceId).getSpcInfoTypeClientList();			
-				}
+				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
+				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, "root." + instanceId).getSpcInfoTypeClientList();
 
 				// Her bir scenarioNodu da instance'in scenarioNodeMap'ine atiyor
 				for (String spcId : spcInfoTypeClientList.keySet()) {
@@ -687,7 +669,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				InstanceNode instanceNode = tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(instanceId);
 				for (String spcId : instanceNode.getScenarioNodeMap().keySet()) {
 					ScenarioNode myScenarioNode = instanceNode.getScenarioNodeMap().get(spcId);
-					ScenarioNode newScenarioNode = getDetails(myScenarioNode);
+					ScenarioNode newScenarioNode = getDetails(jmxUser, myScenarioNode);
 					tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes().get(instanceId).getScenarioNodeMap().put(spcId, newScenarioNode);
 				}
 
@@ -696,18 +678,18 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		return tlosSpaceWideServerNode;
 	}
 
-	private ScenarioNode getDetails(ScenarioNode treeNode) {
+	private ScenarioNode getDetails(JmxUser jmxUser, ScenarioNode treeNode) {
 
 		ScenarioNode newScenarioNode = new ScenarioNode();
 		newScenarioNode.setSpcInfoTypeClient(treeNode.getSpcInfoTypeClient());
 
 		if (!treeNode.getScenarioNodes().isEmpty()) {
 			for (ScenarioNode innerScenarioNode : treeNode.getScenarioNodes()) {
-				ScenarioNode newInnerScenarioNode = getDetails(innerScenarioNode);
+				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
 				newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
 			}
 		} else {
-			SpcLookUpTableTypeClient spcLookUpTableTypeClient = retrieveSpcLookupTable(treeNode.getSpcInfoTypeClient().getSpcId());
+			SpcLookUpTableTypeClient spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId());
 			for (String spcId : spcLookUpTableTypeClient.getSpcInfoTypeClientList().keySet()) {
 				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
@@ -716,7 +698,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			}
 		}
 
-		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(treeNode.getSpcInfoTypeClient().getSpcId(), false);
+		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId(), false);
 		for (JobInfoTypeClient jobInfoTypeClient : jobInfoTypeClientList) {
 			JobNode jobNode = new JobNode();
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
@@ -1261,5 +1243,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 
 		return result;
+	}
+
+	private boolean isTester(JmxUser jmxUser) {
+
+		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
+			return true;
+		}
+
+		return false;
 	}
 }

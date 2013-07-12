@@ -19,7 +19,6 @@ import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.model.client.spc.InfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
-import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
@@ -76,8 +75,6 @@ public interface ProcessInfoProviderMBean {
 	public Object retrieveGlobalStates(JmxAgentUser jmxAgentUser);
 	
 	public Object runningJobs();
-	
-	public SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath);
 	
 	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime); 
 	
