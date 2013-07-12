@@ -268,7 +268,7 @@ public class Cpc extends CpcBase {
 
 			for (String spcId : spcLookupTable.keySet()) {
 
-				Spc spc = new Spc(spcId, getSpaceWideRegistry(), null, isUserSelectedRecover);
+				Spc spc = new Spc(spcId, getSpaceWideRegistry(), null, isUserSelectedRecover, false);
 				LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
 				myLiveStateInfo.setStateName(StateName.PENDING);
