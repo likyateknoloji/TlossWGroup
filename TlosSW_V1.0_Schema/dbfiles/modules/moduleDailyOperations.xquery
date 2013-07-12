@@ -461,7 +461,7 @@ declare function hs:select-jobs-and-scenarios($n as node(), $plan as node()*) as
 			   for $calendar in $plan
 			     , $ca in $a/dat:jobProperties
 			   where data($calendar/calID)=data($ca/dat:baseJobInfos/dat:calendarId) and not($ca/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED')
-			         and $ca/dat:baseJobInfos/dat:jsIsActive/text()='YES'
+			         and data($ca/dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")
 			         (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :)
 			   return hs:select-jobs-and-scenarios($ca, $plan)
 			 }
