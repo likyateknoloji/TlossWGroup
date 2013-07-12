@@ -62,8 +62,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSLiveTree() {
+		
+		if(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID) != null) {
+			getSessionMediator().getWebAppUser().setViewRoleId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
+		}
 
-		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA);
 		// tlosSpaceWideNode = new TlosSpaceWideNode();
 		// tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(tlosSpaceWideNode);
 		// //tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(key);
