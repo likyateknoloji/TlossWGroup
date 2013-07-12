@@ -6,19 +6,28 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+import javax.xml.namespace.QName;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
+import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
+import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
 
 @ManagedBean(name = "jsDefinitionMBean")
 @ViewScoped
@@ -154,9 +163,47 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
 	
-	public String switchToTestPage() {
+	public String switchToTestPage() throws InvalidInputException {
+		
 		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
+		
+		TlosProcessDataDocument tlosProcessDataDocument = TlosProcessDataDocument.Factory.newInstance();
+
+		tlosProcessDataDocument.addNewTlosProcessData();
+		
+		TlosProcessData tlosProcessData = tlosProcessDataDocument.getTlosProcessData();
+		
+		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getSessionMediator().getWebAppUser().getId() + "");
+		
+		tlosProcessData.addNewBaseScenarioInfos().setUserId(getSessionMediator().getWebAppUser().getId());
+		
+		tlosProcessData.addNewJobList();
+		
+		
+		JobProperties jobProperties = null;
+		try {
+			jobProperties = JobPropertiesDocument.Factory.parse(getJobPropertiesXML()).getJobProperties();
+		} catch (XmlException e) {
+			e.printStackTrace();
+		}
+
+		tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
+		
+		if(tlosProcessData.validate()) {
+			throw new InvalidInputException();
+		}
+		
+		TEJmxMpWorkSpaceClient.addTestData(getSessionMediator().getWebAppUser(), tlosProcessDataDocument.toString());
+		
 		return DEFAULT_TEST_PAGE;
+	}
+	
+	public String getJobPropertiesXML() {
+		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
+
+		return jobPropertiesXML;
 	}
 
 	public void handleDropAction(ActionEvent ae) {
