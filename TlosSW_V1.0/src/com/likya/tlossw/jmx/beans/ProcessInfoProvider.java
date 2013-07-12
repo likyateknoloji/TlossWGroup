@@ -628,7 +628,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
 			InstanceNode instanceNode = new InstanceNode("" + jmxUser.getId());
-			gunlukIslerNode.getInstanceNodes().put("test_" + jmxUser.getId(), instanceNode);
+			gunlukIslerNode.getInstanceNodes().put(jmxUser.getId() + "", instanceNode);
 		} else {
 			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 				InstanceNode instanceNode = new InstanceNode(instanceId);
