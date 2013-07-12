@@ -38,14 +38,14 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	private TreeNode selectedJS;
 
 	private TreeNode selectedTreeNode;
-	
+
 	@PostConstruct
 	public void initJSTree() {
 
 		getSessionMediator().setDocumentId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
-		
+
 		long startTime = System.currentTimeMillis();
-		
+
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), getDocumentId());
 		System.out.println("Tree has been loaded !!");
 
@@ -177,26 +177,38 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		boolean result = false;
 		for (TreeNode node : nodeList) {
 
-			String scenarioName = scenarioNameList.get(index);
-			if (((WsNode) node.getData()).getName().equals(scenarioName)) {
-				if (scenarioNameList.size() == index + 1) {
-					result = true;
-				} else {
-					deleteJobNode(scenarioNameList, ++index, node.getChildren(), jobName);
+			// serbest islerde
+			if (scenarioNameList.size() == 0) {
+				if (((WsNode) node.getData()).getName().equals(jobName)) {
+					TreeNode parent = node.getParent();
+					parent.getChildren().remove(node);
+
+					break;
 				}
-			}
 
-			if (result) {
-				for (TreeNode jobNode : node.getChildren()) {
-					if (((WsNode) jobNode.getData()).getName().equals(jobName)) {
-						TreeNode parent = jobNode.getParent();
-						parent.getChildren().remove(jobNode);
+			} else {
+				String scenarioName = scenarioNameList.get(index);
 
-						break;
+				if (((WsNode) node.getData()).getName().equals(scenarioName)) {
+					if (scenarioNameList.size() == index + 1) {
+						result = true;
+					} else {
+						deleteJobNode(scenarioNameList, ++index, node.getChildren(), jobName);
 					}
 				}
 
-				break;
+				if (result) {
+					for (TreeNode jobNode : node.getChildren()) {
+						if (((WsNode) jobNode.getData()).getName().equals(jobName)) {
+							TreeNode parent = jobNode.getParent();
+							parent.getChildren().remove(jobNode);
+
+							break;
+						}
+					}
+
+					break;
+				}
 			}
 		}
 	}

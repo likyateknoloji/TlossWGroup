@@ -23,6 +23,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
+import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -120,7 +121,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		selectedJSPath = "";
 
 		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
-			selectedJSPath = treeNode.getParent().toString() + "/" + selectedJSPath;
+			selectedJSPath = ((WsScenarioNode)treeNode.getParent().getData()).getName() + "/" + selectedJSPath;
 			treeNode = treeNode.getParent();
 		}
 
