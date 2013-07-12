@@ -72,12 +72,12 @@ public class Spc extends SpcBase {
 	private boolean isRecovered = false;
 
 	public Spc(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
-		this(spcId, spaceWideRegistry, taskList, false);
+		this(spcId, spaceWideRegistry, taskList, false, false);
 	}
 
-	public Spc(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction) throws TlosFatalException {
+	public Spc(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
 
-		super(spcId, spaceWideRegistry, taskList);
+		super(spcId, spaceWideRegistry, taskList, isTester);
 
 		if (isRecoverAction) {
 			getGlobalLogger().info("   > " + spcId + " recover islemi yapildi. ");
@@ -99,9 +99,9 @@ public class Spc extends SpcBase {
 		getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin ana thread baslatiliyor. Toplam is Sayisi : " + getJobQueue().size());
 
 		/**
-		 * InfoBus null ise kritik bir hata vard�r, muhtemelen yaz�l�mda bug vard�r. Ko�ulsuz olarak uygulama kapanmal�d�r.
+		 * InfoBus null ise kritik bir hata vardır, muhtemelen yazılımda bug vardır. Koşulsuz olarak uygulama kapanmalıdır.
 		 * 
-		 * @author serkan ta� 19.09.2012
+		 * @author serkan taş 19.09.2012
 		 */
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcId(), getJobQueue().size()));
@@ -115,9 +115,9 @@ public class Spc extends SpcBase {
 		// PerformanceManager performanceManager = TlosSpaceWide.getSpaceWideRegistry().getPerformanceManagerReference();
 
 		/**
-		 * Senaryo i�inde bulunan t�m i�ler bitene yahut, bir nedenle senaryo durdurulana kadar a�a��daki d�ng� belli aral�klarla �al��acakt�r.
+		 * Senaryo içinde bulunan tüm işler bitene yahut, bir nedenle senaryo durdurulana kadar aşağıdaki döngü belli aralıklarla çalışacaktır.
 		 * 
-		 * @author serkan ta�
+		 * @author serkan taş
 		 *         22.09.2012
 		 */
 
@@ -177,71 +177,7 @@ public class Spc extends SpcBase {
 				if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
 					getLiveStateInfo().setStateName(StateName.FINISHED);
 					getLiveStateInfo().setSubstateName(SubstateName.COMPLETED);
-
-					/*
-					 * isleri siralama icin deneme hs 23.09.2012
-					 * HashMap<String, Job> jobQueue = getJobQueue();
-					 * ArrayList<Calendar> a = new ArrayList<Calendar>();
-					 * ArrayList<Calendar> b = new ArrayList<Calendar>();
-					 * JobCalendarCompare compare = new JobCalendarCompare();
-					 * Calendar jobStartTime = Calendar.getInstance();
-					 * jobStartTime.clear();
-					 * Calendar jobStopTime = Calendar.getInstance(); jobStopTime.clear();
-					 * 
-					 * if (jobQueue != null) {
-					 * Iterator<Job> jobsIterator = jobQueue.values().iterator();
-					 * while (jobsIterator.hasNext()) {
-					 * Job scheduledJob = jobsIterator.next();
-					 * JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-					 * 
-					 * try {
-					 * 
-					 * if (jobProperties.getStateInfos() != null) {
-					 * if (jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
-					 * try {
-					 * JsRealTime jsRealTime = jobProperties.getTimeManagement().getJsRealTime();
-					 * jobStartTime.set(Calendar.YEAR, jsRealTime.getStartTime().getDate().get(Calendar.YEAR));
-					 * jobStartTime.set(Calendar.MONTH, jsRealTime.getStartTime().getDate().get(Calendar.MONTH));
-					 * jobStartTime.set(Calendar.DAY_OF_MONTH, jsRealTime.getStartTime().getDate().get(Calendar.DAY_OF_MONTH));
-					 * jobStartTime.set(Calendar.HOUR_OF_DAY, jsRealTime.getStartTime().getTime().get(Calendar.HOUR_OF_DAY));
-					 * jobStartTime.set(Calendar.MINUTE, jsRealTime.getStartTime().getTime().get(Calendar.MINUTE));
-					 * jobStartTime.set(Calendar.SECOND, jsRealTime.getStartTime().getTime().get(Calendar.SECOND));
-					 * jobStartTime.set(Calendar.ZONE_OFFSET, jsRealTime.getStartTime().getTime().get(Calendar.ZONE_OFFSET));
-					 * jobStartTime.set(Calendar.DST_OFFSET, 0);
-					 * 
-					 * jobStopTime.set(Calendar.YEAR, jsRealTime.getStopTime().getDate().get(Calendar.YEAR));
-					 * jobStopTime.set(Calendar.MONTH, jsRealTime.getStopTime().getDate().get(Calendar.MONTH));
-					 * jobStopTime.set(Calendar.DAY_OF_MONTH, jsRealTime.getStopTime().getDate().get(Calendar.DAY_OF_MONTH));
-					 * jobStopTime.set(Calendar.HOUR_OF_DAY, jsRealTime.getStopTime().getTime().get(Calendar.HOUR_OF_DAY));
-					 * jobStopTime.set(Calendar.MINUTE, jsRealTime.getStopTime().getTime().get(Calendar.MINUTE));
-					 * jobStopTime.set(Calendar.SECOND, jsRealTime.getStopTime().getTime().get(Calendar.SECOND));
-					 * jobStopTime.set(Calendar.ZONE_OFFSET, jsRealTime.getStopTime().getTime().get(Calendar.ZONE_OFFSET));
-					 * jobStopTime.set(Calendar.DST_OFFSET, 0);
-					 * 
-					 * a.add(jobStartTime);
-					 * b.add(jobStopTime);
-					 * 
-					 * System.out.println(a);
-					 * 
-					 * } catch (Exception e) {
-					 * e.printStackTrace();
-					 * }
-					 * }
-					 * } else {
-					 * SpaceWideRegistry.getGlobalLogger().error("  > isJobQueueOver fonksiyonunda problem2 : " + jobProperties);
-					 * }
-					 * } catch (Exception e) {
-					 * SpaceWideRegistry.getGlobalLogger().error("  > isJobQueueOver fonksiyonunda problem : " + jobProperties.getStateInfos()); e.printStackTrace();
-					 * }
-					 * }
-					 * 
-					 * System.out.println(a);
-					 * Collections.sort(a, compare); System.out.println(a);
-					 * }
-					 */
-
 					break; // beklemeye gerek yok
-
 				}
 
 				// Gelen deger saniye tipine �evriliyor.
@@ -265,9 +201,13 @@ public class Spc extends SpcBase {
 		// isForced true ise kalan islerin zorla bitirilmesi isteniyor anlamina geliyor. Thread ler terminate ediliyor.
 		// Kalan ne varsa temizliyoruz. Normalde kalmamasi lazim.
 		/**
-		 * Buraya sadece i�iler bitince de�il, executionPermission = false yap�l�nca da giriliyor. isActiveThreads : true : kalan b�t�n joblar taran�p �al��anlar kapat�l�yor isActiveThreads : false : kalan b�t�n joblar taran�yor, e�er en az bir tane �al��an var ise, bekliyor. B�t�n i�ler bitene kadar bekliyor.
+		 * Buraya sadece işler bitince değil, executionPermission = false yapılınca da giriliyor.
+		 * isActiveThreads : true : kalan bütün joblar taranıp çalışanlar kapatılıyor 
+		 * isActiveThreads : false : kalan bütün joblar taranıyor, eğer en az bir tane çalışan var ise, bekliyor. 
 		 * 
-		 * @author serkan ta�
+		 * Bütün işler bitene kadar bekliyor.
+		 * 
+		 * @author serkan taş
 		 *         20.09.2012
 		 */
 
@@ -321,11 +261,11 @@ public class Spc extends SpcBase {
 		// * isler bitince, asagidaki deger d�zenlenmeli.
 		// *
 		/**
-		 * Bu yorumda ve a��da yap�lan i� nedir ???
+		 * Bu yorumda ve aşağda yapılan iş nedir ???
 		 * 
-		 * @author serkan ta� 20.09.2012
+		 * @author serkan taş 20.09.2012
 		 */
-		getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(getSpcId()).setJobListStatus(true);
+		getSpcLookupTable().get(getSpcId()).setJobListStatus(true);
 
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcId(), getJobQueue().size()));
@@ -575,7 +515,7 @@ public class Spc extends SpcBase {
 				jobRuntimeProperties = getJobQueue().get(item.getJsName()).getJobRuntimeProperties();
 			} else { // Global bir bagimlilik
 
-				SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+				SpcInfoType spcInfoType = getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
@@ -583,7 +523,7 @@ public class Spc extends SpcBase {
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
+					Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
@@ -693,16 +633,14 @@ public class Spc extends SpcBase {
 
 		case JobCommandType.INT_DB_JOBS:
 			// TODO db joblari ile ilgili ayarlama yapilacak
-			
+
 			DbJobDefinition dbJobDefinition = TypeUtils.resolveDbJobDefinition(jobProperties);
-			
-			 
+
 			DbProperties dbProperties = jobRuntimeProperties.getDbProperties();
 			DbConnectionProfile dbConnectionProfile = jobRuntimeProperties.getDbConnectionProfile();
 			dbJobDefinition.setDbProperties(dbProperties);
 			dbJobDefinition.setDbConnectionProfile(dbConnectionProfile);
-	 
-		 
+
 			break;
 
 		default:
@@ -760,7 +698,7 @@ public class Spc extends SpcBase {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		int agentId = jobProperties.getAgentId();
-		
+
 		int substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().intValue();
 
 		StreamSource transformCode = null;
@@ -778,8 +716,8 @@ public class Spc extends SpcBase {
 		}
 
 		// PARAMETRE atamalari burada yapilir.
-		
-		//LOCAL VE GLOBAL
+
+		// LOCAL VE GLOBAL
 		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
 		HashMap<Integer, ArrayList<Parameter>> parameterListAll = TlosSpaceWide.getSpaceWideRegistry().getAllParameters();
 		ArrayList<Parameter> parameterList = parameterListAll.get(agentId);
@@ -1030,7 +968,7 @@ public class Spc extends SpcBase {
 						getMyLogger().error("Ana senaryo adı : " + getSpcId());
 						getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
 						getMyLogger().error("Uygulama sona eriyor !");
-						Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
+						Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
 						throw new TlosFatalException();
 					}
 
