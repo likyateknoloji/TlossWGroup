@@ -38,6 +38,7 @@ public class TEJmxMpClientBase {
 				isEnvRead = true;
 			} catch (NamingException e1) {
 				e1.printStackTrace();
+				logger.info(">> Initialization Problem for JMX Ip and Port !! ");
 			}
 		}
 
