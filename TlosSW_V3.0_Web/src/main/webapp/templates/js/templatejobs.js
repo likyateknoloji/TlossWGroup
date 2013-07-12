@@ -310,6 +310,10 @@ function applyDragDrop() {
 	                		   var jobName = $(this.firstChild.lastChild).text();
 	                		   document.getElementById('jsTreeForm:draggedJobName').value = jobName;
 
+	                		   var jobId = this.firstChild.lastChild.lastChild.value;
+	                		   //alert(jobId);
+	                		   document.getElementById('jsTreeForm:draggedJobId').value = jobId;
+
 	                		   var jobPath = getJobPathForDependency(this);
 	                		   document.getElementById('jsTreeForm:draggedJobPath').value = jobPath;
 

@@ -79,6 +79,7 @@
 
 			<p:treeNode id="jobNode" type="job" icon="ui-icon-carat-1-e">
 				<h:outputText value="#{node.name}" id="jobName" />
+				<h:inputHidden value="#{node.id}" id="jobId" />
 			</p:treeNode>
 
 		</p:tree>
@@ -88,11 +89,14 @@
 		<h:inputHidden id="draggedJobName"
 			value="#{jsDefinitionMBean.draggedWsNodeForDependency.name}" />
 
+		<h:inputHidden id="draggedJobId"
+			value="#{jsDefinitionMBean.draggedWsNodeForDependency.id}" />
+
 		<h:inputHidden id="draggedJobPath"
 			value="#{jsDefinitionMBean.draggedJobPathForDependency}" />
 
 		<p:remoteCommand name="callHandleJobDrop"
-			process="@this,draggedJobName,draggedJobPath"
+			process="@this,draggedJobName,draggedJobId,draggedJobPath"
 			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
 
 	</h:form>
