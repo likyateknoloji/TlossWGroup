@@ -27,6 +27,7 @@ import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.common.Security;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -62,6 +63,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSLiveTree() {
 
+		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA);
 		// tlosSpaceWideNode = new TlosSpaceWideNode();
 		// tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(tlosSpaceWideNode);
 		// //tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(key);
