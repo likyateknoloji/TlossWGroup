@@ -36,24 +36,26 @@
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
 				<h:outputText value="#{node.name}" id="jobGroupName"
 					style="font-weight: bold;font-size: 115%;" />
+				<h:inputHidden value="#{node.id}" id="jobGroupId" />
 			</p:treeNode>
 
 			<p:treeNode id="jobTemplateNode" type="job" icon="ui-icon-carat-1-e">
 				<h:outputText value="#{node.name}" id="jobTemplateName" />
+				<h:inputHidden value="#{node.id}" id="jobTemplateId" />
 			</p:treeNode>
 
 		</p:tree>
 		<!-- p:draggable for="tree" / -->
 		<p:resizable for="templateTree" />
 
-		<h:inputHidden id="draggedTemplateName"
-			value="#{jsDefinitionMBean.draggedTemplateName.name}" />
+		<h:inputHidden id="draggedTemplateId"
+			value="#{jsDefinitionMBean.draggedTemplateName.id}" />
 
 		<h:inputHidden id="draggedTemplatePath"
 			value="#{jsDefinitionMBean.draggedTemplatePath}" />
 
 		<p:remoteCommand name="callHandleDrop"
-			process="@this,draggedTemplateName,draggedTemplatePath"
+			process="@this,draggedTemplateId,draggedTemplatePath"
 			actionListener="#{jsDefinitionMBean.handleDropAction}" />
 
 	</h:form>
