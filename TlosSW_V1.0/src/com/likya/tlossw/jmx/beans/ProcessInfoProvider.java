@@ -332,21 +332,20 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			return null;
 		}
 
-		if(CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
+		if (CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
 			return retrieveSpcLookupTable(instanceId, treePath);
 		}
-		
+
 		return retrieveSpcLookupTableForUser("" + jmxUser.getId(), treePath);
 	}
 
-	
 	private SpcLookUpTableTypeClient retrieveSpcLookupTableForUser(String userId, String treePath) {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
 
 		return retrieveSpcLookupTableGeneric(spcLookUpTable, userId, treePath);
 	}
-	
+
 	private SpcLookUpTableTypeClient retrieveSpcLookupTable(String instanceId, String treePath) {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
@@ -627,14 +626,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 
-		if(CommonConstantDefinitions.EXIST_GLOBALDATA.equals(jmxUser.getViewRoleId())) {
+		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
+			InstanceNode instanceNode = new InstanceNode("" + jmxUser.getId());
+			gunlukIslerNode.getInstanceNodes().put("test_" + jmxUser.getId(), instanceNode);
+		} else {
 			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 				InstanceNode instanceNode = new InstanceNode(instanceId);
 				gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
 			}
-		} else {
-			InstanceNode instanceNode = new InstanceNode("" + jmxUser.getId());
-			gunlukIslerNode.getInstanceNodes().put("" + jmxUser.getId(), instanceNode);
 		}
 
 		tlosSpaceWideServerNode.setGunlukIslerNode(gunlukIslerNode);
@@ -651,8 +650,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				// InstanceInfoType instanceInfoType = TlosEnterprise.getEnterpriseRegistery().getInstanceLookupTable().get(instanceId);
 				// for (String spcId : instanceInfoType.getSpcLookupTable().keySet()) {
 
-				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
-				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = retrieveSpcLookupTable(instanceId, "root." + instanceId).getSpcInfoTypeClientList();
+				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
+
+				if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
+					spcInfoTypeClientList = retrieveSpcLookupTableForUser(instanceId, "root." + instanceId).getSpcInfoTypeClientList();			
+				} else {
+					// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
+					spcInfoTypeClientList = retrieveSpcLookupTable(instanceId, "root." + instanceId).getSpcInfoTypeClientList();			
+				}
 
 				// Her bir scenarioNodu da instance'in scenarioNodeMap'ine atiyor
 				for (String spcId : spcInfoTypeClientList.keySet()) {
