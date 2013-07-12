@@ -50,6 +50,8 @@ public class CpcTester extends CpcBase {
 			try {
 
 				logger.info(" 1 - İşlem başlasın !");
+				
+				arrangeParameters(getSpaceWideRegistry().getParameters());
 
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
