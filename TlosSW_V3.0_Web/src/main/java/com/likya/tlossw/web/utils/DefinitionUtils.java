@@ -406,13 +406,9 @@ public class DefinitionUtils {
 		}
 
 		while (pathTokenizer.hasMoreTokens()) {
-			String scenarioName = pathTokenizer.nextToken();
+			String scenarioId = pathTokenizer.nextToken();
 
-			if (scenarioName.contains("|")) {
-				scenarioName = getXFromNameId(scenarioName, "Name");
-			}
-
-			path = path + "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
+			path = path + "/dat:scenario/dat:baseScenarioInfos[@ID = '" + scenarioId + "']/..";
 		}
 
 		path = path + "/dat:jobList";
