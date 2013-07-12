@@ -21,8 +21,8 @@
 					<p:panel>
 						<p:panelGrid id="baseInfos" columns="2">
 						
-							<h:outputText value="#{msgs['tlos.workspace.pannel.scenario.scenarioName']}" />
-							<p:inputText
+							<h:outputText value="#{msgs['tlos.workspace.pannel.js.ID']}" rendered="#{scenarioDefinitionMBean.jsUpdateButton}"/>
+							<p:inputText rendered="#{scenarioDefinitionMBean.jsUpdateButton}"
 								value="#{scenarioDefinitionMBean.scenId}" disabled="true">
 								<p:ajax partialSubmit="true"></p:ajax>
 							</p:inputText>						
