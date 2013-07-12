@@ -6,6 +6,8 @@ public class ConstantDefinitions {
 	 * Ağaç yapısında kullanılan tanımlamalar
 	 */
 	public static final String TREE_ROOT = "root";
+	public static final String TREE_ROOTID = "-1";
+	public static final String TREE_SCENARIOROOTID = "0";
 	public static final String TREE_CALISANISLER = "calisanisler";
 	public static final String TREE_KAYNAKLISTESI = "kaynaklistesi";
 	public static final String TREE_KAYNAK = "kaynak";
@@ -15,6 +17,7 @@ public class ConstantDefinitions {
 	public static final String TREE_SCENARIO = "scenario";
 	public static final String TREE_JOBGROUP = "jobGroup";
 	public static final String TREE_JOB = "job";
+	public static final String TREE_UNKNOWN = "unknown";
 	public static final String TREE_DUMMY = "empty";
 
 	/**

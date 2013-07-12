@@ -28,9 +28,6 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 @ViewScoped
 public class JobTemplatesTree implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8098932616833921105L;
 
 	@ManagedProperty(value = "#{dbOperations}")
@@ -49,12 +46,16 @@ public class JobTemplatesTree implements Serializable {
 
 		constructJSTree(tlosProcessData);
 
-//		addMessage("Job Template Tree olusturuldu !");
+		// addMessage("Job Template Tree olusturuldu !");
 		System.out.println("Job Template Tree olusturuldu !");
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
-		root = new DefaultTreeNode("Root", null);
+		WsScenarioNode rootNode = new WsScenarioNode();
+		rootNode.setId(ConstantDefinitions.TREE_ROOTID);
+		rootNode.setName(ConstantDefinitions.TREE_ROOT);
+
+		root = new DefaultTreeNode(rootNode, null);
 
 		setSelectedTreeNode(root);
 
@@ -67,11 +68,11 @@ public class JobTemplatesTree implements Serializable {
 	}
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
-		
+
 		WsJobNode wsJobNode = new WsJobNode();
-		
+		wsJobNode.setId(jobProperties.getID());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
-		
+
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
 	}
 
@@ -87,11 +88,11 @@ public class JobTemplatesTree implements Serializable {
 	}
 
 	public TreeNode addScenario(Scenario scenario) {
-		
+
 		WsScenarioNode wsScenarioNode = new WsScenarioNode();
-		
+		wsScenarioNode.setId(scenario.getID());
 		wsScenarioNode.setName(scenario.getBaseScenarioInfos().getJsName());
-		
+
 		TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_JOBGROUP, wsScenarioNode, selectedTreeNode);
 
 		scenarioNode.setExpanded(true);
@@ -135,27 +136,35 @@ public class JobTemplatesTree implements Serializable {
 	}
 
 	public void onNodeExpand(NodeExpandEvent event) {
-		/* FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Expanded", event.getTreeNode().toString());
-
-		FacesContext.getCurrentInstance().addMessage(null, message); */
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Expanded", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
 	}
 
 	public void onNodeCollapse(NodeCollapseEvent event) {
-		/* FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Collapsed", event.getTreeNode().toString());
-
-		FacesContext.getCurrentInstance().addMessage(null, message); */
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Collapsed", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
-		/* FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", event.getTreeNode().toString());
-
-		FacesContext.getCurrentInstance().addMessage(null, message); */
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
 	}
 
 	public void onNodeUnselect(NodeUnselectEvent event) {
-		/* FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString());
-
-		FacesContext.getCurrentInstance().addMessage(null, message); */
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
 	}
 
 	public TreeNode getSelectedTreeNode() {

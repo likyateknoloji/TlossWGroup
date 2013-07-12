@@ -23,7 +23,6 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
-import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -105,7 +104,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		WsNode wsNode = (WsNode) event.getTreeNode().getData();
 
-		if (wsNode != null && wsNode.getName() != null && wsNode.getName().toString().equals(resolveMessage("tlos.workspace.tree.scenario.root"))) {
+		if (wsNode != null && wsNode.getId() != null && wsNode.getId().equals(ConstantDefinitions.TREE_ROOT)) {
 			return;
 		}
 
@@ -115,17 +114,16 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
 		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 			selectedType = new String(ConstantDefinitions.TREE_JOB);
-		} else
-			selectedType = new String("what?");
+		} else {
+			selectedType = new String(ConstantDefinitions.TREE_UNKNOWN);
+		}
 
 		selectedJSPath = "";
 
-		while (!treeNode.getParent().toString().equals(ConstantDefinitions.TREE_ROOT)) {
-			selectedJSPath = ((WsScenarioNode)treeNode.getParent().getData()).getName() + "/" + selectedJSPath;
+		while (!((WsNode)treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+			selectedJSPath = ((WsNode)treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
 			treeNode = treeNode.getParent();
 		}
-
-		event.getTreeNode().getParent().getParent().toString();
 
 		String jsId = wsNode.getId();
 
@@ -208,7 +206,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleDropAction(ActionEvent ae) {
-		jobProperties = getDbOperations().getTemplateJobFromName(draggedTemplateName.getName());
+		jobProperties = getDbOperations().getTemplateJobFromId(draggedTemplateName.getId());
 		jobProperties.setID("0");
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();

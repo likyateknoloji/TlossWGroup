@@ -1031,6 +1031,20 @@ public class DBOperations implements Serializable {
 
 		return jobProperties;
 	}
+	
+	public JobProperties getTemplateJobFromId(String jobId) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getTemplateJobFromId", jobId);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		JobProperties jobProperties = JobProperties.Factory.newInstance();
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
+		}
+
+		return jobProperties;
+	}
 
 	public JobProperties getJob(int userId, String dataId, String jobPath, String jobName) {
 
