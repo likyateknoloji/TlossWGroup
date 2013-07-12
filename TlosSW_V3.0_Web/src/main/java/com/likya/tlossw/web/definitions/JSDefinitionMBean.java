@@ -111,9 +111,9 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		TreeNode treeNode = event.getTreeNode();
 
-		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("scenario")) {
+		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
-		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase("job")) {
+		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 			selectedType = new String(ConstantDefinitions.TREE_JOB);
 		} else
 			selectedType = new String("what?");
