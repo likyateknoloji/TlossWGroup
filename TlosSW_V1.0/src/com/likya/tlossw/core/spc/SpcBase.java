@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioSt
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.CpcBase;
+import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -76,7 +77,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private ArrayList<SortType> jobQueueIndex;
 	private HashMap<String, Job> jobQueue;
-
+	
 	private static String logLabel;
 
 	transient private Logger globalLogger;
@@ -87,9 +88,12 @@ public abstract class SpcBase implements Runnable, Serializable {
 	protected boolean executionPermission = true;
 
 	protected boolean isForced = false;
+	
+	protected boolean isTester = false;
 
-	public SpcBase(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) {
+	public SpcBase(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
+		this.isTester = isTester;
 		this.spcId = spcId;
 		this.taskList = taskList;
 		this.spaceWideRegistry = spaceWideRegistry;
@@ -413,4 +417,15 @@ public abstract class SpcBase implements Runnable, Serializable {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
+	public HashMap<String, SpcInfoType> getSpcLookupTable() {
+		
+		if(isTester) {
+			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);			
+		}
+		
+		return getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable();
+		
+	}
+
 }
