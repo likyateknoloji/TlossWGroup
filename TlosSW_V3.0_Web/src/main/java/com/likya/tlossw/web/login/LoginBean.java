@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.WebAppUser;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.appmng.UserManager;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
@@ -112,6 +113,8 @@ public class LoginBean extends LoginBase implements Serializable {
 				return LOGIN_FAILURE;
 			}
 
+			webAppUser.setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA);
+			
 			getSessionMediator().setWebAppUser(webAppUser);
 
 			getSessionMediator().setResourceMapper(webAppUser.getResourceMapper());
