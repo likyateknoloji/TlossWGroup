@@ -124,15 +124,19 @@ function applyDragDrop() {
 
 						// -------------------------------------------------------------
 
-						// isin adini ve senaryoda eklenecegi pathi alip
+						// isin id degerini ve senaryoda eklenecegi pathi alip
 						// sunucuya gonderiyor
+						var jobId = elw.firstChild.lastChild.lastChild.value;
+						console.log("jobId : " + jobId);
+						
 						var jobName = $(elw.firstChild.lastChild).text();
 						console.log("jobName : " + jobName);
+						
 						console.log("jobPath => " + $(this.firstChild).text());
 						var jobPath = getJobPath(this);
 						console.log("Full jobPath : " + jobPath + '/'+ jobName);
 
-						callHandleDropByName(jobName, jobPath);
+						callHandleDropByName(jobId, jobPath);
 
 						return false;
 					}
@@ -161,8 +165,8 @@ function applyDragDrop() {
 	                      });
 		                };
 				    
-					function callHandleDropByName(jobName, jobPath) {
-						document.getElementById('jobTemplatesForm:draggedTemplateName').value = jobName;
+					function callHandleDropByName(jobId, jobPath) {
+						document.getElementById('jobTemplatesForm:draggedTemplateId').value = jobId;
 						document.getElementById('jobTemplatesForm:draggedTemplatePath').value = jobPath;
 
 						//alert("merve1");
@@ -188,7 +192,7 @@ function applyDragDrop() {
 					}
 
 					// jobin senaryo agacinda birakildigi pathi buluyor
-					function getJobPath(myEl) {
+					function getJobPath_old(myEl) {
 						var treeContainerClassName = "ui-tree-container";
 						
 						var jobPath = "";
@@ -202,6 +206,42 @@ function applyDragDrop() {
 									jobPath = $.trim(myEl.querySelector('li span span span').childNodes[0].nodeValue)+ "/" + jobPath;
 								}
 								console.log("getJobPath => " + jobPath);
+							}
+
+							myEl = myEl.parentNode;
+						}
+
+						console.log("********* Birakilan isin senaryo path i *************************");
+						// console.log("root parentNode = " + myEl);
+						console.log("scenarioPath = " + jobPath);
+
+						var rootOfScenarios = myEl;
+						// console.log("rootOfScenarios " + rootOfScenarios);
+
+						// serbest islerden biriyse path bos donuyor
+						// if (rootOfScenarios.className ==
+						// treeContainerClassName) {
+						// return "";
+						// }
+
+						return jobPath;
+					}
+					
+					// jobin senaryo agacinda birakildigi pathi buluyor
+					function getJobPath(myEl) {
+						var treeContainerClassName = "ui-tree-container";
+						
+						var jobPath = "";
+						var first = 1;
+						while (myEl.className != treeContainerClassName) {
+							if (myEl.getAttribute("data-nodetype") == "scenario"){
+								if (first == 1) {
+									jobPath = $.trim(myEl.querySelector('li span span input').value);
+									first = 0;
+								} else {
+									jobPath = $.trim(myEl.querySelector('li span span input').value) + "/" + jobPath;
+								}
+								console.log(jobPath);
 							}
 
 							myEl = myEl.parentNode;
