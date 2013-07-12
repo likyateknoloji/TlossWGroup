@@ -493,7 +493,7 @@ declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $pl
 		   return element RUN 
 		   { attribute id {$next},  
 	          (: hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan) :)
-	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan)
+	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl)/dat:TlosProcessData, $plan)
 	       }
     into $calList
 };
