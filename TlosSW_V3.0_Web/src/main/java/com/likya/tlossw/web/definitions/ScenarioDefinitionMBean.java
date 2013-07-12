@@ -161,16 +161,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		baseScenarioInfos.setUserId(getWebAppUser().getId());
 	}
-/*
-	private void fillDependencyDefinitions() {
-		// son durumda bagimlik tanimlanmamissa senaryo icindeki ilgili kismi
-		// kaldiriyor
-		if (getScenario().getDependencyList() != null && getScenario().getDependencyList().getItemArray().length == 0) {
-			XmlCursor xmlCursor = getScenario().getDependencyList().newCursor();
-			xmlCursor.removeXml();
-		}
-	}
-*/
+
+	/*
+	 * private void fillDependencyDefinitions() { // son durumda bagimlik tanimlanmamissa senaryo icindeki ilgili kismi // kaldiriyor if (getScenario().getDependencyList() != null && getScenario().getDependencyList().getItemArray().length == 0) { XmlCursor xmlCursor = getScenario().getDependencyList().newCursor(); xmlCursor.removeXml(); } }
+	 */
 	private void fillStateInfos() {
 		// son durumda statu kodu tanimlanmamissa senaryo icindeki
 		// ilgili kismi kaldiriyor
@@ -218,7 +212,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 			WsScenarioNode swScenarioNode = new WsScenarioNode();
 			swScenarioNode.setName(scenarioName);
 			swScenarioNode.setId(getScenario().getID());
-			
+
 			TreeNode scenarioNode = new DefaultTreeNode("scenario", swScenarioNode, getJsTree().getSelectedJS());
 			scenarioNode.setExpanded(true);
 
@@ -440,20 +434,23 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 
 		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibaren path'i tutuyor
 		if (isJsUpdateButton()) {
-			scenarioPathInScenario = wsScenarioNode.getPath();
+			scenarioPathInScenario = wsScenarioNode.getName();
 			scenarioName = wsScenarioNode.getName(); // DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
 
 			scenarioNode = scenarioNode.getParent();
 		}
 		if (!scenarioNode.getParent().getData().equals(com.likya.tlossw.web.utils.ConstantDefinitions.TREE_ROOT)) {
-			scenarioPathInScenario = wsScenarioNode.getPath() + "/" + scenarioPathInScenario;
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + wsScenarioNode.getName() + "']/..";
+			String scenarioNodeName = ((WsScenarioNode) scenarioNode.getData()).getName();
 
-			while (scenarioNode.getParent() != null && !scenarioNode.getParent().getData().equals(scenarioRoot)) {
+			scenarioPathInScenario = scenarioNodeName + "/" + scenarioPathInScenario;
+			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioNodeName + "']/..";
+
+			while (scenarioNode.getParent() != null && !((WsScenarioNode) scenarioNode.getParent().getData()).getName().equals(scenarioRoot)) {
 				scenarioNode = scenarioNode.getParent();
+				scenarioNodeName = ((WsScenarioNode) scenarioNode.getData()).getName();
 
-				scenarioPathInScenario = wsScenarioNode.getPath() + "/" + scenarioPathInScenario;
-				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + wsScenarioNode.getName() + "']/.." + path;
+				scenarioPathInScenario = scenarioNodeName + "/" + scenarioPathInScenario;
+				path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioNodeName + "']/.." + path;
 			}
 		}
 
@@ -540,7 +537,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	@Override
 	public void fillTabs() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public String getScenId() {
@@ -550,7 +547,7 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	@Override
 	public void fillJobPropertyDetails() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
