@@ -55,31 +55,31 @@ public class DefinitionUtils {
 
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
 		//String timeStr = zeroCheck(date.get(Calendar.HOUR_OF_DAY) + "") + ":" + zeroCheck(date.get(Calendar.MINUTE) + "") + ":" + zeroCheck(date.get(Calendar.SECOND) + "");
-		
+
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-		LocalTime jobLocalTime = new LocalTime( time );
+		LocalTime jobLocalTime = new LocalTime(time);
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
 		String timeString = jobLocalTime.toDateTimeToday(zone).toString(formatter);
-		
-//		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-//		DateTimeFormatter dtf = DateTimeFormat.forPattern(timeInputFormat);
-//		LocalTime localTime = dtf.parseLocalTime(time.toString());
-//		
-//		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
-//		String jobLocalTime = localTime.toDateTimeToday(zone).toString(formatter);
-		
+
+		//		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+		//		DateTimeFormatter dtf = DateTimeFormat.forPattern(timeInputFormat);
+		//		LocalTime localTime = dtf.parseLocalTime(time.toString());
+		//		
+		//		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
+		//		String jobLocalTime = localTime.toDateTimeToday(zone).toString(formatter);
+
 		return timeString;
 	}
 
-//	public static int calendarToGMT(Calendar date) {
-//		int gmt = date.getTimeZone().getRawOffset() / 3600000;
-//		return gmt;
-//	}
-//
-//	public static int calendarToDST(Calendar date) {
-//		int dst = date.getTimeZone().getDSTSavings() / 3600000;
-//		return dst;
-//	}
+	//	public static int calendarToGMT(Calendar date) {
+	//		int gmt = date.getTimeZone().getRawOffset() / 3600000;
+	//		return gmt;
+	//	}
+	//
+	//	public static int calendarToDST(Calendar date) {
+	//		int dst = date.getTimeZone().getDSTSavings() / 3600000;
+	//		return dst;
+	//	}
 
 	@SuppressWarnings("deprecation")
 	public static String dateToStringTime(java.util.Date date) {
@@ -89,13 +89,12 @@ public class DefinitionUtils {
 		return timeStr;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String dateToStringDate(java.util.Date date, String selectedTZone) {
-		
+
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
 
 		String timeOutputFormat = new String("dd.MM.yyyy");
-		
+
 		DateTime dateTime = new DateTime(date, zone);
 		String dateStr = dateTime.toString(timeOutputFormat);
 
@@ -106,18 +105,18 @@ public class DefinitionUtils {
 	}
 
 	public static java.util.Date dateToDate(java.util.Date date, String selectedTZone) {
-		
+
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
 
-//		String timeOutputFormat = new String("dd.MM.yyyy");
-		
+		//		String timeOutputFormat = new String("dd.MM.yyyy");
+
 		DateTime dateTime = new DateTime(date, zone);
-		
-//		String dateStr = dateTime.toString(timeOutputFormat);
+
+		//		String dateStr = dateTime.toString(timeOutputFormat);
 
 		return dateTime.toDate();
 	}
-	
+
 	public static Calendar dateTimeToXmlDateTime(java.util.Date date, String time, String selectedTZone) {
 
 		//Calendar timeCalendar = dateToXmlTime(time, selectedTZone);
@@ -129,73 +128,69 @@ public class DefinitionUtils {
 	}
 
 	public static Calendar dateToXmlTime(String time, String selectedTZone) {
-		
+
 		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
-		
-		DateTimeParser[] parsers = { 
-		        DateTimeFormat.forPattern( "HH:mm:ss.SSSZZ" ).getParser(),
-		        DateTimeFormat.forPattern( "HH:mm:ss.SSS" ).getParser(),
-		        DateTimeFormat.forPattern( "HH:mm:ss" ).getParser() };
-		
-//		DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss.SSSZZ");
-		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
-		
+
+		DateTimeParser[] parsers = { DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
+
+		//		DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss.SSSZZ");
+		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+
 		LocalTime jobLocalTime = dtf.parseLocalTime(time);
 		//LocalTime jobLocalTime = new LocalTime( time, zonex);
-		
+
 		LocalDate tx = new LocalDate();
 		DateTime dtx = tx.toDateTime(jobLocalTime).toDateTime(zonex);
-		
-//		StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
-//		Integer hour, minute, second, millisecond;
-//
-//		hour = Integer.parseInt(timeTokenizer.nextToken());
-//		minute = Integer.parseInt(timeTokenizer.nextToken());
-//		String ek = timeTokenizer.nextToken();
-//		if(ek.indexOf(".")>0) {
-//			second = Integer.parseInt(ek.substring(0, ek.indexOf(".")-1));
-//			millisecond = Integer.parseInt(ek.substring(ek.indexOf(".")+1));			
-//		}
-//		else second = Integer.parseInt(timeTokenizer.nextToken());
-//
-//		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-//		LocalTime localTime2 = new LocalTime(hour, minute, second);
-//		
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.set(Calendar.HOUR_OF_DAY, hour);
-//		calendar.set(Calendar.MINUTE, minute);
-//		calendar.set(Calendar.SECOND, second);
-//		calendar.set(Calendar.MILLISECOND, 0);
-//
-//		LocalDate t = new LocalDate();
-//		DateTime dt = t.toDateTime(localTime2).toDateTime(zone);
-		
+
+		//		StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
+		//		Integer hour, minute, second, millisecond;
+		//
+		//		hour = Integer.parseInt(timeTokenizer.nextToken());
+		//		minute = Integer.parseInt(timeTokenizer.nextToken());
+		//		String ek = timeTokenizer.nextToken();
+		//		if(ek.indexOf(".")>0) {
+		//			second = Integer.parseInt(ek.substring(0, ek.indexOf(".")-1));
+		//			millisecond = Integer.parseInt(ek.substring(ek.indexOf(".")+1));			
+		//		}
+		//		else second = Integer.parseInt(timeTokenizer.nextToken());
+		//
+		//		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+		//		LocalTime localTime2 = new LocalTime(hour, minute, second);
+		//		
+		//		Calendar calendar = Calendar.getInstance();
+		//		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		//		calendar.set(Calendar.MINUTE, minute);
+		//		calendar.set(Calendar.SECOND, second);
+		//		calendar.set(Calendar.MILLISECOND, 0);
+		//
+		//		LocalDate t = new LocalDate();
+		//		DateTime dt = t.toDateTime(localTime2).toDateTime(zone);
+
 		return dtx.toCalendar(Locale.US);
 	}
 
 	// ekrandan girilen saat, saat dilimi ve gun isigindan yararlanma saatine
 	// gore sonuc donuyor
 	public static Calendar dateToXmlTime(java.util.Date date, String time, String selectedTZone) {
-		
-//		StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
-//		Integer hour, minute, second;
-        
+
+		//		StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
+		//		Integer hour, minute, second;
+
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-		LocalTime jobLocalTime = new LocalTime( time, zone);
+		LocalTime jobLocalTime = new LocalTime(time, zone);
 		//DateTime jdkDate = new DateTime(localTime2, zone);
 		//Calendar timeCalendar = dateToXmlTime(jobCalendar, selectedTZone);
 
 		//startTime = DefinitionUtils.calendarToStringTimeFormat(jobCalendar);
-//		String startTime = jobLocalTime.toString();
-		
-		
-//		DateTimeZone zoneUTC = DateTimeZone.UTC;
-//		LocalTime localTime = new LocalTime(zoneUTC);
+		//		String startTime = jobLocalTime.toString();
 
-//		hour = Integer.parseInt(timeTokenizer.nextToken());
-//		minute = Integer.parseInt(timeTokenizer.nextToken());
-//		second = Integer.parseInt(timeTokenizer.nextToken());
-//		LocalTime localTime2 = new LocalTime(hour, minute, second);
+		//		DateTimeZone zoneUTC = DateTimeZone.UTC;
+		//		LocalTime localTime = new LocalTime(zoneUTC);
+
+		//		hour = Integer.parseInt(timeTokenizer.nextToken());
+		//		minute = Integer.parseInt(timeTokenizer.nextToken());
+		//		second = Integer.parseInt(timeTokenizer.nextToken());
+		//		LocalTime localTime2 = new LocalTime(hour, minute, second);
 		// merge, resulting in 2004-25-12T12:20 (default time zone)
 		//DateTime dt = new DateTime(date);
 		LocalDate t = new LocalDate(date);
@@ -256,9 +251,12 @@ public class DefinitionUtils {
 	/**
 	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini karsilastiriyor.
 	 * 
-	 * @param validTo gecerliligin bittigi zaman
-	 * @param validFrom gecerliligin basladigi zaman
-	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise false donuyor
+	 * @param validTo
+	 *            gecerliligin bittigi zaman
+	 * @param validFrom
+	 *            gecerliligin basladigi zaman
+	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise
+	 *         false donuyor
 	 */
 	public static boolean dateComparer(ValidTo validTo, ValidFrom validFrom) {
 		if (validTo.getDate().after(validFrom.getDate())) {
@@ -274,8 +272,10 @@ public class DefinitionUtils {
 	/**
 	 * Jobin baslangic ve bitis zamanlarini karsilastiriyor.
 	 * 
-	 * @param stopTime jobin bitis zamani
-	 * @param startTime jobin baslangic zamani
+	 * @param stopTime
+	 *            jobin bitis zamani
+	 * @param startTime
+	 *            jobin baslangic zamani
 	 * @return bitis zamani baslangic zamanindan sonra ise true, esit ya da once ise false donuyor
 	 */
 	public static boolean dateComparer(Calendar stopTime, Calendar startTime) {
@@ -291,11 +291,16 @@ public class DefinitionUtils {
 	/**
 	 * Takvim tanimindaki takvimin gecerli oldugu zaman araligini karsilastiriyor.
 	 * 
-	 * @param date2 gecerliligin bittigi tarih, ornegin 2019-12-01
-	 * @param time2 gecerliligin bittigi zaman, ornegin 23:00:00
-	 * @param date1 gecerliligin basladigi tarih, ornegin 2008-12-01
-	 * @param time1 gecerliligin basladigi zaman, ornegin 08:00:00
-	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise false donuyor
+	 * @param date2
+	 *            gecerliligin bittigi tarih, ornegin 2019-12-01
+	 * @param time2
+	 *            gecerliligin bittigi zaman, ornegin 23:00:00
+	 * @param date1
+	 *            gecerliligin basladigi tarih, ornegin 2008-12-01
+	 * @param time1
+	 *            gecerliligin basladigi zaman, ornegin 08:00:00
+	 * @return gecerliligin bitis zamani baslangic zamanindan sonra ise true, ayni ya da once ise
+	 *         false donuyor
 	 */
 	public static boolean dateComparer(Date date2, Time time2, Date date1, Time time1) {
 
@@ -324,7 +329,7 @@ public class DefinitionUtils {
 
 		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 		String dateStr = dt.toString(outputFormat);
-		
+
 		return dateStr;
 	}
 
@@ -408,7 +413,7 @@ public class DefinitionUtils {
 		while (pathTokenizer.hasMoreTokens()) {
 			String scenarioId = pathTokenizer.nextToken();
 
-			path = path + "/dat:scenario/dat:baseScenarioInfos[@ID = '" + scenarioId + "']/..";
+			path = path + "/dat:scenario[@ID = '" + scenarioId + "']";
 		}
 
 		path = path + "/dat:jobList";
@@ -421,9 +426,12 @@ public class DefinitionUtils {
 		String name = nameTokenizer.nextToken().trim();
 		String id = nameTokenizer.nextToken().trim();
 
-		if(X.equalsIgnoreCase("Name")) return name;
-		else if(X.equalsIgnoreCase("Id"))return id;
-		else return null;
+		if (X.equalsIgnoreCase("Name"))
+			return name;
+		else if (X.equalsIgnoreCase("Id"))
+			return id;
+		else
+			return null;
 	}
 
 }
