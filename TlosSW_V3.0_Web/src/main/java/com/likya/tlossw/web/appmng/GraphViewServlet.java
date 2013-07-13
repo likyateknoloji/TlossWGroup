@@ -17,8 +17,8 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
@@ -41,17 +41,19 @@ public class GraphViewServlet extends HttpServlet {
 		String panel = request.getParameter("panel");
 		String scenarioId = request.getParameter("scenarioId");
 		
+		WebAppUser webAppUser = (WebAppUser) request.getSession().getAttribute("webAppUser");
+		
 		String gml = null;
 		byte[] graphML = null;
 		
 		if (panel.equals(ConstantDefinitions.LIVE_TREE)) {
-			gml = constructGMLforLiveTree(scenarioId);
+			gml = constructGMLforLiveTree(webAppUser, scenarioId);
 			
 			response.setContentType("text/xml");
 
 		} else if (panel.equals(ConstantDefinitions.DEFINITION_TREE)) {
 			
-			gml = constructGML(scenarioId);
+			gml = constructGML(webAppUser, scenarioId);
 
 			response.setContentType("text/plain");
 
@@ -78,11 +80,11 @@ public class GraphViewServlet extends HttpServlet {
 		outputStream.close();
 	}
 	
-	private String constructGMLforLiveTree(String scenarioId) {
+	private String constructGMLforLiveTree(WebAppUser webAppUser, String scenarioId) {
 		String gml = null;
 		
 		//ilgili senaryonun islerinin anlik bilgilerini sunucudan aliyor
-		ArrayList<JobInfoTypeClient> jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(new JmxUser(), scenarioId);
+		ArrayList<JobInfoTypeClient> jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(webAppUser, scenarioId);
 		
 		gml = "<Graph>\n";
 		
@@ -146,10 +148,10 @@ public class GraphViewServlet extends HttpServlet {
 		return gml;
 	}
 	
-	private String constructGML(String scenarioId) {
+	private String constructGML(WebAppUser webAppUser, String scenarioId) {
 		String gml = null;
 		
-		Scenario scenario = TEJmxMpDBClient.getScenarioFromId(new JmxUser(), CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
+		Scenario scenario = TEJmxMpDBClient.getScenarioFromId(webAppUser, CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
 		
 		gml = "<Graph>\n";
 		
