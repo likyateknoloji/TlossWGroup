@@ -16,7 +16,6 @@ import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.LiveUtils;
@@ -65,14 +64,14 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJobInfo(String groupId, String jobName) {
 		jobInTyCl = new JobInfoTypeClient();
-		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(new JmxUser(), groupId, jobName, transformToLocalTime);
+		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), groupId, jobName, transformToLocalTime);
 
 		// her isin komut dosyasi yok
 		if (jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
-			jobCommandExist = TEJmxMpClient.checkFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
+			jobCommandExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
 		}
 
-		jobLogExist = TEJmxMpClient.checkFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName()));
+		jobLogExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName()));
 
 		jobDependencyListStr = "";
 		if (jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
@@ -100,7 +99,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		String jcmdStr = LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobPath().toString(), jobDef.getJobCommand().toString());
-		jobCommandStr = TEJmxMpClient.readFile(new JmxUser(), jcmdStr).toString();
+		jobCommandStr = TEJmxMpClient.readFile(getWebAppUser(), jcmdStr).toString();
 	}
 
 	public void openJobLogAction() {
@@ -119,7 +118,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 			jobDef = selectedJobBaseReport;
 		}
 
-		jobLog = TEJmxMpClient.readFile(new JmxUser(), LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobLogPath(), jobDef.getJobLogName())).toString();
+		jobLog = TEJmxMpClient.readFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobLogPath(), jobDef.getJobLogName())).toString();
 	}
 
 	public void fillJobReportGrid() {
@@ -149,7 +148,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void pauseJobAction(ActionEvent e) {
-		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.pauseJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -158,7 +157,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void startJobAction(ActionEvent e) {
-		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.startJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -168,7 +167,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
-		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -177,7 +176,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void stopJobAction(ActionEvent e) {
-		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.stopJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -186,7 +185,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void retryJobAction(ActionEvent e) {
-		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.retryJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -195,7 +194,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void doSuccessJobAction(ActionEvent e) {
-		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.doSuccess(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -204,7 +203,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void skipJobAction(ActionEvent e) {
-		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.skipJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
@@ -213,7 +212,7 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void resumeJobAction(ActionEvent e) {
-		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(jobInTyCl));
+		TEJmxMpClient.resumeJob(getWebAppUser(), LiveUtils.jobPath(jobInTyCl));
 		refreshLivePanel();
 
 		/*
