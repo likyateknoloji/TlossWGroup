@@ -164,35 +164,37 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	
 	public String switchToTestPage() throws InvalidInputException {
 		
-		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
+		getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
 		
 		TlosProcessDataDocument tlosProcessDataDocument = TlosProcessDataDocument.Factory.newInstance();
-
 		tlosProcessDataDocument.addNewTlosProcessData();
 		
 		TlosProcessData tlosProcessData = tlosProcessDataDocument.getTlosProcessData();
+		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
+		tlosProcessData.addNewBaseScenarioInfos().setUserId(getWebAppUser().getId());
 		
-		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getSessionMediator().getWebAppUser().getId() + "");
-		
-		tlosProcessData.addNewBaseScenarioInfos().setUserId(getSessionMediator().getWebAppUser().getId());
-		
-		tlosProcessData.addNewJobList();
-		
-		
-		JobProperties jobProperties = null;
-		try {
-			jobProperties = JobPropertiesDocument.Factory.parse(getJobPropertiesXML()).getJobProperties();
-		} catch (XmlException e) {
-			e.printStackTrace();
-		}
+		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) {
+			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
+			tlosProcessData.addNewScenario().set(scenario);	
+		} else {
+			tlosProcessData.addNewJobList();
+			JobProperties jobProperties = null;
+			try {
+				jobProperties = JobPropertiesDocument.Factory.parse(getJobPropertiesXML()).getJobProperties();
+			} catch (XmlException e) {
+				e.printStackTrace();
+			}
 
-		tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
+			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
+		}
+		
 		
 		if(tlosProcessData.validate()) {
 			throw new InvalidInputException();
 		}
 		
-		TEJmxMpWorkSpaceClient.addTestData(getSessionMediator().getWebAppUser(), tlosProcessDataDocument.toString());
+		
+		TEJmxMpWorkSpaceClient.addTestData(getWebAppUser(), tlosProcessDataDocument.toString());
 		
 		return DEFAULT_TEST_PAGE;
 	}
