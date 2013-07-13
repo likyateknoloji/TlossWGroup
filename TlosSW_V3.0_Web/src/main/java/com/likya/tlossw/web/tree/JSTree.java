@@ -62,7 +62,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		WsScenarioNode rootNode = new WsScenarioNode();
 		rootNode.setId(ConstantDefinitions.TREE_ROOTID);
 		rootNode.setName(ConstantDefinitions.TREE_ROOT);
-		
+
 		root = new DefaultTreeNode(rootNode, null);
 
 		WsScenarioNode wsScenarioNode = new WsScenarioNode();
@@ -156,10 +156,10 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	// silinen işi ağaçtan kaldırıyor
-	public void removeJobNode(String jobPath, String jobName) {
+	public void removeJobNode(String jobPath, String jobId) {
 		TreeNode selectedNode = root;
 
-		ArrayList<String> scenarioNameList = new ArrayList<>();
+		ArrayList<String> scenarioIdList = new ArrayList<>();
 		StringTokenizer pathTokenizer = new StringTokenizer(jobPath, "/");
 
 		// ilk gelen senaryo root oldugu icin onu listeye eklemiyor
@@ -168,21 +168,20 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		}
 
 		while (pathTokenizer.hasMoreTokens()) {
-			scenarioNameList.add(pathTokenizer.nextToken());
+			scenarioIdList.add(pathTokenizer.nextToken());
 		}
-		// scenarioNameList.add(jobName);
 
 		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
-		deleteJobNode(scenarioNameList, 0, nodeList, jobName);
+		deleteJobNode(scenarioIdList, 0, nodeList, jobId);
 	}
 
-	private void deleteJobNode(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList, String jobName) {
+	private void deleteJobNode(ArrayList<String> scenarioIdList, int index, List<TreeNode> nodeList, String jobId) {
 		boolean result = false;
 		for (TreeNode node : nodeList) {
 
 			// serbest islerde
-			if (scenarioNameList.size() == 0) {
-				if (((WsNode) node.getData()).getName().equals(jobName)) {
+			if (scenarioIdList.size() == 0) {
+				if (((WsNode) node.getData()).getId().equals(jobId)) {
 					TreeNode parent = node.getParent();
 					parent.getChildren().remove(node);
 
@@ -190,19 +189,19 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 				}
 
 			} else {
-				String scenarioName = scenarioNameList.get(index);
+				String scenarioId = scenarioIdList.get(index);
 
-				if (((WsNode) node.getData()).getName().equals(scenarioName)) {
-					if (scenarioNameList.size() == index + 1) {
+				if (((WsNode) node.getData()).getId().equals(scenarioId)) {
+					if (scenarioIdList.size() == index + 1) {
 						result = true;
 					} else {
-						deleteJobNode(scenarioNameList, ++index, node.getChildren(), jobName);
+						deleteJobNode(scenarioIdList, ++index, node.getChildren(), jobId);
 					}
 				}
 
 				if (result) {
 					for (TreeNode jobNode : node.getChildren()) {
-						if (((WsNode) jobNode.getData()).getName().equals(jobName)) {
+						if (((WsNode) jobNode.getData()).getId().equals(jobId)) {
 							TreeNode parent = jobNode.getParent();
 							parent.getChildren().remove(jobNode);
 
