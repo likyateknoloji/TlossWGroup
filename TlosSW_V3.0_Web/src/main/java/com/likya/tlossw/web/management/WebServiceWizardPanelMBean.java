@@ -26,7 +26,6 @@ import com.likya.tlos.model.xmlbeans.webservice.EnumListDocument.EnumList;
 import com.likya.tlos.model.xmlbeans.webservice.OperationDocument.Operation;
 import com.likya.tlos.model.xmlbeans.webservice.ParameterListDocument.ParameterList;
 import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.WebServiceDefinition;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.webservice.Function;
 import com.likya.tlossw.model.webservice.Parameter;
 import com.likya.tlossw.model.webservice.WebService;
@@ -106,7 +105,7 @@ public class WebServiceWizardPanelMBean extends TlosSWBaseBean implements Serial
 	}
 
 	public void getWsMethodsAction() {
-		WebService webService = TEJmxMpWSClient.getWsOperationList(new JmxUser(), getWsdlAddress());
+		WebService webService = TEJmxMpWSClient.getWsOperationList(getWebAppUser(), getWsdlAddress());
 
 		if (webService == null) {
 			addMessage("wsCozumleme", FacesMessage.SEVERITY_ERROR, "tlos.info.webservice.error", null);
@@ -129,7 +128,7 @@ public class WebServiceWizardPanelMBean extends TlosSWBaseBean implements Serial
 	}
 
 	public void testWsMethodAction(ActionEvent e) {
-		setResult(TEJmxMpWSClient.callOperation(new JmxUser(), getWsdlAddress(), currentFunction));
+		setResult(TEJmxMpWSClient.callOperation(getWebAppUser(), getWsdlAddress(), currentFunction));
 	}
 
 	public void saveWSDefinitionAction(ActionEvent e) {
