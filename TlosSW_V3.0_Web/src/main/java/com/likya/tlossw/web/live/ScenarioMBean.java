@@ -17,7 +17,6 @@ import org.primefaces.context.RequestContext;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
@@ -50,7 +49,8 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	private boolean transformToLocalTime;
 
 	public void getJobList(String scenarioId) {
-		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(new JmxUser(), scenarioId);
+		
+		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(getWebAppUser(), scenarioId);
 
 		spcInfoTypeClient.setSpcId(spcInfoTypeClient.getSpcId());
 		spcInfoTypeClient.setNumOfActiveJobs(spcInfoTypeClient.getNumOfActiveJobs());
@@ -62,7 +62,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 		setSpcInfoTypeClient(spcInfoTypeClient);
 
-		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(new JmxUser(), getSpcInfoTypeClient().getSpcId(), transformToLocalTime);
+		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), transformToLocalTime);
 		System.out.println("");
 		oSList.add("Windows");
 		oSList.add("Unix");
@@ -86,7 +86,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	public void showAvailableResourcesForJob(ActionEvent e) {
 		selectedRow = (JobInfoTypeClient) jobDataTable.getRowData();
 
-		ArrayList<Resource> resourceAgentList = TEJmxMpClient.getAvailableResourcesForJob(new JmxUser(), LiveUtils.jobPath(selectedRow));
+		ArrayList<Resource> resourceAgentList = TEJmxMpClient.getAvailableResourcesForJob(getWebAppUser(), LiveUtils.jobPath(selectedRow));
 
 		resourceListForJob = new ArrayList<SelectItem>();
 
@@ -106,7 +106,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void assignAgentForJob(ActionEvent e) {
-		boolean assigned = TEJmxMpClient.assignAgentForJob(new JmxUser(), selectedRow.getTreePath() + "." + selectedRow.getJobKey(), selectedResource);
+		boolean assigned = TEJmxMpClient.assignAgentForJob(getWebAppUser(), selectedRow.getTreePath() + "." + selectedRow.getJobKey(), selectedResource);
 
 		if (assigned) {
 			addMessage("assignAgentForJob", FacesMessage.SEVERITY_INFO, "tlos.trace.agentAssignedForJob", null);
@@ -119,14 +119,14 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void stopScenarioNormalAction(ActionEvent e) {
-		TEJmxMpClient.stopScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId(), false);
+		TEJmxMpClient.stopScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), false);
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.normal");
 		 */
 	}
 
 	public void stopScenarioForcedAction(ActionEvent e) {
-		TEJmxMpClient.stopScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId(), true);
+		TEJmxMpClient.stopScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), true);
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.force");
@@ -134,7 +134,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void pauseScenarioAction(ActionEvent e) {
-		TEJmxMpClient.suspendScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
+		TEJmxMpClient.suspendScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.pause");
@@ -142,7 +142,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void resumeScenarioAction(ActionEvent e) {
-		TEJmxMpClient.resumeScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
+		TEJmxMpClient.resumeScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.resume");
@@ -150,7 +150,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void startScenarioAction(ActionEvent e) {
-		TEJmxMpClient.restartScenario(new JmxUser(), getSpcInfoTypeClient().getSpcId());
+		TEJmxMpClient.restartScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.start");
@@ -159,7 +159,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void pauseJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.pauseJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.pauseJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -170,7 +170,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.startUserBasedJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -180,7 +180,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void startJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.startJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.startJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -190,7 +190,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void retryJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.retryJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.retryJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -200,7 +200,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void doSuccessJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.doSuccess(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.doSuccess(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -210,7 +210,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void skipJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.skipJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.skipJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -220,7 +220,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void stopJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.stopJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.stopJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
@@ -230,7 +230,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void resumeJobAction(ActionEvent e) {
 		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.resumeJob(new JmxUser(), LiveUtils.jobPath(job));
+		TEJmxMpClient.resumeJob(getWebAppUser(), LiveUtils.jobPath(job));
 		refreshLivePanel(job.getTreePath());
 
 		/*
