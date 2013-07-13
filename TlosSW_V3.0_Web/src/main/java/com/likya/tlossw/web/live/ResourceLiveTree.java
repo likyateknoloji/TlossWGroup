@@ -19,7 +19,6 @@ import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
@@ -143,7 +142,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 				TlosSWResourceNode tlosSpaceWideInputNode = beforeServerRenderLiveTree(kaynakListesi);
 
 				//sunucudan guncel makine listesini ve o makinelerdeki agent listelerini aliyor
-				tlosSWResourceNode = TEJmxMpClient.getLiveResourceTreeInfo(new JmxUser(), tlosSpaceWideInputNode);
+				tlosSWResourceNode = TEJmxMpClient.getLiveResourceTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				liveTreeCache.put(((Object) tlosSWResourceNode).hashCode(), tlosSWResourceNode);
 			}
 		}
