@@ -24,7 +24,6 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.ProxyPropertiesDocument.ProxyPro
 import com.likya.tlos.model.xmlbeans.ftpadapter.SftpPropertiesDocument.SftpProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument.TransportProvider;
 import com.likya.tlossw.model.FTPAccessInfoTypeClient;
-import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -259,7 +258,7 @@ public class FTPAccessPanelMBean extends TlosSWBaseBean implements Serializable 
 		ftpAccessInfoTypeClient.setUserName(ftpProperties.getConnection().getUserName());
 		ftpAccessInfoTypeClient.setPassword(ftpProperties.getConnection().getUserPassword());
 
-		String message = TEJmxMpValidationClient.checkFTPAccess(new JmxUser(), ftpAccessInfoTypeClient);
+		String message = TEJmxMpValidationClient.checkFTPAccess(getWebAppUser(), ftpAccessInfoTypeClient);
 
 		if (message == null) {
 			addMessage("testftpAccessConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.jmxConnection", null);
