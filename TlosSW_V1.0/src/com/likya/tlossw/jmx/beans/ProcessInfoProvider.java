@@ -104,7 +104,13 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		SpcInfoType spcInfoType = null;
+		
+		if (isTester(jmxUser)) {
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
+		} else {
+			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		}
 
 		JobRuntimeProperties jobRuntimeProperties = null;
 
@@ -547,8 +553,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			return null;
 		}
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		SpcInfoType spcInfoType = null;
 
+		if (isTester(jmxUser)) {
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(treePath);
+		} else {
+			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		}
+		
 		String scenarioId = spcInfoType.getSpcReferance().getSpcId();
 
 		SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
