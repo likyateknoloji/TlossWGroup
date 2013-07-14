@@ -778,6 +778,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		returnCode = ReturnCode.Factory.newInstance();
 
+		jobStatus = Status.Factory.newInstance();
 		jobStatusName = "";
 		manyJobStatusList = new ArrayList<SelectItem>();
 
