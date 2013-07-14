@@ -8,10 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
@@ -32,6 +34,7 @@ import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList;
@@ -40,6 +43,7 @@ import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioSt
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
@@ -64,8 +68,11 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private String jsCalendar;
 	
-	private Status jsStatus;
+	private Status jobStatus;
 	private String jobStatusName;
+	private Collection<SelectItem> jobStatusNameList = null;
+	
+	private Collection<SelectItem> oSystemList = null;
 	
 	/* jsStatusPopup */
 	private boolean statusDialogShow = false;
@@ -124,9 +131,109 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	
 	private ReturnCode returnCode;
 	
+	private Collection<SelectItem> jsCalendarList = null;
+	
+	
+	// localParameters
+	private String paramName;
+	private String paramDesc;
+	private String paramType;
+	private String paramPreValue;
+	private String selectedParamName;
+	
+	private boolean renderUpdateParamButton = false;
+
+	
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
 		jsUpdateButton = !jsUpdateButton;
+	}
+	
+	private void resetInputParameterFields() {
+		paramName = "";
+		paramDesc = "";
+		paramPreValue = "";
+		paramType = "";
+	}
+	
+	public void editInputParamAction(ActionEvent e) {
+		Parameter inParam = (Parameter) getParameterTable().getRowData();
+
+		paramName = new String(inParam.getName());
+		paramDesc = new String(inParam.getDesc());
+		paramPreValue = new String(inParam.getPreValue().getStringValue());
+		paramType = new String(inParam.getPreValue().getType().toString());
+
+		selectedParamName = paramName;
+
+		renderUpdateParamButton = true;
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm:tabView:parametersPanel");
+	}
+	
+	public void addInputParameter() {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
+
+			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
+
+			return;
+		}
+
+		Parameter parameter = Parameter.Factory.newInstance();
+		parameter.setName(paramName);
+		parameter.setDesc(paramDesc);
+
+		PreValue preValue = PreValue.Factory.newInstance();
+		preValue.setStringValue(paramPreValue);
+		preValue.setType(new BigInteger(paramType));
+		parameter.setPreValue(preValue);
+
+		getParameterList().add(parameter);
+
+		resetInputParameterFields();
+	}
+	
+	public void deleteInputParamAction(ActionEvent e) {
+		int parameterIndex = getParameterTable().getRowIndex();
+		getParameterList().remove(parameterIndex);
+
+		renderUpdateParamButton = false;
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm:tabView:parametersPanel");
+	}
+
+	public void updateInputParameter() {
+		for (int i = 0; i < getParameterList().size(); i++) {
+
+			if (selectedParamName.equals(getParameterList().get(i).getName())) {
+				getParameterList().get(i).setName(paramName);
+				getParameterList().get(i).setDesc(paramDesc);
+
+				PreValue preValue = PreValue.Factory.newInstance();
+				preValue.setStringValue(paramPreValue);
+				preValue.setType(new BigInteger(paramType));
+				getParameterList().get(i).setPreValue(preValue);
+
+				break;
+			}
+		}
+
+		resetInputParameterFields();
+
+		renderUpdateParamButton = false;
+	}
+	
+	public void fillAllLists() {
+		
+		long startTime = System.currentTimeMillis();
+		
+		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
+		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		
+		System.out.println();
+		
 	}
 
 	protected void fillTimeManagement(TimeManagement timeManagement) {
@@ -454,8 +561,8 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	public void updateJobStatusAction(Status[] statusArray) {
 
 		for (Status jStatus : statusArray) {
-			if (jsStatus.getStatusName().toString().equals(jStatus.getStatusName().toString())) {
-				jStatus = WebInputUtils.cloneJobStatus(jsStatus);
+			if (jobStatus.getStatusName().toString().equals(jStatus.getStatusName().toString())) {
+				jStatus = WebInputUtils.cloneJobStatus(jobStatus);
 
 				addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.update", null);
 
@@ -478,7 +585,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		
 		for (Status status : statusArray) {
 			if (status.getStatusName().toString().equals(selectedJobStatusList[0])) {
-				jsStatus = WebInputUtils.cloneJobStatus(status);
+				jobStatus = WebInputUtils.cloneJobStatus(status);
 				jobStatusName = selectedJobStatusList[0];
 
 				break;
@@ -487,8 +594,8 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		manyReturnCodeList = new ArrayList<SelectItem>();
 
-		for (int i = 0; i < jsStatus.getReturnCodeListArray().length; i++) {
-			ReturnCodeList returnCodeList = jsStatus.getReturnCodeListArray(i);
+		for (int i = 0; i < jobStatus.getReturnCodeListArray().length; i++) {
+			ReturnCodeList returnCodeList = jobStatus.getReturnCodeListArray(i);
 
 			for (int j = 0; j < returnCodeList.getReturnCodeArray().length; j++) {
 				ReturnCode returnCode = returnCodeList.getReturnCodeArray(j);
@@ -530,8 +637,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		// ayni kod birden fazla tanimlanabiliyor
 		// bu kontrol yapilip ayni kodun eklenmesi engellenecek
 		
-		Status jobStatus = jsStatus;
-
 		// guncelleme icin acildiginda duplicate kontrolunu yapmiyor
 		if (jobStatus.getStsId() == null || jobStatus.getStsId().equals("")) {
 			if (!checkDuplicateStateName()) {
@@ -807,14 +912,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.alarmList = alarmList;
 	}
 
-	public Status getJsStatus() {
-		return jsStatus;
-	}
-
-	public void setJsStatus(Status jsStatus) {
-		this.jsStatus = jsStatus;
-	}
-
 	public String getJobStatusName() {
 		return jobStatusName;
 	}
@@ -1005,6 +1102,86 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public void setTzList(Collection<SelectItem> tzList) {
 		this.tzList = tzList;
+	}
+
+	public Status getJobStatus() {
+		return jobStatus;
+	}
+
+	public void setJobStatus(Status jobStatus) {
+		this.jobStatus = jobStatus;
+	}
+
+	public Collection<SelectItem> getJsCalendarList() {
+		return jsCalendarList;
+	}
+
+	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
+		this.jsCalendarList = jsCalendarList;
+	}
+
+	public Collection<SelectItem> getJobStatusNameList() {
+		return jobStatusNameList;
+	}
+
+	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
+		this.jobStatusNameList = jobStatusNameList;
+	}
+
+	public Collection<SelectItem> getoSystemList() {
+		return oSystemList;
+	}
+
+	public void setoSystemList(Collection<SelectItem> oSystemList) {
+		this.oSystemList = oSystemList;
+	}
+
+	public String getParamName() {
+		return paramName;
+	}
+
+	public void setParamName(String paramName) {
+		this.paramName = paramName;
+	}
+
+	public String getParamDesc() {
+		return paramDesc;
+	}
+
+	public void setParamDesc(String paramDesc) {
+		this.paramDesc = paramDesc;
+	}
+
+	public String getParamType() {
+		return paramType;
+	}
+
+	public void setParamType(String paramType) {
+		this.paramType = paramType;
+	}
+
+	public String getParamPreValue() {
+		return paramPreValue;
+	}
+
+	public void setParamPreValue(String paramPreValue) {
+		this.paramPreValue = paramPreValue;
+	}
+
+	public String getSelectedParamName() {
+		return selectedParamName;
+	}
+
+	public void setSelectedParamName(String selectedParamName) {
+		this.selectedParamName = selectedParamName;
+	}
+
+	public boolean isRenderUpdateParamButton() {
+		return renderUpdateParamButton;
+	}
+
+	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
+		this.renderUpdateParamButton = renderUpdateParamButton;
 	}
 	
 	// public int getGmt() {

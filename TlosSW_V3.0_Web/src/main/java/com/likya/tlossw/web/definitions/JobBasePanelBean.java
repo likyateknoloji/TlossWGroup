@@ -14,7 +14,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
-import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
 import com.likya.tlos.model.xmlbeans.common.ChoiceType;
@@ -45,7 +44,6 @@ import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFaile
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
@@ -108,9 +106,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	// baseJsInfos
 	private String jsName;
 
-	private Collection<SelectItem> jsCalendarList = null;
-
-	private Collection<SelectItem> oSystemList = null;
 	private String oSystem;
 
 	private String jobPriority;
@@ -167,7 +162,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	private boolean jobAutoRetry;
 
 	// stateInfos
-	private Collection<SelectItem> jobStatusNameList = null;
 	private String jobStatusName;
 
 	/* live state info */
@@ -181,16 +175,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	private Collection<SelectItem> osTypeList = null;
 
 	private String[] selectedReturnCodeList;
-
-	// localParameters
-	private String paramName;
-	private String paramDesc;
-	private String paramType;
-	private String paramPreValue;
-
-	private String selectedParamName;
-
-	private boolean renderUpdateParamButton = false;
 
 	private String jobSLA;
 	private Collection<SelectItem> jsSLAList = null;
@@ -412,6 +396,9 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 		long startTime = System.currentTimeMillis();
 
+		System.out.println("");
+		System.out.println("JobBaseBean.initJobPanel");
+		
 		fillAllLists();
 
 		jobProperties = JobProperties.Factory.newInstance();
@@ -444,6 +431,8 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void fillAllLists() {
 		
+		super.fillAllLists();
+		
 		long startTime = System.currentTimeMillis();
 		
 		fillOSystemList();
@@ -466,10 +455,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
 		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
-		System.out.println("JobBaseBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 		
 		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
@@ -1121,87 +1106,11 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		dependencyDialogShow = true;
 	}
 
-	public void addInputParameter() {
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
-
-			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
-
-			return;
-		}
-
-		Parameter parameter = Parameter.Factory.newInstance();
-		parameter.setName(paramName);
-		parameter.setDesc(paramDesc);
-
-		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setStringValue(paramPreValue);
-		preValue.setType(new BigInteger(paramType));
-		parameter.setPreValue(preValue);
-
-		getParameterList().add(parameter);
-
-		resetInputParameterFields();
-	}
-
-	private void resetInputParameterFields() {
-		paramName = "";
-		paramDesc = "";
-		paramPreValue = "";
-		paramType = "";
-	}
-
-	public void deleteInputParamAction(ActionEvent e) {
-		int parameterIndex = getParameterTable().getRowIndex();
-		getParameterList().remove(parameterIndex);
-
-		renderUpdateParamButton = false;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
-	}
-
-	public void editInputParamAction(ActionEvent e) {
-		Parameter inParam = (Parameter) getParameterTable().getRowData();
-
-		paramName = new String(inParam.getName());
-		paramDesc = new String(inParam.getDesc());
-		paramPreValue = new String(inParam.getPreValue().getStringValue());
-		paramType = new String(inParam.getPreValue().getType().toString());
-
-		selectedParamName = paramName;
-
-		renderUpdateParamButton = true;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
-	}
-
-	public void updateInputParameter() {
-		for (int i = 0; i < getParameterList().size(); i++) {
-
-			if (selectedParamName.equals(getParameterList().get(i).getName())) {
-				getParameterList().get(i).setName(paramName);
-				getParameterList().get(i).setDesc(paramDesc);
-
-				PreValue preValue = PreValue.Factory.newInstance();
-				preValue.setStringValue(paramPreValue);
-				preValue.setType(new BigInteger(paramType));
-				getParameterList().get(i).setPreValue(preValue);
-
-				break;
-			}
-		}
-
-		resetInputParameterFields();
-
-		renderUpdateParamButton = false;
-	}
-
 	public void initJobStatusPopup(ActionEvent e) {
 		setStatusDialogShow(!checkDuplicateStateName());
 
 		setOsType(OSystem.WINDOWS.toString());
-		setJsStatus(Status.Factory.newInstance());
+		setJobStatus(Status.Factory.newInstance());
 		setReturnCode(ReturnCode.Factory.newInstance());
 		setManyReturnCodeList(new ArrayList<SelectItem>());
 	}
@@ -1218,7 +1127,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 			return;
 		}
 
-		Status tmpJobStatus = WebInputUtils.cloneJobStatus(getJsStatus());
+		Status tmpJobStatus = WebInputUtils.cloneJobStatus(getJobStatus());
 
 		/**
 		 * @author serkan taş
@@ -1445,22 +1354,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setJobProperties(JobProperties jobProperties) {
 		this.jobProperties = jobProperties;
-	}
-
-	public Collection<SelectItem> getJsCalendarList() {
-		return jsCalendarList;
-	}
-
-	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
-		this.jsCalendarList = jsCalendarList;
-	}
-
-	public Collection<SelectItem> getoSystemList() {
-		return oSystemList;
-	}
-
-	public void setoSystemList(Collection<SelectItem> oSystemList) {
-		this.oSystemList = oSystemList;
 	}
 
 	public String getoSystem() {
@@ -1749,62 +1642,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setJobAutoRetry(boolean jobAutoRetry) {
 		this.jobAutoRetry = jobAutoRetry;
-	}
-
-	public String getParamName() {
-		return paramName;
-	}
-
-	public void setParamName(String paramName) {
-		this.paramName = paramName;
-	}
-
-	public String getParamDesc() {
-		return paramDesc;
-	}
-
-	public void setParamDesc(String paramDesc) {
-		this.paramDesc = paramDesc;
-	}
-
-	public String getParamType() {
-		return paramType;
-	}
-
-	public void setParamType(String paramType) {
-		this.paramType = paramType;
-	}
-
-	public String getParamPreValue() {
-		return paramPreValue;
-	}
-
-	public void setParamPreValue(String paramPreValue) {
-		this.paramPreValue = paramPreValue;
-	}
-
-	public boolean isRenderUpdateParamButton() {
-		return renderUpdateParamButton;
-	}
-
-	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
-		this.renderUpdateParamButton = renderUpdateParamButton;
-	}
-
-	public String getSelectedParamName() {
-		return selectedParamName;
-	}
-
-	public void setSelectedParamName(String selectedParamName) {
-		this.selectedParamName = selectedParamName;
-	}
-
-	public Collection<SelectItem> getJobStatusNameList() {
-		return jobStatusNameList;
-	}
-
-	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
-		this.jobStatusNameList = jobStatusNameList;
 	}
 
 	public String getJobStatusName() {
