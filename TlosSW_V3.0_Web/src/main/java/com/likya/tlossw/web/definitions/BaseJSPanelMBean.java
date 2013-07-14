@@ -1183,6 +1183,12 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
 		this.renderUpdateParamButton = renderUpdateParamButton;
 	}
+
+	public boolean isAgentChoiceMethodUserMandatoryPreference() {
+		return "UserMandatoryPreference".equals(agentChoiceMethod);
+	}
+
+
 	
 	// public int getGmt() {
 	// return gmt;
