@@ -447,43 +447,45 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		long startTime = System.currentTimeMillis();
 		
 		fillOSystemList();
-		System.out.println("JobBaseBean.fillOSystemList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillJobBaseTypeList();
-		System.out.println("JobBaseBean.fillJobBaseTypeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");		
-		
 		fillEventTypeDefList();
-		System.out.println("JobBaseBean.fillEventTypeDefList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillJobTypeDefList();
-		System.out.println("JobBaseBean.fillJobTypeDefList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillAgentChoiceMethodList();
-		System.out.println("JobBaseBean.fillAgentChoiceMethodList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillRelativeTimeOptionList();
-		System.out.println("JobBaseBean.fillRelativeTimeOptionList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillUnitTypeList();
-		System.out.println("JobBaseBean.fillUnitTypeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillJobStatusList();
-		System.out.println("JobBaseBean.fillJobStatusList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillJobStateList();
-		System.out.println("JobBaseBean.fillJobStateList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
 		fillJobSubtateList();
-		System.out.println("JobBaseBean.fillJobSubtateList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+
+		System.out.println("JobBaseBean.WebInputUtils.fillAllLists Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
 		
 		setTzList(WebInputUtils.fillTZList());
+		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
+		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
+		System.out.println("JobBaseBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
+		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setDefinedAgentList(WebInputUtils.fillAgentList(getDbOperations().getAgents()));
+		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setJsSLAList(WebInputUtils.fillSLAList(getDbOperations().getSlaList()));
+		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
 		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
-		System.out.println("JobBaseBean.WebInputUtils fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 	}
 
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
