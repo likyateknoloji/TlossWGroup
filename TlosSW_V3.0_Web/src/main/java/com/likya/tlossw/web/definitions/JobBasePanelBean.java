@@ -393,6 +393,8 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	public void initJobPanel() {
+		
+		super.init();
 
 		long startTime = System.currentTimeMillis();
 
