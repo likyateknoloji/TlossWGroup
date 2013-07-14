@@ -25,11 +25,13 @@ import com.likya.tlos.model.xmlbeans.common.SchedulingAlgorithmDocument.Scheduli
 import com.likya.tlos.model.xmlbeans.data.AdvancedScenarioInfosDocument.AdvancedScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
+import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.Status;
+import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
@@ -37,12 +39,14 @@ import com.likya.tlossw.web.tree.JSTree;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
-public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable {
+public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Serializable {
 
 	private static final long serialVersionUID = -8027723328721838174L;
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
+
+	private Scenario scenario;
 
 	private String scenarioName;
 	private String comment;
@@ -68,7 +72,12 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	public void initScenarioPanel() {
-		fillAllLists();
+
+		/**
+		 * @author serkan
+		 * @date 14.07.2013 Bu metod içindeki herşeye gerçekten gerek var mı bakmak lazım
+		 */
+		// fillAllLists();
 
 		setScenario(Scenario.Factory.newInstance());
 
@@ -88,12 +97,56 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	private void resetScenarioPanelInputs() {
-		resetPanelInputs();
+		
+		super.resetPanelInputs();
 
 		scenarioName = "";
 		comment = "";
 		useCalendarDef = false;
 		selectedSchedulingAlgorithm = SchedulingAlgorithm.FIRST_COME_FIRST_SERVED.toString();
+	}
+
+	protected void fillConcurrencyManagement() {
+		scenario.getConcurrencyManagement().setConcurrent(isConcurrent());
+	}
+
+	protected void fillTimeManagement() {
+
+		TimeManagement timeManagement;
+
+		if (!isUseTimeManagement() || scenario == null) {
+			return;
+		}
+
+		timeManagement = scenario.getTimeManagement();
+		super.fillTimeManagement(timeManagement);
+	}
+
+	public void fillTimeManagementTab() {
+
+		TimeManagement timeManagement = null;
+
+		if (scenario != null) {
+			timeManagement = scenario.getTimeManagement();
+			super.fillTimeManagementTab(timeManagement);
+		}
+
+	}
+
+	protected void fillAlarmPreference() {
+		super.fillAlarmPreference(true, scenario);
+	}
+
+	public void fillAlarmPreferenceTab() {
+		super.fillAlarmPreferenceTab(true, scenario);
+	}
+
+	protected void fillLocalParameters() {
+		super.fillLocalParameters(true, scenario);
+	}
+
+	public void fillLocalParametersTab() {
+		super.fillLocalParametersTab(true, scenario);
 	}
 
 	private void fillSchedulingAlgorithmList() {
@@ -163,7 +216,10 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 	}
 
 	/*
-	 * private void fillDependencyDefinitions() { // son durumda bagimlik tanimlanmamissa senaryo icindeki ilgili kismi // kaldiriyor if (getScenario().getDependencyList() != null && getScenario().getDependencyList().getItemArray().length == 0) { XmlCursor xmlCursor = getScenario().getDependencyList().newCursor(); xmlCursor.removeXml(); } }
+	 * private void fillDependencyDefinitions() { // son durumda bagimlik tanimlanmamissa senaryo
+	 * icindeki ilgili kismi // kaldiriyor if (getScenario().getDependencyList() != null &&
+	 * getScenario().getDependencyList().getItemArray().length == 0) { XmlCursor xmlCursor =
+	 * getScenario().getDependencyList().newCursor(); xmlCursor.removeXml(); } }
 	 */
 	private void fillStateInfos() {
 		// son durumda statu kodu tanimlanmamissa senaryo icindeki
@@ -478,6 +534,64 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		return result;
 	}
 
+	// silinen senaryoyu ağaçtan kaldırıyor
+	public void removeScenarioSubtree(String scenarioPath) {
+		getJsTree().removeScenarioSubtree(scenarioPath);
+	}
+
+	public void fillDependencyDefinitionsTab() {
+		
+		DependencyList dependencyList = null;
+
+		if (scenario != null && scenario.getDependencyList() != null) {
+			dependencyList = scenario.getDependencyList();
+			super.fillDependencyDefinitionsTab(dependencyList);
+		}
+
+	}
+	
+	public void updateJobStatusAction() {
+		
+		Status[] statusArray = null;
+		
+		if(scenario != null) {
+			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
+			super.updateJobStatusAction(statusArray);
+		}
+		
+	}
+	
+	public void jobStatusEditAction() {
+		
+
+		Status[] statusArray = null;
+
+		if(scenario != null) {
+			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
+			super.jobStatusEditAction(statusArray);
+		}
+	}
+	
+	public void deleteScenarioStatusAction() {
+		for (int i = 0; i < getSelectedJobStatusList().length; i++) {
+			for (int j = 0; j < getManyJobStatusList().size(); j++) {
+				if (getManyJobStatusList().get(j).getValue().equals(getSelectedJobStatusList()[i])) {
+
+					ScenarioStatusList scenarioStatusList = scenario.getScenarioStatusList();
+
+					for (int k = 0; k < scenarioStatusList.sizeOfScenarioStatusArray(); k++) {
+						if (getManyJobStatusList().get(j).getValue().equals(scenarioStatusList.getScenarioStatusArray(k).getStatusName().toString())) {
+							scenarioStatusList.removeScenarioStatus(k);
+							k = scenarioStatusList.sizeOfScenarioStatusArray();
+						}
+					}
+					getManyJobStatusList().remove(j);
+					j = getManyJobStatusList().size();
+				}
+			}
+		}
+	}
+
 	public JSTree getJsTree() {
 		return jsTree;
 	}
@@ -534,20 +648,16 @@ public class ScenarioDefinitionMBean extends JobBaseBean implements Serializable
 		this.scenarioPathInScenario = scenarioPathInScenario;
 	}
 
-	@Override
-	public void fillTabs() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public String getScenId() {
 		return getScenario().getID();
 	}
 
-	@Override
-	public void fillJobPropertyDetails() {
-		// TODO Auto-generated method stub
+	public Scenario getScenario() {
+		return scenario;
+	}
 
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
 	}
 
 }
