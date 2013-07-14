@@ -19,7 +19,7 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean
 @ViewScoped
-public class WebServicePanelMBean extends JobBaseBean implements Serializable {
+public class WebServicePanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(WebServicePanelMBean.class);
 
