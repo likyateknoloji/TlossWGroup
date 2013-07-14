@@ -13,7 +13,7 @@ import com.likyateknoloji.xmlExecuteRShellTypes.ExecuteRShellParamsDocument.Exec
 
 @ManagedBean
 @ViewScoped
-public class RemoteShellPanelMBean extends JobBaseBean implements Serializable {
+public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(RemoteShellPanelMBean.class);
 
