@@ -84,7 +84,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	private boolean defineStopTime = false;
 	private String stopTime;
 
-	private Collection<SelectItem> tZList;
+	private Collection<SelectItem> tzList;
 	private String selectedTZone;
 
 	private Collection<SelectItem> relativeTimeOptionList = null;
@@ -803,10 +803,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		return selectedTZone;
 	}
 
-	public void settZList(Collection<SelectItem> tZList) {
-		this.tZList = tZList;
-	}
-
 	public void setAlarmList(Collection<SelectItem> alarmList) {
 		this.alarmList = alarmList;
 	}
@@ -995,16 +991,20 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.returnCode = returnCode;
 	}
 
-	public Collection<SelectItem> gettZList() {
-		return tZList;
-	}
-
 	public Collection<SelectItem> getAlarmList() {
 		return alarmList;
 	}
 
 	public void setSelectedTZone(String selectedTZone) {
 		this.selectedTZone = selectedTZone;
+	}
+
+	public Collection<SelectItem> getTzList() {
+		return tzList;
+	}
+
+	public void setTzList(Collection<SelectItem> tzList) {
+		this.tzList = tzList;
 	}
 	
 	// public int getGmt() {
