@@ -44,7 +44,7 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "fileProcessPanelMBean")
 @ViewScoped
-public class FileProcessPanelMBean extends JobBaseBean implements Serializable {
+public class FileProcessPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(FileProcessPanelMBean.class);
 
