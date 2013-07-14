@@ -22,7 +22,7 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "fileListenerPanelMBean")
 @ViewScoped
-public class FileListenerPanelMBean extends JobBaseBean implements Serializable {
+public class FileListenerPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(FileListenerPanelMBean.class);
 
