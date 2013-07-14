@@ -27,7 +27,7 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "dbJobsPanelMBean")
 @ViewScoped
-public class DBJobsPanelMBean extends JobBaseBean implements Serializable {
+public class DBJobsPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(DBJobsPanelMBean.class);
 
