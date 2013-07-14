@@ -44,6 +44,7 @@ import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
@@ -143,6 +144,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	
 	private boolean renderUpdateParamButton = false;
 
+	private LogAnalyzingTabBean logAnalyzingTabBean = new LogAnalyzingTabBean();
 	
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
@@ -1184,10 +1186,13 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.renderUpdateParamButton = renderUpdateParamButton;
 	}
 
-	public boolean isAgentChoiceMethodUserMandatoryPreference() {
+	public boolean getAgentChoiceMethodUserMandatoryPreference() {
 		return "UserMandatoryPreference".equals(agentChoiceMethod);
 	}
 
+	public LogAnalyzingTabBean getLogAnalyzingTabBean() {
+		return logAnalyzingTabBean;
+	}
 
 	
 	// public int getGmt() {
