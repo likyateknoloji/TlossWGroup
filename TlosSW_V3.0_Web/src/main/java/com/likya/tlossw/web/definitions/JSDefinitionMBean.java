@@ -218,8 +218,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void handleJobDropAction(ActionEvent ae) {
 
-		((JobBaseBean) currentPanelMBeanRef).setDraggedWsJobNode(draggedWsNodeForDependency);
-		((JobBaseBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
+		((JobBasePanelBean) currentPanelMBeanRef).setDraggedWsJobNode(draggedWsNodeForDependency);
+		((JobBasePanelBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
 	}
 
 	private void setCurrentPanel(int jobType) {
@@ -295,15 +295,15 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		setCurrentPanel(jobType);
 
 		if (jobProperties != null) {
-			((JobBaseBean) currentPanelMBeanRef).setJobProperties(jobProperties);
+			((JobBasePanelBean) currentPanelMBeanRef).setJobProperties(jobProperties);
 
-			((JobBaseBean) currentPanelMBeanRef).setJsInsertButton(true);
-			((JobBaseBean) currentPanelMBeanRef).setJsUpdateButton(false);
-			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
-			((JobBaseBean) currentPanelMBeanRef).fillTabs();
+			((JobBasePanelBean) currentPanelMBeanRef).setJsInsertButton(true);
+			((JobBasePanelBean) currentPanelMBeanRef).setJsUpdateButton(false);
+			((JobBasePanelBean) currentPanelMBeanRef).resetPanelInputs();
+			((JobBasePanelBean) currentPanelMBeanRef).fillTabs();
 
-			((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
-			((JobBaseBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
+			((JobBasePanelBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
+			((JobBasePanelBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
 
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.update("jsTreeForm");
@@ -316,18 +316,18 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		setCurrentPanel(jobType);
 
 		if (jobProperties != null) {
-			((JobBaseBean) currentPanelMBeanRef).setJobProperties(jobProperties);
+			((JobBasePanelBean) currentPanelMBeanRef).setJobProperties(jobProperties);
 
-			((JobBaseBean) currentPanelMBeanRef).setJsInsertButton(insert);
-			((JobBaseBean) currentPanelMBeanRef).setJsUpdateButton(!insert);
-			((JobBaseBean) currentPanelMBeanRef).resetPanelInputs();
-			((JobBaseBean) currentPanelMBeanRef).fillTabs();
+			((JobBasePanelBean) currentPanelMBeanRef).setJsInsertButton(insert);
+			((JobBasePanelBean) currentPanelMBeanRef).setJsUpdateButton(!insert);
+			((JobBasePanelBean) currentPanelMBeanRef).resetPanelInputs();
+			((JobBasePanelBean) currentPanelMBeanRef).fillTabs();
 
 			if (insert) {
-				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
+				((JobBasePanelBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
 			} else {
-				((JobBaseBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
-				((JobBaseBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
+				((JobBasePanelBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
+				((JobBasePanelBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
 			}
 
 			RequestContext context = RequestContext.getCurrentInstance();
@@ -338,8 +338,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public void cancelJsAction() {
 		jobDefCenterPanel = DEFAULT_DEF_PAGE;
 
-		if (((JobBaseBean) currentPanelMBeanRef).isJsInsertButton()) {
-			((JobBaseBean) currentPanelMBeanRef).deleteJob();
+		if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
+			((JobBasePanelBean) currentPanelMBeanRef).deleteJob();
 		}
 	}
 
@@ -351,7 +351,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void deleteJobAction(ActionEvent actionEvent) {
 
-		if (((JobBaseBean) currentPanelMBeanRef).deleteJob()) {
+		if (((JobBasePanelBean) currentPanelMBeanRef).deleteJob()) {
 			jobDefCenterPanel = DEFAULT_DEF_PAGE;
 		}
 	}
