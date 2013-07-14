@@ -9,15 +9,9 @@
 				<p:panelGrid columns="4">
 					<h:outputText value="Log Analizi Yapılsın mı" />
 					<p:selectBooleanCheckbox value="#{backingBean.useLogAnalyzer}">
-						<p:ajax update="logAnalyzingInfoPanel" />
 					</p:selectBooleanCheckbox>
 				</p:panelGrid>
 			</p:panel>
-			<p:panel id="logAnalyzingInfoPanel">
-				<p:panelGrid columns="4">
-					<h:outputText value="#{msgs['tlos.management.pannel.newSla.resourceName']}" rendered="#{backingBean.useLogAnalyzer}" />
-				</p:panelGrid>
-			</p:panel>			
 		</p:tab>
 	</ui:composition>
 </h:body>
