@@ -9,9 +9,38 @@
 				<p:panelGrid columns="4">
 					<h:outputText value="Log Analizi Yapılsın mı" />
 					<p:selectBooleanCheckbox value="#{backingBean.useLogAnalyzer}">
+						<p:ajax update=":jobDefinitionForm:tabView:logAnalyzingInfoPanel :jobDefinitionForm:tabView:customPanel" />
 					</p:selectBooleanCheckbox>
 				</p:panelGrid>
 			</p:panel>
+			<p:panel id="customPanel">
+				<p:outputPanel rendered="#{backingBean.useLogAnalyzer}">
+					<p:selectOneRadio id="customRadio" value="#{backingBean.searchType}" layout="custom">
+						<f:selectItem itemLabel="Option 1" itemValue="1" />
+						<f:selectItem itemLabel="Option 2" itemValue="2" />
+					</p:selectOneRadio>
+
+					<h:panelGrid columns="3">
+						<p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+						<h:outputLabel for="opt1" value="Regex" />
+						<p:inputText />
+						<p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+						<h:outputLabel for="opt2" value="String" />
+						<p:inputText />
+					</h:panelGrid>
+				</p:outputPanel>
+			</p:panel>
+			<p:panel id="logAnalyzingInfoPanel">
+				<p:panelGrid columns="10" rendered="#{backingBean.useLogAnalyzer}">
+					<h:outputText value="Options: " />
+					<p:selectOneRadio id="customRadio1" value="#{backingBean.searchType}">
+						<f:selectItem itemLabel="Send email" itemValue="1" />
+						<f:selectItem itemLabel="Return true" itemValue="2" />
+						<f:selectItem itemLabel="Return false" itemValue="2" />
+					</p:selectOneRadio>
+				</p:panelGrid>
+			</p:panel>
+
 		</p:tab>
 	</ui:composition>
 </h:body>
