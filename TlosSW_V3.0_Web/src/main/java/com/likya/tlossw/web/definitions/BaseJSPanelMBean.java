@@ -144,7 +144,12 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	
 	private boolean renderUpdateParamButton = false;
 
-	private LogAnalyzingTabBean logAnalyzingTabBean = new LogAnalyzingTabBean();
+	private LogAnalyzingTabBean logAnalyzingTabBean;
+	
+	
+	public void init() {
+		logAnalyzingTabBean = new LogAnalyzingTabBean();
+	}
 	
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
