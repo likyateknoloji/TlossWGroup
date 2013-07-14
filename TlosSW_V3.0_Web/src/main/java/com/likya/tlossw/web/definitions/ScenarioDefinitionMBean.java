@@ -64,6 +64,9 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 
 	@PostConstruct
 	public void init() {
+		
+		super.init();
+		
 		setScenario(true);
 		setJsInsertButton(true);
 		initScenarioPanel();
