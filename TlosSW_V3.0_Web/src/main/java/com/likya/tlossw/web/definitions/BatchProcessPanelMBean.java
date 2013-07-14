@@ -12,7 +12,7 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetail
 
 @ManagedBean
 @ViewScoped
-public class BatchProcessPanelMBean extends JobBaseBean implements Serializable {
+public class BatchProcessPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(BatchProcessPanelMBean.class);
 
