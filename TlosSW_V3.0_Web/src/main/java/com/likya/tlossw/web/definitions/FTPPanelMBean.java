@@ -37,7 +37,7 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 @ManagedBean(name = "ftpPanelMBean")
 @ViewScoped
-public class FTPPanelMBean extends JobBaseBean implements Serializable {
+public class FTPPanelMBean extends JobBasePanelBean implements Serializable {
 
 	private static final Logger logger = Logger.getLogger(FTPPanelMBean.class);
 
