@@ -441,7 +441,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		fillJobBaseTypeList();
 		fillEventTypeDefList();
 		fillJobTypeDefList();
-		fillAgentChoiceMethodList();
 		fillRelativeTimeOptionList();
 		fillUnitTypeList();
 		fillJobStatusList();
@@ -1288,12 +1287,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
 
 		return jobPropertiesXML;
-	}
-
-	public void fillAgentChoiceMethodList() {
-		if (getAgentChoiceMethodList() == null) {
-			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
-		}
 	}
 
 	public void fillJobTypeDefList() {

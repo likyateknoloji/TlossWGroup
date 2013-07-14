@@ -239,10 +239,18 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
 		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		
+		fillAgentChoiceMethodList();
+		
 		System.out.println();
 		
 	}
 
+	public void fillAgentChoiceMethodList() {
+		if (getAgentChoiceMethodList() == null) {
+			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
+		}
+	}
+	
 	protected void fillTimeManagement(TimeManagement timeManagement) {
 
 		// ekrandan starttime girildiyse onu set ediyor
