@@ -23,9 +23,9 @@
 
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.agentList']}"
-						rendered="#{backingBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+						rendered="#{backingBean.isAgentChoiceMethodUserMandatoryPreference}" />
 					<p:selectOneMenu
-						rendered="#{backingBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+						rendered="#{backingBean.isAgentChoiceMethodUserMandatoryPreference}"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}"
 						value="#{backingBean.selectedAgent}" style="width: 100pt">
