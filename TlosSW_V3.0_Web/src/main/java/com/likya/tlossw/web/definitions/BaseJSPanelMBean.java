@@ -68,13 +68,13 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	private boolean jsUpdateButton = false;
 
 	private String jsCalendar;
-	
+
 	private Status jobStatus;
 	private String jobStatusName;
 	private Collection<SelectItem> jobStatusNameList = null;
-	
+
 	private Collection<SelectItem> oSystemList = null;
-	
+
 	/* jsStatusPopup */
 	private boolean statusDialogShow = false;
 
@@ -122,46 +122,45 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private List<SelectItem> manyJobDependencyList = new ArrayList<SelectItem>();
 	private String dependencyExpression;
-	
+
 	private List<SelectItem> manyReturnCodeList;
-	
+
 	private String osType;
-	
+
 	private ReturnCode returnCode;
-	
+
 	private Collection<SelectItem> jsCalendarList = null;
-	
-	
+
 	// localParameters
 	private String paramName;
 	private String paramDesc;
 	private String paramType;
 	private String paramPreValue;
 	private String selectedParamName;
-	
+
 	private boolean renderUpdateParamButton = false;
 
 	private LogAnalyzingTabBean logAnalyzingTabBean;
-	
+
 	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
 	private transient DataTable parameterTable;
-	
+
 	public void init() {
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 	}
-	
+
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
 		jsUpdateButton = !jsUpdateButton;
 	}
-	
+
 	private void resetInputParameterFields() {
 		paramName = "";
 		paramDesc = "";
 		paramPreValue = "";
 		paramType = "";
 	}
-	
+
 	public void editInputParamAction(ActionEvent e) {
 		Parameter inParam = (Parameter) getParameterTable().getRowData();
 
@@ -177,7 +176,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("jobDefinitionForm:tabView:parametersPanel");
 	}
-	
+
 	public void addInputParameter() {
 		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
 
@@ -199,7 +198,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		resetInputParameterFields();
 	}
-	
+
 	public void deleteInputParamAction(ActionEvent e) {
 		int parameterIndex = getParameterTable().getRowIndex();
 		getParameterList().remove(parameterIndex);
@@ -230,18 +229,18 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		renderUpdateParamButton = false;
 	}
-	
+
 	public void fillAllLists() {
-		
+
 		long startTime = System.currentTimeMillis();
-		
+
 		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
 		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		
+
 		fillAgentChoiceMethodList();
-		
+
 		System.out.println();
-		
+
 	}
 
 	public void fillAgentChoiceMethodList() {
@@ -249,7 +248,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
 		}
 	}
-	
+
 	protected void fillTimeManagement(TimeManagement timeManagement) {
 
 		// ekrandan starttime girildiyse onu set ediyor
@@ -543,7 +542,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 			}
 		}
 	}
-	
+
 	public void fillDependencyDefinitionsTab(DependencyList dependencyList) {
 
 		if (dependencyList != null && dependencyList.sizeOfItemArray() > 0) {
@@ -571,7 +570,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 			dependencyExpression = dependencyList.getDependencyExpression();
 		}
 	}
-	
+
 	public void updateJobStatusAction(Status[] statusArray) {
 
 		for (Status jStatus : statusArray) {
@@ -586,9 +585,9 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		statusDialogShow = false;
 	}
-	
+
 	public void jobStatusEditAction(Status[] statusArray) {
-		
+
 		if (selectedJobStatusList == null || selectedJobStatusList.length == 0) {
 			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose", null);
 			return;
@@ -596,7 +595,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose.one", null);
 			return;
 		}
-		
+
 		for (Status status : statusArray) {
 			if (status.getStatusName().toString().equals(selectedJobStatusList[0])) {
 				jobStatus = WebInputUtils.cloneJobStatus(status);
@@ -627,7 +626,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		statusDialogShow = true;
 	}
-	
+
 	public boolean checkDuplicateStateName() {
 		if (getManyJobStatusList() != null) {
 
@@ -643,14 +642,14 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		return false;
 	}
-	
+
 	public void addJReturnCodeAction(boolean isScenario, Object refObject) {
-		
+
 		// TODO donus kodu eklerken ayni is donus statusu icin ayni isletim
 		// sistemi secilerek
 		// ayni kod birden fazla tanimlanabiliyor
 		// bu kontrol yapilip ayni kodun eklenmesi engellenecek
-		
+
 		// guncelleme icin acildiginda duplicate kontrolunu yapmiyor
 		if (jobStatus.getStsId() == null || jobStatus.getStsId().equals("")) {
 			if (!checkDuplicateStateName()) {
@@ -1207,7 +1206,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		return logAnalyzingTabBean;
 	}
 
-	
 	// public int getGmt() {
 	// return gmt;
 	// }
