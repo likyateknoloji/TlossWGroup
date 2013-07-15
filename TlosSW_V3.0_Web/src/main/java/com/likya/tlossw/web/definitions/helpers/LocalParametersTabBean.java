@@ -6,9 +6,14 @@ import java.util.ArrayList;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
+import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
+import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlossw.web.definitions.BaseJSPanelMBean;
@@ -25,11 +30,11 @@ public class LocalParametersTabBean {
 	private boolean renderUpdateParamButton = false;
 
 	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-	
+
 	private transient DataTable parameterTable;
-	
+
 	private BaseJSPanelMBean baseJSPanelMBean;
-	
+
 	public LocalParametersTabBean(BaseJSPanelMBean baseJSPanelMBean) {
 		super();
 		this.baseJSPanelMBean = baseJSPanelMBean;
@@ -40,10 +45,12 @@ public class LocalParametersTabBean {
 		paramDesc = "";
 		paramPreValue = "";
 		paramType = "";
+		
+		parameterList = new ArrayList<Parameter>();
 	}
 
 	public void addInputParameter() {
-		
+
 		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
 			baseJSPanelMBean.addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 			return;
@@ -64,7 +71,7 @@ public class LocalParametersTabBean {
 	}
 
 	public void editInputParamAction(ActionEvent e) {
-		
+
 		Parameter inParam = (Parameter) parameterTable.getRowData();
 
 		paramName = new String(inParam.getName());
@@ -81,7 +88,7 @@ public class LocalParametersTabBean {
 	}
 
 	public void deleteInputParamAction(ActionEvent e) {
-		
+
 		int parameterIndex = parameterTable.getRowIndex();
 		parameterList.remove(parameterIndex);
 
@@ -112,11 +119,74 @@ public class LocalParametersTabBean {
 		renderUpdateParamButton = false;
 	}
 
+	public void fillLocalParameters(boolean isScenario, Object refObject) {
+
+		if (parameterList.size() > 0) {
+			LocalParameters localParameters = LocalParameters.Factory.newInstance();
+
+			InParam inParam = InParam.Factory.newInstance();
+			localParameters.setInParam(inParam);
+
+			for (int i = 0; i < parameterList.size(); i++) {
+				Parameter parameter = localParameters.getInParam().addNewParameter();
+				parameter.set(parameterList.get(i));
+			}
+
+			if (isScenario) {
+				((Scenario) refObject).setLocalParameters(localParameters);
+			} else {
+				((JobProperties) refObject).setLocalParameters(localParameters);
+			}
+
+		} else {
+			if (isScenario) {
+				Scenario scenario = ((Scenario) refObject);
+				if (scenario.getLocalParameters() != null) {
+					XmlCursor xmlCursor = scenario.getLocalParameters().newCursor();
+					xmlCursor.removeXml();
+				}
+			} else {
+				JobProperties jobProperties = ((JobProperties) refObject);
+				if (jobProperties.getLocalParameters() != null) {
+					XmlCursor xmlCursor = jobProperties.getLocalParameters().newCursor();
+					xmlCursor.removeXml();
+				}
+			}
+		}
+	}
+
+	public void fillLocalParametersTab(boolean isScenario, Object refObject) {
+
+		LocalParameters localParameters = null;
+
+		if (isScenario) {
+			Scenario scenario = ((Scenario) refObject);
+			if (scenario != null && scenario.getLocalParameters() != null) {
+				localParameters = scenario.getLocalParameters();
+			}
+		} else {
+			JobProperties jobProperties = ((JobProperties) refObject);
+			if (jobProperties != null && jobProperties.getLocalParameters() != null) {
+				localParameters = jobProperties.getLocalParameters();
+			}
+		}
+
+		if (localParameters != null) {
+			if (localParameters != null && localParameters.getInParam() != null) {
+				InParam inParam = localParameters.getInParam();
+
+				for (Parameter parameter : inParam.getParameterArray()) {
+					parameterList.add(parameter);
+				}
+			} else {
+				parameterList = new ArrayList<Parameter>();
+			}
+		}
+	}
 
 	public boolean isRenderUpdateParamButton() {
 		return renderUpdateParamButton;
 	}
-
 
 	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
 		this.renderUpdateParamButton = renderUpdateParamButton;
