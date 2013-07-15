@@ -1,18 +1,15 @@
 package com.likya.tlossw.web.definitions;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
@@ -24,7 +21,6 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList;
@@ -34,6 +30,7 @@ import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -99,102 +96,20 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private Collection<SelectItem> jsCalendarList = null;
 
-	// localParameters
-	private String paramName;
-	private String paramDesc;
-	private String paramType;
-	private String paramPreValue;
-	private String selectedParamName;
-
-	private boolean renderUpdateParamButton = false;
 
 	private TimeManagementTabBean timeManagementTabBean;
+	private LocalParametersTabBean localParametersTabBean;
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 
 	public void init() {
 		timeManagementTabBean = new TimeManagementTabBean(isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
+		localParametersTabBean = new LocalParametersTabBean(this);
 	}
 
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
 		jsUpdateButton = !jsUpdateButton;
-	}
-
-	private void resetInputParameterFields() {
-		paramName = "";
-		paramDesc = "";
-		paramPreValue = "";
-		paramType = "";
-	}
-
-	public void editInputParamAction(ActionEvent e) {
-		Parameter inParam = (Parameter) getParameterTable().getRowData();
-
-		paramName = new String(inParam.getName());
-		paramDesc = new String(inParam.getDesc());
-		paramPreValue = new String(inParam.getPreValue().getStringValue());
-		paramType = new String(inParam.getPreValue().getType().toString());
-
-		selectedParamName = paramName;
-
-		renderUpdateParamButton = true;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
-	}
-
-	public void addInputParameter() {
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
-
-			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
-
-			return;
-		}
-
-		Parameter parameter = Parameter.Factory.newInstance();
-		parameter.setName(paramName);
-		parameter.setDesc(paramDesc);
-
-		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setStringValue(paramPreValue);
-		preValue.setType(new BigInteger(paramType));
-		parameter.setPreValue(preValue);
-
-		getParameterList().add(parameter);
-
-		resetInputParameterFields();
-	}
-
-	public void deleteInputParamAction(ActionEvent e) {
-		int parameterIndex = getParameterTable().getRowIndex();
-		getParameterList().remove(parameterIndex);
-
-		renderUpdateParamButton = false;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
-	}
-
-	public void updateInputParameter() {
-		for (int i = 0; i < getParameterList().size(); i++) {
-
-			if (selectedParamName.equals(getParameterList().get(i).getName())) {
-				getParameterList().get(i).setName(paramName);
-				getParameterList().get(i).setDesc(paramDesc);
-
-				PreValue preValue = PreValue.Factory.newInstance();
-				preValue.setStringValue(paramPreValue);
-				preValue.setType(new BigInteger(paramType));
-				getParameterList().get(i).setPreValue(preValue);
-
-				break;
-			}
-		}
-
-		resetInputParameterFields();
-
-		renderUpdateParamButton = false;
 	}
 
 	public void fillAllLists() {
@@ -840,54 +755,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.oSystemList = oSystemList;
 	}
 
-	public String getParamName() {
-		return paramName;
-	}
-
-	public void setParamName(String paramName) {
-		this.paramName = paramName;
-	}
-
-	public String getParamDesc() {
-		return paramDesc;
-	}
-
-	public void setParamDesc(String paramDesc) {
-		this.paramDesc = paramDesc;
-	}
-
-	public String getParamType() {
-		return paramType;
-	}
-
-	public void setParamType(String paramType) {
-		this.paramType = paramType;
-	}
-
-	public String getParamPreValue() {
-		return paramPreValue;
-	}
-
-	public void setParamPreValue(String paramPreValue) {
-		this.paramPreValue = paramPreValue;
-	}
-
-	public String getSelectedParamName() {
-		return selectedParamName;
-	}
-
-	public void setSelectedParamName(String selectedParamName) {
-		this.selectedParamName = selectedParamName;
-	}
-
-	public boolean isRenderUpdateParamButton() {
-		return renderUpdateParamButton;
-	}
-
-	public void setRenderUpdateParamButton(boolean renderUpdateParamButton) {
-		this.renderUpdateParamButton = renderUpdateParamButton;
-	}
-
 	public boolean getAgentChoiceMethodUserMandatoryPreference() {
 		return "UserMandatoryPreference".equals(agentChoiceMethod);
 	}
@@ -900,8 +767,8 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		return timeManagementTabBean;
 	}
 
-	public void setTimeManagementTabBean(TimeManagementTabBean timeManagementTabBean) {
-		this.timeManagementTabBean = timeManagementTabBean;
+	public LocalParametersTabBean getLocalParametersTabBean() {
+		return localParametersTabBean;
 	}
 
 	// public int getGmt() {
