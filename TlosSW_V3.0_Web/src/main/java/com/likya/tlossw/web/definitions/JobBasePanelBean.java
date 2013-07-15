@@ -24,7 +24,6 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
-import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobInfos;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.CascadingConditionsDocument.CascadingConditions;
@@ -124,12 +123,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	/* periodic job */
 	private String periodTime;
-
-	private Collection<SelectItem> typeOfTimeList;
-
-	private String jobTimeOutValue;
-	private String jobTimeOutUnit;
-	private Collection<SelectItem> unitTypeList = null;
 
 	// dependencyDefinitions
 	private WsNode draggedWsNode;
@@ -231,7 +224,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 					if (param.getName().equals(PERIOD_TIME_PARAM)) {
 						// periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
 						String timeOutputFormat = new String("HH:mm:ss");
-						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime(), getSelectedTZone(), timeOutputFormat);
+						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime(), getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
 					}
 				}
 			}
@@ -256,7 +249,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 		if (jobProperties != null) {
 			timeManagement = jobProperties.getTimeManagement();
-			super.fillTimeManagementTab(timeManagement);
+			getTimeManagementTabBean().fillTimeManagementTab(timeManagement);
 		}
 
 	}
@@ -441,21 +434,11 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		fillJobBaseTypeList();
 		fillEventTypeDefList();
 		fillJobTypeDefList();
-		fillRelativeTimeOptionList();
-		fillUnitTypeList();
 		fillJobStatusList();
 		fillJobStateList();
 		fillJobSubtateList();
 
 		System.out.println("JobBaseBean.WebInputUtils.fillAllLists Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setTzList(WebInputUtils.fillTZList());
-		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
-		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 		
 		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
@@ -477,7 +460,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
 	// ikisi de yoksa validasyondan gecemiyor
 	public boolean validateTimeManagement() {
-		if (getStartTime() == null || getStartTime().equals("")) {
+		if (getTimeManagementTabBean().getStartTime() == null || getTimeManagementTabBean().getStartTime().equals("")) {
 			if (jobProperties.getDependencyList() == null || jobProperties.getDependencyList().getItemArray().length == 0) {
 				addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.timeOrDependency", null);
 				return false;
@@ -531,7 +514,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 			Parameter parameter = Parameter.Factory.newInstance();
 			parameter.setName(PERIOD_TIME_PARAM);
-			parameter.setValueTime(DefinitionUtils.dateToXmlTime(periodTime, getSelectedTZone()));
+			parameter.setValueTime(DefinitionUtils.dateToXmlTime(periodTime, getTimeManagementTabBean().getSelectedTZone()));
 			parameter.setId(new BigInteger("1"));
 
 			inParam.addNewParameter();
@@ -556,12 +539,12 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 		TimeManagement timeManagement;
 
-		if (!isUseTimeManagement() || jobProperties == null) {
+		if (!getTimeManagementTabBean().isUseTimeManagement() || jobProperties == null) {
 			return;
 		}
 
 		timeManagement = jobProperties.getTimeManagement();
-		super.fillTimeManagement(timeManagement);
+		getTimeManagementTabBean().fillTimeManagement(timeManagement);
 
 	}
 
@@ -636,9 +619,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		periodTime = "";
 		jobTypeDef = JobTypeDef.TIME_BASED.toString();
 		eventTypeDef = EventTypeDef.FILE.toString();
-
-		jobTimeOutValue = "";
-		jobTimeOutUnit = Unit.HOURS.toString();
 
 		jobStatusName = "";
 		jobSLA = NONE;
@@ -1313,18 +1293,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		}
 	}
 
-	public void fillRelativeTimeOptionList() {
-		if (getRelativeTimeOptionList() == null) {
-			setRelativeTimeOptionList(WebInputUtils.fillRelativeTimeOptionList());
-		}
-	}
-
-	public void fillUnitTypeList() {
-		if (getUnitTypeList() == null) {
-			setUnitTypeList(WebInputUtils.fillUnitTypeList());
-		}
-	}
-
 	public void fillJobStateList() {
 		if (getDepStateNameList() == null) {
 			setDepStateNameList(WebInputUtils.fillJobStateList());
@@ -1453,30 +1421,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setJsSLAList(Collection<SelectItem> jsSLAList) {
 		this.jsSLAList = jsSLAList;
-	}
-
-	public String getJobTimeOutValue() {
-		return jobTimeOutValue;
-	}
-
-	public void setJobTimeOutValue(String jobTimeOutValue) {
-		this.jobTimeOutValue = jobTimeOutValue;
-	}
-
-	public Collection<SelectItem> getUnitTypeList() {
-		return unitTypeList;
-	}
-
-	public void setUnitTypeList(Collection<SelectItem> unitTypeList) {
-		this.unitTypeList = unitTypeList;
-	}
-
-	public String getJobTimeOutUnit() {
-		return jobTimeOutUnit;
-	}
-
-	public void setJobTimeOutUnit(String jobTimeOutUnit) {
-		this.jobTimeOutUnit = jobTimeOutUnit;
 	}
 
 	public String getJobPathInScenario() {
@@ -1797,14 +1741,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setjSTree(JSTree jSTree) {
 		this.jSTree = jSTree;
-	}
-
-	public Collection<SelectItem> getTypeOfTimeList() {
-		return typeOfTimeList;
-	}
-
-	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
-		this.typeOfTimeList = typeOfTimeList;
 	}
 
 	public String getJsName() {

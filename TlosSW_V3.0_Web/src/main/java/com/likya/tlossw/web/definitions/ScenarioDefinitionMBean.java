@@ -117,12 +117,12 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 
 		TimeManagement timeManagement;
 
-		if (!isUseTimeManagement() || scenario == null) {
+		if (!getTimeManagementTabBean().isUseTimeManagement() || scenario == null) {
 			return;
 		}
 
 		timeManagement = scenario.getTimeManagement();
-		super.fillTimeManagement(timeManagement);
+		getTimeManagementTabBean().fillTimeManagement(timeManagement);
 	}
 
 	public void fillTimeManagementTab() {
@@ -131,7 +131,7 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 
 		if (scenario != null) {
 			timeManagement = scenario.getTimeManagement();
-			super.fillTimeManagementTab(timeManagement);
+			getTimeManagementTabBean().fillTimeManagementTab(timeManagement);
 		}
 
 	}
