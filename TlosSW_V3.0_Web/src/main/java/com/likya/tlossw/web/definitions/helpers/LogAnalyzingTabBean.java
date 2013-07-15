@@ -4,7 +4,9 @@ public class LogAnalyzingTabBean {
 
 	private boolean useLogAnalyzer;
 	
-	private int searchType;
+	private int searchType = 1;
+	
+	private int actionType = 1;
 
 	public boolean isUseLogAnalyzer() {
 		return useLogAnalyzer;
@@ -20,6 +22,14 @@ public class LogAnalyzingTabBean {
 
 	public void setSearchType(int searchType) {
 		this.searchType = searchType;
+	}
+
+	public int getActionType() {
+		return actionType;
+	}
+
+	public void setActionType(int actionType) {
+		this.actionType = actionType;
 	}
 
 }
