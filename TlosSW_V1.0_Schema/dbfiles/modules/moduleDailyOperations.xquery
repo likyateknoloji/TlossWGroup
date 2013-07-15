@@ -443,7 +443,7 @@ return
 (:***************************************************************************:)
  into $calList
 
- return hs:getPlan($planDocumentUrl, $nextPlanId)
+ return hs:getPlan($documentUrl, $nextPlanId)
 };
 
 (: Calendars Selection Phase Ended :)
@@ -478,7 +478,7 @@ declare function hs:select-jobs-and-scenarios($n as node(), $plan as node()*) as
 (: declare function hs:TodayJobsAndScenarios($n as node()) as node()* :)
 declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as node()*
 {
-		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n, $plan), $plan)
+		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n/dat:TlosProcessData, $plan), $plan)
 };
 
 (: declare function hs:queryDailyJobsAndScenarios() :)
@@ -493,7 +493,7 @@ declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $pl
 		   return element RUN 
 		   { attribute id {$next},  
 	          (: hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan) :)
-	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl)/dat:TlosProcessData, $plan)
+	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan)
 	       }
     into $calList
 };
