@@ -4,10 +4,10 @@
 
 <h:body>
 	<ui:composition>
-		<p:tab id="logAnalyzingTab" title="Günlük Analiz İşlemleri">
+		<p:tab id="logAnalyzingTab" title="İş Günlüğü Analiz İşlemleri">
 			<p:panel id="logAnalyzingCheckBoxPanel">
 				<p:panelGrid columns="4">
-					<h:outputText value="Log Analizi Yapılsın mı" />
+					<h:outputText value="Analizi Yapılsın mı" />
 					<p:selectBooleanCheckbox value="#{backingBean.useLogAnalyzer}">
 						<p:ajax update=":jobDefinitionForm:tabView:logAnalyzingInfoPanel :jobDefinitionForm:tabView:customPanel" />
 					</p:selectBooleanCheckbox>
