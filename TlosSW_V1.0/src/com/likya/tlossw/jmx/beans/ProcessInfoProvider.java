@@ -25,10 +25,12 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
+import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentOperations;
@@ -203,6 +205,33 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			SWAgent agent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
 
 			jobInfoTypeClient.setResourceName(agent.getResource().getStringValue());
+		}
+		
+		// output parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
+		if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters() != null
+				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam() != null
+				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam().sizeOfParameterArray() > 0) {
+
+			ArrayList<Parameter> paramList = new ArrayList<Parameter>();
+
+			OutParam outParam = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
+
+			for (Parameter param : outParam.getParameterArray()) {
+				Parameter parameter = Parameter.Factory.newInstance();
+				parameter.setName(param.getName());
+				parameter.setDesc(param.getDesc());
+				parameter.setPreValue(param.getPreValue());
+				parameter.setValueString(param.getValueString());
+				parameter.setValueDate(param.getValueDate());
+				parameter.setValueDateTime(param.getValueDateTime());
+				parameter.setValueTime(param.getValueTime());
+				parameter.setValueInteger(param.getValueInteger());
+				parameter.setValueXPATH(param.getValueXPATH());
+				
+				paramList.add(parameter);
+			}
+			
+			jobInfoTypeClient.setOutParameterList(paramList);
 		}
 
 		return jobInfoTypeClient;
