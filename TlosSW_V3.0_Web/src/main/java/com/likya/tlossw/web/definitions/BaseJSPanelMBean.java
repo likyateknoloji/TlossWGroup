@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.xmlbeans.XmlCursor;
 
+import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
@@ -51,12 +52,11 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	private boolean jsUpdateButton = false;
 
 	private String jsCalendar;
+	private Collection<SelectItem> jsCalendarList = null;
 
 	private Status jobStatus;
 	private String jobStatusName;
 	private Collection<SelectItem> jobStatusNameList = null;
-
-	private Collection<SelectItem> oSystemList = null;
 
 	/* jsStatusPopup */
 	private boolean statusDialogShow = false;
@@ -80,7 +80,10 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private ReturnCode returnCode;
 
-	private Collection<SelectItem> jsCalendarList = null;
+	private String oSystem;
+	private Collection<SelectItem> oSystemList = null;
+
+	private String jobBaseType = JobBaseType.NON_PERIODIC.toString();
 
 	private TimeManagementTabBean timeManagementTabBean;
 	private LocalParametersTabBean localParametersTabBean;
@@ -419,8 +422,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public void resetPanelInputs() {
 
-		jsCalendar = "0";
-
 		getTimeManagementTabBean().resetTab();
 
 		returnCode = ReturnCode.Factory.newInstance();
@@ -434,8 +435,17 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		manyJobDependencyList = new ArrayList<SelectItem>();
 		dependencyExpression = "";
 
+		jsCalendar = "0";
+		oSystem = OSystem.WINDOWS.toString();
+
 		selectedAlarmList = null;
 
+	}
+
+	public void fillOSystemList() {
+		if (getoSystemList() == null) {
+			setoSystemList(WebInputUtils.fillOSystemList());
+		}
 	}
 
 	public boolean isScenario() {
@@ -598,28 +608,12 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.jobStatus = jobStatus;
 	}
 
-	public Collection<SelectItem> getJsCalendarList() {
-		return jsCalendarList;
-	}
-
-	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
-		this.jsCalendarList = jsCalendarList;
-	}
-
 	public Collection<SelectItem> getJobStatusNameList() {
 		return jobStatusNameList;
 	}
 
 	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
 		this.jobStatusNameList = jobStatusNameList;
-	}
-
-	public Collection<SelectItem> getoSystemList() {
-		return oSystemList;
-	}
-
-	public void setoSystemList(Collection<SelectItem> oSystemList) {
-		this.oSystemList = oSystemList;
 	}
 
 	public LogAnalyzingTabBean getLogAnalyzingTabBean() {
@@ -636,6 +630,38 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public AdvancedJobInfosTab getAdvancedJobInfosTab() {
 		return advancedJobInfosTab;
+	}
+
+	public Collection<SelectItem> getJsCalendarList() {
+		return jsCalendarList;
+	}
+
+	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
+		this.jsCalendarList = jsCalendarList;
+	}
+
+	public String getJobBaseType() {
+		return jobBaseType;
+	}
+
+	public void setJobBaseType(String jobBaseType) {
+		this.jobBaseType = jobBaseType;
+	}
+
+	public String getoSystem() {
+		return oSystem;
+	}
+
+	public void setoSystem(String oSystem) {
+		this.oSystem = oSystem;
+	}
+
+	public Collection<SelectItem> getoSystemList() {
+		return oSystemList;
+	}
+
+	public void setoSystemList(Collection<SelectItem> oSystemList) {
+		this.oSystemList = oSystemList;
 	}
 
 	// public int getGmt() {
