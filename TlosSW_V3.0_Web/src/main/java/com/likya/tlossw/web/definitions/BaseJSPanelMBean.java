@@ -2,7 +2,6 @@ package com.likya.tlossw.web.definitions;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -18,21 +17,12 @@ import org.primefaces.context.RequestContext;
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
-import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
-import com.likya.tlos.model.xmlbeans.data.ExpectedTimeDocument.ExpectedTime;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
-import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
-import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
-import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
@@ -45,7 +35,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
-import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class BaseJSPanelMBean extends TlosSWBaseBean {
@@ -84,34 +74,12 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	// concurrencyManagement
 	private boolean concurrent;
 
-	// time management
-	private boolean useTimeManagement = false;
-
-	private String startTime;
-
-	private boolean defineStopTime = false;
-	private String stopTime;
-
-	private Collection<SelectItem> tzList;
-	private String selectedTZone;
-
-	private Collection<SelectItem> relativeTimeOptionList = null;
-	private String relativeTimeOption;
-
-	private String jobTimeOutValue;
-	private String jobTimeOutUnit;
-
-	private String expectedTime;
-	private String expectedTimeUnit;
-
-	private String tolerancePercentage;
-	private String minPercentage;
-
-	private String selectedTypeOfTime;
-
 	// alarmPreference
 	private Collection<SelectItem> alarmList = null;
 	private String[] selectedAlarmList;
+
+	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private transient DataTable parameterTable;
 
 	// advancedJobInfos
 	private Collection<SelectItem> agentChoiceMethodList = null;
@@ -140,12 +108,11 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private boolean renderUpdateParamButton = false;
 
+	private TimeManagementTabBean timeManagementTabBean;
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 
-	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-	private transient DataTable parameterTable;
-
 	public void init() {
+		timeManagementTabBean = new TimeManagementTabBean(isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 	}
 
@@ -234,8 +201,14 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		long startTime = System.currentTimeMillis();
 
+		getTimeManagementTabBean().fillTab();
+
 		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
 		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+
+		getTimeManagementTabBean().setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
+		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
 
 		fillAgentChoiceMethodList();
 
@@ -246,156 +219,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	public void fillAgentChoiceMethodList() {
 		if (getAgentChoiceMethodList() == null) {
 			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
-		}
-	}
-
-	protected void fillTimeManagement(TimeManagement timeManagement) {
-
-		// ekrandan starttime girildiyse onu set ediyor
-		if (startTime != null && !startTime.equals("")) {
-
-			if (timeManagement.getJsPlannedTime() == null) {
-				JsPlannedTime jsPlannedTime = JsPlannedTime.Factory.newInstance();
-				StartTime startTime = StartTime.Factory.newInstance();
-				jsPlannedTime.setStartTime(startTime);
-				timeManagement.setJsPlannedTime(jsPlannedTime);
-			}
-
-			JsPlannedTime jsPlannedTime = timeManagement.getJsPlannedTime();
-			jsPlannedTime.getStartTime().setTime(DefinitionUtils.dateToXmlTime(startTime, selectedTZone));
-
-			// ekrandan stoptime girildiyse onu set ediyor, bunu starttime
-			// girildiyse kontrol ediyor cunku start time olmadan stop time
-			// tanimi yapilmiyor
-			if (defineStopTime) {
-				StopTime jsStopTime = StopTime.Factory.newInstance();
-				jsStopTime.setTime(DefinitionUtils.dateToXmlTime(stopTime, selectedTZone));
-
-				jsPlannedTime.setStopTime(jsStopTime);
-
-			} else if (jsPlannedTime.getStopTime() != null) {
-				XmlCursor xmlCursor = jsPlannedTime.getStopTime().newCursor();
-				xmlCursor.removeXml();
-			}
-
-		} else if (timeManagement.getJsPlannedTime() != null) {
-			XmlCursor xmlCursor = timeManagement.getJsPlannedTime().newCursor();
-			xmlCursor.removeXml();
-		}
-
-		timeManagement.setJsRelativeTimeOption(JsRelativeTimeOption.Enum.forString(relativeTimeOption));
-
-		if (jobTimeOutValue != null && !jobTimeOutValue.equals("")) {
-			if (timeManagement.getJsTimeOut() == null) {
-				JsTimeOut jsTimeOut = JsTimeOut.Factory.newInstance();
-				timeManagement.setJsTimeOut(jsTimeOut);
-			}
-			timeManagement.getJsTimeOut().setValueInteger(new BigInteger(jobTimeOutValue));
-			timeManagement.getJsTimeOut().setUnit(Unit.Enum.forString(jobTimeOutUnit));
-		}
-
-		if (tolerancePercentage != null && !tolerancePercentage.equals("")) {
-			timeManagement.setTolerancePercentage(Integer.parseInt(tolerancePercentage));
-		}
-
-		if (minPercentage != null && !minPercentage.equals("")) {
-			timeManagement.setMinPercentage(Integer.parseInt(minPercentage));
-		}
-
-		// expectedTime girildiyse ilgili alanlar set ediliyor
-		if (expectedTime != null && !expectedTime.equals("")) {
-			ExpectedTime jsExpectedTime = ExpectedTime.Factory.newInstance();
-			jsExpectedTime.setValueInteger(new BigInteger(expectedTime));
-			jsExpectedTime.setUnit(Unit.Enum.forString(expectedTimeUnit));
-
-			timeManagement.setExpectedTime(jsExpectedTime);
-
-		} else if (timeManagement.getExpectedTime() != null) {
-			XmlCursor xmlCursor = timeManagement.getExpectedTime().newCursor();
-			xmlCursor.removeXml();
-		}
-
-		timeManagement.setTimeZone(selectedTZone);
-		timeManagement.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
-
-		System.out.println("nedir" + timeManagement.toString());
-	}
-
-	public void fillTimeManagementTab(TimeManagement timeManagement) {
-
-		if (timeManagement != null && timeManagement.getJsTimeOut() != null) {
-			useTimeManagement = true;
-
-			if (timeManagement.getJsPlannedTime() != null && timeManagement.getJsPlannedTime().getStartTime() != null) {
-				Calendar jobStartTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
-
-				// DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-				// DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss.SSSZZ");
-				// LocalTime localStartTime = dtf.parseLocalTime(jobStartTime);
-				//
-				// DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm:ss");
-				// String jobLocalStartTime = localStartTime.toDateTimeToday(zone).toString(formatter);
-
-				String timeOutputFormat = new String("HH:mm:ss.SSS");
-				startTime = DefinitionUtils.calendarToStringTimeFormat(jobStartTime, selectedTZone, timeOutputFormat);
-				// startTime = jobLocalTime.toString();
-
-				if (timeManagement.getJsPlannedTime().getStopTime() != null) {
-					defineStopTime = true;
-
-					Calendar jobStopTime = timeManagement.getJsPlannedTime().getStopTime().getTime();
-					// LocalTime jobLocalStopTime = new LocalTime( jobStopTime);
-					stopTime = DefinitionUtils.calendarToStringTimeFormat(jobStopTime, selectedTZone, timeOutputFormat);
-					// stopTime = jobLocalStopTime.toString();
-					// LocalTime localStopTime = dtf.parseLocalTime(jobStopTime);
-					//
-					// String jobLocalStopTime = localStopTime.toDateTimeToday(zone).toString(formatter);
-
-				}
-			}
-
-			if (timeManagement.getJsRelativeTimeOption() != null) {
-				relativeTimeOption = timeManagement.getJsRelativeTimeOption().toString();
-			}
-
-			JsTimeOut timeOut = timeManagement.getJsTimeOut();
-
-			if (timeOut.getValueInteger() != null) {
-				jobTimeOutValue = timeOut.getValueInteger() + "";
-			}
-			if (timeOut.getUnit() != null) {
-				jobTimeOutUnit = timeOut.getUnit().toString();
-			}
-
-			if (timeManagement.getExpectedTime() != null) {
-				ExpectedTime jobExpectedTime = timeManagement.getExpectedTime();
-
-				if (jobExpectedTime.getValueInteger() != null) {
-					expectedTime = jobExpectedTime.getValueInteger() + "";
-				}
-				if (jobExpectedTime.getUnit() != null) {
-					expectedTimeUnit = jobExpectedTime.getUnit().toString();
-				}
-			}
-
-			// job taniminda bu alan yoksa degeri sifir geliyor
-			if (timeManagement.getTolerancePercentage() > 0) {
-				tolerancePercentage = timeManagement.getTolerancePercentage() + "";
-			}
-
-			// job taniminda bu alan yoksa degeri sifir geliyor
-			if (timeManagement.getMinPercentage() > 0) {
-				minPercentage = timeManagement.getMinPercentage() + "";
-			}
-
-			if (timeManagement.getTimeZone() != null)
-				selectedTZone = timeManagement.getTimeZone();
-
-			if (timeManagement.getTypeOfTime() != null)
-				selectedTypeOfTime = timeManagement.getTypeOfTime().toString();
-
-		} else {
-			useTimeManagement = false;
 		}
 	}
 
@@ -767,20 +590,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		jsCalendar = "0";
 
-		startTime = "";
-		defineStopTime = false;
-		stopTime = "";
-		// gmt = 0;
-		// dst = false;
-		selectedTZone = new String("Europe/Istanbul");
-		selectedTypeOfTime = new String("Actual");
-		relativeTimeOption = JsRelativeTimeOption.NO.toString();
-		jobTimeOutValue = "";
-		jobTimeOutUnit = Unit.HOURS.toString();
-		expectedTime = "";
-		expectedTimeUnit = Unit.HOURS.toString();
-		tolerancePercentage = "10";
-		minPercentage = "10";
+		getTimeManagementTabBean().resetTab();
 
 		returnCode = ReturnCode.Factory.newInstance();
 
@@ -846,14 +656,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.concurrent = concurrent;
 	}
 
-	public boolean isUseTimeManagement() {
-		return useTimeManagement;
-	}
-
-	public void setUseTimeManagement(boolean useTimeManagement) {
-		this.useTimeManagement = useTimeManagement;
-	}
-
 	public Collection<SelectItem> getAgentChoiceMethodList() {
 		return agentChoiceMethodList;
 	}
@@ -902,24 +704,12 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.innerJsNameDuplicate = innerJsNameDuplicate;
 	}
 
-	public Collection<SelectItem> getRelativeTimeOptionList() {
-		return relativeTimeOptionList;
-	}
-
-	public void setRelativeTimeOptionList(Collection<SelectItem> relativeTimeOptionList) {
-		this.relativeTimeOptionList = relativeTimeOptionList;
-	}
-
 	public String[] getSelectedJobStatusList() {
 		return selectedJobStatusList;
 	}
 
 	public void setSelectedJobStatusList(String[] selectedJobStatusList) {
 		this.selectedJobStatusList = selectedJobStatusList;
-	}
-
-	public String getSelectedTZone() {
-		return selectedTZone;
 	}
 
 	public void setAlarmList(Collection<SelectItem> alarmList) {
@@ -940,94 +730,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public void setStatusDialogShow(boolean statusDialogShow) {
 		this.statusDialogShow = statusDialogShow;
-	}
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public boolean isDefineStopTime() {
-		return defineStopTime;
-	}
-
-	public void setDefineStopTime(boolean defineStopTime) {
-		this.defineStopTime = defineStopTime;
-	}
-
-	public String getStopTime() {
-		return stopTime;
-	}
-
-	public void setStopTime(String stopTime) {
-		this.stopTime = stopTime;
-	}
-
-	public String getRelativeTimeOption() {
-		return relativeTimeOption;
-	}
-
-	public void setRelativeTimeOption(String relativeTimeOption) {
-		this.relativeTimeOption = relativeTimeOption;
-	}
-
-	public String getJobTimeOutValue() {
-		return jobTimeOutValue;
-	}
-
-	public void setJobTimeOutValue(String jobTimeOutValue) {
-		this.jobTimeOutValue = jobTimeOutValue;
-	}
-
-	public String getJobTimeOutUnit() {
-		return jobTimeOutUnit;
-	}
-
-	public void setJobTimeOutUnit(String jobTimeOutUnit) {
-		this.jobTimeOutUnit = jobTimeOutUnit;
-	}
-
-	public String getExpectedTime() {
-		return expectedTime;
-	}
-
-	public void setExpectedTime(String expectedTime) {
-		this.expectedTime = expectedTime;
-	}
-
-	public String getExpectedTimeUnit() {
-		return expectedTimeUnit;
-	}
-
-	public void setExpectedTimeUnit(String expectedTimeUnit) {
-		this.expectedTimeUnit = expectedTimeUnit;
-	}
-
-	public String getTolerancePercentage() {
-		return tolerancePercentage;
-	}
-
-	public void setTolerancePercentage(String tolerancePercentage) {
-		this.tolerancePercentage = tolerancePercentage;
-	}
-
-	public String getMinPercentage() {
-		return minPercentage;
-	}
-
-	public void setMinPercentage(String minPercentage) {
-		this.minPercentage = minPercentage;
-	}
-
-	public String getSelectedTypeOfTime() {
-		return selectedTypeOfTime;
-	}
-
-	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
-		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 
 	public String[] getSelectedAlarmList() {
@@ -1104,18 +806,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getAlarmList() {
 		return alarmList;
-	}
-
-	public void setSelectedTZone(String selectedTZone) {
-		this.selectedTZone = selectedTZone;
-	}
-
-	public Collection<SelectItem> getTzList() {
-		return tzList;
-	}
-
-	public void setTzList(Collection<SelectItem> tzList) {
-		this.tzList = tzList;
 	}
 
 	public Status getJobStatus() {
@@ -1204,6 +894,14 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public LogAnalyzingTabBean getLogAnalyzingTabBean() {
 		return logAnalyzingTabBean;
+	}
+
+	public TimeManagementTabBean getTimeManagementTabBean() {
+		return timeManagementTabBean;
+	}
+
+	public void setTimeManagementTabBean(TimeManagementTabBean timeManagementTabBean) {
+		this.timeManagementTabBean = timeManagementTabBean;
 	}
 
 	// public int getGmt() {
