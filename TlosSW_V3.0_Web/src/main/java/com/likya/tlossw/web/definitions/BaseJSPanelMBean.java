@@ -113,9 +113,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	private Collection<SelectItem> alarmList = null;
 	private String[] selectedAlarmList;
 
-	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-	private transient DataTable parameterTable;
-
 	// advancedJobInfos
 	private Collection<SelectItem> agentChoiceMethodList = null;
 	private String agentChoiceMethod;
@@ -146,6 +143,8 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 	
+	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private transient DataTable parameterTable;
 	
 	public void init() {
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
