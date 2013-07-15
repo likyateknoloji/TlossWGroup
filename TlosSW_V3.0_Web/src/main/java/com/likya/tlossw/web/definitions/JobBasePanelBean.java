@@ -1,7 +1,6 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -15,13 +14,9 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
-import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
-import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
-import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobInfos;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.CascadingConditionsDocument.CascadingConditions;
@@ -30,16 +25,13 @@ import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobAutoRetryDocument.JobAutoRetry;
 import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
-import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
-import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
@@ -54,6 +46,7 @@ import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.definitions.helpers.BaseJobInfosTabBean;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -64,8 +57,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jSTree;
-
-	private JobProperties jobProperties;
 
 	public final static String PERIOD_TIME_PARAM = "Period Time";
 
@@ -89,29 +80,15 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	public final static String SAX = "2";
 	public final static String OBJECT = "3";
 
+	private JobProperties jobProperties;
+
 	private String jobPathInScenario;
 
 	// baseJsInfos
 	private String jsName;
 
-	private String oSystem;
-
-	private String jobPriority;
-
-	private Collection<SelectItem> jobBaseTypeList = null;
-	private String jobBaseType = JobBaseType.NON_PERIODIC.toString();
-
-	private Collection<SelectItem> jobTypeDefList = null;
-	private String jobTypeDef = JobTypeDef.TIME_BASED.toString();
-
-	private Collection<SelectItem> eventTypeDefList = null;
-	private String eventTypeDef = EventTypeDef.FILE.toString();
-
 	private Collection<SelectItem> jobCommandTypeList = null;
 	private String jobCommandType;
-
-	/* periodic job */
-	private String periodTime;
 
 	// dependencyDefinitions
 	private WsNode draggedWsNode;
@@ -162,6 +139,49 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	abstract public void fillJobPropertyDetails();
 
+	private BaseJobInfosTabBean baseJobInfosTabBean;
+
+	public void initJobPanel() {
+		
+		super.init();
+		
+		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
+		
+		long startTime = System.currentTimeMillis();
+
+		System.out.println("");
+		System.out.println("JobBaseBean.initJobPanel");
+
+		fillAllLists();
+
+		jobProperties = JobProperties.Factory.newInstance();
+
+		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
+		JobInfos jobInfos = JobInfos.Factory.newInstance();
+		JobTypeDetails jobTypeDetails = JobTypeDetails.Factory.newInstance();
+		jobInfos.setJobTypeDetails(jobTypeDetails);
+		baseJobInfos.setJobInfos(jobInfos);
+		jobProperties.setBaseJobInfos(baseJobInfos);
+
+		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
+		JsTimeOut jobTimeOut = JsTimeOut.Factory.newInstance();
+		timeManagement.setJsTimeOut(jobTimeOut);
+		jobProperties.setTimeManagement(timeManagement);
+
+		CascadingConditions cascadingConditions = CascadingConditions.Factory.newInstance();
+		jobProperties.setCascadingConditions(cascadingConditions);
+
+		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
+		jobProperties.setConcurrencyManagement(concurrencyManagement);
+
+		resetPanelInputs();
+
+		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+
+		System.out.println(getClass().getName());
+
+	}
+
 	public void fillJobPanel() {
 		fillBaseInfosTab();
 		fillTimeManagementTab();
@@ -175,36 +195,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	private void fillBaseInfosTab() {
-		if (jobProperties != null) {
-			BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
-			setJsCalendar(baseJobInfos.getCalendarId() + "");
-			oSystem = baseJobInfos.getOSystem().toString();
-			jobPriority = baseJobInfos.getJobPriority().toString();
-			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
-			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
-
-			if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
-				for (Parameter param : baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray()) {
-					if (param.getName().equals(PERIOD_TIME_PARAM)) {
-						// periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
-						String timeOutputFormat = new String("HH:mm:ss");
-						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime(), getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
-					}
-				}
-			}
-
-			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
-				eventTypeDef = baseJobInfos.getJobInfos().getJobTypeDetails().getEventTypeDef().toString();
-			}
-
-			if (baseJobInfos.getJsIsActive().equals(JsIsActive.YES)) {
-				setJsActive(true);
-			} else {
-				setJsActive(false);
-			}
-		} else {
-			System.out.println("jobProperties is NULL in fillBaseInfosTab !!");
-		}
+		getBaseJobInfosTabBean().fillBaseInfosTab();
 	}
 
 	public void fillTimeManagementTab() {
@@ -306,66 +297,25 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		}
 	}
 
-	public void initJobPanel() {
-		
-		super.init();
-
-		long startTime = System.currentTimeMillis();
-
-		System.out.println("");
-		System.out.println("JobBaseBean.initJobPanel");
-		
-		fillAllLists();
-
-		jobProperties = JobProperties.Factory.newInstance();
-
-		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
-		JobInfos jobInfos = JobInfos.Factory.newInstance();
-		JobTypeDetails jobTypeDetails = JobTypeDetails.Factory.newInstance();
-		jobInfos.setJobTypeDetails(jobTypeDetails);
-		baseJobInfos.setJobInfos(jobInfos);
-		jobProperties.setBaseJobInfos(baseJobInfos);
-
-		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
-		JsTimeOut jobTimeOut = JsTimeOut.Factory.newInstance();
-		timeManagement.setJsTimeOut(jobTimeOut);
-		jobProperties.setTimeManagement(timeManagement);
-
-		CascadingConditions cascadingConditions = CascadingConditions.Factory.newInstance();
-		jobProperties.setCascadingConditions(cascadingConditions);
-
-		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
-		jobProperties.setConcurrencyManagement(concurrencyManagement);
-
-		resetPanelInputs();
-
-		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-
-		System.out.println(getClass().getName());
-
-	}
-
 	public void fillAllLists() {
-		
+
 		super.fillAllLists();
-		
+
 		long startTime = System.currentTimeMillis();
-		
-		fillOSystemList();
-		fillJobBaseTypeList();
-		fillEventTypeDefList();
-		fillJobTypeDefList();
+
+		getBaseJobInfosTabBean().fillTab();
+
 		fillJobStatusList();
 		fillJobStateList();
 		fillJobSubtateList();
 
 		System.out.println("JobBaseBean.WebInputUtils.fillAllLists Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
-		
+
 		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
 		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
-		
+
 	}
 
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
@@ -394,56 +344,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	private void fillBaseJobInfos() {
-		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
-
-		baseJobInfos.setCalendarId(Integer.parseInt(getJsCalendar()));
-		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
-		if (jobPriority.isEmpty())
-			jobPriority = "1"; // default değer
-		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
-
-		if (isJsActive()) {
-			baseJobInfos.setJsIsActive(JsIsActive.YES);
-		} else {
-			baseJobInfos.setJsIsActive(JsIsActive.NO);
-		}
-
-		JobInfos jobInfos = baseJobInfos.getJobInfos();
-		jobInfos.setJobBaseType(JobBaseType.Enum.forString(jobBaseType));
-
-		// periyodik is ise onunla ilgili alanlari dolduruyor
-		if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
-
-			SpecialParameters specialParameters;
-			if (baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters() == null) {
-				specialParameters = SpecialParameters.Factory.newInstance();
-			} else {
-				specialParameters = baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters();
-			}
-
-			InParam inParam = InParam.Factory.newInstance();
-
-			Parameter parameter = Parameter.Factory.newInstance();
-			parameter.setName(PERIOD_TIME_PARAM);
-			parameter.setValueTime(DefinitionUtils.dateToXmlTime(periodTime, getTimeManagementTabBean().getSelectedTZone()));
-			parameter.setId(new BigInteger("1"));
-
-			inParam.addNewParameter();
-			inParam.setParameterArray(0, parameter);
-
-			specialParameters.setInParam(inParam);
-
-			jobInfos.getJobTypeDetails().setSpecialParameters(specialParameters);
-		}
-
-		jobInfos.setJobTypeDef(JobTypeDef.Enum.forString(jobTypeDef));
-
-		// event tabanli bir is ise event turunu set ediyor
-		if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
-			jobInfos.getJobTypeDetails().setEventTypeDef(EventTypeDef.Enum.forString(eventTypeDef));
-		}
-
-		baseJobInfos.setUserId(getWebAppUser().getId());
+		getBaseJobInfosTabBean().fillBaseJobInfos();
 	}
 
 	protected void fillTimeManagement() {
@@ -524,17 +425,11 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void resetPanelInputs() {
 
-		oSystem = OSystem.WINDOWS.toString();
-		jobPriority = "1";
-		jobBaseType = JobBaseType.NON_PERIODIC.toString();
-		periodTime = "";
-		jobTypeDef = JobTypeDef.TIME_BASED.toString();
-		eventTypeDef = EventTypeDef.FILE.toString();
-
 		jobStatusName = "";
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
+		getBaseJobInfosTabBean().resetTab();
 		super.resetPanelInputs();
 	}
 
@@ -954,14 +849,13 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 		/**
 		 * @author serkan taş
-		 * @date 14.07.2013
-		 * Aşağıdaki kımsa gerek yok gibi geldi bana
+		 * @date 14.07.2013 Aşağıdaki kımsa gerek yok gibi geldi bana
 		 */
-//		if (isScenario) {
-//			addToScenarioStatusList(tmpJobStatus);
-//		} else {
-			addToJobStatusList(tmpJobStatus);
-//		}
+		//		if (isScenario) {
+		//			addToScenarioStatusList(tmpJobStatus);
+		//		} else {
+		addToJobStatusList(tmpJobStatus);
+		//		}
 
 		if (getManyJobStatusList() == null) {
 			setManyJobStatusList(new ArrayList<SelectItem>());
@@ -996,27 +890,27 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		newStatus.set(tmpJobStatus);
 	}
 
-//	private void addToScenarioStatusList(Status tmpJobStatus) {
-//		ScenarioStatusList scenarioStatusList = null;
-//
-//		if (scenario.getScenarioStatusList() == null || scenario.getScenarioStatusList().sizeOfScenarioStatusArray() == 0) {
-//			scenario.setScenarioStatusList(ScenarioStatusList.Factory.newInstance());
-//
-//			scenarioStatusList = scenario.getScenarioStatusList();
-//
-//			tmpJobStatus.setStsId("1");
-//		} else {
-//			scenarioStatusList = scenario.getScenarioStatusList();
-//
-//			int lastStatusIndex = scenarioStatusList.sizeOfScenarioStatusArray() - 1;
-//			String id = scenarioStatusList.getScenarioStatusArray(lastStatusIndex).getStsId();
-//
-//			tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
-//		}
-//
-//		Status newStatus = scenarioStatusList.addNewScenarioStatus();
-//		newStatus.set(tmpJobStatus);
-//	}
+	//	private void addToScenarioStatusList(Status tmpJobStatus) {
+	//		ScenarioStatusList scenarioStatusList = null;
+	//
+	//		if (scenario.getScenarioStatusList() == null || scenario.getScenarioStatusList().sizeOfScenarioStatusArray() == 0) {
+	//			scenario.setScenarioStatusList(ScenarioStatusList.Factory.newInstance());
+	//
+	//			scenarioStatusList = scenario.getScenarioStatusList();
+	//
+	//			tmpJobStatus.setStsId("1");
+	//		} else {
+	//			scenarioStatusList = scenario.getScenarioStatusList();
+	//
+	//			int lastStatusIndex = scenarioStatusList.sizeOfScenarioStatusArray() - 1;
+	//			String id = scenarioStatusList.getScenarioStatusArray(lastStatusIndex).getStsId();
+	//
+	//			tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
+	//		}
+	//
+	//		Status newStatus = scenarioStatusList.addNewScenarioStatus();
+	//		newStatus.set(tmpJobStatus);
+	//	}
 
 	public void closeJobStatusDialogAction() {
 		setStatusDialogShow(false);
@@ -1111,30 +1005,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		return jobPropertiesXML;
 	}
 
-	public void fillJobTypeDefList() {
-		if (getJobTypeDefList() == null) {
-			setJobTypeDefList(WebInputUtils.fillJobTypeDefList());
-		}
-	}
-
-	public void fillJobBaseTypeList() {
-		if (getJobBaseTypeList() == null) {
-			setJobBaseTypeList(WebInputUtils.fillJobBaseTypeList());
-		}
-	}
-
-	public void fillEventTypeDefList() {
-		if (getEventTypeDefList() == null) {
-			setEventTypeDefList(WebInputUtils.fillEventTypeDefList());
-		}
-	}
-
-	public void fillOSystemList() {
-		if (getoSystemList() == null) {
-			setoSystemList(WebInputUtils.fillOSystemList());
-		}
-	}
-
 	public void fillJobStateList() {
 		if (getDepStateNameList() == null) {
 			setDepStateNameList(WebInputUtils.fillJobStateList());
@@ -1161,70 +1031,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		this.jobProperties = jobProperties;
 	}
 
-	public String getoSystem() {
-		return oSystem;
-	}
-
-	public void setoSystem(String oSystem) {
-		this.oSystem = oSystem;
-	}
-
-	public String getJobPriority() {
-		return jobPriority;
-	}
-
-	public void setJobPriority(String jobPriority) {
-		this.jobPriority = jobPriority;
-	}
-
-	public Collection<SelectItem> getJobBaseTypeList() {
-		return jobBaseTypeList;
-	}
-
-	public void setJobBaseTypeList(Collection<SelectItem> jobBaseTypeList) {
-		this.jobBaseTypeList = jobBaseTypeList;
-	}
-
-	public String getJobBaseType() {
-		return jobBaseType;
-	}
-
-	public void setJobBaseType(String jobBaseType) {
-		this.jobBaseType = jobBaseType;
-	}
-
-	public Collection<SelectItem> getJobTypeDefList() {
-		return jobTypeDefList;
-	}
-
-	public void setJobTypeDefList(Collection<SelectItem> jobTypeDefList) {
-		this.jobTypeDefList = jobTypeDefList;
-	}
-
-	public String getJobTypeDef() {
-		return jobTypeDef;
-	}
-
-	public void setJobTypeDef(String jobTypeDef) {
-		this.jobTypeDef = jobTypeDef;
-	}
-
-	public Collection<SelectItem> getEventTypeDefList() {
-		return eventTypeDefList;
-	}
-
-	public void setEventTypeDefList(Collection<SelectItem> eventTypeDefList) {
-		this.eventTypeDefList = eventTypeDefList;
-	}
-
-	public String getEventTypeDef() {
-		return eventTypeDef;
-	}
-
-	public void setEventTypeDef(String eventTypeDef) {
-		this.eventTypeDef = eventTypeDef;
-	}
-
 	public Collection<SelectItem> getJobCommandTypeList() {
 		return jobCommandTypeList;
 	}
@@ -1239,14 +1045,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setJobCommandType(String jobCommandType) {
 		this.jobCommandType = jobCommandType;
-	}
-
-	public String getPeriodTime() {
-		return periodTime;
-	}
-
-	public void setPeriodTime(String periodTime) {
-		this.periodTime = periodTime;
 	}
 
 	public String getJobPathInScenario() {
@@ -1455,6 +1253,10 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 	public void setDraggedWsJobNode(WsNode draggedWsNode) {
 		this.draggedWsNode = draggedWsNode;
+	}
+
+	public BaseJobInfosTabBean getBaseJobInfosTabBean() {
+		return baseJobInfosTabBean;
 	}
 
 }
