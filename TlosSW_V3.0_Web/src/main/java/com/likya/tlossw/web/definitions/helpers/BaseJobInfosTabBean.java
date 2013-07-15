@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialPar
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
@@ -27,11 +28,8 @@ public class BaseJobInfosTabBean {
 	/* periodic job */
 	private String periodTime;
 
-	private String oSystem;
-	private Collection<SelectItem> oSystemList = null;
-
 	private Collection<SelectItem> jobBaseTypeList = null;
-	private String jobBaseType = JobBaseType.NON_PERIODIC.toString();
+	private String jobBaseType;
 
 	private Collection<SelectItem> jobTypeDefList = null;
 	private String jobTypeDef = JobTypeDef.TIME_BASED.toString();
@@ -41,13 +39,13 @@ public class BaseJobInfosTabBean {
 
 	JobBasePanelBean jobBasePanelBean;
 
-	public BaseJobInfosTabBean(JobBasePanelBean jobBasePanelBean) {
+	public BaseJobInfosTabBean(JobBasePanelBean jobBasePanelBean, String jobBaseType) {
 		super();
 		this.jobBasePanelBean = jobBasePanelBean;
+		this.jobBaseType = jobBaseType;
 	}
 	
 	public void resetTab() {
-		oSystem = OSystem.WINDOWS.toString();
 		jobPriority = "1";
 		jobBaseType = JobBaseType.NON_PERIODIC.toString();
 		periodTime = "";
@@ -59,7 +57,7 @@ public class BaseJobInfosTabBean {
 		fillJobBaseTypeList();
 		fillEventTypeDefList();
 		fillJobTypeDefList();
-		fillOSystemList();
+		jobBasePanelBean.fillOSystemList();
 	}
 	
 	public void fillBaseInfosTab() {
@@ -68,7 +66,7 @@ public class BaseJobInfosTabBean {
 
 			BaseJobInfos baseJobInfos = jobBasePanelBean.getJobProperties().getBaseJobInfos();
 			jobBasePanelBean.setJsCalendar(baseJobInfos.getCalendarId() + "");
-			oSystem = baseJobInfos.getOSystem().toString();
+			jobBasePanelBean.setoSystem(baseJobInfos.getOSystem().toString());
 			jobPriority = baseJobInfos.getJobPriority().toString();
 			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
 			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
@@ -103,7 +101,7 @@ public class BaseJobInfosTabBean {
 		BaseJobInfos baseJobInfos = jobBasePanelBean.getJobProperties().getBaseJobInfos();
 
 		baseJobInfos.setCalendarId(Integer.parseInt(jobBasePanelBean.getJsCalendar()));
-		baseJobInfos.setOSystem(OSystem.Enum.forString(oSystem));
+		baseJobInfos.setOSystem(OSystem.Enum.forString(jobBasePanelBean.getoSystem()));
 		if (jobPriority.isEmpty())
 			jobPriority = "1"; // default değer
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
@@ -170,10 +168,24 @@ public class BaseJobInfosTabBean {
 		}
 	}
 	
-	public void fillOSystemList() {
-		if (getoSystemList() == null) {
-			setoSystemList(WebInputUtils.fillOSystemList());
-		}
+	public JobProperties getJobProperties() {
+		return jobBasePanelBean.getJobProperties();
+	}
+	
+	public String getJsCalendar() {
+		return jobBasePanelBean.getJsCalendar();
+	}
+	
+	public Collection<SelectItem> getJsCalendarList() {
+		return jobBasePanelBean.getJsCalendarList();
+	}
+	
+	public String getoSystem() {
+		return jobBasePanelBean.getoSystem();
+	}
+
+	public Collection<SelectItem> getoSystemList() {
+		return jobBasePanelBean.getoSystemList();
 	}
 	
 	public String getJobPriority() {
@@ -190,22 +202,6 @@ public class BaseJobInfosTabBean {
 
 	public void setPeriodTime(String periodTime) {
 		this.periodTime = periodTime;
-	}
-
-	public String getoSystem() {
-		return oSystem;
-	}
-
-	public void setoSystem(String oSystem) {
-		this.oSystem = oSystem;
-	}
-
-	public Collection<SelectItem> getoSystemList() {
-		return oSystemList;
-	}
-
-	public void setoSystemList(Collection<SelectItem> oSystemList) {
-		this.oSystemList = oSystemList;
 	}
 
 	public Collection<SelectItem> getJobBaseTypeList() {
