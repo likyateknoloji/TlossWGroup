@@ -237,10 +237,10 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 		AdvancedScenarioInfos advancedScenarioInfos = AdvancedScenarioInfos.Factory.newInstance();
 
 		AgentChoiceMethod choiceMethod = AgentChoiceMethod.Factory.newInstance();
-		choiceMethod.setStringValue(getAgentChoiceMethod());
+		choiceMethod.setStringValue(getAdvancedJobInfosTab().getAgentChoiceMethod());
 
-		if (getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
-			choiceMethod.setAgentId(getSelectedAgent());
+		if (getAdvancedJobInfosTab().getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
+			choiceMethod.setAgentId(getAdvancedJobInfosTab().getSelectedAgent());
 		}
 		advancedScenarioInfos.setAgentChoiceMethod(choiceMethod);
 
@@ -388,10 +388,10 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 
 			// agent secme metodu
 			if (advancedScenarioInfos.getAgentChoiceMethod() != null) {
-				setAgentChoiceMethod(advancedScenarioInfos.getAgentChoiceMethod().getStringValue());
+				getAdvancedJobInfosTab().setAgentChoiceMethod(advancedScenarioInfos.getAgentChoiceMethod().getStringValue());
 
-				if (getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
-					setSelectedAgent(advancedScenarioInfos.getAgentChoiceMethod().getAgentId());
+				if (getAdvancedJobInfosTab().getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
+					getAdvancedJobInfosTab().setSelectedAgent(advancedScenarioInfos.getAgentChoiceMethod().getAgentId());
 				}
 			}
 
