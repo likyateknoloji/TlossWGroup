@@ -11,7 +11,6 @@ import javax.faces.model.SelectItem;
 import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
 
-import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
@@ -30,6 +29,7 @@ import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.definitions.helpers.AdvancedJobInfosTab;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
@@ -78,13 +78,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
 	private transient DataTable parameterTable;
 
-	// advancedJobInfos
-	private Collection<SelectItem> agentChoiceMethodList = null;
-	private String agentChoiceMethod;
-
-	private Collection<SelectItem> definedAgentList = null;
-	private String selectedAgent;
-
 	private List<SelectItem> manyJobDependencyList = new ArrayList<SelectItem>();
 	private String dependencyExpression;
 
@@ -96,15 +89,16 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	private Collection<SelectItem> jsCalendarList = null;
 
-
 	private TimeManagementTabBean timeManagementTabBean;
 	private LocalParametersTabBean localParametersTabBean;
 	private LogAnalyzingTabBean logAnalyzingTabBean;
+	private AdvancedJobInfosTab advancedJobInfosTab;
 
 	public void init() {
 		timeManagementTabBean = new TimeManagementTabBean(isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean(this);
+		advancedJobInfosTab = new AdvancedJobInfosTab(getDbOperations());
 	}
 
 	public void switchInsertUpdateButtons() {
@@ -125,16 +119,10 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 
-		fillAgentChoiceMethodList();
+		getAdvancedJobInfosTab().fillTab();
 
 		System.out.println();
 
-	}
-
-	public void fillAgentChoiceMethodList() {
-		if (getAgentChoiceMethodList() == null) {
-			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
-		}
 	}
 
 	/**
@@ -513,7 +501,7 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		jobStatusName = "";
 		manyJobStatusList = new ArrayList<SelectItem>();
 
-		agentChoiceMethod = AgentChoiceMethod.SIMPLE_METASCHEDULER.toString();
+		getAdvancedJobInfosTab().resetTab();
 
 		manyJobDependencyList = new ArrayList<SelectItem>();
 		dependencyExpression = "";
@@ -569,30 +557,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public void setConcurrent(boolean concurrent) {
 		this.concurrent = concurrent;
-	}
-
-	public Collection<SelectItem> getAgentChoiceMethodList() {
-		return agentChoiceMethodList;
-	}
-
-	public void setAgentChoiceMethodList(Collection<SelectItem> agentChoiceMethodList) {
-		this.agentChoiceMethodList = agentChoiceMethodList;
-	}
-
-	public String getAgentChoiceMethod() {
-		return agentChoiceMethod;
-	}
-
-	public void setAgentChoiceMethod(String agentChoiceMethod) {
-		this.agentChoiceMethod = agentChoiceMethod;
-	}
-
-	public String getSelectedAgent() {
-		return selectedAgent;
-	}
-
-	public void setSelectedAgent(String selectedAgent) {
-		this.selectedAgent = selectedAgent;
 	}
 
 	public boolean isJsNameConfirmDialog() {
@@ -671,14 +635,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.parameterTable = parameterTable;
 	}
 
-	public Collection<SelectItem> getDefinedAgentList() {
-		return definedAgentList;
-	}
-
-	public void setDefinedAgentList(Collection<SelectItem> definedAgentList) {
-		this.definedAgentList = definedAgentList;
-	}
-
 	public List<SelectItem> getManyJobDependencyList() {
 		return manyJobDependencyList;
 	}
@@ -755,10 +711,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 		this.oSystemList = oSystemList;
 	}
 
-	public boolean getAgentChoiceMethodUserMandatoryPreference() {
-		return "UserMandatoryPreference".equals(agentChoiceMethod);
-	}
-
 	public LogAnalyzingTabBean getLogAnalyzingTabBean() {
 		return logAnalyzingTabBean;
 	}
@@ -769,6 +721,10 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public LocalParametersTabBean getLocalParametersTabBean() {
 		return localParametersTabBean;
+	}
+
+	public AdvancedJobInfosTab getAdvancedJobInfosTab() {
+		return advancedJobInfosTab;
 	}
 
 	// public int getGmt() {
