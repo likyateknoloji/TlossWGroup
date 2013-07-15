@@ -15,8 +15,6 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument.AgentChoiceMethod;
-import com.likya.tlos.model.xmlbeans.common.ChoiceType;
 import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
@@ -38,19 +36,10 @@ import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRest
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
-import com.likya.tlos.model.xmlbeans.data.ResourceRequirementDocument.ResourceRequirement;
 import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
-import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
-import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
-import com.likya.tlos.model.xmlbeans.sla.DiskDocument.Disk;
-import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
-import com.likya.tlos.model.xmlbeans.sla.HardwareDocument.Hardware;
-import com.likya.tlos.model.xmlbeans.sla.MemDocument.Mem;
-import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
@@ -168,31 +157,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	private Collection<SelectItem> osTypeList = null;
 
 	private String[] selectedReturnCodeList;
-
-	private String jobSLA;
-	private Collection<SelectItem> jsSLAList = null;
-
-	private boolean useResourceReq = false;
-
-	private boolean resourceBasedDef = false;
-
-	private Collection<SelectItem> resourceNameList = null;
-	private String selectedResourceForHardware;
-
-	private String cpuTimein;
-	private String cpuCondition;
-	private String cpuValue;
-	private String cpuUnit;
-
-	private String memoryPart;
-	private String memoryCondition;
-	private String memoryValue;
-	private String memoryUnit;
-
-	private String diskPart;
-	private String diskCondition;
-	private String diskValue;
-	private String diskUnit;
 
 	abstract public void fillTabs();
 
@@ -336,50 +300,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 				return;
 			}
 
-			AdvancedJobInfos advancedJobInfos = jobProperties.getAdvancedJobInfos();
-
-			// sla tanimi
-			if (advancedJobInfos.getSLAId() > 0) {
-				jobSLA = advancedJobInfos.getSLAId() + "";
-			}
-
-			// agent secme metodu
-			if (advancedJobInfos.getAgentChoiceMethod() != null) {
-				setAgentChoiceMethod(advancedJobInfos.getAgentChoiceMethod().getStringValue());
-
-				if (getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
-					setSelectedAgent(advancedJobInfos.getAgentChoiceMethod().getAgentId());
-				}
-			}
-
-			// kaynak gereksinimi tanimi
-			if (advancedJobInfos.getResourceRequirement() != null) {
-				useResourceReq = true;
-
-				Hardware hardware = advancedJobInfos.getResourceRequirement().getHardware();
-
-				if (hardware.getEntryName() != null) {
-					selectedResourceForHardware = hardware.getEntryName();
-				}
-
-				Cpu cpu = hardware.getCpu();
-				cpuTimein = cpu.getTimein().toString();
-				cpuCondition = cpu.getCondition().toString();
-				cpuValue = cpu.getStringValue();
-				cpuUnit = cpu.getBirim().toString();
-
-				Mem mem = hardware.getMem();
-				memoryPart = mem.getForWhat().toString();
-				memoryCondition = mem.getCondition().toString();
-				memoryValue = mem.getStringValue();
-				memoryUnit = mem.getBirim().toString();
-
-				Disk disk = hardware.getDisk();
-				diskPart = disk.getForWhat().toString();
-				diskCondition = disk.getCondition().toString();
-				diskValue = disk.getStringValue();
-				diskUnit = disk.getBirim().toString();
-			}
+			getAdvancedJobInfosTab().fillAdvancedJobInfosTab(jobProperties.getAdvancedJobInfos());
 		} else {
 			System.out.println("jobProperties is NULL in fillAdvancedJobInfosTab !!");
 		}
@@ -445,16 +366,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 		
-		setDefinedAgentList(WebInputUtils.fillAgentList(getDbOperations().getAgents()));
-		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setJsSLAList(WebInputUtils.fillSLAList(getDbOperations().getSlaList()));
-		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
-		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 	}
 
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
@@ -621,13 +532,6 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		eventTypeDef = EventTypeDef.FILE.toString();
 
 		jobStatusName = "";
-		jobSLA = NONE;
-		useResourceReq = false;
-		cpuValue = "0";
-		cpuUnit = "%";
-		memoryValue = "0";
-		diskValue = "0";
-
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
@@ -647,69 +551,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	private void fillAdvancedJobInfos() {
-		AdvancedJobInfos advancedJobInfos = AdvancedJobInfos.Factory.newInstance();
-
-		// sla tanimi
-		if (!jobSLA.equals(NONE)) {
-			advancedJobInfos.setSLAId(Integer.valueOf(jobSLA));
-		}
-
-		AgentChoiceMethod choiceMethod = AgentChoiceMethod.Factory.newInstance();
-		choiceMethod.setStringValue(getAgentChoiceMethod());
-
-		if (getAgentChoiceMethod().equals(ChoiceType.USER_MANDATORY_PREFERENCE.toString())) {
-			choiceMethod.setAgentId(getSelectedAgent());
-		}
-		advancedJobInfos.setAgentChoiceMethod(choiceMethod);
-
-		// kaynak gereksinimi tanimi
-		if (useResourceReq) {
-			ResourceRequirement resourceRequirement;
-
-			if (advancedJobInfos.getResourceRequirement() == null) {
-				resourceRequirement = ResourceRequirement.Factory.newInstance();
-			} else {
-				resourceRequirement = advancedJobInfos.getResourceRequirement();
-			}
-
-			Hardware hardware;
-
-			if (resourceRequirement.getHardware() == null) {
-				hardware = Hardware.Factory.newInstance();
-			} else {
-				hardware = resourceRequirement.getHardware();
-			}
-
-			if (resourceBasedDef) {
-				hardware.setEntryName(selectedResourceForHardware);
-			}
-
-			Cpu cpu = Cpu.Factory.newInstance();
-			cpu.setTimein(Timein.Enum.forString(cpuTimein));
-			cpu.setCondition(Condition.Enum.forString(cpuCondition));
-			cpu.setStringValue(cpuValue);
-			cpu.setBirim(Birim.Enum.forString(cpuUnit));
-
-			Mem mem = Mem.Factory.newInstance();
-			mem.setForWhat(ForWhat.Enum.forString(memoryPart));
-			mem.setCondition(Condition.Enum.forString(memoryCondition));
-			mem.setStringValue(memoryValue);
-			mem.setBirim(Birim.Enum.forString(memoryUnit));
-
-			Disk disk = Disk.Factory.newInstance();
-			disk.setForWhat(ForWhat.Enum.forString(diskPart));
-			disk.setCondition(Condition.Enum.forString(diskCondition));
-			disk.setStringValue(diskValue);
-			disk.setBirim(Birim.Enum.forString(diskUnit));
-
-			hardware.setCpu(cpu);
-			hardware.setMem(mem);
-			hardware.setDisk(disk);
-
-			resourceRequirement.setHardware(hardware);
-			advancedJobInfos.setResourceRequirement(resourceRequirement);
-		}
-
+		AdvancedJobInfos advancedJobInfos = getAdvancedJobInfosTab().fillAdvancedJobInfos();
 		jobProperties.setAdvancedJobInfos(advancedJobInfos);
 	}
 
@@ -1407,156 +1249,12 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		this.periodTime = periodTime;
 	}
 
-	public String getJobSLA() {
-		return jobSLA;
-	}
-
-	public void setJobSLA(String jobSLA) {
-		this.jobSLA = jobSLA;
-	}
-
-	public Collection<SelectItem> getJsSLAList() {
-		return jsSLAList;
-	}
-
-	public void setJsSLAList(Collection<SelectItem> jsSLAList) {
-		this.jsSLAList = jsSLAList;
-	}
-
 	public String getJobPathInScenario() {
 		return jobPathInScenario;
 	}
 
 	public void setJobPathInScenario(String jobPathInScenario) {
 		this.jobPathInScenario = jobPathInScenario;
-	}
-
-	public boolean isResourceBasedDef() {
-		return resourceBasedDef;
-	}
-
-	public void setResourceBasedDef(boolean resourceBasedDef) {
-		this.resourceBasedDef = resourceBasedDef;
-	}
-
-	public String getCpuTimein() {
-		return cpuTimein;
-	}
-
-	public void setCpuTimein(String cpuTimein) {
-		this.cpuTimein = cpuTimein;
-	}
-
-	public String getCpuCondition() {
-		return cpuCondition;
-	}
-
-	public void setCpuCondition(String cpuCondition) {
-		this.cpuCondition = cpuCondition;
-	}
-
-	public String getCpuValue() {
-		return cpuValue;
-	}
-
-	public void setCpuValue(String cpuValue) {
-		this.cpuValue = cpuValue;
-	}
-
-	public String getCpuUnit() {
-		return cpuUnit;
-	}
-
-	public void setCpuUnit(String cpuUnit) {
-		this.cpuUnit = cpuUnit;
-	}
-
-	public String getMemoryPart() {
-		return memoryPart;
-	}
-
-	public void setMemoryPart(String memoryPart) {
-		this.memoryPart = memoryPart;
-	}
-
-	public String getMemoryCondition() {
-		return memoryCondition;
-	}
-
-	public void setMemoryCondition(String memoryCondition) {
-		this.memoryCondition = memoryCondition;
-	}
-
-	public String getMemoryValue() {
-		return memoryValue;
-	}
-
-	public void setMemoryValue(String memoryValue) {
-		this.memoryValue = memoryValue;
-	}
-
-	public String getMemoryUnit() {
-		return memoryUnit;
-	}
-
-	public void setMemoryUnit(String memoryUnit) {
-		this.memoryUnit = memoryUnit;
-	}
-
-	public String getDiskPart() {
-		return diskPart;
-	}
-
-	public void setDiskPart(String diskPart) {
-		this.diskPart = diskPart;
-	}
-
-	public String getDiskCondition() {
-		return diskCondition;
-	}
-
-	public void setDiskCondition(String diskCondition) {
-		this.diskCondition = diskCondition;
-	}
-
-	public String getDiskValue() {
-		return diskValue;
-	}
-
-	public void setDiskValue(String diskValue) {
-		this.diskValue = diskValue;
-	}
-
-	public String getDiskUnit() {
-		return diskUnit;
-	}
-
-	public void setDiskUnit(String diskUnit) {
-		this.diskUnit = diskUnit;
-	}
-
-	public void setUseResourceReq(boolean useResourceReq) {
-		this.useResourceReq = useResourceReq;
-	}
-
-	public boolean isUseResourceReq() {
-		return useResourceReq;
-	}
-
-	public Collection<SelectItem> getResourceNameList() {
-		return resourceNameList;
-	}
-
-	public void setResourceNameList(Collection<SelectItem> resourceNameList) {
-		this.resourceNameList = resourceNameList;
-	}
-
-	public String getSelectedResourceForHardware() {
-		return selectedResourceForHardware;
-	}
-
-	public void setSelectedResourceForHardware(String selectedResourceForHardware) {
-		this.selectedResourceForHardware = selectedResourceForHardware;
 	}
 
 	public boolean isRunEvenIfFailed() {
