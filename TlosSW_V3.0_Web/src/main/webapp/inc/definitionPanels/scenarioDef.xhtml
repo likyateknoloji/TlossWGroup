@@ -96,18 +96,18 @@
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
 							<p:selectOneMenu id="agentChoiceMethod"
-								value="#{scenarioDefinitionMBean.agentChoiceMethod}"
+								value="#{scenarioDefinitionMBean.advancedJobInfosTab.agentChoiceMethod}"
 								style="width: 100pt">
 								<f:selectItems
-									value="#{scenarioDefinitionMBean.agentChoiceMethodList}" />
+									value="#{scenarioDefinitionMBean.advancedJobInfosTab.agentChoiceMethodList}" />
 								<p:ajax update="advancedInfos"></p:ajax>
 							</p:selectOneMenu>
 
 							<h:outputText
 								value="#{msgs['tlos.workspace.pannel.job.agentList']}"
-								rendered="#{scenarioDefinitionMBean.agentChoiceMethod eq 'UserMandatoryPreference'}" />
+								rendered="#{scenarioDefinitionMBean.advancedJobInfosTab.agentChoiceMethod eq 'UserMandatoryPreference'}" />
 							<p:selectOneMenu
-								rendered="#{scenarioDefinitionMBean.agentChoiceMethod eq 'UserMandatoryPreference'}"
+								rendered="#{scenarioDefinitionMBean.advancedJobInfosTab.agentChoiceMethod eq 'UserMandatoryPreference'}"
 								required="true"
 								requiredMessage="#{msgs['tlos.validation.scenario.advanced.agent']}"
 								value="#{scenarioDefinitionMBean.selectedAgent}"
