@@ -16,44 +16,12 @@
 
 			<p:tabView effect="blind" effectDuration="normal" id="tabView">
 
-				<ui:include src="/inc/propertiesTabs/baseJobInfosTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
 				<ui:include src="/inc/propertiesTabs/dbTab.xhtml">
 					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
 				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/dependencyDefinitionsTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/cascadingConditionsTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/stateInfosTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/alarmPreferenceTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/localParametersTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/advancedJobInfosTab.xhtml">
-					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
+				
+				<ui:include src="/inc/propertiesTabs/common/commonTabs.xhtml">
+					<ui:param name="backingBean" value="#{fileListenerPanelMBean}" />
 				</ui:include>
 
 			</p:tabView>
