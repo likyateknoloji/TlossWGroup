@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="jobDefinitionForm">
 
-		<p:fieldset id="jobDef"
-			legend="#{msgs['tlos.workspace.pannel.job.dbJobs']}"
-			style="width: 96%;">
+		<p:fieldset id="jobDef" legend="#{msgs['tlos.workspace.pannel.job.dbJobs']}" style="width: 96%;">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
@@ -19,7 +13,7 @@
 				<ui:include src="/inc/propertiesTabs/dbTab.xhtml">
 					<ui:param name="backingBean" value="#{dbJobsPanelMBean}" />
 				</ui:include>
-				
+
 				<ui:include src="/inc/propertiesTabs/common/commonTabs.xhtml">
 					<ui:param name="backingBean" value="#{fileListenerPanelMBean}" />
 				</ui:include>
