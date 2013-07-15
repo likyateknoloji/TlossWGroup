@@ -9,17 +9,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 
 import org.apache.xmlbeans.XmlCursor;
-import org.primefaces.component.datatable.DataTable;
 
-import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
-import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList;
@@ -74,9 +70,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 	// alarmPreference
 	private Collection<SelectItem> alarmList = null;
 	private String[] selectedAlarmList;
-
-	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-	private transient DataTable parameterTable;
 
 	private List<SelectItem> manyJobDependencyList = new ArrayList<SelectItem>();
 	private String dependencyExpression;
@@ -200,71 +193,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 			for (int i = 0; i < length; i++) {
 				selectedAlarmList[i] = alarmPreference.getAlarmIdArray(i) + "";
-			}
-		}
-	}
-
-	protected void fillLocalParameters(boolean isScenario, Object refObject) {
-
-		if (parameterList.size() > 0) {
-			LocalParameters localParameters = LocalParameters.Factory.newInstance();
-
-			InParam inParam = InParam.Factory.newInstance();
-			localParameters.setInParam(inParam);
-
-			for (int i = 0; i < parameterList.size(); i++) {
-				Parameter parameter = localParameters.getInParam().addNewParameter();
-				parameter.set(parameterList.get(i));
-			}
-
-			if (isScenario) {
-				((Scenario) refObject).setLocalParameters(localParameters);
-			} else {
-				((JobProperties) refObject).setLocalParameters(localParameters);
-			}
-
-		} else {
-			if (isScenario) {
-				Scenario scenario = ((Scenario) refObject);
-				if (scenario.getLocalParameters() != null) {
-					XmlCursor xmlCursor = scenario.getLocalParameters().newCursor();
-					xmlCursor.removeXml();
-				}
-			} else {
-				JobProperties jobProperties = ((JobProperties) refObject);
-				if (jobProperties.getLocalParameters() != null) {
-					XmlCursor xmlCursor = jobProperties.getLocalParameters().newCursor();
-					xmlCursor.removeXml();
-				}
-			}
-		}
-	}
-
-	public void fillLocalParametersTab(boolean isScenario, Object refObject) {
-
-		LocalParameters localParameters = null;
-
-		if (isScenario) {
-			Scenario scenario = ((Scenario) refObject);
-			if (scenario != null && scenario.getLocalParameters() != null) {
-				localParameters = scenario.getLocalParameters();
-			}
-		} else {
-			JobProperties jobProperties = ((JobProperties) refObject);
-			if (jobProperties != null && jobProperties.getLocalParameters() != null) {
-				localParameters = jobProperties.getLocalParameters();
-			}
-		}
-
-		if (localParameters != null) {
-			if (localParameters != null && localParameters.getInParam() != null) {
-				InParam inParam = localParameters.getInParam();
-
-				for (Parameter parameter : inParam.getParameterArray()) {
-					parameterList.add(parameter);
-				}
-			} else {
-				parameterList = new ArrayList<Parameter>();
 			}
 		}
 	}
@@ -508,7 +436,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 		selectedAlarmList = null;
 
-		parameterList = new ArrayList<Parameter>();
 	}
 
 	public boolean isScenario() {
@@ -617,22 +544,6 @@ public class BaseJSPanelMBean extends TlosSWBaseBean {
 
 	public void setSelectedAlarmList(String[] selectedAlarmList) {
 		this.selectedAlarmList = selectedAlarmList;
-	}
-
-	public ArrayList<Parameter> getParameterList() {
-		return parameterList;
-	}
-
-	public void setParameterList(ArrayList<Parameter> parameterList) {
-		this.parameterList = parameterList;
-	}
-
-	public DataTable getParameterTable() {
-		return parameterTable;
-	}
-
-	public void setParameterTable(DataTable parameterTable) {
-		this.parameterTable = parameterTable;
 	}
 
 	public List<SelectItem> getManyJobDependencyList() {

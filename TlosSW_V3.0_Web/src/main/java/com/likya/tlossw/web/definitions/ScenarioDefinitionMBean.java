@@ -145,11 +145,11 @@ public class ScenarioDefinitionMBean extends BaseJSPanelMBean implements Seriali
 	}
 
 	protected void fillLocalParameters() {
-		super.fillLocalParameters(true, scenario);
+		getLocalParametersTabBean().fillLocalParameters(true, scenario);
 	}
 
 	public void fillLocalParametersTab() {
-		super.fillLocalParametersTab(true, scenario);
+		getLocalParametersTabBean().fillLocalParametersTab(true, scenario);
 	}
 
 	private void fillSchedulingAlgorithmList() {

@@ -291,7 +291,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	public void fillLocalParametersTab() {
-		super.fillLocalParametersTab(false, jobProperties);
+		getLocalParametersTabBean().fillLocalParametersTab(false, jobProperties);
 	}
 
 	private void fillAdvancedJobInfosTab() {
@@ -547,7 +547,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 	}
 
 	protected void fillLocalParameters() {
-		super.fillLocalParameters(false, jobProperties);
+		getLocalParametersTabBean().fillLocalParameters(false, jobProperties);
 	}
 
 	private void fillAdvancedJobInfos() {
