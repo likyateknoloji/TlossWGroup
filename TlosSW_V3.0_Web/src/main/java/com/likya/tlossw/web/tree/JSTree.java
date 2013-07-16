@@ -42,7 +42,10 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSTree() {
 
-		getSessionMediator().setDocumentId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
+		String documentId = getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID);
+		if (documentId != null) {
+			getSessionMediator().setDocumentId(documentId);
+		}
 
 		long startTime = System.currentTimeMillis();
 
