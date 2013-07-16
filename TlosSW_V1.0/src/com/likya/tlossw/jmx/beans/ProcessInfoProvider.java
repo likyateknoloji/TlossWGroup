@@ -212,30 +212,47 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam() != null
 				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam().sizeOfParameterArray() > 0) {
 
-			ArrayList<Parameter> paramList = new ArrayList<Parameter>();
-
 			OutParam outParam = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
 
 			for (Parameter param : outParam.getParameterArray()) {
-				Parameter parameter = Parameter.Factory.newInstance();
-				parameter.setName(param.getName());
-				parameter.setDesc(param.getDesc());
-				parameter.setPreValue(param.getPreValue());
-				parameter.setValueString(param.getValueString());
-				parameter.setValueDate(param.getValueDate());
-				parameter.setValueDateTime(param.getValueDateTime());
-				parameter.setValueTime(param.getValueTime());
-				parameter.setValueInteger(param.getValueInteger());
-				parameter.setValueXPATH(param.getValueXPATH());
-				
-				paramList.add(parameter);
+				jobInfoTypeClient.setOutParameterName(param.getName());
+				jobInfoTypeClient.setOutParameterDesc(param.getDesc());
+
+				int paramType = Integer.parseInt(param.getPreValue().getType() + "");
+
+				switch (paramType) {
+				case CommonConstantDefinitions.INTEGER:
+					jobInfoTypeClient.setOutParameterValue(param.getValueInteger() + "");
+
+					break;
+				case CommonConstantDefinitions.STRING:
+					jobInfoTypeClient.setOutParameterValue(param.getValueString());
+
+					break;
+				case CommonConstantDefinitions.DATE:
+					jobInfoTypeClient.setOutParameterValue(param.getValueDate() + "");
+
+					break;
+				case CommonConstantDefinitions.TIME:
+					jobInfoTypeClient.setOutParameterValue(param.getValueTime() + "");
+
+					break;
+				case CommonConstantDefinitions.DATETIME:
+					jobInfoTypeClient.setOutParameterValue(param.getValueDateTime() + "");
+
+					break;
+				case CommonConstantDefinitions.XPATH:
+					jobInfoTypeClient.setOutParameterValue(param.getValueXPATH());
+
+					break;
+
+				default:
+					break;
+				}
 			}
-			
-			jobInfoTypeClient.setOutParameterList(paramList);
 		}
 
 		return jobInfoTypeClient;
-
 	}
 
 	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime) {
