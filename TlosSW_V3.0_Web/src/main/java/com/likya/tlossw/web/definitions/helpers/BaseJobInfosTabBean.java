@@ -176,18 +176,34 @@ public class BaseJobInfosTabBean {
 		return jobBasePanelBean.getJsCalendar();
 	}
 	
+	public void setJsCalendar(String jsCalendar) {
+		jobBasePanelBean.setJsCalendar(jsCalendar);
+	}
+
 	public Collection<SelectItem> getJsCalendarList() {
 		return jobBasePanelBean.getJsCalendarList();
 	}
-	
+
+	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
+		jobBasePanelBean.setJsCalendarList(jsCalendarList);
+	}
+
 	public String getoSystem() {
 		return jobBasePanelBean.getoSystem();
+	}
+
+	public void setoSystem(String oSystem) {
+		jobBasePanelBean.setoSystem(oSystem);
 	}
 
 	public Collection<SelectItem> getoSystemList() {
 		return jobBasePanelBean.getoSystemList();
 	}
-	
+
+	public void setoSystemList(Collection<SelectItem> oSystemList) {
+		jobBasePanelBean.setoSystemList(oSystemList);
+	}
+
 	public String getJobPriority() {
 		return jobPriority;
 	}
