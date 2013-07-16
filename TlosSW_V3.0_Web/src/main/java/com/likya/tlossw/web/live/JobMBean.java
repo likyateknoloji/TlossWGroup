@@ -14,7 +14,6 @@ import org.primefaces.context.RequestContext;
 import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -57,9 +56,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean transformToLocalTime;
 	
-	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
-	private transient DataTable parameterTable;
-
 	public void fillJobLivePanel(String groupId, String jobName) {
 		setJobInfo(groupId, jobName);
 		fillJobReportGrid();
@@ -85,7 +81,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 			jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
 		}
 		
-		parameterList = jobInTyCl.getOutParameterList();
 	}
 
 	public void openJobCommandAction() {
@@ -367,22 +362,6 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedJobBaseReport(JobInfoTypeClient selectedJobBaseReport) {
 		this.selectedJobBaseReport = selectedJobBaseReport;
-	}
-
-	public ArrayList<Parameter> getParameterList() {
-		return parameterList;
-	}
-
-	public void setParameterList(ArrayList<Parameter> parameterList) {
-		this.parameterList = parameterList;
-	}
-
-	public DataTable getParameterTable() {
-		return parameterTable;
-	}
-
-	public void setParameterTable(DataTable parameterTable) {
-		this.parameterTable = parameterTable;
 	}
 
 }
