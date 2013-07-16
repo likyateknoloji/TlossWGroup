@@ -87,6 +87,7 @@ public class JMXServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 			TlosSpaceWide.errprintln(TlosSpaceWide.getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+			System.out.println("Code : 1234");
 			System.exit(-1);
 		}
 	}
