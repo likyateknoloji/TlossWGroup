@@ -9,7 +9,6 @@ package com.likya.tlossw.model.client.spc;
 
 import java.util.ArrayList;
 
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 
 public class JobInfoTypeClient extends JobInfoTypeClientBase {
@@ -39,7 +38,9 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private String runId;
 	private String LSIDateTime;
 
-	private ArrayList<Parameter> outParameterList;
+	private String outParameterName;
+	private String outParameterDesc;
+	private String outParameterValue;
 
  // Paramaters for webpage
 //	private String statusStr;
@@ -176,13 +177,29 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.instanceId = instanceId;
 	}
 
-	public ArrayList<Parameter> getOutParameterList() {
-		return outParameterList;
+	public String getOutParameterName() {
+		return outParameterName;
 	}
 
-	public void setOutParameterList(ArrayList<Parameter> outParameterList) {
-		this.outParameterList = outParameterList;
+	public void setOutParameterName(String outParameterName) {
+		this.outParameterName = outParameterName;
 	}
-	
+
+	public String getOutParameterValue() {
+		return outParameterValue;
+	}
+
+	public void setOutParameterValue(String outParameterValue) {
+		this.outParameterValue = outParameterValue;
+	}
+
+	public String getOutParameterDesc() {
+		return outParameterDesc;
+	}
+
+	public void setOutParameterDesc(String outParameterDesc) {
+		this.outParameterDesc = outParameterDesc;
+	}
+
 
 }
