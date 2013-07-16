@@ -303,10 +303,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			((JobBasePanelBean) currentPanelMBeanRef).fillTabs();
 
 			((JobBasePanelBean) currentPanelMBeanRef).setJobPathInScenario(draggedTemplatePath);
-			((JobBasePanelBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
+			// ((JobBasePanelBean) currentPanelMBeanRef).addJobNodeToScenarioPath();
 
 			RequestContext context = RequestContext.getCurrentInstance();
-			context.update("jsTreeForm");
+			// context.update("jsTreeForm");
 			context.update("jobDefinitionForm");
 		}
 	}

@@ -473,7 +473,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 
 		if (getDbOperations().insertJob(getWebAppUser().getId(), getDocumentId(), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
-			// addJobNodeToScenarioPath();
+			addJobNodeToScenarioPath();
 
 			addMessage("jobInsert", FacesMessage.SEVERITY_INFO, "tlos.success.job.insert", null);
 

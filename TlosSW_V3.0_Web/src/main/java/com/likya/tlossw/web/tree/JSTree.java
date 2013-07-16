@@ -106,10 +106,10 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		StringTokenizer pathTokenizer = new StringTokenizer(jobPathInScenario, "/");
 
 		while (pathTokenizer.hasMoreTokens()) {
-			String scenarioName = pathTokenizer.nextToken();
+			String scenarioId = pathTokenizer.nextToken();
 
 			for (TreeNode node : selectedNode.getChildren()) {
-				if (((WsNode) node.getData()).getName().equals(scenarioName)) {
+				if (((WsNode) node.getData()).getId().equals(scenarioId)) {
 					selectedNode = node;
 					break;
 				}
