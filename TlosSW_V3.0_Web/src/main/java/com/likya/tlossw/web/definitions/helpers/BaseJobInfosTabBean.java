@@ -1,5 +1,6 @@
 package com.likya.tlossw.web.definitions.helpers;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
 
@@ -21,7 +22,12 @@ import com.likya.tlossw.web.definitions.JobBasePanelBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
-public class BaseJobInfosTabBean {
+public class BaseJobInfosTabBean implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4999462516588657534L;
 
 	private String jobPriority;
 
