@@ -87,50 +87,22 @@
 			
 			<br />
 
-			<p:panel id="outParamPanel" header="#{msgs['tlos.live.pannel.job.outputParams']}" rendered="#{not empty jobMBean.jobInTyCl.outParameterList}" toggleable="true" toggleSpeed="500" collapsed="true">
+			<p:panel id="outParamPanel" header="#{msgs['tlos.live.pannel.job.outputParam']}" 
+				rendered="#{jobMBean.jobInTyCl.outParameterName != null and jobMBean.jobInTyCl.outParameterName != ''}" 
+				toggleable="true" toggleSpeed="500" collapsed="true">
 
-				<p:dataTable id="outParamDataTable" var="param" value="#{jobMBean.jobInTyCl.outParameterList}" resizableColumns="true" width="100%">
-
-					<p:column
-						headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
-						sortBy="#{param.name}">
-						<h:outputText value="#{param.name}" style="text-align: center;" />
-					</p:column>
-
-					<p:column
-						headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
-						sortBy="#{param.desc}">
-						<h:outputText value="#{param.desc}" style="text-align: center;" />
-					</p:column>
-
-					<p:column
-						headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
-						sortBy="#{param.preValue.stringValue}">
-						<h:outputText value="#{param.preValue.stringValue}"
-							style="text-align: center;" />
-					</p:column>
-
-					<p:column
-						headerText="#{msgs['tlos.workspace.pannel.job.parameterType']}">
-						<h:outputText value="#{msgs['tlos.combo.integer']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 1}" />
-						<h:outputText value="#{msgs['tlos.combo.string']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 2}" />
-						<h:outputText value="#{msgs['tlos.combo.date']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 3}" />
-						<h:outputText value="#{msgs['tlos.combo.time']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 4}" />
-						<h:outputText value="#{msgs['tlos.combo.dateTime']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 5}" />
-						<h:outputText value="#{msgs['tlos.combo.xPath']}"
-							style="text-align: center;" rendered="#{param.preValue.type eq 6}" />
-					</p:column>
+				<p:panelGrid columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.outParameterName}" readonly="true" style="width: 150px;"/>
 					
-				</p:dataTable>
-				
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.outParameterDesc}" readonly="true" style="width: 150px;"/>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
+					<p:inputTextarea value="#{jobMBean.jobInTyCl.outParameterValue}" readonly="true" 
+						rows="10" cols="70" autoResize="false"/>
+				</p:panelGrid>
 			</p:panel>
-
-			<br />
 
 			<p:panel id="management" header="#{msgs['tlos.live.pannel.job.management']}"
 				rendered="#{(jobMBean.jobInTyCl.retriable and security.RetryJob) or (jobMBean.jobInTyCl.successable and security.SetSuccessJob) 
@@ -165,8 +137,6 @@
 						rendered="#{jobMBean.jobInTyCl.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob}" actionListener="#{liveManager.showAvailableResourcesForJob}" />
 				</h:panelGrid>
 			</p:panel>
-
-			<br />
 
 			<p:panel id="alarmPanel" header="#{msgs['tlos.live.pannel.job.pastAlarmInfo']}" rendered="#{not empty jobMBean.jobAlarmList}" toggleable="true" toggleSpeed="500" collapsed="true">
 
@@ -286,8 +256,6 @@
 					</p:panel>
 				</p:dialog>
 			</p:panel>
-
-			<br />
 
 			<p:panel id="reportPanel" header="#{msgs['tlos.live.pannel.job.executionInfo']}" rendered="#{not empty jobMBean.jobBaseReportList}" toggleable="true" toggleSpeed="500" collapsed="true">
 
