@@ -120,10 +120,12 @@ public class TlosSpaceWideBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+			System.out.println("Code : 1235");
 			System.exit(-1);
 		} catch (NoClassDefFoundError e) {
 			e.printStackTrace();
 			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+			System.out.println("Code : 1236");
 			System.exit(-1);
 		}
 
@@ -242,6 +244,7 @@ public class TlosSpaceWideBase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+			System.out.println("Code : 1237");
 			System.exit(-1);
 		}
 	}
@@ -433,6 +436,7 @@ public class TlosSpaceWideBase {
 			} catch (TlosFatalException e) {
 				if (getSpaceWideRegistry().getCpcReference() == null) {
 					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+					System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
 					System.exit(-1);
 				} else {
 					errprintln("Gün dönümü sonrasý çalýþma listesi alýnamadý !");
