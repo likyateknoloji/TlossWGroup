@@ -108,4 +108,15 @@ public class CommonConstantDefinitions {
 	public static final String WSUSERPROFILE_ID = "wsUserProfileId";
 	public static final String FTPCONNECTION_ID = "ftpConnectionId";
 	public static final String ERROR_ID = "errorId";
+	
+	/**
+	 * parametre tanımları tipleri
+	 */
+	public static final int INTEGER = 1;
+	public static final int STRING = 2;
+	public static final int DATE = 3;
+	public static final int TIME = 4;
+	public static final int DATETIME = 5;
+	public static final int XPATH = 6;
+	
 }
