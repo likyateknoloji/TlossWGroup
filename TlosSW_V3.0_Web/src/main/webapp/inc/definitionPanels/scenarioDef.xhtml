@@ -63,30 +63,8 @@
 					</p:panel>
 				</p:tab>
 
-				<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean.timeManagementTabBean}" />
-				</ui:include>
-
-				<!-- senaryo taniminda bagimlilik simdilik yok 
-				<ui:include src="/inc/propertiesTabs/dependencyDefinitionsTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
-				</ui:include>
-				-->
-
-				<ui:include src="/inc/propertiesTabs/stateInfosTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/alarmPreferenceTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean}" />
-				</ui:include>
-
-				<ui:include src="/inc/propertiesTabs/localParametersTab.xhtml">
-					<ui:param name="backingBean" value="#{scenarioDefinitionMBean.localParametersTabBean}" />
+				<ui:include src="/inc/propertiesTabs/common/commonScenarioTabs.xhtml">
+					<ui:param name="backingBean" value="#{shellScriptPanelMBean}" />
 				</ui:include>
 
 				<p:tab id="advancedScenarioInfos"
