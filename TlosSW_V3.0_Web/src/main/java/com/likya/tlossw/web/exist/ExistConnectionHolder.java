@@ -56,7 +56,7 @@ public class ExistConnectionHolder implements Serializable {
 	public Collection getCollection() {
 		if (collection == null) {
 			ExistClient.tryReconnect = true;
-			return ExistClient.getCollection();
+			collection = ExistClient.getCollection();
 		}
 		return collection;
 	}
