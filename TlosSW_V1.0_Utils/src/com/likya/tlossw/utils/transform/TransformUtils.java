@@ -8,15 +8,24 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlossw.utils.CommonConstantDefinitions;
-
 import net.sf.saxon.om.NamespaceConstant;
+
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 
 public class TransformUtils {
 
 	protected static String objectModel = null;
-	
+
+	/**
+	 * parametre tanımları tipleri
+	 */
+	public static final int INTEGER = 1;
+	public static final int STRING = 2;
+	public static final int DATE = 3;
+	public static final int TIME = 4;
+	public static final int DATETIME = 5;
+	public static final int XPATH = 6;
+
 	public static Transformer getTransformer(StreamSource streamSource) {
 		// setup the xslt transformer
 	    System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
@@ -94,27 +103,27 @@ public class TransformUtils {
 		Object retValue = "";
 		
 		switch (paramType) {
-		case CommonConstantDefinitions.INTEGER:
+		case INTEGER:
 			retValue = parameter.getValueInteger();
 
 			break;
-		case CommonConstantDefinitions.STRING:
+		case STRING:
 			retValue = parameter.getValueString();
 
 			break;
-		case CommonConstantDefinitions.DATE:
+		case DATE:
 			retValue = parameter.getValueDate();
 
 			break;
-		case CommonConstantDefinitions.TIME:
+		case TIME:
 			retValue = parameter.getValueTime();
 
 			break;
-		case CommonConstantDefinitions.DATETIME:
+		case DATETIME:
 			retValue = parameter.getValueDateTime();
 
 			break;
-		case CommonConstantDefinitions.XPATH:
+		case XPATH:
 			retValue = parameter.getValueXPATH();
 
 			break;
