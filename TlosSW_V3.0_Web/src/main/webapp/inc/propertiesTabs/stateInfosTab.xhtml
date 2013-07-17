@@ -75,9 +75,8 @@
 
 					<p:commandButton value="#{msgs['tlos.button.update']}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['jobStatusEditAction']}" />
 
-					<p:commandButton value="#{msgs['tlos.button.delete']}" rendered="#{!backingBean.scenario}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['deleteJobStatusAction']}" />
+					<p:commandButton value="#{msgs['tlos.button.delete']}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['deleteStatusAction']}" />
 
-					<p:commandButton value="#{msgs['tlos.button.delete']}" rendered="#{backingBean.scenario}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['deleteScenarioStatusAction']}" />
 				</p:panelGrid>
 
 			</p:panel>
