@@ -1,9 +1,11 @@
 package com.likya.tlossw.web.definitions.helpers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
@@ -20,27 +22,38 @@ import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class StateInfosTabBean {
 
+	@ManagedProperty(value = "#{jsBasePanelMBean.oSystemList}")
+	private Collection<SelectItem> oSystemList;
+
+	@ManagedProperty(value = "#{jsBasePanelMBean.oSystem}")
+	private String oSystem;
+	
+	@ManagedProperty(value = "#{jsBasePanelMBean.jsUpdateButton}")
+	private boolean jsUpdateButton;
+	
 	private Status jobStatus;
-	
+
 	private String jobStatusName;
-	
+
+	private Collection<SelectItem> jobStatusNameList = null;
+
 	private List<SelectItem> manyJobStatusList;
 	private String[] selectedJobStatusList;
-	
+
 	/* jsStatusPopup */
 	private boolean statusDialogShow = false;
-	
+
 	private String osType;
 	private ReturnCode returnCode;
 	private List<SelectItem> manyReturnCodeList;
-	
+
 	private JSBasePanelMBean jsBasePanelMBean;
 
 	public StateInfosTabBean(JSBasePanelMBean jsBasePanelMBean) {
 		super();
 		this.jsBasePanelMBean = jsBasePanelMBean;
 	}
-	
+
 	public void resetTab() {
 		returnCode = ReturnCode.Factory.newInstance();
 
@@ -48,7 +61,7 @@ public class StateInfosTabBean {
 		jobStatusName = "";
 		manyJobStatusList = new ArrayList<SelectItem>();
 	}
-	
+
 	public void initJobStatusPopup(ActionEvent e) {
 		setStatusDialogShow(!checkDuplicateStateName());
 
@@ -56,7 +69,7 @@ public class StateInfosTabBean {
 		jobStatus = Status.Factory.newInstance();
 		setReturnCode(ReturnCode.Factory.newInstance());
 		manyReturnCodeList = new ArrayList<SelectItem>();
-		
+
 	}
 
 	public boolean checkDuplicateStateName() {
@@ -251,6 +264,12 @@ public class StateInfosTabBean {
 		manyReturnCodeList.add(item);
 	}
 
+	public void fillJobStatusList() {
+		if (jobStatusNameList == null) {
+			jobStatusNameList = WebInputUtils.fillJobStatusList();
+		}
+	}
+
 	public List<SelectItem> getManyJobStatusList() {
 		return manyJobStatusList;
 	}
@@ -309,6 +328,46 @@ public class StateInfosTabBean {
 
 	public void setJobStatusName(String jobStatusName) {
 		this.jobStatusName = jobStatusName;
+	}
+
+	public Collection<SelectItem> getJobStatusNameList() {
+		return jobStatusNameList;
+	}
+
+	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
+		this.jobStatusNameList = jobStatusNameList;
+	}
+
+	public Collection<SelectItem> getoSystemList() {
+		return oSystemList;
+	}
+
+	public void setoSystemList(Collection<SelectItem> oSystemList) {
+		this.oSystemList = oSystemList;
+	}
+
+	public String getoSystem() {
+		return oSystem;
+	}
+
+	public void setoSystem(String oSystem) {
+		this.oSystem = oSystem;
+	}
+
+	public String getOsType() {
+		return osType;
+	}
+
+	public void setOsType(String osType) {
+		this.osType = osType;
+	}
+
+	public boolean isJsUpdateButton() {
+		return jsUpdateButton;
+	}
+
+	public void setJsUpdateButton(boolean jsUpdateButton) {
+		this.jsUpdateButton = jsUpdateButton;
 	}
 
 }
