@@ -40,7 +40,7 @@ public class LocalParametersTabBean {
 		this.baseJSPanelMBean = baseJSPanelMBean;
 	}
 
-	private void resetTab() {
+	public void resetTab() {
 		paramName = "";
 		paramDesc = "";
 		paramPreValue = "";
