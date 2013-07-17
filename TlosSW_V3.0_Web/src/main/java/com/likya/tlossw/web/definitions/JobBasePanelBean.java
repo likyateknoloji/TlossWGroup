@@ -998,12 +998,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
-	public void fillJobStatusList() {
-		if (getJobStatusNameList() == null) {
-			setJobStatusNameList(WebInputUtils.fillJobStatusList());
-		}
-	}
-
 	public JobProperties getJobProperties() {
 		return jobProperties;
 	}
