@@ -26,6 +26,7 @@ import org.xmldb.api.base.XMLDBException;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
 import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
+import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
@@ -73,6 +74,7 @@ import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.InstanceUtils;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
+import com.likya.tlossw.utils.transform.TransformUtils;
 
 public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
@@ -107,7 +109,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
 
 		SpcInfoType spcInfoType = null;
-		
+
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
 		} else {
@@ -206,49 +208,19 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 			jobInfoTypeClient.setResourceName(agent.getResource().getStringValue());
 		}
-		
-		// output parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
-		if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters() != null
-				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam() != null
-				&& jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam().sizeOfParameterArray() > 0) {
 
-			OutParam outParam = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
+		// output parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
+		SpecialParameters specialParameters = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
+		
+		if (specialParameters != null && specialParameters.getOutParam() != null && specialParameters.getOutParam().sizeOfParameterArray() > 0) {
+
+			OutParam outParam = specialParameters.getOutParam();
 
 			for (Parameter param : outParam.getParameterArray()) {
 				jobInfoTypeClient.setOutParameterName(param.getName());
 				jobInfoTypeClient.setOutParameterDesc(param.getDesc());
 
-				int paramType = Integer.parseInt(param.getPreValue().getType() + "");
-
-				switch (paramType) {
-				case CommonConstantDefinitions.INTEGER:
-					jobInfoTypeClient.setOutParameterValue(param.getValueInteger() + "");
-
-					break;
-				case CommonConstantDefinitions.STRING:
-					jobInfoTypeClient.setOutParameterValue(param.getValueString());
-
-					break;
-				case CommonConstantDefinitions.DATE:
-					jobInfoTypeClient.setOutParameterValue(param.getValueDate() + "");
-
-					break;
-				case CommonConstantDefinitions.TIME:
-					jobInfoTypeClient.setOutParameterValue(param.getValueTime() + "");
-
-					break;
-				case CommonConstantDefinitions.DATETIME:
-					jobInfoTypeClient.setOutParameterValue(param.getValueDateTime() + "");
-
-					break;
-				case CommonConstantDefinitions.XPATH:
-					jobInfoTypeClient.setOutParameterValue(param.getValueXPATH());
-
-					break;
-
-				default:
-					break;
-				}
+				jobInfoTypeClient.setOutParameterValue(TransformUtils.typeSelector(param));
 			}
 		}
 
@@ -606,7 +578,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		} else {
 			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
-		
+
 		String scenarioId = spcInfoType.getSpcReferance().getSpcId();
 
 		SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
