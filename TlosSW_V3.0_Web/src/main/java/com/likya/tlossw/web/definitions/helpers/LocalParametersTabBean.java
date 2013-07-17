@@ -16,7 +16,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
-import com.likya.tlossw.web.definitions.BaseJSPanelMBean;
+import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 
 public class LocalParametersTabBean {
 
@@ -33,9 +33,9 @@ public class LocalParametersTabBean {
 
 	private transient DataTable parameterTable;
 
-	private BaseJSPanelMBean baseJSPanelMBean;
+	private JSBasePanelMBean baseJSPanelMBean;
 
-	public LocalParametersTabBean(BaseJSPanelMBean baseJSPanelMBean) {
+	public LocalParametersTabBean(JSBasePanelMBean baseJSPanelMBean) {
 		super();
 		this.baseJSPanelMBean = baseJSPanelMBean;
 	}

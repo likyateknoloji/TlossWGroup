@@ -51,7 +51,7 @@ import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
-public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Serializable {
+public abstract class JobBasePanelBean extends JSBasePanelMBean implements Serializable {
 
 	private static final long serialVersionUID = -3792738737288576190L;
 
