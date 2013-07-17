@@ -28,14 +28,12 @@ import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
 import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
-import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
-import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
@@ -119,9 +117,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	private boolean runEvenIfFailed;
 	private boolean jobSafeToRestart;
 	private boolean jobAutoRetry;
-
-	// stateInfos
-	private String jobStatusName;
 
 	/* live state info */
 	private String stateName;
@@ -255,14 +250,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 			// durum tanimi yapildiysa alanlari dolduruyor
 			if (jobProperties.getStateInfos() != null && jobProperties.getStateInfos().getJobStatusList() != null) {
-				setManyJobStatusList(new ArrayList<SelectItem>());
+				getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
 
 				for (Status jobStatus : jobProperties.getStateInfos().getJobStatusList().getJobStatusArray()) {
 					String statusName = jobStatus.getStatusName().toString();
-					getManyJobStatusList().add(new SelectItem(statusName, statusName));
+					getStateInfosTabBean().getManyJobStatusList().add(new SelectItem(statusName, statusName));
 				}
 			} else {
-				setManyJobStatusList(null);
+				getStateInfosTabBean().setManyJobStatusList(null);
 			}
 		} else {
 			System.out.println("jobProperties is NULL in fillStateInfosTab !!");
@@ -425,7 +420,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void resetPanelInputs() {
 
-		jobStatusName = "";
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
@@ -820,28 +814,19 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyDialogShow = true;
 	}
 
-	public void initJobStatusPopup(ActionEvent e) {
-		setStatusDialogShow(!checkDuplicateStateName());
-
-		setOsType(OSystem.WINDOWS.toString());
-		setJobStatus(Status.Factory.newInstance());
-		setReturnCode(ReturnCode.Factory.newInstance());
-		setManyReturnCodeList(new ArrayList<SelectItem>());
-	}
-
 	public void addJReturnCodeAction() {
-		super.addJReturnCodeAction(false, jobStatusList);
+		getStateInfosTabBean().addJReturnCodeAction(false, jobStatusList);
 	}
 
 	public void saveJobStatusAction() {
 
-		if (getManyReturnCodeList() == null || getManyReturnCodeList().size() == 0) {
+		if (getStateInfosTabBean().getManyReturnCodeList() == null || getStateInfosTabBean().getManyReturnCodeList().size() == 0) {
 			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.codeList", null);
 
 			return;
 		}
 
-		Status tmpJobStatus = WebInputUtils.cloneJobStatus(getJobStatus());
+		Status tmpJobStatus = WebInputUtils.cloneJobStatus(getStateInfosTabBean().getJobStatus());
 
 		/**
 		 * @author serkan taş
@@ -853,15 +838,15 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		addToJobStatusList(tmpJobStatus);
 		//		}
 
-		if (getManyJobStatusList() == null) {
-			setManyJobStatusList(new ArrayList<SelectItem>());
+		if (getStateInfosTabBean().getManyJobStatusList() == null) {
+			getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
 		}
 
-		getManyJobStatusList().add(new SelectItem(jobStatusName, jobStatusName));
+		getStateInfosTabBean().getManyJobStatusList().add(new SelectItem(getStateInfosTabBean().getJobStatusName(), getStateInfosTabBean().getJobStatusName()));
 
 		addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.add", null);
 
-		setStatusDialogShow(false);
+		getStateInfosTabBean().setStatusDialogShow(false);
 	}
 
 	private void addToJobStatusList(Status tmpJobStatus) {
@@ -909,7 +894,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	//	}
 
 	public void closeJobStatusDialogAction() {
-		setStatusDialogShow(false);
+		getStateInfosTabBean().setStatusDialogShow(false);
 	}
 
 	public void deleteJReturnCodeAction() {
@@ -919,35 +904,35 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 
 		for (int i = 0; i < selectedReturnCodeList.length; i++) {
-			for (int j = 0; j < getManyReturnCodeList().size(); j++) {
-				if (getManyReturnCodeList().get(j).getValue().toString().equals(selectedReturnCodeList[i])) {
+			for (int j = 0; j < getStateInfosTabBean().getManyReturnCodeList().size(); j++) {
+				if (getStateInfosTabBean().getManyReturnCodeList().get(j).getValue().toString().equals(selectedReturnCodeList[i])) {
 
 					// TODO job tanimi ya da senaryo tanimi icinden silme isi
 					// burada yapilacak,
 					// asagida sadece goruntu olarak ekrandaki listeden siliyor
 
-					getManyReturnCodeList().remove(j);
-					j = getManyReturnCodeList().size();
+					getStateInfosTabBean().getManyReturnCodeList().remove(j);
+					j = getStateInfosTabBean().getManyReturnCodeList().size();
 				}
 			}
 		}
 	}
 
 	public void deleteJobStatusAction() {
-		for (int i = 0; i < getSelectedJobStatusList().length; i++) {
-			for (int j = 0; j < getManyJobStatusList().size(); j++) {
-				if (getManyJobStatusList().get(j).getValue().equals(getSelectedJobStatusList()[i])) {
+		for (int i = 0; i < getStateInfosTabBean().getSelectedJobStatusList().length; i++) {
+			for (int j = 0; j < getStateInfosTabBean().getManyJobStatusList().size(); j++) {
+				if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(getStateInfosTabBean().getSelectedJobStatusList()[i])) {
 
 					JobStatusList jobStatusList = jobProperties.getStateInfos().getJobStatusList();
 
 					for (int k = 0; k < jobStatusList.sizeOfJobStatusArray(); k++) {
-						if (getManyJobStatusList().get(j).getValue().equals(jobStatusList.getJobStatusArray(k).getStatusName().toString())) {
+						if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(jobStatusList.getJobStatusArray(k).getStatusName().toString())) {
 							jobStatusList.removeJobStatus(k);
 							k = jobStatusList.sizeOfJobStatusArray();
 						}
 					}
-					getManyJobStatusList().remove(j);
-					j = getManyJobStatusList().size();
+					getStateInfosTabBean().getManyJobStatusList().remove(j);
+					j = getStateInfosTabBean().getManyJobStatusList().size();
 				}
 			}
 		}
@@ -959,7 +944,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		if (jobProperties != null) {
 			statusArray = jobProperties.getStateInfos().getJobStatusList().getJobStatusArray();
-			super.jobStatusEditAction(statusArray);
+			getStateInfosTabBean().jobStatusEditAction(statusArray);
 		}
 
 	}
@@ -970,7 +955,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		if (jobProperties != null) {
 			statusArray = jobProperties.getStateInfos().getJobStatusList().getJobStatusArray();
-			super.updateJobStatusAction(statusArray);
+			getStateInfosTabBean().updateJobStatusAction(statusArray);
 		}
 
 	}
@@ -1073,14 +1058,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setJobAutoRetry(boolean jobAutoRetry) {
 		this.jobAutoRetry = jobAutoRetry;
-	}
-
-	public String getJobStatusName() {
-		return jobStatusName;
-	}
-
-	public void setJobStatusName(String jobStatusName) {
-		this.jobStatusName = jobStatusName;
 	}
 
 	public String getStateName() {
