@@ -300,7 +300,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		getBaseJobInfosTabBean().fillTab();
 
-		fillJobStatusList();
+		getStateInfosTabBean().fillJobStatusList();
 		fillJobStateList();
 		fillJobSubtateList();
 
@@ -918,7 +918,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
-	public void deleteJobStatusAction() {
+	public void deleteStatusAction() {
 		for (int i = 0; i < getStateInfosTabBean().getSelectedJobStatusList().length; i++) {
 			for (int j = 0; j < getStateInfosTabBean().getManyJobStatusList().size(); j++) {
 				if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(getStateInfosTabBean().getSelectedJobStatusList()[i])) {
