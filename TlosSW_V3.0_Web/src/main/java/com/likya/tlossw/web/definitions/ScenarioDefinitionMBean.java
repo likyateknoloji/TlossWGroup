@@ -30,8 +30,8 @@ import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
-import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
+import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
@@ -45,7 +45,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
-
+	
 	private Scenario scenario;
 
 	private String scenarioName;
@@ -585,7 +585,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		}
 	}
 	
-	public void deleteScenarioStatusAction() {
+	public void deleteStatusAction() {
 		for (int i = 0; i < getStateInfosTabBean().getSelectedJobStatusList().length; i++) {
 			for (int j = 0; j < getStateInfosTabBean().getManyJobStatusList().size(); j++) {
 				if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(getStateInfosTabBean().getSelectedJobStatusList()[i])) {
