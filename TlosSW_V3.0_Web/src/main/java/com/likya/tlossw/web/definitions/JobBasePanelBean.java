@@ -526,11 +526,7 @@ public abstract class JobBasePanelBean extends BaseJSPanelMBean implements Seria
 		StringTokenizer pathTokenizer = new StringTokenizer(treePath, "/");
 
 		while (pathTokenizer.hasMoreTokens()) {
-			String scenarioName = pathTokenizer.nextToken();
-
-			StringTokenizer nameTokenizer = new StringTokenizer(scenarioName, "|");
-			scenarioName = nameTokenizer.nextToken().trim();
-			String scenarioId = nameTokenizer.nextToken().trim();
+			String scenarioId = pathTokenizer.nextToken();
 
 			if (path.equals("")) {
 				path = scenarioId;

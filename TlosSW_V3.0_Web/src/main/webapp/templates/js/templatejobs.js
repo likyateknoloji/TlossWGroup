@@ -273,13 +273,12 @@ function applyDragDrop() {
 						}
 
 						var scenarioNode = node.parentNode.previousSibling;
-						var jobPath = $(scenarioNode.lastChild).text();
+						var jobPath = scenarioNode.lastChild.lastChild.value;
 
 						while (scenarioNode.parentNode.parentNode.parentNode.parentNode.className != treeContainerClassName) {
 							scenarioNode = scenarioNode.parentNode.parentNode.previousSibling;
 
-							jobPath = $(scenarioNode.lastChild).text() + "/"
-									+ jobPath;
+							jobPath = scenarioNode.lastChild.lastChild.value + "/" + jobPath;
 						}
 
 						console.log("jobPath : " + jobPath);
