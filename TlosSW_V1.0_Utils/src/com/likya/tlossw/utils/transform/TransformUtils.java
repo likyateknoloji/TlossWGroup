@@ -8,6 +8,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
+
 import net.sf.saxon.om.NamespaceConstant;
 
 public class TransformUtils {
@@ -81,6 +84,46 @@ public class TransformUtils {
 		}
 
 		return xpf;
+	}
+
+	public static String typeSelector(Parameter parameter) {
+		
+		
+		int paramType = parameter.getPreValue().getType().intValue();
+		
+		Object retValue = "";
+		
+		switch (paramType) {
+		case CommonConstantDefinitions.INTEGER:
+			retValue = parameter.getValueInteger();
+
+			break;
+		case CommonConstantDefinitions.STRING:
+			retValue = parameter.getValueString();
+
+			break;
+		case CommonConstantDefinitions.DATE:
+			retValue = parameter.getValueDate();
+
+			break;
+		case CommonConstantDefinitions.TIME:
+			retValue = parameter.getValueTime();
+
+			break;
+		case CommonConstantDefinitions.DATETIME:
+			retValue = parameter.getValueDateTime();
+
+			break;
+		case CommonConstantDefinitions.XPATH:
+			retValue = parameter.getValueXPATH();
+
+			break;
+
+		default:
+			break;
+		}
+		
+		return retValue == null ? null : retValue.toString();
 	}
 	
 	public static String toXSString(int intData) {
