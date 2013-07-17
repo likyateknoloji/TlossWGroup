@@ -1,39 +1,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <h:body>
 	<ui:composition>
-		<p:tab id="stateInfosTab"
-			title="#{msgs['tlos.workspace.pannel.job.stateInfos']}">
-			<p:panel id="stateInfosPanel"
-				header="#{msgs['tlos.workspace.pannel.job.returnCodeStateDef']}">
+		<p:tab id="stateInfosTab" title="#{msgs['tlos.workspace.pannel.job.stateInfos']}">
+			<p:panel id="stateInfosPanel" header="#{msgs['tlos.workspace.pannel.job.returnCodeStateDef']}">
 
 				<p:panelGrid id="stateInfos" columns="3">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.status']}" />
-					<p:selectOneMenu id="jobstatus"
-						value="#{backingBean.jobStatusName}" style="width: 100pt">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-							itemValue="" />
+					<p:selectOneMenu id="jobstatus" value="#{backingBean.jobStatusName}" style="width: 100pt">
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.jobStatusNameList}" />
 						<p:ajax update="stateInfosPanel"></p:ajax>
 					</p:selectOneMenu>
 
-					<p:commandButton value="#{msgs['tlos.button.add']}"
-						rendered="#{backingBean.jobStatusName ne null and backingBean.jobStatusName ne ''}"
-						actionListener="#{backingBean['initJobStatusPopup']}"
-						update=":jobDefinitionForm:tabView:stateInfosPanel"
-						oncomplete="stateDialog.show()" />
+					<p:commandButton value="#{msgs['tlos.button.add']}" rendered="#{backingBean.jobStatusName ne null and backingBean.jobStatusName ne ''}" actionListener="#{backingBean['initJobStatusPopup']}" update=":jobDefinitionForm:tabView:stateInfosPanel" oncomplete="stateDialog.show()" />
 
 				</p:panelGrid>
 
-				<p:dialog id="statusdialog" visible="#{backingBean.statusDialogShow}"
-					header="#{backingBean.jobStatusName} #{msgs['tlos.popup.status.jobStatus']}"
-					widgetVar="stateDialog" resizable="false" showEffect="show">
+				<p:dialog id="statusdialog" visible="#{backingBean.statusDialogShow}" header="#{backingBean.jobStatusName} #{msgs['tlos.popup.status.jobStatus']}" widgetVar="stateDialog" resizable="false" showEffect="show">
 					<p:panel id="returnCodeDialogPanel">
 						<h:panelGrid columns="4">
 							<h:outputText value="#{msgs['tlos.popup.status.osType']}" />
@@ -42,89 +28,61 @@
 							</p:selectOneMenu>
 
 							<h:outputText value="#{msgs['tlos.popup.status.statusDesc']}" />
-							<p:inputText value="#{backingBean.jobStatus.desc}"
-								style="width:200px;" />
+							<p:inputText value="#{backingBean.jobStatus.desc}" style="width:200px;" />
 
 							<h:outputText value="#{msgs['tlos.popup.status.returnCode']}" />
-							<p:inputText id="Code" value="#{backingBean.returnCode.code}"
-								label="#{msgs['tlos.popup.status.returnCode']}" type="integer" />
+							<p:inputText id="Code" value="#{backingBean.returnCode.code}" label="#{msgs['tlos.popup.status.returnCode']}" type="integer" />
 
 							<h:outputText value="#{msgs['tlos.popup.status.desc']}" />
-							<p:inputText value="#{backingBean.returnCode.desc}"
-								style="width:200px;" />
+							<p:inputText value="#{backingBean.returnCode.desc}" style="width:200px;" />
 						</h:panelGrid>
 
 						<br />
 
-						<p:commandButton value="#{msgs['tlos.button.add']}"
-							action="#{backingBean['addJReturnCodeAction']}"
-							update="returnCodeDialogPanel" />
+						<p:commandButton value="#{msgs['tlos.button.add']}" action="#{backingBean['addJReturnCodeAction']}" update="returnCodeDialogPanel" />
 
 						<br />
 						<br />
 
-						<h:panelGrid columns="3"
-							rendered="#{backingBean.manyReturnCodeList ne null and backingBean.manyReturnCodeList[0] ne null}">
+						<h:panelGrid columns="3" rendered="#{backingBean.manyReturnCodeList ne null and backingBean.manyReturnCodeList[0] ne null}">
 							<h:outputText value="#{msgs['tlos.popup.status.codeList']}" />
-							<p:selectManyMenu style="width: 200px; height: 80px;"
-								value="#{backingBean.selectedReturnCodeList}">
+							<p:selectManyMenu style="width: 200px; height: 80px;" value="#{backingBean.selectedReturnCodeList}">
 								<f:selectItems value="#{backingBean.manyReturnCodeList}" />
 							</p:selectManyMenu>
 
-							<p:commandButton value="#{msgs['tlos.button.delete']}"
-								action="#{backingBean['deleteJReturnCodeAction']}"
-								update="returnCodeDialogPanel" />
+							<p:commandButton value="#{msgs['tlos.button.delete']}" action="#{backingBean['deleteJReturnCodeAction']}" update="returnCodeDialogPanel" />
 						</h:panelGrid>
 
 						<br />
 
-						<p:commandButton value="#{msgs['tlos.button.saveList']}"
-							rendered="#{empty backingBean.jobStatus.stsId}"
-							action="#{backingBean['saveJobStatusAction']}"
-							update=":jobDefinitionForm:tabView:stateInfosPanel" />
+						<p:commandButton value="#{msgs['tlos.button.saveList']}" rendered="#{empty backingBean.jobStatus.stsId}" action="#{backingBean['saveJobStatusAction']}" update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
-						<p:commandButton value="#{msgs['tlos.button.update']}"
-							rendered="#{not empty backingBean.jobStatus.stsId}"
-							action="#{backingBean['updateJobStatusAction']}"
-							update=":jobDefinitionForm:tabView:stateInfosPanel" />
+						<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{not empty backingBean.jobStatus.stsId}" action="#{backingBean['updateJobStatusAction']}" update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
-						<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}"
-							action="#{backingBean['closeJobStatusDialogAction']}"
-							update=":jobDefinitionForm:tabView:stateInfosPanel" />
+						<p:commandButton value="#{msgs['tlos.popup.status.giveUp']}" action="#{backingBean['closeJobStatusDialogAction']}" update=":jobDefinitionForm:tabView:stateInfosPanel" />
 
 					</p:panel>
 				</p:dialog>
 
 				<br />
 
-				<p:panelGrid id="stateInfosList" columns="4"
-					rendered="#{backingBean.manyJobStatusList ne null}">
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.statusList']}" />
+				<p:panelGrid id="stateInfosList" columns="4" rendered="#{backingBean.manyJobStatusList ne null}">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.statusList']}" />
 
-					<p:selectManyMenu id="jssuccescodes"
-						value="#{backingBean.selectedJobStatusList}" style="width:150px;">
+					<p:selectManyMenu id="jssuccescodes" value="#{backingBean.selectedJobStatusList}" style="width:150px;">
 						<f:selectItems value="#{backingBean.manyJobStatusList}" />
 					</p:selectManyMenu>
 
-					<p:commandButton value="#{msgs['tlos.button.update']}"
-						update=":jobDefinitionForm:tabView:stateInfosPanel"
-						action="#{backingBean['jobStatusEditAction']}" />
+					<p:commandButton value="#{msgs['tlos.button.update']}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['jobStatusEditAction']}" />
 
-					<p:commandButton value="#{msgs['tlos.button.delete']}" rendered="#{!backingBean.scenario}"
-						update=":jobDefinitionForm:tabView:stateInfosPanel"
-						action="#{backingBean['deleteJobStatusAction']}" />
+					<p:commandButton value="#{msgs['tlos.button.delete']}" rendered="#{!backingBean.scenario}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['deleteJobStatusAction']}" />
 
-					<p:commandButton value="#{msgs['tlos.button.delete']}"
-						rendered="#{backingBean.scenario}"
-						update=":jobDefinitionForm:tabView:stateInfosPanel"
-						action="#{backingBean['deleteScenarioStatusAction']}" />
+					<p:commandButton value="#{msgs['tlos.button.delete']}" rendered="#{backingBean.scenario}" update=":jobDefinitionForm:tabView:stateInfosPanel" action="#{backingBean['deleteScenarioStatusAction']}" />
 				</p:panelGrid>
 
 			</p:panel>
 
-			<p:panel header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}"
-				rendered="#{backingBean.jsUpdateButton and !backingBean.scenario}">
+			<p:panel header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}" rendered="#{backingBean.jsUpdateButton and !backingBean.scenario}">
 				<p:panelGrid columns="4">
 					<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
 					<p:selectOneMenu value="#{backingBean.stateName}" style="width: 100pt">
