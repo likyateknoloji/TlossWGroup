@@ -126,26 +126,32 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 	public void removeScenarioSubtree(String scenarioPath) {
 		TreeNode selectedNode = root;
 
-		ArrayList<String> scenarioNameList = new ArrayList<>();
+		ArrayList<String> scenarioIdList = new ArrayList<>();
 		StringTokenizer pathTokenizer = new StringTokenizer(scenarioPath, "/");
+
+		// ilk gelen senaryo root oldugu icin onu listeye eklemiyor
+		if (pathTokenizer.hasMoreTokens()) {
+			pathTokenizer.nextToken();
+		}
+				
 		while (pathTokenizer.hasMoreTokens()) {
-			scenarioNameList.add(pathTokenizer.nextToken());
+			scenarioIdList.add(pathTokenizer.nextToken());
 		}
 
 		List<TreeNode> nodeList = selectedNode.getChildren().get(0).getChildren();
-		deleteSubtree(scenarioNameList, 0, nodeList);
+		deleteSubtree(scenarioIdList, 0, nodeList);
 	}
 
-	private void deleteSubtree(ArrayList<String> scenarioNameList, int index, List<TreeNode> nodeList) {
+	private void deleteSubtree(ArrayList<String> scenarioIdList, int index, List<TreeNode> nodeList) {
 		boolean result = false;
 		for (TreeNode node : nodeList) {
 
-			String scenarioName = scenarioNameList.get(index);
-			if (((WsNode) node.getData()).getName().equals(scenarioName)) {
-				if (scenarioNameList.size() == index + 1) {
+			String scenarioId = scenarioIdList.get(index);
+			if (((WsNode) node.getData()).getId().equals(scenarioId)) {
+				if (scenarioIdList.size() == index + 1) {
 					result = true;
 				} else {
-					deleteSubtree(scenarioNameList, ++index, node.getChildren());
+					deleteSubtree(scenarioIdList, ++index, node.getChildren());
 				}
 			}
 
