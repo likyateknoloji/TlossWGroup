@@ -278,7 +278,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	public void fillAlarmPreferenceTab() {
-		super.fillAlarmPreferenceTab(false, jobProperties);
+		getAlarmPreferencesTabBean().fillAlarmPreferenceTab(false, jobProperties);
 	}
 
 	public void fillLocalParametersTab() {
@@ -312,7 +312,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		System.out.println("JobBaseBean.WebInputUtils.fillAllLists Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 
-		setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
+		getAlarmPreferencesTabBean().setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
 		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 		startTime = System.currentTimeMillis();
 
@@ -438,7 +438,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	protected void fillAlarmPreference() {
-		super.fillAlarmPreference(false, jobProperties);
+		getAlarmPreferencesTabBean().fillAlarmPreference(false, jobProperties);
 	}
 
 	protected void fillLocalParameters() {

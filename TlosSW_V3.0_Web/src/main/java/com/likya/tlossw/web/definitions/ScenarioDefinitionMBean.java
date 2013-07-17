@@ -137,11 +137,11 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	protected void fillAlarmPreference() {
-		super.fillAlarmPreference(true, scenario);
+		getAlarmPreferencesTabBean().fillAlarmPreference(true, scenario);
 	}
 
 	public void fillAlarmPreferenceTab() {
-		super.fillAlarmPreferenceTab(true, scenario);
+		getAlarmPreferencesTabBean().fillAlarmPreferenceTab(true, scenario);
 	}
 
 	protected void fillLocalParameters() {

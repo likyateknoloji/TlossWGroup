@@ -2,21 +2,15 @@ package com.likya.tlossw.web.definitions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 
-import org.apache.xmlbeans.XmlCursor;
-
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
-import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
-import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
-import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList;
@@ -27,6 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.definitions.helpers.AdvancedJobInfosTab;
+import com.likya.tlossw.web.definitions.helpers.AlarmPreferencesTabBean;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
@@ -67,9 +62,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	// concurrencyManagement
 	private boolean concurrent;
 
-	// alarmPreference
-	private Collection<SelectItem> alarmList = null;
-	private String[] selectedAlarmList;
 
 	private List<SelectItem> manyJobDependencyList = new ArrayList<SelectItem>();
 	private String dependencyExpression;
@@ -89,12 +81,14 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	private LocalParametersTabBean localParametersTabBean;
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 	private AdvancedJobInfosTab advancedJobInfosTab;
+	private AlarmPreferencesTabBean alarmPreferencesTabBean;
 
 	public void init() {
 		timeManagementTabBean = new TimeManagementTabBean(isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean(this);
 		advancedJobInfosTab = new AdvancedJobInfosTab(getDbOperations());
+		alarmPreferencesTabBean = new AlarmPreferencesTabBean();
 	}
 
 	public void switchInsertUpdateButtons() {
@@ -121,84 +115,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	}
 
-	/**
-	 * xsd yapsında da scenaryo ve job nesnelerinin ortak alanları bir üst nesene de tanımlı olsaydı
-	 * isScenario bilgisnin geçmesine gerek olmayacak.
-	 * 
-	 * @date 14.07.2013
-	 * @author serkan taş
-	 * @param isScenario
-	 * @param refObject
-	 */
-	protected void fillAlarmPreference(boolean isScenario, Object refObject) {
 
-		if (selectedAlarmList != null && selectedAlarmList.length > 0) {
-			AlarmPreference alarmPreference = AlarmPreference.Factory.newInstance();
-
-			for (int i = 0; i < selectedAlarmList.length; i++) {
-				String selectedId = selectedAlarmList[i].toString();
-
-				Iterator<SelectItem> alarmIterator = alarmList.iterator();
-
-				while (alarmIterator.hasNext()) {
-					SelectItem alarm = alarmIterator.next();
-
-					if (alarm.getValue().equals(selectedId)) {
-						alarmPreference.addNewAlarmId();
-						alarmPreference.setAlarmIdArray(alarmPreference.sizeOfAlarmIdArray() - 1, Integer.parseInt(selectedId));
-					}
-				}
-			}
-
-			if (isScenario) {
-				((Scenario) refObject).setAlarmPreference(alarmPreference);
-			} else {
-				((JobProperties) refObject).setAlarmPreference(alarmPreference);
-			}
-		} else {
-			if (isScenario) {
-				if (((Scenario) refObject).getAlarmPreference() != null) {
-					XmlCursor xmlCursor = ((Scenario) refObject).getAlarmPreference().newCursor();
-					xmlCursor.removeXml();
-				}
-			} else if (((JobProperties) refObject).getAlarmPreference() != null) {
-				XmlCursor xmlCursor = ((JobProperties) refObject).getAlarmPreference().newCursor();
-				xmlCursor.removeXml();
-			}
-		}
-	}
-
-	public void fillAlarmPreferenceTab(boolean isScenario, Object refObject) {
-
-		AlarmPreference alarmPreference = null;
-
-		if (isScenario) {
-
-			Scenario scenario = ((Scenario) refObject);
-
-			if (scenario != null && scenario.getAlarmPreference() != null) {
-				alarmPreference = scenario.getAlarmPreference();
-			}
-
-		} else {
-
-			JobProperties jobProperties = ((JobProperties) refObject);
-
-			if (jobProperties != null && jobProperties.getAlarmPreference() != null) {
-				alarmPreference = jobProperties.getAlarmPreference();
-			}
-
-		}
-
-		if (alarmPreference != null && alarmPreference.getAlarmIdArray() != null && alarmPreference.getAlarmIdArray().length > 0) {
-			int length = alarmPreference.getAlarmIdArray().length;
-			selectedAlarmList = new String[length];
-
-			for (int i = 0; i < length; i++) {
-				selectedAlarmList[i] = alarmPreference.getAlarmIdArray(i) + "";
-			}
-		}
-	}
 
 	public void fillDependencyDefinitionsTab(DependencyList dependencyList) {
 
@@ -422,7 +339,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void resetPanelInputs() {
 
-		getTimeManagementTabBean().resetTab();
+		timeManagementTabBean.resetTab();
 
 		returnCode = ReturnCode.Factory.newInstance();
 
@@ -430,7 +347,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		jobStatusName = "";
 		manyJobStatusList = new ArrayList<SelectItem>();
 
-		getAdvancedJobInfosTab().resetTab();
+		advancedJobInfosTab.resetTab();
 
 		manyJobDependencyList = new ArrayList<SelectItem>();
 		dependencyExpression = "";
@@ -438,8 +355,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		jsCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
 
-		selectedAlarmList = null;
-
+		localParametersTabBean.resetTab();
+		alarmPreferencesTabBean.resetTab();
 	}
 
 	public void fillOSystemList() {
@@ -528,10 +445,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		this.selectedJobStatusList = selectedJobStatusList;
 	}
 
-	public void setAlarmList(Collection<SelectItem> alarmList) {
-		this.alarmList = alarmList;
-	}
-
 	public String getJobStatusName() {
 		return jobStatusName;
 	}
@@ -546,14 +459,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void setStatusDialogShow(boolean statusDialogShow) {
 		this.statusDialogShow = statusDialogShow;
-	}
-
-	public String[] getSelectedAlarmList() {
-		return selectedAlarmList;
-	}
-
-	public void setSelectedAlarmList(String[] selectedAlarmList) {
-		this.selectedAlarmList = selectedAlarmList;
 	}
 
 	public List<SelectItem> getManyJobDependencyList() {
@@ -594,10 +499,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void setReturnCode(ReturnCode returnCode) {
 		this.returnCode = returnCode;
-	}
-
-	public Collection<SelectItem> getAlarmList() {
-		return alarmList;
 	}
 
 	public Status getJobStatus() {
@@ -662,6 +563,14 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void setoSystemList(Collection<SelectItem> oSystemList) {
 		this.oSystemList = oSystemList;
+	}
+
+	public AlarmPreferencesTabBean getAlarmPreferencesTabBean() {
+		return alarmPreferencesTabBean;
+	}
+
+	public void setAlarmPreferencesTabBean(AlarmPreferencesTabBean alarmPreferencesTabBean) {
+		this.alarmPreferencesTabBean = alarmPreferencesTabBean;
 	}
 
 	// public int getGmt() {
