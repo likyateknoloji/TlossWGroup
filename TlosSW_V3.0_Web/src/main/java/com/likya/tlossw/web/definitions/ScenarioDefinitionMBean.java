@@ -357,13 +357,13 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			// durum tanimi yapildiysa alanlari dolduruyor
 			if (getScenario().getScenarioStatusList() != null) {
 
-				setManyJobStatusList(new ArrayList<SelectItem>());
+				getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
 				for (Status scenarioStatus : getScenario().getScenarioStatusList().getScenarioStatusArray()) {
 					String statusName = scenarioStatus.getStatusName().toString();
-					getManyJobStatusList().add(new SelectItem(statusName, statusName));
+					getStateInfosTabBean().getManyJobStatusList().add(new SelectItem(statusName, statusName));
 				}
 			} else {
-				setManyJobStatusList(null);
+				getStateInfosTabBean().setManyJobStatusList(null);
 			}
 		} else {
 			System.out.println("scenario is NULL in fillStateInfosTab !!");
@@ -569,7 +569,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		
 		if(scenario != null) {
 			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
-			super.updateJobStatusAction(statusArray);
+			getStateInfosTabBean().updateJobStatusAction(statusArray);
 		}
 		
 	}
@@ -581,25 +581,25 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 		if(scenario != null) {
 			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
-			super.jobStatusEditAction(statusArray);
+			getStateInfosTabBean().jobStatusEditAction(statusArray);
 		}
 	}
 	
 	public void deleteScenarioStatusAction() {
-		for (int i = 0; i < getSelectedJobStatusList().length; i++) {
-			for (int j = 0; j < getManyJobStatusList().size(); j++) {
-				if (getManyJobStatusList().get(j).getValue().equals(getSelectedJobStatusList()[i])) {
+		for (int i = 0; i < getStateInfosTabBean().getSelectedJobStatusList().length; i++) {
+			for (int j = 0; j < getStateInfosTabBean().getManyJobStatusList().size(); j++) {
+				if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(getStateInfosTabBean().getSelectedJobStatusList()[i])) {
 
 					ScenarioStatusList scenarioStatusList = scenario.getScenarioStatusList();
 
 					for (int k = 0; k < scenarioStatusList.sizeOfScenarioStatusArray(); k++) {
-						if (getManyJobStatusList().get(j).getValue().equals(scenarioStatusList.getScenarioStatusArray(k).getStatusName().toString())) {
+						if (getStateInfosTabBean().getManyJobStatusList().get(j).getValue().equals(scenarioStatusList.getScenarioStatusArray(k).getStatusName().toString())) {
 							scenarioStatusList.removeScenarioStatus(k);
 							k = scenarioStatusList.sizeOfScenarioStatusArray();
 						}
 					}
-					getManyJobStatusList().remove(j);
-					j = getManyJobStatusList().size();
+					getStateInfosTabBean().getManyJobStatusList().remove(j);
+					j = getStateInfosTabBean().getManyJobStatusList().size();
 				}
 			}
 		}
