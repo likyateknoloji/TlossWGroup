@@ -42,8 +42,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	private String jsCalendar;
 	private Collection<SelectItem> jsCalendarList = null;
 
-	private Collection<SelectItem> jobStatusNameList = null;
-
 	// concurrencyManagement
 	private boolean concurrent;
 
@@ -227,14 +225,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void setDependencyExpression(String dependencyExpression) {
 		this.dependencyExpression = dependencyExpression;
-	}
-
-	public Collection<SelectItem> getJobStatusNameList() {
-		return jobStatusNameList;
-	}
-
-	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
-		this.jobStatusNameList = jobStatusNameList;
 	}
 
 	public LogAnalyzingTabBean getLogAnalyzingTabBean() {
