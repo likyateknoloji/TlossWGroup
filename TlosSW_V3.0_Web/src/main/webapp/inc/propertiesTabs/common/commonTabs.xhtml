@@ -5,20 +5,9 @@
 <h:body>
 	<ui:composition>
 
-		<ui:include src="/inc/propertiesTabs/baseJobInfosTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean.baseJobInfosTabBean}" />
-		</ui:include>
 
 		<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean.timeManagementTabBean}" />
-		</ui:include>
-
-		<ui:include src="/inc/propertiesTabs/dependencyDefinitionsTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean}" />
-		</ui:include>
-
-		<ui:include src="/inc/propertiesTabs/cascadingConditionsTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean}" />
 		</ui:include>
 
 		<ui:include src="/inc/propertiesTabs/stateInfosTab.xhtml">
@@ -35,14 +24,6 @@
 
 		<ui:include src="/inc/propertiesTabs/localParametersTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean.localParametersTabBean}" />
-		</ui:include>
-
-		<ui:include src="/inc/propertiesTabs/advancedJobInfosTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean.advancedJobInfosTab}" />
-		</ui:include>
-
-		<ui:include src="/inc/propertiesTabs/logAnalyzingTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean.logAnalyzingTabBean}" />
 		</ui:include>
 
 	</ui:composition>
