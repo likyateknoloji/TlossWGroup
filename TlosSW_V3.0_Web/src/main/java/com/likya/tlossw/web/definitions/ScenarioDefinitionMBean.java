@@ -510,9 +510,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 				treePath = "/dat:scenario[@ID = '" + scenarioNodeId + "']" + treePath;
 				scenarioPathInScenario = "/" + scenarioNodeId + scenarioPathInScenario;
 			}
-
-		} else
-			path = "/dat:baseScenarioInfos[com:jsName/text() = '" + "Serbest isler" + "']" + path;
+		}
 
 		scenarioPathInScenario = "/" + ConstantDefinitions.TREE_SCENARIOROOTID + scenarioPathInScenario;
 		treePath = "/dat:TlosProcessData" + treePath;
