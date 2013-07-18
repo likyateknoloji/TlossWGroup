@@ -167,7 +167,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 				transformType = processNode.getTransform().getWith().toString();
 
 				if (transformType.equals(With.XSLT.toString())) {
-					transformCommand = processNode.getTransform().getStringValue();
+					transformCommand = "<![CDATA[" + processNode.getTransform().getStringValue() + "]]>";
 				}
 			}
 		}
