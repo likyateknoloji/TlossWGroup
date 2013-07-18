@@ -87,6 +87,23 @@
 			
 			<br />
 
+			<p:panel id="inParamPanel" header="#{msgs['tlos.live.pannel.job.inputParam']}" 
+				rendered="#{jobMBean.jobInTyCl.inParameterName != null and jobMBean.jobInTyCl.inParameterName != ''}" 
+				toggleable="true" toggleSpeed="500" collapsed="true">
+
+				<p:panelGrid columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.inParameterName}" readonly="true" style="width: 150px;"/>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.inParameterDesc}" readonly="true" style="width: 150px;"/>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
+					<p:inputTextarea value="#{jobMBean.jobInTyCl.inParameterValue}" readonly="true" 
+						rows="10" cols="70" autoResize="false"/>
+				</p:panelGrid>
+			</p:panel>
+
 			<p:panel id="outParamPanel" header="#{msgs['tlos.live.pannel.job.outputParam']}" 
 				rendered="#{jobMBean.jobInTyCl.outParameterName != null and jobMBean.jobInTyCl.outParameterName != ''}" 
 				toggleable="true" toggleSpeed="500" collapsed="true">
