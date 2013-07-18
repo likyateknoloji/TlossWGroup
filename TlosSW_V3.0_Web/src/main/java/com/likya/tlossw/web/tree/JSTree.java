@@ -88,6 +88,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 		WsJobNode wsJobNode = new WsJobNode();
 		wsJobNode.setId(jobProperties.getID());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
 
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
