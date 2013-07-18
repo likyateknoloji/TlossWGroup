@@ -80,7 +80,7 @@ public class TimeManagementTabBean {
 		selectedTZone = new String("Europe/Istanbul");
 		selectedTypeOfTime = new String("Actual");
 		relativeTimeOption = JsRelativeTimeOption.NO.toString();
-		jobTimeOutValue = "";
+		jobTimeOutValue = "3";
 		jobTimeOutUnit = Unit.HOURS.toString();
 		expectedTime = "";
 		expectedTimeUnit = Unit.HOURS.toString();

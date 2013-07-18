@@ -36,6 +36,7 @@ import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.tree.JSTree;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
@@ -45,7 +46,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
-	
+
 	private Scenario scenario;
 
 	private String scenarioName;
@@ -64,9 +65,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	@PostConstruct
 	public void init() {
-		
+
 		super.init();
-		
+
 		setScenario(true);
 		setJsInsertButton(true);
 		initScenarioPanel();
@@ -77,7 +78,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public void fillAllLists() {
 		super.fillAllLists();
 	}
-	
+
 	public void initScenarioPanel() {
 
 		fillAllLists();
@@ -100,7 +101,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	private void resetScenarioPanelInputs() {
-		
+
 		super.resetPanelInputs();
 
 		scenarioName = "";
@@ -219,10 +220,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	/*
-	 * private void fillDependencyDefinitions() { // son durumda bagimlik tanimlanmamissa senaryo
-	 * icindeki ilgili kismi // kaldiriyor if (getScenario().getDependencyList() != null &&
-	 * getScenario().getDependencyList().getItemArray().length == 0) { XmlCursor xmlCursor =
-	 * getScenario().getDependencyList().newCursor(); xmlCursor.removeXml(); } }
+	 * private void fillDependencyDefinitions() { // son durumda bagimlik tanimlanmamissa senaryo icindeki ilgili kismi // kaldiriyor if (getScenario().getDependencyList() != null && getScenario().getDependencyList().getItemArray().length == 0) { XmlCursor xmlCursor = getScenario().getDependencyList().newCursor(); xmlCursor.removeXml(); } }
 	 */
 	private void fillStateInfos() {
 		// son durumda statu kodu tanimlanmamissa senaryo icindeki
@@ -297,6 +295,8 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		}
 
 		if (getDbOperations().updateScenario(getWebAppUser().getId(), getDocumentId(), scenarioPath, getScenarioXML())) {
+			jsTree.initJSTree();
+
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
 		} else {
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.scenario.update", null);
@@ -485,52 +485,39 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	private void setScenarioTreePath(TreeNode scenarioNode) {
-		String scenarioRoot = resolveMessage("tlos.workspace.tree.scenario.root"); // Kökün ekranda gorunen ismi
 
-		WsScenarioNode wsScenarioParentNode =  (WsScenarioNode) scenarioNode.getParent().getData();
-		
+		WsScenarioNode wsScenarioParentNode = (WsScenarioNode) scenarioNode.getParent().getData();
+
 		WsScenarioNode wsScenarioNode = (WsScenarioNode) scenarioNode.getData();
-		String path = ""; 
+		String path = "";
 		treePath = ""; // Odaktaki senaryo path i
 		scenarioPathInScenario = ""; // Ekrandaki ağaçtaki node isimleri path i
 
 		// yeni kayıtta tıklanan yeri koruyor, güncellemede bir üstünden itibaren path'i tutuyor
 		if (isJsUpdateButton()) {
-			//scenarioPathInScenario = wsScenarioNode.getName();
 			scenarioName = wsScenarioNode.getName(); // DefinitionUtils.getXFromNameId(scenarioPathInScenario, "Name");
-
-			//scenarioNode = scenarioNode.getParent();
 		}
-		
-		
-		if (!wsScenarioParentNode.getName().equalsIgnoreCase(com.likya.tlossw.web.utils.ConstantDefinitions.TREE_ROOT)) { // Seçilen nodun atası root değil midir?
-			String scenarioNodeName = ((WsScenarioNode) scenarioNode.getData()).getName(); // Referans senaryo nodunun ismi
 
-			path = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioNodeName + "']";
-			scenarioPathInScenario = scenarioPathInScenario + "/" + scenarioNodeName;
-			while (scenarioNode.getParent() != null && !((WsScenarioNode) scenarioNode.getParent().getData()).getName().equals(scenarioRoot)) {
+		if (!wsScenarioParentNode.getId().equalsIgnoreCase(ConstantDefinitions.TREE_ROOTID)) { // Seçilen nodun atası root
+			String scenarioNodeId = ((WsScenarioNode) scenarioNode.getData()).getId(); // Referans senaryo nodunun id si
+
+			path = "/dat:scenario[@ID = '" + scenarioNodeId + "']";
+			scenarioPathInScenario = scenarioPathInScenario + "/" + scenarioNodeId;
+			while (scenarioNode.getParent() != null && !((WsScenarioNode) scenarioNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_SCENARIOROOTID)) {
 				scenarioNode = scenarioNode.getParent();
-				scenarioNodeName = ((WsScenarioNode) scenarioNode.getData()).getName();
+				scenarioNodeId = ((WsScenarioNode) scenarioNode.getData()).getId();
 
-				treePath = "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioNodeName + "']/.." + treePath;
-				scenarioPathInScenario = "/" + scenarioNodeName + scenarioPathInScenario;
+				treePath = "/dat:scenario[@ID = '" + scenarioNodeId + "']" + treePath;
+				scenarioPathInScenario = "/" + scenarioNodeId + scenarioPathInScenario;
 			}
 
-		} else path = "/dat:baseScenarioInfos[com:jsName/text() = '" + "Serbest isler" + "']" + path;
+		} else
+			path = "/dat:baseScenarioInfos[com:jsName/text() = '" + "Serbest isler" + "']" + path;
 
-		scenarioPathInScenario = "/" + scenarioRoot + scenarioPathInScenario;
+		scenarioPathInScenario = "/" + ConstantDefinitions.TREE_SCENARIOROOTID + scenarioPathInScenario;
 		treePath = "/dat:TlosProcessData" + treePath;
-		
-//		if (isJsUpdateButton()) {
-//			path = path + "/..";
-//		}
-		
-		//treePath = path;
-		scenarioPath = treePath + path + "/.."; // Odaktaki senaryo path i full
 
-//		if (scenarioName != null && !scenarioName.equals("")) {
-//			scenarioPath += "/dat:scenario/dat:baseScenarioInfos[com:jsName/text() = '" + scenarioName + "']/..";
-//		}
+		scenarioPath = treePath + path; // Odaktaki senaryo path i full
 	}
 
 	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
@@ -553,7 +540,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	public void fillDependencyDefinitionsTab() {
-		
+
 		DependencyList dependencyList = null;
 
 		if (scenario != null && scenario.getDependencyList() != null) {
@@ -562,29 +549,28 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		}
 
 	}
-	
+
 	public void updateJobStatusAction() {
-		
+
 		Status[] statusArray = null;
-		
-		if(scenario != null) {
+
+		if (scenario != null) {
 			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
 			getStateInfosTabBean().updateJobStatusAction(statusArray);
 		}
-		
+
 	}
-	
+
 	public void jobStatusEditAction() {
-		
 
 		Status[] statusArray = null;
 
-		if(scenario != null) {
+		if (scenario != null) {
 			statusArray = scenario.getScenarioStatusList().getScenarioStatusArray();
 			getStateInfosTabBean().jobStatusEditAction(statusArray);
 		}
 	}
-	
+
 	public void deleteStatusAction() {
 		for (int i = 0; i < getStateInfosTabBean().getSelectedJobStatusList().length; i++) {
 			for (int j = 0; j < getStateInfosTabBean().getManyJobStatusList().size(); j++) {
