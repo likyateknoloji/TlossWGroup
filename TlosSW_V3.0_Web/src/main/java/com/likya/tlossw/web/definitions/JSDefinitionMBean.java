@@ -338,9 +338,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public void cancelJsAction() {
 		jobDefCenterPanel = DEFAULT_DEF_PAGE;
 
-		if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
+		// isi agaca insert edildikten sonra ekledigimiz icin bu kismi kaldirdim
+		/* if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
 			((JobBasePanelBean) currentPanelMBeanRef).deleteJob();
-		}
+		}*/
 	}
 
 	public void deleteScenarioAction() {
