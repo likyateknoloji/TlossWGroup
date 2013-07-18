@@ -25,6 +25,7 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
+import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
@@ -221,6 +222,19 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				jobInfoTypeClient.setOutParameterDesc(param.getDesc());
 
 				jobInfoTypeClient.setOutParameterValue(TransformUtils.typeSelector(param));
+			}
+		}
+
+		// input parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
+		if (specialParameters != null && specialParameters.getInParam() != null && specialParameters.getInParam().sizeOfParameterArray() > 0) {
+
+			InParam inParam = specialParameters.getInParam();
+
+			for (Parameter param : inParam.getParameterArray()) {
+				jobInfoTypeClient.setInParameterName(param.getName());
+				jobInfoTypeClient.setInParameterDesc(param.getDesc());
+
+				jobInfoTypeClient.setInParameterValue(TransformUtils.typeSelector(param));
 			}
 		}
 
