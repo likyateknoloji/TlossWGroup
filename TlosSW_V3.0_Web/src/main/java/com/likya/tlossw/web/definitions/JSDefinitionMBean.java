@@ -35,36 +35,33 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1393726981346371091L;
 
-	@ManagedProperty(value = "#{batchProcessPanelMBean}")
-	private BatchProcessPanelMBean batchProcessPanelMBean;
-
-	@ManagedProperty(value = "#{webServicePanelMBean}")
-	private WebServicePanelMBean webServicePanelMBean;
-
-	@ManagedProperty(value = "#{ftpPanelMBean}")
-	private FTPPanelMBean ftpPanelMBean;
-
-	@ManagedProperty(value = "#{fileProcessPanelMBean}")
-	private FileProcessPanelMBean fileProcessPanelMBean;
-
-	@ManagedProperty(value = "#{fileListenerPanelMBean}")
-	private FileListenerPanelMBean fileListenerPanelMBean;
-
-	@ManagedProperty(value = "#{dbJobsPanelMBean}")
-	private DBJobsPanelMBean dbJobsPanelMBean;
-
-	@ManagedProperty(value = "#{processNodePanelMBean}")
-	private ProcessNodePanelMBean processNodePanelMBean;
-
-	@ManagedProperty(value = "#{remoteShellPanelMBean}")
-	private RemoteShellPanelMBean remoteShellPanelMBean;
-
-	@ManagedProperty(value = "#{systemCommandPanelMBean}")
-	private SystemCommandPanelMBean systemCommandPanelMBean;
-
-	@ManagedProperty(value = "#{shellScriptPanelMBean}")
-	private ShellScriptPanelMBean shellScriptPanelMBean;
-
+	//	@ManagedProperty(value = "#{batchProcessPanelMBean}")
+	//	private BatchProcessPanelMBean batchProcessPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{webServicePanelMBean}")
+	//	private WebServicePanelMBean webServicePanelMBean;
+	//
+	//	@ManagedProperty(value = "#{ftpPanelMBean}")
+	//	private FTPPanelMBean ftpPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{fileProcessPanelMBean}")
+	//	private FileProcessPanelMBean fileProcessPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{fileListenerPanelMBean}")
+	//	private FileListenerPanelMBean fileListenerPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{dbJobsPanelMBean}")
+	//	private DBJobsPanelMBean dbJobsPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{processNodePanelMBean}")
+	//	private ProcessNodePanelMBean processNodePanelMBean;
+	//
+	//	@ManagedProperty(value = "#{remoteShellPanelMBean}")
+	//	private RemoteShellPanelMBean remoteShellPanelMBean;
+	//
+	//	@ManagedProperty(value = "#{shellScriptPanelMBean}")
+	//	private ShellScriptPanelMBean shellScriptPanelMBean;
+	//
 	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
@@ -83,7 +80,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
-	
+
 	public final static String DEFAULT_TEST_PAGE = "/inc/livePanels/testLiveJS.xhtml";
 
 	public WsNode draggedTemplateName = new WsNode();
@@ -100,7 +97,64 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private Object currentPanelMBeanRef;
 
+	private String jsId;
+	private boolean insert = false;
+
 	public void onNodeSelect(NodeSelectEvent event) {
+
+		WsNode wsNode = (WsNode) event.getTreeNode().getData();
+
+		if (wsNode != null && wsNode.getId() != null && wsNode.getId().equals(ConstantDefinitions.TREE_ROOT)) {
+			return;
+		}
+
+		jsId = wsNode.getId();
+
+		TreeNode treeNode = event.getTreeNode();
+
+		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
+			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
+		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+			selectedType = new String(ConstantDefinitions.TREE_JOB);
+		} else {
+			selectedType = new String(ConstantDefinitions.TREE_UNKNOWN);
+		}
+
+		selectedJSPath = "";
+
+		while (!((WsNode) treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+			selectedJSPath = ((WsNode) treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
+			treeNode = treeNode.getParent();
+		}
+		
+		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+
+			int jobType = ((WsJobNode) wsNode).getJobType();
+			setCurrentPanel(jobType);
+
+			jobProperties = null;
+
+			if (Integer.parseInt(jsId) <= 0) {
+				insert = true;
+			}
+
+		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
+			scenario = null;
+			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
+
+			if (scenario != null) {
+				switchToScenarioPanel();
+				getScenarioDefinitionMBean().setScenario(scenario);
+				getScenarioDefinitionMBean().initializeScenarioPanel(false);
+			}
+		}
+
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update("jobDefinitionForm");
+
+	}
+
+	public void onNodeSelectOld(NodeSelectEvent event) {
 
 		WsNode wsNode = (WsNode) event.getTreeNode().getData();
 
@@ -120,8 +174,8 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		selectedJSPath = "";
 
-		while (!((WsNode)treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
-			selectedJSPath = ((WsNode)treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
+		while (!((WsNode) treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+			selectedJSPath = ((WsNode) treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
 			treeNode = treeNode.getParent();
 		}
 
@@ -161,21 +215,21 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
-	
+
 	public String switchToTestPage() throws InvalidInputException {
-		
+
 		getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
-		
+
 		TlosProcessDataDocument tlosProcessDataDocument = TlosProcessDataDocument.Factory.newInstance();
 		tlosProcessDataDocument.addNewTlosProcessData();
-		
+
 		TlosProcessData tlosProcessData = tlosProcessDataDocument.getTlosProcessData();
 		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
 		tlosProcessData.addNewBaseScenarioInfos().setUserId(getWebAppUser().getId());
-		
-		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) {
+
+		if (currentPanelMBeanRef instanceof ScenarioDefinitionMBean) {
 			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
-			tlosProcessData.addNewScenario().set(scenario);	
+			tlosProcessData.addNewScenario().set(scenario);
 		} else {
 			tlosProcessData.addNewJobList();
 			JobProperties jobProperties = null;
@@ -187,18 +241,16 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
-		
-		
-		if(tlosProcessData.validate()) {
+
+		if (tlosProcessData.validate()) {
 			throw new InvalidInputException();
 		}
-		
-		
+
 		TEJmxMpWorkSpaceClient.addTestData(getWebAppUser(), tlosProcessDataDocument.toString());
-		
+
 		return DEFAULT_TEST_PAGE;
 	}
-	
+
 	public String getJobPropertiesXML() {
 		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
@@ -227,17 +279,17 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
-			currentPanelMBeanRef = getSystemCommandPanelMBean();
+			// currentPanelMBeanRef = getSystemCommandPanelMBean();
 			jobDefCenterPanel = SYSTEM_COMMAND_PAGE;
 			break;
 
 		case JobCommandType.INT_BATCH_PROCESS:
-			currentPanelMBeanRef = getBatchProcessPanelMBean();
+			//			currentPanelMBeanRef = getBatchProcessPanelMBean();
 			jobDefCenterPanel = BATCH_PROCESS_PAGE;
 			break;
 
 		case JobCommandType.INT_SHELL_SCRIPT:
-			currentPanelMBeanRef = getShellScriptPanelMBean();
+			//			currentPanelMBeanRef = getShellScriptPanelMBean();
 			jobDefCenterPanel = SHELL_SCRIPT_PAGE;
 			break;
 
@@ -251,37 +303,37 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_FTP:
-			currentPanelMBeanRef = getFtpPanelMBean();
+			//			currentPanelMBeanRef = getFtpPanelMBean();
 			jobDefCenterPanel = FTP_PAGE;
 			break;
 
 		case JobCommandType.INT_WEB_SERVICE:
-			currentPanelMBeanRef = getWebServicePanelMBean();
+			//			currentPanelMBeanRef = getWebServicePanelMBean();
 			jobDefCenterPanel = WEB_SERVICE_PAGE;
 			break;
 
 		case JobCommandType.INT_DB_JOBS:
-			currentPanelMBeanRef = getDbJobsPanelMBean();
+			//			currentPanelMBeanRef = getDbJobsPanelMBean();
 			jobDefCenterPanel = DB_JOBS_PAGE;
 			break;
 
 		case JobCommandType.INT_FILE_LISTENER:
-			currentPanelMBeanRef = getFileListenerPanelMBean();
+			//			currentPanelMBeanRef = getFileListenerPanelMBean();
 			jobDefCenterPanel = FILE_LISTENER_PAGE;
 			break;
 
 		case JobCommandType.INT_PROCESS_NODE:
-			currentPanelMBeanRef = getProcessNodePanelMBean();
+			//			currentPanelMBeanRef = getProcessNodePanelMBean();
 			jobDefCenterPanel = PROCESS_NODE_PAGE;
 			break;
 
 		case JobCommandType.INT_FILE_PROCESS:
-			currentPanelMBeanRef = getFileProcessPanelMBean();
+			//			currentPanelMBeanRef = getFileProcessPanelMBean();
 			jobDefCenterPanel = FILE_PROCESS_PAGE;
 			break;
 
 		case JobCommandType.INT_REMOTE_SHELL:
-			currentPanelMBeanRef = getRemoteShellPanelMBean();
+			//			currentPanelMBeanRef = getRemoteShellPanelMBean();
 			jobDefCenterPanel = REMOTE_SHELL_PAGE;
 			break;
 
@@ -339,9 +391,10 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		jobDefCenterPanel = DEFAULT_DEF_PAGE;
 
 		// isi agaca insert edildikten sonra ekledigimiz icin bu kismi kaldirdim
-		/* if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
-			((JobBasePanelBean) currentPanelMBeanRef).deleteJob();
-		}*/
+		/*
+		 * if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) { ((JobBasePanelBean)
+		 * currentPanelMBeanRef).deleteJob(); }
+		 */
 	}
 
 	public void deleteScenarioAction() {
@@ -373,13 +426,13 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		this.jobProperties = jobProperties;
 	}
 
-	public BatchProcessPanelMBean getBatchProcessPanelMBean() {
-		return batchProcessPanelMBean;
-	}
-
-	public void setBatchProcessPanelMBean(BatchProcessPanelMBean batchProcessPanelMBean) {
-		this.batchProcessPanelMBean = batchProcessPanelMBean;
-	}
+	//	public BatchProcessPanelMBean getBatchProcessPanelMBean() {
+	//		return batchProcessPanelMBean;
+	//	}
+	//
+	//	public void setBatchProcessPanelMBean(BatchProcessPanelMBean batchProcessPanelMBean) {
+	//		this.batchProcessPanelMBean = batchProcessPanelMBean;
+	//	}
 
 	public String getDraggedTemplatePath() {
 		return draggedTemplatePath;
@@ -397,53 +450,53 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		this.draggedJobPathForDependency = draggedJobPathForDependency;
 	}
 
-	public WebServicePanelMBean getWebServicePanelMBean() {
-		return webServicePanelMBean;
-	}
-
-	public void setWebServicePanelMBean(WebServicePanelMBean webServicePanelMBean) {
-		this.webServicePanelMBean = webServicePanelMBean;
-	}
-
-	public FTPPanelMBean getFtpPanelMBean() {
-		return ftpPanelMBean;
-	}
-
-	public void setFtpPanelMBean(FTPPanelMBean ftpPanelMBean) {
-		this.ftpPanelMBean = ftpPanelMBean;
-	}
-
-	public FileProcessPanelMBean getFileProcessPanelMBean() {
-		return fileProcessPanelMBean;
-	}
-
-	public void setFileProcessPanelMBean(FileProcessPanelMBean fileProcessPanelMBean) {
-		this.fileProcessPanelMBean = fileProcessPanelMBean;
-	}
-
-	public FileListenerPanelMBean getFileListenerPanelMBean() {
-		return fileListenerPanelMBean;
-	}
-
-	public void setFileListenerPanelMBean(FileListenerPanelMBean fileListenerPanelMBean) {
-		this.fileListenerPanelMBean = fileListenerPanelMBean;
-	}
-
-	public DBJobsPanelMBean getDbJobsPanelMBean() {
-		return dbJobsPanelMBean;
-	}
-
-	public void setDbJobsPanelMBean(DBJobsPanelMBean dbJobsPanelMBean) {
-		this.dbJobsPanelMBean = dbJobsPanelMBean;
-	}
-
-	public ProcessNodePanelMBean getProcessNodePanelMBean() {
-		return processNodePanelMBean;
-	}
-
-	public void setProcessNodePanelMBean(ProcessNodePanelMBean processNodePanelMBean) {
-		this.processNodePanelMBean = processNodePanelMBean;
-	}
+	//	public WebServicePanelMBean getWebServicePanelMBean() {
+	//		return webServicePanelMBean;
+	//	}
+	//
+	//	public void setWebServicePanelMBean(WebServicePanelMBean webServicePanelMBean) {
+	//		this.webServicePanelMBean = webServicePanelMBean;
+	//	}
+	//
+	//	public FTPPanelMBean getFtpPanelMBean() {
+	//		return ftpPanelMBean;
+	//	}
+	//
+	//	public void setFtpPanelMBean(FTPPanelMBean ftpPanelMBean) {
+	//		this.ftpPanelMBean = ftpPanelMBean;
+	//	}
+	//
+	//	public FileProcessPanelMBean getFileProcessPanelMBean() {
+	//		return fileProcessPanelMBean;
+	//	}
+	//
+	//	public void setFileProcessPanelMBean(FileProcessPanelMBean fileProcessPanelMBean) {
+	//		this.fileProcessPanelMBean = fileProcessPanelMBean;
+	//	}
+	//
+	//	public FileListenerPanelMBean getFileListenerPanelMBean() {
+	//		return fileListenerPanelMBean;
+	//	}
+	//
+	//	public void setFileListenerPanelMBean(FileListenerPanelMBean fileListenerPanelMBean) {
+	//		this.fileListenerPanelMBean = fileListenerPanelMBean;
+	//	}
+	//
+	//	public DBJobsPanelMBean getDbJobsPanelMBean() {
+	//		return dbJobsPanelMBean;
+	//	}
+	//
+	//	public void setDbJobsPanelMBean(DBJobsPanelMBean dbJobsPanelMBean) {
+	//		this.dbJobsPanelMBean = dbJobsPanelMBean;
+	//	}
+	//
+	//	public ProcessNodePanelMBean getProcessNodePanelMBean() {
+	//		return processNodePanelMBean;
+	//	}
+	//
+	//	public void setProcessNodePanelMBean(ProcessNodePanelMBean processNodePanelMBean) {
+	//		this.processNodePanelMBean = processNodePanelMBean;
+	//	}
 
 	public String getSelectedType() {
 		return selectedType;
@@ -469,21 +522,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		this.scenarioDefinitionMBean = scenarioDefinitionMBean;
 	}
 
-	public RemoteShellPanelMBean getRemoteShellPanelMBean() {
-		return remoteShellPanelMBean;
-	}
-
-	public void setRemoteShellPanelMBean(RemoteShellPanelMBean remoteShellPanelMBean) {
-		this.remoteShellPanelMBean = remoteShellPanelMBean;
-	}
-
-	public SystemCommandPanelMBean getSystemCommandPanelMBean() {
-		return systemCommandPanelMBean;
-	}
-
-	public void setSystemCommandPanelMBean(SystemCommandPanelMBean systemCommandPanelMBean) {
-		this.systemCommandPanelMBean = systemCommandPanelMBean;
-	}
+	//
+	//	public RemoteShellPanelMBean getRemoteShellPanelMBean() {
+	//		return remoteShellPanelMBean;
+	//	}
+	//
+	//	public void setRemoteShellPanelMBean(RemoteShellPanelMBean remoteShellPanelMBean) {
+	//		this.remoteShellPanelMBean = remoteShellPanelMBean;
+	//	}
 
 	public WsNode getDraggedWsNodeForDependency() {
 		return draggedWsNodeForDependency;
@@ -501,12 +547,36 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 		this.draggedTemplateName = draggedTemplateName;
 	}
 
-	public ShellScriptPanelMBean getShellScriptPanelMBean() {
-		return shellScriptPanelMBean;
+	//	public ShellScriptPanelMBean getShellScriptPanelMBean() {
+	//		return shellScriptPanelMBean;
+	//	}
+	//
+	//	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
+	//		this.shellScriptPanelMBean = shellScriptPanelMBean;
+	//	}
+
+	public String getJsId() {
+		return jsId;
 	}
 
-	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
-		this.shellScriptPanelMBean = shellScriptPanelMBean;
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
+	}
+
+	public boolean isInsert() {
+		return insert;
+	}
+
+	public void setInsert(boolean insert) {
+		this.insert = insert;
+	}
+
+	public String getSelectedJSPath() {
+		return selectedJSPath;
+	}
+
+	public void setSelectedJSPath(String selectedJSPath) {
+		this.selectedJSPath = selectedJSPath;
 	}
 
 }
