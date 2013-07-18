@@ -42,6 +42,10 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private String outParameterDesc;
 	private String outParameterValue;
 
+	private String inParameterName;
+	private String inParameterDesc;
+	private String inParameterValue;
+
  // Paramaters for webpage
 //	private String statusStr;
 	
@@ -199,6 +203,30 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	public void setOutParameterDesc(String outParameterDesc) {
 		this.outParameterDesc = outParameterDesc;
+	}
+
+	public String getInParameterName() {
+		return inParameterName;
+	}
+
+	public void setInParameterName(String inParameterName) {
+		this.inParameterName = inParameterName;
+	}
+
+	public String getInParameterDesc() {
+		return inParameterDesc;
+	}
+
+	public void setInParameterDesc(String inParameterDesc) {
+		this.inParameterDesc = inParameterDesc;
+	}
+
+	public String getInParameterValue() {
+		return inParameterValue;
+	}
+
+	public void setInParameterValue(String inParameterValue) {
+		this.inParameterValue = inParameterValue;
 	}
 
 
