@@ -72,14 +72,14 @@ public class ThemeSwitcherBean implements Serializable {
         advancedThemes = new ArrayList<Theme>();
         advancedThemes.add(new Theme("afterdark", "afterdark.png"));
         advancedThemes.add(new Theme("afternoon", "afternoon.png"));
-        advancedThemes.add(new Theme("afterwork", "afterwork.png"));
+        //advancedThemes.add(new Theme("afterwork", "afterwork.png"));
         advancedThemes.add(new Theme("aristo", "aristo.png"));
         // advancedThemes.add(new Theme("black-tie", "black-tie.png"));
         advancedThemes.add(new Theme("blitzer", "blitzer.png"));
         advancedThemes.add(new Theme("bluesky", "bluesky.png"));
-        advancedThemes.add(new Theme("bootstrap", "bootstrap.png"));
-        advancedThemes.add(new Theme("casablanca", "casablanca.png"));
-        advancedThemes.add(new Theme("cruze", "cruze.png"));
+        //advancedThemes.add(new Theme("bootstrap", "bootstrap.png"));
+        //advancedThemes.add(new Theme("casablanca", "casablanca.png"));
+        //advancedThemes.add(new Theme("cruze", "cruze.png"));
         advancedThemes.add(new Theme("cupertino", "cupertino.png"));    
         //advancedThemes.add(new Theme("dark-hive", "dark-hive.png"));
         //advancedThemes.add(new Theme("dot-luv", "dot-luv.png"));
@@ -105,21 +105,21 @@ public class ThemeSwitcherBean implements Serializable {
         advancedThemes.add(new Theme("swanky-purse", "swanky-purse.png"));
         advancedThemes.add(new Theme("trontastic", "trontastic.png"));
         //advancedThemes.add(new Theme("ui-darkness", "ui-darkness.png"));
-        advancedThemes.add(new Theme("ui-lightness", "ui-lightness.png"));
+        //advancedThemes.add(new Theme("ui-lightness", "ui-lightness.png"));
         //advancedThemes.add(new Theme("vader", "vader.png"));
        
         themes = new TreeMap<String, String>();
         themes.put("Afterdark", "afterdark");
         themes.put("Afternoon", "afternoon");
-        themes.put("Afterwork", "afterwork");
+        //themes.put("Afterwork", "afterwork");
         themes.put("Aristo", "aristo");
         //themes.put("Black-Tie", "black-tie");
         themes.put("Blitzer", "blitzer");
         themes.put("Bluesky", "bluesky");
-        themes.put("Bootstrap", "bootstrap");
-        themes.put("Casablanca", "casablanca");
+        //themes.put("Bootstrap", "bootstrap");
+        //themes.put("Casablanca", "casablanca");
         themes.put("Cupertino", "cupertino");
-        themes.put("Cruze", "cruze");
+        //themes.put("Cruze", "cruze");
         //themes.put("Dark-Hive", "dark-hive");
         //themes.put("Dot-Luv", "dot-luv");
         //themes.put("Eggplant", "eggplant");
@@ -130,8 +130,8 @@ public class ThemeSwitcherBean implements Serializable {
         //themes.put("Hot-Sneaks", "hot-sneaks");
         themes.put("Humanity", "humanity");
         themes.put("Le-Frog", "le-frog");
-        themes.put("Likya Cupertino", "likya-cupertino");
-        themes.put("Merve", "merve");
+        //themes.put("Likya Cupertino", "likya-cupertino");
+        //themes.put("Merve", "merve");
         //themes.put("Midnight", "midnight");
         //themes.put("Mint-Choc", "mint-choc");
         //themes.put("Overcast", "overcast");
@@ -146,7 +146,7 @@ public class ThemeSwitcherBean implements Serializable {
         themes.put("Swanky-Purse", "swanky-purse");
         themes.put("Trontastic", "trontastic");
         //themes.put("UI-Darkness", "ui-darkness");
-        themes.put("UI-Lightness", "ui-lightness");
+        //themes.put("UI-Lightness", "ui-lightness");
         //themes.put("Vader", "vader");
     }
    
