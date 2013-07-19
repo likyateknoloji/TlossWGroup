@@ -13,7 +13,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
-import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
@@ -57,18 +56,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jSTree;
-
-	@ManagedProperty(value = "#{jsDefinitionMBean.jsId}")
-	private String jsId;
-
-	@ManagedProperty(value = "#{jsDefinitionMBean.draggedTemplatePath}")
-	public String draggedTemplatePath;
-
-	@ManagedProperty(value = "#{jsDefinitionMBean.selectedJSPath}")
-	public String selectedJSPath;
-
-	@ManagedProperty(value = "#{jsDefinitionMBean.insert}")
-	public boolean insert;
 
 	public final static String PERIOD_TIME_PARAM = "Period Time";
 
@@ -158,33 +145,12 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
 		envVariablesTabBean = new EnvVariablesTabBean(this);
 
-		if (insert) {
-			insertRecord();
-		} else {
-			updateRecord();
-		}
-
 		long startTime = System.currentTimeMillis();
 
 		System.out.println("");
 		System.out.println("JobBaseBean.initJobPanel");
 
 		fillAllLists();
-
-		setJsInsertButton(insert);
-		setJsUpdateButton(!insert);
-		resetPanelInputs();
-		fillTabs();
-
-		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-
-		System.out.println(getClass().getName());
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm");
-
-	}
-
-	private void insertRecord() {
 
 		jobProperties = JobProperties.Factory.newInstance();
 
@@ -206,14 +172,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
 		jobProperties.setConcurrencyManagement(concurrencyManagement);
 
-		setJobPathInScenario(draggedTemplatePath);
-	}
+		resetPanelInputs();
 
-	private void updateRecord() {
+		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
 
-		jobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), jsId);
-		setJobPathInScenario(selectedJSPath);
-		setJsName(jobProperties.getBaseJobInfos().getJsName());
+		System.out.println(getClass().getName());
 
 	}
 
@@ -1274,38 +1237,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public BaseJobInfosTabBean getBaseJobInfosTabBean() {
 		return baseJobInfosTabBean;
-	}
-
-	public String getJsId() {
-		return jsId;
-	}
-
-	public void setJsId(String jsId) {
-		this.jsId = jsId;
-	}
-
-	public String getDraggedTemplatePath() {
-		return draggedTemplatePath;
-	}
-
-	public void setDraggedTemplatePath(String draggedTemplatePath) {
-		this.draggedTemplatePath = draggedTemplatePath;
-	}
-
-	public String getSelectedJSPath() {
-		return selectedJSPath;
-	}
-
-	public void setSelectedJSPath(String selectedJSPath) {
-		this.selectedJSPath = selectedJSPath;
-	}
-
-	public boolean isInsert() {
-		return insert;
-	}
-
-	public void setInsert(boolean insert) {
-		this.insert = insert;
 	}
 
 	public EnvVariablesTabBean getEnvVariablesTabBean() {
