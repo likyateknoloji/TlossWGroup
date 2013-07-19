@@ -64,10 +64,10 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	public void init() {
 		timeManagementTabBean = new TimeManagementTabBean(isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
-		localParametersTabBean = new LocalParametersTabBean(this);
+		localParametersTabBean = new LocalParametersTabBean();
 		advancedJobInfosTab = new AdvancedJobInfosTab(getDbOperations());
 		alarmPreferencesTabBean = new AlarmPreferencesTabBean();
-		stateInfosTabBean = new StateInfosTabBean(this);
+		stateInfosTabBean = new StateInfosTabBean();
 	}
 
 	public void switchInsertUpdateButtons() {
