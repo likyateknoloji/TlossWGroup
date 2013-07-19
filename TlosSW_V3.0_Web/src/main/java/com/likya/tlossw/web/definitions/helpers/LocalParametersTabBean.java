@@ -36,13 +36,15 @@ public class LocalParametersTabBean extends BaseTabBean {
 		super();
 	}
 
-	public void resetTab() {
+	public void resetTab(boolean resetList) {
 		paramName = "";
 		paramDesc = "";
 		paramPreValue = "";
 		paramType = "";
 		
-		parameterList = new ArrayList<Parameter>();
+		if (resetList) {
+			parameterList = new ArrayList<Parameter>();
+		}
 	}
 
 	public void addInputParameter() {
@@ -63,7 +65,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 		parameterList.add(parameter);
 
-		resetTab();
+		resetTab(false);
 	}
 
 	public void editInputParamAction(ActionEvent e) {
@@ -110,7 +112,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 			}
 		}
 
-		resetTab();
+		resetTab(false);
 
 		renderUpdateParamButton = false;
 	}
