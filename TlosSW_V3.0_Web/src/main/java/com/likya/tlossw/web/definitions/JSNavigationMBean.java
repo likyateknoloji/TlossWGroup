@@ -1,13 +1,11 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
@@ -30,7 +28,6 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
-import com.likya.tlossw.web.utils.WebInputUtils;
 import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
 
 @ManagedBean(name = "jsDefinitionMBean")
@@ -39,30 +36,37 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1393726981346371091L;
 
-	private HashMap<Integer, Object> jobBeanMap = new HashMap<>(); 
-	
-	private Collection<SelectItem> jsCalendarList;
-	
+	@ManagedProperty(value = "#{batchProcessPanelMBean}")
 	private BatchProcessPanelMBean batchProcessPanelMBean;
 
+	@ManagedProperty(value = "#{webServicePanelMBean}")
 	private WebServicePanelMBean webServicePanelMBean;
 
+	@ManagedProperty(value = "#{ftpPanelMBean}")
 	private FTPPanelMBean ftpPanelMBean;
 
+	@ManagedProperty(value = "#{fileProcessPanelMBean}")
 	private FileProcessPanelMBean fileProcessPanelMBean;
 
+	@ManagedProperty(value = "#{fileListenerPanelMBean}")
 	private FileListenerPanelMBean fileListenerPanelMBean;
 
+	@ManagedProperty(value = "#{dbJobsPanelMBean}")
 	private DBJobsPanelMBean dbJobsPanelMBean;
 
+	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
 
+	@ManagedProperty(value = "#{remoteShellPanelMBean}")
 	private RemoteShellPanelMBean remoteShellPanelMBean;
 
+	@ManagedProperty(value = "#{systemCommandPanelMBean}")
 	private SystemCommandPanelMBean systemCommandPanelMBean;
 
+	@ManagedProperty(value = "#{shellScriptPanelMBean}")
 	private ShellScriptPanelMBean shellScriptPanelMBean;
 
+	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
 	private String jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
@@ -209,10 +213,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private void setCurrentPanel(int jobType) {
 
-		if(jobBeanMap.containsKey(jobType)) {
-			currentPanelMBeanRef = jobBeanMap.get(jobType);
-			return;
-		}
+//		if(jobBeanMap.containsKey(jobType)) {
+//			currentPanelMBeanRef = jobBeanMap.get(jobType);
+//			return;
+//		}
 		
 		switch (jobType) {
 
@@ -223,7 +227,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			break;
 
 		case JobCommandType.INT_BATCH_PROCESS:
-			currentPanelMBeanRef = new MyBatchProcessPanelMBean(); // getBatchProcessPanelMBean();
+			currentPanelMBeanRef = getBatchProcessPanelMBean();
 			jobDefCenterPanel = BeanUtils.BATCH_PROCESS_PAGE;
 			break;
 
@@ -280,7 +284,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			break;
 		}
 		
-		jobBeanMap.put(jobType, currentPanelMBeanRef);
+//		jobBeanMap.put(jobType, currentPanelMBeanRef);
 	}
 
 	private void initializeJobPanel(int jobType) {
@@ -500,13 +504,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
 		this.shellScriptPanelMBean = shellScriptPanelMBean;
-	}
-
-	public Collection<SelectItem> getJsCalendarList() {
-		if(jsCalendarList == null) {
-			jsCalendarList = WebInputUtils.fillCalendarList(getDbOperations().getCalendars());
-		}
-		return jsCalendarList;
 	}
 
 }
