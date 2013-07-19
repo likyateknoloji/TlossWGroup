@@ -36,7 +36,6 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
-import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.AgentDbUtils;
 import com.likya.tlossw.db.utils.DBUtils;
@@ -115,7 +114,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 			Job myJob = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 			if (myJob.getJobRuntimeProperties().isStopable()) {
-				((ExecuteInShell) myJob).stopMyDogBarking();
+				myJob.stopMyDogBarking();
 
 				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
 				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.STOPPED.intValue(), 0));
