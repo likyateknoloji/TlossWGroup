@@ -105,7 +105,7 @@
 									rendered="#{backingBean.dependencyType eq 'Status'}">
 									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 										itemValue="" />
-									<f:selectItems value="#{backingBean.jobStatusNameList}" />
+									<f:selectItems value="#{backingBean.stateInfosTabBean.jobStatusNameList}" />
 								</p:selectOneMenu>
 							</h:panelGrid>
 
