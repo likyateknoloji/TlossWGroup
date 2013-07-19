@@ -16,9 +16,8 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
-import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 
-public class LocalParametersTabBean {
+public class LocalParametersTabBean extends BaseTabBean {
 
 	// localParameters
 	private String paramName;
@@ -33,11 +32,8 @@ public class LocalParametersTabBean {
 
 	private transient DataTable parameterTable;
 
-	private JSBasePanelMBean baseJSPanelMBean;
-
-	public LocalParametersTabBean(JSBasePanelMBean baseJSPanelMBean) {
+	public LocalParametersTabBean() {
 		super();
-		this.baseJSPanelMBean = baseJSPanelMBean;
 	}
 
 	public void resetTab() {
@@ -52,7 +48,7 @@ public class LocalParametersTabBean {
 	public void addInputParameter() {
 
 		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
-			baseJSPanelMBean.addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
+			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 			return;
 		}
 
