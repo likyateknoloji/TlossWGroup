@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
 
 import com.likya.tlos.model.xmlbeans.common.EntryDocument.Entry;
@@ -102,22 +103,26 @@ public class EnvVariablesTabBean {
 
 	public void fillEnvVariables(Object refObject) {
 
-		SpecialParameters specialParameters;
-		if (((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters() == null) {
+		SpecialParameters specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
+		if (specialParameters == null) {
 			specialParameters = SpecialParameters.Factory.newInstance();
-		} else {
-			specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
 		}
 
-		EnvVariables envVariables = EnvVariables.Factory.newInstance();
+		if (envVariableList.size() > 0) {
+			EnvVariables envVariables = EnvVariables.Factory.newInstance();
 
-		for (int i = 0; i < envVariableList.size(); i++) {
-			Entry entry = envVariables.addNewEntry();
-			entry.set(envVariableList.get(i));
+			for (int i = 0; i < envVariableList.size(); i++) {
+				Entry entry = envVariables.addNewEntry();
+				entry.set(envVariableList.get(i));
+			}
+
+			specialParameters.setEnvVariables(envVariables);
+			((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().setSpecialParameters(specialParameters);
+
+		} else if (specialParameters.getEnvVariables() != null) {
+			XmlCursor xmlCursor = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().newCursor();
+			xmlCursor.removeXml();
 		}
-
-		specialParameters.setEnvVariables(envVariables);
-		((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().setSpecialParameters(specialParameters);
 	}
 
 	public void fillEnvVariablesTab(Object refObject) {
