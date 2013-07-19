@@ -46,6 +46,7 @@ import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.definitions.helpers.BaseJobInfosTabBean;
+import com.likya.tlossw.web.definitions.helpers.EnvVariablesTabBean;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebInputUtils;
@@ -148,12 +149,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	abstract public void fillJobPropertyDetails();
 
 	private BaseJobInfosTabBean baseJobInfosTabBean;
+	private EnvVariablesTabBean envVariablesTabBean;
 
 	public void initJobPanel() {
 
 		super.init();
 
 		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
+		envVariablesTabBean = new EnvVariablesTabBean(this);
 
 		if (insert) {
 			insertRecord();
@@ -223,7 +226,12 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillConcurrencyManagementTab();
 		fillAlarmPreferenceTab();
 		fillLocalParametersTab();
+		fillEnvVariablesTab();
 		fillAdvancedJobInfosTab();
+	}
+
+	public void fillEnvVariablesTab() {
+		getEnvVariablesTabBean().fillEnvVariablesTab(jobProperties);
 	}
 
 	private void fillBaseInfosTab() {
@@ -365,6 +373,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	// ekrandan girilen degerler jobProperties icine dolduruluyor
 	public void fillJobProperties() {
 		fillBaseJobInfos();
+		fillEnvVariables();
 		fillTimeManagement();
 		fillDependencyDefinitions();
 		fillCascadingConditions();
@@ -470,6 +479,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	protected void fillAlarmPreference() {
 		getAlarmPreferencesTabBean().fillAlarmPreference(false, jobProperties);
+	}
+
+	protected void fillEnvVariables() {
+		getEnvVariablesTabBean().fillEnvVariables(jobProperties);
 	}
 
 	protected void fillLocalParameters() {
@@ -869,11 +882,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		 * @author serkan taş
 		 * @date 14.07.2013 Aşağıdaki kımsa gerek yok gibi geldi bana
 		 */
-		//		if (isScenario) {
-		//			addToScenarioStatusList(tmpJobStatus);
-		//		} else {
+		// if (isScenario) {
+		// addToScenarioStatusList(tmpJobStatus);
+		// } else {
 		addToJobStatusList(tmpJobStatus);
-		//		}
+		// }
 
 		if (getStateInfosTabBean().getManyJobStatusList() == null) {
 			getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
@@ -908,27 +921,27 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		newStatus.set(tmpJobStatus);
 	}
 
-	//	private void addToScenarioStatusList(Status tmpJobStatus) {
-	//		ScenarioStatusList scenarioStatusList = null;
+	// private void addToScenarioStatusList(Status tmpJobStatus) {
+	// ScenarioStatusList scenarioStatusList = null;
 	//
-	//		if (scenario.getScenarioStatusList() == null || scenario.getScenarioStatusList().sizeOfScenarioStatusArray() == 0) {
-	//			scenario.setScenarioStatusList(ScenarioStatusList.Factory.newInstance());
+	// if (scenario.getScenarioStatusList() == null || scenario.getScenarioStatusList().sizeOfScenarioStatusArray() == 0) {
+	// scenario.setScenarioStatusList(ScenarioStatusList.Factory.newInstance());
 	//
-	//			scenarioStatusList = scenario.getScenarioStatusList();
+	// scenarioStatusList = scenario.getScenarioStatusList();
 	//
-	//			tmpJobStatus.setStsId("1");
-	//		} else {
-	//			scenarioStatusList = scenario.getScenarioStatusList();
+	// tmpJobStatus.setStsId("1");
+	// } else {
+	// scenarioStatusList = scenario.getScenarioStatusList();
 	//
-	//			int lastStatusIndex = scenarioStatusList.sizeOfScenarioStatusArray() - 1;
-	//			String id = scenarioStatusList.getScenarioStatusArray(lastStatusIndex).getStsId();
+	// int lastStatusIndex = scenarioStatusList.sizeOfScenarioStatusArray() - 1;
+	// String id = scenarioStatusList.getScenarioStatusArray(lastStatusIndex).getStsId();
 	//
-	//			tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
-	//		}
+	// tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
+	// }
 	//
-	//		Status newStatus = scenarioStatusList.addNewScenarioStatus();
-	//		newStatus.set(tmpJobStatus);
-	//	}
+	// Status newStatus = scenarioStatusList.addNewScenarioStatus();
+	// newStatus.set(tmpJobStatus);
+	// }
 
 	public void closeJobStatusDialogAction() {
 		getStateInfosTabBean().setStatusDialogShow(false);
@@ -1293,6 +1306,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setInsert(boolean insert) {
 		this.insert = insert;
+	}
+
+	public EnvVariablesTabBean getEnvVariablesTabBean() {
+		return envVariablesTabBean;
 	}
 
 }
