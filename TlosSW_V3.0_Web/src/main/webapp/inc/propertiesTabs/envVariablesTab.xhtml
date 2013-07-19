@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="envVariablesTab"
+			title="#{msgs['tlos.workspace.pannel.job.envVariables']}">
+			<p:panel id="envVariablesPanel">
+				<p:panelGrid id="envVariables" columns="4" style="width:80%;">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.envVariableName']}" />
+					<p:inputText value="#{backingBean.envVariableName}" />
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.envVariableValue']}" />
+					<p:inputText value="#{backingBean.envVariableValue}" />
+
+				</p:panelGrid>
+
+				<br />
+
+				<p:commandButton
+					value="#{msgs['tlos.workspace.pannel.job.addToEnvVariableList']}"
+					rendered="#{!backingBean.renderUpdateEnvVariableButton}"
+					action="#{backingBean['addEnvVariable']}"
+					update=":jobDefinitionForm:tabView:envVariablesPanel" />
+					
+				<p:commandButton value="#{msgs['tlos.button.update']}"
+					rendered="#{backingBean.renderUpdateEnvVariableButton}"
+					update=":jobDefinitionForm:tabView:envVariablesPanel"
+					action="#{backingBean['updateEnvVariable']}" />
+
+				<br />
+				<br />
+
+				<p:dataTable var="item" rows="10" id="envVariableDataTable"
+					rendered="#{not empty backingBean.envVariableList}"
+					value="#{backingBean.envVariableList}"
+					binding="#{backingBean.envVariableTable}" paginator="true"
+					paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15">
+
+					<p:column>
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							actionListener="#{backingBean['editEnvVariableAction']}" update=":jobDefinitionForm:tabView:envVariablesPanel">
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.delete']}"
+							onclick="confirmation.show()" />
+						<p:confirmDialog style="z-index: 999 !important;"
+							message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
+							header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+							widgetVar="confirmation">
+							<p:commandButton immediate="true" process="@this"
+								value="#{msgs['tlos.ask.delete.confirm1']}"
+								onclick="confirmation.hide()"
+								actionListener="#{backingBean['deleteEnvVariableAction']}" 
+								update=":jobDefinitionForm:tabView:envVariablesPanel" />
+							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}"
+								onclick="confirmation.hide()" type="button" />
+						</p:confirmDialog>
+
+					</p:column>
+
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.envVariableName']}"
+						sortBy="#{item.key}">
+						<h:outputText value="#{item.key}" style="text-align: center;" />
+					</p:column>
+
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.envVariableValue']}"
+						sortBy="#{item.stringValue}">
+						<h:outputText value="#{item.stringValue}"
+							style="text-align: center;" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>

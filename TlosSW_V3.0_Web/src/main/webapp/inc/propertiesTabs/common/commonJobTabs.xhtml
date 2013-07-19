@@ -29,6 +29,10 @@
 			<ui:param name="backingBean" value="#{backingBean.logAnalyzingTabBean}" />
 		</ui:include>
 
+		<ui:include src="/inc/propertiesTabs/envVariablesTab.xhtml">
+			<ui:param name="backingBean" value="#{backingBean.envVariablesTabBean}" />
+		</ui:include>
+
 	</ui:composition>
 </h:body>
 </html>
