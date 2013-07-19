@@ -17,10 +17,9 @@ import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
-import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
-public class StateInfosTabBean {
+public class StateInfosTabBean extends BaseTabBean {
 
 	@ManagedProperty(value = "#{jsBasePanelMBean.oSystemList}")
 	private Collection<SelectItem> oSystemList;
@@ -47,11 +46,8 @@ public class StateInfosTabBean {
 	private ReturnCode returnCode;
 	private List<SelectItem> manyReturnCodeList;
 
-	private JSBasePanelMBean jsBasePanelMBean;
-
-	public StateInfosTabBean(JSBasePanelMBean jsBasePanelMBean) {
+	public StateInfosTabBean() {
 		super();
-		this.jsBasePanelMBean = jsBasePanelMBean;
 	}
 
 	public void resetTab() {
@@ -78,7 +74,7 @@ public class StateInfosTabBean {
 			for (int i = 0; i < getManyJobStatusList().size(); i++) {
 
 				if (getManyJobStatusList().get(i).getValue().equals(jobStatusName)) {
-					jsBasePanelMBean.addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.duplicate", null);
+					addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.duplicate", null);
 
 					return true;
 				}
@@ -94,7 +90,7 @@ public class StateInfosTabBean {
 			if (jobStatus.getStatusName().toString().equals(jStatus.getStatusName().toString())) {
 				jStatus = WebInputUtils.cloneJobStatus(jobStatus);
 
-				jsBasePanelMBean.addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.update", null);
+				addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.update", null);
 
 				break;
 			}
@@ -106,10 +102,10 @@ public class StateInfosTabBean {
 	public void jobStatusEditAction(Status[] statusArray) {
 
 		if (selectedJobStatusList == null || selectedJobStatusList.length == 0) {
-			jsBasePanelMBean.addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose", null);
+			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose", null);
 			return;
 		} else if (selectedJobStatusList.length > 1) {
-			jsBasePanelMBean.addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose.one", null);
+			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.status.choose.one", null);
 			return;
 		}
 
@@ -284,10 +280,6 @@ public class StateInfosTabBean {
 
 	public void setSelectedJobStatusList(String[] selectedJobStatusList) {
 		this.selectedJobStatusList = selectedJobStatusList;
-	}
-
-	public JSBasePanelMBean getJsBasePanelMBean() {
-		return jsBasePanelMBean;
 	}
 
 	public boolean isStatusDialogShow() {
