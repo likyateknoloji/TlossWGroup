@@ -36,9 +36,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1393726981346371091L;
 	
-//	HashMap<Integer, Object> jobBeanMap = new HashMap<>();
-//	Collection<SelectItem> jsCalendarList;
-	
 	@ManagedProperty(value = "#{batchProcessPanelMBean}")
 	private BatchProcessPanelMBean batchProcessPanelMBean;
 
@@ -216,11 +213,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private void setCurrentPanel(int jobType) {
 
-//		if(jobBeanMap.containsKey(jobType)) {
-//			currentPanelMBeanRef = jobBeanMap.get(jobType);
-//			return;
-//		}
-		
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
@@ -231,7 +223,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		case JobCommandType.INT_BATCH_PROCESS:
 			currentPanelMBeanRef = getBatchProcessPanelMBean();
-//			currentPanelMBeanRef = new BatchProcessPanelMBeanMy(); // getBatchProcessPanelMBean();
 			jobDefCenterPanel = BeanUtils.BATCH_PROCESS_PAGE;
 			break;
 
@@ -288,7 +279,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			break;
 		}
 		
-//		jobBeanMap.put(jobType, currentPanelMBeanRef);
 	}
 
 	private void initializeJobPanel(int jobType) {
