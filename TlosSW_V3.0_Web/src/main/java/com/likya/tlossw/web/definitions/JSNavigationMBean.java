@@ -30,7 +30,7 @@ import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
 
-@ManagedBean(name = "jsDefinitionMBean")
+@ManagedBean(name = "jsNavigationMBean")
 @ViewScoped
 public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
