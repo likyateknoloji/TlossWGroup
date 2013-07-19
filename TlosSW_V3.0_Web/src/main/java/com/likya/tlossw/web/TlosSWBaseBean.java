@@ -1,7 +1,6 @@
 package com.likya.tlossw.web;
 
 import java.util.HashMap;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
@@ -13,6 +12,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.BeanUtils;
 
 public abstract class TlosSWBaseBean {
 
@@ -31,38 +31,19 @@ public abstract class TlosSWBaseBean {
 
 		ResourceBundle messages = sessionMediator.getMessageBundle();
 
-		if (errorMessage != null) {
-			try {
-				errorMessage = messages.getString(errorMessage);
-			}
-			// eat any errors, and just use original message if there is a
-			// problem
-			catch (MissingResourceException e) {
-				logger.error("Missing Resource bundle, could not display message");
-			} catch (NullPointerException e) {
-				logger.error("Missing Resource bundle, could not dipslay message");
-			}
-		} else {
-			errorMessage = "";
-		}
-
+		errorMessage = BeanUtils.resolveMessage(messages, errorMessage);
+		
 		return errorMessage;
 	}
 
+
 	public void addMessage(String formName, String fieldName, String errorMessage, String miscText) {
 
-		errorMessage = resolveMessage(errorMessage);
-
-		FacesContext context = FacesContext.getCurrentInstance();
-		FacesMessage message;
-
-		if (miscText != null) {
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", (errorMessage + " " + miscText).trim());
-		} else {
-			message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errorMessage);
-		}
-		// report the message.
-		context.addMessage(formName + ":" + fieldName, message);
+		ResourceBundle messages = sessionMediator.getMessageBundle();
+		
+		BeanUtils.addMessage(messages, formName, fieldName, errorMessage, miscText);
+		
+		return; 
 	}
 
 	public HashMap<String, String> getPassedParameter() {
@@ -76,18 +57,18 @@ public abstract class TlosSWBaseBean {
 	}
 
 	public void addMessage(String fieldName, FacesMessage.Severity severity, String errorMessage, String miscText) {
-		errorMessage = resolveMessage(errorMessage);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, errorMessage, miscText));
+		ResourceBundle messages = sessionMediator.getMessageBundle();
+		BeanUtils.addMessage(messages, fieldName, severity, errorMessage, miscText);
 	}
 
 	public void addSuccessMessage(String fieldName, String errorMessage, String miscText) {
-		errorMessage = resolveMessage(errorMessage);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, errorMessage, miscText));
+		ResourceBundle messages = sessionMediator.getMessageBundle();
+		BeanUtils.addSuccessMessage(messages, fieldName, errorMessage, miscText);
 	}
 
 	public void addFailMessage(String fieldName, String errorMessage, String miscText) {
-		errorMessage = resolveMessage(errorMessage);
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, miscText));
+		ResourceBundle messages = sessionMediator.getMessageBundle();
+		BeanUtils.addFailMessage(messages, fieldName, errorMessage, miscText);
 	}
 
 	public SessionMediator getSessionMediator() {
@@ -116,6 +97,11 @@ public abstract class TlosSWBaseBean {
 
 	public void setWebAppUser(WebAppUser webAppUser) {
 		this.webAppUser = webAppUser;
+	}
+
+
+	public static Logger getLogger() {
+		return logger;
 	}
 
 }
