@@ -136,7 +136,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		jsCalendar = "0";
 		oSystem = OSystem.WINDOWS.toString();
 
-		localParametersTabBean.resetTab();
+		localParametersTabBean.resetTab(true);
 		alarmPreferencesTabBean.resetTab();
 		stateInfosTabBean.resetTab();
 	}
