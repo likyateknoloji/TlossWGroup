@@ -1,11 +1,13 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
@@ -26,61 +28,44 @@ import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
+import com.likya.tlossw.web.utils.WebInputUtils;
 import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
 
 @ManagedBean(name = "jsDefinitionMBean")
 @ViewScoped
-public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
+public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1393726981346371091L;
 
-	@ManagedProperty(value = "#{batchProcessPanelMBean}")
+	private HashMap<Integer, Object> jobBeanMap = new HashMap<>(); 
+	
+	private Collection<SelectItem> jsCalendarList;
+	
 	private BatchProcessPanelMBean batchProcessPanelMBean;
 
-	@ManagedProperty(value = "#{webServicePanelMBean}")
 	private WebServicePanelMBean webServicePanelMBean;
 
-	@ManagedProperty(value = "#{ftpPanelMBean}")
 	private FTPPanelMBean ftpPanelMBean;
 
-	@ManagedProperty(value = "#{fileProcessPanelMBean}")
 	private FileProcessPanelMBean fileProcessPanelMBean;
 
-	@ManagedProperty(value = "#{fileListenerPanelMBean}")
 	private FileListenerPanelMBean fileListenerPanelMBean;
 
-	@ManagedProperty(value = "#{dbJobsPanelMBean}")
 	private DBJobsPanelMBean dbJobsPanelMBean;
 
-	@ManagedProperty(value = "#{processNodePanelMBean}")
 	private ProcessNodePanelMBean processNodePanelMBean;
 
-	@ManagedProperty(value = "#{remoteShellPanelMBean}")
 	private RemoteShellPanelMBean remoteShellPanelMBean;
 
-	@ManagedProperty(value = "#{systemCommandPanelMBean}")
 	private SystemCommandPanelMBean systemCommandPanelMBean;
 
-	@ManagedProperty(value = "#{shellScriptPanelMBean}")
 	private ShellScriptPanelMBean shellScriptPanelMBean;
 
-	@ManagedProperty(value = "#{scenarioDefinitionMBean}")
 	private ScenarioDefinitionMBean scenarioDefinitionMBean;
 
-	private String jobDefCenterPanel = DEFAULT_DEF_PAGE;
-
-	public final static String BATCH_PROCESS_PAGE = "/inc/definitionPanels/batchProcessJobDef.xhtml";
-	public final static String WEB_SERVICE_PAGE = "/inc/definitionPanels/webServiceJobDef.xhtml";
-	public final static String FTP_PAGE = "/inc/definitionPanels/ftpJobDef.xhtml";
-	public final static String FILE_PROCESS_PAGE = "/inc/definitionPanels/fileProcessJobDef.xhtml";
-	public final static String FILE_LISTENER_PAGE = "/inc/definitionPanels/fileListenerJobDef.xhtml";
-	public final static String DB_JOBS_PAGE = "/inc/definitionPanels/dbJobDef.xhtml";
-	public final static String PROCESS_NODE_PAGE = "/inc/definitionPanels/processNodeJobDef.xhtml";
-	public final static String REMOTE_SHELL_PAGE = "/inc/definitionPanels/remoteJobDef.xhtml";
-	public final static String SYSTEM_COMMAND_PAGE = "/inc/definitionPanels/systemCommandJobDef.xhtml";
-	public final static String SHELL_SCRIPT_PAGE = "/inc/definitionPanels/shellScriptJobDef.xhtml";
-	public final static String DEFAULT_DEF_PAGE = "/inc/definitionPanels/defaultJobDef.xhtml";
+	private String jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
 	
@@ -157,7 +142,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void switchToScenarioPanel() {
-		jobDefCenterPanel = JSDefinitionMBean.SCENARIO_PAGE;
+		jobDefCenterPanel = JSNavigationMBean.SCENARIO_PAGE;
 
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
@@ -224,21 +209,27 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	private void setCurrentPanel(int jobType) {
 
+		if(jobBeanMap.containsKey(jobType)) {
+			currentPanelMBeanRef = jobBeanMap.get(jobType);
+			return;
+		}
+		
 		switch (jobType) {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
 			currentPanelMBeanRef = getSystemCommandPanelMBean();
-			jobDefCenterPanel = SYSTEM_COMMAND_PAGE;
+			
+			jobDefCenterPanel = BeanUtils.SYSTEM_COMMAND_PAGE;
 			break;
 
 		case JobCommandType.INT_BATCH_PROCESS:
-			currentPanelMBeanRef = getBatchProcessPanelMBean();
-			jobDefCenterPanel = BATCH_PROCESS_PAGE;
+			currentPanelMBeanRef = new MyBatchProcessPanelMBean(); // getBatchProcessPanelMBean();
+			jobDefCenterPanel = BeanUtils.BATCH_PROCESS_PAGE;
 			break;
 
 		case JobCommandType.INT_SHELL_SCRIPT:
 			currentPanelMBeanRef = getShellScriptPanelMBean();
-			jobDefCenterPanel = SHELL_SCRIPT_PAGE;
+			jobDefCenterPanel = BeanUtils.SHELL_SCRIPT_PAGE;
 			break;
 
 		case JobCommandType.INT_SAP:
@@ -252,42 +243,44 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 		case JobCommandType.INT_FTP:
 			currentPanelMBeanRef = getFtpPanelMBean();
-			jobDefCenterPanel = FTP_PAGE;
+			jobDefCenterPanel = BeanUtils.FTP_PAGE;
 			break;
 
 		case JobCommandType.INT_WEB_SERVICE:
 			currentPanelMBeanRef = getWebServicePanelMBean();
-			jobDefCenterPanel = WEB_SERVICE_PAGE;
+			jobDefCenterPanel = BeanUtils.WEB_SERVICE_PAGE;
 			break;
 
 		case JobCommandType.INT_DB_JOBS:
 			currentPanelMBeanRef = getDbJobsPanelMBean();
-			jobDefCenterPanel = DB_JOBS_PAGE;
+			jobDefCenterPanel = BeanUtils.DB_JOBS_PAGE;
 			break;
 
 		case JobCommandType.INT_FILE_LISTENER:
 			currentPanelMBeanRef = getFileListenerPanelMBean();
-			jobDefCenterPanel = FILE_LISTENER_PAGE;
+			jobDefCenterPanel = BeanUtils.FILE_LISTENER_PAGE;
 			break;
 
 		case JobCommandType.INT_PROCESS_NODE:
 			currentPanelMBeanRef = getProcessNodePanelMBean();
-			jobDefCenterPanel = PROCESS_NODE_PAGE;
+			jobDefCenterPanel = BeanUtils.PROCESS_NODE_PAGE;
 			break;
 
 		case JobCommandType.INT_FILE_PROCESS:
 			currentPanelMBeanRef = getFileProcessPanelMBean();
-			jobDefCenterPanel = FILE_PROCESS_PAGE;
+			jobDefCenterPanel = BeanUtils.FILE_PROCESS_PAGE;
 			break;
 
 		case JobCommandType.INT_REMOTE_SHELL:
 			currentPanelMBeanRef = getRemoteShellPanelMBean();
-			jobDefCenterPanel = REMOTE_SHELL_PAGE;
+			jobDefCenterPanel = BeanUtils.REMOTE_SHELL_PAGE;
 			break;
 
 		default:
 			break;
 		}
+		
+		jobBeanMap.put(jobType, currentPanelMBeanRef);
 	}
 
 	private void initializeJobPanel(int jobType) {
@@ -336,7 +329,7 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void cancelJsAction() {
-		jobDefCenterPanel = DEFAULT_DEF_PAGE;
+		jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 
 		// isi agaca insert edildikten sonra ekledigimiz icin bu kismi kaldirdim
 		/* if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
@@ -346,14 +339,14 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void deleteScenarioAction() {
 		if (getScenarioDefinitionMBean().deleteScenario()) {
-			jobDefCenterPanel = DEFAULT_DEF_PAGE;
+			jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 		}
 	}
 
 	public void deleteJobAction(ActionEvent actionEvent) {
 
 		if (((JobBasePanelBean) currentPanelMBeanRef).deleteJob()) {
-			jobDefCenterPanel = DEFAULT_DEF_PAGE;
+			jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 		}
 	}
 
@@ -507,6 +500,13 @@ public class JSDefinitionMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
 		this.shellScriptPanelMBean = shellScriptPanelMBean;
+	}
+
+	public Collection<SelectItem> getJsCalendarList() {
+		if(jsCalendarList == null) {
+			jsCalendarList = WebInputUtils.fillCalendarList(getDbOperations().getCalendars());
+		}
+		return jsCalendarList;
 	}
 
 }
