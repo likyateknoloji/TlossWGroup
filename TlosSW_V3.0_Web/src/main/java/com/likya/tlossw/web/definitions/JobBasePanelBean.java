@@ -143,7 +143,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		super.init();
 
 		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
-		envVariablesTabBean = new EnvVariablesTabBean(this);
+		envVariablesTabBean = new EnvVariablesTabBean();
 
 		long startTime = System.currentTimeMillis();
 
