@@ -19,6 +19,7 @@ import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.LiveUtils;
+import com.likya.tlossw.web.utils.WebOutputUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "jobMBean")
@@ -66,6 +67,10 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 		jobInTyCl = new JobInfoTypeClient();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), groupId, jobName, transformToLocalTime);
 
+		// TODO Eger XML ise uygulanmali.
+		WebOutputUtils webOutputUtils= new WebOutputUtils();
+		jobInTyCl.setOutParameterValue(webOutputUtils.formatXml(jobInTyCl.getOutParameterValue()));
+		
 		// her isin komut dosyasi yok
 		if (jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
 			jobCommandExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
