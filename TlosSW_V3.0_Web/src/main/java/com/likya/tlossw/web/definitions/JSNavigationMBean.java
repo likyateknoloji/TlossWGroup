@@ -348,16 +348,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 	
-//	public Collection<SelectItem> constructJsCalendarList() {
-//		
-//		if(jsCalendarList == null) {
-//			jsCalendarList = WebInputUtils.fillCalendarList(getDbOperations().getCalendars());
-//		}
-//		
-//		return jsCalendarList;
-//		
-//	}
-
 	public String getJobDefCenterPanel() {
 		return jobDefCenterPanel;
 	}
