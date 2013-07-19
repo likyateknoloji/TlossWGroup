@@ -44,7 +44,7 @@
 						</p:commandButton>
 
 						<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" />
-						<p:confirmDialog style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
+						<p:confirmDialog id="paramDeleteDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
 							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="confirmation.hide()" actionListener="#{backingBean['deleteInputParamAction']}" />
 							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
 						</p:confirmDialog>
