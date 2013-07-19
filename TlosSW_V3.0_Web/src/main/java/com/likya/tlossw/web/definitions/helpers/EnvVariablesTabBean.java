@@ -12,9 +12,8 @@ import com.likya.tlos.model.xmlbeans.common.EntryDocument.Entry;
 import com.likya.tlos.model.xmlbeans.common.EnvVariablesDocument.EnvVariables;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 
-public class EnvVariablesTabBean {
+public class EnvVariablesTabBean extends BaseTabBean {
 
 	// envVariables
 	private String envVariableName;
@@ -27,11 +26,8 @@ public class EnvVariablesTabBean {
 
 	private boolean renderUpdateEnvVariableButton = false;
 
-	private JSBasePanelMBean baseJSPanelMBean;
-
-	public EnvVariablesTabBean(JSBasePanelMBean baseJSPanelMBean) {
+	public EnvVariablesTabBean() {
 		super();
-		this.baseJSPanelMBean = baseJSPanelMBean;
 	}
 
 	public void resetTab() {
@@ -46,7 +42,7 @@ public class EnvVariablesTabBean {
 
 		if (envVariableName == null || envVariableName.equals("") || envVariableValue == null || envVariableValue.equals("")) {
 
-			baseJSPanelMBean.addMessage("addEnvVariable", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.envVariableValidationError", null);
+			addMessage("addEnvVariable", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.envVariableValidationError", null);
 
 			return;
 		}
