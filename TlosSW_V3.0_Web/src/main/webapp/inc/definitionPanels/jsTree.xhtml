@@ -17,7 +17,7 @@
 			<p:commandButton id="confirmScenarioDelete" immediate="true" process="@this"
 				value="#{msgs['tlos.ask.delete.confirm1']}"
 				update="tree :jobDefinitionForm" onclick="deleteScenarioConfirmation.hide()"
-				actionListener="#{jsDefinitionMBean.deleteScenarioAction}" />
+				actionListener="#{jsNavigationMBean.deleteScenarioAction}" />
 			<p:commandButton id="declineScenarioDelete"
 				value="#{msgs['tlos.ask.delete.confirm2']}"
 				onclick="deleteScenarioConfirmation.hide()" type="button" />
@@ -31,7 +31,7 @@
 			<p:commandButton id="confirmJobDelete" immediate="true" process="@this"
 				value="#{msgs['tlos.ask.delete.confirm1']}"
 				update="tree :jobDefinitionForm" onclick="deleteJobConfirmation.hide()"
-				actionListener="#{jsDefinitionMBean.deleteJobAction}" />
+				actionListener="#{jsNavigationMBean.deleteJobAction}" />
 			<p:commandButton id="declineJobDelete"
 				value="#{msgs['tlos.ask.delete.confirm2']}"
 				onclick="deleteJobConfirmation.hide()" type="button" />
@@ -44,10 +44,10 @@
 			<p:menuitem value="#{msgs['tlos.workspace.tree.addNewScenario']}"
 				update="tree :jobDefinitionForm"
 				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
-				action="#{jsDefinitionMBean.switchToScenarioPanel}"
+				action="#{jsNavigationMBean.switchToScenarioPanel}"
 				icon="ui-icon-plus" />
 			<p:menuitem value="Run Test"
-				action="#{jsDefinitionMBean.switchToTestPage}"
+				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 		</p:contextMenu>
 
@@ -56,7 +56,7 @@
 				onclick="deleteJobConfirmation.show()" icon="ui-icon-close" >
 			</p:menuitem>
 			<p:menuitem value="Run Test"
-				action="#{jsDefinitionMBean.switchToTestPage}"
+				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 		</p:contextMenu>
 
@@ -69,7 +69,7 @@
 			<p:ajax event="collapse" update=":jsTreeForm:messages"
 				listener="#{jSTree.onNodeCollapse}" />
 			<p:ajax event="select" update=":jobDefinitionForm"
-				listener="#{jsDefinitionMBean.onNodeSelect}" />
+				listener="#{jsNavigationMBean.onNodeSelect}" />
 			<p:ajax event="unselect" update=":jsTreeForm:messages"
 				listener="#{jSTree.onNodeUnselect}" />
 
@@ -91,17 +91,17 @@
 		<p:resizable for="tree" />
 
 		<h:inputHidden id="draggedJobName"
-			value="#{jsDefinitionMBean.draggedWsNodeForDependency.name}" />
+			value="#{jsNavigationMBean.draggedWsNodeForDependency.name}" />
 
 		<h:inputHidden id="draggedJobId"
-			value="#{jsDefinitionMBean.draggedWsNodeForDependency.id}" />
+			value="#{jsNavigationMBean.draggedWsNodeForDependency.id}" />
 
 		<h:inputHidden id="draggedJobPath"
-			value="#{jsDefinitionMBean.draggedJobPathForDependency}" />
+			value="#{jsNavigationMBean.draggedJobPathForDependency}" />
 
 		<p:remoteCommand name="callHandleJobDrop"
 			process="@this,draggedJobName,draggedJobId,draggedJobPath"
-			actionListener="#{jsDefinitionMBean.handleJobDropAction}" />
+			actionListener="#{jsNavigationMBean.handleJobDropAction}" />
 
 	</h:form>
 	<script>
