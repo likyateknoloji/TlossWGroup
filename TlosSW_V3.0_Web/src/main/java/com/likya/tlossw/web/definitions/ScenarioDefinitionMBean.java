@@ -37,7 +37,7 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "scenarioDefinitionMBean")
 @ViewScoped
-public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Serializable {
+public class ScenarioDefinitionMBean extends JSBasePanelMBean implements JSDefPanelInterface, Serializable {
 
 	private static final long serialVersionUID = -8027723328721838174L;
 
