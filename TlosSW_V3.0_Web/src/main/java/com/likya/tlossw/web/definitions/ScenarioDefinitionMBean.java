@@ -71,13 +71,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		fillSchedulingAlgorithmList();
 	}
 
-	public void fillAllLists() {
-		super.fillAllLists();
-	}
-
 	public void initScenarioPanel() {
-
-		fillAllLists();
 
 		setScenario(Scenario.Factory.newInstance());
 
