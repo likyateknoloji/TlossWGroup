@@ -19,6 +19,8 @@ import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 
 public class LocalParametersTabBean extends BaseTabBean {
 
+	private static final long serialVersionUID = -539345583609476380L;
+	
 	// localParameters
 	private String paramName;
 	private String paramDesc;
