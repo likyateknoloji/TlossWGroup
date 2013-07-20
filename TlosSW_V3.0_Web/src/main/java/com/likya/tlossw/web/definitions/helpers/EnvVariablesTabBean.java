@@ -15,6 +15,8 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 
 public class EnvVariablesTabBean extends BaseTabBean {
 
+	private static final long serialVersionUID = -7016007758343152710L;
+	
 	// envVariables
 	private String envVariableName;
 	private String envVariableValue;
