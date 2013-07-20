@@ -16,10 +16,8 @@ import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.HardwareDocument.Hardware;
 import com.likya.tlos.model.xmlbeans.sla.MemDocument.Mem;
 import com.likya.tlos.model.xmlbeans.sla.TimeinAttribute.Timein;
-import com.likya.tlossw.web.appmng.TraceBean;
-import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 import com.likya.tlossw.web.definitions.JobBasePanelBean;
-import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class AdvancedJobInfosTab {
 
@@ -30,16 +28,10 @@ public class AdvancedJobInfosTab {
 	private String selectedResourceForHardware;
 
 	private String agentChoiceMethod;
-	private Collection<SelectItem> agentChoiceMethodList = null;
 
 	private String selectedAgent;
 
-	private Collection<SelectItem> definedAgentList = null;
-
 	private String jobSLA;
-	private Collection<SelectItem> jsSLAList = null;
-
-	private Collection<SelectItem> resourceNameList = null;
 
 	private String cpuTimein;
 	private String cpuCondition;
@@ -56,32 +48,13 @@ public class AdvancedJobInfosTab {
 	private String diskValue;
 	private String diskUnit;
 	
-	private DBOperations dbOperations;
+	private JSBasePanelMBean jsBasePanelMBean;
 	
-
-	public AdvancedJobInfosTab(DBOperations dbOperations) {
+	public AdvancedJobInfosTab(JSBasePanelMBean jsBasePanelMBean) {
 		super();
-		this.dbOperations = dbOperations;
+		this.jsBasePanelMBean = jsBasePanelMBean;
 	}
 
-	public void fillTab() {
-		
-		long startTime = System.currentTimeMillis();
-		
-		fillAgentChoiceMethodList();
-		
-		setDefinedAgentList(WebInputUtils.fillAgentList(dbOperations.getAgents()));
-		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setJsSLAList(WebInputUtils.fillSLAList(dbOperations.getSlaList()));
-		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		setResourceNameList(WebInputUtils.fillResourceNameList(dbOperations.getResources()));
-		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-	}
-	
 	public void resetTab() {
 		jobSLA = JobBasePanelBean.NONE;
 		useResourceReq = false;
@@ -205,12 +178,6 @@ public class AdvancedJobInfosTab {
 		return advancedJobInfos;
 	}
 
-	public void fillAgentChoiceMethodList() {
-		if (getAgentChoiceMethodList() == null) {
-			setAgentChoiceMethodList(WebInputUtils.fillAgentChoiceMethodList());
-		}
-	}
-	
 	public boolean getAgentChoiceMethodUserMandatoryPreference() {
 		return "UserMandatoryPreference".equals(agentChoiceMethod);
 	}
@@ -248,11 +215,7 @@ public class AdvancedJobInfosTab {
 	}
 
 	public Collection<SelectItem> getAgentChoiceMethodList() {
-		return agentChoiceMethodList;
-	}
-
-	public void setAgentChoiceMethodList(Collection<SelectItem> agentChoiceMethodList) {
-		this.agentChoiceMethodList = agentChoiceMethodList;
+		return jsBasePanelMBean.getAgentChoiceMethodList();
 	}
 
 	public String getSelectedAgent() {
@@ -264,11 +227,7 @@ public class AdvancedJobInfosTab {
 	}
 
 	public Collection<SelectItem> getDefinedAgentList() {
-		return definedAgentList;
-	}
-
-	public void setDefinedAgentList(Collection<SelectItem> definedAgentList) {
-		this.definedAgentList = definedAgentList;
+		return jsBasePanelMBean.getDefinedAgentList();
 	}
 
 	public String getJobSLA() {
@@ -280,19 +239,11 @@ public class AdvancedJobInfosTab {
 	}
 
 	public Collection<SelectItem> getJsSLAList() {
-		return jsSLAList;
-	}
-
-	public void setJsSLAList(Collection<SelectItem> jsSLAList) {
-		this.jsSLAList = jsSLAList;
+		return jsBasePanelMBean.getJsSLAList();
 	}
 
 	public Collection<SelectItem> getResourceNameList() {
-		return resourceNameList;
-	}
-
-	public void setResourceNameList(Collection<SelectItem> resourceNameList) {
-		this.resourceNameList = resourceNameList;
+		return jsBasePanelMBean.getResourceNameList();
 	}
 
 	public String getCpuTimein() {
