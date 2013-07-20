@@ -16,9 +16,38 @@ import com.likya.tlossw.web.appmng.TraceBean;
 public class ComboListUtils {
 	
 	public static void logTimeInfo(String header, long timeInfo) {
-		System.out.println(header + TraceBean.dateDiffWithNow(timeInfo) + "ms");
+		if(timeInfo == 0) {
+			System.out.println(header);
+		} else {
+			System.out.println(header + TraceBean.dateDiffWithNow(timeInfo) + "ms");		
+		}
+	
+	}
+
+	public static void logTimeInfo(String header) {
+		logTimeInfo(header, 0);
 	}
 	
+	public static Collection<SelectItem> constructJobStateList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobStateList = WebInputUtils.fillJobStateList();
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobStateList Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return jobStateList;
+	}
+
+	public static Collection<SelectItem> constructJobSubtateList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobSubtateList = WebInputUtils.fillJobSubstateList();
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobSubstateList Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return jobSubtateList;
+	}
+
 	public static Collection<SelectItem> constructOSystemList() {
 
 		long startTime = System.currentTimeMillis();
