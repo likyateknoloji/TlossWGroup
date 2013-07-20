@@ -279,6 +279,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			break;
 		}
 		
+		((JSDefPanelInterface) currentPanelMBeanRef).init();
 	}
 
 	private void initializeJobPanel(int jobType) {
