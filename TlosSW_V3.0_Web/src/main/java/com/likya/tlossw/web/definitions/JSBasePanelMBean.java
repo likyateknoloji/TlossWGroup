@@ -18,7 +18,7 @@ import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
 
-public class JSBasePanelMBean extends TlosSWBaseBean {
+public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterface {
 
 	private Collection<SelectItem> tzList;
 	private Collection<SelectItem> typeOfTimeList;
