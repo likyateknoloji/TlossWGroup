@@ -22,6 +22,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
@@ -40,14 +41,18 @@ public class JobTemplatesTree implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
+		
+		long startTime = System.currentTimeMillis();
 		TlosProcessData tlosProcessData = dbOperations.getTlosTemplateDataXml();
+		ComboListUtils.logTimeInfo("JobTemplatesTree.initJSTree.dbOperations.getTlosTemplateDataXml() Süre : " , startTime);
 
+		startTime = System.currentTimeMillis();
 		System.out.println("Job Template Tree olusturuluyor ..");
-
 		constructJSTree(tlosProcessData);
-
+		ComboListUtils.logTimeInfo("JobTemplatesTree.initJSTree.dbOperations.getTlosTemplateDataXml() Süre : ", startTime);
+		
 		// addMessage("Job Template Tree olusturuldu !");
-		System.out.println("Job Template Tree olusturuldu !");
+		
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
