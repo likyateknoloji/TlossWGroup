@@ -20,52 +20,41 @@ import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlossw.web.definitions.JobBasePanelBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
-import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class BaseJobInfosTabBean implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4999462516588657534L;
 
+	public JobBasePanelBean jobBasePanelBean;
+	
 	private String jobPriority;
 
 	/* periodic job */
 	private String periodTime;
 
-	private Collection<SelectItem> jobBaseTypeList = null;
 	private String jobBaseType;
 
-	private Collection<SelectItem> jobTypeDefList = null;
-	private String jobTypeDef = JobTypeDef.TIME_BASED.toString();
+	private String jobTypeDef;
 
-	private Collection<SelectItem> eventTypeDefList = null;
-	private String eventTypeDef = EventTypeDef.FILE.toString();
-
-	JobBasePanelBean jobBasePanelBean;
+	private String eventTypeDef;
 
 	public BaseJobInfosTabBean(JobBasePanelBean jobBasePanelBean, String jobBaseType) {
+		
 		super();
+		resetTab();
 		this.jobBasePanelBean = jobBasePanelBean;
 		this.jobBaseType = jobBaseType;
+		
 	}
 	
 	public void resetTab() {
-		jobPriority = "1";
+		jobPriority = JobPriority.X_1.toString();
 		jobBaseType = JobBaseType.NON_PERIODIC.toString();
 		periodTime = "";
 		jobTypeDef = JobTypeDef.TIME_BASED.toString();
 		eventTypeDef = EventTypeDef.FILE.toString();
 	}
 
-	public void fillTab() {
-		fillJobBaseTypeList();
-		fillEventTypeDefList();
-		fillJobTypeDefList();
-		jobBasePanelBean.fillOSystemList();
-	}
-	
 	public void fillBaseInfosTab() {
 
 		if (jobBasePanelBean.getJobProperties() != null) {
@@ -156,24 +145,6 @@ public class BaseJobInfosTabBean implements Serializable{
 		baseJobInfos.setUserId(jobBasePanelBean.getWebAppUser().getId());
 	}
 	
-	public void fillJobTypeDefList() {
-		if (getJobTypeDefList() == null) {
-			setJobTypeDefList(WebInputUtils.fillJobTypeDefList());
-		}
-	}
-
-	public void fillJobBaseTypeList() {
-		if (getJobBaseTypeList() == null) {
-			setJobBaseTypeList(WebInputUtils.fillJobBaseTypeList());
-		}
-	}
-
-	public void fillEventTypeDefList() {
-		if (getEventTypeDefList() == null) {
-			setEventTypeDefList(WebInputUtils.fillEventTypeDefList());
-		}
-	}
-	
 	public JobProperties getJobProperties() {
 		return jobBasePanelBean.getJobProperties();
 	}
@@ -206,10 +177,6 @@ public class BaseJobInfosTabBean implements Serializable{
 		return jobBasePanelBean.getoSystemList();
 	}
 
-	public void setoSystemList(Collection<SelectItem> oSystemList) {
-		jobBasePanelBean.setoSystemList(oSystemList);
-	}
-
 	public String getJobPriority() {
 		return jobPriority;
 	}
@@ -227,11 +194,7 @@ public class BaseJobInfosTabBean implements Serializable{
 	}
 
 	public Collection<SelectItem> getJobBaseTypeList() {
-		return jobBaseTypeList;
-	}
-
-	public void setJobBaseTypeList(Collection<SelectItem> jobBaseTypeList) {
-		this.jobBaseTypeList = jobBaseTypeList;
+		return jobBasePanelBean.getJobBaseTypeList();
 	}
 
 	public String getJobBaseType() {
@@ -243,11 +206,7 @@ public class BaseJobInfosTabBean implements Serializable{
 	}
 
 	public Collection<SelectItem> getJobTypeDefList() {
-		return jobTypeDefList;
-	}
-
-	public void setJobTypeDefList(Collection<SelectItem> jobTypeDefList) {
-		this.jobTypeDefList = jobTypeDefList;
+		return jobBasePanelBean.getJobTypeDefList();
 	}
 
 	public String getJobTypeDef() {
@@ -259,11 +218,7 @@ public class BaseJobInfosTabBean implements Serializable{
 	}
 
 	public Collection<SelectItem> getEventTypeDefList() {
-		return eventTypeDefList;
-	}
-
-	public void setEventTypeDefList(Collection<SelectItem> eventTypeDefList) {
-		this.eventTypeDefList = eventTypeDefList;
+		return jobBasePanelBean.getEventTypeDefList();
 	}
 
 	public String getEventTypeDef() {
@@ -272,6 +227,14 @@ public class BaseJobInfosTabBean implements Serializable{
 
 	public void setEventTypeDef(String eventTypeDef) {
 		this.eventTypeDef = eventTypeDef;
+	}
+
+	public JobBasePanelBean getJobBasePanelBean() {
+		return jobBasePanelBean;
+	}
+
+	public void setJobBasePanelBean(JobBasePanelBean jobBasePanelBean) {
+		this.jobBasePanelBean = jobBasePanelBean;
 	}
 
 }
