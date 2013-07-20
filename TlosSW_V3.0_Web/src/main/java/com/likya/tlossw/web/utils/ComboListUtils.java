@@ -15,11 +15,15 @@ import com.likya.tlossw.web.appmng.TraceBean;
 
 public class ComboListUtils {
 	
+	public static void logTimeInfo(String header, long timeInfo) {
+		System.out.println(header + TraceBean.dateDiffWithNow(timeInfo) + "ms");
+	}
+	
 	public static Collection<SelectItem> constructOSystemList() {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> oSystemList = WebInputUtils.fillOSystemList();
-		System.out.println("JobBaseBean.WebInputUtils.fillOSystemList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillOSystemList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return oSystemList;
@@ -29,7 +33,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> tzList = WebInputUtils.fillTZList();
-		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillTZList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return tzList;
@@ -39,7 +43,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> tzList = WebInputUtils.fillCalendarList(calendarList);
-		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return tzList;
@@ -49,7 +53,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> typeOfTimeList = WebInputUtils.fillTypesOfTimeList();
-		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return typeOfTimeList;
@@ -59,7 +63,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> alarmList = WebInputUtils.fillAlarmList(alarmQueryList);
-		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillAlarmList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return alarmList;
@@ -69,7 +73,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> definedAgentList = WebInputUtils.fillAgentList(agentList);
-		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillAgentList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return definedAgentList;
@@ -79,7 +83,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> jsSLAList = WebInputUtils.fillSLAList(slaList);
-		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillSLAList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return jsSLAList;
@@ -89,7 +93,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> resourceNameList = WebInputUtils.fillResourceNameList(rnsList);
-		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return resourceNameList;
@@ -99,7 +103,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> jobBaseTypeList = WebInputUtils.fillJobBaseTypeList();
-		System.out.println("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return jobBaseTypeList;
@@ -109,7 +113,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> eventTypeDefList = WebInputUtils.fillEventTypeDefList();
-		System.out.println("JobBaseBean.WebInputUtils.fillEventTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillEventTypeDefList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return eventTypeDefList;
@@ -119,7 +123,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> jobTypeDefList = WebInputUtils.fillJobTypeDefList();
-		System.out.println("JobBaseBean.WebInputUtils.fillJobTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobTypeDefList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return jobTypeDefList;
@@ -129,7 +133,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> relativeTimeOptionList = WebInputUtils.fillRelativeTimeOptionList();
-		System.out.println("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return relativeTimeOptionList;
@@ -139,7 +143,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> unitTypeList = WebInputUtils.fillUnitTypeList();
-		System.out.println("JobBaseBean.WebInputUtils.fillUnitTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillUnitTypeList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return unitTypeList;
@@ -149,7 +153,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> jobStatusNameList = WebInputUtils.fillJobStatusList();
-		System.out.println("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return jobStatusNameList;
@@ -159,7 +163,7 @@ public class ComboListUtils {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> agentChoiceMethodList = WebInputUtils.fillAgentChoiceMethodList();
-		System.out.println("JobBaseBean.WebInputUtils.fillAgentChoiceMethodList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		logTimeInfo("JobBaseBean.WebInputUtils.fillAgentChoiceMethodList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
 		return agentChoiceMethodList;
