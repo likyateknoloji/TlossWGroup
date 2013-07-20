@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
@@ -56,7 +55,6 @@ public class DBJobsPanelMBean extends JobBasePanelBean implements Serializable {
 
 	}
 
-	@PostConstruct
 	public void init() {
 		initJobPanel();
 
