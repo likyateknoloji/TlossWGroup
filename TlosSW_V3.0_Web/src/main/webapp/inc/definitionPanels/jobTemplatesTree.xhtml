@@ -49,14 +49,14 @@
 		<p:resizable for="templateTree" />
 
 		<h:inputHidden id="draggedTemplateId"
-			value="#{jsDefinitionMBean.draggedTemplateName.id}" />
+			value="#{jsNavigationMBean.draggedTemplateName.id}" />
 
 		<h:inputHidden id="draggedTemplatePath"
-			value="#{jsDefinitionMBean.draggedTemplatePath}" />
+			value="#{jsNavigationMBean.draggedTemplatePath}" />
 
 		<p:remoteCommand name="callHandleDrop"
 			process="@this,draggedTemplateId,draggedTemplatePath"
-			actionListener="#{jsDefinitionMBean.handleDropAction}" />
+			actionListener="#{jsNavigationMBean.handleDropAction}" />
 
 	</h:form>
 
