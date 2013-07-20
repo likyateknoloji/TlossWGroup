@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -63,7 +62,6 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	// senaryonun senaryo ağacındaki pathinin sadece "isim | id" ve "/" ile oluşturulmuş hali
 	private String scenarioPathInScenario;
 
-	@PostConstruct
 	public void init() {
 
 		super.init();
