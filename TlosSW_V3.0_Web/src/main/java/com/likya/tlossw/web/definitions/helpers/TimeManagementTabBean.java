@@ -17,12 +17,12 @@ import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
-import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
-import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class TimeManagementTabBean {
 
+	private JSBasePanelMBean jsBasePanelMBean;
 	// time management
 	private boolean useTimeManagement = false;
 
@@ -40,36 +40,20 @@ public class TimeManagementTabBean {
 
 	private boolean defineStopTime = false;
 
-	private Collection<SelectItem> tzList;
 	private String selectedTZone;
 
 	private String relativeTimeOption;
-	private Collection<SelectItem> relativeTimeOptionList = null;
 
 	private String selectedTypeOfTime;
-	private Collection<SelectItem> typeOfTimeList;
 
-	private Collection<SelectItem> unitTypeList = null;
-	
 	private boolean isScenario = false;
 
-	public TimeManagementTabBean(boolean isScenario) {
+	public TimeManagementTabBean(JSBasePanelMBean jsBasePanelMBean, boolean isScenario) {
 		super();
 		this.isScenario = isScenario;
+		this.jsBasePanelMBean = jsBasePanelMBean;
 	}
 
-	public void fillTab() {
-		
-		fillRelativeTimeOptionList();
-		fillUnitTypeList();
-		
-		long startTime = System.currentTimeMillis();
-		setTzList(WebInputUtils.fillTZList());
-		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-	}
-	
 	public void resetTab() {
 
 		startTime = "";
@@ -239,18 +223,6 @@ public class TimeManagementTabBean {
 		}
 	}
 	
-	private void fillUnitTypeList() {
-		if (getUnitTypeList() == null) {
-			setUnitTypeList(WebInputUtils.fillUnitTypeList());
-		}
-	}
-	
-	private void fillRelativeTimeOptionList() {
-		if (getRelativeTimeOptionList() == null) {
-			setRelativeTimeOptionList(WebInputUtils.fillRelativeTimeOptionList());
-		}
-	}
-	
 	public boolean isUseTimeManagement() {
 		return useTimeManagement;
 	}
@@ -332,11 +304,7 @@ public class TimeManagementTabBean {
 	}
 
 	public Collection<SelectItem> getTzList() {
-		return tzList;
-	}
-
-	public void setTzList(Collection<SelectItem> tzList) {
-		this.tzList = tzList;
+		return jsBasePanelMBean.getTzList();
 	}
 
 	public String getSelectedTZone() {
@@ -356,11 +324,7 @@ public class TimeManagementTabBean {
 	}
 
 	public Collection<SelectItem> getRelativeTimeOptionList() {
-		return relativeTimeOptionList;
-	}
-
-	public void setRelativeTimeOptionList(Collection<SelectItem> relativeTimeOptionList) {
-		this.relativeTimeOptionList = relativeTimeOptionList;
+		return jsBasePanelMBean.getRelativeTimeOptionList();
 	}
 
 	public String getSelectedTypeOfTime() {
@@ -372,23 +336,23 @@ public class TimeManagementTabBean {
 	}
 
 	public Collection<SelectItem> getTypeOfTimeList() {
-		return typeOfTimeList;
-	}
-
-	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
-		this.typeOfTimeList = typeOfTimeList;
+		return jsBasePanelMBean.getTypeOfTimeList();
 	}
 
 	public Collection<SelectItem> getUnitTypeList() {
-		return unitTypeList;
-	}
-
-	public void setUnitTypeList(Collection<SelectItem> unitTypeList) {
-		this.unitTypeList = unitTypeList;
+		return jsBasePanelMBean.getUnitTypeList();
 	}
 
 	public boolean isScenario() {
 		return isScenario;
+	}
+
+	public JSBasePanelMBean getJsBasePanelMBean() {
+		return jsBasePanelMBean;
+	}
+
+	public void setJsBasePanelMBean(JSBasePanelMBean jsBasePanelMBean) {
+		this.jsBasePanelMBean = jsBasePanelMBean;
 	}
 
 }
