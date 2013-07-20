@@ -2,7 +2,6 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -25,7 +24,6 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 
 	}
 
-	@PostConstruct
 	public void init() {
 		initJobPanel();
 	}
