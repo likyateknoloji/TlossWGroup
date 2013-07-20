@@ -89,7 +89,10 @@
 		</p:tree>
 		<!-- p:draggable for="tree" / -->
 		<p:resizable for="tree" />
-
+		<p:blockUI block=":center" trigger="tree">  
+        	LOADING<br />
+			<p:graphicImage value="/images/ajax-loader.gif" />
+		</p:blockUI>
 		<h:inputHidden id="draggedJobName"
 			value="#{jsNavigationMBean.draggedWsNodeForDependency.name}" />
 
