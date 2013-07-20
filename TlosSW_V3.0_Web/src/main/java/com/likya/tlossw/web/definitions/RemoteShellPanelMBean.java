@@ -2,7 +2,6 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -33,7 +32,6 @@ public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializa
 
 	}
 
-	@PostConstruct
 	public void init() {
 		initJobPanel();
 	}
