@@ -16,12 +16,24 @@ import com.likya.tlossw.web.definitions.helpers.AdvancedJobInfosTab;
 import com.likya.tlossw.web.definitions.helpers.AlarmPreferencesTabBean;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
-import com.likya.tlossw.web.definitions.helpers.StateInfosTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class JSBasePanelMBean extends TlosSWBaseBean {
 
+	private Collection<SelectItem> tzList;
+	private Collection<SelectItem> typeOfTimeList;
+	private Collection<SelectItem> alarmList;
+	private Collection<SelectItem> definedAgentList;
+	private Collection<SelectItem> jsSLAList;
+	private Collection<SelectItem> resourceNameList;
+	private Collection<SelectItem> jobBaseTypeList;
+	private Collection<SelectItem> eventTypeDefList;
+	private Collection<SelectItem> jobTypeDefList;
+	private Collection<SelectItem> relativeTimeOptionList;
+	private Collection<SelectItem> unitTypeList;
+	private Collection<SelectItem> jobStatusNameList;
+	
 	/**
 	 * Anlamları ile ilgili kısa bir açıklamada fayda var.
 	 */
@@ -59,15 +71,13 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 	private AdvancedJobInfosTab advancedJobInfosTab;
 	private AlarmPreferencesTabBean alarmPreferencesTabBean;
-	private StateInfosTabBean stateInfosTabBean; 
 
 	public void init() {
-		timeManagementTabBean = new TimeManagementTabBean(isScenario);
+		timeManagementTabBean = new TimeManagementTabBean(this, isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean();
 		advancedJobInfosTab = new AdvancedJobInfosTab(getDbOperations());
 		alarmPreferencesTabBean = new AlarmPreferencesTabBean();
-		stateInfosTabBean = new StateInfosTabBean();
 	}
 
 	public void switchInsertUpdateButtons() {
@@ -77,24 +87,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void fillAllLists() {
 
-		long startTime = System.currentTimeMillis();
-
-		getTimeManagementTabBean().fillTab();
-
-		setJsCalendarList(WebInputUtils.fillCalendarList(getDbOperations().getCalendars()));
-		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-
-		getTimeManagementTabBean().setTypeOfTimeList(WebInputUtils.fillTypesOfTimeList());
-		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-
 		getAdvancedJobInfosTab().fillTab();
 
-		System.out.println();
-
 	}
-
-
 
 	public void fillDependencyDefinitionsTab(DependencyList dependencyList) {
 
@@ -138,15 +133,150 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 		localParametersTabBean.resetTab(true);
 		alarmPreferencesTabBean.resetTab();
-		stateInfosTabBean.resetTab();
+		
 	}
 
-	public void fillOSystemList() {
-		if (getoSystemList() == null) {
-			setoSystemList(WebInputUtils.fillOSystemList());
-		}
+	private Collection<SelectItem> constructOSystemList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> oSystemList = WebInputUtils.fillOSystemList();
+		System.out.println("JobBaseBean.WebInputUtils.fillOSystemList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return oSystemList;
+	}
+	
+	private Collection<SelectItem> constructTzList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> tzList = WebInputUtils.fillTZList();
+		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return tzList;
 	}
 
+	private Collection<SelectItem> constructJsCalendarList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> tzList = WebInputUtils.fillCalendarList(getDbOperations().getCalendars());
+		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return tzList;
+	}
+
+	private Collection<SelectItem> constructTypeOfTimeList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> typeOfTimeList = WebInputUtils.fillTypesOfTimeList();
+		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return typeOfTimeList;
+	}
+
+	private Collection<SelectItem> constructAlarmList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> alarmList = WebInputUtils.fillAlarmList(getDbOperations().getAlarms()); 
+		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return alarmList;
+	}
+	
+	private Collection<SelectItem> constructDefinedAgentList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> definedAgentList = WebInputUtils.fillAgentList(getDbOperations().getAgents()); 
+		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return definedAgentList;
+	}
+	
+	private Collection<SelectItem> constructJsSLAList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jsSLAList = WebInputUtils.fillSLAList(getDbOperations().getSlaList()); 
+		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return jsSLAList;
+	}
+	
+
+	private Collection<SelectItem> constructResourceNameList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> resourceNameList = WebInputUtils.fillResourceNameList(getDbOperations().getResources()); 
+		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return resourceNameList;
+	}
+	
+	private Collection<SelectItem> constructJobBaseTypeList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobBaseTypeList = WebInputUtils.fillJobBaseTypeList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return jobBaseTypeList;
+	}
+
+	private Collection<SelectItem> constructEventTypeDefList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> eventTypeDefList = WebInputUtils.fillEventTypeDefList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillEventTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return eventTypeDefList;
+	}
+	
+	private Collection<SelectItem> constructJobTypeDefList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobTypeDefList = WebInputUtils.fillJobTypeDefList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillJobTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return jobTypeDefList;
+	}
+	
+	private Collection<SelectItem> constructRelativeTimeOptionList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> relativeTimeOptionList = WebInputUtils.fillRelativeTimeOptionList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return relativeTimeOptionList;
+	}
+
+	private Collection<SelectItem> constructUnitTypeList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> unitTypeList = WebInputUtils.fillUnitTypeList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillUnitTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return unitTypeList;
+	}
+
+	private Collection<SelectItem> constructJobStatusNameList() {
+		
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobStatusNameList = WebInputUtils.fillJobStatusList(); 
+		System.out.println("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
+		startTime = System.currentTimeMillis();
+		
+		return jobStatusNameList;
+	}
+	
 	public boolean isScenario() {
 		return isScenario;
 	}
@@ -244,6 +374,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	}
 
 	public Collection<SelectItem> getJsCalendarList() {
+		if(jsCalendarList == null) {
+			jsCalendarList = constructJsCalendarList();
+		}
 		return jsCalendarList;
 	}
 
@@ -268,6 +401,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	}
 
 	public Collection<SelectItem> getoSystemList() {
+		if(oSystemList == null) {
+			oSystemList = constructOSystemList();
+		}
 		return oSystemList;
 	}
 
@@ -283,8 +419,136 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		this.alarmPreferencesTabBean = alarmPreferencesTabBean;
 	}
 
-	public StateInfosTabBean getStateInfosTabBean() {
-		return stateInfosTabBean;
+	public Collection<SelectItem> getTzList() {
+		if(tzList == null) {
+			tzList = constructTzList();
+		}
+		return tzList;
+	}
+
+	public void setTzList(Collection<SelectItem> tzList) {
+		this.tzList = tzList;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		if(typeOfTimeList == null) {
+			typeOfTimeList = constructTypeOfTimeList();
+		}
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public Collection<SelectItem> getAlarmList() {
+		if(alarmList == null) {
+			alarmList = constructAlarmList();
+		}		
+		return alarmList;
+	}
+
+	public void setAlarmList(Collection<SelectItem> alarmList) {
+		this.alarmList = alarmList;
+	}
+
+	public Collection<SelectItem> getDefinedAgentList() {
+		if(definedAgentList == null) {
+			definedAgentList = constructDefinedAgentList();
+		}	
+		return definedAgentList;
+	}
+
+	public void setDefinedAgentList(Collection<SelectItem> definedAgentList) {
+		this.definedAgentList = definedAgentList;
+	}
+
+	public Collection<SelectItem> getJsSLAList() {
+		if(jsSLAList == null) {
+			jsSLAList = constructJsSLAList();
+		}	
+		return jsSLAList;
+	}
+
+	public void setJsSLAList(Collection<SelectItem> jsSLAList) {
+		this.jsSLAList = jsSLAList;
+	}
+
+	public Collection<SelectItem> getResourceNameList() {
+		if(resourceNameList == null) {
+			resourceNameList = constructResourceNameList();
+		}	
+		return resourceNameList;
+	}
+
+	public void setResourceNameList(Collection<SelectItem> resourceNameList) {
+		this.resourceNameList = resourceNameList;
+	}
+
+	public Collection<SelectItem> getJobBaseTypeList() {
+		if(jobBaseTypeList == null) {
+			jobBaseTypeList = constructJobBaseTypeList();
+		}	
+		return jobBaseTypeList;
+	}
+
+	public void setJobBaseTypeList(Collection<SelectItem> jobBaseTypeList) {
+		this.jobBaseTypeList = jobBaseTypeList;
+	}
+
+	public Collection<SelectItem> getEventTypeDefList() {
+		if(eventTypeDefList == null) {
+			eventTypeDefList = constructEventTypeDefList();
+		}	
+		return eventTypeDefList;
+	}
+
+	public void setEventTypeDefList(Collection<SelectItem> eventTypeDefList) {
+		this.eventTypeDefList = eventTypeDefList;
+	}
+
+	public Collection<SelectItem> getJobTypeDefList() {
+		if(jobTypeDefList == null) {
+			jobTypeDefList = constructJobTypeDefList();
+		}
+		return jobTypeDefList;
+	}
+
+	public void setJobTypeDefList(Collection<SelectItem> jobTypeDefList) {
+		this.jobTypeDefList = jobTypeDefList;
+	}
+
+	public Collection<SelectItem> getRelativeTimeOptionList() {
+		if(relativeTimeOptionList == null) {
+			relativeTimeOptionList = constructRelativeTimeOptionList();
+		}
+		return relativeTimeOptionList;
+	}
+
+	public void setRelativeTimeOptionList(Collection<SelectItem> relativeTimeOptionList) {
+		this.relativeTimeOptionList = relativeTimeOptionList;
+	}
+
+	public Collection<SelectItem> getUnitTypeList() {
+		if(unitTypeList == null) {
+			unitTypeList = constructUnitTypeList();
+		}
+		return unitTypeList;
+	}
+
+	public void setUnitTypeList(Collection<SelectItem> unitTypeList) {
+		this.unitTypeList = unitTypeList;
+	}
+
+	public Collection<SelectItem> getJobStatusNameList() {
+		if(jobStatusNameList == null) {
+			jobStatusNameList = constructJobStatusNameList();
+		}
+		return jobStatusNameList;
+	}
+
+	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
+		this.jobStatusNameList = jobStatusNameList;
 	}
 
 	// public int getGmt() {
