@@ -3,7 +3,6 @@ package com.likya.tlossw.web.definitions;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
@@ -73,7 +72,6 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 
 	}
 
-	@PostConstruct
 	public void init() {
 		initJobPanel();
 		fillSourceTypeList();
