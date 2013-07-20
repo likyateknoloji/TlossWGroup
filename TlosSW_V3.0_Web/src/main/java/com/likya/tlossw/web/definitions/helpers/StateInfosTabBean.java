@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
@@ -17,24 +17,22 @@ import com.likya.tlos.model.xmlbeans.state.ReturnCodeListDocument.ReturnCodeList
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
+import com.likya.tlossw.web.definitions.JobBasePanelBean;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class StateInfosTabBean extends BaseTabBean {
 
-	@ManagedProperty(value = "#{jsBasePanelMBean.oSystemList}")
-	private Collection<SelectItem> oSystemList;
+	private static final long serialVersionUID = 1283735807693574258L;
 
-	@ManagedProperty(value = "#{jsBasePanelMBean.oSystem}")
+	private String[] selectedReturnCodeList;
+	
 	private String oSystem;
 	
-	@ManagedProperty(value = "#{jsBasePanelMBean.jsUpdateButton}")
 	private boolean jsUpdateButton;
 	
 	private Status jobStatus;
 
 	private String jobStatusName;
-
-	private Collection<SelectItem> jobStatusNameList = null;
 
 	private List<SelectItem> manyJobStatusList;
 	private String[] selectedJobStatusList;
@@ -45,9 +43,12 @@ public class StateInfosTabBean extends BaseTabBean {
 	private String osType;
 	private ReturnCode returnCode;
 	private List<SelectItem> manyReturnCodeList;
+	
+	public JobBasePanelBean jobBasePanelBean;
 
-	public StateInfosTabBean() {
+	public StateInfosTabBean(JobBasePanelBean jobBasePanelBean) {
 		super();
+		this.jobBasePanelBean = jobBasePanelBean;
 	}
 
 	public void resetTab() {
@@ -138,6 +139,66 @@ public class StateInfosTabBean extends BaseTabBean {
 		returnCode = ReturnCode.Factory.newInstance();
 
 		statusDialogShow = true;
+	}
+	
+	private void addToJobStatusList(Status tmpJobStatus) {
+		
+		JobStatusList jobStatusList = null;
+
+		JobProperties jobProperties = jobBasePanelBean.getJobProperties();
+		
+		if (jobProperties.getStateInfos().getJobStatusList() == null || jobProperties.getStateInfos().getJobStatusList().sizeOfJobStatusArray() == 0) {
+			jobProperties.getStateInfos().setJobStatusList(JobStatusList.Factory.newInstance());
+
+			jobStatusList = jobProperties.getStateInfos().getJobStatusList();
+
+			tmpJobStatus.setStsId("1");
+		} else {
+			jobStatusList = jobProperties.getStateInfos().getJobStatusList();
+
+			int lastStatusIndex = jobStatusList.sizeOfJobStatusArray() - 1;
+			String id = jobStatusList.getJobStatusArray(lastStatusIndex).getStsId();
+
+			tmpJobStatus.setStsId((Integer.parseInt(id) + 1) + "");
+		}
+
+		Status newStatus = jobStatusList.addNewJobStatus();
+		newStatus.set(tmpJobStatus);
+	}
+	
+	public void saveJobStatusAction() {
+
+		if (getManyReturnCodeList() == null || getManyReturnCodeList().size() == 0) {
+			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.codeList", null);
+
+			return;
+		}
+
+		Status tmpJobStatus = WebInputUtils.cloneJobStatus(getJobStatus());
+
+		/**
+		 * @author serkan taş
+		 * @date 14.07.2013 Aşağıdaki kımsa gerek yok gibi geldi bana
+		 */
+		// if (isScenario) {
+		// addToScenarioStatusList(tmpJobStatus);
+		// } else {
+		addToJobStatusList(tmpJobStatus);
+		// }
+
+		if (getManyJobStatusList() == null) {
+			setManyJobStatusList(new ArrayList<SelectItem>());
+		}
+
+		getManyJobStatusList().add(new SelectItem(getJobStatusName(), getJobStatusName()));
+
+		addMessage("addReturnCode", FacesMessage.SEVERITY_INFO, "tlos.info.job.code.add", null);
+
+		setStatusDialogShow(false);
+	}
+	
+	public void addJReturnCodeAction() {
+		addJReturnCodeAction(false, jobBasePanelBean.getJobStatusList());
 	}
 
 	public void addJReturnCodeAction(boolean isScenario, Object refObject) {
@@ -260,9 +321,24 @@ public class StateInfosTabBean extends BaseTabBean {
 		manyReturnCodeList.add(item);
 	}
 
-	public void fillJobStatusList() {
-		if (jobStatusNameList == null) {
-			jobStatusNameList = WebInputUtils.fillJobStatusList();
+	public void deleteJReturnCodeAction() {
+		if (selectedReturnCodeList.length == 0) {
+			addMessage("addReturnCode", FacesMessage.SEVERITY_ERROR, "tlos.info.job.code.delete", null);
+			return;
+		}
+
+		for (int i = 0; i < selectedReturnCodeList.length; i++) {
+			for (int j = 0; j < getManyReturnCodeList().size(); j++) {
+				if (getManyReturnCodeList().get(j).getValue().toString().equals(selectedReturnCodeList[i])) {
+
+					// TODO job tanimi ya da senaryo tanimi icinden silme isi
+					// burada yapilacak,
+					// asagida sadece goruntu olarak ekrandaki listeden siliyor
+
+					getManyReturnCodeList().remove(j);
+					j = getManyReturnCodeList().size();
+				}
+			}
 		}
 	}
 
@@ -323,19 +399,11 @@ public class StateInfosTabBean extends BaseTabBean {
 	}
 
 	public Collection<SelectItem> getJobStatusNameList() {
-		return jobStatusNameList;
-	}
-
-	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
-		this.jobStatusNameList = jobStatusNameList;
+		return jobBasePanelBean.getJobStatusNameList();
 	}
 
 	public Collection<SelectItem> getoSystemList() {
-		return oSystemList;
-	}
-
-	public void setoSystemList(Collection<SelectItem> oSystemList) {
-		this.oSystemList = oSystemList;
+		return jobBasePanelBean.getoSystemList();
 	}
 
 	public String getoSystem() {
@@ -360,6 +428,14 @@ public class StateInfosTabBean extends BaseTabBean {
 
 	public void setJsUpdateButton(boolean jsUpdateButton) {
 		this.jsUpdateButton = jsUpdateButton;
+	}
+
+	public String[] getSelectedReturnCodeList() {
+		return selectedReturnCodeList;
+	}
+
+	public void setSelectedReturnCodeList(String[] selectedReturnCodeList) {
+		this.selectedReturnCodeList = selectedReturnCodeList;
 	}
 
 }
