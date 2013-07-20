@@ -306,8 +306,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void fillAllLists() {
 
-		super.fillAllLists();
-
 		long startTime = System.currentTimeMillis();
 
 		fillJobStateList();
