@@ -29,8 +29,6 @@ import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
-import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
-import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
@@ -318,7 +316,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		fillTimeManagementTab();
 		// şimdilik senaryolar arası bağımlılık yok
 		// fillDependencyDefinitionsTab();
-		fillStateInfosTab();
+		// fillStateInfosTab();
 		fillConcurrencyManagementTab();
 		fillAlarmPreferenceTab();
 		fillLocalParametersTab();
@@ -350,23 +348,32 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		}
 	}
 
-	private void fillStateInfosTab() {
-		if (getScenario() != null) {
-			// durum tanimi yapildiysa alanlari dolduruyor
-			if (getScenario().getScenarioStatusList() != null) {
-
-				getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
-				for (Status scenarioStatus : getScenario().getScenarioStatusList().getScenarioStatusArray()) {
-					String statusName = scenarioStatus.getStatusName().toString();
-					getStateInfosTabBean().getManyJobStatusList().add(new SelectItem(statusName, statusName));
-				}
-			} else {
-				getStateInfosTabBean().setManyJobStatusList(null);
-			}
-		} else {
-			System.out.println("scenario is NULL in fillStateInfosTab !!");
-		}
-	}
+	/**
+	 * @author serkan
+	 * 
+	 * Aşağıdaki kısmı kaldırdım, çünkü state yapısı job için kurgulanmış.
+	 *  Buna uyum sqğlamıyor.
+	 *  
+	 * 20.07.2013
+	 */
+	
+//	private void fillStateInfosTab() {
+//		if (getScenario() != null) {
+//			// durum tanimi yapildiysa alanlari dolduruyor
+//			if (getScenario().getScenarioStatusList() != null) {
+//
+//				getStateInfosTabBean().setManyJobStatusList(new ArrayList<SelectItem>());
+//				for (Status scenarioStatus : getScenario().getScenarioStatusList().getScenarioStatusArray()) {
+//					String statusName = scenarioStatus.getStatusName().toString();
+//					getStateInfosTabBean().getManyJobStatusList().add(new SelectItem(statusName, statusName));
+//				}
+//			} else {
+//				getStateInfosTabBean().setManyJobStatusList(null);
+//			}
+//		} else {
+//			System.out.println("scenario is NULL in fillStateInfosTab !!");
+//		}
+//	}
 
 	public void fillConcurrencyManagementTab() {
 		if (getScenario() != null) {
@@ -546,6 +553,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	}
 
+	/*
 	public void updateJobStatusAction() {
 
 		Status[] statusArray = null;
@@ -586,6 +594,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			}
 		}
 	}
+	*/
 
 	public JSTree getJsTree() {
 		return jsTree;
