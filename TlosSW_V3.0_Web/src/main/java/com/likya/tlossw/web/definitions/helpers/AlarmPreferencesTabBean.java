@@ -10,12 +10,19 @@ import org.apache.xmlbeans.XmlCursor;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlossw.web.definitions.JSBasePanelMBean;
 
 public class AlarmPreferencesTabBean {
 	
 	// alarmPreference
-	private Collection<SelectItem> alarmList = null;
 	private String[] selectedAlarmList;
+	
+	private JSBasePanelMBean jsBasePanelMBean;
+
+	public AlarmPreferencesTabBean(JSBasePanelMBean jsBasePanelMBean) {
+		super();
+		this.jsBasePanelMBean = jsBasePanelMBean;
+	}
 	
 	public void resetTab() {
 		selectedAlarmList = null;
@@ -38,7 +45,7 @@ public class AlarmPreferencesTabBean {
 			for (int i = 0; i < selectedAlarmList.length; i++) {
 				String selectedId = selectedAlarmList[i].toString();
 
-				Iterator<SelectItem> alarmIterator = alarmList.iterator();
+				Iterator<SelectItem> alarmIterator = getAlarmList().iterator();
 
 				while (alarmIterator.hasNext()) {
 					SelectItem alarm = alarmIterator.next();
@@ -101,11 +108,7 @@ public class AlarmPreferencesTabBean {
 	}
 
 	public Collection<SelectItem> getAlarmList() {
-		return alarmList;
-	}
-
-	public void setAlarmList(Collection<SelectItem> alarmList) {
-		this.alarmList = alarmList;
+		return jsBasePanelMBean.getAlarmList();
 	}
 
 	public String[] getSelectedAlarmList() {
