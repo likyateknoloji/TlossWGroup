@@ -43,14 +43,13 @@ import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.definitions.helpers.BaseJobInfosTabBean;
 import com.likya.tlossw.web.definitions.helpers.EnvVariablesTabBean;
 import com.likya.tlossw.web.definitions.helpers.StateInfosTabBean;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.BeanUtils;
+import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.DefinitionUtils;
-import com.likya.tlossw.web.utils.WebInputUtils;
 
 public abstract class JobBasePanelBean extends JSBasePanelMBean implements Serializable {
 
@@ -142,19 +141,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void initJobPanel() {
 
+		long startTime = System.currentTimeMillis();
+		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel", startTime);
+		
 		super.init();
 
 		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
 		stateInfosTabBean = new StateInfosTabBean(this);
-
 		envVariablesTabBean = new EnvVariablesTabBean();
-
-		long startTime = System.currentTimeMillis();
-
-		System.out.println("");
-		System.out.println("JobBaseBean.initJobPanel");
-
-		fillAllLists();
 
 		jobProperties = JobProperties.Factory.newInstance();
 
@@ -178,9 +172,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		resetPanelInputs();
 
-		System.out.println("JobBaseBean.initJobPanel Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-
 		System.out.println(getClass().getName());
+		
+		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel Süre : ", startTime);
+
 
 	}
 
@@ -302,22 +297,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		} else {
 			System.out.println("jobProperties is NULL in fillAdvancedJobInfosTab !!");
 		}
-	}
-
-	public void fillAllLists() {
-
-		long startTime = System.currentTimeMillis();
-
-		fillJobStateList();
-		fillJobSubtateList();
-
-		System.out.println("JobBaseBean.WebInputUtils.fillAllLists Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-
-		getAlarmPreferencesTabBean().setAlarmList(WebInputUtils.fillAlarmList(getDbOperations().getAlarms()));
-		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-
 	}
 
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
@@ -930,18 +909,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
 
 		return jobPropertiesXML;
-	}
-
-	public void fillJobStateList() {
-		if (getDepStateNameList() == null) {
-			setDepStateNameList(WebInputUtils.fillJobStateList());
-		}
-	}
-
-	public void fillJobSubtateList() {
-		if (getDepSubstateNameList() == null) {
-			setDepSubstateNameList(WebInputUtils.fillJobSubstateList());
-		}
 	}
 
 	public JobProperties getJobProperties() {
