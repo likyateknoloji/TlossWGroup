@@ -78,4 +78,17 @@ public class BeanUtils {
 		return errorMessage;
 	}
 	
+	public static boolean wordToBool(String keyWord) {
+		if("YES".equals(keyWord)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static String boolToWord(boolean value) {
+		if(value) {
+			return "YES";
+		}
+		return "NO";
+	}
 }
