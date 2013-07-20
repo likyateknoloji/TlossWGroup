@@ -139,10 +139,12 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 			if (scenario != null) {
 				switchToScenarioPanel();
+				((JSDefPanelInterface) currentPanelMBeanRef).init();
 				getScenarioDefinitionMBean().setScenario(scenario);
 				getScenarioDefinitionMBean().initializeScenarioPanel(false);
 			}
 		}
+		
 	}
 
 	public void switchToScenarioPanel() {
