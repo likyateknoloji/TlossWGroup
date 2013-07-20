@@ -11,13 +11,12 @@ import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlossw.web.TlosSWBaseBean;
-import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.definitions.helpers.AdvancedJobInfosTab;
 import com.likya.tlossw.web.definitions.helpers.AlarmPreferencesTabBean;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
-import com.likya.tlossw.web.utils.WebInputUtils;
+import com.likya.tlossw.web.utils.ComboListUtils;
 
 public class JSBasePanelMBean extends TlosSWBaseBean {
 
@@ -33,6 +32,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	private Collection<SelectItem> relativeTimeOptionList;
 	private Collection<SelectItem> unitTypeList;
 	private Collection<SelectItem> jobStatusNameList;
+	private Collection<SelectItem> agentChoiceMethodList = null;
+
 	
 	/**
 	 * Anlamları ile ilgili kısa bir açıklamada fayda var.
@@ -76,19 +77,13 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		timeManagementTabBean = new TimeManagementTabBean(this, isScenario);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean();
-		advancedJobInfosTab = new AdvancedJobInfosTab(getDbOperations());
+		advancedJobInfosTab = new AdvancedJobInfosTab(this);
 		alarmPreferencesTabBean = new AlarmPreferencesTabBean();
 	}
 
 	public void switchInsertUpdateButtons() {
 		jsInsertButton = !jsInsertButton;
 		jsUpdateButton = !jsUpdateButton;
-	}
-
-	public void fillAllLists() {
-
-		getAdvancedJobInfosTab().fillTab();
-
 	}
 
 	public void fillDependencyDefinitionsTab(DependencyList dependencyList) {
@@ -136,146 +131,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		
 	}
 
-	private Collection<SelectItem> constructOSystemList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> oSystemList = WebInputUtils.fillOSystemList();
-		System.out.println("JobBaseBean.WebInputUtils.fillOSystemList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return oSystemList;
-	}
-	
-	private Collection<SelectItem> constructTzList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> tzList = WebInputUtils.fillTZList();
-		System.out.println("JobBaseBean.WebInputUtils.fillTZList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return tzList;
-	}
-
-	private Collection<SelectItem> constructJsCalendarList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> tzList = WebInputUtils.fillCalendarList(getDbOperations().getCalendars());
-		System.out.println("BaseJSPanelMBean.WebInputUtils.fillCalendarList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return tzList;
-	}
-
-	private Collection<SelectItem> constructTypeOfTimeList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> typeOfTimeList = WebInputUtils.fillTypesOfTimeList();
-		System.out.println("JobBaseBean.WebInputUtils.fillTypesOfTimeList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return typeOfTimeList;
-	}
-
-	private Collection<SelectItem> constructAlarmList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> alarmList = WebInputUtils.fillAlarmList(getDbOperations().getAlarms()); 
-		System.out.println("JobBaseBean.WebInputUtils.fillAlarmList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return alarmList;
-	}
-	
-	private Collection<SelectItem> constructDefinedAgentList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> definedAgentList = WebInputUtils.fillAgentList(getDbOperations().getAgents()); 
-		System.out.println("JobBaseBean.WebInputUtils.fillAgentList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return definedAgentList;
-	}
-	
-	private Collection<SelectItem> constructJsSLAList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jsSLAList = WebInputUtils.fillSLAList(getDbOperations().getSlaList()); 
-		System.out.println("JobBaseBean.WebInputUtils.fillSLAList Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return jsSLAList;
-	}
-	
-
-	private Collection<SelectItem> constructResourceNameList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> resourceNameList = WebInputUtils.fillResourceNameList(getDbOperations().getResources()); 
-		System.out.println("JobBaseBean.WebInputUtils.fillResourceNameList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return resourceNameList;
-	}
-	
-	private Collection<SelectItem> constructJobBaseTypeList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobBaseTypeList = WebInputUtils.fillJobBaseTypeList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return jobBaseTypeList;
-	}
-
-	private Collection<SelectItem> constructEventTypeDefList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> eventTypeDefList = WebInputUtils.fillEventTypeDefList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillEventTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return eventTypeDefList;
-	}
-	
-	private Collection<SelectItem> constructJobTypeDefList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobTypeDefList = WebInputUtils.fillJobTypeDefList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillJobTypeDefList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return jobTypeDefList;
-	}
-	
-	private Collection<SelectItem> constructRelativeTimeOptionList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> relativeTimeOptionList = WebInputUtils.fillRelativeTimeOptionList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return relativeTimeOptionList;
-	}
-
-	private Collection<SelectItem> constructUnitTypeList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> unitTypeList = WebInputUtils.fillUnitTypeList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillUnitTypeList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return unitTypeList;
-	}
-
-	private Collection<SelectItem> constructJobStatusNameList() {
-		
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobStatusNameList = WebInputUtils.fillJobStatusList(); 
-		System.out.println("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : " + TraceBean.dateDiffWithNow(startTime) + "ms");
-		startTime = System.currentTimeMillis();
-		
-		return jobStatusNameList;
-	}
 	
 	public boolean isScenario() {
 		return isScenario;
@@ -375,7 +230,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getJsCalendarList() {
 		if(jsCalendarList == null) {
-			jsCalendarList = constructJsCalendarList();
+			jsCalendarList = ComboListUtils.constructJsCalendarList(getDbOperations().getCalendars());
 		}
 		return jsCalendarList;
 	}
@@ -402,7 +257,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getoSystemList() {
 		if(oSystemList == null) {
-			oSystemList = constructOSystemList();
+			oSystemList = ComboListUtils.constructOSystemList();
 		}
 		return oSystemList;
 	}
@@ -421,7 +276,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getTzList() {
 		if(tzList == null) {
-			tzList = constructTzList();
+			tzList = ComboListUtils.constructTzList();
 		}
 		return tzList;
 	}
@@ -432,7 +287,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getTypeOfTimeList() {
 		if(typeOfTimeList == null) {
-			typeOfTimeList = constructTypeOfTimeList();
+			typeOfTimeList = ComboListUtils.constructTypeOfTimeList();
 		}
 		return typeOfTimeList;
 	}
@@ -443,7 +298,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getAlarmList() {
 		if(alarmList == null) {
-			alarmList = constructAlarmList();
+			alarmList = ComboListUtils.constructAlarmList(getDbOperations().getAlarms());
 		}		
 		return alarmList;
 	}
@@ -454,7 +309,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getDefinedAgentList() {
 		if(definedAgentList == null) {
-			definedAgentList = constructDefinedAgentList();
+			definedAgentList = ComboListUtils.constructDefinedAgentList(getDbOperations().getAgents());
 		}	
 		return definedAgentList;
 	}
@@ -465,7 +320,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getJsSLAList() {
 		if(jsSLAList == null) {
-			jsSLAList = constructJsSLAList();
+			jsSLAList = ComboListUtils.constructJsSLAList(getDbOperations().getSlaList());
 		}	
 		return jsSLAList;
 	}
@@ -476,7 +331,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getResourceNameList() {
 		if(resourceNameList == null) {
-			resourceNameList = constructResourceNameList();
+			resourceNameList = ComboListUtils.constructResourceNameList(getDbOperations().getResources());
 		}	
 		return resourceNameList;
 	}
@@ -487,7 +342,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getJobBaseTypeList() {
 		if(jobBaseTypeList == null) {
-			jobBaseTypeList = constructJobBaseTypeList();
+			jobBaseTypeList = ComboListUtils.constructJobBaseTypeList();
 		}	
 		return jobBaseTypeList;
 	}
@@ -498,7 +353,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getEventTypeDefList() {
 		if(eventTypeDefList == null) {
-			eventTypeDefList = constructEventTypeDefList();
+			eventTypeDefList = ComboListUtils.constructEventTypeDefList();
 		}	
 		return eventTypeDefList;
 	}
@@ -509,7 +364,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getJobTypeDefList() {
 		if(jobTypeDefList == null) {
-			jobTypeDefList = constructJobTypeDefList();
+			jobTypeDefList = ComboListUtils.constructJobTypeDefList();
 		}
 		return jobTypeDefList;
 	}
@@ -520,7 +375,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getRelativeTimeOptionList() {
 		if(relativeTimeOptionList == null) {
-			relativeTimeOptionList = constructRelativeTimeOptionList();
+			relativeTimeOptionList = ComboListUtils.constructRelativeTimeOptionList();
 		}
 		return relativeTimeOptionList;
 	}
@@ -531,7 +386,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getUnitTypeList() {
 		if(unitTypeList == null) {
-			unitTypeList = constructUnitTypeList();
+			unitTypeList = ComboListUtils.constructUnitTypeList();
 		}
 		return unitTypeList;
 	}
@@ -542,13 +397,24 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public Collection<SelectItem> getJobStatusNameList() {
 		if(jobStatusNameList == null) {
-			jobStatusNameList = constructJobStatusNameList();
+			jobStatusNameList = ComboListUtils.constructJobStatusNameList();
 		}
 		return jobStatusNameList;
 	}
 
 	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
 		this.jobStatusNameList = jobStatusNameList;
+	}
+
+	public Collection<SelectItem> getAgentChoiceMethodList() {
+		if(agentChoiceMethodList == null) {
+			agentChoiceMethodList = ComboListUtils.constructAgentChoiceMethodList();
+		}
+		return agentChoiceMethodList;
+	}
+
+	public void setAgentChoiceMethodList(Collection<SelectItem> agentChoiceMethodList) {
+		this.agentChoiceMethodList = agentChoiceMethodList;
 	}
 
 	// public int getGmt() {
