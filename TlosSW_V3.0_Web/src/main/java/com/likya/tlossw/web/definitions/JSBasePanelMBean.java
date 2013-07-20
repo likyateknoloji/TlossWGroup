@@ -32,7 +32,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 	private Collection<SelectItem> relativeTimeOptionList;
 	private Collection<SelectItem> unitTypeList;
 	private Collection<SelectItem> jobStatusNameList;
-	private Collection<SelectItem> agentChoiceMethodList = null;
+	private Collection<SelectItem> agentChoiceMethodList;
+	private Collection<SelectItem> jobStateList;
+	private Collection<SelectItem> jobSubtateList;
 
 	
 	/**
@@ -78,7 +80,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean();
 		advancedJobInfosTab = new AdvancedJobInfosTab(this);
-		alarmPreferencesTabBean = new AlarmPreferencesTabBean();
+		alarmPreferencesTabBean = new AlarmPreferencesTabBean(this);
 	}
 
 	public void switchInsertUpdateButtons() {
@@ -415,6 +417,22 @@ public class JSBasePanelMBean extends TlosSWBaseBean {
 
 	public void setAgentChoiceMethodList(Collection<SelectItem> agentChoiceMethodList) {
 		this.agentChoiceMethodList = agentChoiceMethodList;
+	}
+
+	public Collection<SelectItem> getJobStateList() {
+		return jobStateList;
+	}
+
+	public void setJobStateList(Collection<SelectItem> jobStateList) {
+		this.jobStateList = jobStateList;
+	}
+
+	public Collection<SelectItem> getJobSubtateList() {
+		return jobSubtateList;
+	}
+
+	public void setJobSubtateList(Collection<SelectItem> jobSubtateList) {
+		this.jobSubtateList = jobSubtateList;
 	}
 
 	// public int getGmt() {
