@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
@@ -52,7 +51,6 @@ public class FileListenerPanelMBean extends JobBasePanelBean implements Serializ
 
 	}
 
-	@PostConstruct
 	public void init() {
 		initJobPanel();
 		fillPollingTypeList();
