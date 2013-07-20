@@ -14,7 +14,7 @@
 
 
 
-	<p:panel id="languagePanel" header="Language Info" style="width:50%">
+	<p:panel id="languagePanel" header="Dil Seçimi" style="width:50%">
 
 		<h:panelGrid id="languageGrid" columns="1" width="100%" styleClass="languageEntryInputTable">
 
@@ -31,7 +31,7 @@
 	
 	<h:form id="loginEntryForm">
 		<p:growl id="messages" showDetail="true" autoUpdate="true" />
-		<p:panel id="loginInfoInputPanel" header="Login Info" style="width:50%">
+		<p:panel id="loginInfoInputPanel" header="Kullanıcı Bilgileri" style="width:50%">
 
 			<h:panelGrid id="inputGrid" columns="1" width="100%" styleClass="loginEntryInputTable">
 
@@ -50,7 +50,7 @@
 					</h:inputSecret>
 				</h:panelGrid>
 
-				<p:commandButton value="Login" id="loginButton" action="#{loginBean.login}" update="messages"/>
+				<p:commandButton value="Giriş" id="loginButton" action="#{loginBean.login}" update="messages"/>
 
 			</h:panelGrid>
 			
