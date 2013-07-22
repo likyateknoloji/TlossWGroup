@@ -223,7 +223,7 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
-				Job jobb = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsName());
+				Job jobb = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				jobRuntimeProperties = jobb.getJobRuntimeProperties();
 
 				JobProperties job = jobRuntimeProperties.getJobProperties();
