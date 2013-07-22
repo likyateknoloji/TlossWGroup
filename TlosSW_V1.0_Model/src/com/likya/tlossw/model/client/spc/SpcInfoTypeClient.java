@@ -17,6 +17,7 @@ public class SpcInfoTypeClient implements Serializable {
 	
 	private String spcId;
 	private String jsName;
+	private String jsId;
 	private int numOfJobs;
 	private int numOfActiveJobs;
 
@@ -33,6 +34,11 @@ public class SpcInfoTypeClient implements Serializable {
 	
 	public SpcInfoTypeClient(SpcInfoTypeClient cloneSpcInfoTypeClient) {
 		super();
+		if(cloneSpcInfoTypeClient.getJsId() != null) {
+			jsId = new String(cloneSpcInfoTypeClient.getJsId());
+		}else {
+			jsId = null;
+		}		
 		if(cloneSpcInfoTypeClient.getSpcId() != null) {
 			spcId = new String(cloneSpcInfoTypeClient.getSpcId());
 		}else {
@@ -138,6 +144,14 @@ public class SpcInfoTypeClient implements Serializable {
 
 	public void setSerbestFolder(boolean serbestFolder) {
 		this.serbestFolder = serbestFolder;
+	}
+
+	public String getJsId() {
+		return jsId;
+	}
+
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
 	}
 
 }
