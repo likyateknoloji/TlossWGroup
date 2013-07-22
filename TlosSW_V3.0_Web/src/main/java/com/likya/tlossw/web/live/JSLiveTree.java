@@ -330,7 +330,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			ScenarioNode scenarioNode = new ScenarioNode();
 
-			scenarioNode.setId(spcInfoTypeClient.getJsName());
+			scenarioNode.setId(spcInfoTypeClient.getJsId());
+			scenarioNode.setName(spcInfoTypeClient.getJsName());
 
 			if (spcInfoTypeClient.isSerbestFolder()) {
 				scenarioNode.setId(resolveMessage("tlos.live.tree.free"));
@@ -361,7 +362,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		for (ScenarioNode tmpScenarioNode : serverScenarioNode.getScenarioNodes()) {
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(tmpScenarioNode.getSpcInfoTypeClient());
 
-			String scenarioText = spcInfoTypeClient.getJsName();
+			tmpScenarioNode.setName(spcInfoTypeClient.getJsName());
+			tmpScenarioNode.setId(spcInfoTypeClient.getJsId());
 
 			if (tmpScenarioNode.getScenarioNodes().size() > 0 || tmpScenarioNode.getJobNodes().size() > 0) {
 				scenarioNode.setExpanded(true);
@@ -371,7 +373,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			renderLiveTreeRecursive(scenarioNode, tmpScenarioNode);
 
-			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioText, scenarioNode);
+			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, tmpScenarioNode, scenarioNode);
 			scenarioNodeTree.setExpanded(false);
 		}
 
