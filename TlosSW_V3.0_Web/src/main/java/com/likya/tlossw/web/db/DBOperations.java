@@ -1757,7 +1757,7 @@ public class DBOperations implements Serializable {
 			Iterator<Item> dependencyListIterator = dependencyList.iterator();
 			ArrayList<String> depenArrayList = new ArrayList<String>();
 			while (dependencyListIterator.hasNext()) {
-				depenArrayList.add(dependencyListIterator.next().getJsName());
+				depenArrayList.add(dependencyListIterator.next().getJsId());
 			}
 			jobInfoTypeClient.setJobDependencyList(depenArrayList);
 		}
