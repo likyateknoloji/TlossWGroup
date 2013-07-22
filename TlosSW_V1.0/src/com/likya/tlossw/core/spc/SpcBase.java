@@ -118,7 +118,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			// TODO Hosuma gitmedi ama tip d�n�s�m� uyguladim.
 			// isleri onceliklerine gore siraya dizdigimiz bir dizi
 			// tanimlamistik, ona ekleyip siralandiralim.
-			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getID(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 			// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
 			// yok. Koyulacak.
 
@@ -146,8 +146,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 				myJob = getMyJob(jobRuntimeProperties);
 			}
 			if (myJob != null) {
-				// isi jobQueue ya ismi ile birlikte koyalim.
-				getJobQueue().put(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), myJob);
+				// isi jobQueue ya ID si ile birlikte koyalim.
+				getJobQueue().put(jobRuntimeProperties.getJobProperties().getID(), myJob);
 			}
 		}
 
@@ -176,7 +176,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			jobRuntimeProperties.setTreePath(getSpcId());
 
 			// TODO Ho�uma gitmedi ama tip d�n�s�m� yaptim
-			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getID(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 
 			Job myJob = null;
 
@@ -201,8 +201,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 			}
 
 			if (myJob != null) {
-				// isi jobQueue ya ismi ile birlikte koyalim.
-				getJobQueue().put(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName(), myJob);
+				// isi jobQueue ya id si ile birlikte koyalim.
+				getJobQueue().put(jobRuntimeProperties.getJobProperties().getID(), myJob);
 			}
 
 			Collections.sort(jobQueueIndex);
