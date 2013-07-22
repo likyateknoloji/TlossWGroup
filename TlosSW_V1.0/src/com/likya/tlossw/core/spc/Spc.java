@@ -505,9 +505,10 @@ public class Spc extends SpcBase {
 			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
 				// bir
 				// bagimlilik
-				if (getJobQueue().get(item.getJsName()) == null) {
+				if (getJobQueue().get(item.getJsId()) == null) {
 					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+					getMyLogger().error("     > Ana is Id : " + ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
@@ -527,7 +528,7 @@ public class Spc extends SpcBase {
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
-				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsName());
+				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				if (job == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
@@ -564,6 +565,8 @@ public class Spc extends SpcBase {
 					if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName() != null)
 						if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().equals(item.getJsDependencyRule().getStatusName())) {
 							variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+						} else {
+							variables.put(item.getDependencyID(), new BigDecimal(0)); // false
 						}
 				} else {
 					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
