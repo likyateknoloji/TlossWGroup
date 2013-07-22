@@ -372,6 +372,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="lt:jsName"/>
+                <xs:element ref="lt:jsId"/>
                 <xs:element ref="lt:jsType"/>
                 <xs:element ref="lt:jsPath" minOccurs="0"/>
                 <xs:element ref="lt:comment"/>
