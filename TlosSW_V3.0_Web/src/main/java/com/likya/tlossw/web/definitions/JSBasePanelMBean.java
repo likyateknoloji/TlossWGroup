@@ -92,10 +92,10 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 		if (dependencyList != null && dependencyList.sizeOfItemArray() > 0) {
 			for (Item item : dependencyList.getItemArray()) {
-				String depPathAndName = item.getJsPath() + "." + item.getJsName();
+				String depPathAndName = item.getJsPath() + "." + item.getJsId();
 
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(item.getJsName());
+				selectItem.setLabel("ID:" + item.getJsId() + " > " + item.getJsName() );
 				selectItem.setValue(depPathAndName);
 
 				/*
