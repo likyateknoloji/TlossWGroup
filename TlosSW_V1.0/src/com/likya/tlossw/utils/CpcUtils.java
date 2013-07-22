@@ -75,6 +75,7 @@ public class CpcUtils {
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 
+		spcInfoType.setJsId(tmpScenario.getID());
 		spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
