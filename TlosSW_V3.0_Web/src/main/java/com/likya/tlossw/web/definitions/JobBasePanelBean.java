@@ -86,7 +86,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	// baseJsInfos
 	private String jsName;
-
+	private String jsId;
 	private Collection<SelectItem> jobCommandTypeList = null;
 	private String jobCommandType;
 
@@ -608,7 +608,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 		dependencyItem.setJsName(draggedWsNode.getName());
-
+		dependencyItem.setJsId(draggedWsNode.getId());
 		depStateName = "";
 		depSubstateName = "";
 		depStatusName = "";
@@ -661,10 +661,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		composeDependencyExpression();
 
 		String depJobName = draggedWsNode.getName();
-
+		String depJobId = draggedWsNode.getId();
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
-		item.setValue(dependencyTreePath + "." + depJobName);
+		item.setValue(dependencyTreePath + "." + depJobId);
 
 		getManyJobDependencyList().add(item);
 
@@ -762,7 +762,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			}
 
 			for (int k = 0; k < jobProperties.getDependencyList().getItemArray().length; k++) {
-				String depPathAndName = jobProperties.getDependencyList().getItemArray(k).getJsPath() + "." + jobProperties.getDependencyList().getItemArray(k).getJsName();
+				String depPathAndName = jobProperties.getDependencyList().getItemArray(k).getJsPath() + "." + jobProperties.getDependencyList().getItemArray(k).getJsId();
 
 				if (selectedJobDependencyList[i].equals(depPathAndName)) {
 					jobProperties.getDependencyList().removeItem(k);
@@ -785,7 +785,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		DependencyList dependencyList = jobProperties.getDependencyList();
 
 		for (int i = 0; i < dependencyList.sizeOfItemArray(); i++) {
-			String depPathAndName = dependencyList.getItemArray(i).getJsPath() + "." + dependencyList.getItemArray(i).getJsName();
+			String depPathAndName = dependencyList.getItemArray(i).getJsPath() + "." + dependencyList.getItemArray(i).getJsId();
 
 			if (depPathAndName.equals(selectedJobDependencyList[0])) {
 				dependencyItem = dependencyList.getItemArray(i);
@@ -1138,6 +1138,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public StateInfosTabBean getStateInfosTabBean() {
 		return stateInfosTabBean;
+	}
+
+	public String getJsId() {
+		return jsId;
+	}
+
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
 	}
 
 }
