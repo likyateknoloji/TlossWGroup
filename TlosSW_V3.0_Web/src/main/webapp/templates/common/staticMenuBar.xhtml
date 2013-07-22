@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<!-- p:menubar rendered="true" model="#{tlosMenuModel.initMenu()}" /-->
+
+
+		<p:menubar>
+			<p:submenu label=" " icon="ui-icon-home">
+				<p:menuitem value="Home" url="/" icon="ui-icon-home" />
+			</p:submenu>
+
+			<!-- p:submenu label="File" icon="ui-icon-document">
+				<p:submenu label="New" icon="ui-icon-contact">
+					<p:menuitem value="Project" url="#" />
+					<p:menuitem value="Other" url="#" />
+				</p:submenu>
+				<p:menuitem value="Open" url="#" />
+				<p:separator />
+				<p:menuitem value="Quit" url="#" />
+			</p:submenu-->
+			<!--
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/jobsDef.jsf?" + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/jobsDef.jsf?" + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_MYDATA));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/calendarSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/alarmSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/agentSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "/inc/definitionPanels/resourceSearchPanel.jsf"));
+			menuitems.add(new MenuItems("Definitions", "ui-icon-document", "", "#"));
+			-->
+
+			<p:submenu label="Definitions" icon="ui-icon-document">
+				<p:menuitem value="Global Jobs &amp; Scenarios" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="My Jobs &amp; Scenarios" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+				<p:menuitem value="Calendars" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+				<p:menuitem value="Alarms" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+				<p:menuitem value="Agents" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+				<p:menuitem value="Resources" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+				<p:menuitem value="Advanced D." url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="Planning" icon="ui-icon-document">
+				<p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="WorkSpace" icon="ui-icon-document">
+				<p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="Reporting" icon="ui-icon-document">
+				<p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="Administration" icon="ui-icon-document">
+				<p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="Preferences" icon="ui-icon-document">
+				<p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+				<p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+			</p:submenu>
+
+			<p:submenu label="Help" icon="ui-icon-help">
+				<p:menuitem value="Contents" url="#" />
+				<p:submenu label="Search" icon="ui-icon-search">
+					<p:submenu label="Text">
+						<p:menuitem value="Workspace" url="#" />
+					</p:submenu>
+					<p:menuitem value="File" url="#" />
+				</p:submenu>
+			</p:submenu>
+
+			<!-- p:submenu label="Actions" icon="ui-icon-gear">
+				<p:submenu label="Ajax" icon="ui-icon-refresh">
+					<p:menuitem value="Save" actionListener="#{menuBean.save}" icon="ui-icon-disk" update="messages" />
+					<p:menuitem value="Update" actionListener="#{menuBean.update}" icon="ui-icon-arrowrefresh-1-w" update="messages" />
+				</p:submenu>
+				<p:submenu label="Non-Ajax" icon="ui-icon-newwin">
+					<p:menuitem value="Delete" actionListener="#{menuBean.delete}" icon="ui-icon-close" update="messages" ajax="false" />
+				</p:submenu>
+			</p:submenu-->
+
+			<p:menuitem value="Quit" url="http://www.primefaces.org" icon="ui-icon-close" />
+
+			<f:facet name="options">
+				<p:inputText style="margin-right:3px" />
+				<p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />
+			</f:facet>
+		</p:menubar>
+	</ui:composition>
+</body>
+</html>
