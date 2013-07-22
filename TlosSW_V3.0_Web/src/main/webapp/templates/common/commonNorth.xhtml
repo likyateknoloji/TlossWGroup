@@ -10,7 +10,7 @@
 	<ui:composition>
 
 		<h:form>
-			<p:menubar rendered="true" model="#{dynamicMenuItem.initMenu()}" />
+			<ui:include src="/templates/common/dynamicMenuBar.xhtml" />
 
 			<!-- p:slideMenu model="#{dynamicMenuItem.initMenu()}" / -->
 		</h:form>
