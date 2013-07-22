@@ -427,6 +427,7 @@ public class TlosSpaceWideBase {
 			try {
 
 				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
+				System.out.println(tlosProcessData.toString());
 
 				if (tlosProcessData == null || !tlosProcessData.validate()) {
 					throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
