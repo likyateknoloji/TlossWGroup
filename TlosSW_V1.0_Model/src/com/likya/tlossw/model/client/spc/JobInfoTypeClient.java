@@ -13,46 +13,45 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 
 public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
-
 	// Paramaters from JobPropertiesType
-	
-    /**
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6027037594587545575L;
-	
-	private String jobCommandType;
-    private ArrayList<String> jobDependencyList;
-    private String jobAutoRetry;
-    private ArrayList<Integer> jobReturnCodeIgnoreList;
 
- // Paramaters from JobRunPropertiesType
+	private String jobCommandType;
+	private ArrayList<String> jobDependencyList;
+	private String jobAutoRetry;
+	private ArrayList<Integer> jobReturnCodeIgnoreList;
+
+	// Paramaters from JobRunPropertiesType
 	private String plannedExecutionDate = "-";
 	private String completionDate = "-";
 	private String workDuration = "-";
 	private boolean isOver;
 	private LiveStateInfo liveStateInfo;
-	
+
 	private String resourceName;
 	private int agentId;
 	private String runId;
 	private String LSIDateTime;
 
 	private String outParameterName;
-	private String outParameterDesc;
+	private int outParameterType;
 	private String outParameterValue;
 
 	private String inParameterName;
-	private String inParameterDesc;
+	private int inParameterType;
 	private String inParameterValue;
 
- // Paramaters for webpage
-//	private String statusStr;
-	
-//	private int dependJobNumber;
-	
+	// Paramaters for webpage
+	// private String statusStr;
+
+	// private int dependJobNumber;
+
 	private String instanceId;
-	
+
 	public String getPlannedExecutionDate() {
 		return plannedExecutionDate;
 	}
@@ -117,17 +116,17 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.jobReturnCodeIgnoreList = jobReturnCodeIgnoreList;
 	}
 
-//	public void setStatusStr(String statusStr) {
-//		this.statusStr = statusStr;
-//	}
+	// public void setStatusStr(String statusStr) {
+	// this.statusStr = statusStr;
+	// }
 
-//	public int getDependJobNumber() {
-//		return dependJobNumber;
-//	}
-//
-//	public void setDependJobNumber(int dependJobNumber) {
-//		this.dependJobNumber = dependJobNumber;
-//	}
+	// public int getDependJobNumber() {
+	// return dependJobNumber;
+	// }
+	//
+	// public void setDependJobNumber(int dependJobNumber) {
+	// this.dependJobNumber = dependJobNumber;
+	// }
 
 	public LiveStateInfo getLiveStateInfo() {
 		return liveStateInfo;
@@ -169,10 +168,10 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		return LSIDateTime;
 	}
 
-//	public String getStatusStr() {
-//		return statusStr;
-//	}
-	
+	// public String getStatusStr() {
+	// return statusStr;
+	// }
+
 	public String getInstanceId() {
 		return instanceId;
 	}
@@ -197,28 +196,12 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.outParameterValue = outParameterValue;
 	}
 
-	public String getOutParameterDesc() {
-		return outParameterDesc;
-	}
-
-	public void setOutParameterDesc(String outParameterDesc) {
-		this.outParameterDesc = outParameterDesc;
-	}
-
 	public String getInParameterName() {
 		return inParameterName;
 	}
 
 	public void setInParameterName(String inParameterName) {
 		this.inParameterName = inParameterName;
-	}
-
-	public String getInParameterDesc() {
-		return inParameterDesc;
-	}
-
-	public void setInParameterDesc(String inParameterDesc) {
-		this.inParameterDesc = inParameterDesc;
 	}
 
 	public String getInParameterValue() {
@@ -228,6 +211,23 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	public void setInParameterValue(String inParameterValue) {
 		this.inParameterValue = inParameterValue;
 	}
+
+	public int getOutParameterType() {
+		return outParameterType;
+	}
+
+	public void setOutParameterType(int outParameterType) {
+		this.outParameterType = outParameterType;
+	}
+
+	public int getInParameterType() {
+		return inParameterType;
+	}
+
+	public void setInParameterType(int inParameterType) {
+		this.inParameterType = inParameterType;
+	}
+
 
 
 }
