@@ -396,6 +396,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				spcInfoTypeClient.setSerbestFolder(true);
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
+				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
 			}
 			spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
 			spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
@@ -602,6 +603,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			spcInfoTypeClient.setJsName(scenarioId);
 		} else {
 			spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
+			spcInfoTypeClient.setJsId(spcInfoType.getJsId());
 		}
 		spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
 		spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
