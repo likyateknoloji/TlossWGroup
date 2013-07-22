@@ -170,13 +170,13 @@ public class GraphViewServlet extends HttpServlet {
 			if(job.getDependencyList() != null && job.getDependencyList().getItemArray() != null && job.getDependencyList().getItemArray().length > 0) {
 				
 				for(Item dependencyItem: job.getDependencyList().getItemArray()) {
-					edgesML += "<Edge fromID=\"" + dependencyItem.getJsName() + "\" toID=\"" + job.getBaseJobInfos().getJsName() + "\" color=\"0x8F8FFF\" flow=\"50\"  />\n";
+					edgesML += "<Edge fromID=\"" + dependencyItem.getJsId() + "\" toID=\"" + job.getID() + "\" color=\"0x8F8FFF\" flow=\"50\"  />\n";
 				}
 			} else {
-				edgesML += "<Edge fromID=\"" + rootKey + "\" toID=\"" + job.getBaseJobInfos().getJsName() + "\" color=\"0x8F8FFF\" flow=\"50\" />\n";
+				edgesML += "<Edge fromID=\"" + rootKey + "\" toID=\"" + job.getID() + "\" color=\"0x8F8FFF\" flow=\"50\" />\n";
 			} 
 			
-			gml += "<Node id=\"" + job.getBaseJobInfos().getJsName() + "\" name=\"" + job.getBaseJobInfos().getJsName() + "\" desc=\"" + job.getBaseJobInfos().getJsName() + "-" + job.getBaseJobInfos().getComment() + "\" nodeColor=\"" + colorIndicator + "\" nodeSize=\""
+			gml += "<Node id=\"" + job.getID() + "\" name=\"" + job.getBaseJobInfos().getJsName() + "\" desc=\"" + job.getBaseJobInfos().getJsName() + "-" + job.getBaseJobInfos().getComment() + "\" nodeColor=\"" + colorIndicator + "\" nodeSize=\""
 				+ "32" + "\" nodeClass=\"" + "earth" + "\" nodeIcon=\"" + nodeIcon + "\" />\n";
 		}
 		
