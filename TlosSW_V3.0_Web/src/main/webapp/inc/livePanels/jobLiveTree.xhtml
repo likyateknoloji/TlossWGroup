@@ -95,9 +95,14 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.inParameterName}" readonly="true" style="width: 150px;"/>
 					
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-					<p:inputText value="#{jobMBean.jobInTyCl.inParameterDesc}" readonly="true" style="width: 150px;"/>
-					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
+					<p:inputText value="#{msgs['tlos.combo.integer']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 1}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.string']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 2}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.date']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 3}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.time']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 4}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.dateTime']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 5}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.xPath']}" rendered="#{jobMBean.jobInTyCl.inParameterType eq 6}" readonly="true" style="width: 150px;"/>
+
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
 					<p:inputTextarea value="#{jobMBean.jobInTyCl.inParameterValue}" readonly="true" 
 						rows="10" cols="70" autoResize="false"/>
@@ -112,8 +117,13 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.outParameterName}" readonly="true" style="width: 150px;"/>
 					
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-					<p:inputText value="#{jobMBean.jobInTyCl.outParameterDesc}" readonly="true" style="width: 150px;"/>
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
+					<p:inputText value="#{msgs['tlos.combo.integer']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 1}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.string']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 2}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.date']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 3}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.time']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 4}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.dateTime']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 5}" readonly="true" style="width: 150px;"/>
+					<p:inputText value="#{msgs['tlos.combo.xPath']}" rendered="#{jobMBean.jobInTyCl.outParameterType eq 6}" readonly="true" style="width: 150px;"/>
 					
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
 					<p:inputTextarea value="#{jobMBean.jobInTyCl.outParameterValue}" readonly="true" 
