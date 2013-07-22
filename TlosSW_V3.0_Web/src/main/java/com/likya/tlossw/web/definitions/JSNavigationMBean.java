@@ -322,6 +322,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			} else {
 				((JobBasePanelBean) currentPanelMBeanRef).setJobPathInScenario(selectedJSPath);
 				((JobBasePanelBean) currentPanelMBeanRef).setJsName(jobProperties.getBaseJobInfos().getJsName());
+				((JobBasePanelBean) currentPanelMBeanRef).setJsId(jobProperties.getID());
 			}
 
 			RequestContext context = RequestContext.getCurrentInstance();
