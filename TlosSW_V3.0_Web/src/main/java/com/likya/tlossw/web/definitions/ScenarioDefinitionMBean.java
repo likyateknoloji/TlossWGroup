@@ -158,7 +158,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	// sağ tıkla yeni senaryo ekle seçilince buraya geliyor
 	public void addNewScenario() {
-		initScenarioPanel();
+		init();
 
 		setJsInsertButton(true);
 		setJsUpdateButton(false);
