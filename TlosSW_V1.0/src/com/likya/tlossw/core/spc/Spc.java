@@ -105,9 +105,13 @@ public class Spc extends SpcBase {
 		 */
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcId(), getJobQueue().size()));
-			getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin islerin baslatildigi bilgisi InfoBusManager a iletildi.");
+			if(SpaceWideRegistry.isDebug) {
+				getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin islerin baslatildigi bilgisi InfoBusManager a iletildi.");
+			}
 		} else {
-			getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " senaryosu baslangic bilgilerini ekleme asamasinda, InfoBusManager ile ilgili bir problem var. Bos olmamali !.");
+			if(SpaceWideRegistry.isDebug) {
+				getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " senaryosu baslangic bilgilerini ekleme asamasinda, InfoBusManager ile ilgili bir problem var. Bos olmamali !.");
+			}
 			System.out.println("getSpaceWideRegistry().getInfoBusManager() == null !");
 			System.exit(-1);
 		}
@@ -162,12 +166,15 @@ public class Spc extends SpcBase {
 					// is kuyrugunun durumunu dokelim. Calisan, bekleyen ve
 					// biten islerin sayisini tespit edelim.
 					/**
-					 * TODO Burada listenin loglanmas� s�ras�nda, logun sadece ilgili senaryo y�neticisi loguna y�nlendirilmesi gerekiyor.
+					 * TODO Burada listenin loglanması sırasında, 
+					 * logun sadece ilgili senaryo yöneticisi loguna yönlendirilmesi gerekiyor.
 					 * 
-					 * @author serkan ta�
+					 * @author serkan taş
 					 *         20.09.2012
 					 */
-					JobQueueOperations.dumpJobQueue(getSpcId(), getJobQueue());
+					if(SpaceWideRegistry.isDebug) {
+						JobQueueOperations.dumpJobQueue(getSpcId(), getJobQueue());
+					}
 
 				} catch (Throwable t) {
 					t.printStackTrace();
