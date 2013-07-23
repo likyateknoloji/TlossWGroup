@@ -21,7 +21,7 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 					<xs:element ref="transform"/>
 				</xs:choice>
 			</xs:sequence>
-			<xs:attribute name="id" use="required" type="xs:integer"/>
+			<xs:attribute name="id" use="optional" type="xs:integer"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="process">
