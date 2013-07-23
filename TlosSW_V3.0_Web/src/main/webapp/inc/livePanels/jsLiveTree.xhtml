@@ -70,6 +70,11 @@
 
 		</p:tree>
 		
+		<p:blockUI block=":center" trigger="tree">  
+        	LOADING<br />
+			<p:graphicImage value="/images/ajax-loader.gif" />
+		</p:blockUI>
+		
 		<p:poll interval="5" listener="#{jSLiveTree.renderLiveTree}" update=":jsLiveTreeForm:tree" />
 			
 	</h:form>
