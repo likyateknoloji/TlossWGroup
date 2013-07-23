@@ -41,7 +41,7 @@ declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:st
         <com:jsName>Serbest isler</com:jsName>
         <com:comment>Serbest isler burada yer alir</com:comment>
         <dat:jsIsActive>YES</dat:jsIsActive>
-        <com:userId>4</com:userId>
+        <com:userId>{$userId}</com:userId>
     </dat:baseScenarioInfos>
     <dat:jobList/>
     <dat:timeManagement/>
