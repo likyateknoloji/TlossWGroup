@@ -185,6 +185,16 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+	<xs:element name="logAnalysis">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="findWhat"/>
+				<xs:element ref="action"/>
+			</xs:sequence>
+			<xs:attribute name="active" use="required" type="xs:boolean"/>
+			<xs:attribute name="id" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
     <xs:element name="jobProperties">
         <xs:complexType>
             <xs:sequence>
@@ -198,6 +208,7 @@
                 <xs:element ref="concurrencyManagement"/>
                 <xs:element ref="alarmPreference" minOccurs="0"/>
                 <xs:element ref="timeManagement"/>
+                <xs:element ref="logAnalysis" minOccurs="0"/>
                 <xs:element ref="lt:localParameters" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="ID" use="required">
@@ -334,6 +345,75 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+	<xs:element name="findWhat">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:NCName">
+					<xs:attribute name="direction" use="required" type="directionType"/>
+					<xs:attribute name="matchCase" use="required" type="xs:boolean"/>
+					<xs:attribute name="matchWholeWordOnly" type="xs:boolean"/>
+					<xs:attribute name="mode" use="required" type="modeType"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="action">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="then"/>
+				<xs:element minOccurs="0" ref="else"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="then">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="event"/>
+				<xs:element ref="forcedResult"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="else">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="event"/>
+				<xs:element ref="forcedResult"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="event">
+		<xs:complexType>
+			<xs:attribute name="code" use="required" type="codeType"/>
+			<xs:attribute name="id" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="forcedResult">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="state-types:LiveStateInfo"/>
+			</xs:sequence>
+			<xs:attribute name="active" use="required" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="modeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="normal"/>
+			<xs:enumeration value="regEx"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="directionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Up"/>
+			<xs:enumeration value="Down"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="codeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="email"/>
+			<xs:enumeration value="waitMe"/>
+		</xs:restriction>
+	</xs:simpleType>
+    
     <xs:element name="TlosProcessData">
         <xs:complexType mixed="true">
             <xs:sequence>
