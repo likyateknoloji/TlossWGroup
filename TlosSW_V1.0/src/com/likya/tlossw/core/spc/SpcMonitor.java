@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class SpcMonitor implements Runnable {
@@ -50,14 +51,15 @@ public class SpcMonitor implements Runnable {
 				SubstateNameDocument.SubstateName.Enum  substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName();
 				StatusNameDocument.StatusName.Enum  statusName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName();
 			
-				String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
-				logString += " [Job Name : " + jobProperties.getID() + "]";
-				logString += " [Tarih : " + DateUtils.getW3CDateTime() + "]";
-				logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
-				logString += " [Substattate Name : " + (substateName == null ? "" : substateName) + "]";
-				logString += " [Status Name : " + (statusName == null ? "" : statusName) + "]";
-
-				myLogger.info(logString);
+				if(SpaceWideRegistry.isDebug) {
+					String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
+					logString += " [Job Name : " + jobProperties.getID() + "]";
+					logString += " [Tarih : " + DateUtils.getW3CDateTime() + "]";
+					logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
+					logString += " [Substattate Name : " + (substateName == null ? "" : substateName) + "]";
+					logString += " [Status Name : " + (statusName == null ? "" : statusName) + "]";
+					myLogger.info(logString);
+				}
 			}
 			
 
@@ -66,7 +68,7 @@ public class SpcMonitor implements Runnable {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				//	e.printStackTrace();
-				myLogger.info("SpcMonitor harici olarak akamete u�rat�ld� !");
+				myLogger.info("SpcMonitor harici olarak akamete uğratıldı !");
 				break;
 			}
 		}
