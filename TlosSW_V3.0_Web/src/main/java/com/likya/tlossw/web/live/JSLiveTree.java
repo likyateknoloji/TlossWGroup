@@ -326,7 +326,10 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		while (keyIterator.hasNext()) {
 
 			String scenarioId = keyIterator.next();
-			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(serverScenarioNodes.get(scenarioId).getSpcInfoTypeClient());
+			
+			ScenarioNode serverScenarioNode = serverScenarioNodes.get(scenarioId);
+			
+			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(serverScenarioNode.getSpcInfoTypeClient());
 
 			ScenarioNode scenarioNode = new ScenarioNode();
 
@@ -347,10 +350,18 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			scenarioNodeTree.getChildren().add(dummyNode);
 			scenarioNodeTree.setExpanded(false);
 
-			if (serverScenarioNodes.get(scenarioId).getScenarioNodes().size() > 0 || serverScenarioNodes.get(scenarioId).getJobNodes().size() > 0) {
+			System.out.println();
+			System.out.println("************************************************************");
+			System.out.println();
+			System.out.println("Working for scenario : " + spcInfoTypeClient.getJsName());
+			
+			if (serverScenarioNode.getScenarioNodes().size() > 0 || serverScenarioNode.getJobNodes().size() > 0) {
+				System.out.println("Cleaning children of scenario : " + scenarioNode.getName());
 				scenarioNodeTree.getChildren().clear();
 				scenarioNodeTree.setExpanded(true);
-				renderLiveTreeRecursive(scenarioNodeTree, serverScenarioNodes.get(scenarioId));
+				System.out.println("Recursing for scenario : " + spcInfoTypeClient.getJsName());
+				System.out.println("Scenario : " + serverScenarioNode.getName() + " Job List Size : " + serverScenarioNode.getJobNodes().size() + " Scenario List Size " + serverScenarioNode.getScenarioNodes().size());
+				renderLiveTreeRecursive(scenarioNodeTree, serverScenarioNode);
 			}
 		}
 	}
@@ -364,17 +375,17 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			tmpScenarioNode.setName(spcInfoTypeClient.getJsName());
 			tmpScenarioNode.setId(spcInfoTypeClient.getJsId());
+			
+			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, tmpScenarioNode, scenarioNode);
+			scenarioNodeTree.getChildren().add(dummyNode);
+			scenarioNodeTree.setExpanded(false);
 
 			if (tmpScenarioNode.getScenarioNodes().size() > 0 || tmpScenarioNode.getJobNodes().size() > 0) {
-				scenarioNode.setExpanded(true);
-			} else {
-				scenarioNode.setExpanded(false);
+				scenarioNodeTree.getChildren().clear();
+				scenarioNodeTree.setExpanded(true);
+				renderLiveTreeRecursive(scenarioNodeTree, tmpScenarioNode);
 			}
 
-			renderLiveTreeRecursive(scenarioNode, tmpScenarioNode);
-
-			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, tmpScenarioNode, scenarioNode);
-			scenarioNodeTree.setExpanded(false);
 		}
 
 	}
@@ -384,11 +395,13 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		Iterator<JobNode> jobNodeIterator = jobNodes.iterator();
 
 		while (jobNodeIterator.hasNext()) {
-
-			JobInfoTypeClient jobInfoTypeClient = jobNodeIterator.next().getJobInfoTypeClient();
+			
+			JobNode tmpJobNode = jobNodeIterator.next();
+			JobInfoTypeClient jobInfoTypeClient = tmpJobNode.getJobInfoTypeClient();
 
 			String jobText = jobInfoTypeClient.getJobKey();
 			JobNode jobNode = new JobNode();
+			jobNode.setId(tmpJobNode.getId());
 			jobNode.setLabelText(jobText);
 			
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
