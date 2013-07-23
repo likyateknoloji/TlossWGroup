@@ -1192,6 +1192,7 @@
 				<dat:DependencyList>
 					<dat:Item dependencyID="DEP1">
 						<com:jsName>Read Text File</com:jsName>
+						<com:jsId>5</com:jsId>
 						<com:jsType>JOB</com:jsType>
 						<com:jsPath/>
 						<com:comment>file_process_job</com:comment>
