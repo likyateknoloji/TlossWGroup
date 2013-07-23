@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
 
 <body>
 	<ui:composition>
 		<h:outputLink value="http://www.likyateknoloji.com">
-                                <p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
-        </h:outputLink>
-		<a href="#"><img src="images/likyalg01.png" width="51" height="44"
-			alt="" border="0" /></a> Likya Teknoloji &#169; 2008-2013 <a
-			href="http://www.tlos.com.tr/">Tlos Workload Automation Solutions
-			...</a>
+			<p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
+		</h:outputLink>
+		
+		<a href="#"><p:graphicImage value="/images/likyalg01.png" /></a> 
+		
+		Likya Teknoloji &#169; 2008-2013 
+		
+		<a href="http://www.tlos.com.tr/">Tlos Workload Automation Solutions...</a>
+		
 		<br />
 
 		<h:form>
 			<p:dock>
 				<p:menuitem label="Finder" icon="/images/macosx/finder.png" url="#" />
-				<p:menuitem label="Terminal" icon="/images/macosx/terminal.png"
-					url="#" onclick="terminal.show();term.focus();" />
+				<p:menuitem label="Terminal" icon="/images/macosx/terminal.png" url="#" onclick="terminal.show();term.focus();" />
 				<p:menuitem label="Safari" icon="/images/macosx/safari.png" url="#" />
 				<p:menuitem label="iTunes" icon="/images/macosx/itunes.png" url="#" />
 				<p:menuitem label="iChat" icon="/images/macosx/ichat.png" url="#" />
 				<p:menuitem label="Trash" icon="/images/macosx/trash.png" url="#" />
 			</p:dock>
 			<p:stack icon="/images/stack/stack.png">
-				<p:menuitem value="Aperture" icon="/images/stack/aperture.png"
-					url="#" />
-				<p:menuitem value="Photoshop" icon="/images/stack/photoshop.png"
-					url="#" />
+				<p:menuitem value="Aperture" icon="/images/stack/aperture.png" url="#" />
+				<p:menuitem value="Photoshop" icon="/images/stack/photoshop.png" url="#" />
 				<p:menuitem value="Coda" icon="/images/stack/coda.png" url="#" />
 				<p:menuitem value="Safari" icon="/images/stack/safari.png" url="#" />
 				<p:menuitem value="Finder" icon="/images/stack/finder.png" url="#" />
