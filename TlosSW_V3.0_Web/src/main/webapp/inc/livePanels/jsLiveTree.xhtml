@@ -9,6 +9,11 @@
 	<h:form id="jsLiveTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
+		<p:contextMenu for="tree" nodeType="calisanisler">
+			<p:menuitem value="Refresh" update="tree"
+				actionListener="#{jSLiveTree.renderLiveTree}" icon="ui-icon-refresh" />
+		</p:contextMenu>
+		
 		<p:contextMenu for="tree" nodeType="scenario">
 			<p:menuitem value="#{msgs['tlos.button.view']}" update="messages"
 				actionListener="#{jSLiveTree.viewScenario}" icon="ui-icon-search" />
