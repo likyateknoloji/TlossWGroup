@@ -31,6 +31,8 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private static final long serialVersionUID = 579016499754067105L;
 
 	private transient static SpaceWideRegistry spaceWideRegistry;
+	
+	public static boolean isDebug = false;
 
 	private boolean FIRST_TIME = true;
 	
