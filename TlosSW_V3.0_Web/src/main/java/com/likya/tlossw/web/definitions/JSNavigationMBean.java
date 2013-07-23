@@ -115,9 +115,11 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		String jsId = wsNode.getId();
+		
 
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
+			int jobType = ((WsJobNode) wsNode).getJobType();
 			boolean isInsert = false;
 
 			jobProperties = null;
@@ -128,11 +130,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 				isInsert = true;
 			}
 
-			if (jobProperties != null && jobProperties.getBaseJobInfos() != null) {
-				int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+			initializeSelectedJobPanel(jobType, isInsert);
 
-				initializeSelectedJobPanel(jobType, isInsert);
-			}
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
 			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
