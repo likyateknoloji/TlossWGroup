@@ -99,21 +99,21 @@ public class JobQueueOperations {
 			SpaceWideRegistry.getGlobalLogger().info(queueDumpDebug);
 			// Logger.getLogger(SpcBase.class).info("     > "+ this.getJsName()
 			// + " senaryosunda guncel is Sayisi : " + getJobQueue().size());
-			SpaceWideRegistry.getGlobalLogger().info("     > " + spcID + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
+			if(SpaceWideRegistry.isDebug) {
+				SpaceWideRegistry.getGlobalLogger().info("     > " + spcID + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
+			}
 		}
 
 		return;
 	}
 
 	/**
-	 * Spc : Sub Process Controller a ait i� listesinin diske yaz�lmas� i�levini
-	 * g�r�r
+	 * Spc : Sub Process Controller a ait iş listesinin diske yazılması işlevini görür
 	 * 
 	 * @param fileName
-	 *            : Diskte tutlacak dosya ismi ki bu isim her Spc i�in farkl�
-	 *            olmal�
+	 *            : Diskte tutlacak dosya ismi ki bu isim her Spc için farklı olmalı
 	 * @param jobQueue
-	 *            : Spc'ye ait i� listesi
+	 *            : Spc'ye ait iş listesi
 	 * @return
 	 */
 	public static boolean persistJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
