@@ -212,7 +212,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		// output parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
 		SpecialParameters specialParameters = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-		
+
 		if (specialParameters != null && specialParameters.getOutParam() != null && specialParameters.getOutParam().sizeOfParameterArray() > 0) {
 
 			OutParam outParam = specialParameters.getOutParam();
@@ -723,8 +723,112 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 		return tlosSpaceWideServerNode;
 	}
-
+	
 	private ScenarioNode getDetails(JmxUser jmxUser, ScenarioNode treeNode) {
+
+		ScenarioNode newScenarioNode = new ScenarioNode();
+		newScenarioNode.setSpcInfoTypeClient(treeNode.getSpcInfoTypeClient());
+
+		SpcLookUpTableTypeClient spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId());
+		
+		for (String spcId : spcLookUpTableTypeClient.getSpcInfoTypeClientList().keySet()) {
+			
+			ScenarioNode innerScenarioNode = scenarioListContainsSpc(treeNode.getScenarioNodes(), spcId);
+			
+			if(innerScenarioNode != null) {
+				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
+				newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
+			} else {
+				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
+				ScenarioNode tmpScenarioNode = new ScenarioNode();
+				tmpScenarioNode.setId(tmpScenario.getJsId());
+				tmpScenarioNode.setName(tmpScenario.getJsName());
+				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
+				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
+			}
+			
+			
+		}
+		
+		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId(), false);
+		for (JobInfoTypeClient jobInfoTypeClient : jobInfoTypeClientList) {
+			JobNode jobNode = new JobNode();
+			jobNode.setId(jobInfoTypeClient.getJobId());
+			jobNode.setName(jobInfoTypeClient.getJobKey());
+			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
+			newScenarioNode.getJobNodes().add(jobNode);
+		}
+
+		return newScenarioNode;
+	}
+
+	private ScenarioNode scenarioListContainsSpc(ArrayList<ScenarioNode> scenarioNodes, String spcId) {
+		for (ScenarioNode scenarioNode : scenarioNodes) {
+			if (scenarioNode.getSpcInfoTypeClient().getSpcId().equals(spcId)) {
+				return scenarioNode;
+			}
+		}
+		return null;
+	}
+	
+	/*
+	 
+	private ScenarioNode getDetailsMerve(JmxUser jmxUser, ScenarioNode treeNode) {
+		
+		System.out.println("Getting details of scenario " + treeNode.getSpcInfoTypeClient().getJsName());
+
+		ScenarioNode newScenarioNode = new ScenarioNode();
+		newScenarioNode.setSpcInfoTypeClient(treeNode.getSpcInfoTypeClient());
+
+		long startTime = System.currentTimeMillis();
+
+		SpcLookUpTableTypeClient spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId());
+
+		long endTime = System.currentTimeMillis();
+
+		System.out.println("retrieveSpcLookupTable() süresi --> " + (endTime - startTime));
+
+		for (String spcId : spcLookUpTableTypeClient.getSpcInfoTypeClientList().keySet()) {
+
+			if (!treeNode.getScenarioNodes().isEmpty()) {
+
+				for (ScenarioNode expandedScenarioNode : treeNode.getScenarioNodes()) {
+
+					if (expandedScenarioNode.getSpcInfoTypeClient().getSpcId().equals(spcId)) {
+						ScenarioNode newInnerScenarioNode = getDetails(jmxUser, expandedScenarioNode);
+						newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
+
+						break;
+					}
+				}
+			}
+
+			if (!scenarioListContainsSpc(newScenarioNode.getScenarioNodes(), spcId)) {
+				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
+				ScenarioNode tmpScenarioNode = new ScenarioNode();
+				tmpScenarioNode.setId(tmpScenario.getJsId());
+				tmpScenarioNode.setName(tmpScenario.getJsName());
+				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
+				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
+			}
+		}
+
+		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId(), false);
+		for (JobInfoTypeClient jobInfoTypeClient : jobInfoTypeClientList) {
+			JobNode jobNode = new JobNode();
+			jobNode.setId(jobInfoTypeClient.getJobId());
+			jobNode.setName(jobInfoTypeClient.getJobKey());
+			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
+			newScenarioNode.getJobNodes().add(jobNode);
+		}
+
+		return newScenarioNode;
+	}
+	*/
+
+
+	/*
+	private ScenarioNode getDetailsOld(JmxUser jmxUser, ScenarioNode treeNode) {
 
 		ScenarioNode newScenarioNode = new ScenarioNode();
 		newScenarioNode.setSpcInfoTypeClient(treeNode.getSpcInfoTypeClient());
@@ -739,6 +843,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			for (String spcId : spcLookUpTableTypeClient.getSpcInfoTypeClientList().keySet()) {
 				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
+				tmpScenarioNode.setId(tmpScenario.getJsId());
+				tmpScenarioNode.setName(tmpScenario.getJsName());
 				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
 			}
@@ -747,12 +853,15 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId(), false);
 		for (JobInfoTypeClient jobInfoTypeClient : jobInfoTypeClientList) {
 			JobNode jobNode = new JobNode();
+			jobNode.setId(jobInfoTypeClient.getJobId());
+			jobNode.setName(jobInfoTypeClient.getJobKey());
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			newScenarioNode.getJobNodes().add(jobNode);
 		}
 
 		return newScenarioNode;
 	}
+	*/
 
 	public Object retrieveGlobalStates(JmxAgentUser jmxAgentUser) {
 		if (!JMXTLSServer.authorizeWeb(jmxAgentUser)) {
