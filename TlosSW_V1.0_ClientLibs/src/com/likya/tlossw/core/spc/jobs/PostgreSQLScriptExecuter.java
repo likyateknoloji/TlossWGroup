@@ -31,7 +31,7 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

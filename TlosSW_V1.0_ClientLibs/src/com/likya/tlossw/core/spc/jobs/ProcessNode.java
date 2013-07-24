@@ -48,7 +48,7 @@ public class ProcessNode extends Job {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

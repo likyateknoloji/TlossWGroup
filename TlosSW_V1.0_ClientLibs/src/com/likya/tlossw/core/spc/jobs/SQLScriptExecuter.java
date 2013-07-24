@@ -15,7 +15,7 @@ public abstract class SQLScriptExecuter extends ExecuteInShell {
 	}
 
 	@Override
-	public void run() {
+	public void localRun() {
 	}
 
 }
