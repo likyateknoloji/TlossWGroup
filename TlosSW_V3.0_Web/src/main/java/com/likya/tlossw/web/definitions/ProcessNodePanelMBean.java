@@ -165,7 +165,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 				transformType = processNode.getTransform().getWith().toString();
 
 				if (transformType.equals(With.XSLT.toString())) {
-					transformCommand = "<![CDATA[" + processNode.getTransform().getStringValue() + "]]>";
+					transformCommand = processNode.getTransform().getStringValue();
 				}
 			}
 		}
@@ -295,6 +295,9 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 
 			if (sourceType.equals(Source.XML.toString()) && getTransformType().equals(With.XSLT.toString())) {
 				transform.setWith(With.XSLT);
+				if(!transformCommand.startsWith("<![CDATA[")) {
+					transformCommand = new String("<![CDATA[".concat(transformCommand).concat("]]>"));
+				}
 				transform.setStringValue(transformCommand);
 			}
 
