@@ -31,6 +31,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private Collection<SelectItem> jobTypeDefList;
 	private Collection<SelectItem> relativeTimeOptionList;
 	private Collection<SelectItem> unitTypeList;
+	private Collection<SelectItem> jobStateNameList;
+	private Collection<SelectItem> jobSubStateNameList;
 	private Collection<SelectItem> jobStatusNameList;
 	private Collection<SelectItem> agentChoiceMethodList;
 	private Collection<SelectItem> jobStateList;
@@ -397,13 +399,27 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		this.unitTypeList = unitTypeList;
 	}
 
+	public Collection<SelectItem> getJobStateNameList() {
+		if(jobStateNameList == null) {
+			jobStateNameList = ComboListUtils.constructJobStateList();
+		}
+		return jobStateNameList;
+	}
+
+	public Collection<SelectItem> getJobSubStateNameList() {
+		if(jobSubStateNameList == null) {
+			jobSubStateNameList = ComboListUtils.constructJobSubStateList();
+		}
+		return jobSubStateNameList;
+	}
+	
 	public Collection<SelectItem> getJobStatusNameList() {
 		if(jobStatusNameList == null) {
 			jobStatusNameList = ComboListUtils.constructJobStatusNameList();
 		}
 		return jobStatusNameList;
 	}
-
+	
 	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
 		this.jobStatusNameList = jobStatusNameList;
 	}
