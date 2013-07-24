@@ -11,6 +11,7 @@ import org.apache.xmlbeans.XmlException;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agentconfig.AgentConfigInfoDocument.AgentConfigInfo;
+import com.likya.tlos.model.xmlbeans.agentconfig.ServerInfoDocument.ServerInfo;
 import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument;
 import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalStateDefinition;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
@@ -250,8 +251,10 @@ public class TlosSWAgentBase {
 
 		if (!SWAgentRegistry.TEST) {
 
-			String resourceId = getSwAgentRegistry().getAgentConfigInfo().getSettings().getServerInfo().getResource().getStringValue();
-			int portNumber = (int) getSwAgentRegistry().getAgentConfigInfo().getSettings().getServerInfo().getPortNumber();
+			ServerInfo serverInfo =  getSwAgentRegistry().getAgentConfigInfo().getSettings().getServerInfo();
+			String resourceId = serverInfo.getResource().getStringValue();
+			
+			int portNumber = serverInfo.getPortNumber();
 
 			swAgentLogger.info(resourceId + " için server tarafýnda þifre tanýmý kontrol ediliyor...");
 			agentId = TSWServerJmxClient.checkJmxUser(jmxAgentUser, resourceId, portNumber);
