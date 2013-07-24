@@ -75,7 +75,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		// mediator.authorizeResource("AvailableResources")) {
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, new ResourceNode(resolveMessage("root")), null);
-		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI,  new ResourceNode(resolveMessage("likya.agac.kaynaklistesi")), root);
+		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI,  new ResourceNode(resolveMessage("tlos.live.panel.resources.tree")), root);
 
 		kaynakListesi.getChildren().add(dummyNode);
 
