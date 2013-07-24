@@ -21,6 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
+import com.likya.tlossw.core.spc.helpers.LogAnalyser;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.helpers.WatchDogTimer;
@@ -64,7 +65,7 @@ public abstract class Job implements Runnable, Serializable {
 
 	// Joblarda kullanilmak icin gerekebiliyor. Ornek XSLT kodu, DB den aliniyor, agentlardan DB ye erisim olmadigindan oncesinde alinip buraya konacak. HS
 	private StreamSource requestedStream;
-	
+
 	private Calendar startTime;
 	private JsRealTime jobRealTime;
 
@@ -75,6 +76,16 @@ public abstract class Job implements Runnable, Serializable {
 		this.jobRuntimeProperties = jobRuntimeProperties;
 		this.globalLogger = globalLogger;
 	}
+
+	public final void run() {
+
+		localRun();
+
+		LogAnalyser.evaluate(getJobRuntimeProperties().getJobProperties());
+
+	}
+
+	protected abstract void localRun();
 
 	public Thread getMyExecuter() {
 		return myExecuter;
@@ -218,18 +229,13 @@ public abstract class Job implements Runnable, Serializable {
 	public synchronized void addStateInfo(LiveStateInfo liveStateInfo) {
 
 		/*
-		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos().
-		 * insertNewLiveStateInfo(0);
-		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos
-		 * ().getLiveStateInfoArray
-		 * (0).setLSIDateTime(DateUtils.getW3CDateTime());
-		 * jobRuntimeProperties.getJobProperties
+		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos(). insertNewLiveStateInfo(0);
+		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos ().getLiveStateInfoArray
+		 * (0).setLSIDateTime(DateUtils.getW3CDateTime()); jobRuntimeProperties.getJobProperties
 		 * ().getLiveStateInfos().getLiveStateInfoArray
-		 * (0).setStateName(liveStateInfo.getStateName());
-		 * jobRuntimeProperties.getJobProperties
+		 * (0).setStateName(liveStateInfo.getStateName()); jobRuntimeProperties.getJobProperties
 		 * ().getLiveStateInfos().getLiveStateInfoArray
-		 * (0).setSubstateName(liveStateInfo.getSubstateName());
-		 * jobRuntimeProperties
+		 * (0).setSubstateName(liveStateInfo.getSubstateName()); jobRuntimeProperties
 		 * .getJobProperties().getLiveStateInfos().getLiveStateInfoArray
 		 * (0).setStatusName(liveStateInfo.getStatusName());
 		 */
@@ -515,6 +521,5 @@ public abstract class Job implements Runnable, Serializable {
 	public void setRequestedStream(StreamSource requestedStream) {
 		this.requestedStream = requestedStream;
 	}
-
 
 }
