@@ -7,6 +7,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.error.SWErrorDocument.SWError;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -21,7 +22,7 @@ public class ErrorDbUtils extends DBBase {
 		
 		String errorXML = error.xmlText(xmlOptions);
 		
-		String xQueryStr = agentFunctionConstructor("lk:insertError", errorXML);
+		String xQueryStr = localFunctionConstructor("moduleErrorOperations.xquery", "lk:insertError", CommonConstantDefinitions.lkNsUrl, errorXML);
 				
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
