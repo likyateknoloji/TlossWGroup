@@ -14,6 +14,8 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 
 	public final static String DB_RESULT = "dbResult";
 	
+	public final static int DB_RESULT_MAX_ROWSIZE = 10;
+	
 	public JDBCSQLSentenceExecuter(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
@@ -53,8 +55,13 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 		// System.out.println();
 
 		// Loop through the result set
+		int RowSize = 0;
+		if(resultSetMetaData.getColumnCount() > DB_RESULT_MAX_ROWSIZE ) 
+			 RowSize = DB_RESULT_MAX_ROWSIZE;
+		else RowSize = resultSetMetaData.getColumnCount();
+		
 		while (resultSet.next()) {
-			for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
+			for (int i = 1; i <= RowSize; i++) {
 				// System.out.print(resultSet.getString(i) + " ");
 				resultData.append(resultSet.getString(i) + ", ");
 			}
