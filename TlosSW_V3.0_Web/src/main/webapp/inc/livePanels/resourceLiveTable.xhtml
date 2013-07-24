@@ -13,9 +13,9 @@
 
 			<p:treeTable value="#{resourceLiveTree.root}" var="node"
 				selection="#{resourceLiveTree.selectedJS}" selectionMode="single"
-				 dynamic="true" cache="false"
+				dynamic="true" cache="false"
 				id="treetable" animate="true" scrollable="true"   
-                 scrollHeight="300">
+                scrollHeight="500" resizableColumns="true" >
 
 				<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
 				<p:ajax event="collapse"
@@ -29,24 +29,15 @@
 		            Kaynak Listesi  
 		        </f:facet>
 
-				<p:column style="width:250px">
-					<f:facet name="header">  
-                Job Name  
-            </f:facet>
+				<p:column style="width:50%" headerText="#{msgs['tlos.live.pannel.job.jobName']}">
 					<h:outputText value="#{node.labelText}" />
 				</p:column>
 
-				<p:column style="width:100px">
-					<f:facet name="header">  	
-                State  
-            </f:facet>
+				<p:column style="width:20%" headerText="#{msgs['tlos.live.pannel.scenario.status']}">
 					<h:outputText value="xx" />
 				</p:column>
 
-				<p:column style="width:100px">
-					<f:facet name="header">  
-                      Agent Name  
-                    </f:facet>
+				<p:column style="width:20%" headerText="Agent Name">
 					<h:outputText value="yy" />
 					<p:treeNode id="scenarioNode" type="scenario">
 						<h:outputText value="#{node}" id="scenarioName"
