@@ -32,7 +32,7 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	private transient static SpaceWideRegistry spaceWideRegistry;
 	
-	public static boolean isDebug = false;
+	public static boolean isDebug = true;
 
 	private boolean FIRST_TIME = true;
 	
