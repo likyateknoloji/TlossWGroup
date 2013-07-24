@@ -216,4 +216,203 @@ public class DependencyResolver {
 
 	}
 
+	/*
+	private synchronized boolean isJobDependencyResolvedOrj(Job ownerJob, String dependencyExpression, Item[] dependencyArray) throws UnresolvedDependencyException {
+
+		dependencyExpression = dependencyExpression.replace("AND", "&&");
+		dependencyExpression = dependencyExpression.replace("OR", "||");
+
+		Expression exp = new Expression(dependencyExpression);
+		BigDecimal result = new BigDecimal(0);
+
+		ArrayIterator dependencyArrayIterator = new ArrayIterator(dependencyArray);
+
+		Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
+
+		while (dependencyArrayIterator.hasNext()) {
+
+			Item item = (Item) (dependencyArrayIterator.next());
+			JobRuntimeProperties jobRuntimeProperties = null;
+			if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
+				// getMyLogger().error("Hatal� tan�mlama ! Uygulama sona eriyor !");
+				String errorMessage = "     > " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + " isi icin hatali bagimlilik tanimlamasi yapilmis ! (" + dependencyExpression + ") kontrol ediniz.";
+				getMyLogger().info(errorMessage);
+				getMyLogger().error(errorMessage);
+				throw new UnresolvedDependencyException(errorMessage);
+			}
+
+			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
+				// bir
+				// bagimlilik
+				if (getJobQueue().get(item.getJsId()) == null) {
+					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
+					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+					getMyLogger().error("     > Ana is Id : " + ownerJob.getJobRuntimeProperties().getJobProperties().getID());
+					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
+					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
+					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
+				}
+				jobRuntimeProperties = getJobQueue().get(item.getJsName()).getJobRuntimeProperties();
+			} else { // Global bir bagimlilik
+
+				SpcInfoType spcInfoType = getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+
+				if (spcInfoType == null) {
+					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
+					getMyLogger().error("     > Uygulama sona eriyor !");
+					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
+					Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
+					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+				}
+
+				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
+				if (job == null) {
+					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
+					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
+					getMyLogger().error("     >    Dizin : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     > 	Yukaridaki is  " + spcInfoType.getSpcReferance().getSpcId() + " adli senaryoda bulunamadi !");
+					getMyLogger().error("     > Uygulama sona eriyor !");
+					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
+					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
+				}
+
+				jobRuntimeProperties = job.getJobRuntimeProperties();
+			}
+
+			if (jobRuntimeProperties.getJobProperties() == null) {
+				getMyLogger().info("     > jobRuntimeProperties.getJobProperties() == null !!");
+				throw new UnresolvedDependencyException("     > jobRuntimeProperties.getJobProperties() == null !!");
+			}
+
+			if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() == null && item.getJsDependencyRule().getStatusName() == null) {
+				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName())) {
+					variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+				} else {
+					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+				}
+			} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() == null) {
+				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName()) && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
+					variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+				} else {
+					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+				}
+			} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() != null && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName() != null && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName() != null) {
+				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName()) && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
+					if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName() != null)
+						if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().equals(item.getJsDependencyRule().getStatusName())) {
+							variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+						} else {
+							variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+						}
+				} else {
+					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+				}
+			} else {
+				return false;
+			}
+
+		}
+
+		result = exp.eval(variables);
+
+		return result.intValue() == 0 ? false : true;
+
+	}
+	
+	*/
+	
+	/*
+	private boolean isScenarioDependentAllowsToWorkOrj() throws TlosFatalException {
+		if (this.getDependencyList() == null || this.getDependencyList().getItemArray().length == 0) {
+			// There is no dependency defined so it is allowed to execute
+			return true;
+		} else {
+			String dependencyExpression = this.getDependencyList().getDependencyExpression();
+			Item[] dependencyArray = this.getDependencyList().getItemArray();
+
+			dependencyExpression = dependencyExpression.replace("AND", "&&");
+			dependencyExpression = dependencyExpression.replace("OR", "||");
+
+			Expression exp = new Expression(dependencyExpression);
+			BigDecimal result = new BigDecimal(0);
+
+			ArrayIterator dependencyArrayIterator = new ArrayIterator(dependencyArray);
+
+			Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
+
+			while (dependencyArrayIterator.hasNext()) {
+
+				Item item = (Item) (dependencyArrayIterator.next());
+				Spc spc = null;
+
+				if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
+					getMyLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
+					throw new TlosFatalException();
+				}
+
+				if (item.getJsPath() == null || item.getJsPath() == "") {
+					getMyLogger().error("Hatalı sanal bağımlılık ! Tanımı yapılan senaryonun yolu yanlış ! Sernaryo adı : " + item.getJsName());
+					getMyLogger().error("Ana senaryo adı : " + getSpcId());
+					getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
+					getMyLogger().error("Uygulama sona eriyor !");
+					throw new TlosFatalException();
+				} else {
+
+					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), getSpaceWideRegistry().getInstanceLookupTable());
+
+					if (spcInfoType == null) {
+						getMyLogger().error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+						getMyLogger().error("Ana senaryo adı : " + getSpcId());
+						getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
+						getMyLogger().error("Uygulama sona eriyor !");
+						Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
+						throw new TlosFatalException();
+					}
+
+					spc = spcInfoType.getSpcReferance();
+				}
+
+				if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() == null && item.getJsDependencyRule().getStatusName() == null) {
+					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName())) {
+						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+					} else {
+						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+					}
+				} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() == null) {
+					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName()) && spc.getLiveStateInfo().getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
+						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+					} else {
+						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+					}
+				} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() != null) {
+					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName()) && spc.getLiveStateInfo().getSubstateName().equals(item.getJsDependencyRule().getSubstateName()) && spc.getLiveStateInfo().getStatusName().equals(item.getJsDependencyRule().getStatusName())) {
+						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
+					} else {
+						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
+					}
+				} else {
+					return false;
+				}
+
+			}
+
+			result = exp.eval(variables);
+
+			boolean retValue = (result.intValue() == 0 ? false : true);
+
+			if (!retValue) {
+				this.getLiveStateInfo().setStateName(StateName.PENDING);
+				this.getLiveStateInfo().setSubstateName(SubstateName.READY);
+			} else {
+				this.getLiveStateInfo().setStateName(StateName.RUNNING);
+			}
+
+			return retValue;
+		}
+
+	}
+	*/
 }
