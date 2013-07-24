@@ -17,7 +17,7 @@
 			<p:ajax event="unselect" listener="#{resourceLiveTree.onNodeUnselect}" />
 
 			<p:treeNode type="kaynaklistesi">
-				<h:outputText value="#{node}" id="resourceList" />
+				<h:outputText value="#{node.labelText}" id="resourceList" />
 			</p:treeNode>
 			
 			<p:treeNode type="kaynak" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
