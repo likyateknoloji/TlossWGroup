@@ -16,9 +16,9 @@
             <com:name>SUN</com:name>
         </con:machine-info>
         <con:server-info>
-            <res:Resource>Serkan-MacBook-Pro.local</res:Resource>
-        	<com:ipAddress>192.168.1.60</com:ipAddress>
-        	<com:portNumber>5555</com:portNumber>
+            <res:Resource>merve-laptop</res:Resource>
+        	<com:ipAddress>192.168.1.64</com:ipAddress>
+        	<con:portNumber>5555</con:portNumber>
         </con:server-info>
         <con:paths>
             <com:comment>Urunun calisacagi dizin bilgilerini icerir</com:comment>
@@ -44,16 +44,16 @@
         <con:remoteManagerProperties>
             <com:comment>		managementPort : yonetim konsolu haberlesme portu
 		managementBufferSize : yonetim konsolu buffer boyu</com:comment>
-            <com:portNumber>3001</com:portNumber>
+            <con:portNumber>3001</con:portNumber>
             <com:bufferSize>128</com:bufferSize>
         </con:remoteManagerProperties>
         <con:jmxTlsPort>
             <com:comment>jmxTlsPort</com:comment>
-            <com:portNumber>5556</com:portNumber>
+            <con:portNumber>5556</con:portNumber>
         </con:jmxTlsPort>
         <con:jmxPort>
             <com:comment>jmxPort</com:comment>
-            <com:portNumber>5559</com:portNumber>
+            <con:portNumber>5559</con:portNumber>
         </con:jmxPort>
     </con:settings>
     <con:performance>
