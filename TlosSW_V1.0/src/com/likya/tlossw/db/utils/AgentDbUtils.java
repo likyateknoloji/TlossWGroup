@@ -99,7 +99,7 @@ public class AgentDbUtils extends DBBase {
 		
 		boolean returnValue = false;
 
-		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId);
+		String xQueryStr = agentFunctionConstructor("lk:updateAgentToAvailableLock", "" + agentId);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
