@@ -28,7 +28,7 @@ public class FtpGetFile extends FtpExecutor {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

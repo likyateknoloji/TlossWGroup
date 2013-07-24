@@ -27,7 +27,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 	}
 
 	@Override
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

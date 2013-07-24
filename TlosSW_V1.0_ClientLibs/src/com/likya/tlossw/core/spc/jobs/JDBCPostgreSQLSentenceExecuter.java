@@ -33,7 +33,7 @@ public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

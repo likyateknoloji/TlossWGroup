@@ -28,7 +28,7 @@ public class FtpPutFile extends FtpExecutor {
 		super(spaceWideRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 
