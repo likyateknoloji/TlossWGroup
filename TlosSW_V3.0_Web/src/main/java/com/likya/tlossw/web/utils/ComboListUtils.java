@@ -38,7 +38,7 @@ public class ComboListUtils {
 		return jobStateList;
 	}
 
-	public static Collection<SelectItem> constructJobSubtateList() {
+	public static Collection<SelectItem> constructJobSubStateList() {
 
 		long startTime = System.currentTimeMillis();
 		Collection<SelectItem> jobSubtateList = WebInputUtils.fillJobSubstateList();
