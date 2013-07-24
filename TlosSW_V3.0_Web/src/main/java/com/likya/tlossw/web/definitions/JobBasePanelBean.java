@@ -105,10 +105,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private String dependencyType = STATE;
 
-	private Collection<SelectItem> depStateNameList = null;
 	private String depStateName;
 
-	private Collection<SelectItem> depSubstateNameList = null;
 	private String depSubstateName;
 
 	private String depStatusName;
@@ -1033,11 +1031,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	public Collection<SelectItem> getDepStateNameList() {
-		return depStateNameList;
-	}
-
-	public void setDepStateNameList(Collection<SelectItem> depStateNameList) {
-		this.depStateNameList = depStateNameList;
+		return getJobStateNameList();
 	}
 
 	public String getDepSubstateName() {
@@ -1057,11 +1051,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	public Collection<SelectItem> getDepSubstateNameList() {
-		return depSubstateNameList;
-	}
-
-	public void setDepSubstateNameList(Collection<SelectItem> depSubstateNameList) {
-		this.depSubstateNameList = depSubstateNameList;
+		return getJobSubStateNameList();
 	}
 
 	public boolean isDependencyInsertButton() {
