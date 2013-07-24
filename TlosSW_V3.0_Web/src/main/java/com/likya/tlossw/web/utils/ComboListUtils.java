@@ -48,6 +48,16 @@ public class ComboListUtils {
 		return jobSubtateList;
 	}
 
+	public static Collection<SelectItem> constructJobStatusNameList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> jobStatusNameList = WebInputUtils.fillJobStatusList();
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return jobStatusNameList;
+	}
+	
 	public static Collection<SelectItem> constructOSystemList() {
 
 		long startTime = System.currentTimeMillis();
@@ -176,16 +186,6 @@ public class ComboListUtils {
 		startTime = System.currentTimeMillis();
 
 		return unitTypeList;
-	}
-
-	public static Collection<SelectItem> constructJobStatusNameList() {
-
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobStatusNameList = WebInputUtils.fillJobStatusList();
-		logTimeInfo("JobBaseBean.WebInputUtils.fillJobStatusList fill things Süre : ", startTime);
-		startTime = System.currentTimeMillis();
-
-		return jobStatusNameList;
 	}
 
 	public static Collection<SelectItem> constructAgentChoiceMethodList() {
