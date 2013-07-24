@@ -26,7 +26,7 @@ public class ExecuteInRemoteSch extends ExecuteSchComponent {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

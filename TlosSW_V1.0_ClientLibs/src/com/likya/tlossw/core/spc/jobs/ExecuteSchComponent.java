@@ -142,7 +142,7 @@ public abstract class ExecuteSchComponent extends Job {
 	}
 
 	@Override
-	public void run() {
+	public void localRun() {
 
 	}
 

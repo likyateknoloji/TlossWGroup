@@ -30,7 +30,7 @@ public abstract class ExecuteOSComponent extends Job {
 	private static final long serialVersionUID = 7931558555995487881L;
 
 	@Override
-	public void run() {
+	public void localRun() {
 
 	}
 

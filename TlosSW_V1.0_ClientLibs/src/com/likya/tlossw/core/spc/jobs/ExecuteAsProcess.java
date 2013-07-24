@@ -22,7 +22,7 @@ public class ExecuteAsProcess extends ExecuteOSComponent {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
 	}
 
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 

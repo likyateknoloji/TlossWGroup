@@ -44,7 +44,7 @@ public class FileListenerExecuter extends FileJob {
 	}
 
 	@Override
-	public void run() {
+	public void localRun() {
 
 		initStartUp(myLogger);
 
