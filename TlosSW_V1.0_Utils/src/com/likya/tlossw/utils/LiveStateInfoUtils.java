@@ -189,5 +189,14 @@ public class LiveStateInfoUtils {
 		}
 
 	}
+	
+	public static void insertNewLiveStateInfo(JobProperties jobProperties, LiveStateInfo liveStateInfo) {
+		synchronized (jobProperties) {
 
+			jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
+			jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
+
+		}
+
+	}
 }
