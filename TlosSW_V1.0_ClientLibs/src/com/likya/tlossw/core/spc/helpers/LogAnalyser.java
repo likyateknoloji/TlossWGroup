@@ -20,19 +20,17 @@ public class LogAnalyser {
 		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
 
 		if (logAnalysis != null && logAnalysis.getActive()) {
-			
+
 			boolean result = false;
 
 			try {
 				// Evaluate log analyzing procedures.
-				
-				
 
 				String filePath = jobProperties.getBaseJobInfos().getJobLogPath();
 				String fileName = jobProperties.getBaseJobInfos().getJobLogFile();
 
 				File sourceFiile = new File(filePath + File.separator + fileName);
-				
+
 				int direction = logAnalysis.getFindWhat().getDirection().intValue();
 
 				boolean matcWholeWordOnly = logAnalysis.getFindWhat().getMatchWholeWordOnly();
@@ -42,53 +40,43 @@ public class LogAnalyser {
 
 				int modeType = logAnalysis.getFindWhat().getMode().intValue();
 
-				switch (modeType) {
-
-				case ModeType.INT_NORMAL:
-					if (matcWholeWordOnly) {
-						result = matcWholeWordOnly(sourceFiile, searchString, isCaseSensitive, direction);
-					} else {
-						result = matcWord(sourceFiile, searchString, isCaseSensitive, direction);
-					}
-					break;
-				case ModeType.INT_REG_EX:
-					throw new UnsupportedOperationException();
-
-				default:
-					throw new UnsupportedOperationException();
+				if (matcWholeWordOnly) {
+					result = matcWholeWordOnly(sourceFiile, searchString, isCaseSensitive, direction, modeType);
+				} else {
+					result = matcWord(sourceFiile, searchString, isCaseSensitive, direction, modeType);
 				}
 
 			} catch (UnsupportedOperationException uoe) {
 				uoe.printStackTrace();
 			}
 
-			if(result && logAnalysis.getAction().getThen() != null) {
+			if (result && logAnalysis.getAction().getThen() != null) {
 				// Event is not implemented yet
 				// Do event thing
-				
+
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getThen().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
-				
-			} else if(!result && logAnalysis.getAction().getElse() != null) {
+
+			} else if (!result && logAnalysis.getAction().getElse() != null) {
 				// Event is not implemented yet
 				// Do event thing
-				
+
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getElse().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
 			}
-			
+
 		}
 
 	}
 
-	private static boolean matcWord(File sourceFile, String searchString, boolean isCaseSensitive, int direction) {
+	private static boolean matcWord(File sourceFile, String searchString, boolean isCaseSensitive, int direction, int modeType) {
 
 		boolean retValue = false;
 
 		switch (direction) {
 
 		case DirectionType.INT_DOWN:
-			retValue = find(sourceFile, searchString, isCaseSensitive);
+			retValue = find(sourceFile, searchString, isCaseSensitive, modeType);
 			break;
 
 		case DirectionType.INT_UP:
@@ -101,14 +89,14 @@ public class LogAnalyser {
 
 	}
 
-	private static boolean matcWholeWordOnly(File sourceFile, String searchString, boolean isCaseSensitive, int direction) {
+	private static boolean matcWholeWordOnly(File sourceFile, String searchString, boolean isCaseSensitive, int direction, int modeType) {
 
 		boolean retValue = false;
 
 		switch (direction) {
 
 		case DirectionType.INT_DOWN:
-			retValue = find(sourceFile, " " + searchString + " ", isCaseSensitive);
+			retValue = find(sourceFile, " " + searchString + " ", isCaseSensitive, modeType);
 			break;
 
 		case DirectionType.INT_UP:
@@ -120,7 +108,7 @@ public class LogAnalyser {
 		return retValue;
 	}
 
-	public static boolean find(File f, String searchString, boolean isCaseSensitive) {
+	public static boolean find(File f, String searchString, boolean isCaseSensitive, int modeType) {
 
 		boolean result = false;
 
@@ -129,10 +117,21 @@ public class LogAnalyser {
 		try {
 			in = new Scanner(new FileReader(f));
 			while (in.hasNextLine() && !result) {
-				if (isCaseSensitive) {
-					result = in.nextLine().indexOf(searchString) >= 0;
-				} else {
-					result = in.nextLine().toUpperCase().indexOf(searchString.toUpperCase()) >= 0;
+
+				switch (modeType) {
+
+				case ModeType.INT_NORMAL:
+					if (isCaseSensitive) {
+						result = in.nextLine().indexOf(searchString) >= 0;
+					} else {
+						result = in.nextLine().toUpperCase().indexOf(searchString.toUpperCase()) >= 0;
+					}
+
+					break;
+				case ModeType.INT_REG_EX:
+					result = in.nextLine().matches(searchString);
+				default:
+					throw new UnsupportedOperationException();
 				}
 			}
 		} catch (IOException e) {
