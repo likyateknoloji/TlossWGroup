@@ -1,18 +1,12 @@
 package com.likya.tlossw.core.spc;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.xml.transform.stream.StreamSource;
-
-import net.java.dev.eval.Expression;
-
-import org.apache.commons.collections.iterators.ArrayIterator;
 
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
@@ -37,10 +31,8 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
 import com.likya.tlossw.core.agents.AgentManager;
-import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.dss.DssVisionaire;
-import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
+import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -105,11 +97,11 @@ public class Spc extends SpcBase {
 		 */
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcId(), getJobQueue().size()));
-			if(SpaceWideRegistry.isDebug) {
+			if (SpaceWideRegistry.isDebug) {
 				getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin islerin baslatildigi bilgisi InfoBusManager a iletildi.");
 			}
 		} else {
-			if(SpaceWideRegistry.isDebug) {
+			if (SpaceWideRegistry.isDebug) {
 				getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " senaryosu baslangic bilgilerini ekleme asamasinda, InfoBusManager ile ilgili bir problem var. Bos olmamali !.");
 			}
 			System.out.println("getSpaceWideRegistry().getInfoBusManager() == null !");
@@ -166,13 +158,13 @@ public class Spc extends SpcBase {
 					// is kuyrugunun durumunu dokelim. Calisan, bekleyen ve
 					// biten islerin sayisini tespit edelim.
 					/**
-					 * TODO Burada listenin loglanması sırasında, 
+					 * TODO Burada listenin loglanması sırasında,
 					 * logun sadece ilgili senaryo yöneticisi loguna yönlendirilmesi gerekiyor.
 					 * 
 					 * @author serkan taş
 					 *         20.09.2012
 					 */
-					if(SpaceWideRegistry.isDebug) {
+					if (SpaceWideRegistry.isDebug) {
 						JobQueueOperations.dumpJobQueue(getSpcId(), getJobQueue());
 					}
 
@@ -209,8 +201,8 @@ public class Spc extends SpcBase {
 		// Kalan ne varsa temizliyoruz. Normalde kalmamasi lazim.
 		/**
 		 * Buraya sadece işler bitince değil, executionPermission = false yapılınca da giriliyor.
-		 * isActiveThreads : true : kalan bütün joblar taranıp çalışanlar kapatılıyor 
-		 * isActiveThreads : false : kalan bütün joblar taranıyor, eğer en az bir tane çalışan var ise, bekliyor. 
+		 * isActiveThreads : true : kalan bütün joblar taranıp çalışanlar kapatılıyor
+		 * isActiveThreads : false : kalan bütün joblar taranıyor, eğer en az bir tane çalışan var ise, bekliyor.
 		 * 
 		 * Bütün işler bitene kadar bekliyor.
 		 * 
@@ -299,7 +291,7 @@ public class Spc extends SpcBase {
 		// TODO Performans Yoneticisi nin de fikrini almak lazim. Fakat bu asamada kaynak belli olmadigi icin sadece genel performans kontrolu yapilabilir.
 		// Bunu sonraya birakiyoruz.
 
-		while (executionPermission && !getLiveStateInfo().getStateName().equals(StateName.PENDING) && isScenarioDependentAllowsToWork() && jobQueueIndexIterator.hasNext()) {
+		while (executionPermission && !getLiveStateInfo().getStateName().equals(StateName.PENDING) && isScenarioDependencyResolved() && jobQueueIndexIterator.hasNext()) {
 
 			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
 			SortType sortType = jobQueueIndexIterator.next();
@@ -344,6 +336,12 @@ public class Spc extends SpcBase {
 				if (jobLiveStateInfo.getSubstateName().equals(SubstateName.IDLED)) {
 					/*
 					 * InfoQueue ya ilk uc state i koyamadigim icin burada bir kerede guncelleme yapiyorum. Eger infoQueue kullanabilirsek bunu kaldiracagiz ama is gorur bu hali.
+					 */
+					/**
+					 * Buralarda kesinlikle veri tabanı erişimi olMAmalı. Zira bu kısımın işi yönetmesini riske eder.
+					 * Asenkron loglama maksatlı kesinlikle infoBus'a kayıt atıp hayatına devam etmeli
+					 * Serkan Taş
+					 * TODO
 					 */
 					if (scheduledJob.getFirstLoop()) {
 						DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(getSpcId()));
@@ -403,9 +401,9 @@ public class Spc extends SpcBase {
 
 						getGlobalLogger().error("  > HATA : Bir isin baslama kosulu bilgisi USER/EVENT/TIME disinda birsey bos olamaz !! Kontrol ediniz. " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 						/**
-						 * E�er bu durum ger�ekle�irse, ilgili i� FAIL edilip bir sonraki i�e ge�meli
+						 * Eğer bu durum gerçekleşirse, ilgili iş FAIL edilip bir sonraki işe geçmeli
 						 * 
-						 * @author serkan ta� 21.09.2012
+						 * @author serkan taş 21.09.2012
 						 */
 						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 						scheduledJob.sendStatusChangeInfo();
@@ -418,9 +416,9 @@ public class Spc extends SpcBase {
 				} else {
 
 					/**
-					 * E�er bu durum ger�ekle�irse, ilgili i� FAIL edilip bir sonraki i�e ge�meli
+					 * Eğer bu durum gerçekleşirse, ilgili iş FAIL edilip bir sonraki işe geçmeli
 					 * 
-					 * @author serkan ta� 21.09.2012
+					 * @author serkan taş 21.09.2012
 					 */
 					getGlobalLogger().error("  > HATA : Bir isin baslama kosulu bilgisi IDLED ve READY disinda birsey bos olamaz !! Kontrol ediniz. " + jobProperties.getBaseJobInfos().getJsName());
 					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
@@ -483,110 +481,7 @@ public class Spc extends SpcBase {
 	}
 
 	private synchronized boolean isJobDependencyResolved(Job ownerJob, String dependencyExpression, Item[] dependencyArray) throws UnresolvedDependencyException {
-
-		dependencyExpression = dependencyExpression.replace("AND", "&&");
-		dependencyExpression = dependencyExpression.replace("OR", "||");
-
-		Expression exp = new Expression(dependencyExpression);
-		BigDecimal result = new BigDecimal(0);
-
-		ArrayIterator dependencyArrayIterator = new ArrayIterator(dependencyArray);
-
-		Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
-
-		while (dependencyArrayIterator.hasNext()) {
-
-			Item item = (Item) (dependencyArrayIterator.next());
-			JobRuntimeProperties jobRuntimeProperties = null;
-			/*
-			 * if (item != null) { myLogger.info("     > bagimlilik var1>" + item.getJsDependencyRule()); } else { myLogger.info("     > item bos !!"); throw new TlosFatalException(); }
-			 */
-			if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
-				// getMyLogger().error("Hatal� tan�mlama ! Uygulama sona eriyor !");
-				String errorMessage = "     > " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + " isi icin hatali bagimlilik tanimlamasi yapilmis ! (" + dependencyExpression + ") kontrol ediniz.";
-				getMyLogger().info(errorMessage);
-				getMyLogger().error(errorMessage);
-				throw new UnresolvedDependencyException(errorMessage);
-			}
-
-			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
-				// bir
-				// bagimlilik
-				if (getJobQueue().get(item.getJsId()) == null) {
-					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
-					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-					getMyLogger().error("     > Ana is Id : " + ownerJob.getJobRuntimeProperties().getJobProperties().getID());
-					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
-					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
-				}
-				jobRuntimeProperties = getJobQueue().get(item.getJsName()).getJobRuntimeProperties();
-			} else { // Global bir bagimlilik
-
-				SpcInfoType spcInfoType = getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-
-				if (spcInfoType == null) {
-					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
-					getMyLogger().error("     > Uygulama sona eriyor !");
-					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
-					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-				}
-
-				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
-				if (job == null) {
-					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
-					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-					getMyLogger().error("     >    Dizin : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-					getMyLogger().error("     > 	Yukaridaki is  " + spcInfoType.getSpcReferance().getSpcId() + " adli senaryoda bulunamadi !");
-					getMyLogger().error("     > Uygulama sona eriyor !");
-					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-				}
-
-				jobRuntimeProperties = job.getJobRuntimeProperties();
-			}
-
-			if (jobRuntimeProperties.getJobProperties() == null) {
-				getMyLogger().info("     > jobRuntimeProperties.getJobProperties() == null !!");
-				throw new UnresolvedDependencyException("     > jobRuntimeProperties.getJobProperties() == null !!");
-			}
-
-			if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() == null && item.getJsDependencyRule().getStatusName() == null) {
-				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName())) {
-					variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-				} else {
-					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-				}
-			} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() == null) {
-				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName()) && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
-					variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-				} else {
-					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-				}
-			} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() != null && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName() != null && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName() != null) {
-				if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(item.getJsDependencyRule().getStateName()) && jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
-					if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName() != null)
-						if (jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().equals(item.getJsDependencyRule().getStatusName())) {
-							variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-						} else {
-							variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-						}
-				} else {
-					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-				}
-			} else {
-				return false;
-			}
-
-		}
-
-		result = exp.eval(variables);
-
-		return result.intValue() == 0 ? false : true;
+		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getInstanceId(), getJobQueue(), getSpcLookupTable());
 	}
 
 	private synchronized void executeJob(Job scheduledJob) {
@@ -806,11 +701,24 @@ public class Spc extends SpcBase {
 	public LiveStateInfo getLastStateOfJob(LiveStateInfos liveStateInfos) {
 
 		/*
-		 * TODO Burada tarihe gore siralama yapmaya gerek var mi? Varsa asagidakine benzer birsey yapmamiz lazim. tarih cevriminde bir problem var, onu cozmemiz lazim tabii once
+		 * TODO Burada tarihe gore siralama yapmaya gerek var mi?
+		 * Varsa asagidakine benzer birsey yapmamiz lazim.
+		 * tarih cevriminde bir problem var, onu cozmemiz lazim tabii once
 		 * 
-		 * int boyut = liveStateInfos.sizeOfLiveStateInfoArray(); Date refDate = DateUtils.getDateTime( liveStateInfos.getLiveStateInfoArray(0).getLSIDateTime()); LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
+		 * int boyut = liveStateInfos.sizeOfLiveStateInfoArray();
+		 * Date refDate = DateUtils.getDateTime( liveStateInfos.getLiveStateInfoArray(0).getLSIDateTime());
+		 * LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
 		 * 
-		 * for (int i=0; i<boyut; i++) { System.out.println(liveStateInfos.getLiveStateInfoArray(i)); System.out.println(liveStateInfos.getLiveStateInfoArray(i)); //com.likya.tlossw.utils.date.DateUtils String dateTimeInString = liveStateInfos.getLiveStateInfoArray(i).getLSIDateTime(); if(DateUtils.getDateTime(dateTimeInString).after(refDate)) { refDate = DateUtils.getDateTime(dateTimeInString); lastStateInfo = liveStateInfos.getLiveStateInfoArray(i); } }
+		 * for (int i=0; i<boyut; i++) {
+		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
+		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
+		 * //com.likya.tlossw.utils.date.DateUtils
+		 * String dateTimeInString = liveStateInfos.getLiveStateInfoArray(i).getLSIDateTime();
+		 * if(DateUtils.getDateTime(dateTimeInString).after(refDate)) {
+		 * refDate = DateUtils.getDateTime(dateTimeInString);
+		 * lastStateInfo = liveStateInfos.getLiveStateInfoArray(i);
+		 * }
+		 * }
 		 */
 		LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
 
@@ -919,7 +827,7 @@ public class Spc extends SpcBase {
 
 	public void pause() {
 		if (isPausable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Beklemeye al�yor...");
+			getMyLogger().info("Spc " + getSpcId() + " Beklemeye alıyor...");
 			getLiveStateInfo().setStateName(StateName.PENDING);
 			getLiveStateInfo().setSubstateName(SubstateName.PAUSED);
 			getMyLogger().info("Spc " + getSpcId() + " Beklemede !");
@@ -928,101 +836,22 @@ public class Spc extends SpcBase {
 
 	public void resume() {
 		if (isResumable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan ��kart�yor...");
+			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çıkartıyor...");
 			getLiveStateInfo().setStateName(StateName.RUNNING);
 			getLiveStateInfo().setSubstateName(null);
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan ��kart�ld� !");
+			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çıkartıldı !");
 		}
 	}
 
-	private boolean isScenarioDependentAllowsToWork() throws TlosFatalException {
-		if (this.getDependencyList() == null || this.getDependencyList().getItemArray().length == 0) {
-			// There is no dependency defined so it is allowed to execute
-			return true;
-		} else {
-			String dependencyExpression = this.getDependencyList().getDependencyExpression();
-			Item[] dependencyArray = this.getDependencyList().getItemArray();
-
-			dependencyExpression = dependencyExpression.replace("AND", "&&");
-			dependencyExpression = dependencyExpression.replace("OR", "||");
-
-			Expression exp = new Expression(dependencyExpression);
-			BigDecimal result = new BigDecimal(0);
-
-			ArrayIterator dependencyArrayIterator = new ArrayIterator(dependencyArray);
-
-			Map<String, BigDecimal> variables = new HashMap<String, BigDecimal>();
-
-			while (dependencyArrayIterator.hasNext()) {
-
-				Item item = (Item) (dependencyArrayIterator.next());
-				Spc spc = null;
-
-				if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
-					getMyLogger().error("Hatalı tanımlama ! Uygulama sona eriyor !");
-					throw new TlosFatalException();
-				}
-
-				if (item.getJsPath() == null || item.getJsPath() == "") {
-					getMyLogger().error("Hatalı sanal bağımlılık ! Tanımı yapılan senaryonun yolu yanlış ! Sernaryo adı : " + item.getJsName());
-					getMyLogger().error("Ana senaryo adı : " + getSpcId());
-					getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
-					getMyLogger().error("Uygulama sona eriyor !");
-					throw new TlosFatalException();
-				} else {
-
-					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), getSpaceWideRegistry().getInstanceLookupTable());
-
-					if (spcInfoType == null) {
-						getMyLogger().error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-						getMyLogger().error("Ana senaryo adı : " + getSpcId());
-						getMyLogger().error("Ana senaryo yolu : " + this.getBaseScenarioInfos().getJsName());
-						getMyLogger().error("Uygulama sona eriyor !");
-						Cpc.dumpSpcLookupTable(getInstanceId(), getSpcLookupTable());
-						throw new TlosFatalException();
-					}
-
-					spc = spcInfoType.getSpcReferance();
-				}
-
-				if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() == null && item.getJsDependencyRule().getStatusName() == null) {
-					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName())) {
-						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-					} else {
-						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-					}
-				} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() == null) {
-					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName()) && spc.getLiveStateInfo().getSubstateName().equals(item.getJsDependencyRule().getSubstateName())) {
-						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-					} else {
-						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-					}
-				} else if (item.getJsDependencyRule().getStateName() != null && item.getJsDependencyRule().getSubstateName() != null && item.getJsDependencyRule().getStatusName() != null) {
-					if (spc.getLiveStateInfo().getStateName().equals(item.getJsDependencyRule().getStateName()) && spc.getLiveStateInfo().getSubstateName().equals(item.getJsDependencyRule().getSubstateName()) && spc.getLiveStateInfo().getStatusName().equals(item.getJsDependencyRule().getStatusName())) {
-						variables.put(item.getDependencyID(), new BigDecimal(1)); // true
-					} else {
-						variables.put(item.getDependencyID(), new BigDecimal(0)); // false
-					}
-				} else {
-					return false;
-				}
-
-			}
-
-			result = exp.eval(variables);
-
-			boolean retValue = (result.intValue() == 0 ? false : true);
-
-			if (!retValue) {
-				this.getLiveStateInfo().setStateName(StateName.PENDING);
-				this.getLiveStateInfo().setSubstateName(SubstateName.READY);
-			} else {
-				this.getLiveStateInfo().setStateName(StateName.RUNNING);
-			}
-
-			return retValue;
-		}
-
+	/**
+	 * Henüz hiç bir yerde kullanılmıyor
+	 * @author Serkan Taş
+	 * @return
+	 * @throws TlosFatalException
+	 */
+	
+	private synchronized boolean isScenarioDependencyResolved() throws TlosFatalException {
+		return DependencyResolver.isScenarioDependencyResolved(getMyLogger(), getDependencyList(), getSpcId(), getBaseScenarioInfos().getJsName(),  getInstanceId(), this.getLiveStateInfo(), getSpcLookupTable(), getSpaceWideRegistry().getInstanceLookupTable());
 	}
 
 	public boolean isRecovered() {
