@@ -142,7 +142,7 @@ public class AgentManager implements Runnable {
 
 	}
 
-	public boolean isServer(int agentId) {
+	public boolean checkDestIfServer(int agentId) {
 		boolean isServer = false;
 
 		SWAgent swAgent = swAgentsCache.get(agentId + "");
