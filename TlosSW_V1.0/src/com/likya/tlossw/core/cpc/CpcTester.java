@@ -168,7 +168,7 @@ public class CpcTester extends CpcBase {
 
 			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
 
-			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
 
 			scpLookupTable.put(scenarioId, spcInfoType);
 
