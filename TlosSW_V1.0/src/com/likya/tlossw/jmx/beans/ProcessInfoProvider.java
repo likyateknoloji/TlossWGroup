@@ -1408,4 +1408,22 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		return false;
 	}
+	
+	// Web ekranindaki kaynak listesi agacinda kaynak ağacı secildiginde buraya geliyor
+	public ArrayList<ResourceInfoTypeClient> getResourceInfoTypeClientList(JmxUser jmxUser) {
+
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
+
+		ArrayList<ResourceInfoTypeClient> resourceInfoList = new ArrayList<ResourceInfoTypeClient>();
+		
+		HashMap<String, ResourceNode> resourceList = AgentOperations.getResources(TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache());
+		
+		for (ResourceNode resourceNode : resourceList.values()) {
+			resourceInfoList.add(resourceNode.getResourceInfoTypeClient());
+		}
+		
+		return resourceInfoList;
+	}
 }
