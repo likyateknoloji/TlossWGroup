@@ -11,6 +11,7 @@ import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Re
 import com.likya.tlossw.model.MessagesCodeMapping;
 import com.likya.tlossw.model.TlosJmxReturnValue;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
+import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
 import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.model.client.spc.InfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
@@ -880,5 +881,30 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		return true;
 	}
 	
+	/**
+	 * Sistemde kayıtlı olan kaynakların bilgilerini sunucudan istiyor
+	 * 
+	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<ResourceInfoTypeClient> getResourceInfoTypeClientList(JmxUser jmxUser) {
+
+		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
+
+		Object[] paramList = { jmxUser };
+		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser" };
+		Object o;
+
+		try {
+			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getResourceInfoTypeClientList", paramList, signature);
+			TEJmxMpClient.disconnect(jmxConnector);
+			return (ArrayList<ResourceInfoTypeClient>) o;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 }
