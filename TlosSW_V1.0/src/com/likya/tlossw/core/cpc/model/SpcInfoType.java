@@ -26,7 +26,6 @@ public class SpcInfoType implements Serializable {
 	private Scenario scenario;
 	
 	private transient Spc spcReferance;
-	private boolean jobListStatus = false;
 	private boolean scnearioListStatus = false;
 
 	private boolean isVirgin = true;
@@ -37,14 +36,6 @@ public class SpcInfoType implements Serializable {
 
 	public void setSpcReferance(Spc spcReferance) {
 		this.spcReferance = spcReferance;
-	}
-
-	public boolean isJobListStatus() {
-		return jobListStatus;
-	}
-
-	public void setJobListStatus(boolean jobListStatus) {
-		this.jobListStatus = jobListStatus;
 	}
 
 	public boolean isScnearioListStatus() {
