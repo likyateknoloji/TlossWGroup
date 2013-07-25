@@ -12,7 +12,7 @@ public class TSWAgentJmxClient extends TSWAgentJmxClientBase {
 	
 	private static Logger logger = Logger.getLogger(TSWAgentJmxClient.class);
 	
-	public static boolean jobHandle(String host, Integer port, String rxMessage, JmxAgentUser jmxAgentUser) {
+	public static boolean sendJob(String host, Integer port, String rxMessage, JmxAgentUser jmxAgentUser) {
 
 		JMXConnector jmxConnector = TSWAgentJmxClient.getJMXTLSConnection(host, port);
 		
