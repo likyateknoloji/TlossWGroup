@@ -42,6 +42,7 @@ import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.ValidPlatforms;
+import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.i18n.ResourceMapper;
 import com.likya.tlossw.utils.i18n.ResourceReader;
@@ -428,7 +429,7 @@ public class TlosSpaceWideBase {
 
 				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
 
-				if (tlosProcessData == null || !tlosProcessData.validate()) {
+				if (tlosProcessData == null || ! XmlUtils.validateWithLogs(logger, tlosProcessData)) {
 					throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
 				}
 				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
@@ -436,7 +437,7 @@ public class TlosSpaceWideBase {
 			} catch (TlosFatalException e) {
 				if (getSpaceWideRegistry().getCpcReference() == null) {
 					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-					System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
+					//System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
 					System.exit(-1);
 				} else {
 					errprintln("Gün dönümü sonrasý çalýþma listesi alýnamadý !");
