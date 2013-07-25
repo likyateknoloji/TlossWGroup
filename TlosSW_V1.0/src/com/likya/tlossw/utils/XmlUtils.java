@@ -1,11 +1,15 @@
 package com.likya.tlossw.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.agent.RxMessageBodyTypeDocument.RxMessageBodyType;
@@ -204,4 +208,45 @@ public class XmlUtils {
 	 * 
 	 * return liveStateInfo; }
 	 */
+
+	public static boolean validateWithLogs(Logger logger, XmlObject xmlObject) {
+		/**
+		 * @reference http://xmlbeans.apache.org/docs/1.0.4/reference/org/apache/xmlbeans/XmlObject.html#validate%28%29
+		 */
+
+		// Create an XmlOptions instance and set the error listener.
+		XmlOptions validateOptions = new XmlOptions();
+		ArrayList<XmlError> errorList = new ArrayList<XmlError>();
+		validateOptions.setErrorListener(errorList);
+
+		// Validate the XML.
+		boolean isValid = xmlObject.validate(validateOptions);
+
+		// If the XML isn't valid, loop through the listener's contents,
+		// printing contained messages.
+		
+		if (!isValid) {
+			for (int i = 0; i < errorList.size(); i++) {
+				XmlError error = (XmlError) errorList.get(i);
+
+				logger.error("*************************************************************");
+				logger.error("Validating xmlObject class : " + xmlObject.getClass().getName());
+				logger.error("Validation error : " + i);
+				logger.error("	> Message: " + error.getMessage());
+				logger.error("	> Location of invalid XML : ");
+				logger.error("		" + error.getCursorLocation().xmlText());
+				logger.error("	");
+				
+				TlosSpaceWide.errprintln("*************************************************************");
+				TlosSpaceWide.errprintln("xmlObject : " + xmlObject.getClass().getName());
+				TlosSpaceWide.errprintln("Validation error : " + i);
+				TlosSpaceWide.errprintln("	> Message: " + error.getMessage());
+				TlosSpaceWide.errprintln("	> Location of invalid XML : ");
+				TlosSpaceWide.errprintln("		" + error.getCursorLocation().xmlText());
+				TlosSpaceWide.errprintln("	");
+			}
+		}
+
+		return isValid;
+	}
 }
