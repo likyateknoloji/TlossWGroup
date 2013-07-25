@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="liveResourceForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<br></br>
+
+		<p:fieldset id="resourceList" legend="#{msgs['likya.agac.kaynaklistesi']}">
+
+			<p:dataTable id="jobListDataTable" var="item" value="#{resourceMBean.resourceInfoList}" widgetVar="itemsTable"
+				resizableColumns="true" binding="#{resourceMBean.resourceDataTable}" filteredValue="#{resourceMBean.filteredResources}" emptyMessage="No records found with given criteria" sortMode="multiple"
+				paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15">
+
+				<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="#{msgs['tlos.search.all']}" />
+						<p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="width:150px" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.resourceName']}" 
+					sortBy="#{item.resourceName}" filterBy="#{item.resourceName}" filterMatchMode="contains">
+					<h:outputText value="#{item.resourceName}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.osType']}" 
+					sortBy="#{item.osType}" filterBy="#{item.osType}" filterMatchMode="contains">
+					<h:outputText value="#{item.osType}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.includesServer']}" 
+					sortBy="#{item.includesServer}">
+					<p:selectBooleanCheckbox value="#{item.includesServer}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.active']}" 
+					sortBy="#{item.active}">
+					<p:selectBooleanCheckbox value="#{item.active}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>

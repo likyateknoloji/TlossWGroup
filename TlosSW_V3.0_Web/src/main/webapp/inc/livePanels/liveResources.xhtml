@@ -16,12 +16,12 @@
 
 			<p:layoutUnit position="north" resizable="true" size="35">
 				<ui:param name="title1" value="Main Menu" />
-				<ui:param name="title2" value="Monitoring" />
+				<ui:param name="title2" value="WorkSpace" />
 				<ui:param name="title3" value="Resources" />
 				<ui:param name="title4" value="" />
 
 				<ui:param name="title1link" value="/" />
-				<ui:param name="title2link" value="MonitoringLink" />
+				<ui:param name="title2link" value="WorkSpaceLink" />
 				<ui:param name="title3link" value="ResourcesLink" />
 				<ui:param name="title4link"
 					value="Tlos SW Workload Automation Software v1.0 - Resource Monitoring Page - LIVE ! " />
@@ -36,12 +36,12 @@
 
 			<p:layoutUnit position="center" id="centerLayout">
 				<h:panelGroup id="commonPanel">
-
-					<ui:include src="/inc/livePanels/resourceLiveTable.xhtml">
-					</ui:include>
+					<ui:include src="#{liveResourceMBean.activeLivePanel}"/>
+					
+					<!-- ui:include src="/inc/livePanels/resourceLiveTable.xhtml">
+					</ui:include-->
 
 				</h:panelGroup>
-
 
 				<!-- 
 				<p:inputText id="input" value="#{jsDefinitionMBean.jobDefCenterPanel}">
