@@ -193,6 +193,7 @@ public class LiveStateInfoUtils {
 	public static void insertNewLiveStateInfo(JobProperties jobProperties, LiveStateInfo liveStateInfo) {
 		synchronized (jobProperties) {
 
+			liveStateInfo.setLSIDateTime(DateUtils.getW3CDateTime());
 			jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
 			jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
 
