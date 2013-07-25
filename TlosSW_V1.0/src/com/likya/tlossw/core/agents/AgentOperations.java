@@ -27,23 +27,23 @@ public class AgentOperations {
 	}
 	
 	public static HashMap<String, ResourceNode> getResources(HashMap<String, SWAgent> agentCache) {
-		
+
 		HashMap<String, ResourceNode> resourceMap = new HashMap<String, ResourceNode>();
-		
+
 		for (String agentId : agentCache.keySet()) {
-		
+
 			SWAgent swAgent = agentCache.get(agentId);
-			
+
 			String resourceName = swAgent.getResource().getStringValue();
-			
-			if (swAgent.getAgentType().toString().equals(ConstantDefinitions.AGENT_ON_SERVER)) {
-				resourceMap.get(resourceName).getResourceInfoTypeClient().setIncludesServer(true);
+
+			if (resourceMap.containsKey(resourceName)) {
+				if (!resourceMap.get(resourceName).getResourceInfoTypeClient().isActive()) {
+					resourceMap.remove(resourceName);
+				} else {
+					continue;
+				}
 			}
-			
-			if(resourceMap.containsKey(resourceName)) {
-				continue;
-			}
-			
+
 			ResourceNode resourceNode = new ResourceNode();
 
 			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient();
@@ -53,13 +53,17 @@ public class AgentOperations {
 			if (swAgent.getOutJmxAvailable()) {
 				resourceInfoTypeClient.setActive(true);
 			}
+
+			if (swAgent.getAgentType().toString().equals(ConstantDefinitions.AGENT_ON_SERVER)) {
+				resourceInfoTypeClient.setIncludesServer(true);
+			}
 			
 			resourceNode.setResourceInfoTypeClient(resourceInfoTypeClient);
-			
+
 			resourceMap.put(resourceName, resourceNode);
+
 		}
 
-		
 		return resourceMap;
 	}
 
