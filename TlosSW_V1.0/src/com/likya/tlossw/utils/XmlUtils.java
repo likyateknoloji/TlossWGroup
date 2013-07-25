@@ -226,25 +226,32 @@ public class XmlUtils {
 		// printing contained messages.
 		
 		if (!isValid) {
+			
+			TlosSpaceWide.errprintln("*************************************************************");
+			logger.error("*************************************************************");
+			logger.error("Validating xmlObject class : " + xmlObject.getClass().getName());
+			TlosSpaceWide.errprintln("xmlObject : " + xmlObject.getClass().getName());
+			logger.error("Found " + errorList.size() + " validation errors !");
+			TlosSpaceWide.errprintln("Found " + errorList.size() + " validation errors !");
+			
 			for (int i = 0; i < errorList.size(); i++) {
 				XmlError error = (XmlError) errorList.get(i);
-
-				logger.error("*************************************************************");
-				logger.error("Validating xmlObject class : " + xmlObject.getClass().getName());
-				logger.error("Validation error : " + i);
+				
+				logger.error("Validation error : " + (i + 1));
 				logger.error("	> Message: " + error.getMessage());
 				logger.error("	> Location of invalid XML : ");
 				logger.error("		" + error.getCursorLocation().xmlText());
 				logger.error("	");
 				
-				TlosSpaceWide.errprintln("*************************************************************");
-				TlosSpaceWide.errprintln("xmlObject : " + xmlObject.getClass().getName());
-				TlosSpaceWide.errprintln("Validation error : " + i);
+				TlosSpaceWide.errprintln("Validation error : " + (i + 1));
 				TlosSpaceWide.errprintln("	> Message: " + error.getMessage());
 				TlosSpaceWide.errprintln("	> Location of invalid XML : ");
 				TlosSpaceWide.errprintln("		" + error.getCursorLocation().xmlText());
 				TlosSpaceWide.errprintln("	");
 			}
+			
+			TlosSpaceWide.errprintln("*************************************************************");
+			logger.error("*************************************************************");
 		}
 
 		return isValid;
