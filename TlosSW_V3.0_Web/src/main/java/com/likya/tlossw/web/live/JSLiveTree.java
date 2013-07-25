@@ -38,9 +38,6 @@ import com.likya.tlossw.webclient.TEJmxMpClient;
 @ViewScoped
 public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2287729115524041857L;
 
 	private TreeNode root;
@@ -62,8 +59,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSLiveTree() {
-		
-		if(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID) != null) {
+
+		if (getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID) != null) {
 			getSessionMediator().getWebAppUser().setViewRoleId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
 		}
 
@@ -194,8 +191,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			if (root.getChildCount() > 0) {
 				DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
 				TlosSpaceWideNode tlosSpaceWideInputNode = preparePreRenderLiveTreeData(calisanIsler);
-				
-				//sunucudan guncel is listelerini aliyor
+
+				// sunucudan guncel is listelerini aliyor
 				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				if (tlosSpaceWideNode == null) {
 					System.out.println("tlosSpaceWideNode == null");
@@ -215,7 +212,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	}
 
-	//agacin datasi alinip render icin hazirlaniyor
+	// agacin datasi alinip render icin hazirlaniyor
 	private TlosSpaceWideNode preparePreRenderLiveTreeData(TreeNode calisanIslerNode) {
 
 		TlosSpaceWideNode tlosSpaceWideNode = new TlosSpaceWideNode();
@@ -326,9 +323,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		while (keyIterator.hasNext()) {
 
 			String scenarioId = keyIterator.next();
-			
+
 			ScenarioNode serverScenarioNode = serverScenarioNodes.get(scenarioId);
-			
+
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(serverScenarioNode.getSpcInfoTypeClient());
 
 			ScenarioNode scenarioNode = new ScenarioNode();
@@ -354,7 +351,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			System.out.println("************************************************************");
 			System.out.println();
 			System.out.println("Working for scenario : " + spcInfoTypeClient.getJsName());
-			
+
 			if (serverScenarioNode.getScenarioNodes().size() > 0 || serverScenarioNode.getJobNodes().size() > 0) {
 				System.out.println("Cleaning children of scenario : " + scenarioNode.getName());
 				scenarioNodeTree.getChildren().clear();
@@ -375,7 +372,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			tmpScenarioNode.setName(spcInfoTypeClient.getJsName());
 			tmpScenarioNode.setId(spcInfoTypeClient.getJsId());
-			
+
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, tmpScenarioNode, scenarioNode);
 			scenarioNodeTree.getChildren().add(dummyNode);
 			scenarioNodeTree.setExpanded(false);
@@ -395,7 +392,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		Iterator<JobNode> jobNodeIterator = jobNodes.iterator();
 
 		while (jobNodeIterator.hasNext()) {
-			
+
 			JobNode tmpJobNode = jobNodeIterator.next();
 			JobInfoTypeClient jobInfoTypeClient = tmpJobNode.getJobInfoTypeClient();
 
@@ -403,7 +400,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			JobNode jobNode = new JobNode();
 			jobNode.setId(tmpJobNode.getId());
 			jobNode.setLabelText(jobText);
-			
+
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setName(jobInfoTypeClient.getJobKey());
 			if (jobInfoTypeClient.getLiveStateInfo() == null) {

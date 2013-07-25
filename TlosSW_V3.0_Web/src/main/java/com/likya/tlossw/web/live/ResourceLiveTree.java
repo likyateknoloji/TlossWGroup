@@ -12,7 +12,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -35,16 +34,12 @@ import com.likya.tlossw.webclient.TEJmxMpClient;
 @ViewScoped
 public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2287729115524041857L;
 
+	@ManagedProperty(value = "#{security}")
+	private Security security;
+
 	private TreeNode root;
-
-	// private TreeNode calisanIsler;
-
-	private TreeNode selectedJS;
 
 	private TreeNode selectedTreeNode;
 
@@ -57,9 +52,6 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 	private DefaultTreeNode dummyNode = new DefaultTreeNode(ConstantDefinitions.TREE_DUMMY, new ResourceNode(ConstantDefinitions.TREE_DUMMY), null);
 
 	private String scenarioId;
-	
-	@ManagedProperty(value = "#{security}")
-	private Security security;
 
 	@PostConstruct
 	public void initResourceLiveTree() {
@@ -75,7 +67,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		// mediator.authorizeResource("AvailableResources")) {
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, new ResourceNode(resolveMessage("root")), null);
-		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI,  new ResourceNode(resolveMessage("tlos.live.panel.resources.tree")), root);
+		DefaultTreeNode kaynakListesi = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAKLISTESI, new ResourceNode(resolveMessage("tlos.live.panel.resources.tree")), root);
 
 		kaynakListesi.getChildren().add(dummyNode);
 
@@ -140,8 +132,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			if (root.getChildCount() > 0) {
 				DefaultTreeNode kaynakListesi = (DefaultTreeNode) root.getChildren().get(0);
 				TlosSWResourceNode tlosSpaceWideInputNode = beforeServerRenderLiveTree(kaynakListesi);
-
-				//sunucudan guncel makine listesini ve o makinelerdeki agent listelerini aliyor
+				// sunucudan guncel makine listesini ve o makinelerdeki agent listelerini aliyor
 				tlosSWResourceNode = TEJmxMpClient.getLiveResourceTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				liveTreeCache.put(((Object) tlosSWResourceNode).hashCode(), tlosSWResourceNode);
 			}
@@ -154,7 +145,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	//agacin datasi alinip render icin hazirlaniyor
+	// agacin datasi alinip render icin hazirlaniyor
 	private TlosSWResourceNode beforeServerRenderLiveTree(TreeNode kaynakListesiNode) {
 
 		TlosSWResourceNode tlosSWResourceNode = new TlosSWResourceNode();
@@ -175,15 +166,15 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 				TreeNode resourceTreeNode = kaynakListesiNode.getChildren().get(i);
 				resourceTreeNode.getChildren().remove(dummyNode);
 
-				//ele alinan resourceNode ekranda expand edildiyse altindaki agentlarla ilgileniyor
+				// ele alinan resourceNode ekranda expand edildiyse altindaki agentlarla ilgileniyor
 				if (resourceTreeNode.isExpanded()) {
 
 					ResourceNode serverResourceNode = new ResourceNode();
 					ResourceNode resourceNode = ((ResourceNode) resourceTreeNode.getData());
-					
+
 					serverResourceNode.setLabelText(resourceNode.getLabelText());
 					serverResourceNode.setResourceInfoTypeClient(resourceNode.getResourceInfoTypeClient());
-					
+
 					// kaynak icindeki agent sayisina bakiyoruz
 					int numberOfAgentsInResource = resourceTreeNode.getChildCount();
 
@@ -192,7 +183,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 						DefaultTreeNode tmpAgent = (DefaultTreeNode) resourceTreeNode.getChildren().get(j);
 
 						if (tmpAgent.isExpanded()) {
-							//tlos/monitor ayrimina gore agentlar duzenleniyor
+							// tlos/monitor ayrimina gore agentlar duzenleniyor
 							if (tmpAgent.getData() instanceof MonitorAgentNode) {
 								MonitorAgentNode currentNode = (MonitorAgentNode) tmpAgent.getData();
 								if (currentNode != null) {
@@ -278,7 +269,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 				String resourceName = resourceNode.getResourceInfoTypeClient().getResourceName();
 
-				//ilgili makinenin agent nodelarini ekleyip agaci tamamliyor
+				// ilgili makinenin agent nodelarini ekleyip agaci tamamliyor
 				for (int i = 0; i < serverResourceListNode.getResourceNodes().size(); i++) {
 
 					if (serverResourceListNode.getResourceNodes().get(i).getResourceInfoTypeClient().getResourceName().equals(resourceName)) {
@@ -299,7 +290,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		return kaynakListesi;
 	}
 
-	//sunucudan gelen makine bilgileri ekranda gosterilmek uzere set ediliyor
+	// sunucudan gelen makine bilgileri ekranda gosterilmek uzere set ediliyor
 	private void constructResourceNodes(TreeNode localResourceList, ArrayList<ResourceNode> resourceNodeList) {
 
 		Iterator<ResourceNode> resourceNodeIterator = resourceNodeList.iterator();
@@ -308,41 +299,41 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 			ResourceNode newResourceNode = resourceNodeIterator.next();
 
-			//			ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
+			// ResourceInfoTypeClient resourceInfoTypeClient = new ResourceInfoTypeClient(newResourceNode.getResourceInfoTypeClient());
 
-			//			LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
+			// LiveResourceNavigationContentBean resource = new LiveResourceNavigationContentBean();
 
-			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
+			// ResourceFolderBean resourceFolder = new ResourceFolderBean();
 
-			//			resource.setNavigationSelection(navigationBean);
+			// resource.setNavigationSelection(navigationBean);
 			if (newResourceNode.getResourceInfoTypeClient().getIncludesServer()) {
 				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName() + " (S)");
 			} else {
 				newResourceNode.setLabelText(newResourceNode.getResourceInfoTypeClient().getResourceName());
 			}
-			//			resource.setMenuContentTitle("webmail.navigation.rootNode.title");
-			//			resource.setTemplateName("resourceViewPanel");
-			//			resource.setPageContent(true);
-			//			resource.setExpanded(false);
+			// resource.setMenuContentTitle("webmail.navigation.rootNode.title");
+			// resource.setTemplateName("resourceViewPanel");
+			// resource.setPageContent(true);
+			// resource.setExpanded(false);
 
 			/*
 			 * if (!resourceInfoTypeClient.isActive()) { resource.setBranchContractedIcon("images/navigation_tree/tree_folder_closed_passive.gif"); resource.setBranchExpandedIcon("images/navigation_tree/tree_folder_open_passive.gif"); }
 			 */
 
-			//			resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
-			//			resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
-			//			resourceFolder.setResource(true);
-			//			resource.setResourceFolder(resourceFolder);
+			// resourceFolder.setResourceName(newResourceNode.getResourceInfoTypeClient().getResourceName());
+			// resourceFolder.setResourceInfoTypeClient(resourceInfoTypeClient);
+			// resourceFolder.setResource(true);
+			// resource.setResourceFolder(resourceFolder);
 
 			TreeNode resourceNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_KAYNAK, newResourceNode, localResourceList);
 			resourceNodeTree.setExpanded(false);
 		}
 	}
 
-	//sunucudan alinan her makine icin bu metot cagiriliyor, lokaldeki agactaki ilgili makinenin altina sunucudan gelen agentlar ekleniyor
+	// sunucudan alinan her makine icin bu metot cagiriliyor, lokaldeki agactaki ilgili makinenin altina sunucudan gelen agentlar ekleniyor
 	private void constructLiveResourceTree(TreeNode resourceNode, ResourceNode serverResourceNode) {
 
-		//Tlos agentlari alip agaca ekleyecek
+		// Tlos agentlari alip agaca ekleyecek
 		Iterator<Integer> keyIterator = serverResourceNode.getTlosAgentNodes().keySet().iterator();
 
 		while (keyIterator.hasNext()) {
@@ -356,22 +347,22 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 				tlosAgentNode.setLabelText("Agent" + serverResourceNode.getTlosAgentNodes().get(tlosAgentId).getTlosAgentInfoTypeClient().getAgentId());
 			}
 
-			//			tlosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");
-			//			tlosAgent.setTemplateName("tlosAgentViewPanel");
-			//			tlosAgent.setPageContent(true);
-			//			tlosAgent.setExpanded(false);
-			//			tlosAgent.setLeaf(true);
+			// tlosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");
+			// tlosAgent.setTemplateName("tlosAgentViewPanel");
+			// tlosAgent.setPageContent(true);
+			// tlosAgent.setExpanded(false);
+			// tlosAgent.setLeaf(true);
 
-			//			if (!tlosAgentInfoTypeClient.isOutJmxAvailable()) {
-			//				tlosAgent.setLeafIcon("images/navigation_tree/tree_node.gif");
-			//			}
+			// if (!tlosAgentInfoTypeClient.isOutJmxAvailable()) {
+			// tlosAgent.setLeafIcon("images/navigation_tree/tree_node.gif");
+			// }
 
-			//			ResourceFolderBean resourceFolder = new ResourceFolderBean();
-			//			resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName());
-			//			resourceFolder.setResource(true);
-			//			resourceFolder.setTlosAgent(true);
-			//			resourceFolder.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
-			//			tlosAgent.setResourceFolder(resourceFolder);
+			// ResourceFolderBean resourceFolder = new ResourceFolderBean();
+			// resourceFolder.setResourceName(resourceNode.getResourceFolder().getResourceName());
+			// resourceFolder.setResource(true);
+			// resourceFolder.setTlosAgent(true);
+			// resourceFolder.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
+			// tlosAgent.setResourceFolder(resourceFolder);
 
 			TreeNode tlosAgentNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_TLOSAGENT, tlosAgentNode, resourceNode);
 			tlosAgentNodeTree.setExpanded(false);
@@ -386,12 +377,12 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		}
 
 		MonitorAgentNode monitorAgentNode = serverResourceNode.getMonitorAgentNode();
-		//gelen makine icinde monitor agent var mı diye kontrol ediliyor
+		// gelen makine icinde monitor agent var mı diye kontrol ediliyor
 		if (monitorAgentNode.getMonitorAgentInfoTypeClient().isNrpeAvailable()) {
 
-			//			monitorAgentInfoTypeClient monitorAgentInfoTypeClient = new monitorAgentInfoTypeClient(serverResourceNode.getmonitorAgentNode().getmonitorAgentInfoTypeClient());
+			// monitorAgentInfoTypeClient monitorAgentInfoTypeClient = new monitorAgentInfoTypeClient(serverResourceNode.getmonitorAgentNode().getmonitorAgentInfoTypeClient());
 
-			//monitor agenti agaca ekleyecek
+			// monitor agenti agaca ekleyecek
 
 			monitorAgentNode.setLabelText(MONITOR_AGENT_NAME);
 
@@ -414,22 +405,6 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public TreeNode getRoot() {
-		return root;
-	}
-
-	public void setRoot(TreeNode root) {
-		this.root = root;
-	}
-
-	public TreeNode getSelectedJS() {
-		return selectedJS;
-	}
-
-	public void setSelectedJS(TreeNode selectedJS) {
-		this.selectedJS = selectedJS;
-	}
-
 	public void onNodeExpand(NodeExpandEvent event) {
 		event.getTreeNode().setExpanded(true);
 		treeAction(event);
@@ -438,20 +413,23 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void onNodeCollapse(NodeCollapseEvent event) {
-		event.getTreeNode().getChildren().clear();
+		event.getTreeNode().setExpanded(false);
 		treeAction(event);
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// event.getTreeNode().toString() + " collapsed", null);
 	}
 
-	public void onNodeSelect(NodeSelectEvent event) {
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// event.getTreeNode().toString() + " selected", null);
-	}
-
 	public void onNodeUnselect(NodeUnselectEvent event) {
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// event.getTreeNode().toString() + " unselected", null);
+	}
+
+	public TreeNode getRoot() {
+		return root;
+	}
+
+	public void setRoot(TreeNode root) {
+		this.root = root;
 	}
 
 	public TreeNode getSelectedTreeNode() {
