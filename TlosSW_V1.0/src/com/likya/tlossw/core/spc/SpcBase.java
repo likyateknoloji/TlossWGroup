@@ -20,6 +20,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
@@ -212,6 +213,126 @@ public abstract class SpcBase implements Runnable, Serializable {
 		}
 
 		return true;
+	}
+	
+	public int getNumOfJobs() {
+		return getJobQueue().size();
+	}
+
+	public int getNumOfJobs(String stateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+
+		while (jobsIterator.hasNext()) {
+
+			Job scheduledJob = jobsIterator.next();
+			JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+			StateName.Enum stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName();
+
+			if (stateName != null && stateName.toString().equals(stateNameType)) {
+				counter += 1;
+			}
+
+		}
+
+		return counter;
+	}
+
+	public int getNumOfJobs(SubstateName substateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+			String tmpSubstateNameType = scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
+			if (tmpSubstateNameType != null && tmpSubstateNameType.equals(substateNameType)) {
+				counter += 1;
+			}
+
+		}
+
+		return counter;
+	}
+
+	public int getNumOfJobs(StateName stateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+			if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(stateNameType)) {
+				counter += 1;
+			}
+		}
+
+		return counter;
+	}
+	
+	/*
+	 * state yapisinda time-out statusu running statusunun substate i oldugu icin 
+	 * hem state i running olanlari hem de substate i timeout olanlari toplarsak 
+	 * timeout olanlari iki kere saymis olacagiz. bunun icin o kismi kaldirdim
+	 */
+	public int getNumOfActiveJobs() {
+
+		int numOfWorkingJobs = getNumOfJobs(StateName.RUNNING.toString());
+
+		return numOfWorkingJobs;
+	}
+	
+	public int getNumOfJobsByAgent(int agentId) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+			LiveStateInfo currentStateInfo = null;
+			if (scheduledJob.getJobRuntimeProperties().getJobProperties().getAgentId() != 0 && scheduledJob.getJobRuntimeProperties().getJobProperties().getAgentId() == agentId) {
+				currentStateInfo = getLastStateOfJob(scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos());
+				if (currentStateInfo.getStateName().toString().equalsIgnoreCase(StateName.RUNNING.toString())) {
+					// System.out.println("OK !");
+					counter += 1;
+				}
+			}
+
+		}
+
+		return counter;
+	}
+	
+	public LiveStateInfo getLastStateOfJob(LiveStateInfos liveStateInfos) {
+
+		/*
+		 * TODO Burada tarihe gore siralama yapmaya gerek var mi?
+		 * Varsa asagidakine benzer birsey yapmamiz lazim.
+		 * tarih cevriminde bir problem var, onu cozmemiz lazim tabii once
+		 * 
+		 * int boyut = liveStateInfos.sizeOfLiveStateInfoArray();
+		 * Date refDate = DateUtils.getDateTime( liveStateInfos.getLiveStateInfoArray(0).getLSIDateTime());
+		 * LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
+		 * 
+		 * for (int i=0; i<boyut; i++) {
+		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
+		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
+		 * //com.likya.tlossw.utils.date.DateUtils
+		 * String dateTimeInString = liveStateInfos.getLiveStateInfoArray(i).getLSIDateTime();
+		 * if(DateUtils.getDateTime(dateTimeInString).after(refDate)) {
+		 * refDate = DateUtils.getDateTime(dateTimeInString);
+		 * lastStateInfo = liveStateInfos.getLiveStateInfoArray(i);
+		 * }
+		 * }
+		 */
+		LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
+
+		return lastStateInfo;
 	}
 
 	public boolean isPausable() {
