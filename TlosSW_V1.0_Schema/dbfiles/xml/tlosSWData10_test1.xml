@@ -15,7 +15,7 @@
     <dat:concurrencyManagement>
         <com:concurrent>true</com:concurrent>
     </dat:concurrencyManagement>
-    <dat:scenario xmlns="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:stat="http://www.likyateknoloji.com/state-types" ID="2">
+    <dat:scenario xmlns="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:state-types="http://www.likyateknoloji.com/state-types" ID="2">
         <dat:baseScenarioInfos>
             <com:jsName>100_Job</com:jsName>
             <com:comment>Ayni_anda_100_job</com:comment>
