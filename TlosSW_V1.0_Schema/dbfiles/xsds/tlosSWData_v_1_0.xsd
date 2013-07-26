@@ -348,7 +348,7 @@
 	<xs:element name="findWhat">
 		<xs:complexType>
 			<xs:simpleContent>
-				<xs:extension base="xs:NCName">
+				<xs:extension base="xs:normalizedString">
 					<xs:attribute name="direction" use="required" type="directionType"/>
 					<xs:attribute name="matchCase" use="required" type="xs:boolean"/>
 					<xs:attribute name="matchWholeWordOnly" type="xs:boolean"/>
