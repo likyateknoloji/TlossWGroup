@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="liveResourceForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<br></br>
+
+		<p:fieldset id="resourceList" legend="#{msgs['tlos.live.panel.resources.agentList']}">
+
+			<p:dataTable id="agentListDataTable" var="item" value="#{resourceMBean.agentInfoList}" widgetVar="itemsTable"
+				resizableColumns="true" binding="#{resourceMBean.agentDataTable}" filteredValue="#{resourceMBean.filteredAgents}" emptyMessage="No records found with given criteria" sortMode="multiple"
+				paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15">
+
+				<f:facet name="header">
+					<p:outputPanel>
+						<h:outputText value="#{msgs['tlos.search.all']}" />
+						<p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="width:150px" />
+					</p:outputPanel>
+				</f:facet>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.agentName']}" 
+					sortBy="#{item.agentName}" filterBy="#{item.agentName}" filterMatchMode="contains">
+					<h:outputText value="#{item.agentName}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.agentType']}" 
+					sortBy="#{item.agentType}" filterBy="#{item.agentType}" filterMatchMode="contains">
+					<h:outputText value="#{item.agentType}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.jmxPort']}" 
+					sortBy="#{item.jmxPort}" filterBy="#{item.jmxPort}" filterMatchMode="contains">
+					<h:outputText value="#{item.jmxPort}" />
+				</p:column>
+
+				<p:column headerText="#{msgs['tlos.live.panel.resources.inJmxAvailable']}" 
+					sortBy="#{item.inJmxAvailable}">
+					<p:selectBooleanCheckbox value="#{item.inJmxAvailable}" disabled="true"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs['tlos.live.panel.resources.outJmxAvailable']}" 
+					sortBy="#{item.outJmxAvailable}">
+					<p:selectBooleanCheckbox value="#{item.outJmxAvailable}" disabled="true"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs['tlos.live.panel.resources.jmxAvailable']}" 
+					sortBy="#{item.jmxAvailable}">
+					<p:selectBooleanCheckbox value="#{item.jmxAvailable}" disabled="true"/>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>

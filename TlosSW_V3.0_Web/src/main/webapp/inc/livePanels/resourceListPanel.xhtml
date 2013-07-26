@@ -9,7 +9,7 @@
 
 		<p:fieldset id="resourceList" legend="#{msgs['likya.agac.kaynaklistesi']}">
 
-			<p:dataTable id="jobListDataTable" var="item" value="#{resourceMBean.resourceInfoList}" widgetVar="itemsTable"
+			<p:dataTable id="resourceListDataTable" var="item" value="#{resourceMBean.resourceInfoList}" widgetVar="itemsTable"
 				resizableColumns="true" binding="#{resourceMBean.resourceDataTable}" filteredValue="#{resourceMBean.filteredResources}" emptyMessage="No records found with given criteria" sortMode="multiple"
 				paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15">
@@ -33,12 +33,12 @@
 
 				<p:column headerText="#{msgs['tlos.live.panel.resources.includesServer']}" 
 					sortBy="#{item.includesServer}">
-					<p:selectBooleanCheckbox value="#{item.includesServer}" />
+					<p:selectBooleanCheckbox value="#{item.includesServer}" disabled="true"/>
 				</p:column>
 
 				<p:column headerText="#{msgs['tlos.live.panel.resources.active']}" 
 					sortBy="#{item.active}">
-					<p:selectBooleanCheckbox value="#{item.active}" />
+					<p:selectBooleanCheckbox value="#{item.active}" disabled="true"/>
 				</p:column>
 
 			</p:dataTable>
