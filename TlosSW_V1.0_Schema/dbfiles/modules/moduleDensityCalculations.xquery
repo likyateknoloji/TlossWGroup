@@ -7,7 +7,6 @@ import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperatio
 
 declare namespace rep="http://www.likyateknoloji.com/XML_report_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
-declare namespace stat="http://www.likyateknoloji.com/state-types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
 
 (:
