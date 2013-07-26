@@ -198,4 +198,15 @@ public class ComboListUtils {
 		return agentChoiceMethodList;
 	}
 
+	public static SelectItem[] createFilterOptions(ArrayList<String> data) {
+		SelectItem[] options = new SelectItem[data.size() + 1];
+
+		options[0] = new SelectItem("", "Select");
+		for (int i = 0; i < data.size(); i++) {
+			options[i + 1] = new SelectItem(data.get(i), data.get(i));
+		}
+
+		return options;
+	}
+
 }
