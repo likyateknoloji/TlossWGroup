@@ -18,6 +18,7 @@ import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Re
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
@@ -66,19 +67,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 		System.out.println("");
 		oSList.add("Windows");
 		oSList.add("Unix");
-		oSSelectItem = createFilterOptions(oSList);
-
-	}
-
-	private SelectItem[] createFilterOptions(ArrayList<String> data) {
-		SelectItem[] options = new SelectItem[data.size() + 1];
-
-		options[0] = new SelectItem("", "Select");
-		for (int i = 0; i < data.size(); i++) {
-			options[i + 1] = new SelectItem(data.get(i), data.get(i));
-		}
-
-		return options;
+		oSSelectItem = ComboListUtils.createFilterOptions(oSList);
 	}
 
 	// job taniminda agentChoiceMethod: userInteractionPreference ise ekrandan
