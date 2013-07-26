@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<style>
+.failed {
+	color: red;
+	background-color: black;
+	font-weight: bold;
+}
+</style>
+	<h:form id="liveResourceForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<br></br>
+
+		<p:fieldset id="tlosAgent" legend="#{msgs['tlos.live.panel.tlosagent.header']} - #{tlosAgentMBean.tlosAgentInfoTypeClient.agentName}" style="width: 96%;">
+
+			<p:panel>
+
+			</p:panel>
+
+			<br />
+
+			<ui:include src="/inc/livePanels/commonJobListTable.xhtml">
+				<ui:param name="backingBean" value="#{tlosAgentMBean}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>
