@@ -53,18 +53,11 @@
             <xs:restriction base="xs:anyURI"/>
         </xs:simpleType>
     </xs:element>
-	<!--xs:simpleType name="paramTyp">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="STRING"/>
-			<xs:enumeration value="INTEGER"/>
-			<xs:enumeration value="DATE"/>
-			<xs:enumeration value="TIME"/>
-		</xs:restriction>
-	</xs:simpleType-->
     <xs:element name="parameter">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="name"/>
+                <xs:element name="format" type="formatType" minOccurs="0" maxOccurs="1"/>
                 <xs:choice>
                     <xs:element ref="valueInteger" minOccurs="0" maxOccurs="1"/>
                     <xs:element ref="valueString" minOccurs="0" maxOccurs="1"/>
@@ -79,15 +72,6 @@
             <xs:attribute name="id" use="required" type="xs:integer"/>
         </xs:complexType>
     </xs:element>
-	<!--xs:element name="name">
-		<xs:complexType>
-			<xs:simpleContent>
-				<xs:extension base="xs:NCName">
-					<xs:attribute name="paramType" type="paramTyp" use="required"/>
-				</xs:extension>
-			</xs:simpleContent>
-		</xs:complexType>
-	</xs:element-->
     <xs:element name="name" type="xs:token"/>
     <xs:element name="desc" type="xs:string"/>
     <xs:element name="preValue">
@@ -99,5 +83,14 @@
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
-    
+    <xs:simpleType name="formatType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="XML"/>
+			<xs:enumeration value="CSV"/>
+			<xs:enumeration value="PLAIN"/>
+			<xs:enumeration value="DATE"/>
+			<xs:enumeration value="TIME"/>
+			<xs:enumeration value="DATETIME"/>
+	</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
