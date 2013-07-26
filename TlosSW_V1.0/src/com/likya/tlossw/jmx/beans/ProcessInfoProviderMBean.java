@@ -113,4 +113,6 @@ public interface ProcessInfoProviderMBean {
 	public boolean testDBConnection(JmxUser jmxUser, DbConnectionProfile dbConnectionProfile);
 
 	public ArrayList<ResourceInfoTypeClient> getResourceInfoTypeClientList(JmxUser jmxUser);
+
+	public ArrayList<TlosAgentInfoTypeClient> getTlosAgentInfoTypeClientList(JmxUser jmxUser, String resourceName);
 }

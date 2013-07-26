@@ -1426,4 +1426,24 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		
 		return resourceInfoList;
 	}
+
+	// Web ekranindaki kaynak listesi agacinda herhangi bir kaynak secildiginde buraya geliyor
+	public ArrayList<TlosAgentInfoTypeClient> getTlosAgentInfoTypeClientList(JmxUser jmxUser, String resourceName) {
+
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
+
+		ArrayList<TlosAgentInfoTypeClient> agentInfoList = new ArrayList<TlosAgentInfoTypeClient>();
+
+		HashMap<String, SWAgent> agentList = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache();
+
+		for (SWAgent agent : agentList.values()) {
+			if (agent.getResource().getStringValue().equals(resourceName)) {
+				agentInfoList.add(fillTlosAgentInfoData(agent));
+			}
+		}
+
+		return agentInfoList;
+	}
 }
