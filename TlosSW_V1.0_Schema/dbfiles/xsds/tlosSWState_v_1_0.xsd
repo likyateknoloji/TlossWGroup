@@ -1,5 +1,5 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/state-types" elementFormDefault="qualified">
+<xs:schema xmlns="http://www.likyateknoloji.com/state-types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/state-types" elementFormDefault="qualified">
     <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
     <xs:element name="StateName">
         <xs:simpleType>
