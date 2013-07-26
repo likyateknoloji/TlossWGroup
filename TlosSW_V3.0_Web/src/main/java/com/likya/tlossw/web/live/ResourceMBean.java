@@ -9,8 +9,11 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.component.datatable.DataTable;
 
+import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
 import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
+import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "resourceMBean")
@@ -26,13 +29,27 @@ public class ResourceMBean extends TlosSWBaseBean implements Serializable {
 	private transient DataTable resourceDataTable;
 	private List<ResourceInfoTypeClient> filteredResources;
 
-	private ResourceInfoTypeClient selectedRow;
-	private ResourceInfoTypeClient[] selectedRows;
+	private ArrayList<TlosAgentInfoTypeClient> agentInfoList;
+
+	private transient DataTable agentDataTable;
+	private List<TlosAgentInfoTypeClient> filteredAgents;
 
 	private boolean transformToLocalTime;
 
 	public void fillResourceInfoList() {
 		resourceInfoList = TEJmxMpClient.getResourceInfoTypeClientList(getWebAppUser());
+	}
+
+	public void fillAgentInfoList(String resourceName) {
+		agentInfoList = TEJmxMpClient.getTlosAgentInfoTypeClientList(getWebAppUser(), resourceName);
+
+		for (TlosAgentInfoTypeClient agent : agentInfoList) {
+			if (agent.getAgentType().toLowerCase().equals(AgentType.SERVER.toString().toLowerCase())) {
+				agent.setAgentName(ConstantDefinitions.SERVER_NAME);
+			} else {
+				agent.setAgentName(ConstantDefinitions.AGENT_NAME + agent.getAgentId());
+			}
+		}
 	}
 
 	public ResourceInfoTypeClient getResourceInfoTypeClient() {
@@ -67,28 +84,36 @@ public class ResourceMBean extends TlosSWBaseBean implements Serializable {
 		this.filteredResources = filteredResources;
 	}
 
-	public ResourceInfoTypeClient getSelectedRow() {
-		return selectedRow;
-	}
-
-	public void setSelectedRow(ResourceInfoTypeClient selectedRow) {
-		this.selectedRow = selectedRow;
-	}
-
-	public ResourceInfoTypeClient[] getSelectedRows() {
-		return selectedRows;
-	}
-
-	public void setSelectedRows(ResourceInfoTypeClient[] selectedRows) {
-		this.selectedRows = selectedRows;
-	}
-
 	public boolean isTransformToLocalTime() {
 		return transformToLocalTime;
 	}
 
 	public void setTransformToLocalTime(boolean transformToLocalTime) {
 		this.transformToLocalTime = transformToLocalTime;
+	}
+
+	public List<TlosAgentInfoTypeClient> getFilteredAgents() {
+		return filteredAgents;
+	}
+
+	public void setFilteredAgents(List<TlosAgentInfoTypeClient> filteredAgents) {
+		this.filteredAgents = filteredAgents;
+	}
+
+	public DataTable getAgentDataTable() {
+		return agentDataTable;
+	}
+
+	public void setAgentDataTable(DataTable agentDataTable) {
+		this.agentDataTable = agentDataTable;
+	}
+
+	public ArrayList<TlosAgentInfoTypeClient> getAgentInfoList() {
+		return agentInfoList;
+	}
+
+	public void setAgentInfoList(ArrayList<TlosAgentInfoTypeClient> agentInfoList) {
+		this.agentInfoList = agentInfoList;
 	}
 
 }

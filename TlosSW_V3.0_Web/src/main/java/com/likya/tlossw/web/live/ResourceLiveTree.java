@@ -342,9 +342,9 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			TlosAgentNode tlosAgentNode = serverResourceNode.getTlosAgentNodes().get(tlosAgentId);
 
 			if (tlosAgentNode.getTlosAgentInfoTypeClient().getAgentType().toLowerCase().equals(AgentType.SERVER.toString().toLowerCase())) {
-				tlosAgentNode.setLabelText("Sunucu");
+				tlosAgentNode.setLabelText(ConstantDefinitions.SERVER_NAME);
 			} else {
-				tlosAgentNode.setLabelText("Agent" + serverResourceNode.getTlosAgentNodes().get(tlosAgentId).getTlosAgentInfoTypeClient().getAgentId());
+				tlosAgentNode.setLabelText(ConstantDefinitions.AGENT_NAME + serverResourceNode.getTlosAgentNodes().get(tlosAgentId).getTlosAgentInfoTypeClient().getAgentId());
 			}
 
 			// tlosAgent.setMenuContentTitle("webmail.navigation.rootNode.title");

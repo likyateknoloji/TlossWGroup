@@ -20,10 +20,13 @@ public class ConstantDefinitions {
 	public static final String TREE_UNKNOWN = "unknown";
 	public static final String TREE_DUMMY = "empty";
 
+	public static final String AGENT_NAME = "Agent";
+	public static final String SERVER_NAME = "Sunucu";
+
 	/**
 	 * flex agaci sabitleri
 	 */
 	public static final String LIVE_TREE = "live";
 	public static final String DEFINITION_TREE = "workspace";
-	
+
 }

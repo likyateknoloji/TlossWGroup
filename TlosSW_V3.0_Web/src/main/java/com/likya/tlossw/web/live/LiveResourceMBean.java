@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -24,7 +25,7 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 	private String activeLivePanel = RESOURCELIST_PANEL;
 
 	public final static String RESOURCELIST_PANEL = "/inc/livePanels/resourceListPanel.xhtml";
-	public final static String RESOURCE_PANEL = "/inc/livePanels/scenarioLiveTree.xhtml";
+	public final static String RESOURCE_PANEL = "/inc/livePanels/resourcePanel.xhtml";
 	public final static String AGENT_PANEL = "/inc/livePanels/scenarioLiveTree.xhtml";
 	public final static String JOB_PANEL = "/inc/livePanels/jobLiveTree.xhtml";
 
@@ -37,10 +38,17 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 
 	public void onNodeSelect(NodeSelectEvent event) {
 
-		if (event.getTreeNode().getType().equals(ConstantDefinitions.TREE_KAYNAKLISTESI)) {
+		String nodeType = event.getTreeNode().getType();
+		if (nodeType.equals(ConstantDefinitions.TREE_KAYNAKLISTESI)) {
 			getResourceMBean().fillResourceInfoList();
 
 			activeLivePanel = RESOURCELIST_PANEL;
+		} else if (nodeType.equals(ConstantDefinitions.TREE_KAYNAK)) {
+			ResourceNode resourceNode = (ResourceNode)event.getTreeNode().getData();
+			String resourceName = resourceNode.getResourceInfoTypeClient().getResourceName();
+			getResourceMBean().fillAgentInfoList(resourceName);
+			
+			activeLivePanel = RESOURCE_PANEL;
 		}
 	}
 
