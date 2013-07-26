@@ -907,4 +907,39 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		return null;
 	}
 	
+	/**
+	 * Sunucudan Tlos Agent bilgilerini istiyor
+	 * 
+	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
+	 * @param tlosAgentId Bilgileri istenen Tlos Agent'in id numarasi
+	 * @return Sunucudan aldigi Tlos Agent bilgilerini donuyor
+	 */
+	
+	/**
+	 * Sunucudan ilgili kaynaktaki Tlos Agent listesini istiyor
+	 * 
+	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
+	 * @param resourceName Kaynak adı
+	 * @return Tlos Agent listesi
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<TlosAgentInfoTypeClient> getTlosAgentInfoTypeClientList(JmxUser jmxUser, String resourceName) {
+
+		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
+
+		Object[] paramList = { jmxUser, resourceName };
+		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
+		Object o;
+
+		try {
+			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getTlosAgentInfoTypeClientList", paramList, signature);
+			TEJmxMpClient.disconnect(jmxConnector);
+			return (ArrayList<TlosAgentInfoTypeClient>) o;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }
