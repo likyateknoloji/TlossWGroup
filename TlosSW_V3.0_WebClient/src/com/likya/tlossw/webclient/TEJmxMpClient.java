@@ -906,15 +906,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		}
 		return null;
 	}
-	
-	/**
-	 * Sunucudan Tlos Agent bilgilerini istiyor
-	 * 
-	 * @param jmxUser Jmx sunucusuna baglanmak icin gerekli kullanici bilgileri
-	 * @param tlosAgentId Bilgileri istenen Tlos Agent'in id numarasi
-	 * @return Sunucudan aldigi Tlos Agent bilgilerini donuyor
-	 */
-	
+
 	/**
 	 * Sunucudan ilgili kaynaktaki Tlos Agent listesini istiyor
 	 * 
