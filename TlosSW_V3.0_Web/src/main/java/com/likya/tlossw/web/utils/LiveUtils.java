@@ -4,10 +4,9 @@ import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 
 public class LiveUtils {
 	
-	// path hesaplanirkenki '.' ayracini '|' ile degistirdim, cunku job adinda '.' oldugu zaman sorun cikiyor
 	public static String jobPath(JobInfoTypeClient job) {
 		String jobPath = new String();
-		jobPath = job.getTreePath() + "|" + job.getJobKey();
+		jobPath = job.getTreePath() + "." + job.getJobKey();
 		return jobPath;
 	}
 	
