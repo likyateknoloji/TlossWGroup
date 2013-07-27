@@ -54,9 +54,9 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 			liveJSTable = SCENARIO_PAGE;
 		} else if (event.getTreeNode().getType().equals(ConstantDefinitions.TREE_JOB)) {
 			JobNode jobNode = (JobNode) event.getTreeNode().getData();
-			String jobName = jobNode.getName();
+			String jobId = jobNode.getId();
 			String groupId = jobNode.getPath();
-			getJobMBean().fillJobLivePanel(groupId, jobName);
+			getJobMBean().fillJobLivePanel(groupId, jobId);
 
 			liveJSTable = JOB_PAGE;
 		}
