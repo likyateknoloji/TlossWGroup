@@ -2378,7 +2378,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		jobInfoTypeClient.setLSIDateTime(jobProperties.getLSIDateTime());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
-		jobInfoTypeClient.setJobKey(jobProperties.getBaseJobInfos().getJsName());
+		jobInfoTypeClient.setJobKey(jobProperties.getID());
 		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 		// jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
@@ -2432,7 +2432,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			Iterator<Item> dependencyListIterator = dependencyList.iterator();
 			ArrayList<String> depenArrayList = new ArrayList<String>();
 			while (dependencyListIterator.hasNext()) {
-				depenArrayList.add(dependencyListIterator.next().getJsName());
+				depenArrayList.add(dependencyListIterator.next().getJsId());
 			}
 			jobInfoTypeClient.setJobDependencyList(depenArrayList);
 			// jobInfoTypeClient.setDependJobNumber(depenArrayList.size());
