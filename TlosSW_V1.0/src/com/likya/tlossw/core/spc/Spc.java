@@ -266,7 +266,7 @@ public class Spc extends SpcBase {
 
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcId(), getJobQueue().size()));
-			getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
+			getMyLogger().info("     > SPC ID : " + this.getSpcId() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
 		} else {
 			getGlobalLogger().error("getSpaceWideRegistry().getInfoBusManager() == null !");
 		}
@@ -479,7 +479,7 @@ public class Spc extends SpcBase {
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 
 		getMyLogger().info("");
-		getMyLogger().info("     > " + jobProperties.getBaseJobInfos().getJsName() + " Calisma zamani gelmis, <Server> da calistirilacak. !");
+		getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " Calisma zamani gelmis, <Server> da calistirilacak. !");
 
 		getMyLogger().info("");
 		getMyLogger().info(scheduledJob.getJobRuntimeProperties().toString());
@@ -504,7 +504,7 @@ public class Spc extends SpcBase {
 		starterThread.setName(this.getSpcId());
 		scheduledJob.setMyExecuter(starterThread);
 
-		getMyLogger().info("     > " + jobProperties.getBaseJobInfos().getJsName() + " isi icin <Server> da bir thread acildi !");
+		getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " isi icin <Server> da bir thread acildi !");
 		getMyLogger().info("");
 
 		scheduledJob.getMyExecuter().start();
@@ -558,9 +558,9 @@ public class Spc extends SpcBase {
 		if (!transferSuccess) { // Eger agent a transfer basarili olmadi ise onden ekledigimiz state leri silmemiz gerekiyor. HS
 			jobProperties.getStateInfos().getLiveStateInfos().removeLiveStateInfo(0);
 			jobProperties.getStateInfos().getLiveStateInfos().removeLiveStateInfo(0);
-			getMyLogger().info("     > " + jobProperties.getBaseJobInfos().getJsName() + " isi <Agent#" + jobProperties.getAgentId() + "#> da calistirilAMAdi !");
+			getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " isi <Agent#" + jobProperties.getAgentId() + "#> da calistirilAMAdi !");
 		} else
-			getMyLogger().info("     > " + jobProperties.getBaseJobInfos().getJsName() + " isi <Agent#" + jobProperties.getAgentId() + "#> da calistirildi !");
+			getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " isi <Agent#" + jobProperties.getAgentId() + "#> da calistirildi !");
 
 		return transferSuccess;
 	}
