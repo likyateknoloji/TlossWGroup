@@ -184,7 +184,7 @@ public class Dss {
 							 * var. O yuzden DailyScenarios a yeni bir is olarak
 							 * kaydini yapalim.
 							 */
-							Logger.getLogger(Dss.class).info("     > " + jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
+							Logger.getLogger(Dss.class).info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 							job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getW3CDateTime());
 							DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
 							// DBUtils.insertJobInTheBeginning(jobProperties,
