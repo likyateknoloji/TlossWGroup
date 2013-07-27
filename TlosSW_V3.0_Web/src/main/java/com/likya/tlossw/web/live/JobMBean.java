@@ -57,17 +57,18 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean transformToLocalTime;
 	
-	public void fillJobLivePanel(String groupId, String jobName) {
-		setJobInfo(groupId, jobName);
+	public void fillJobLivePanel(String groupId, String jobId) {
+		setJobInfo(groupId, jobId);
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
 
-	public void setJobInfo(String groupId, String jobName) {
+	public void setJobInfo(String groupId, String jobId) {
 		jobInTyCl = new JobInfoTypeClient();
-		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), groupId, jobName, transformToLocalTime);
+		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), groupId, jobId, transformToLocalTime);
 
 		// TODO Eger XML ise uygulanmali.
+		//jobInTyCl.getOutParameterType() hakans
 		WebOutputUtils webOutputUtils= new WebOutputUtils();
 		jobInTyCl.setOutParameterValue(webOutputUtils.formatXml(jobInTyCl.getOutParameterValue()));
 		
@@ -80,8 +81,8 @@ public class JobMBean extends TlosSWBaseBean implements Serializable {
 
 		jobDependencyListStr = "";
 		if (jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
-			for (String depJobName : jobInTyCl.getJobDependencyList()) {
-				jobDependencyListStr += depJobName + ",";
+			for (String depJobId : jobInTyCl.getJobDependencyList()) {
+				jobDependencyListStr += depJobId + ",";
 			}
 			jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
 		}
