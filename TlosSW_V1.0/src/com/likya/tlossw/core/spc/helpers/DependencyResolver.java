@@ -58,7 +58,7 @@ public class DependencyResolver {
 				if (jobQueue.get(item.getJsId()) == null) {
 					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 				}
-				jobRuntimeProperties = jobQueue.get(item.getJsName()).getJobRuntimeProperties();
+				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
 				// Global bir bagimlilik
 				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + instanceId + "." + item.getJsPath());
