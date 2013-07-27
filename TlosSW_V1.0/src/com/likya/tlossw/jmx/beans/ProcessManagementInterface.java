@@ -85,7 +85,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		}
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc("root." + maxInstanceId + "." + EngineeConstants.LONELY_JOBS, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
-		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().get(jobProperties.getBaseJobInfos().getJsName()) != null) {
+		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().get(jobProperties.getID()) != null) {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.SCENARIO_DUPLICATEJOBNAME), null);
 		}
 
@@ -104,8 +104,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 		logger.info("[stopJob] command received for job : " + jobId);
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
@@ -135,8 +135,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -173,8 +173,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -205,8 +205,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -237,8 +237,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -268,8 +268,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -306,8 +306,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		}
 
 		// path hesaplanirkenki '.' ayracini '|' ile degistirdim, cunku job adinda '.' oldugu zaman sorun cikiyor
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -354,8 +354,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -390,8 +390,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		ArrayList<Resource> resourceList = new ArrayList<Resource>();
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 
@@ -415,8 +415,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return false;
 		}
 
-		String jobId = jobPath.substring(jobPath.lastIndexOf("|") + 1);
-		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("|"));
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
+		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
 			logger.info("Scenario is not available for  accepting commands !");
@@ -476,8 +476,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		return false;
 	}
 	
-	private void updateStartConditions(HashMap<String, Job> jobQueue, String jobName, Calendar myCalendar) {
-		ArrayList<Job> dependencyList = JobQueueOperations.getDependencyList(jobQueue, jobName);
+	private void updateStartConditions(HashMap<String, Job> jobQueue, String jobId, Calendar myCalendar) {
+		ArrayList<Job> dependencyList = JobQueueOperations.getDependencyList(jobQueue, jobId);
 		if (dependencyList == null) {
 			return;
 		}
