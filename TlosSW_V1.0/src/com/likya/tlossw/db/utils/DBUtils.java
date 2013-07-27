@@ -191,14 +191,14 @@ public class DBUtils extends DBBase {
 
 		while (dependentJobListIterator.hasNext()) {
 			Item item = (Item) dependentJobListIterator.next();
-			String jobName = item.getJsName();
-
+			String jobId = item.getJsId();
+			
 			ArrayIterator jobListIterator = new ArrayIterator(jobList);
 
 			while (jobListIterator.hasNext()) {
 				JobProperties jobProperties = (JobProperties) jobListIterator.next();
 
-				if (jobProperties.getBaseJobInfos().getJsName().equals(jobName)) {
+				if (jobProperties.getID().equals(jobId)) {
 					if (jobProperties.getTimeManagement().getJsPlannedTime() != null && jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
 						return jobProperties.getTimeManagement().getJsPlannedTime().getStartTime();
 					} else {
