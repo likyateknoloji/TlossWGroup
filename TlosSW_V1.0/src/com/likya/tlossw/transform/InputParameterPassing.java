@@ -152,14 +152,14 @@ public class InputParameterPassing {
 			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
 				// bir
 				// bagimlilik
-				if (jobQueue.get(item.getJsName()) == null) {
+				if (jobQueue.get(item.getJsId()) == null) {
 					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 				}
-				jobRuntimeProperties = jobQueue.get(item.getJsName()).getJobRuntimeProperties();
+				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 
 				JobProperties job = jobRuntimeProperties.getJobProperties();
 				OutParam outParameter = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
