@@ -274,7 +274,7 @@ public class DssFresh {
 				 * var. O yuzden DailyScenarios a yeni bir is olarak
 				 * kaydini yapalim.
 				 */
-				myLogger.info("     > " + jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
+				myLogger.info("     > ID : " + jobProperties.getID() + ":" +  jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 
 				job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getW3CDateTime());
 
