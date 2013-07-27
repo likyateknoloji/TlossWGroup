@@ -1706,7 +1706,7 @@ public class DBOperations implements Serializable {
 
 		jobInfoTypeClient.setLSIDateTime(jobProperties.getLSIDateTime());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
-		jobInfoTypeClient.setJobKey(jobProperties.getBaseJobInfos().getJsName());
+		jobInfoTypeClient.setJobKey(jobProperties.getID());
 		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
