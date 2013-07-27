@@ -133,7 +133,7 @@ public abstract class CpcBase implements Runnable {
 			// jobPropertiesType.getBaseJobInfos().getOSystem().toString();
 			// if(validationRequired.equalsIg<noreCase("windows")) break;
 
-			String jobKey = jobPropertiesType.getBaseJobInfos().getJsName();
+			String jobKey = jobPropertiesType.getID();
 
 			// if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals("BATCH PROCESS")) {
 			// jobPropertiesType.getJobDescription().getApplication().getPOSIXApplication().getArgumentArray(1);
@@ -155,7 +155,7 @@ public abstract class CpcBase implements Runnable {
 
 			}
 
-			myLogger.info("   > Is ismi : " + jobKey);
+			myLogger.info("   > Is Id si: " + jobKey);
 			myLogger.info("   > Listeye eklemek icin validasyon yapiyorum. ");
 
 			if (!testTable.containsKey(jobKey)) {
@@ -165,8 +165,8 @@ public abstract class CpcBase implements Runnable {
 
 			} else {
 
-				myLogger.error("Ayni isimde birden fazla anahtar kullanilamaz ! => " + jobKey);
-				myLogger.info("     > Hayir, serbest joblar icinde ayni isimde birden fazla is kullanilamaz.");
+				myLogger.error("Ayni Id ile birden fazla anahtar kullanilamaz ! => " + jobKey);
+				myLogger.info("     > Hayir, serbest joblar icinde ayni Id ile birden fazla is kullanilamaz.");
 
 				return false;
 			}
