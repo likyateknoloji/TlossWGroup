@@ -126,7 +126,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			SortType sortType = jobQueueIndexIterator.next();
 			Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
 			jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
-			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName().equals(jobId)) {
+			if (jobRuntimeProperties.getJobProperties().getID().equals(jobId)) {
 				break;
 			}
 		}
@@ -137,7 +137,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getInstanceId());
 		jobInfoTypeClient.setJobId(jobRuntimeProperties.getJobProperties().getID());
-		jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
+		jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 		jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
@@ -196,7 +196,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			Iterator<Item> dependencyListIterator = dependencyList.iterator();
 			ArrayList<String> depenArrayList = new ArrayList<String>();
 			while (dependencyListIterator.hasNext()) {
-				depenArrayList.add(dependencyListIterator.next().getJsName());
+				depenArrayList.add(dependencyListIterator.next().getJsId());
 			}
 			jobInfoTypeClient.setJobDependencyList(depenArrayList);
 			// jobInfoTypeClient.setDependJobNumber(depenArrayList.size());
@@ -267,7 +267,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
 
 			jobInfoTypeClient.setJobId(jobRuntimeProperties.getJobProperties().getID());
-			jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
+			jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
@@ -320,7 +320,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				Iterator<Item> dependencyListIterator = dependencyList.iterator();
 				ArrayList<String> depenArrayList = new ArrayList<String>();
 				while (dependencyListIterator.hasNext()) {
-					depenArrayList.add(dependencyListIterator.next().getJsName());
+					depenArrayList.add(dependencyListIterator.next().getJsId());
 				}
 				jobInfoTypeClient.setJobDependencyList(depenArrayList);
 			}
@@ -1223,7 +1223,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
 
 			jobInfoTypeClient.setJobId(jobRuntimeProperties.getJobProperties().getID());
-			jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
+			jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
@@ -1276,7 +1276,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				Iterator<Item> dependencyListIterator = dependencyList.iterator();
 				ArrayList<String> depenArrayList = new ArrayList<String>();
 				while (dependencyListIterator.hasNext()) {
-					depenArrayList.add(dependencyListIterator.next().getJsName());
+					depenArrayList.add(dependencyListIterator.next().getJsId());
 				}
 				jobInfoTypeClient.setJobDependencyList(depenArrayList);
 			}
