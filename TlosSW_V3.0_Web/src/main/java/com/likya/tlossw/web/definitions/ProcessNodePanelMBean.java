@@ -292,12 +292,12 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 
 		} else if (processType.equals(TRANSFORM)) {
 			Transform transform = Transform.Factory.newInstance();
-
-			if (sourceType.equals(Source.XML.toString()) && getTransformType().equals(With.XSLT.toString())) {
+            // TODO Source.XML.toString() null geliyor. Sebebini bulamadım. Simdilik "xml" koydum yerine. HS 26.07.2013
+			if (sourceType.equals("xml") && getTransformType().equals(With.XSLT.toString())) {
 				transform.setWith(With.XSLT);
-				if(!transformCommand.startsWith("<![CDATA[")) {
-					transformCommand = new String("<![CDATA[".concat(transformCommand).concat("]]>"));
-				}
+//				if(!transformCommand.startsWith("<![CDATA[")) {
+//					transformCommand = new String("<![CDATA[".concat(transformCommand).concat("]]>"));
+//				}
 				transform.setStringValue(transformCommand);
 			}
 
