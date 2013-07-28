@@ -13,20 +13,23 @@
 
 		<h:form id="dashboardReports" prependId="false">
 
-			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+			<p:growl id="growl" showDetail="true" autoUpdate="true" />
 
 			<p:fieldset legend="Job Density Graphics" widgetVar="dashWidget"
 				style="width: 1500px;">
 
 				<p:panel id="density" header="Overall Job Execution Density">
-					<p:lineChart id="category"
+					<p:barChart id="category"
 						value="#{jobsDensityGraphicsMBean.denseModel}"
-						seriesColors="F73C84" animate="true" zoom="true"
+						seriesColors="F73C84, 13253e, b22924, 009ec5, dc143c, ffc613, ff0097, 40e0d1, 00ff00" animate="true" zoom="true"
 						legendPosition="e" minY="0.0" xaxisAngle="20" maxY="#{jobsDensityGraphicsMBean.maxValue}"
-						yaxisLabel="Number of Jobs Running" xaxisLabel="Time"
-						style="width:1200px;height:600px;margin-top:20px; font-size:1em" />
-					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-						action="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
+						yaxisLabel="Number of Jobs Running" xaxisLabel="Time" stacked="#{jobsDensityGraphicsMBean.stacked}"
+						style="width:1200px;height:600px;margin-top:20px; font-size:1em" >
+						
+						<p:ajax event="itemSelect" listener="#{jobsDensityGraphicsMBean.itemSelect}" update="growl" /> 
+					</p:barChart>
+					<p:commandButton id="densityButton" value="#{msgs['tlos.button.chartRefresh']}" update="density" ajax="true"
+						actionListener="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
 				</p:panel>
 
 			</p:fieldset>
