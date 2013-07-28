@@ -47,6 +47,8 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 	private Long maxValue;
 	
 	private boolean stacked = false;
+	
+	private int stepForDensity = 10;
 
 	private BigInteger sizeOfReport;
 
@@ -104,6 +106,12 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 	}
 
+	public void changeDensityStep() {
+		
+		createDenseModel();
+
+	}
+	
     public void itemSelect(ItemSelectEvent event) {  
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",  
                         "Item Index: " + event.getItemIndex() + ", Series Index:" + event.getSeriesIndex());  
@@ -125,7 +133,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 					TransformUtils.toXSString("TIME-IN"),
 					"xs:dateTime(\"2013-07-25T17:04:00.205+03:00\")",
 					"xs:dateTime(\"2013-07-25T17:06:16.363+03:00\")",
-					"xs:dayTimeDuration('PT10S')");
+					"xs:dayTimeDuration('PT" + stepForDensity + "S')");
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -292,6 +300,14 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 	public void setStacked(boolean stacked) {
 		this.stacked = stacked;
+	}
+
+	public int getStepForDensity() {
+		return stepForDensity;
+	}
+
+	public void setStepForDensity(int stepForDensity) {
+		this.stepForDensity = stepForDensity;
 	}
 
 
