@@ -28,8 +28,16 @@
 						
 						<p:ajax event="itemSelect" listener="#{jobsDensityGraphicsMBean.itemSelect}" update="growl" /> 
 					</p:barChart>
-					<p:commandButton id="densityButton" value="#{msgs['tlos.button.chartRefresh']}" update="density" ajax="true"
+					<p:commandButton id="densityStackedButton" value="#{msgs['tlos.button.chartStacked']}" update="density" ajax="true"
 						actionListener="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
+						
+                    <h:outputLabel for="stepForDensity" value="#{msgs['tlos.button.chartDensityStep']}" />  
+                    <p:inputText id="stepForDensityInput"   
+                       value="#{jobsDensityGraphicsMBean.stepForDensity}" required="true" label="#{msgs['tlos.button.chartDensityStep']}">  
+                       <f:validateLength minimum="1" maximum="2"/>  
+                    </p:inputText> 
+					<p:commandButton id="densityStepButton" value="#{msgs['tlos.button.chartRefresh']}" update="density" ajax="true"
+						actionListener="#{jobsDensityGraphicsMBean.changeDensityStep}" />
 				</p:panel>
 
 			</p:fieldset>
