@@ -72,9 +72,13 @@ declare function hs:getScenarioFromId($documentUrl as xs:string, $userId as xs:s
    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
    
 	let $doc := doc($dataDocumentUrl) 
-	for $scenario in $doc//dat:scenario
-        where $scenario/@ID = $id
-        return $scenario
+	let $sonuc := if($id eq 0) then
+                    <dat:scenario ID="0"> { $doc/dat:TlosProcessData/* } </dat:scenario>
+                  else
+                    for $scenario in $doc//dat:scenario
+                    where $scenario/@ID = $id
+                    return $scenario
+    return $sonuc
 };
 
 declare function hs:scenarioList($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as element(dat:scenario)* 
