@@ -13,17 +13,12 @@ package com.likya.tlossw.transform;
  @see [ParameterPassing#passParameter]
  **/
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-
-import net.java.dev.eval.Expression;
-import org.apache.log4j.Logger;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
@@ -41,8 +36,6 @@ import com.likya.tlossw.core.cpc.Cpc;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.core.spc.SpcBase;
-import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
@@ -119,7 +112,7 @@ public class InputParameterPassing {
 		return null;
 	}
 
-	public synchronized boolean setInputParameterViaDependency(HashMap<String, Job> jobQueue, Job ownerJob) throws UnresolvedDependencyException {
+	public synchronized boolean setInputParameterViaDependency(HashMap<Integer, Job> jobQueue, Job ownerJob) throws UnresolvedDependencyException {
 
 		Boolean assignmentOk = false;
 
