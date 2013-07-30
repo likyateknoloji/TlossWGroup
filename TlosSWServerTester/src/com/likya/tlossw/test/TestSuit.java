@@ -321,7 +321,7 @@ public abstract class TestSuit {
 		// jobInfo.setTreePath(getJobRuntimeProperties().getTreePath());
 
 		jobInfo.setTreePath("/TlosProcessDataAll/RUN[@id='1119']/dat:TlosProcessData/dat:jobList/dat:jobProperties[@ID='1' and @agentId='1' and not(exists(@LSIDateTime))]");
-		jobInfo.setJobKey("JobKey");
+		jobInfo.setJobName("JobKey");
 		jobInfo.setJobID("1");
 		jobInfo.setUserID(1);
 		jobInfo.setAgentID(1);

@@ -123,7 +123,7 @@ public class HPOVManager implements Runnable {
 							DssDbUtils.swFindAlarms(jobInfo.getJobID(), jobInfo.getUserID(), jobInfo.getAgentID(), liveStateInfo);
 
 							logger.info("  > ");
-							logger.info("  > DB guncellemesi. " + jobInfo.getJobKey() + " icin state durumu.");
+							logger.info("  > DB guncellemesi. " + jobInfo.getJobID() + " icin state durumu.");
 							logger.info("  > " + jobInfo.getTreePath());
 							logger.info("  > " + liveStateInfo);
 						}
