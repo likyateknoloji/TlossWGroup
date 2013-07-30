@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
-	<style>
-.failed {
-	color: red;
-	background-color: black;
-	font-weight: bold;
-}
-</style>
+
 	<h:form id="liveResourceForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
 		<br></br>
 
 		<p:fieldset id="tlosAgent" legend="#{msgs['tlos.live.panel.tlosagent.header']} - #{tlosAgentMBean.tlosAgentInfoTypeClient.agentName}" style="width: 96%;">
-
+			
 			<p:panel>
 
+				<p:commandButton id="forcedDeactivateButton" 
+					value="#{msgs['tlos.live.panel.tlosagent.forcedDeactivate']}" 
+					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.forcedDeactivate and security.ForcedDeactivateTAgent}"
+					action="#{tlosAgentMBean.forcedDeactivateAgentAction}" />
+	
+				<p:commandButton id="normalDeactivateButton"
+					value="#{msgs['tlos.live.panel.tlosagent.normalDeactivate']}"
+					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.normalDeactivate and security.NormalDeactivateTAgent}"
+					actionListener="#{tlosAgentMBean.normalDeactivateTAgentAction}" />
+	
+				<p:commandButton id="activateButton"
+					value="#{msgs['tlos.live.panel.tlosagent.activate']}"
+					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.activate and security.ActivateTAgent}"
+					actionListener="#{tlosAgentMBean.activateTAgentAction}" />
+		
 			</p:panel>
 
 			<br />
