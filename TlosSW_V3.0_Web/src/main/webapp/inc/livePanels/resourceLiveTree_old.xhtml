@@ -9,24 +9,20 @@
 	<h:form id="resourceLiveTreeForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:contextMenu for="tree" nodeType="kaynaklistesi">
-			<p:menuitem value="Refresh" update="tree"
+		<p:contextMenu for="resourceTree" nodeType="kaynaklistesi">
+			<p:menuitem value="Refresh" update="resourceTree"
 				actionListener="#{resourceLiveTree.renderLiveTree}" icon="ui-icon-refresh" />
 		</p:contextMenu>
-		
-		<p:tree value="#{resourceLiveTree.root}" var="node" id="tree" animate="true"
-			style="width:350px;height:720px" dynamic="true" cache="false"
-			selectionMode="single" selection="#{resourceLiveTree.selectedTreeNode}">
 
-			<p:ajax event="expand" update=":resourceLiveTreeForm:messages"
-				listener="#{resourceLiveTree.onNodeExpand}" />
-			<p:ajax event="collapse" update=":resourceLiveTreeForm:messages"
-				listener="#{resourceLiveTree.onNodeCollapse}" />
-			<p:ajax event="select" update=":liveResourceForm"
-				listener="#{liveResourceMBean.onNodeSelect}" />
-			<p:ajax event="unselect" update=":resourceLiveTreeForm:messages"
-				listener="#{resourceLiveTree.onNodeUnselect}" />
-			
+		<p:tree value="#{resourceLiveTree.root}" var="node" style="width:350px;height:720px" dynamic="true" 
+			cache="false" id="resourceTree" animate="true" selectionMode="single"
+			selection="#{resourceLiveTree.selectedTreeNode}">
+
+			<p:ajax event="expand" listener="#{resourceLiveTree.onNodeExpand}" />
+			<p:ajax event="collapse" listener="#{resourceLiveTree.onNodeCollapse}" />
+			<p:ajax event="select" listener="#{liveResourceMBean.onNodeSelect}" update=":liveResourceForm" />
+			<p:ajax event="unselect" listener="#{resourceLiveTree.onNodeUnselect}" />
+
 			<p:treeNode type="kaynaklistesi">
 				<h:outputText value="#{node.labelText}" id="resourceList" />
 			</p:treeNode>
@@ -54,16 +50,10 @@
 			<p:treeNode type="empty">
 				<h:outputText value="#{msgs['tlos.live.panel.resources.empty']}" />
 			</p:treeNode>
-			
 		</p:tree>
-		
-		<p:blockUI block=":center" trigger="tree">  
-        	LOADING<br />
-			<p:graphicImage value="/images/ajax-loader.gif" />
-		</p:blockUI>
-		
-		<p:poll interval="10" listener="#{resourceLiveTree.renderLiveTree}" update=":resourceLiveTreeForm:tree" />
-			
+
+		<p:poll interval="10" listener="#{resourceLiveTree.renderLiveTree}" update=":resourceLiveTreeForm:resourceTree" />
+
 	</h:form>
 
 </ui:composition>
