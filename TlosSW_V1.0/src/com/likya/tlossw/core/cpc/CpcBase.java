@@ -126,14 +126,17 @@ public abstract class CpcBase implements Runnable {
 
 		ArrayIterator jobListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
 		String validationRequired = "NO";
+		
 		while (jobListIterator.hasNext()) {
+			
 			JobProperties jobPropertiesType = (JobProperties) (jobListIterator.next());
 
 			// String validationRequired =
 			// jobPropertiesType.getBaseJobInfos().getOSystem().toString();
 			// if(validationRequired.equalsIg<noreCase("windows")) break;
 
-			String jobKey = jobPropertiesType.getID();
+			String jobId = jobPropertiesType.getID();
+			String jobName = jobPropertiesType.getBaseJobInfos().getJsName();
 
 			// if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals("BATCH PROCESS")) {
 			// jobPropertiesType.getJobDescription().getApplication().getPOSIXApplication().getArgumentArray(1);
@@ -155,17 +158,18 @@ public abstract class CpcBase implements Runnable {
 
 			}
 
-			myLogger.info("   > Is Id si: " + jobKey);
+			myLogger.info("   > Is Id si: " + jobId);
+			myLogger.info("   > Is Adı : " + jobName);
 			myLogger.info("   > Listeye eklemek icin validasyon yapiyorum. ");
 
-			if (!testTable.containsKey(jobKey)) {
+			if (!testTable.containsKey(jobId)) {
 
-				testTable.put(jobKey, jobKey);
+				testTable.put(jobId, jobId);
 				myLogger.info("     > OK isim validated.");
 
 			} else {
 
-				myLogger.error("Ayni Id ile birden fazla anahtar kullanilamaz ! => " + jobKey);
+				myLogger.error("Ayni Id ile birden fazla anahtar kullanilamaz ! => " + jobId);
 				myLogger.info("     > Hayir, serbest joblar icinde ayni Id ile birden fazla is kullanilamaz.");
 
 				return false;
@@ -188,12 +192,12 @@ public abstract class CpcBase implements Runnable {
 
 			if (jobCommandType != null && jobCommandType.equals(JobCommandType.SYSTEM_COMMAND) && !FileUtils.checkFile(fileNameWtihPath)) {
 				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : " + jobKey + " i�in belirtilen is dosyasi bulunamadi -> " + jobCommandType);
+				myLogger.fatal("HATA : id : " + jobId + " name : " + jobName + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
 
 				return false;
 			} else if (jobCommandType.equals(JobCommandType.BATCH_PROCESS) && (!FileUtils.checkFile(fileNameWtihPath) && jobPropertiesType.getBaseJobInfos().getOSystem().toString().equals("Windows"))) {
 				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : " + jobKey + " i�in belirtilen is dosyasi bulunamadi -> " + jobCommandType);
+				myLogger.fatal("HATA : id : " + jobId + " name : " + jobName + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
 
 				return false;
 			} else {
