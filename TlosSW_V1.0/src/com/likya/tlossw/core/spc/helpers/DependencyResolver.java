@@ -26,7 +26,7 @@ import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 
 public class DependencyResolver {
 	
-	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String instanceId, HashMap<String, Job> jobQueue, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
+	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String instanceId, HashMap<Integer, Job> jobQueue, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 	
 		String ownerJsName = ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName();
 		
