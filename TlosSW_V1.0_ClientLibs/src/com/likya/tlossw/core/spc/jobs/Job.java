@@ -138,7 +138,8 @@ public abstract class Job implements Runnable, Serializable {
 
 			String jobPath = ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
 			jobStart.setTreePath(jobPath);
-			jobStart.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+			// jobStart.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+			jobStart.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 			jobStart.setJobID(getJobRuntimeProperties().getJobProperties().getID());
 			jobStart.setUserID(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getUserId());
 
@@ -192,7 +193,8 @@ public abstract class Job implements Runnable, Serializable {
 		JobInfo jobInfo = new JobInfo();
 
 		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime()));
-		jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+		//jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 		jobInfo.setJobID(getJobRuntimeProperties().getJobProperties().getID());
 		jobInfo.setUserID(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getUserId());
 		jobInfo.setAgentID(getJobRuntimeProperties().getJobProperties().getAgentId());
@@ -251,7 +253,8 @@ public abstract class Job implements Runnable, Serializable {
 
 		ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime());
 		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime()));
-		jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+		// jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 		jobInfo.setLiveLiveStateInfo(liveStateInfo);
 		// jobInfo.getLiveLiveStateInfo().setLSIDateTime(DateUtils.getW3CDateTime());
 		Date infoTime = Calendar.getInstance().getTime();
