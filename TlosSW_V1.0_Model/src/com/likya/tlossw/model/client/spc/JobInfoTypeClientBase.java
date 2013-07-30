@@ -12,11 +12,10 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 
 	private static final long serialVersionUID = 1L;
 
-	// Paramaters from JobPropertiesType
-
-	private String treePath;
 	private String jobId;
-	private String jobKey;
+	private String jobName;
+//	private String jobKey;
+	private String treePath;
 	private String jobPath;
 	private String jobCommand;
 	private String jobLogPath;
@@ -46,13 +45,13 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 		this.jobPath = jobPath;
 	}
 
-	public String getJobKey() {
-		return jobKey;
-	}
-
-	public void setJobKey(String jobKey) {
-		this.jobKey = jobKey;
-	}
+//	public String getJobKey() {
+//		return jobKey;
+//	}
+//
+//	public void setJobKey(String jobKey) {
+//		this.jobKey = jobKey;
+//	}
 
 	public String getJobCommand() {
 		return jobCommand;
@@ -170,14 +169,6 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 		this.treePath = treePath;
 	}
 
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
-	}
-
-	public String getJobId() {
-		return jobId;
-	}
-
 	public void setoSystem(String oSystem) {
 		this.oSystem = oSystem;
 	}
@@ -202,5 +193,20 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 		return jobPlanEndTime;
 	}
 
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
 	
 }
