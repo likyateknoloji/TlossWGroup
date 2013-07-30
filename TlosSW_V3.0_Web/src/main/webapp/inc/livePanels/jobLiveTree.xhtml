@@ -14,12 +14,12 @@
 
 		<br></br>
 
-		<p:fieldset id="jobManagement" legend="#{msgs['tlos.live.pannel.job.header']} - #{jobMBean.jobInTyCl.jobKey}" style="width: 96%;">
+		<p:fieldset id="jobManagement" legend="#{msgs['tlos.live.pannel.job.header']} - #{jobMBean.jobInTyCl.jobName}" style="width: 96%;">
 
 			<p:panel id="jobInfoPanel">
 				<p:panelGrid columns="4">
 					<h:outputText value="#{msgs['tlos.live.pannel.job.jobName']}" />
-					<p:inputText value="#{jobMBean.jobInTyCl.jobKey}" readonly="true" maxlength="500" style="width: 150px;" />
+					<p:inputText value="#{jobMBean.jobInTyCl.jobName}" readonly="true" maxlength="500" style="width: 150px;" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.oSystem}" readonly="true" maxlength="500" style="width: 150px;" />
@@ -324,7 +324,7 @@
 					<p:panel id="jobReportDetailPanel">
 						<p:panelGrid columns="4">
 							<h:outputText value="#{msgs['tlos.live.pannel.job.jobName']}" />
-							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobKey}" readonly="true" maxlength="500" style="width: 150px;" />
+							<p:inputText value="#{jobMBean.selectedJobBaseReport.jobName}" readonly="true" maxlength="500" style="width: 150px;" />
 
 							<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 							<p:inputText value="#{jobMBean.selectedJobBaseReport.oSystem}" readonly="true" maxlength="500" style="width: 150px;" />
