@@ -225,7 +225,7 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 
 			JobNode jobNode = new JobNode();
 
-			jobNode.setLabelText(jobInfoTypeClient.getJobKey());
+			jobNode.setLabelText(jobInfoTypeClient.getJobName());
 			jobNode.setLeafIcon(DecorationUtils.jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setPath(jobInfoTypeClient.getTreePath());
 

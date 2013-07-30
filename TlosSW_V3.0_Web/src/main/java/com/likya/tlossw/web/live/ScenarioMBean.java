@@ -95,7 +95,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void assignAgentForJob(ActionEvent e) {
-		boolean assigned = TEJmxMpClient.assignAgentForJob(getWebAppUser(), selectedRow.getTreePath() + "." + selectedRow.getJobKey(), selectedResource);
+		boolean assigned = TEJmxMpClient.assignAgentForJob(getWebAppUser(), selectedRow.getTreePath() + "." + selectedRow.getJobName(), selectedResource);
 
 		if (assigned) {
 			addMessage("assignAgentForJob", FacesMessage.SEVERITY_INFO, "tlos.trace.agentAssignedForJob", null);

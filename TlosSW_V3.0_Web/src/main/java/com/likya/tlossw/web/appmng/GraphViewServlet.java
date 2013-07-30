@@ -129,15 +129,18 @@ public class GraphViewServlet extends HttpServlet {
 					colorIndicator = 0xFF0040;
 				} 
 				
+				String jobId = job.getJobId();
+				String jobName = job.getJobName();
+				
 				if(job.getJobDependencyList() != null && job.getJobDependencyList().size() > 0) {
 					for(String dependencyItem: job.getJobDependencyList()) {
-						edgesML += "<Edge fromID=\"" + dependencyItem + "\" toID=\"" + job.getJobKey() + "\" color=\"" + colorIndicator + "\" flow=\"50\"  />\n";
+						edgesML += "<Edge fromID=\"" + dependencyItem + "\" toID=\"" + jobId + "\" color=\"" + colorIndicator + "\" flow=\"50\"  />\n";
 					}
 				} else {
-					edgesML += "<Edge fromID=\"" + rootKey + "\" toID=\"" + job.getJobKey() + "\" color=\"" + colorIndicator + "\" flow=\"50\"  />\n";
+					edgesML += "<Edge fromID=\"" + rootKey + "\" toID=\"" + jobId + "\" color=\"" + colorIndicator + "\" flow=\"50\"  />\n";
 				} 
 				
-				gml += "<Node id=\"" + job.getJobKey() + "\" name=\"" + job.getJobKey() + "\" desc=\"" + job.getJobKey() + "\" nodeColor=\"" + colorIndicator + "\" nodeSize=\""
+				gml += "<Node id=\"" + jobId + "\" name=\"" + jobName + "\" desc=\"" + jobName + "\" nodeColor=\"" + colorIndicator + "\" nodeSize=\""
 				+ "32" + "\" nodeClass=\"" + "earth" + "\" nodeIcon=\"" + nodeIcon + "\" />\n";
 			}
 		}
