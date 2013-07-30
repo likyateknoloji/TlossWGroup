@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.primefaces.component.datatable.DataTable;
@@ -20,7 +21,7 @@ import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
-@ManagedBean
+@ManagedBean(name = "tlosAgentMBean")
 @ViewScoped
 public class TlosAgentMBean extends TlosSWBaseBean implements Serializable {
 
@@ -43,18 +44,38 @@ public class TlosAgentMBean extends TlosSWBaseBean implements Serializable {
 	private boolean transformToLocalTime;
 
 	public void initializeTlosAgentPanel(int agentId) {
+
 		tlosAgentInfoTypeClient = TEJmxMpClient.retrieveTlosAgentInfo(getWebAppUser(), agentId);
 		if (tlosAgentInfoTypeClient.getAgentType().toLowerCase().equals(AgentType.SERVER.toString().toLowerCase())) {
 			tlosAgentInfoTypeClient.setAgentName(ConstantDefinitions.SERVER_NAME);
 		} else {
 			tlosAgentInfoTypeClient.setAgentName(ConstantDefinitions.AGENT_NAME + tlosAgentInfoTypeClient.getAgentId());
 		}
-		
+
 		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getAgentsJobList(getWebAppUser(), agentId, transformToLocalTime);
 
 		oSList.add(OsType.WINDOWS.toString());
 		oSList.add(OsType.UNIX.toString());
 		oSSelectItem = ComboListUtils.createFilterOptions(oSList);
+	}
+
+	public void forcedDeactivateAgentAction() {
+		TEJmxMpClient.deactivateTlosAgent(getWebAppUser(), getTlosAgentInfoTypeClient().getAgentId(), true);
+		refreshTlosAgentPanel();
+	}
+
+	public void normalDeactivateTAgentAction(ActionEvent e) {
+		TEJmxMpClient.deactivateTlosAgent(getWebAppUser(), getTlosAgentInfoTypeClient().getAgentId(), false);
+		refreshTlosAgentPanel();
+	}
+
+	public void activateTAgentAction(ActionEvent e) {
+		TEJmxMpClient.activateTlosAgent(getWebAppUser(), getTlosAgentInfoTypeClient().getAgentId());
+		refreshTlosAgentPanel();
+	}
+
+	private void refreshTlosAgentPanel() {
+		initializeTlosAgentPanel(tlosAgentInfoTypeClient.getAgentId());
 	}
 
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
