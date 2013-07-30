@@ -81,8 +81,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 	
 	private static String logLabel;
 
-	transient private Logger globalLogger;
-	transient private Logger myLogger;
+	transient private Logger globalLogger = SpaceWideRegistry.getGlobalLogger();
+	transient private Logger myLogger = Logger.getLogger(SpcBase.class);
 
 	transient private Thread executerThread;
 
@@ -104,8 +104,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		logLabel = "Spc_" + this.getSpcId();
 
-		globalLogger = SpaceWideRegistry.getGlobalLogger();
-		myLogger = Logger.getLogger(SpcBase.class);
 	}
 
 	public boolean initScenarioInfo() { // Senaryolarin ilk baslatilmalari icin
