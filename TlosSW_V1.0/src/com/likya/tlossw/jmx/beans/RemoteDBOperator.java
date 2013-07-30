@@ -2378,7 +2378,8 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		jobInfoTypeClient.setLSIDateTime(jobProperties.getLSIDateTime());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
-		jobInfoTypeClient.setJobKey(jobProperties.getID());
+		// jobInfoTypeClient.setJobKey(jobProperties.getID());
+		jobInfoTypeClient.setJobName(jobProperties.getBaseJobInfos().getJsName());
 		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 		// jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
