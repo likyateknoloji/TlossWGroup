@@ -318,7 +318,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 
-		HashMap<String, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
+		HashMap<Integer, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
 		if (jobQueue.containsKey(jobId)) {
 			Job myJob = jobQueue.get(jobId);
 			if (myJob.getJobRuntimeProperties().isStartable()) {
@@ -476,7 +476,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		return false;
 	}
 	
-	private void updateStartConditions(HashMap<String, Job> jobQueue, String jobId, Calendar myCalendar) {
+	private void updateStartConditions(HashMap<Integer, Job> jobQueue, String jobId, Calendar myCalendar) {
 		ArrayList<Job> dependencyList = JobQueueOperations.getDependencyList(jobQueue, jobId);
 		if (dependencyList == null) {
 			return;
