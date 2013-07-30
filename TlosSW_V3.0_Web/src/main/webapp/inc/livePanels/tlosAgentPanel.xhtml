@@ -11,10 +11,14 @@
 
 		<br></br>
 
+		<p:commandButton value="Non-Ajax Submit" actionListener="#{tlosAgentMBean.refreshTlosAgentPanel}" ajax="false" />
+
 		<p:fieldset id="tlosAgent" legend="#{msgs['tlos.live.panel.tlosagent.header']} - #{tlosAgentMBean.tlosAgentInfoTypeClient.agentName}" style="width: 96%;">
 			
 			<p:panel>
-
+				
+				<h:outputText value="#{tlosAgentMBean}" />
+				
 				<p:commandButton id="forcedDeactivateButton" 
 					value="#{msgs['tlos.live.panel.tlosagent.forcedDeactivate']}" 
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.forcedDeactivate and security.ForcedDeactivateTAgent}"
@@ -23,12 +27,12 @@
 				<p:commandButton id="normalDeactivateButton"
 					value="#{msgs['tlos.live.panel.tlosagent.normalDeactivate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.normalDeactivate and security.NormalDeactivateTAgent}"
-					actionListener="#{tlosAgentMBean.normalDeactivateTAgentAction}" />
+					actionListener="#{tlosAgentMBean.normalDeactivateAgentAction}" />
 	
 				<p:commandButton id="activateButton"
 					value="#{msgs['tlos.live.panel.tlosagent.activate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.activate and security.ActivateTAgent}"
-					actionListener="#{tlosAgentMBean.activateTAgentAction}" />
+					actionListener="#{tlosAgentMBean.activateAgentAction}" />
 		
 			</p:panel>
 
