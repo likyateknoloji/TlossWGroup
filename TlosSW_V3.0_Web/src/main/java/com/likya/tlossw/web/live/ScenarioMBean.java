@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,13 +19,14 @@ import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Re
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.live.helpers.LiveJobManagementBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
 @ManagedBean(name = "scenarioMBean")
 @ViewScoped
-public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
+public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterface, Serializable {
 
 	private static final long serialVersionUID = 4922375731088848331L;
 
@@ -49,6 +51,13 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean transformToLocalTime;
 
+	private LiveJobManagementBean liveJobManagementBean;
+	
+	@PostConstruct
+	public void init() {
+		setLiveJobManagementBean(new LiveJobManagementBean(this));
+	}
+	
 	public void getJobList(String scenarioId) {
 		
 		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(getWebAppUser(), scenarioId);
@@ -146,92 +155,15 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 		 */
 	}
 
-	public void pauseJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.pauseJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.pause");
-		 */
-	}
-
-	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
-	public void startUserBasedJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
-		 */
-	}
-
-	public void startJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.startJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
-		 */
-	}
-
-	public void retryJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.retryJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.retry");
-		 */
-	}
-
-	public void doSuccessJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.doSuccess(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.doSuccess");
-		 */
-	}
-
-	public void skipJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.skipJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.skip");
-		 */
-	}
-
-	public void stopJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.stopJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.stop");
-		 */
-	}
-
-	public void resumeJobAction(ActionEvent e) {
-		JobInfoTypeClient job = (JobInfoTypeClient) jobDataTable.getRowData();
-		TEJmxMpClient.resumeJob(getWebAppUser(), LiveUtils.jobPath(job));
-		refreshLivePanel(job.getTreePath());
-
-		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.resume");
-		 */
-	}
-
-	private void refreshLivePanel(String scenarioPath) {
+	public void refreshLivePanel(String scenarioPath) {
 		getJobList(scenarioPath);
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
+	}
+	
+	@Override
+	public void refreshTlosAgentPanel() {
 	}
 
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
@@ -328,6 +260,14 @@ public class ScenarioMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedResource(String selectedResource) {
 		this.selectedResource = selectedResource;
+	}
+
+	public LiveJobManagementBean getLiveJobManagementBean() {
+		return liveJobManagementBean;
+	}
+
+	public void setLiveJobManagementBean(LiveJobManagementBean liveJobManagementBean) {
+		this.liveJobManagementBean = liveJobManagementBean;
 	}
 
 }
