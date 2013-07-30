@@ -288,7 +288,7 @@ public class Spc extends SpcBase {
 			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
 			SortType sortType = jobQueueIndexIterator.next();
 
-			Job scheduledJob = getJobQueue().get(sortType.getJobKey());
+			Job scheduledJob = getJobQueue().get(sortType.getJobId());
 			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 
@@ -450,7 +450,7 @@ public class Spc extends SpcBase {
 			if (isJobDependencyResolved(scheduledJob, dependencyExpression, dependencyArray)) {
 				if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
 					// if (DssFresh.transferPermission(scheduledJob)) {
-					preparAndTransform(scheduledJob, sortType.getJobKey());
+					preparAndTransform(scheduledJob, sortType.getJobId());
 				}
 			} else {
 				// Bu durumda job bagimliliklarindan beklenenler var demektir.
@@ -464,7 +464,7 @@ public class Spc extends SpcBase {
 		} else { // Herhangi bir bagimliligi yok !!
 			if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
 				// if (DssFresh.transferPermission(scheduledJob)) {
-				preparAndTransform(scheduledJob, sortType.getJobKey());
+				preparAndTransform(scheduledJob, sortType.getJobId());
 			}
 		}
 
@@ -516,7 +516,7 @@ public class Spc extends SpcBase {
 		return SpcUtils.getJobPropertiesWithSpecialParameters(jobRuntimeProperties);
 	}
 
-	private synchronized boolean transferJobToAgent(Job scheduledJob, String jobKey) {
+	private synchronized boolean transferJobToAgent(Job scheduledJob, Integer jobId) {
 
 		/**
 		 * Biri bir diğerini içeiren iki nesen de aynı alanlar olması konusunda 
@@ -528,7 +528,7 @@ public class Spc extends SpcBase {
 		// agenta gonderilecek islerde gondermeden once JobRuntimeProperties icinde olup jobproperties icinde olmayan kisimlar jobproperties icine aliniyor
 		JobProperties jobProperties = getJobPropertiesWithSpecialParameters(scheduledJob.getJobRuntimeProperties());
 
-		String rxMessageKey = getTransferedJobKey(jobProperties.getAgentId(), jobKey, jobProperties.getLSIDateTime());
+		String rxMessageKey = getTransferedJobKey(jobProperties.getAgentId(), jobId, jobProperties.getLSIDateTime());
 		RxMessage rxMessage = XmlUtils.generateRxMessage(jobProperties, rxMessageKey);
 
 		SWAgent agent = getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache().get(jobProperties.getAgentId() + "");
@@ -565,7 +565,7 @@ public class Spc extends SpcBase {
 		return transferSuccess;
 	}
 
-	private synchronized void preparAndTransform(Job scheduledJob, String jobKey) throws UnresolvedDependencyException, TransformCodeCreateException {
+	private synchronized void preparAndTransform(Job scheduledJob, Integer jobId) throws UnresolvedDependencyException, TransformCodeCreateException {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		int agentId = jobProperties.getAgentId();
@@ -616,7 +616,7 @@ public class Spc extends SpcBase {
 		} else {
 			scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().addNewJsRealTime().addNewStartTime().setTime(Calendar.getInstance());
 			
-			boolean transferSuccess = transferJobToAgent(scheduledJob, jobKey);
+			boolean transferSuccess = transferJobToAgent(scheduledJob, jobId);
 			
 			long transferTime = System.currentTimeMillis();
 
@@ -699,8 +699,8 @@ public class Spc extends SpcBase {
 		return isRecovered;
 	}
 
-	public String getTransferedJobKey(int agentId, String jobKey, String lsiDateTime) {
-		String transferedJobKey = getInstanceId() + "|" + getSpcId() + "|" + jobKey + "|" + agentId + "|" + lsiDateTime;
+	public String getTransferedJobKey(int agentId, Integer jobId, String lsiDateTime) {
+		String transferedJobKey = getInstanceId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
 
 		return transferedJobKey;
 	}
@@ -756,7 +756,7 @@ public class Spc extends SpcBase {
 			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
 			SortType sortType = jobQueueIndexIterator.next();
 
-			Job scheduledJob = getJobQueue().get(sortType.getJobKey());
+			Job scheduledJob = getJobQueue().get(sortType.getJobId());
 			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 

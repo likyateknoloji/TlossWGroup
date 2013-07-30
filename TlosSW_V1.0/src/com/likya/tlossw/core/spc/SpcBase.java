@@ -119,7 +119,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			// TODO Hosuma gitmedi ama tip d�n�s�m� uyguladim.
 			// isleri onceliklerine gore siraya dizdigimiz bir dizi
 			// tanimlamistik, ona ekleyip siralandiralim.
-			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getID(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+			
+			int jobId = new Integer(jobRuntimeProperties.getJobProperties().getID()).intValue();
+			
+			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 			// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
 			// yok. Koyulacak.
 
@@ -176,8 +179,9 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			jobRuntimeProperties.setTreePath(getSpcId());
 
-			// TODO Ho�uma gitmedi ama tip d�n�s�m� yaptim
-			jobQueueIndex.add(new SortType(jobRuntimeProperties.getJobProperties().getID(), jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+			int jobId = new Integer(jobRuntimeProperties.getJobProperties().getID()).intValue();
+			
+			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 
 			Job myJob = null;
 

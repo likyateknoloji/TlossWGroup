@@ -126,7 +126,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		while (jobQueueIndexIterator.hasNext()) {
 
 			SortType sortType = jobQueueIndexIterator.next();
-			Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
+			Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobId());
 			jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 			if (jobRuntimeProperties.getJobProperties().getID().equals(jobId)) {
 				break;
@@ -266,7 +266,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		while (jobQueueIndexIterator.hasNext()) {
 
 			SortType sortType = jobQueueIndexIterator.next();
-			Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
+			Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobId());
 
 			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 			JobInfoTypeClient jobInfoTypeClient = new JobInfoTypeClient();
@@ -562,9 +562,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				Iterator<SortType> jobQueueIndexIterator = spcInfoType.getSpcReferance().getJobQueueIndex().iterator();
 				while (jobQueueIndexIterator.hasNext()) {
 					SortType sortType = jobQueueIndexIterator.next();
-					Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobKey());
+					Job scheduledJob = spcInfoType.getSpcReferance().getJobQueue().get(sortType.getJobId());
 					JobStatusSummary jobStatus = new JobStatusSummary();
-					jobStatus.setJobId(sortType.getJobKey());
+					jobStatus.setJobId(sortType.getJobId() + "");
 					// TODO Serkan : Burası kontrol edilecek !!!!!!
 					// jobStatus.setJobStatus(scheduledJob.getJobRuntimeProperties().getJobProperties().getLiveStateInfo().getSubstateName().intValue());
 

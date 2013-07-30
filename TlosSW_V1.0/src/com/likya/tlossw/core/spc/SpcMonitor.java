@@ -41,7 +41,7 @@ public class SpcMonitor implements Runnable {
 				
 				SortType sortType = jobQueueIndexIterator.next();
 				
-				Job scheduledJob = jobQueue.get(sortType.getJobKey());
+				Job scheduledJob = jobQueue.get(sortType.getJobId());
 				
 				JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 				
