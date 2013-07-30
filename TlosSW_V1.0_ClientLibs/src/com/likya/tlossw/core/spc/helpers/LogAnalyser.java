@@ -130,6 +130,7 @@ public class LogAnalyser {
 					break;
 				case ModeType.INT_REG_EX:
 					result = in.nextLine().matches(searchString);
+					break;
 				default:
 					throw new UnsupportedOperationException();
 				}
