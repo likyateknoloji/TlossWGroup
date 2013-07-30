@@ -148,7 +148,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 						if(debug) {
 							logger.info("  > ");
-							logger.info("  > DB guncellemesi. " + jobInfo.getJobKey() + " icin state durumu.");
+							logger.info("  > DB guncellemesi. id: " + jobInfo.getJobID() + " name : " +  jobInfo.getJobName() + " icin state durumu.");
 							logger.info("  > " + jobInfo.getTreePath());
 							logger.info("  > " + liveStateInfo);
 						}
