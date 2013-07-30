@@ -52,8 +52,8 @@
 					</p:outputPanel>
 				</f:facet>
 
-				<p:column headerText="#{msgs['tlos.live.pannel.job.jobName']}" sortBy="#{item.jobKey}" filterBy="#{item.jobKey}" filterMatchMode="contains">
-					<h:outputText value="#{item.jobKey}" style="text-align: center;" />
+				<p:column headerText="#{msgs['tlos.live.pannel.job.jobName']}" sortBy="#{item.jobName}" filterBy="#{item.jobName}" filterMatchMode="contains">
+					<h:outputText value="#{item.jobName}" style="text-align: center;" />
 				</p:column>
 
 				<p:column headerText="#{msgs['tlos.live.pannel.job.stateInfo']}" sortBy="#{item.liveStateInfo.stateName}" filterBy="#{item.liveStateInfo.stateName}" filterMatchMode="contains">
