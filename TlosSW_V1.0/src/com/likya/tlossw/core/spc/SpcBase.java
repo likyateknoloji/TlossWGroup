@@ -77,7 +77,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private ArrayList<JobRuntimeProperties> taskList;
 
 	private ArrayList<SortType> jobQueueIndex;
-	private HashMap<String, Job> jobQueue;
+	private HashMap<Integer, Job> jobQueue;
 	
 	private static String logLabel;
 
@@ -99,7 +99,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.taskList = taskList;
 		this.spaceWideRegistry = spaceWideRegistry;
 
-		jobQueue = new HashMap<String, Job>();
+		jobQueue = new HashMap<Integer, Job>();
 		jobQueueIndex = new ArrayList<SortType>();
 
 		logLabel = "Spc_" + this.getSpcId();
@@ -114,9 +114,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			jobRuntimeProperties.setTreePath(getSpcId());
-			// TODO Hosuma gitmedi ama tip d�n�s�m� uyguladim.
-			// isleri onceliklerine gore siraya dizdigimiz bir dizi
-			// tanimlamistik, ona ekleyip siralandiralim.
 			
 			int jobId = new Integer(jobRuntimeProperties.getJobProperties().getID()).intValue();
 			
@@ -147,9 +144,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 				myLogger.info("     > Peryodik olmayan " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " isi calistirilmaya hazir !");
 				myJob = getMyJob(jobRuntimeProperties);
 			}
-			if (myJob != null) {
+			
+			String jobIdStr = jobRuntimeProperties.getJobProperties().getID();
+			
+			if (myJob != null && jobIdStr != null) {
 				// isi jobQueue ya ID si ile birlikte koyalim.
-				getJobQueue().put(jobRuntimeProperties.getJobProperties().getID(), myJob);
+				
+				getJobQueue().put(new Integer(jobIdStr), myJob);
 			}
 		}
 
@@ -203,9 +204,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 				// TODO myJob = getMyJob(jobRuntimeProperties); olmasi gerekmez mi ? Hakan
 			}
 
-			if (myJob != null) {
+			String jobIdStr = jobRuntimeProperties.getJobProperties().getID();
+			
+			if (myJob != null && jobIdStr != null) {
 				// isi jobQueue ya id si ile birlikte koyalim.
-				getJobQueue().put(jobRuntimeProperties.getJobProperties().getID(), myJob);
+				getJobQueue().put(new Integer(jobIdStr), myJob);
 			}
 
 			Collections.sort(jobQueueIndex);
@@ -501,7 +504,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return spcId;
 	}
 
-	public HashMap<String, Job> getJobQueue() {
+	public HashMap<Integer, Job> getJobQueue() {
 		return jobQueue;
 	}
 
