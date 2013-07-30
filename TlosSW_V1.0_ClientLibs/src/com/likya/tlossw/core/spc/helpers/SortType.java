@@ -38,7 +38,7 @@ public class SortType implements Comparable<SortType>,Serializable {
 	public SortType(Integer jobId, int priortiyLevel) {
 		super();
 		// this.jobKey = jobKey;
-		// this.jobId = this.jobId;
+		this.jobId = jobId;
 		this.priortiyLevel = priortiyLevel;
 	}
 
