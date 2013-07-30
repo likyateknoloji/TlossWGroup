@@ -40,8 +40,8 @@ public class Cpc extends CpcBase {
 					while (taskQueueIndexIterator.hasNext()) {
 
 						SortType sortType = taskQueueIndexIterator.next();
-						Object task = taskQueueManager.getTask(sortType.getJobKey());
-						executeTask(task, sortType.getJobKey());
+						Object task = taskQueueManager.getTask(sortType.getJobId() + "");
+						executeTask(task, sortType.getJobId() + "");
 
 					}
 				}
