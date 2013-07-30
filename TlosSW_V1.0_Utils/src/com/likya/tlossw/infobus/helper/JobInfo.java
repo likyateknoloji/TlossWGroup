@@ -26,20 +26,21 @@ public class JobInfo implements InfoType {
 	private static final long serialVersionUID = 6215054106876862103L;
 
 	private String treePath;
-	private String jobKey;
+//	private String jobKey;
+	private String jobName;
 	private String jobID;
 	private int agentID;
 	private int userID;
 	private Date infoDate;
 	private LiveStateInfo liveLiveStateInfo;
 
-	public String getJobKey() {
-		return jobKey;
-	}
-
-	public void setJobKey(String jobKey) {
-		this.jobKey = jobKey;
-	}
+//	public String getJobKey() {
+//		return jobKey;
+//	}
+//
+//	public void setJobKey(String jobKey) {
+//		this.jobKey = jobKey;
+//	}
 
 	public Date getInfoDate() {
 		return infoDate;
@@ -87,6 +88,14 @@ public class JobInfo implements InfoType {
 
 	public void setAgentID(int agentID) {
 		this.agentID = agentID;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 
 }

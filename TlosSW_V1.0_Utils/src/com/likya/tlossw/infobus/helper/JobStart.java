@@ -20,7 +20,7 @@ public class JobStart extends JobInfo {
 	private static final long serialVersionUID = 6164026950216235026L;
 
 	private String jobPath;
-	private String jobKey;
+//	private String jobKey;
 
 	public String getJobPath() {
 		return jobPath;
@@ -30,12 +30,12 @@ public class JobStart extends JobInfo {
 		this.jobPath = jobPath;
 	}
 
-	public String getJobKey() {
-		return jobKey;
-	}
-
-	public void setJobKey(String jobKey) {
-		this.jobKey = jobKey;
-	}
+//	public String getJobKey() {
+//		return jobKey;
+//	}
+//
+//	public void setJobKey(String jobKey) {
+//		this.jobKey = jobKey;
+//	}
 
 }
