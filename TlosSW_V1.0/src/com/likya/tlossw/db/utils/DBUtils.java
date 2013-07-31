@@ -71,7 +71,7 @@ public class DBUtils extends DBBase {
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
-				HashMap<Integer, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId);
+				HashMap<String, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId);
 				Iterator<Job> jobsIterator = jobQueue.values().iterator();
 
 				while (jobsIterator.hasNext()) {
