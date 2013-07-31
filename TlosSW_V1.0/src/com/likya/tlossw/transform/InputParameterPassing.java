@@ -119,8 +119,9 @@ public class InputParameterPassing {
 		JobProperties jobProperties = ownerJob.getJobRuntimeProperties().getJobProperties();
 		DependencyList dependentJobList = jobProperties.getDependencyList();
 
-		if (dependentJobList == null)
+		if (dependentJobList == null) {
 			return false;
+		}
 
 		String dependencyExpression = dependentJobList.getDependencyExpression().trim().toUpperCase();
 		Item[] dependencyArray = jobProperties.getDependencyList().getItemArray();
@@ -133,7 +134,7 @@ public class InputParameterPassing {
 		while (dependencyArrayIterator.hasNext()) {
 
 			Item item = (Item) (dependencyArrayIterator.next());
-			int jobId = new Integer(item.getJsId()).intValue();
+			String jobId = item.getJsId();
 			
 			JobRuntimeProperties jobRuntimeProperties = null;
 
