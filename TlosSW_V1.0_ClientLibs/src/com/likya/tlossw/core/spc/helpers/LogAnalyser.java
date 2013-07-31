@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.likya.tlos.model.xmlbeans.data.DirectionType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -79,7 +81,7 @@ public class LogAnalyser {
 			break;
 
 		case DirectionType.INT_UP:
-			throw new UnsupportedOperationException();
+			retValue = reverseFind(sourceFile, " " + searchString + " ", isCaseSensitive, modeType);
 		default:
 			throw new UnsupportedOperationException();
 		}
@@ -123,11 +125,11 @@ public class LogAnalyser {
 
 				case ModeType.INT_NORMAL:
 					
-					result = searchString(in.nextLine(), searchString, isCaseSensitive);
+					result = searchNormal(in.nextLine(), searchString, isCaseSensitive);
 
 					break;
 				case ModeType.INT_REG_EX:
-					result = in.nextLine().matches(searchString);
+					result = searchRegEx(in.nextLine(), searchString, isCaseSensitive);
 					break;
 				default:
 					throw new UnsupportedOperationException();
@@ -164,11 +166,11 @@ public class LogAnalyser {
 
 				case ModeType.INT_NORMAL:
 
-					result = searchString(in.nextLine(), searchString, isCaseSensitive);
+					result = searchNormal(in.nextLine(), searchString, isCaseSensitive);
 
 					break;
 				case ModeType.INT_REG_EX:
-					result = in.nextLine().matches(searchString);
+					result = searchRegEx(in.nextLine(), searchString, isCaseSensitive);
 					break;
 				default:
 					throw new UnsupportedOperationException();
@@ -188,7 +190,7 @@ public class LogAnalyser {
 
 	}
 	
-	private static boolean searchString(String source, String key, boolean isCaseSensitive) {
+	private static boolean searchNormal(String source, String key, boolean isCaseSensitive) {
 		
 		boolean result = false;
 		
@@ -201,4 +203,22 @@ public class LogAnalyser {
 		return result;
 	}
 
+	private static boolean searchRegEx(String source, String key, boolean isCaseSensitive) {
+		
+		boolean result = false;
+		Pattern pattern = null;
+		
+		if(isCaseSensitive) {
+			pattern = Pattern.compile(key);
+		} else {
+			pattern = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
+		}
+		
+		Matcher matcher = pattern.matcher(source);
+		
+	
+		result = matcher.find();
+				
+		return result;
+	}
 }
