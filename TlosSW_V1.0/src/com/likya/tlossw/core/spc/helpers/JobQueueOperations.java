@@ -30,7 +30,7 @@ public class JobQueueOperations {
 	 * @param jobQueue
 	 * @return true, false
 	 */
-	public static boolean isJobQueueOver(HashMap<Integer, Job> jobQueue) {
+	public static boolean isJobQueueOver(HashMap<String, Job> jobQueue) {
 
 		if (jobQueue != null) {
 			Iterator<Job> jobsIterator = jobQueue.values().iterator();
@@ -55,7 +55,7 @@ public class JobQueueOperations {
 		return true;
 	}
 
-	public static void dumpJobQueue(String spcID, HashMap<Integer, Job> jobQueue) {
+	public static void dumpJobQueue(String spcID, HashMap<String, Job> jobQueue) {
 
 		@SuppressWarnings("unused")
 		String queueDumpInfo = " JOB QUEUE >> ";
@@ -116,7 +116,7 @@ public class JobQueueOperations {
 	 *            : Spc'ye ait iş listesi
 	 * @return
 	 */
-	public static boolean persistJobQueue(String fileName, HashMap<Integer, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean persistJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		FileOutputStream fos = null;
 		FileOutputStream fosIdx = null;
@@ -148,7 +148,7 @@ public class JobQueueOperations {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean recoverJobQueue(String fileName, HashMap<Integer, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean recoverJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		FileInputStream fis = null;
 		FileInputStream fisIdx = null;
@@ -159,7 +159,7 @@ public class JobQueueOperations {
 			in = new ObjectInputStream(fis);
 			Object input = in.readObject();
 
-			jobQueue.putAll((HashMap<Integer, Job>) input);
+			jobQueue.putAll((HashMap<String, Job>) input);
 			in.close();
 
 			fisIdx = new FileInputStream(System.getProperty("tlos.tmpdir") + "/" + fileName + ".idx");
@@ -184,7 +184,7 @@ public class JobQueueOperations {
 		return true;
 	}
 
-	public static void resetJobQueue(HashMap<Integer, Job> jobQueue) {
+	public static void resetJobQueue(HashMap<String, Job> jobQueue) {
 		Iterator<Job> jobsIterator = jobQueue.values().iterator();
 		while (jobsIterator.hasNext()) {
 			Job scheduledJob = jobsIterator.next();
@@ -214,7 +214,7 @@ public class JobQueueOperations {
 
 	}
 
-	public static ArrayList<Job> getDependencyList(HashMap<Integer, Job> jobQueue, Object jobKey) {
+	public static ArrayList<Job> getDependencyList(HashMap<String, Job> jobQueue, Object jobKey) {
 
 		ArrayList<Job> jobList = new ArrayList<Job>();
 
