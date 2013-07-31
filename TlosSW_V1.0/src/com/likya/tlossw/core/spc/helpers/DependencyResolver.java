@@ -53,12 +53,13 @@ public class DependencyResolver {
 				throw new UnresolvedDependencyException(errorMessage);
 			}
 
+			int jsId = new Integer(item.getJsId()).intValue();
 			if (item.getJsPath() == null || item.getJsPath() == "") { 
 				// Lokal bir bagimlilik
-				if (jobQueue.get(item.getJsId()) == null) {
+				if (jobQueue.get(jsId) == null) {
 					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 				}
-				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
+				jobRuntimeProperties = jobQueue.get(jsId).getJobRuntimeProperties();
 			} else { 
 				// Global bir bagimlilik
 				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + instanceId + "." + item.getJsPath());
@@ -67,7 +68,7 @@ public class DependencyResolver {
 					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), instanceId, ownerJob.getJobRuntimeProperties().getTreePath(), spcLookupTable);
 				}
 
-				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
+				Job job = spcInfoType.getSpcReferance().getJobQueue().get(new Integer(jsId).intValue());
 				if (job == null) {
 					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), instanceId, spcInfoType.getSpcReferance().getSpcId());
 				}
