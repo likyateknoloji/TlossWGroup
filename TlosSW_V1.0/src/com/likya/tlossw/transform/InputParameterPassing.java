@@ -56,15 +56,15 @@ public class InputParameterPassing {
 		this.instanceId = instanceId;
 	}
 
-	private void findInputValues(String xpath) throws TlosFatalException {
-
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-
-			findInputValue(instanceId, xpath);
-		}
-
-		return;
-	}
+	// private void findInputValues(String xpath) throws TlosFatalException {
+	//
+	// for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+	//
+	// findInputValue(instanceId, xpath);
+	// }
+	//
+	// return;
+	// }
 
 	private String[] findInputValue(String instanceIdd, String xpath) throws TlosFatalException {
 		String[] result;
@@ -80,7 +80,6 @@ public class InputParameterPassing {
 				if (result != null && result.length > 0)
 					return result;
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -102,7 +101,6 @@ public class InputParameterPassing {
 			try {
 				result = ApplyXPath.queryXmlWithXPath(xmlDoc, sorgu);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (result != null && result.length > 0)
@@ -114,17 +112,15 @@ public class InputParameterPassing {
 
 	public synchronized boolean setInputParameterViaDependency(HashMap<String, Job> jobQueue, Job ownerJob, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 
-		Boolean assignmentOk = false;
-
-		JobProperties jobProperties = ownerJob.getJobRuntimeProperties().getJobProperties();
-		DependencyList dependentJobList = jobProperties.getDependencyList();
+		JobProperties ownerJobProperties = ownerJob.getJobRuntimeProperties().getJobProperties();
+		DependencyList dependentJobList = ownerJobProperties.getDependencyList();
 
 		if (dependentJobList == null) {
 			return false;
 		}
 
 		String dependencyExpression = dependentJobList.getDependencyExpression().trim().toUpperCase();
-		Item[] dependencyArray = jobProperties.getDependencyList().getItemArray();
+		Item[] dependencyArray = ownerJobProperties.getDependencyList().getItemArray();
 
 		dependencyExpression = dependencyExpression.replace("AND", "&&");
 		dependencyExpression = dependencyExpression.replace("OR", "||");
@@ -135,8 +131,6 @@ public class InputParameterPassing {
 
 			Item item = (Item) (dependencyArrayIterator.next());
 			String jobId = item.getJsId();
-			
-			JobRuntimeProperties jobRuntimeProperties = null;
 
 			if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
 				String errorMessage = "     > " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + " isi icin hatali bagimlilik tanimlamasi yapilmis ! (" + dependencyExpression + ") kontrol ediniz.";
@@ -145,67 +139,42 @@ public class InputParameterPassing {
 				throw new UnresolvedDependencyException(errorMessage);
 			}
 
-			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
-				// bir
-				// bagimlilik
-				if (jobQueue.get(jobId) == null) {
+			JobTypeDetails ownerJobTypeDetails = ownerJobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails();
+
+			if (item.getJsPath() == null || item.getJsPath() == "") {// Lokal bir bagimlilik
+
+				Job depJob = jobQueue.get(jobId);
+
+				if (depJob == null) {
 					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 				}
-				jobRuntimeProperties = jobQueue.get(jobId).getJobRuntimeProperties();
 
-				JobProperties job = jobRuntimeProperties.getJobProperties();
-				OutParam outParameter = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
+				JobRuntimeProperties depJobRuntimeProperties = depJob.getJobRuntimeProperties();
 
-				if (outParameter != null) {
+				JobProperties depJobProperties = depJobRuntimeProperties.getJobProperties();
 
-					// System.out.println("Parametre mapping i : " + paramNameInI1 + " --> " + paramNameInI2 + " = " + result);
-					if (job instanceof JobProperties) {
-						SpecialParameters specialParameter = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-						// Durum 2: icin
-						if (specialParameter == null) {
-							jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().addNewSpecialParameters();
-							jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().addNewInParam();
-						} else if (specialParameter.getInParam() == null) {
-							specialParameter.addNewInParam();
-						}
-						
-						specialParameter = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-
-						InParam inParam = specialParameter.getInParam();
-						Boolean paramF = false;
-						// Durum 2
-						for (int i = 0; i < outParameter.sizeOfParameterArray(); i++) {
-							if (!paramF) {
-								inParam.addNewParameter();
-								inParam.getParameterArray(0).setName(outParameter.getParameterArray(i).getName());
-
-								PreValue preValue = PreValue.Factory.newInstance();
-								preValue.setType(outParameter.getParameterArray(i).getPreValue().getType());
-								preValue.setStringValue(" Bu parametre " + job.getBaseJobInfos().getJsName() + " isine olan bagimliliktan geliyor.");
-
-								inParam.getParameterArray(0).setPreValue(preValue);
-								inParam.getParameterArray(0).setValueString(outParameter.getParameterArray(i).getValueString());
-								assignmentOk = true;
-							}
-						}
-					}
-
-					if (assignmentOk) {
-						System.out.println("Parametre gecisi yapildi.");
-						return true;
-					} else {
-						System.out.println("Parametre gecisi yapilMAdi.");
-						return false;
-					}
-
+				if (depJobProperties == null) {
+					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
+					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
+					getMyLogger().error("     >    Dizin : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     > 	Yukaridaki is  yerel senaryoda bulunamadi !");
+					getMyLogger().error("     > Uygulama sona eriyor !");
+					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
+					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 				}
 
+				boolean retValue = assignParameter(ownerJobTypeDetails, depJobProperties);
+
 				System.out.println("Parametre gecisi yapiliyor.1.");
-			} else { // Global bir bagimlilik
+
+				return retValue;
+
+			} else { // Global bir bağımlılık
 
 				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
@@ -219,12 +188,12 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
-				Job jobb = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
-				jobRuntimeProperties = jobb.getJobRuntimeProperties();
+				Job depJob /* jobb */= spcInfoType.getSpcReferance().getJobQueue().get(jobId);
+				JobRuntimeProperties depJobRuntimeProperties = depJob.getJobRuntimeProperties();
 
-				JobProperties job = jobRuntimeProperties.getJobProperties();
+				JobProperties depJobProperties /* job */= depJobRuntimeProperties.getJobProperties();
 
-				if (job == null) {
+				if (depJobProperties == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
@@ -235,56 +204,11 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 				}
 
-				JobTypeDetails jobTypeDetails = job.getBaseJobInfos().getJobInfos().getJobTypeDetails();
+				boolean retValue = assignParameter(ownerJobTypeDetails, depJobProperties);
 
-				if (jobTypeDetails.getSpecialParameters() == null)
-					return false;
-
-				OutParam outParameter = jobTypeDetails.getSpecialParameters().getOutParam();
-
-				if (outParameter != null) {
-
-					// System.out.println("Parametre mapping i : " + paramNameInI1 + " --> " + paramNameInI2 + " = " + result);
-					if (jobProperties instanceof JobProperties) {
-						SpecialParameters specialParameter = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-						// Durum 2: icin
-						if (specialParameter == null) {
-							jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().addNewSpecialParameters();
-							jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().addNewInParam();
-						} else if (specialParameter.getInParam() == null) {
-							specialParameter.addNewInParam();
-						}
-						
-						specialParameter = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-						InParam inParam = specialParameter.getInParam();			
-						Boolean paramF = false;
-						// Durum 2
-						for (int i = 0; i < outParameter.sizeOfParameterArray(); i++) {
-							if (!paramF) {
-								inParam.addNewParameter();
-								inParam.getParameterArray(0).setName(outParameter.getParameterArray(i).getName());
-
-								PreValue preValue = PreValue.Factory.newInstance();
-								preValue.setType(outParameter.getParameterArray(i).getPreValue().getType());
-								preValue.setStringValue(" Bu parametre " + job.getBaseJobInfos().getJsName() + " isine olan bagimliliktan geliyor.");
-
-								inParam.getParameterArray(0).setPreValue(preValue);
-								inParam.getParameterArray(0).setValueString(outParameter.getParameterArray(i).getValueString());
-								assignmentOk = true;
-							}
-						}
-					}
-
-					if (assignmentOk) {
-						System.out.println("Parametre gecisi yapildi.");
-						return true;
-					} else {
-						System.out.println("Parametre gecisi yapilMAdi.");
-						return false;
-					}
-
-				}
 				System.out.println("Parametre gecisi yapiliyor.2.");
+
+				return retValue;
 			}
 
 		}
@@ -292,9 +216,64 @@ public class InputParameterPassing {
 		return false;
 	}
 
-	public Boolean setInputParameter(JobProperties job) {
+	private boolean assignParameter(JobTypeDetails ownerJobTypeDetails, JobProperties depJobProperties) {
 
-		Boolean assignmentOk = false;
+		boolean assignmentOk = false;
+
+		JobTypeDetails depJobTypeDetails = depJobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails();
+
+		if (depJobTypeDetails.getSpecialParameters() == null) {
+			return assignmentOk;
+		}
+
+		OutParam outParameter = depJobTypeDetails.getSpecialParameters().getOutParam();
+
+		if (outParameter == null) {
+			return assignmentOk;
+		}
+
+		SpecialParameters specialParameter = ownerJobTypeDetails.getSpecialParameters();
+
+		// Durum 2: icin
+		if (specialParameter == null) {
+			ownerJobTypeDetails.addNewSpecialParameters();
+			ownerJobTypeDetails.getSpecialParameters().addNewInParam();
+		} else if (specialParameter.getInParam() == null) {
+			specialParameter.addNewInParam();
+		}
+
+		specialParameter = ownerJobTypeDetails.getSpecialParameters();
+		InParam inParam = specialParameter.getInParam();
+		boolean paramF = false;
+
+		// Durum 2
+		for (int i = 0; i < outParameter.sizeOfParameterArray(); i++) {
+			if (!paramF) {
+				inParam.addNewParameter();
+				inParam.getParameterArray(0).setName(outParameter.getParameterArray(i).getName());
+
+				PreValue preValue = PreValue.Factory.newInstance();
+				preValue.setType(outParameter.getParameterArray(i).getPreValue().getType());
+				preValue.setStringValue(" Bu parametre " + depJobProperties.getBaseJobInfos().getJsName() + " isine olan bagimliliktan geliyor.");
+
+				inParam.getParameterArray(0).setPreValue(preValue);
+				inParam.getParameterArray(0).setValueString(outParameter.getParameterArray(i).getValueString());
+				assignmentOk = true;
+			}
+		}
+
+		if (assignmentOk) {
+			System.out.println("Parametre gecisi yapildi.");
+		} else {
+			System.out.println("Parametre gecisi yapilMAdi.");
+		}
+
+		return assignmentOk;
+	}
+	
+	public boolean setInputParameter(JobProperties job) {
+
+		boolean assignmentOk = false;
 		/**** parametre gecisi varsa yapalim **************/
 
 		// Once job in kullandigi parametreler icinde
@@ -362,7 +341,7 @@ public class InputParameterPassing {
 
 				} catch (XmlException e) {
 					e.printStackTrace();
-					return null;
+					return false;
 				}
 			}
 		} catch (Exception e) {
@@ -389,4 +368,5 @@ public class InputParameterPassing {
 	public String getInstanceId() {
 		return instanceId;
 	}
+
 }
