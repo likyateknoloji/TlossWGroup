@@ -112,7 +112,7 @@ public class InputParameterPassing {
 		return null;
 	}
 
-	public synchronized boolean setInputParameterViaDependency(HashMap<Integer, Job> jobQueue, Job ownerJob, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
+	public synchronized boolean setInputParameterViaDependency(HashMap<String, Job> jobQueue, Job ownerJob, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 
 		Boolean assignmentOk = false;
 
