@@ -104,8 +104,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 		logger.info("[stopJob] command received for job : " + jobId);
 
@@ -136,8 +135,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -175,8 +173,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -208,8 +205,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -241,8 +237,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -273,8 +268,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -311,8 +305,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		// path hesaplanirkenki '.' ayracini '|' ile degistirdim, cunku job adinda '.' oldugu zaman sorun cikiyor
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -324,12 +318,12 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 
-		HashMap<Integer, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
+		HashMap<String, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
 		if (jobQueue.containsKey(jobId)) {
 			Job myJob = jobQueue.get(jobId);
 			if (myJob.getJobRuntimeProperties().isStartable()) {
 				Calendar myCalendar = Calendar.getInstance();
-				updateStartConditions(jobQueue, jobIdStr, myCalendar);
+				updateStartConditions(jobQueue, jobId, myCalendar);
 				// TODO �lk eleman� ald�k ama pek i�ime sinmedi
 				JsPlannedTime jobPlannedTime = myJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
 
@@ -360,8 +354,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -397,8 +390,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		ArrayList<Resource> resourceList = new ArrayList<Resource>();
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
@@ -423,8 +415,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return false;
 		}
 
-		String jobIdStr = jobPath.substring(jobPath.lastIndexOf(".") + 1);
-		int jobId = new Integer(jobIdStr).intValue();
+		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
 		if (!checkScenarioForAcceptingCommands(jobAbsolutePath)) {
@@ -485,7 +476,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		return false;
 	}
 	
-	private void updateStartConditions(HashMap<Integer, Job> jobQueue, String jobId, Calendar myCalendar) {
+	private void updateStartConditions(HashMap<String, Job> jobQueue, String jobId, Calendar myCalendar) {
 		ArrayList<Job> dependencyList = JobQueueOperations.getDependencyList(jobQueue, jobId);
 		if (dependencyList == null) {
 			return;
@@ -493,10 +484,10 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		Iterator<Job> dependencyListIterator = dependencyList.iterator();
 		while (dependencyListIterator.hasNext()) {
 			Job scheduledJob = dependencyListIterator.next();
-			String tmpJobId = scheduledJob.getJobRuntimeProperties().getJobProperties().getID();
-			ArrayList<Job> tempJobList = JobQueueOperations.getDependencyList(jobQueue, tmpJobId);
+			String tmpJobKey = scheduledJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName().toString();
+			ArrayList<Job> tempJobList = JobQueueOperations.getDependencyList(jobQueue, tmpJobKey);
 			if ((tempJobList != null) && (tempJobList.size() > 0)) {
-				updateStartConditions(jobQueue, tmpJobId, myCalendar);
+				updateStartConditions(jobQueue, tmpJobKey, myCalendar);
 			}
 			// TODO ilk eleman� al�yoruz ama emin de�ilim
 			JsPlannedTime jobPlannedTime = scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
