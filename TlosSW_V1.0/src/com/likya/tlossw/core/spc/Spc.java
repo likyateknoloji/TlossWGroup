@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
 import com.likya.tlossw.core.agents.AgentManager;
+import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.dss.DssVisionaire;
 import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
@@ -589,6 +590,7 @@ public class Spc extends SpcBase {
 		// PARAMETRE atamalari burada yapilir.
 
 		// LOCAL VE GLOBAL
+		HashMap<String, SpcInfoType> spcLookupTable = getSpcLookupTable();
 		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
 		HashMap<Integer, ArrayList<Parameter>> parameterListAll = TlosSpaceWide.getSpaceWideRegistry().getAllParameters();
 		ArrayList<Parameter> parameterList = parameterListAll.get(agentId);
@@ -604,7 +606,7 @@ public class Spc extends SpcBase {
 		// 1.tip verilen xpath ile aktarim.
 		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// 2.tip fiziksel bagimlilik ile aktarim
-		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob);
+		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
 
 		scheduledJob.sendEndInfo(getSpcId(), scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// //////////////////\\\\\\\\\\\\\\\\\
