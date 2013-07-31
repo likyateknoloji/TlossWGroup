@@ -26,7 +26,7 @@ import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 
 public class DependencyResolver {
 	
-	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String instanceId, HashMap<Integer, Job> jobQueue, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
+	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String instanceId, HashMap<String, Job> jobQueue, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 	
 		String ownerJsName = ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName();
 		
@@ -53,13 +53,12 @@ public class DependencyResolver {
 				throw new UnresolvedDependencyException(errorMessage);
 			}
 
-			int jsId = new Integer(item.getJsId()).intValue();
 			if (item.getJsPath() == null || item.getJsPath() == "") { 
 				// Lokal bir bagimlilik
-				if (jobQueue.get(jsId) == null) {
+				if (jobQueue.get(item.getJsId()) == null) {
 					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 				}
-				jobRuntimeProperties = jobQueue.get(jsId).getJobRuntimeProperties();
+				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
 				// Global bir bagimlilik
 				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + instanceId + "." + item.getJsPath());
@@ -68,7 +67,7 @@ public class DependencyResolver {
 					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), instanceId, ownerJob.getJobRuntimeProperties().getTreePath(), spcLookupTable);
 				}
 
-				Job job = spcInfoType.getSpcReferance().getJobQueue().get(new Integer(jsId).intValue());
+				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				if (job == null) {
 					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), instanceId, spcInfoType.getSpcReferance().getSpcId());
 				}
