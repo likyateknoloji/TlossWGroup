@@ -484,10 +484,10 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		Iterator<Job> dependencyListIterator = dependencyList.iterator();
 		while (dependencyListIterator.hasNext()) {
 			Job scheduledJob = dependencyListIterator.next();
-			String tmpJobKey = scheduledJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName().toString();
-			ArrayList<Job> tempJobList = JobQueueOperations.getDependencyList(jobQueue, tmpJobKey);
+			String tmpJobId = scheduledJob.getJobRuntimeProperties().getJobProperties().getID().toString();
+			ArrayList<Job> tempJobList = JobQueueOperations.getDependencyList(jobQueue, tmpJobId);
 			if ((tempJobList != null) && (tempJobList.size() > 0)) {
-				updateStartConditions(jobQueue, tmpJobKey, myCalendar);
+				updateStartConditions(jobQueue, tmpJobId, myCalendar);
 			}
 			// TODO ilk eleman� al�yoruz ama emin de�ilim
 			JsPlannedTime jobPlannedTime = scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
