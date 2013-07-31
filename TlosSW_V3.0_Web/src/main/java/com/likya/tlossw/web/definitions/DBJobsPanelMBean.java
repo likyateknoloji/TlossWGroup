@@ -135,7 +135,7 @@ public class DBJobsPanelMBean extends JobBasePanelBean implements Serializable {
 		// ayrica dbAccessMethod alani set ediliyor
 		if (jobTypeDetails.getSpecialParameters() == null) {
 			specialParameters = SpecialParameters.Factory.newInstance();
-			dbJobDefinition.setDbAccessMethod(DbAccessMethod.NATIVE);
+			dbJobDefinition.setDbAccessMethod(DbAccessMethod.JDBC);
 		} else {
 			specialParameters = jobTypeDetails.getSpecialParameters();
 			dbJobDefinition.setDbAccessMethod(specialParameters.getDbJobDefinition().getDbAccessMethod());
