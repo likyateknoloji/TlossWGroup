@@ -290,8 +290,18 @@ public class Spc extends SpcBase {
 			SortType sortType = jobQueueIndexIterator.next();
 
 			Job scheduledJob = getJobQueue().get(sortType.getJobId());
+			
+			if(scheduledJob == null) {
+				getGlobalLogger().error("  > HATA : Indexde bulunan " + sortType.getJobId() + " li iş Kuyrukta bulunaMAdı !!");
+				getGlobalLogger().error("		İş kontrolden geçememiş olabilir. Lütfen log dosyalarını kontrol ediniz. ");
+				getGlobalLogger().error("  > UYARI : Bir sonraki işe geçiyor.");
+				// TODO Bu işin index'ten de çıkarılmasında fayda var.
+				// 31.07.2013 Serkan Taş
+				continue;
+			}
+			
 			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
-			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();			
 
 			DependencyList dependentJobList = jobProperties.getDependencyList();
 
