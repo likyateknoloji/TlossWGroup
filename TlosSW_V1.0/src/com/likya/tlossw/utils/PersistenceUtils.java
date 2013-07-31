@@ -258,9 +258,9 @@ public class PersistenceUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static HashMap<Integer, Job> recoverTempFiles(String fileName) {
+	public static HashMap<String, Job> recoverTempFiles(String fileName) {
 
-		HashMap<Integer, Job> jobQueue = null;
+		HashMap<String, Job> jobQueue = null;
 		FileInputStream fis = null;
 		ObjectInputStream in = null;
 
@@ -268,8 +268,8 @@ public class PersistenceUtils {
 			fis = new FileInputStream(System.getProperty("tlos.tmpdir") + "/" + fileName);
 			in = new ObjectInputStream(fis);
 			Object input = in.readObject();
-			jobQueue = new HashMap<Integer, Job>();
-			jobQueue.putAll((HashMap<Integer, Job>) input);
+			jobQueue = new HashMap<String, Job>();
+			jobQueue.putAll((HashMap<String, Job>) input);
 			in.close();
 			
 		} catch (FileNotFoundException fnf) {
