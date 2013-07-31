@@ -236,8 +236,8 @@ public class TaskQueueManager implements Runnable, Serializable {
 		synchronized (taskInputQueue) {
 			taskQueueIndex.removeAll(taskQueueIndex);
 			for (String taskKey : taskInputQueue.keySet()) {
-				int taskId = new Integer(taskKey).intValue();
-				taskQueueIndex.add(new SortType(taskId, ((Job) taskInputQueue.get(taskKey)).getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+				int jobPriority = ((Job) taskInputQueue.get(taskKey)).getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue();
+				taskQueueIndex.add(new SortType(taskKey, jobPriority));
 			}
 			Collections.sort(taskQueueIndex);
 		}
