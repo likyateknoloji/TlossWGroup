@@ -39,6 +39,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -635,7 +636,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyItem.setJsType(JsType.JOB);
 
-		dependencyTreePath = getDependencyTreePath(draggedJobPath);
+		dependencyTreePath = getDependencyTreePath(EngineeConstants.LONELY_JOBS + '.' + draggedJobPath);
 
 		dependencyItem.setJsPath(dependencyTreePath);
 
