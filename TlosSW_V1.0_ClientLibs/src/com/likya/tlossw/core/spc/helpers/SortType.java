@@ -16,7 +16,7 @@ public class SortType implements Comparable<SortType>,Serializable {
 	private static final long serialVersionUID = -6374567916153023159L;
 	
 //	private String jobKey;
-	private int jobId;
+	private String jobId;
 	int priortiyLevel = -1;
 	
 	/**
@@ -35,7 +35,7 @@ public class SortType implements Comparable<SortType>,Serializable {
 		return 0;
 	}
 
-	public SortType(Integer jobId, int priortiyLevel) {
+	public SortType(String jobId, int priortiyLevel) {
 		super();
 		// this.jobKey = jobKey;
 		this.jobId = jobId;
@@ -50,12 +50,12 @@ public class SortType implements Comparable<SortType>,Serializable {
 		return priortiyLevel;
 	}
 
-	public int getJobId() {
+	public String getJobId() {
 		return jobId;
 	}
 
-	public void setJobId(int jobId) {
+	public void setJobId(String jobId) {
 		this.jobId = jobId;
 	}
-	
+
 }
