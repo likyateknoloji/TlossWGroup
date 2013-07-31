@@ -82,6 +82,8 @@ public class LogAnalyser {
 
 		case DirectionType.INT_UP:
 			retValue = reverseFind(sourceFile, " " + searchString + " ", isCaseSensitive, modeType);
+			break;
+			
 		default:
 			throw new UnsupportedOperationException();
 		}
@@ -102,6 +104,8 @@ public class LogAnalyser {
 
 		case DirectionType.INT_UP:
 			retValue = reverseFind(sourceFile, " " + searchString + " ", isCaseSensitive, modeType);
+			break;
+			
 		default:
 			throw new UnsupportedOperationException();
 		}
@@ -124,9 +128,7 @@ public class LogAnalyser {
 				switch (modeType) {
 
 				case ModeType.INT_NORMAL:
-					
 					result = searchNormal(in.nextLine(), searchString, isCaseSensitive);
-
 					break;
 				case ModeType.INT_REG_EX:
 					result = searchRegEx(in.nextLine(), searchString, isCaseSensitive);
@@ -165,9 +167,7 @@ public class LogAnalyser {
 				switch (modeType) {
 
 				case ModeType.INT_NORMAL:
-
 					result = searchNormal(in.nextLine(), searchString, isCaseSensitive);
-
 					break;
 				case ModeType.INT_REG_EX:
 					result = searchRegEx(in.nextLine(), searchString, isCaseSensitive);
