@@ -133,6 +133,8 @@ public class InputParameterPassing {
 		while (dependencyArrayIterator.hasNext()) {
 
 			Item item = (Item) (dependencyArrayIterator.next());
+			int jobId = new Integer(item.getJsId()).intValue();
+			
 			JobRuntimeProperties jobRuntimeProperties = null;
 
 			if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
@@ -145,14 +147,14 @@ public class InputParameterPassing {
 			if (item.getJsPath() == null || item.getJsPath() == "") { // Lokal
 				// bir
 				// bagimlilik
-				if (jobQueue.get(item.getJsId()) == null) {
+				if (jobQueue.get(jobId) == null) {
 					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 				}
-				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
+				jobRuntimeProperties = jobQueue.get(jobId).getJobRuntimeProperties();
 
 				JobProperties job = jobRuntimeProperties.getJobProperties();
 				OutParam outParameter = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getOutParam();
@@ -216,7 +218,7 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
-				Job jobb = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
+				Job jobb = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 				jobRuntimeProperties = jobb.getJobRuntimeProperties();
 
 				JobProperties job = jobRuntimeProperties.getJobProperties();
