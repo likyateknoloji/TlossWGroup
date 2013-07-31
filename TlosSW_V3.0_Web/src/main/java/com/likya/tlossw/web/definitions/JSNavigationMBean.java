@@ -108,6 +108,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		selectedJSPath = "";
+		
+		String scenarioId = ((WsNode)treeNode.getParent().getData()).getId();
 
 		while (!((WsNode)treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
 			selectedJSPath = ((WsNode)treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
@@ -130,7 +132,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 				isInsert = true;
 			}
 
-			initializeSelectedJobPanel(jobType, isInsert);
+			initializeSelectedJobPanel(jobType, scenarioId, isInsert);
 
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
@@ -304,10 +306,12 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	private void initializeSelectedJobPanel(int jobType, boolean insert) {
+	private void initializeSelectedJobPanel(int jobType, String scenarioId, boolean insert) {
 
 		setCurrentPanel(jobType);
 
+		((JobBasePanelBean) currentPanelMBeanRef).setScenarioId(scenarioId);
+		
 		if (jobProperties != null) {
 			((JobBasePanelBean) currentPanelMBeanRef).setJobProperties(jobProperties);
 
