@@ -112,7 +112,7 @@ public class InputParameterPassing {
 		return null;
 	}
 
-	public synchronized boolean setInputParameterViaDependency(HashMap<Integer, Job> jobQueue, Job ownerJob) throws UnresolvedDependencyException {
+	public synchronized boolean setInputParameterViaDependency(HashMap<Integer, Job> jobQueue, Job ownerJob, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 
 		Boolean assignmentOk = false;
 
@@ -204,8 +204,8 @@ public class InputParameterPassing {
 				System.out.println("Parametre gecisi yapiliyor.1.");
 			} else { // Global bir bagimlilik
 
-				SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
-
+				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
