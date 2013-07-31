@@ -3,13 +3,12 @@ package com.likya.tlossw.core.spc.helpers;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 import com.likya.tlos.model.xmlbeans.data.DirectionType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.ModeType;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
+import com.likya.tlos.model.xmlbeans.data.ModeType;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
@@ -100,7 +99,7 @@ public class LogAnalyser {
 			break;
 
 		case DirectionType.INT_UP:
-			throw new UnsupportedOperationException();
+			retValue = reverseFind(sourceFile, " " + searchString + " ", isCaseSensitive, modeType);
 		default:
 			throw new UnsupportedOperationException();
 		}
@@ -115,17 +114,16 @@ public class LogAnalyser {
 		Scanner in = null;
 
 		try {
+			
 			in = new Scanner(new FileReader(f));
+			
 			while (in.hasNextLine() && !result) {
 
 				switch (modeType) {
 
 				case ModeType.INT_NORMAL:
-					if (isCaseSensitive) {
-						result = in.nextLine().indexOf(searchString) >= 0;
-					} else {
-						result = in.nextLine().toUpperCase().indexOf(searchString.toUpperCase()) >= 0;
-					}
+					
+					result = searchString(in.nextLine(), searchString, isCaseSensitive);
 
 					break;
 				case ModeType.INT_REG_EX:
@@ -148,21 +146,37 @@ public class LogAnalyser {
 
 	}
 
-	public static boolean reverseFind(InputStream inputStream, String searchString, boolean isCaseSensitive) {
+	public static boolean reverseFind(File f, String searchString, boolean isCaseSensitive, int modeType) {
 
 		boolean result = false;
 
 		Scanner in = null;
 
 		try {
-			in = new Scanner(inputStream);
+			
+			ReverseLineInputStream reverseLineInputStream = new ReverseLineInputStream(f);
+			
+			in = new Scanner(reverseLineInputStream);
+			
 			while (in.hasNextLine() && !result) {
-				if (isCaseSensitive) {
-					result = in.nextLine().indexOf(searchString) >= 0;
-				} else {
-					result = in.nextLine().toUpperCase().indexOf(searchString.toUpperCase()) >= 0;
-				}
+				
+				switch (modeType) {
+
+				case ModeType.INT_NORMAL:
+
+					result = searchString(in.nextLine(), searchString, isCaseSensitive);
+
+					break;
+				case ModeType.INT_REG_EX:
+					result = in.nextLine().matches(searchString);
+					break;
+				default:
+					throw new UnsupportedOperationException();
+				}				
+				
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				in.close();
@@ -172,6 +186,19 @@ public class LogAnalyser {
 
 		return result;
 
+	}
+	
+	private static boolean searchString(String source, String key, boolean isCaseSensitive) {
+		
+		boolean result = false;
+		
+		if (isCaseSensitive) {
+			result = source.indexOf(key) >= 0;
+		} else {
+			result = source.indexOf(key.toUpperCase()) >= 0;
+		}
+		
+		return result;
 	}
 
 }
