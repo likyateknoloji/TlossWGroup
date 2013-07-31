@@ -100,4 +100,19 @@
 		<dat:tolerancePercentage>10</dat:tolerancePercentage>
 		<dat:minPercentage>10</dat:minPercentage>
 	</dat:timeManagement>
+	<dat:logAnalysis id="1" active="true">
+		<dat:findWhat mode="regEx" direction="Up" matchCase="true">h[a-z]st</dat:findWhat>
+		<dat:action>
+			<dat:then>
+				<dat:event id="1" code="email" />
+				<dat:forcedResult active="true">
+					<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10.000+03:00">
+						<state-types:StateName>FINISHED</state-types:StateName>
+						<state-types:SubstateName>COMPLETED</state-types:SubstateName>
+						<state-types:StatusName>FAILED</state-types:StatusName>
+					</state-types:LiveStateInfo>
+				</dat:forcedResult>
+			</dat:then>
+		</dat:action>
+	</dat:logAnalysis>
 </dat:jobProperties>
