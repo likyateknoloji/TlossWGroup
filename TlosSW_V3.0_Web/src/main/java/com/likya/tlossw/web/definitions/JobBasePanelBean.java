@@ -39,7 +39,6 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -81,6 +80,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	public final static String SAX = "2";
 	public final static String OBJECT = "3";
 
+	private String scenarioId;
 	private JobProperties jobProperties;
 
 	private String jobPathInScenario;
@@ -636,9 +636,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyItem.setJsType(JsType.JOB);
 
-		dependencyTreePath = getDependencyTreePath(EngineeConstants.LONELY_JOBS + '.' + draggedJobPath);
-
-		dependencyItem.setJsPath(dependencyTreePath);
+		dependencyTreePath = getDependencyTreePath(draggedJobPath);
 
 		dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 
@@ -663,7 +661,16 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		String depJobId = draggedWsNode.getId();
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
-		item.setValue(dependencyTreePath + "." + depJobId);
+		
+		if(!dependencyTreePath.equals(scenarioId)) {
+			// Global dependency
+			dependencyItem.setJsPath(dependencyTreePath);
+			item.setValue(dependencyTreePath + "." + depJobId);
+		} else {
+			item.setValue(depJobId);
+		}
+
+		
 
 		getManyJobDependencyList().add(item);
 
@@ -1137,6 +1144,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setJsId(String jsId) {
 		this.jsId = jsId;
+	}
+
+	public String getScenarioId() {
+		return scenarioId;
+	}
+
+	public void setScenarioId(String scenarioId) {
+		this.scenarioId = scenarioId;
 	}
 
 }
