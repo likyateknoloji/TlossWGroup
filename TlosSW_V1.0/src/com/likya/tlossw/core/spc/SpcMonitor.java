@@ -18,14 +18,14 @@ import com.likya.tlossw.utils.date.DateUtils;
 
 public class SpcMonitor implements Runnable {
 	
-	private HashMap<Integer, Job> jobQueue;
+	private HashMap<String, Job> jobQueue;
 	private ArrayList<SortType> jobQueueIndex;
 	
 	private Thread myExecuter;
 	
 	private Logger myLogger = Logger.getLogger(getClass());
 
-	public SpcMonitor(HashMap<Integer, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public SpcMonitor(HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 		this.jobQueue = jobQueue;
 		this.jobQueueIndex = jobQueueIndex;
 	}

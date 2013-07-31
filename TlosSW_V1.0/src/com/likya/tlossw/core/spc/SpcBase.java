@@ -77,7 +77,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private ArrayList<JobRuntimeProperties> taskList;
 
 	private ArrayList<SortType> jobQueueIndex;
-	private HashMap<Integer, Job> jobQueue;
+	private HashMap<String, Job> jobQueue;
 	
 	private static String logLabel;
 
@@ -99,7 +99,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.taskList = taskList;
 		this.spaceWideRegistry = spaceWideRegistry;
 
-		jobQueue = new HashMap<Integer, Job>();
+		jobQueue = new HashMap<String, Job>();
 		jobQueueIndex = new ArrayList<SortType>();
 
 		logLabel = "Spc_" + this.getSpcId();
@@ -115,7 +115,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			jobRuntimeProperties.setTreePath(getSpcId());
 			
-			int jobId = new Integer(jobRuntimeProperties.getJobProperties().getID()).intValue();
+			String jobId = jobRuntimeProperties.getJobProperties().getID();
 			
 			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 			// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
@@ -145,12 +145,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 				myJob = getMyJob(jobRuntimeProperties);
 			}
 			
-			String jobIdStr = jobRuntimeProperties.getJobProperties().getID();
-			
-			if (myJob != null && jobIdStr != null) {
+			if (myJob != null && jobId != null) {
 				// isi jobQueue ya ID si ile birlikte koyalim.
 				
-				getJobQueue().put(new Integer(jobIdStr), myJob);
+				getJobQueue().put(jobId, myJob);
 			}
 		}
 
@@ -178,7 +176,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			jobRuntimeProperties.setTreePath(getSpcId());
 
-			int jobId = new Integer(jobRuntimeProperties.getJobProperties().getID()).intValue();
+			String jobId = jobRuntimeProperties.getJobProperties().getID();
 			
 			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 
@@ -208,7 +206,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			
 			if (myJob != null && jobIdStr != null) {
 				// isi jobQueue ya id si ile birlikte koyalim.
-				getJobQueue().put(new Integer(jobIdStr), myJob);
+				getJobQueue().put(jobId, myJob);
 			}
 
 			Collections.sort(jobQueueIndex);
@@ -504,10 +502,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return spcId;
 	}
 
-	public HashMap<Integer, Job> getJobQueue() {
-		return jobQueue;
-	}
-
 	public ArrayList<SortType> getJobQueueIndex() {
 		return jobQueueIndex;
 	}
@@ -552,6 +546,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 		
 		return getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable();
 		
+	}
+
+	public HashMap<String, Job> getJobQueue() {
+		return jobQueue;
 	}
 
 }

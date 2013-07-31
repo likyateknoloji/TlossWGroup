@@ -356,7 +356,7 @@ public class Spc extends SpcBase {
 
 						// isin planlanan calisma zamani gecti mi?
 						if (tmpCalendar.before(currentTime)) { // GECTI, calismasi icin gerekli islemlere baslansin.
-							handleTransferRequestsOnDss(scheduledJob, sortType, dependentJobList);
+							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 						} else { // Zamani bekliyor ...
 							if (scheduledJob.getFirstLoop()) { /* status u ekle */
 								LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
@@ -385,7 +385,7 @@ public class Spc extends SpcBase {
 
 						boolean eventOccured = true; // TODO buraya olay kontrolu eklenecek.
 						if (eventOccured) {
-							handleTransferRequestsOnDss(scheduledJob, sortType, dependentJobList);
+							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 						}
 
 					} else {
@@ -402,7 +402,7 @@ public class Spc extends SpcBase {
 
 				} else if (jobLiveStateInfo.getSubstateName().equals(SubstateName.READY) && (jobLiveStateInfo.getStatusName().equals(StatusName.WAITING) || jobLiveStateInfo.getStatusName().equals(StatusName.LOOKFOR_RESOURCE))) {
 					// is calismaya hazir (IDLED) disinda bir statude, kuvvetle muhtemel READY beklemeye gecmis.
-					handleTransferRequestsOnDss(scheduledJob, sortType, dependentJobList);
+					handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 
 				} else {
 
@@ -437,7 +437,7 @@ public class Spc extends SpcBase {
 		}
 	}
 
-	private void handleTransferRequestsOnDss(Job scheduledJob, SortType sortType, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
+	private void handleTransferRequestsOnDss(Job scheduledJob, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		// job in son state ini al.
@@ -451,7 +451,7 @@ public class Spc extends SpcBase {
 			if (isJobDependencyResolved(scheduledJob, dependencyExpression, dependencyArray)) {
 				if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
 					// if (DssFresh.transferPermission(scheduledJob)) {
-					preparAndTransform(scheduledJob, sortType.getJobId());
+					prepareAndTransform(scheduledJob);
 				}
 			} else {
 				// Bu durumda job bagimliliklarindan beklenenler var demektir.
@@ -465,7 +465,7 @@ public class Spc extends SpcBase {
 		} else { // Herhangi bir bagimliligi yok !!
 			if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
 				// if (DssFresh.transferPermission(scheduledJob)) {
-				preparAndTransform(scheduledJob, sortType.getJobId());
+				prepareAndTransform(scheduledJob);
 			}
 		}
 
@@ -517,7 +517,7 @@ public class Spc extends SpcBase {
 		return SpcUtils.getJobPropertiesWithSpecialParameters(jobRuntimeProperties);
 	}
 
-	private synchronized boolean transferJobToAgent(Job scheduledJob, Integer jobId) {
+	private synchronized boolean transferJobToAgent(Job scheduledJob) {
 
 		/**
 		 * Biri bir diğerini içeiren iki nesen de aynı alanlar olması konusunda 
@@ -529,7 +529,9 @@ public class Spc extends SpcBase {
 		// agenta gonderilecek islerde gondermeden once JobRuntimeProperties icinde olup jobproperties icinde olmayan kisimlar jobproperties icine aliniyor
 		JobProperties jobProperties = getJobPropertiesWithSpecialParameters(scheduledJob.getJobRuntimeProperties());
 
-		String rxMessageKey = getTransferedJobKey(jobProperties.getAgentId(), jobId, jobProperties.getLSIDateTime());
+		String jsId = jobProperties.getID();
+		
+		String rxMessageKey = getTransferedJobKey(jobProperties.getAgentId(), jsId, jobProperties.getLSIDateTime());
 		RxMessage rxMessage = XmlUtils.generateRxMessage(jobProperties, rxMessageKey);
 
 		SWAgent agent = getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache().get(jobProperties.getAgentId() + "");
@@ -566,7 +568,7 @@ public class Spc extends SpcBase {
 		return transferSuccess;
 	}
 
-	private synchronized void preparAndTransform(Job scheduledJob, Integer jobId) throws UnresolvedDependencyException, TransformCodeCreateException {
+	private synchronized void prepareAndTransform(Job scheduledJob) throws UnresolvedDependencyException, TransformCodeCreateException {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		int agentId = jobProperties.getAgentId();
@@ -618,7 +620,7 @@ public class Spc extends SpcBase {
 		} else {
 			scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().addNewJsRealTime().addNewStartTime().setTime(Calendar.getInstance());
 			
-			boolean transferSuccess = transferJobToAgent(scheduledJob, jobId);
+			boolean transferSuccess = transferJobToAgent(scheduledJob);
 			
 			long transferTime = System.currentTimeMillis();
 
@@ -701,7 +703,7 @@ public class Spc extends SpcBase {
 		return isRecovered;
 	}
 
-	public String getTransferedJobKey(int agentId, Integer jobId, String lsiDateTime) {
+	public String getTransferedJobKey(int agentId, String jobId, String lsiDateTime) {
 		String transferedJobKey = getInstanceId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
 
 		return transferedJobKey;
