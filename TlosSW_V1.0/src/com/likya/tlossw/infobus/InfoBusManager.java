@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlos.model.xmlbeans.alarm.WarnByDocument.WarnBy;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
@@ -20,6 +21,7 @@ import com.likya.tlossw.infobus.helper.JobAllInfo;
 import com.likya.tlossw.infobus.helper.JobInfo;
 import com.likya.tlossw.infobus.helper.TlosSWError;
 import com.likya.tlossw.infobus.helper.mail.SimpleMail;
+import com.likya.tlossw.infobus.servers.MailServer;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.InfoBus;
@@ -42,7 +44,6 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
  */
 public class InfoBusManager implements InfoBus, Runnable {
 
-
 	private boolean executePermission = true;
 
 	/**
@@ -54,29 +55,34 @@ public class InfoBusManager implements InfoBus, Runnable {
 	private static final Logger logger = Logger.getLogger(InfoBusManager.class);
 
 	private SpaceWideRegistry spaceWideRegistry = SpaceWideRegistry.getInstance();
+	
+	private MailServer mailServer;
 
 	private final int timeout;
-	
+
 	private int processedRecordCount = 0;
-	
+
 	private final boolean debug;
-	
+
 	public InfoBusManager() throws TlosRecoverException {
 
 		timeout = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getInfoBusOptions().getPeriod().getPeriodValue().intValue();
 		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
 
+		mailServer = spaceWideRegistry.getMailServer();
+		
 		if (TlosSpaceWide.isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistInfoQueueFile, EngineeConstants.tempDir)) {
 			infoQueue = PersistenceUtils.recoverInfoQueue();
-			if(infoQueue == null) {
+			if (infoQueue == null) {
 				throw new TlosRecoverException();
 			}
 		}
+		
 
 	}
 
 	/**
-	 * infoQueue kuyrugunun sa�l�kl� bir sekilde temizlenmesi icin kullanilir.
+	 * infoQueue kuyrugunun sağlıklı bir sekilde temizlenmesi icin kullanilir.
 	 * 
 	 * @author tlosSW Dev Team
 	 * @param forcedTerminate
@@ -100,7 +106,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 		while (executePermission || getQueueSize() > 0) {
 
-			if(getQueueSize() == 0) {
+			if (getQueueSize() == 0) {
 				try {
 					Thread.sleep(timeout);
 				} catch (InterruptedException e) {
@@ -127,7 +133,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 						DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
 
-						if(debug) {
+						if (debug) {
 							logger.info("  > ");
 							logger.info("  > DB guncellemesi. " + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName() + " icin baslama bitis zamani ve butun state ler.");
 							logger.info("  > " + jobAllInfo.getSpcId() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
@@ -146,9 +152,9 @@ public class InfoBusManager implements InfoBus, Runnable {
 							handleAlarms(alarm);
 						}
 
-						if(debug) {
+						if (debug) {
 							logger.info("  > ");
-							logger.info("  > DB guncellemesi. id: " + jobInfo.getJobID() + " name : " +  jobInfo.getJobName() + " icin state durumu.");
+							logger.info("  > DB guncellemesi. id: " + jobInfo.getJobID() + " name : " + jobInfo.getJobName() + " icin state durumu.");
 							logger.info("  > " + jobInfo.getTreePath());
 							logger.info("  > " + liveStateInfo);
 						}
@@ -161,18 +167,20 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 					}
 
-					if(debug) logger.info("  > islem tamam.");
+					if (debug)
+						logger.info("  > islem tamam.");
 
 					deleteInfo(0);
 					processedRecordCount++;
 					logger.info("  > processedRecordCount (" + processedRecordCount + ")");
-					
+
 					if (TlosSpaceWide.isPersistent()) {
 						PersistenceUtils.persistInfoQueue(infoQueue);
 					}
 
-					if(debug) logger.debug(timeout + "ms sleeping !");
-//					Thread.sleep(timeout);
+					if (debug)
+						logger.debug(timeout + "ms sleeping !");
+					// Thread.sleep(timeout);
 
 				} catch (Exception e) {
 					logger.error("InfoBusManager da problem !!!");
@@ -218,7 +226,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 			roleN = alarm.getSubscriber().getRole().toString();
 		} else if (alarm.getSubscriber().getPerson() != null) {
 			personN = alarm.getSubscriber().getPerson().getId().intValue();
-		} else { 
+		} else {
 			return false;
 		}
 
@@ -244,30 +252,32 @@ public class InfoBusManager implements InfoBus, Runnable {
 		boolean isSmtpAlarm = false;
 		boolean isGuiAlarm = false;
 
-		
-		for (int i = 0; i < alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray().length; i++) {
-				if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(i).compareTo(BigInteger.valueOf(1)) == 0) isEmailAlarm = true;
-				if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(i).compareTo(BigInteger.valueOf(2)) == 0) isSmsAlarm = true;
-				if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(i).compareTo(BigInteger.valueOf(3)) == 0) isGuiAlarm = true;
-			}
-			
-		 
+		WarnBy[] warnBies = alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray();
+
+		for (int i = 0; i < warnBies.length; i++) {
+			if (warnBies[i].compareTo(BigInteger.valueOf(1)) == 0)
+				isEmailAlarm = true;
+			if (warnBies[i].compareTo(BigInteger.valueOf(2)) == 0)
+				isSmsAlarm = true;
+			if (warnBies[i].compareTo(BigInteger.valueOf(3)) == 0)
+				isGuiAlarm = true;
+		}
 
 		boolean isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
 
 		// (String mailSubject, String mailText, ArrayList<String> distributionList
-		if (isEmailEnabled && isEmailAlarm) { 
+		if (isEmailEnabled && isEmailAlarm) {
 			SimpleMail simpleMail = new SimpleMail("Alarm Id = " + alarm.getAlarmId(), "Merhaba, \n alarm var. Id = " + alarm.getAlarmId(), distributionList);
-			spaceWideRegistry.getMailServer().sendMail(simpleMail);
-		}  
+			mailServer.sendMail(simpleMail);
+		}
 
 		if (isSmsAlarm) {
 			// TODO Sms Server
-		} 
+		}
 		if (isSmtpAlarm) {
 			// TODO Smtp Server
-		} 
-		if(isGuiAlarm) {
+		}
+		if (isGuiAlarm) {
 			// TODO Gui
 		}
 
