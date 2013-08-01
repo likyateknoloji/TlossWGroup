@@ -364,7 +364,7 @@ public class DBUtils extends DBBase {
 
 		Person person = null;
 
-		String xQueryStr = userFunctionConstructor("hs:getSubscribers", "" + userId, role);
+		String xQueryStr = userFunctionConstructor("hs:getSubscribers", "" + userId, TransformUtils.toXSString(role));
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
