@@ -275,8 +275,7 @@ declare function lk:SWFindAlarms($documentUrl as xs:string, $jobID as xs:string,
 
     let $alarmLevel := data($alarmList/alm:level)
 
-    let $kimicin := if($alarmList/alm:subscriptionType/text() eq xs:string("User")) then $alarmList/alm:subscriber/alm:person
-                    else $alarmList/alm:subscriber/com:role
+    let $kimicin := $alarmList/alm:subscriber
 
     let $alarmCases := $alarmList/alm:caseManagement
     let $systemManagement := $alarmCases/alm:systemManagement 
@@ -313,9 +312,7 @@ declare function lk:SWFindAlarms($documentUrl as xs:string, $jobID as xs:string,
         <alm:creationDate>{fn:current-dateTime()}</alm:creationDate>
         <alm:level>{$alarmLevel}</alm:level>
         <alm-history:alarmId>{$alarmId}</alm-history:alarmId>
-        <alm:subscriber>
-            {$kimicin}
-        </alm:subscriber>
+        {$kimicin}
         <alm:focus>
             <alm:jobs>
                 {$alarmParams}
