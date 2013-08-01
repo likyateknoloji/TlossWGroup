@@ -152,6 +152,14 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		/** License Server */
 		// startLicenseManager();
 
+		
+		/** Start alert servers (Log, Mail, SMS, ...) */
+		boolean isEmailEnabled = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
+		if (isEmailEnabled) {
+			/** Mail Server */
+			startMailSystem();
+		}
+		
 		/**************************************************************************************/
 
 		/** Start Info bus manager */
@@ -161,13 +169,6 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 			logger.error("   > Close application reason : cannot recover InfoBusQueue !");
 			logger.error("   > Clean tmp folder or set persistent to false and restart the application !");
 			System.exit(-1);
-		}
-
-		/** Start alert servers (Log, Mail, SMS, ...) */
-		boolean isEmailEnabled = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
-		if (isEmailEnabled) {
-			/** Mail Server */
-			startMailSystem();
 		}
 
 		/**************************************************************************************/
