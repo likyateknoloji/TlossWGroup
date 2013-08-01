@@ -2224,7 +2224,7 @@
 											<db:dbUserId>3</db:dbUserId>
 										</db:dbConnectionProperties>
 										<db:dbJobType>Free SQL</db:dbJobType>
-										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
+										<db:dbAccessMethod>JDBC</db:dbAccessMethod>
 										<db:freeSQLProperties>
 											<db:sqlSentence>select * from personel</db:sqlSentence>
 										</db:freeSQLProperties>
