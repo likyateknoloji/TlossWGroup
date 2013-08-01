@@ -334,16 +334,13 @@ public abstract class CpcBase implements Runnable {
 			myLogger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
 		}
 
-		// Senaryo listesi i�indeki senaryolar ## LINEERLESTIRME ##
-		// System.out.println(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
 		myLogger.info("");
 		myLogger.info(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
 		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
-		// System.out.println("   > Lineerlestirilme islemi OK.");
+
 		myLogger.info("   > Lineerlestirilme islemi OK.");
 		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
 
-		// System.out.println(" 8 - TlosProcessData icindeki Senaryolardaki islerin listesi cikarilacak.");
 		myLogger.info("");
 		myLogger.info(" 8 - TlosProcessData icindeki Senaryolardaki islerin listesi cikarilacak.");
 
@@ -358,16 +355,11 @@ public abstract class CpcBase implements Runnable {
 
 			if (!validateJobList(jobList)) {
 				// TODO WAITING e nasil alacagiz?
-				// System.out.println("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.info("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.error("Cpc Scenario jobs validation failed, process state changed to WAITING !");
 
 				continue; // 08.07.2013 Serkan
 				// throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
-				/*
-				 * eski hali buydu. hakan
-				 * myLogger.error("Cpc failed, terminating !"); break;
-				 */
 			}
 
 			if (jobList.getJobPropertiesArray().length == 0) {
