@@ -1,6 +1,5 @@
 package com.likya.tlossw.infobus;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -55,7 +54,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 	private static final Logger logger = Logger.getLogger(InfoBusManager.class);
 
 	private SpaceWideRegistry spaceWideRegistry = SpaceWideRegistry.getInstance();
-	
+
 	private MailServer mailServer;
 
 	private final int timeout;
@@ -70,14 +69,13 @@ public class InfoBusManager implements InfoBus, Runnable {
 		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
 
 		mailServer = spaceWideRegistry.getMailServer();
-		
+
 		if (TlosSpaceWide.isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistInfoQueueFile, EngineeConstants.tempDir)) {
 			infoQueue = PersistenceUtils.recoverInfoQueue();
 			if (infoQueue == null) {
 				throw new TlosRecoverException();
 			}
 		}
-		
 
 	}
 
@@ -255,11 +253,11 @@ public class InfoBusManager implements InfoBus, Runnable {
 		WarnBy[] warnBies = alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray();
 
 		for (int i = 0; i < warnBies.length; i++) {
-			if (warnBies[i].compareTo(BigInteger.valueOf(1)) == 0)
+			if (warnBies[i].getId().intValue() == 1)
 				isEmailAlarm = true;
-			if (warnBies[i].compareTo(BigInteger.valueOf(2)) == 0)
+			if (warnBies[i].getId().intValue() == 2)
 				isSmsAlarm = true;
-			if (warnBies[i].compareTo(BigInteger.valueOf(3)) == 0)
+			if (warnBies[i].getId().intValue() == 3)
 				isGuiAlarm = true;
 		}
 
