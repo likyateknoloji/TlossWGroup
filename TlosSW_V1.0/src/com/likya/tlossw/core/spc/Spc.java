@@ -10,12 +10,14 @@ import javax.xml.transform.stream.StreamSource;
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -362,10 +364,10 @@ public class Spc extends SpcBase {
 						tmpCalendar.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
 						tmpCalendar.set(Calendar.SECOND, startTime.get(Calendar.SECOND));
 
-						Calendar currentTime = Calendar.getInstance();
+						boolean timeHasCome = calculateExecutionTime(tmpCalendar, jobProperties.getTimeManagement());
 
 						// isin planlanan calisma zamani gecti mi?
-						if (tmpCalendar.before(currentTime)) { // GECTI, calismasi icin gerekli islemlere baslansin.
+						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
 							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 						} else { // Zamani bekliyor ...
 							if (scheduledJob.getFirstLoop()) { /* status u ekle */
@@ -445,6 +447,32 @@ public class Spc extends SpcBase {
 			}
 
 		}
+	}
+	
+	private boolean calculateExecutionTime(Calendar tmpCalendar, TimeManagement timeManagement) {
+		
+		boolean timeHasCome = false;
+		
+		Calendar currentTime = Calendar.getInstance();
+		
+		TypeOfTime.Enum myType = timeManagement.getTypeOfTime(); 
+		
+		switch (myType.intValue()) {
+		case TypeOfTime.INT_ACTUAL:
+			// Convert tmpCalendar according to the job timezone to my server time with DTS effect
+			timeHasCome = tmpCalendar.before(currentTime);
+			break;
+
+		case TypeOfTime.INT_RECURRING:
+			timeHasCome = tmpCalendar.before(currentTime);
+			break;
+
+		default:
+			break;
+		}
+		
+		return timeHasCome;
+		
 	}
 
 	private void handleTransferRequestsOnDss(Job scheduledJob, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
