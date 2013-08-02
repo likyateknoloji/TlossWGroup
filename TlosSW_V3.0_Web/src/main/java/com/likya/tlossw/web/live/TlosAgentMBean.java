@@ -35,6 +35,7 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 
 	private transient DataTable jobDataTable;
 	private List<JobInfoTypeClient> filteredJobs;
+	private JobInfoTypeClient selectedRow;
 
 	private ArrayList<String> oSList = new ArrayList<String>();
 
@@ -44,14 +45,14 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 	private String selectedResource;
 
 	private boolean transformToLocalTime;
-	
+
 	private LiveJobManagementBean liveJobManagementBean;
 
 	@PostConstruct
 	public void init() {
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
-	
+
 	public void initializeTlosAgentPanel(int agentId) {
 
 		tlosAgentInfoTypeClient = TEJmxMpClient.retrieveTlosAgentInfo(getWebAppUser(), agentId);
@@ -68,7 +69,7 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 		oSSelectItem = ComboListUtils.createFilterOptions(oSList);
 	}
 
-	public void forcedDeactivateAgentAction() {
+	public void forcedDeactivateAgentAction(ActionEvent e) {
 		TEJmxMpClient.deactivateTlosAgent(getWebAppUser(), getTlosAgentInfoTypeClient().getAgentId(), true);
 		refreshTlosAgentPanel();
 	}
@@ -86,7 +87,7 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 	public void refreshTlosAgentPanel() {
 		initializeTlosAgentPanel(tlosAgentInfoTypeClient.getAgentId());
 	}
-
+	
 	@Override
 	public void refreshLivePanel(String scenarioPath) {
 	}
@@ -131,11 +132,19 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 		this.tlosAgentInfoTypeClient = tlosAgentInfoTypeClient;
 	}
 
-	public SelectItem[] getOsSelectItem() {
+	public ArrayList<String> getoSList() {
+		return oSList;
+	}
+
+	public void setoSList(ArrayList<String> oSList) {
+		this.oSList = oSList;
+	}
+
+	public SelectItem[] getosSelectItem() {
 		return oSSelectItem;
 	}
 
-	public void setOsSelectItem(SelectItem[] oSSelectItem) {
+	public void setosSelectItem(SelectItem[] oSSelectItem) {
 		this.oSSelectItem = oSSelectItem;
 	}
 
@@ -161,6 +170,14 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 
 	public void setLiveJobManagementBean(LiveJobManagementBean liveJobManagementBean) {
 		this.liveJobManagementBean = liveJobManagementBean;
+	}
+
+	public JobInfoTypeClient getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(JobInfoTypeClient selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }

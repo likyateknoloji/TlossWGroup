@@ -28,10 +28,10 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 
 	private String activeLivePanel = RESOURCELIST_PANEL;
 
-	public final static String RESOURCELIST_PANEL = "/inc/livePanels/resourceListPanel.xhtml";
-	public final static String RESOURCE_PANEL = "/inc/livePanels/resourcePanel.xhtml";
-	public final static String TLOSAGENT_PANEL = "/inc/livePanels/tlosAgentPanel.xhtml";
-	public final static String JOB_PANEL = "/inc/livePanels/jobLiveTree.xhtml";
+	public final static String RESOURCELIST_PANEL = "resourceListPanel.xhtml";
+	public final static String RESOURCE_PANEL = "resourcePanel.xhtml";
+	public final static String TLOSAGENT_PANEL = "tlosAgentPanel.xhtml";
+	public final static String JOB_PANEL = "jobLiveTree.xhtml";
 
 	private boolean transformToLocalTime = false;
 
@@ -48,6 +48,7 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 			getResourceMBean().fillResourceInfoList();
 
 			activeLivePanel = RESOURCELIST_PANEL;
+			
 		} else if (nodeType.equals(ConstantDefinitions.TREE_KAYNAK)) {
 			ResourceNode resourceNode = (ResourceNode) event.getTreeNode().getData();
 			String resourceName = resourceNode.getResourceInfoTypeClient().getResourceName();

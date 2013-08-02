@@ -6,13 +6,16 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.primefaces.component.datatable.DataTable;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlos.model.xmlbeans.agent.OsTypeDocument.OsType;
 import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
 import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
@@ -34,10 +37,18 @@ public class ResourceMBean extends TlosSWBaseBean implements Serializable {
 	private transient DataTable agentDataTable;
 	private List<TlosAgentInfoTypeClient> filteredAgents;
 
+	private ArrayList<String> oSList = new ArrayList<String>();
+
+	private SelectItem[] oSSelectItem;
+
 	private boolean transformToLocalTime;
 
 	public void fillResourceInfoList() {
 		resourceInfoList = TEJmxMpClient.getResourceInfoTypeClientList(getWebAppUser());
+
+		oSList.add(OsType.WINDOWS.toString());
+		oSList.add(OsType.UNIX.toString());
+		oSSelectItem = ComboListUtils.createFilterOptions(oSList);
 	}
 
 	public void fillAgentInfoList(String resourceName) {
@@ -114,6 +125,22 @@ public class ResourceMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setAgentInfoList(ArrayList<TlosAgentInfoTypeClient> agentInfoList) {
 		this.agentInfoList = agentInfoList;
+	}
+
+	public ArrayList<String> getoSList() {
+		return oSList;
+	}
+
+	public void setoSList(ArrayList<String> oSList) {
+		this.oSList = oSList;
+	}
+
+	public SelectItem[] getosSelectItem() {
+		return oSSelectItem;
+	}
+
+	public void setosSelectItem(SelectItem[] oSSelectItem) {
+		this.oSSelectItem = oSSelectItem;
 	}
 
 }
