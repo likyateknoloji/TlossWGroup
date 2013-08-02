@@ -1,5 +1,7 @@
 package com.likya.tlossw.web.live.helpers;
 
+import java.io.Serializable;
+
 import javax.faces.event.ActionEvent;
 
 import com.likya.tlossw.model.auth.WebAppUser;
@@ -8,8 +10,10 @@ import com.likya.tlossw.web.live.JobManagementInterface;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
-public class LiveJobManagementBean {
+public class LiveJobManagementBean implements Serializable {
 
+	private static final long serialVersionUID = -6775403643497743131L;
+	
 	private JobManagementInterface jobManagementInterface;
 
 	public LiveJobManagementBean(JobManagementInterface jobManagementInterface) {
