@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:h="http://java.sun.com/jsf/html" 
+xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="rightForm">
+
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<br></br>
+
+		<p:fieldset id="resourceList" legend="3 nolu grup">
+
+
+			<h:outputText value="3 Nolu XHTML" />
+			<br />
+			<p:commandButton id="buton" value="Print Me 3" actionListener="#{demo3MBean.printMe3}" />
+
+		</p:fieldset>
+
+	</h:form>
+
+</ui:composition>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="treeForm">
+	
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<p:tree value="#{demoTreeBean.root}" var="node" id="tree" animate="true"
+			style="width:350px;height:720px" dynamic="true" cache="false"
+			selectionMode="single">
+			
+			<p:treeNode type="First">
+				<h:outputText value="#{node}" id="lblNode1" />
+			</p:treeNode>
+			<p:treeNode type="Second">
+				<h:outputText value="#{node}" id="lblNode2" />
+			</p:treeNode>
+			<p:treeNode type="Third">
+				<h:outputText value="#{node}" id="lblNode3" />
+			</p:treeNode>
+			<p:ajax event="select" update=":rightForm" listener="#{demo3MBean.onNodeSelect}" />
+		</p:tree>
+
+		<p:blockUI block=":center" trigger="tree">  
+        	LOADING<br />
+			<p:graphicImage value="/images/ajax-loader.gif" />
+		</p:blockUI>
+
+	</h:form>
+
+</ui:composition>
