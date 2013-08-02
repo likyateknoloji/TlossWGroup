@@ -4,7 +4,7 @@
 
 <h:body>
 	<ui:composition>
-		
+
 		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" rowStyleClass="#{item.liveStateInfo.statusName eq 'FAILED' ? 'failed' : null}" widgetVar="itemsTable"
 			resizableColumns="true" binding="#{backingBean.jobDataTable}" filteredValue="#{backingBean.filteredJobs}" emptyMessage="No records found with given criteria" sortMode="multiple" width="100%"
 			paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -63,24 +63,26 @@
 					<h:outputText value="#{msgs['tlos.live.pannel.scenario.manage']}" />
 				</f:facet>
 
-				<p:commandButton id="retryJobButton" value="#{msgs['tlos.button.retry']}" rendered="#{item.retriable and security.RetryJob}" actionListener="#{backingBean['retryJobAction']}" />
+				<p:commandButton id="retryJobButton" value="#{msgs['tlos.button.retry']}" rendered="#{item.retriable and security.RetryJob}" actionListener="#{backingBean.liveJobManagementBean['retryJobAction']}" />
 
-				<p:commandButton id="doSuccessJobButton" value="#{msgs['tlos.button.setSuccess']}" rendered="#{item.successable and security.SetSuccessJob}" actionListener="#{backingBean['doSuccessJobAction']}" />
+				<p:commandButton id="doSuccessJobButton" value="#{msgs['tlos.button.setSuccess']}" rendered="#{item.successable and security.SetSuccessJob}"
+					actionListener="#{backingBean.liveJobManagementBean['doSuccessJobAction']}" />
 
-				<p:commandButton id="skipJobButton" value="#{msgs['tlos.button.skip']}" rendered="#{item.skippable and security.SkipJob}" actionListener="#{backingBean['skipJobAction']}" />
+				<p:commandButton id="skipJobButton" value="#{msgs['tlos.button.skip']}" rendered="#{item.skippable and security.SkipJob}" actionListener="#{backingBean.liveJobManagementBean['skipJobAction']}" />
 
-				<p:commandButton id="stopJobButton" value="#{msgs['tlos.button.stop']}" rendered="#{item.stopable and security.StopJob}" actionListener="#{backingBean['stopJobAction']}" />
+				<p:commandButton id="stopJobButton" value="#{msgs['tlos.button.stop']}" rendered="#{item.stopable and security.StopJob}" actionListener="#{backingBean.liveJobManagementBean['stopJobAction']}" />
 
 				<p:commandButton id="pauseJobButton" value="#{msgs['tlos.button.pause']}"
 					rendered="#{item.pausable and security.PauseJob and item.liveStateInfo.statusName ne 'USER-WAITING' and item.liveStateInfo.statusName ne 'USER-CHOOSE-RESOURCE'}"
-					actionListener="#{backingBean['pauseJobAction']}" />
+					actionListener="#{backingBean.liveJobManagementBean['pauseJobAction']}" />
 
-				<p:commandButton id="resumeJobButton" value="#{msgs['tlos.button.resume']}" rendered="#{item.resumable and security.ResumeJob}" actionListener="#{backingBean['resumeJobAction']}" />
+				<p:commandButton id="resumeJobButton" value="#{msgs['tlos.button.resume']}" rendered="#{item.resumable and security.ResumeJob}"
+					actionListener="#{backingBean.liveJobManagementBean['resumeJobAction']}" />
 
-				<p:commandButton id="startJobButton" value="#{msgs['tlos.button.start']}" rendered="#{item.startable and security.StartJob}" actionListener="#{backingBean['startJobAction']}" />
+				<p:commandButton id="startJobButton" value="#{msgs['tlos.button.start']}" rendered="#{item.startable and security.StartJob}" actionListener="#{backingBean.liveJobManagementBean['startJobAction']}" />
 
 				<p:commandButton id="startUserBasedJobButton" value="#{msgs['tlos.button.start']}" rendered="#{item.liveStateInfo.statusName eq 'USER-WAITING' and security.StartUserBasedJob}"
-					actionListener="#{backingBean ['startUserBasedJobAction']}" />
+					actionListener="#{backingBean.liveJobManagementBean['startUserBasedJobAction']}" />
 
 				<p:commandButton id="selectResourceButton" value="#{msgs['tlos.button.showAvailableResources']}"
 					rendered="#{item.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob}" actionListener="#{backingBean['showAvailableResourcesForJob']}"
@@ -103,7 +105,7 @@
 				</h:panelGrid>
 			</p:panel>
 		</p:dialog>
-			
+
 	</ui:composition>
 </h:body>
 </html>

@@ -6,41 +6,44 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:form id="liveForm">
-		
+	<h:form id="liveResourceForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
+		<br></br>
+
+		<p:commandButton value="Non-Ajax Submit" actionListener="#{tlosAgentMBean.refreshTlosAgentPanel}" ajax="false" />
+
 		<p:fieldset id="tlosAgent" legend="#{msgs['tlos.live.panel.tlosagent.header']} - #{tlosAgentMBean.tlosAgentInfoTypeClient.agentName}" style="width: 96%;">
-
-			<p:panel rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.agentType ne 'server'}" >
-
-				<p:commandButton id="forcedDeactivateButton" update="liveResourceForm"
+			
+			<p:panel>
+				
+				<h:outputText value="#{tlosAgentMBean}" />
+				
+				<p:commandButton id="forcedDeactivateButton" 
 					value="#{msgs['tlos.live.panel.tlosagent.forcedDeactivate']}" 
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.forcedDeactivate and security.ForcedDeactivateTAgent}"
-					actionListener="#{tlosAgentMBean.forcedDeactivateAgentAction}" 
-					onclick="if(!confirm('#{msgs['tlos.confirm.live.tlosagent.forcedDeactivate']}')) return false;" />
-
-				<p:commandButton id="normalDeactivateButton" update="liveResourceForm"
+					action="#{tlosAgentMBean.forcedDeactivateAgentAction}" />
+	
+				<p:commandButton id="normalDeactivateButton"
 					value="#{msgs['tlos.live.panel.tlosagent.normalDeactivate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.normalDeactivate and security.NormalDeactivateTAgent}"
-					actionListener="#{tlosAgentMBean.normalDeactivateAgentAction}"
-					onclick="if(!confirm('#{msgs['tlos.confirm.live.tlosagent.normalDeactivate']}')) return false;" />
-
-				<p:commandButton id="activateButton" update="liveResourceForm"
+					actionListener="#{tlosAgentMBean.normalDeactivateAgentAction}" />
+	
+				<p:commandButton id="activateButton"
 					value="#{msgs['tlos.live.panel.tlosagent.activate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.activate and security.ActivateTAgent}"
-					actionListener="#{tlosAgentMBean.activateAgentAction}"
-					onclick="if(!confirm('#{msgs['tlos.confirm.live.tlosagent.activate']}')) return false;" />
-
-			</p:panel>
+					actionListener="#{tlosAgentMBean.activateAgentAction}" />
 		
+			</p:panel>
+
 			<br />
 
 			<ui:include src="/inc/livePanels/commonJobListTable.xhtml">
 				<ui:param name="backingBean" value="#{tlosAgentMBean}" />
 			</ui:include>
-		
+
 		</p:fieldset>
+
 	</h:form>
 
 </ui:composition>
