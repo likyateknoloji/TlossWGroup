@@ -15,7 +15,7 @@
 			<p:commandButton id="forcedDeactivateButton" value="test1" actionListener="#{tlosAgentMBean.forcedDeactivateAgentAction}" />
 			<p:commandButton id="normalDeactivateButton" value="test2" actionListener="#{tlosAgentMBean.normalDeactivateAgentAction}" />
 			<p:commandButton id="activateButton" value="test3" actionListener="#{tlosAgentMBean.activateAgentAction}" />
-			<p:commandButton id="retryJobButton" value="#{msgs['tlos.button.retry']}" actionListener="#{tlosAgentMBean.liveJobManagementBean['retryJobAction']}" />
+			<p:commandButton id="retryJobButton" value="#{msgs['tlos.button.retry']}" actionListener="#{tlosAgentMBean.liveJobManagementBean.retryJobAction}" />
 			
 			<p:dataTable id="resourceListDataTable" var="item" value="#{resourceMBean.resourceInfoList}" widgetVar="itemsTable" resizableColumns="true" binding="#{resourceMBean.resourceDataTable}"
 				filteredValue="#{resourceMBean.filteredResources}" emptyMessage="No records found with given criteria" sortMode="multiple" paginator="true" rows="10" paginatorPosition="bottom"
