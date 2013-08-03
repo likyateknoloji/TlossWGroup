@@ -104,7 +104,7 @@ public class YAXPath {
             else if (prefix.equals("par2"))
                 uri = "http://www.likyateknoloji.com/XML_parameters_types2";
             else
-                uri = XMLConstants.NULL_NS_URI;
+                uri = XMLConstants.DEFAULT_NS_PREFIX;
             return uri;
 
         }
