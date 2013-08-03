@@ -60,6 +60,7 @@ package com.likya.tlossw.transform;
 // This file uses 4 space indents, no tabs.
 
 import net.sf.saxon.om.NamespaceConstant;
+
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
@@ -68,6 +69,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -198,7 +200,8 @@ public class ApplyXPathJAXP {
 
                         public String getPrefix(String s) { return null; }
 
-                        public Iterator getPrefixes(String s) { return null; }
+                        @SuppressWarnings("rawtypes")
+						public Iterator getPrefixes(String s) { return null; }
                     }
                 );
 
@@ -220,7 +223,8 @@ public class ApplyXPathJAXP {
             // Declare a function:
 
             final XPathFunction sqrt = new XPathFunction() {
-                public Object evaluate(List list) throws XPathFunctionException {
+                @SuppressWarnings("rawtypes")
+				public Object evaluate(List list) throws XPathFunctionException {
                     Object arg = list.get(0);
                     if (!(arg instanceof Double)) {
                         throw new XPathFunctionException("f:sqrt() expects an xs:double argument");
