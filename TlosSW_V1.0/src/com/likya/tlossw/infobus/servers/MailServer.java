@@ -19,10 +19,10 @@ import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.infobus.helper.mail.MultipartMail;
-import com.likya.tlossw.infobus.helper.mail.SimpleMail;
-import com.likya.tlossw.infobus.helper.mail.TlosMail;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.infobus.mail.MultipartMail;
+import com.likya.tlossw.model.infobus.mail.SimpleMail;
+import com.likya.tlossw.model.infobus.mail.TlosMail;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -110,7 +110,7 @@ public class MailServer implements Runnable {
 					
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.info("E-posta gönderiminde hata oldu : " + e.getLocalizedMessage() + "=> e-posta iptal edildi !");
+					logger.info("E-posta gï¿½nderiminde hata oldu : " + e.getLocalizedMessage() + "=> e-posta iptal edildi !");
 				}
 				
 				mailQueue.remove(0);
@@ -130,25 +130,25 @@ public class MailServer implements Runnable {
 		
 		/*
 		 * if (TlosServer.getTlosParameters().isMail()) {
-		 * schedulerLogger.info("E-posta sunucusu kapatýlýyor !");
-		 * schedulerLogger.info("E-posta kuyruðunun boþalmasýný bekliyoruz...");
-		 * schedulerLogger.info("Kuyruktaki e-posta sayýsý : " +
+		 * schedulerLogger.info("E-posta sunucusu kapatï¿½lï¿½yor !");
+		 * schedulerLogger.info("E-posta kuyruï¿½unun boï¿½almasï¿½nï¿½ bekliyoruz...");
+		 * schedulerLogger.info("Kuyruktaki e-posta sayï¿½sï¿½ : " +
 		 * getTlosMailServer().getQueueSize());
 		 * 
 		 * while (getTlosMailServer().getQueueSize() > 0) {
 		 * print(getTlosMailServer().getQueueSize() + "-"); try {
 		 * Thread.sleep(3000); } catch (InterruptedException e) {
 		 * e.printStackTrace(); } } schedulerLogger.info("E-posta sunucusu
-		 * kapatýldý !"); }
+		 * kapatï¿½ldï¿½ !"); }
 		 */
-		// schedulerLogger.info("Uygulama kapatýldý !");
-		// logger.log(Level.WARNING, "Ýþi bitmeyen job'lar olabilir !" +
+		// schedulerLogger.info("Uygulama kapatï¿½ldï¿½ !");
+		// logger.log(Level.WARNING, "ï¿½ï¿½i bitmeyen job'lar olabilir !" +
 		// Thread.currentThread().getThreadGroup().activeCount());
 		// System.exit(0);
 		
 		
-		logger.info("E-posta sistemi kapatýldý !");
-		logger.info("E-posta kuyruk sayýsý : " + mailQueue.size());
+		logger.info("E-posta sistemi kapatï¿½ldï¿½ !");
+		logger.info("E-posta kuyruk sayï¿½sï¿½ : " + mailQueue.size());
 	}
 
 	private void postMultiPartMail(MultipartMail multipartMail) throws MessagingException {
@@ -172,7 +172,7 @@ public class MailServer implements Runnable {
 			// Send message
 			Transport.send(message);
 			try {
-				// Aþýrý yükleme yapýp, sistemi yormasýn diye aralýklý gönderim yapýlacak.
+				// Aï¿½ï¿½rï¿½ yï¿½kleme yapï¿½p, sistemi yormasï¿½n diye aralï¿½klï¿½ gï¿½nderim yapï¿½lacak.
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -198,7 +198,7 @@ public class MailServer implements Runnable {
 			// Send message
 			Transport.send(message);
 			try {
-				// Aþýrý yükleme yapýp, sistemi yormasýn diye aralýklý gönderim yapýlacak.
+				// Aï¿½ï¿½rï¿½ yï¿½kleme yapï¿½p, sistemi yormasï¿½n diye aralï¿½klï¿½ gï¿½nderim yapï¿½lacak.
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
