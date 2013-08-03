@@ -15,13 +15,14 @@ import com.likya.tlossw.core.spc.helpers.SWErrorOperations;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
 import com.likya.tlossw.exceptions.TlosRecoverException;
-import com.likya.tlossw.infobus.helper.InfoType;
-import com.likya.tlossw.infobus.helper.JobAllInfo;
-import com.likya.tlossw.infobus.helper.JobInfo;
 import com.likya.tlossw.infobus.helper.TlosSWError;
-import com.likya.tlossw.infobus.helper.mail.SimpleMail;
 import com.likya.tlossw.infobus.servers.MailServer;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.infobus.InfoType;
+import com.likya.tlossw.model.infobus.JobAllInfo;
+import com.likya.tlossw.model.infobus.JobInfo;
+import com.likya.tlossw.model.infobus.mail.SimpleMail;
+import com.likya.tlossw.model.infobus.mail.TlosMail;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.InfoBus;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -62,12 +63,16 @@ public class InfoBusManager implements InfoBus, Runnable {
 	private int processedRecordCount = 0;
 
 	private final boolean debug;
+	
+	boolean isEmailEnabled = false;
 
 	public InfoBusManager() throws TlosRecoverException {
 
 		timeout = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getInfoBusOptions().getPeriod().getPeriodValue().intValue();
 		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
 
+		isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
+		
 		mailServer = spaceWideRegistry.getMailServer();
 
 		if (TlosSpaceWide.isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistInfoQueueFile, EngineeConstants.tempDir)) {
@@ -163,6 +168,8 @@ public class InfoBusManager implements InfoBus, Runnable {
 						SWErrorOperations.insertError(tlosSWError);
 						logger.info("InfoBusManager hata bilgilerini DB ye insert ediyor." + tlosSWError.getSwError());
 
+					} else if (infoType instanceof TlosMail) {
+						addMail(infoType);
 					}
 
 					if (debug)
@@ -261,12 +268,9 @@ public class InfoBusManager implements InfoBus, Runnable {
 				isGuiAlarm = true;
 		}
 
-		boolean isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
-
-		// (String mailSubject, String mailText, ArrayList<String> distributionList
-		if (isEmailEnabled && isEmailAlarm) {
+		if (isEmailAlarm) {
 			SimpleMail simpleMail = new SimpleMail("Alarm Id = " + alarm.getAlarmId(), "Merhaba, \n alarm var. Id = " + alarm.getAlarmId(), distributionList);
-			mailServer.sendMail(simpleMail);
+			addMail(simpleMail);
 		}
 
 		if (isSmsAlarm) {
@@ -280,5 +284,11 @@ public class InfoBusManager implements InfoBus, Runnable {
 		}
 
 		return true;
+	}
+
+	private void addMail(InfoType infoType) {
+		if (isEmailEnabled) {
+			mailServer.sendMail((TlosMail)infoType);
+		}
 	}
 }
