@@ -17,13 +17,7 @@ import com.likya.tlos.model.xmlbeans.trace.TrcSourceDocument.TrcSource;
 import com.likya.tlos.model.xmlbeans.trace.TrcTimeDocument.TrcTime;
 import com.likya.tlos.model.xmlbeans.trace.TrcUserAgentDocument.TrcUserAgent;
 import com.likya.tlos.model.xmlbeans.trace.TrcUserDocument.TrcUser;
-import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-
-import com.likya.tlossw.utils.date.DateUtils;
-
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.login.LoginBean;
-import com.likya.tlossw.webclient.TEJmxMpDBClient;
 
 public class TraceBean implements Serializable {
 
@@ -112,6 +106,7 @@ public class TraceBean implements Serializable {
 		return trace;
 	}
 
+	/*
 	private static Person generateLoginUser(LoginBean loginBean) {
 		Person attemptedUser = Person.Factory.newInstance();
 		Person logginedUser = null; //loginBean.getLogginedUser();
@@ -123,6 +118,7 @@ public class TraceBean implements Serializable {
 		}
 		return logginedUser;
 	}
+	*/
 
 	public static String getBrowserName(String ag) {
 		String browser = "other";
