@@ -109,6 +109,7 @@ public class LdapClient {
 
 			// Get the node's attributes
 			Attributes attrs = match.getAttributes();
+			@SuppressWarnings("rawtypes")
 			NamingEnumeration e = attrs.getAll();
 
 			// Loop through the attributes
