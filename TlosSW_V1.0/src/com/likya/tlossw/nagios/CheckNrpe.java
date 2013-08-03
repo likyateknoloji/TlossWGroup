@@ -14,36 +14,35 @@ public class CheckNrpe {
 		CheckNrpe c = new CheckNrpe();
 		// XXX still need to do something with the timeout
 		NrpePacket p = c.executeQuery(host, port, buffer.toString(), NrpePacket.DEFAULT_PADDING);
-//		System.out.println(p.getBuffer());
-//		System.exit(p.getResultCode());
+		// System.out.println(p.getBuffer());
+		// System.exit(p.getResultCode());
 		return p;
 	}
 
 	public NrpePacket executeQuery(String host, String buffer) throws Exception {
-		return executeQuery(host, DEFAULT_PORT, buffer,
-				NrpePacket.DEFAULT_PADDING);
+		return executeQuery(host, DEFAULT_PORT, buffer, NrpePacket.DEFAULT_PADDING);
 	}
 
-	public NrpePacket executeQuery(String host, String buffer, int padding)
-			throws Exception {
+	public NrpePacket executeQuery(String host, String buffer, int padding) throws Exception {
 		return executeQuery(host, DEFAULT_PORT, buffer, padding);
 	}
 
-	public NrpePacket executeQuery(String host, int port, String buffer,
-			int padding) throws Exception {
+	public NrpePacket executeQuery(String host, int port, String buffer, int padding) throws Exception {
 
-		NrpePacket p = new NrpePacket(NrpePacket.QUERY_PACKET, (short) 0,
-				buffer);
+		NrpePacket p = new NrpePacket(NrpePacket.QUERY_PACKET, (short) 0, buffer);
 		byte[] b = p.buildPacket(padding);
 		Socket s = new Socket(host, port);
 		OutputStream o = s.getOutputStream();
 		o.write(b);
 
-		return NrpePacket.receivePacket(s.getInputStream(), padding);
+		NrpePacket nrpePacket = NrpePacket.receivePacket(s.getInputStream(), padding);
+
+		s.close();
+
+		return nrpePacket;
 	}
 
-	public NrpePacket sendPacket(short type, short resultCode, String buffer)
-			throws Exception {
+	public NrpePacket sendPacket(short type, short resultCode, String buffer) throws Exception {
 
 		int padding = NrpePacket.DEFAULT_PADDING;
 
@@ -53,6 +52,10 @@ public class CheckNrpe {
 		OutputStream o = s.getOutputStream();
 		o.write(b);
 
-		return NrpePacket.receivePacket(s.getInputStream(), padding);
+		NrpePacket nrpePacket = NrpePacket.receivePacket(s.getInputStream(), padding);
+
+		s.close();
+
+		return nrpePacket;
 	}
 }
