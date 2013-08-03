@@ -194,7 +194,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 		}
 		setMaxValue(maxMax.longValue());
 	}
-
+	/*
 	private void createDenseModelOld() {
 		denseModel = new CartesianChartModel();
 
@@ -229,7 +229,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 		denseModel.addSeries(dense);
 
 	}
-
+	*/
 	public CartesianChartModel getDenseModel() {
 		return denseModel;
 	}
