@@ -10,11 +10,11 @@ import com.likya.tlossw.core.spc.helpers.SWErrorOperations;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
 import com.likya.tlossw.infobus.InfoBusManager;
-import com.likya.tlossw.infobus.helper.InfoType;
-import com.likya.tlossw.infobus.helper.JobAllInfo;
-import com.likya.tlossw.infobus.helper.JobInfo;
 import com.likya.tlossw.infobus.helper.TlosSWError;
 import com.likya.tlossw.infobus.servers.MailServer;
+import com.likya.tlossw.model.infobus.InfoType;
+import com.likya.tlossw.model.infobus.JobAllInfo;
+import com.likya.tlossw.model.infobus.JobInfo;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
