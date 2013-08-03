@@ -1,11 +1,13 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.infobus.helper : ScenarioStart.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Nov 28, 2008 4:13:46 PM
  */
 
 package com.likya.tlossw.infobus.helper;
+
+import com.likya.tlossw.model.infobus.JobInfo;
 
 /**
  * Job in sonlanmasi sirasinda elde edilebilen bazi bilgilerin tutuldugu class.

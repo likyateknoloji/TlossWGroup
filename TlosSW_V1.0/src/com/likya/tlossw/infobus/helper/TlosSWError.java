@@ -1,6 +1,7 @@
 package com.likya.tlossw.infobus.helper;
 
 import com.likya.tlos.model.xmlbeans.error.SWErrorDocument.SWError;
+import com.likya.tlossw.model.infobus.InfoType;
 
 /**
  * TlosSW de cikmasi olasi herturlu hatanin tutuldugu SWError un 
