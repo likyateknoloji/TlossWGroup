@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Observable;
 
 import javax.xml.transform.stream.StreamSource;
 
@@ -20,22 +21,24 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
+import com.likya.tlossw.core.events.types.EmailSenderEvent;
+import com.likya.tlossw.core.events.types.JobStartEvent;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
 import com.likya.tlossw.core.spc.helpers.LogAnalyser;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.helpers.WatchDogTimer;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
-import com.likya.tlossw.infobus.helper.JobAllInfo;
-import com.likya.tlossw.infobus.helper.JobInfo;
-import com.likya.tlossw.infobus.helper.JobStart;
+import com.likya.tlossw.model.infobus.JobAllInfo;
+import com.likya.tlossw.model.infobus.JobInfo;
+import com.likya.tlossw.model.infobus.JobStart;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.transform.OutputParameterPassing;
 
-public abstract class Job implements Runnable, Serializable {
+public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,6 +78,12 @@ public abstract class Job implements Runnable, Serializable {
 		this.globalRegistry = globalRegistry;
 		this.jobRuntimeProperties = jobRuntimeProperties;
 		this.globalLogger = globalLogger;
+		
+		if("MAILEVENT".equals(jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent())) {
+			addObserver(new EmailSenderEvent(globalRegistry));
+		} else if("JOBSTART".equals(jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent())) {
+			addObserver(new JobStartEvent(globalRegistry));
+		}
 	}
 
 	public final void run() {
