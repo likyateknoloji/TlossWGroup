@@ -1,15 +1,15 @@
 /*
  * TlosFaz2
  * com.likya.tlos.infobus.helper : TlosMail.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : 10.Kas.2008 14:52:28
  */
 
-package com.likya.tlossw.infobus.helper.mail;
+package com.likya.tlossw.model.infobus.mail;
 
 import java.util.ArrayList;
 
-import com.likya.tlossw.infobus.helper.InfoType;
+import com.likya.tlossw.model.infobus.InfoType;
 
 
 public class TlosMail implements InfoType {

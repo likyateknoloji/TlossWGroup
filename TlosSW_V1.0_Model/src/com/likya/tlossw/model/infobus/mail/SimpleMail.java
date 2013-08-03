@@ -1,4 +1,4 @@
-package com.likya.tlossw.infobus.helper.mail;
+package com.likya.tlossw.model.infobus.mail;
 
 import java.util.ArrayList;
 
