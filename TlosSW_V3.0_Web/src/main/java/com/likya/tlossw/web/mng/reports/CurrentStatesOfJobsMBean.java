@@ -1,7 +1,6 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
