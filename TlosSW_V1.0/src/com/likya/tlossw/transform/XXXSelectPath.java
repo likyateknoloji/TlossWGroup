@@ -15,29 +15,17 @@
 
 package com.likya.tlossw.transform;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlRuntimeException;
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlRuntimeException;
 
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.parameters.GlobalsDocument;
-import com.likya.tlos.model.xmlbeans.parameters.GlobalsDocument.Globals;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
-import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
-
-import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
 /**
@@ -81,7 +69,7 @@ public class XXXSelectPath {
 	 */
 	public static boolean updateParameter(XmlObject empDoc) throws XmlException {
 		boolean hasResults = false;
-	      ArrayList<Parameter> parameterList = SpaceWideRegistry.getInstance().getParameters();
+//	      ArrayList<Parameter> parameterList = SpaceWideRegistry.getInstance().getParameters();
 	      
 		// Print the XML received.
 		System.out.println("XML as received by updateParameter method: \n\n" + empDoc.toString());
@@ -95,21 +83,21 @@ public class XXXSelectPath {
 		//	    "declare namespace xq='http://xmlbeans.apache.org/samples/xquery/employees';" +
 		//	    "$this/xq:employees/xq:employee/xq:phone[contains(., '(206)')]";
 		
-    	  for(int i = 0; i < parameterList.size(); i++) { 
-    	    String paramName = parameterList.get(i).getName(); 
-    	    String paramPreValueString = parameterList.get(i).getPreValue().getStringValue(); 
-    	    BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
-    	    String paramDesc = parameterList.get(i).getDesc(); 
-		  }
+//    	  for(int i = 0; i < parameterList.size(); i++) { 
+//    	    String paramName = parameterList.get(i).getName(); 
+//    	    String paramPreValueString = parameterList.get(i).getPreValue().getStringValue(); 
+//			BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
+//    	    String paramDesc = parameterList.get(i).getDesc(); 
+//		  }
     	  
         JobProperties jobProperties = JobProperties.Factory.newInstance();
         jobProperties.set(empDoc);
 		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		xmlOptions.setSaveOuter();
-		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
+//		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
 		
-		String myJob = empDoc.toString();
+//		String myJob = empDoc.toString();
 
 		
 		// Execute the query.
@@ -131,13 +119,13 @@ public class XXXSelectPath {
 				qName = LocalParameters.type.getOuterType().getDocumentElementName();
 				xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 				xmlOptions.setSaveOuter();
-				String localParametersXML = result.xmlText(xmlOptions);				
+//				String localParametersXML = result.xmlText(xmlOptions);				
 			} else if(results[0] instanceof SpecialParameters) {
 				result = (SpecialParameters) results[0];
 				qName = SpecialParameters.type.getOuterType().getDocumentElementName();
 				xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 				xmlOptions.setSaveOuter();
-				String specialParametersXML = result.xmlText(xmlOptions);				
+//				String specialParametersXML = result.xmlText(xmlOptions);				
 			} else { 
 				System.out.println("XPath den hatali tip dondu !!");
 				
