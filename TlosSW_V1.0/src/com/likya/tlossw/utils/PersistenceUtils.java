@@ -22,9 +22,9 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalStateDefinition;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.infobus.helper.InfoType;
-import com.likya.tlossw.infobus.helper.mail.TlosMail;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.infobus.InfoType;
+import com.likya.tlossw.model.infobus.mail.TlosMail;
 
 
 public class PersistenceUtils {
