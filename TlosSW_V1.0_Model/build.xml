@@ -68,6 +68,7 @@
 		<path id="build.path">
 				<pathelement location="${build.classes.dir}" />
 				<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
+				<pathelement location="${home.dir}/${sharedlib.dir}/exist_1.4/user/mail-1.4.2.jar" />
 		</path>
 		
 		<mkdir dir="${build.classes.dir}" />
