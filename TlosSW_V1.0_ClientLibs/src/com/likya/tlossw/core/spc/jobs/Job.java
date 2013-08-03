@@ -12,6 +12,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
+import com.likya.tlos.model.xmlbeans.data.CodeType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
@@ -78,11 +79,34 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.globalRegistry = globalRegistry;
 		this.jobRuntimeProperties = jobRuntimeProperties;
 		this.globalLogger = globalLogger;
+
+		extractEventType();
+	}
+	
+	public void setChanged() {
+		super.setChanged();
+	}
+
+	private void extractEventType() {
 		
-		if("MAILEVENT".equals(jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent())) {
-			addObserver(new EmailSenderEvent(globalRegistry));
-		} else if("JOBSTART".equals(jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent())) {
-			addObserver(new JobStartEvent(globalRegistry));
+		try {
+
+			int eventCode = jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent().getCode().intValue();
+
+			switch (eventCode) {
+			case CodeType.INT_EMAIL:
+				addObserver(new EmailSenderEvent(globalRegistry));
+				break;
+			case CodeType.INT_WAIT_ME:
+				addObserver(new JobStartEvent(globalRegistry));
+				break;
+
+			default:
+				break;
+			}
+
+		} catch (NullPointerException ne) {
+			System.out.println("One of the parameters of jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent() is NULL !");
 		}
 	}
 
@@ -90,7 +114,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		localRun();
 
-		LogAnalyser.evaluate(getJobRuntimeProperties().getJobProperties());
+		new LogAnalyser().evaluate(this);
 
 	}
 
