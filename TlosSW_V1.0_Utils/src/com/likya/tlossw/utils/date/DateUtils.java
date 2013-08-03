@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 
 public class DateUtils {
