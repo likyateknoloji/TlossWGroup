@@ -51,8 +51,6 @@ public class PersistenceUtils {
 			in = new ObjectInputStream(fis);
 			input = in.readObject();
 
-			in.close();
-			
 		} catch (FileNotFoundException fnf) {
 			return null;
 		} catch (IOException ex) {
@@ -61,6 +59,12 @@ public class PersistenceUtils {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return input;
