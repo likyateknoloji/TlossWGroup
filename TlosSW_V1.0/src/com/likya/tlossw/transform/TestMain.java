@@ -1,36 +1,23 @@
 package com.likya.tlossw.transform;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.math.BigInteger;
-import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.xpath.XPathException;
 
-import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlossw.jmx.beans.RemoteDBOperator;
-import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 
@@ -39,14 +26,14 @@ public class TestMain {
    public synchronized static void transformTest(XmlObject job) {
 
 	  /** Genel parametreleri kullanma ornegi **/
-      ArrayList<Parameter> parameterList = SpaceWideRegistry.getInstance().getParameters();
+//      ArrayList<Parameter> parameterList = SpaceWideRegistry.getInstance().getParameters();
 
-      for(int i = 0; i < parameterList.size(); i++) { 
-	    String paramName = parameterList.get(i).getName(); 
-	    String paramPreValueString = parameterList.get(i).getPreValue().getStringValue(); 
-	    BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
-	    String paramDesc = parameterList.get(i).getDesc(); 
-	  }
+//      for(int i = 0; i < parameterList.size(); i++) { 
+//	    String paramName = parameterList.get(i).getName(); 
+//	    String paramPreValueString = parameterList.get(i).getPreValue().getStringValue(); 
+//	    BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
+//	    String paramDesc = parameterList.get(i).getDesc(); 
+//	  }
       /******************************************/
       
       try {
@@ -82,17 +69,17 @@ public class TestMain {
   		/********** XML Dosyasini org.apache.xmlbeans.XmlObject olarak bellege al ve XPATH sorgula ******** BASLA *********/
           // Burada dogrudan job parametresini kullanabiliriz. Yada kullanicinin belirttigi XML i islemeye
   		  // devam ederiz.
-          XmlObject xmlObjExpected = null;
-  		  try {
-  		    xmlObjExpected = XmlObject.Factory.parse((Node) p, xmlOptions);
-		  }
-		  catch(XmlException xe) {
-			System.out.print(" XML i DOM dan xmlObjct e cevirmede hata olustu :" + xe.getMessage());
-		  }
+//          XmlObject xmlObjExpected = null;
+//  		  try {
+//  		    xmlObjExpected = XmlObject.Factory.parse((Node) p, xmlOptions);
+//		  }
+//		  catch(XmlException xe) {
+//			System.out.print(" XML i DOM dan xmlObjct e cevirmede hata olustu :" + xe.getMessage());
+//		  }
 
-  		  XmlObject[] xmlObjExpectedResult = xmlObjExpected.selectPath(
-  		      "declare namespace par='http://www.likyateknoloji.com/XML_parameters_types'; " +
-              ".//Parameters/Globals", xmlOptions);
+//  		  XmlObject[] xmlObjExpectedResult = xmlObjExpected.selectPath(
+//  		      "declare namespace par='http://www.likyateknoloji.com/XML_parameters_types'; " +
+//              ".//Parameters/Globals", xmlOptions);
 
           XXXSelectPath.updateParameter(job);
           //SelectPath.updateParameter(TlosSpaceWide.getSpaceWideRegistry().getSpaceWideReference().getParameters());
@@ -132,8 +119,8 @@ public class TestMain {
 	     new File("D:\\likya\\projeler\\tlos\\tlos3.0\\parameters\\job_sample11_xslt_1.0.xsl"));
 
 	   // Set up output sink
-	   StreamResult outputXHTML = new StreamResult(
-	     new File("D:\\likya\\projeler\\tlos\\tlos3.0\\parameters\\output.html"));
+//	   StreamResult outputXHTML = new StreamResult(
+//	     new File("D:\\likya\\projeler\\tlos\\tlos3.0\\parameters\\output.html"));
 	
 	   try {
 		    StringReader reader = new StringReader("<xml>blabla</xml>");
@@ -154,7 +141,7 @@ public class TestMain {
 			transformer.transform(new javax.xml.transform.stream.StreamSource(reader), 
 					              new javax.xml.transform.stream.StreamResult(writer));
 			   
-		    String result = writer.toString();
+//		    String result = writer.toString();
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
