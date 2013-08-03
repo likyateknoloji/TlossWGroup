@@ -12,12 +12,16 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
 import com.likya.tlos.model.xmlbeans.data.ModeType;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class LogAnalyser {
 
-	public static void evaluate(JobProperties jobProperties) {
+	public void evaluate(Job job) {
 
+		
+		JobProperties jobProperties = job.getJobRuntimeProperties().getJobProperties();
+		
 		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
 
 		if (logAnalysis != null && logAnalysis.getActive()) {
@@ -52,16 +56,18 @@ public class LogAnalyser {
 			}
 
 			if (result && logAnalysis.getAction().getThen() != null) {
-				// Event is not implemented yet
-				// Do event thing
-
+				
+				job.setChanged();
+				job.notifyObservers();
+				
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getThen().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
 
 			} else if (!result && logAnalysis.getAction().getElse() != null) {
-				// Event is not implemented yet
-				// Do event thing
-
+				
+				job.setChanged();
+				job.notifyObservers(this);
+				
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getElse().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
 			}
