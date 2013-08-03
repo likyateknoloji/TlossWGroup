@@ -45,7 +45,7 @@ import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.infobus.InfoBusManager;
-import com.likya.tlossw.infobus.helper.JobInfo;
+import com.likya.tlossw.model.infobus.JobInfo;
 import com.likya.tlossw.perfmng.PerformanceManager;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -68,8 +68,8 @@ public abstract class TestSuit {
 		SpaceWideRegistry.setGlobalLogger(TestSuit.testLogger);
 
 		/**
-		 * TlosConfig nesnesi olu�turup Global Kay�t defterine
-		 * tan�maln�yor
+		 * TlosConfig nesnesi oluşturup Global Kayıt defterine
+		 * tanımalnıyor
 		 */
 
 		TlosConfigInfoDocument tlosConfigInfoDocument = TlosConfigInfoDocument.Factory.newInstance();
