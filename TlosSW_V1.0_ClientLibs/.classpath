@@ -4,7 +4,6 @@
 	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/wsdl4j-1.6.2.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache/commons-net-3.0.1.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/log4j/log4j-1.2.15.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Schema"/>
@@ -22,5 +21,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/TlosSW_V1.0_Common"/>
 	<classpathentry kind="lib" path="/SharedLibs/Jsch/jsch-0.1.49.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/postgreSQL/postgresql-9.1-902.jdbc4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
