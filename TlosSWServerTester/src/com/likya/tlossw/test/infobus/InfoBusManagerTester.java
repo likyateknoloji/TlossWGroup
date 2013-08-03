@@ -3,7 +3,7 @@ package com.likya.tlossw.test.infobus;
 import org.apache.log4j.Logger;
 
 import com.likya.tlossw.infobus.InfoBusManager;
-import com.likya.tlossw.infobus.helper.JobInfo;
+import com.likya.tlossw.model.infobus.JobInfo;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.date.DateUtils;
 
