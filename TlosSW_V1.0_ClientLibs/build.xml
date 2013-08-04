@@ -92,12 +92,15 @@
 		<if>
 			<equals arg1="${minor.number}" arg2="" />
 			<then>
-				<echo message="Tying to mavenize locally..." />
+				<echo message="Trying to mavenize locally..." />
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
 				<copy file="${appname}-1.0.0.jar" todir="${user.home}/.m2/repository/likyateknoloji/${appname}/1.0.0/" />
 				<echo message="Tying to mavenize locally... completed !" />
 			</then>
 			<else>
+				<!--arg value="${env.MAVEN_HOME}\bin\mvn.bat"/-->
+				<!--arg value="/Users/serkan/apache-maven-3.0.5/bin/mvn"/-->
+				<!--exec dir="." executable="sh"-->
 				<echo message="**************************************************"/>
 				<echo message="Tying to mavenize for deployment..." />
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
