@@ -10,7 +10,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 public class SelectItemCollectionFactory {
 
 	/**
-	 *  Örnek kullaným 
+	 *  Ã–rnek kullanÄ±m 
 	 */
      //	setAlarmUserList(SelectItemCollectionFactory.getCollection(getDbOperations().getUsers(), "id", "userName"));
 	
