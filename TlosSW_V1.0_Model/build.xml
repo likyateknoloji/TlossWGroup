@@ -94,16 +94,16 @@
 				<!--arg value="${env.MAVEN_HOME}\bin\mvn.bat"/-->
 				<!--arg value="/Users/serkan/apache-maven-3.0.5/bin/mvn"/-->
 				<!--exec dir="." executable="sh"-->
-				<!--echo message="**************************************************"/>
-				<echo message="Tying to mavenize locally..." />
+				<echo message="**************************************************"/>
+				<echo message="Tying to mavenize for deployment..." />
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
 				<echo message="executing maven : install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
 				<exec dir="." executable="cmd" failonerror="true">
 					<arg value="/c"/>
 					<arg value="D:/apache-maven-3.0.5/bin/mvn.bat install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
 				</exec>
-				<echo message="Tying to mavenize locally... completed !" />			
-				<echo message="**************************************************"/-->
+				<echo message="Tying to mavenize for deployment... completed !" />			
+				<echo message="**************************************************"/>
 			</else>
 		</if>
 		
