@@ -11,6 +11,12 @@
 	<property name="app.deploy.dir" value="${basedir}" />
 	<property name="version.num" value="1.0"/>
 
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+			
 	<target name="init" depends="init2" unless="minor.number">
 		<property name="minor.number" value="" />
 		<property name="buildchar" value="" />
