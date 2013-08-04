@@ -244,6 +244,18 @@
 			<artifactId>tlossw-webclient</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>el-api</artifactId>
+			<version>1.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>1.0.0</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
