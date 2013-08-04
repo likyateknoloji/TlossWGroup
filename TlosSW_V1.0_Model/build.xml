@@ -98,6 +98,7 @@
 					<!--arg value="${env.MAVEN_HOME}\bin\mvn.bat"/-->
 					<!--arg value="/Users/serkan/apache-maven-3.0.5/bin/mvn"/-->
 					<arg value="D:\apache-maven-3.0.5\bin\mvn.bat"/>
+					<echo message="executing maven : install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
 					<arg line="install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
 				</exec>
 				<echo message="Tying to mavenize locally... completed !" />			
