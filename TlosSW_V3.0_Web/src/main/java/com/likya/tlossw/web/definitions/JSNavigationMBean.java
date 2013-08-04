@@ -8,9 +8,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.xml.namespace.QName;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
@@ -21,9 +21,11 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.utils.validation.XMLValidations;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.BeanUtils;
@@ -154,7 +156,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
 	
-	public String switchToTestPage() throws InvalidInputException {
+	public String switchToTestPage() throws Exception {
 		
 		getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
 		
@@ -180,11 +182,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
 		
-		
-		if(tlosProcessData.validate()) {
-			throw new InvalidInputException();
+		if (tlosProcessData == null || ! XMLValidations.validateWithLogs(Logger.getLogger(getClass()), tlosProcessData)) {
+			throw new TlosFatalException("JSNavigationMBean.switchToTestPage : TlosProcessData is null or tlosProcessData xml is damaged !");
 		}
-		
 		
 		TEJmxMpWorkSpaceClient.addTestData(getWebAppUser(), tlosProcessDataDocument.toString());
 		
