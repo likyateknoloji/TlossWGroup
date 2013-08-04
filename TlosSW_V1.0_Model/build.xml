@@ -94,7 +94,7 @@
 				<echo message="Tying to mavenize locally..." />
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
 				<!--exec dir="." executable="sh"-->
-				<exec dir="${exportDir}/${TlosSW_V1.0_Model}" executable="cmd">
+				<exec dir="." executable="cmd">
 					<!--arg value="${env.MAVEN_HOME}\bin\mvn.bat"/-->
 					<!--arg value="/Users/serkan/apache-maven-3.0.5/bin/mvn"/-->
 					<arg value="D:\apache-maven-3.0.5\bin\mvn.bat"/>
