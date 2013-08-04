@@ -1,15 +1,11 @@
 package com.likya.tlossw.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.agent.RxMessageBodyTypeDocument.RxMessageBodyType;
