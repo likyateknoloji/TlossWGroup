@@ -96,11 +96,11 @@
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
 				<!--exec dir="." executable="sh"-->
 				<echo message="executing maven : install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
-				<exec dir="." executable="cmd">
+				<exec dir="." executable="cmd" failonerror="true">
 					<!--arg value="${env.MAVEN_HOME}\bin\mvn.bat"/-->
 					<!--arg value="/Users/serkan/apache-maven-3.0.5/bin/mvn"/-->
-					<arg value="D:\apache-maven-3.0.5\bin\mvn.bat"/>
-					<arg line="install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
+					<arg value="/c"/>
+					<arg value="D:/apache-maven-3.0.5/bin/mvn.bat install:install-file -Dfile=${appname}-1.0.0.jar -DgroupId=likyateknoloji -DartifactId=${appname} -Dversion=1.0.0 -Dpackaging=jar" />
 				</exec>
 				<echo message="Tying to mavenize locally... completed !" />			
 				<echo message="**************************************************"/>
