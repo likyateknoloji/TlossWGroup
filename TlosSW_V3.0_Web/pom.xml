@@ -45,37 +45,31 @@
 			<groupId>exist</groupId>
 			<artifactId>exist</artifactId>
 			<version>1.0.0</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>exist</groupId>
 			<artifactId>xmldb</artifactId>
 			<version>1.0.0</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>exist</groupId>
 			<artifactId>xmlrpc-client</artifactId>
 			<version>3.1.2</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>exist</groupId>
 			<artifactId>xmlrpc-common</artifactId>
 			<version>3.1.2</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>exist</groupId>
 			<artifactId>xmlrpc-server</artifactId>
 			<version>3.1.2</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>exist</groupId>
 			<artifactId>ws-commons-util</artifactId>
 			<version>1.0.2</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>mojarra</groupId>
