@@ -1,7 +1,7 @@
+
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_data_types" xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
-           xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
-           xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" targetNamespace="http://www.likyateknoloji.com/XML_data_types"
-           elementFormDefault="qualified">
+           xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep"
+           xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" targetNamespace="http://www.likyateknoloji.com/XML_data_types" elementFormDefault="qualified">
 	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
 	<xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
 	<xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
@@ -385,8 +385,22 @@
 	</xs:element>
 	<xs:element name="event">
 		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:EmailList" minOccurs="0"/>
+				<xs:element ref="content" minOccurs="0"/>
+			</xs:sequence>
 			<xs:attribute name="code" use="required" type="codeType"/>
 			<xs:attribute name="id" use="required" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="content">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="logLineNumBack" use="optional" type="xs:positiveInteger"/>
+					<xs:attribute name="logLineNumForward" use="optional" type="xs:positiveInteger"/>
+				</xs:extension>
+			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="forcedResult">
