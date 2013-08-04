@@ -84,17 +84,17 @@
 		<copy file="${jar}" todir="test" />
 		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
 
-		<if>
+		<!--if>
 			<equals arg1="${minor.number}" arg2="" />
-			<then>
+			<then-->
 				<echo message="Tying to mavenize locally..." />
 				<move file="${appname}.jar" tofile="${appname}-1.0.0.jar" />
 				<copy file="${appname}-1.0.0.jar" todir="${user.home}/.m2/repository/likyateknoloji/${appname}/1.0.0/" />
 				<echo message="Tying to mavenize locally... completed !" />
-			</then>
+			<!--/then>
 			<else>
 			</else>
-		</if>
+		</if-->
 		
 	</target>
 
