@@ -110,25 +110,21 @@
 			<groupId>primefaces</groupId>
 			<artifactId>cupertino</artifactId>
 			<version>1.0.8</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>primefaces</groupId>
 			<artifactId>likya-cupertino</artifactId>
 			<version>1.0.0</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>primefaces</groupId>
 			<artifactId>ui-lightness</artifactId>
 			<version>1.0.8</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>primefaces</groupId>
 			<artifactId>swanky-purse</artifactId>
 			<version>1.0.8</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>primefaces</groupId>
