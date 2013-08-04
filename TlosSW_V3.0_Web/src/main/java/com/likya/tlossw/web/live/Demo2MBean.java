@@ -1,6 +1,5 @@
 package com.likya.tlossw.web.live;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
@@ -64,11 +63,13 @@ public class Demo2MBean extends TlosSWBaseBean implements Serializable {
 			activeLivePanel = TLOSAGENT_PANEL;
 		}
 		
-		try {
-			FacesContext.getCurrentInstance().getExternalContext().redirect(activeLivePanel + "?faces-redirect=true");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			FacesContext.getCurrentInstance().getExternalContext().redirect(activeLivePanel + "?faces-redirect=true");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+
+		FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "null", activeLivePanel + "?faces-redirect=true");
 
 	}
 
