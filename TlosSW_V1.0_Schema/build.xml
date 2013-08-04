@@ -88,7 +88,7 @@
 
 		<mkdir dir="test" />
 		<copy file="${appname}-V${version.num}${buildchar}${minor.number}.jar" todir="test" />
-		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}-1.0.0.jar" />
+		<move file="test/${appname}-V${version.num}${buildchar}${minor.number}.jar" tofile="${appname}.jar" />
 
 		<if>
 			<equals arg1="${minor.number}" arg2="" />
