@@ -207,7 +207,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		jobInfo.setUserID(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getUserId());
 		jobInfo.setAgentID(getJobRuntimeProperties().getJobProperties().getAgentId());
 		jobInfo.setLiveLiveStateInfo(getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
-		jobInfo.getLiveLiveStateInfo().setLSIDateTime(DateUtils.getW3CDateTime());
+		jobInfo.getLiveLiveStateInfo().setLSIDateTime(DateUtils.getServerW3CDateTime());
 
 		Date infoTime = Calendar.getInstance().getTime();
 		jobInfo.setInfoDate(infoTime);
