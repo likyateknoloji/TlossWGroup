@@ -127,11 +127,11 @@
 	<con:jmxParams>
 		<con:jmxTlsPort>
             <com:comment>jmxTlsPort</com:comment>
-            <con:portNumber>5555</con:portNumber>
+            <con:portNumber>5570</con:portNumber>
         </con:jmxTlsPort>
         <con:jmxPort>
             <com:comment>jmxPort</com:comment>
-            <con:portNumber>5554</con:portNumber>
+            <con:portNumber>5571</con:portNumber>
         </con:jmxPort>
 		<con:trustStore>likyaKeystore</con:trustStore>
 		<con:keyStore>likyaKeystore</con:keyStore>
