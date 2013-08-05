@@ -7,6 +7,17 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
+
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 
 public class DateUtils {
@@ -741,6 +752,93 @@ public class DateUtils {
 		return dateFormater.format(date);
 	}
 
+	public static String getServerW3CDateTime() {
+
+		String serverTimeZone = new String("Europe/Istanbul");
+		
+		TimeZone timeZone = TimeZone.getTimeZone(serverTimeZone);
+		Calendar calendar = Calendar.getInstance(timeZone);
+		
+		DateTimeZone zone = DateTimeZone.forID(serverTimeZone);
+
+		
+		LocalTime jobLocalTime = new LocalTime(calendar.getTime(), zone);
+		LocalDate t = new LocalDate(calendar.getTime(), zone);
+		DateTime dt = t.toDateTime(jobLocalTime, zone);
+
+		boolean isStandardOffset = zone.isStandardOffset(dt.getMillis());
+		boolean isDaylightOfset = !isStandardOffset;
+		
+		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+		String dateStr = dt.toString(outputFormat);
+
+		return dateStr;
+	}
+	
+	public static Calendar dateToXmlTime(String time, String selectedTZone) {
+		
+		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
+
+		DateTimeParser[] parsers = { DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
+
+		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+
+		LocalTime jobLocalTime = dtf.parseLocalTime(time);
+		DateTime tx = jobLocalTime.toDateTimeToday(zonex);
+		
+		// TODO Locale için doğru seçim konusunda birşeyler yapmak lazım.
+		return tx.toCalendar(Locale.US);
+	}
+	
+	public static String getW3CDateTime(Calendar calendar, String selectedTZone, TypeOfTime.Enum myType) {
+
+		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi? 
+		//TimeZone serverTZ = TimeZone.getTimeZone(serverTimeZone);
+		
+		String selectedTimeZone = new String(selectedTZone);
+		TimeZone timeZone = TimeZone.getTimeZone(selectedTimeZone);
+		
+		boolean isDstExistWhenJobIsDefined = calendar.getTimeZone().useDaylightTime(); 
+		boolean isDstExistWhenJobIsPlannedToRun = timeZone.inDaylightTime(calendar.getTime());
+		
+		DateTimeZone zonex = DateTimeZone.forID(serverTimeZone);
+		DateTimeZone zone = DateTimeZone.forID(selectedTimeZone);
+		
+		//int timeOffSet2 = zone.getOffset(calendar.getTimeInMillis())/3600000;
+		int timeOffSet = calendar.getTimeZone().getRawOffset()/3600000; // İşin tanımlandığı andaki Offset i, ornek +02:00
+		//LocalTime localTime = new LocalTime(calendar.getTimeInMillis(), zonex.UTC);
+		LocalTime jobLocalTime = null;
+		LocalDateTime localDateTime = null;
+		// Seçilen zaman tipine göre işin çalışma zamanını belirleyelim
+		switch (myType.intValue()) {
+			case TypeOfTime.INT_ACTUAL:
+				jobLocalTime = new LocalTime(calendar.getTime(), zone);
+				localDateTime = new LocalDateTime(calendar.getTime(), zone);
+				break;
+
+			case TypeOfTime.INT_RECURRING:
+				jobLocalTime = new LocalTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
+				localDateTime = new LocalDateTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
+				break;
+
+			case TypeOfTime.INT_BROADCAST: // Burası nasıl olacak tam karar vermedim.
+				jobLocalTime = new LocalTime(calendar.getTime(), zone);
+				localDateTime = new LocalDateTime(calendar.getTime(), zonex.UTC);
+				break;
+					
+			default:
+				break;
+		}
+
+		//LocalDate t = new LocalDate(calendar.getTime(), zone);
+		DateTime dt = localDateTime.toDateTime(zone);
+
+		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+		String dateStr = dt.toString(outputFormat);
+
+		return dateStr;
+	}
+	
 	public static long getCurrentTimeMilliseconds() {
 		return System.currentTimeMillis();
 	}
