@@ -68,6 +68,7 @@
 			<pathelement location="${sharedlib.dir}/log4j/log4j-1.2.15.jar" />
 			<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
 			<pathelement location="${sharedlib.dir}/saxonb9-1-0-8j/saxon9.jar" />
+			<pathelement location="${sharedlib.dir}/joda-time-2.2/joda-time-2.2.jar" />
 			<pathelement location="${tlos_commonDefinitions.dir}/tlossw-common-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
 			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
