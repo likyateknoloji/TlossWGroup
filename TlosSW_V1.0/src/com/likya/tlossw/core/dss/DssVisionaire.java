@@ -46,7 +46,7 @@ public class DssVisionaire extends DssBase {
 			// Job in hangi agent da calisacagi belli oldu. Tanimdaki agentId ye atayalim.
 			
 			jobProperties.setAgentId(resource.getAgentid());
-			job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getW3CDateTime());
+			job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
 			
 			/* TRANSFERING state i ekle */
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
