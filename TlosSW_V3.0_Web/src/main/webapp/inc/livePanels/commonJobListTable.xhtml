@@ -5,6 +5,14 @@
 <h:body>
 	<ui:composition>
 
+		<style>
+			.failed {
+				color: red;
+				background-color: black;
+				font-weight: bold;
+			}
+		</style>
+
 		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" rowStyleClass="#{item.liveStateInfo.statusName eq 'FAILED' ? 'failed' : null}" widgetVar="itemsTable"
 			resizableColumns="true" binding="#{backingBean.jobDataTable}" filteredValue="#{backingBean.filteredJobs}" emptyMessage="No records found with given criteria" sortMode="multiple" width="100%"
 			paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"

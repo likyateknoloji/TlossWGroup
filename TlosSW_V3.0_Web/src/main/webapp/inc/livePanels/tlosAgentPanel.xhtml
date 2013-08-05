@@ -14,19 +14,19 @@
 
 			<p:panel rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.agentType ne 'server'}" >
 
-				<p:commandButton id="forcedDeactivateButton" update="liveResourceForm"
+				<p:commandButton id="forcedDeactivateButton" update="liveForm"
 					value="#{msgs['tlos.live.panel.tlosagent.forcedDeactivate']}" 
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.forcedDeactivate and security.ForcedDeactivateTAgent}"
 					actionListener="#{tlosAgentMBean.forcedDeactivateAgentAction}" 
 					onclick="if(!confirm('#{msgs['tlos.confirm.live.tlosagent.forcedDeactivate']}')) return false;" />
 
-				<p:commandButton id="normalDeactivateButton" update="liveResourceForm"
+				<p:commandButton id="normalDeactivateButton" update="liveForm"
 					value="#{msgs['tlos.live.panel.tlosagent.normalDeactivate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.normalDeactivate and security.NormalDeactivateTAgent}"
 					actionListener="#{tlosAgentMBean.normalDeactivateAgentAction}"
 					onclick="if(!confirm('#{msgs['tlos.confirm.live.tlosagent.normalDeactivate']}')) return false;" />
 
-				<p:commandButton id="activateButton" update="liveResourceForm"
+				<p:commandButton id="activateButton" update="liveForm"
 					value="#{msgs['tlos.live.panel.tlosagent.activate']}"
 					rendered="#{tlosAgentMBean.tlosAgentInfoTypeClient.activate and security.ActivateTAgent}"
 					actionListener="#{tlosAgentMBean.activateAgentAction}"
