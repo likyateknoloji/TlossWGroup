@@ -198,7 +198,7 @@ public class MailServer implements Runnable {
 			// Send message
 			Transport.send(message);
 			try {
-				// A��r� y�kleme yap�p, sistemi yormas�n diye aral�kl� g�nderim yap�lacak.
+				// Aşırı yükleme yapıp, sistemi yormasın diye aralıklı gönderim yapılacak.
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
