@@ -83,7 +83,7 @@ public class NrpeCommander implements Runnable {
 			nrpeCall.setOs(nrpeHost.getOsType().toString());
 			
 			Message nrpeMessage = Message.Factory.newInstance();
-			nrpeMessage.setTime(DateUtils.getW3CDateTime());
+			nrpeMessage.setTime(DateUtils.getServerW3CDateTime());
 			nrpeMessage.setId(DateUtils.getCurrentTimeMilliseconds()+"");
 
 			nrpeMessage.addNewResponse();
