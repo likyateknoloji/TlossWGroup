@@ -37,7 +37,7 @@ public class Demo4MBean extends TlosSWBaseBean implements Serializable {
 		
 //		try {
 //			FacesContext.getCurrentInstance().getExternalContext().redirect(activeLivePanel + "?faces-redirect=true");
-			FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "null", "myPage.xhtml");
+			FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), "null", activeLivePanel + "?faces-redirect=true");
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
