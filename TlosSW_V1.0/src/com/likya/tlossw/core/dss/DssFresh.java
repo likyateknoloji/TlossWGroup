@@ -276,7 +276,7 @@ public class DssFresh {
 				 */
 				myLogger.info("     > ID : " + jobProperties.getID() + ":" +  jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 
-				job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getW3CDateTime());
+				job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
 
 				DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
 
