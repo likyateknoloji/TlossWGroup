@@ -26,7 +26,7 @@ public class SWErrorOperations {
 
 		swError.setResource(agent.getResource());
 		swError.setAgentId(agent.getId());
-		swError.setLSIDateTime(DateUtils.getW3CDateTime());
+		swError.setLSIDateTime(DateUtils.getServerW3CDateTime());
 		swError.setErrLevel(ErrLevel.APPLICATION_LEVEL);
 		swError.setErrType(ErrType.INTERACTION_AND_NETWORK_ERRORS);
 		swError.setErrDetail(ErrDetail.JMX_COMMUNICATION_PROTOCOL);
@@ -50,7 +50,7 @@ public class SWErrorOperations {
 
 		swError.setResource(agent.getResource());
 		swError.setAgentId(agent.getId());
-		swError.setLSIDateTime(DateUtils.getW3CDateTime());
+		swError.setLSIDateTime(DateUtils.getServerW3CDateTime());
 		swError.setErrLevel(ErrLevel.APPLICATION_LEVEL);
 		swError.setErrType(ErrType.INTERACTION_AND_NETWORK_ERRORS);
 		swError.setErrDetail(ErrDetail.JMX_COMMUNICATION_PROTOCOL);
@@ -73,7 +73,7 @@ public class SWErrorOperations {
 
 		swError.setResource(agent.getResource());
 		swError.setAgentId(agent.getId());
-		swError.setLSIDateTime(DateUtils.getW3CDateTime());
+		swError.setLSIDateTime(DateUtils.getServerW3CDateTime());
 		swError.setErrLevel(ErrLevel.APPLICATION_LEVEL);
 		swError.setErrType(ErrType.INTERACTION_AND_NETWORK_ERRORS);
 		swError.setErrDetail(ErrDetail.JMX_COMMUNICATION_PROTOCOL);
