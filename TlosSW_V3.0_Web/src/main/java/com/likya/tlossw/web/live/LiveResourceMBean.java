@@ -48,19 +48,23 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 			getResourceMBean().fillResourceInfoList();
 
 			activeLivePanel = RESOURCELIST_PANEL;
-			
+
 		} else if (nodeType.equals(ConstantDefinitions.TREE_KAYNAK)) {
 			ResourceNode resourceNode = (ResourceNode) event.getTreeNode().getData();
 			String resourceName = resourceNode.getResourceInfoTypeClient().getResourceName();
 			getResourceMBean().fillAgentInfoList(resourceName);
 
 			activeLivePanel = RESOURCE_PANEL;
+
 		} else if (nodeType.equals(ConstantDefinitions.TREE_TLOSAGENT)) {
 			TlosAgentNode tlosAgentNode = (TlosAgentNode) event.getTreeNode().getData();
 			int agentId = tlosAgentNode.getTlosAgentInfoTypeClient().getAgentId();
 			getTlosAgentMBean().initializeTlosAgentPanel(agentId);
 
 			activeLivePanel = TLOSAGENT_PANEL;
+
+		} else if (nodeType.equals(ConstantDefinitions.TREE_JOB)) {
+			
 		}
 	}
 

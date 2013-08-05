@@ -180,4 +180,10 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 		this.selectedRow = selectedRow;
 	}
 
+	@Override
+	public JobInfoTypeClient getJobInTyCl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

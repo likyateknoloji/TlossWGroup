@@ -166,6 +166,11 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	public void refreshTlosAgentPanel() {
 	}
 
+	@Override
+	public JobInfoTypeClient getJobInTyCl() {
+		return null;
+	}
+
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
 		return jobInfoList;
 	}
