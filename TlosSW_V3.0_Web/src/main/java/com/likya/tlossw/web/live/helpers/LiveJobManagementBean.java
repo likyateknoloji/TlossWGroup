@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.component.column.Column;
+
 import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.web.live.JobManagementInterface;
@@ -13,7 +15,7 @@ import com.likya.tlossw.webclient.TEJmxMpClient;
 public class LiveJobManagementBean implements Serializable {
 
 	private static final long serialVersionUID = -6775403643497743131L;
-	
+
 	private JobManagementInterface jobManagementInterface;
 
 	public LiveJobManagementBean(JobManagementInterface jobManagementInterface) {
@@ -22,7 +24,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void pauseJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.pauseJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -33,7 +41,13 @@ public class LiveJobManagementBean implements Serializable {
 
 	// user based islerde kullanici ekrandan baslati sectiginde buraya geliyor
 	public void startUserBasedJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -43,7 +57,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void startJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.startJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -53,7 +73,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void retryJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.retryJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -63,7 +89,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void doSuccessJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.doSuccess(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -73,7 +105,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void skipJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.skipJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -83,7 +121,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void stopJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.stopJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -93,7 +137,13 @@ public class LiveJobManagementBean implements Serializable {
 	}
 
 	public void resumeJobAction(ActionEvent e) {
-		JobInfoTypeClient jobInfoTypeClient = getRowData();
+
+		JobInfoTypeClient jobInfoTypeClient;
+		if (e.getComponent().getParent() instanceof Column) {
+			jobInfoTypeClient = getRowData();
+		} else {
+			jobInfoTypeClient = getJobInTyCl();
+		}
 		TEJmxMpClient.resumeJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
@@ -116,6 +166,10 @@ public class LiveJobManagementBean implements Serializable {
 
 	public WebAppUser getWebAppUser() {
 		return jobManagementInterface.getWebAppUser();
+	}
+
+	public JobInfoTypeClient getJobInTyCl() {
+		return jobManagementInterface.getJobInTyCl();
 	}
 
 }
