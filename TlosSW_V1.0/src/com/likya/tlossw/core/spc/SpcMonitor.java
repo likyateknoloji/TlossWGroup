@@ -54,7 +54,7 @@ public class SpcMonitor implements Runnable {
 				if(SpaceWideRegistry.isDebug) {
 					String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
 					logString += " [Job Name : " + jobProperties.getID() + "]";
-					logString += " [Tarih : " + DateUtils.getW3CDateTime() + "]";
+					logString += " [Tarih : " + DateUtils.getServerW3CDateTime() + "]";
 					logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
 					logString += " [Substattate Name : " + (substateName == null ? "" : substateName) + "]";
 					logString += " [Status Name : " + (statusName == null ? "" : statusName) + "]";
