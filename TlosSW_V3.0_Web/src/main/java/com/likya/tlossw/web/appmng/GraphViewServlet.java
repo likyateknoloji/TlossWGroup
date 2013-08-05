@@ -42,7 +42,9 @@ public class GraphViewServlet extends HttpServlet {
 		String scenarioId = request.getParameter("scenarioId");
 		
 		WebAppUser webAppUser = (WebAppUser) request.getSession().getAttribute("webAppUser");
-		
+		if(webAppUser == null) {
+	    	System.err.println(" Grafik çizimi için webAppUser bilgisi alınamadı. Error Code : 1985");
+        }
 		String gml = null;
 		byte[] graphML = null;
 		
@@ -84,7 +86,13 @@ public class GraphViewServlet extends HttpServlet {
 		String gml = null;
 		
 		//ilgili senaryonun islerinin anlik bilgilerini sunucudan aliyor
-		ArrayList<JobInfoTypeClient> jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(webAppUser, scenarioId);
+		ArrayList<JobInfoTypeClient> jobInfoList = null;
+		
+		try {
+			jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(webAppUser, scenarioId);	
+	    } catch (NullPointerException npe) {
+	    	System.err.println(" Grafik çizimi için Senaryo detayı alınamadı. Error Code : 1986");
+        }
 		
 		gml = "<Graph>\n";
 		
@@ -154,8 +162,14 @@ public class GraphViewServlet extends HttpServlet {
 	private String constructGML(WebAppUser webAppUser, String scenarioId) {
 		String gml = null;
 		
-		Scenario scenario = TEJmxMpDBClient.getScenarioFromId(webAppUser, CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
-		
+		Scenario scenario = null; 
+				
+		try {
+		   scenario = TEJmxMpDBClient.getScenarioFromId(webAppUser, CommonConstantDefinitions.JOB_DEFINITION_DATA, Integer.parseInt(scenarioId));
+        } catch (NullPointerException npe) {
+    	    System.out.println(" Grafik çizimi için getScenarioFromId bilgisi alınamadı. Error Code : 1987");
+    	    return "";
+        }
 		gml = "<Graph>\n";
 		
 		String rootKey = "Job_List";
