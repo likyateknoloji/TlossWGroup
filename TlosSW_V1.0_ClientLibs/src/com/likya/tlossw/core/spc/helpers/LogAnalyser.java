@@ -34,7 +34,7 @@ public class LogAnalyser {
 				String filePath = jobProperties.getBaseJobInfos().getJobLogPath();
 				String fileName = jobProperties.getBaseJobInfos().getJobLogFile();
 
-				File sourceFiile = new File(filePath + File.separator + fileName);
+				File sourceFile = new File(filePath + File.separator + fileName);
 
 				int direction = logAnalysis.getFindWhat().getDirection().intValue();
 
@@ -46,9 +46,9 @@ public class LogAnalyser {
 				int modeType = logAnalysis.getFindWhat().getMode().intValue();
 
 				if (matcWholeWordOnly) {
-					result = matcWholeWordOnly(sourceFiile, searchString, isCaseSensitive, direction, modeType);
+					result = matcWholeWordOnly(sourceFile, searchString, isCaseSensitive, direction, modeType);
 				} else {
-					result = matcWord(sourceFiile, searchString, isCaseSensitive, direction, modeType);
+					result = matcWord(sourceFile, searchString, isCaseSensitive, direction, modeType);
 				}
 
 			} catch (UnsupportedOperationException uoe) {
@@ -57,16 +57,24 @@ public class LogAnalyser {
 
 			if (result && logAnalysis.getAction().getThen() != null) {
 				
+				// Verilen parametereye göre log dosyasından alınacak
+				// TODO
+				String logContent = "LogContent";
+
 				job.setChanged();
-				job.notifyObservers();
+				job.notifyObservers(logContent);
 				
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getThen().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
 
 			} else if (!result && logAnalysis.getAction().getElse() != null) {
 				
+				// Verilen parametereye göre log dosyasından alınacak
+				// TODO
+				String logContent = "LogContent";
+				
 				job.setChanged();
-				job.notifyObservers(this);
+				job.notifyObservers(logContent);
 				
 				LiveStateInfo liveStateInfo = logAnalysis.getAction().getElse().getForcedResult().getLiveStateInfo();
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
