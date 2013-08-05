@@ -88,7 +88,7 @@ public class LiveStateInfoUtils {
 
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
-		liveStateInfo.setLSIDateTime(DateUtils.getW3CDateTime());
+		liveStateInfo.setLSIDateTime(DateUtils.getServerW3CDateTime());
 
 		if (enumStateName > 0) {
 			liveStateInfo.setStateName(StateName.Enum.forInt(enumStateName));
@@ -113,7 +113,7 @@ public class LiveStateInfoUtils {
 
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
-		liveStateInfo.setLSIDateTime(DateUtils.getW3CDateTime());
+		liveStateInfo.setLSIDateTime(DateUtils.getServerW3CDateTime());
 
 		liveStateInfo.setStateName(stateNameEnum);
 		liveStateInfo.setSubstateName(substateNameEnum);
@@ -193,7 +193,7 @@ public class LiveStateInfoUtils {
 	public static void insertNewLiveStateInfo(JobProperties jobProperties, LiveStateInfo liveStateInfo) {
 		synchronized (jobProperties) {
 
-			liveStateInfo.setLSIDateTime(DateUtils.getW3CDateTime());
+			liveStateInfo.setLSIDateTime(DateUtils.getServerW3CDateTime());
 			jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
 			jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
 
