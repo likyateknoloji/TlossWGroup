@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>likyateknoloji</groupId>
 	<artifactId>tlossw-webapp</artifactId>
 	<version>3.0.0</version>
 	<packaging>war</packaging>
-	
+
 	<name>TlosSW Web Interface</name>
 	<description>TlosSW Web Interface</description>
 	<url>http://www.likyateknoloji.com</url>
@@ -269,6 +269,12 @@
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/java/</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
 			</resource>
 		</resources>
 		<plugins>
