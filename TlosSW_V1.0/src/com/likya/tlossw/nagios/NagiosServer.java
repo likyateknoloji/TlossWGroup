@@ -133,7 +133,7 @@ public class NagiosServer implements Runnable {
 	}
 
 	public void cleanupNrpeMessages() {
-		NrpeDbUtils.deleteExpiredNrpeMessages(DateUtils.getW3CDateTime(), messageCleanupPeriod);
+		NrpeDbUtils.deleteExpiredNrpeMessages(DateUtils.getServerW3CDateTime(), messageCleanupPeriod);
 	}
 
 	public HashMap<String, NrpeCommander> getNrpeCommanderHashMap() {
