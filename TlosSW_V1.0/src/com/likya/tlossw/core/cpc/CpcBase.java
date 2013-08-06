@@ -89,7 +89,7 @@ public abstract class CpcBase implements Runnable {
 			String tmpPath = path + ".";
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			String scenarioId = tmpPath + scenario.getID().toString();
+			String scenarioId = tmpPath + EngineeConstants.LONELY_JOBS + "." + scenario.getID().toString();
 
 			myLogger.info("   > " + scenarioId + " senaryosu yani scenario ID=" + scenario.getID().toString() + " isleniyor.");
 
