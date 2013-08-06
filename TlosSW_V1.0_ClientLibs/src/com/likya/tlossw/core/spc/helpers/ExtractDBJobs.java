@@ -43,6 +43,8 @@ public class ExtractDBJobs {
 
 				default:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+					                    + "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 				}
 
 			} else if (dbJobDefinition.getScriptProperties() != null) {
@@ -51,6 +53,8 @@ public class ExtractDBJobs {
 
 				case DbAccessMethod.INT_JDBC:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+							+ "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 					break;
 
 				default:
@@ -62,6 +66,8 @@ public class ExtractDBJobs {
 
 				case DbAccessMethod.INT_JDBC:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+					        + "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 					break;
 
 				default:
@@ -81,6 +87,8 @@ public class ExtractDBJobs {
 
 				case DbAccessMethod.INT_JDBC:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+							+ "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 					break;
 
 				default:
@@ -93,6 +101,8 @@ public class ExtractDBJobs {
 
 				case DbAccessMethod.INT_JDBC:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+							+ "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 					break;
 
 				default:
@@ -105,6 +115,8 @@ public class ExtractDBJobs {
 
 				case DbAccessMethod.INT_JDBC:
 					myLogger.error(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !");
+					System.err.println(" Access method " + DbAccessMethod.Enum.forInt(dbAccessMethod) + " for " + DbType.Enum.forInt(dbType) + " is not defined !"
+							+ "\n" + " Therefore JobId = " + jobRuntimeProperties.getJobProperties().getID() + " is not scheduled !!");
 					break;
 
 				default:
@@ -143,7 +155,7 @@ public class ExtractDBJobs {
 			break;
 		// TODO Gelistirme yapilacak.
 		case DbType.INT_TERADATA:
-			// TODO Gelistirme yapilacak.
+			// TODO Gelistirme yapilacak..
 			break;
 
 		default:
