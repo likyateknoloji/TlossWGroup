@@ -117,10 +117,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 			
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 			
-			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
-			// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
-			// yok. Koyulacak.
-
 			Job myJob = null;
 
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
@@ -147,6 +143,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			
 			if (myJob != null && jobId != null) {
 				// isi jobQueue ya ID si ile birlikte koyalim.
+				
+				jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
+				// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
+				// yok. Koyulacak.
 				
 				getJobQueue().put(jobId, myJob);
 			}
