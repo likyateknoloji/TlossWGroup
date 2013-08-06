@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -26,6 +27,9 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{tlosAgentMBean}")
 	private TlosAgentMBean tlosAgentMBean;
 
+	@ManagedProperty(value = "#{jobMBean}")
+	private JobMBean jobMBean;
+
 	private String activeLivePanel = RESOURCELIST_PANEL;
 
 	public final static String RESOURCELIST_PANEL = "resourceListPanel.xhtml";
@@ -39,6 +43,7 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 	public void init() {
 		getResourceMBean().setTransformToLocalTime(transformToLocalTime);
 		getTlosAgentMBean().setTransformToLocalTime(transformToLocalTime);
+		getJobMBean().setTransformToLocalTime(transformToLocalTime);
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
@@ -64,7 +69,12 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 			activeLivePanel = TLOSAGENT_PANEL;
 
 		} else if (nodeType.equals(ConstantDefinitions.TREE_JOB)) {
-			
+			JobNode jobNode = (JobNode) event.getTreeNode().getData();
+			String jobId = jobNode.getId();
+			String groupId = jobNode.getPath();
+			getJobMBean().fillJobLivePanel(groupId, jobId);
+
+			activeLivePanel = JOB_PANEL;
 		}
 	}
 
@@ -90,6 +100,14 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setTlosAgentMBean(TlosAgentMBean tlosAgentMBean) {
 		this.tlosAgentMBean = tlosAgentMBean;
+	}
+
+	public JobMBean getJobMBean() {
+		return jobMBean;
+	}
+
+	public void setJobMBean(JobMBean jobMBean) {
+		this.jobMBean = jobMBean;
 	}
 
 }
