@@ -54,8 +54,8 @@ public class ExtractEvents {
 			}
 
 		} catch (NullPointerException ne) {
-			System.out.println("One of the parameters of jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent() is NULL !");
-			myLogger.equals("One of the parameters of jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent() is NULL !");
+			System.err.println("One of the parameters of JobId=" + job.getJobRuntimeProperties().getJobProperties().getID() + " jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent() is NULL !");
+			myLogger.equals("One of the parameters of JobId=" + job.getJobRuntimeProperties().getJobProperties().getID() + " jobRuntimeProperties.getJobProperties().getLogAnalysis().getAction().getThen().getEvent() is NULL !");
 		}
 		
 	}
