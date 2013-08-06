@@ -17,7 +17,6 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
-import com.likya.tlos.model.xmlbeans.error.SWErrorDocument.SWError;
 import com.likya.tlos.model.xmlbeans.nrpe.NrpeCallDocument.NrpeCall;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -58,7 +57,7 @@ public class NrpeDbUtils extends DBBase {
 
 		boolean returnValue = false;
 		
-		QName qName = SWError.type.getOuterType().getDocumentElementName();
+		QName qName = NrpeCall.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 		
 		String nrpeCallXML = nrpeCall.xmlText(xmlOptions);
