@@ -36,8 +36,6 @@ import com.likya.tlos.model.xmlbeans.webservice.WebServiceDefinitionDocument.Web
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
-import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
-import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 
@@ -150,7 +148,7 @@ public interface RemoteDBOperatorMBean {
 
 	public Object insertTrace(JmxUser jmxUser, String traceXML);
 
-	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient);
+//	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient);
 
 	public ArrayList<SWAgent> searchAgent(JmxUser jmxUser, String agentXML) throws XMLDBException;
 

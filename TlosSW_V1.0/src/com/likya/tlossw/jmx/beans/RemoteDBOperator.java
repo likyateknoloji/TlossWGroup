@@ -46,19 +46,12 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
-import com.likya.tlos.model.xmlbeans.nrperesults.CpuKullanimType.Timein;
-import com.likya.tlos.model.xmlbeans.nrperesults.MessageDocument.Message;
-import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument;
-import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument.NrpeData;
-import com.likya.tlos.model.xmlbeans.nrperesults.ResponseDocument.Response;
-import com.likya.tlos.model.xmlbeans.nrperesults.ResponseDocument.Response.Command;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument.Permission;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument;
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
-import com.likya.tlos.model.xmlbeans.sla.ForWhatAttribute.ForWhat;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -74,11 +67,6 @@ import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
-import com.likya.tlossw.model.client.resource.CpuInfoTypeClient;
-import com.likya.tlossw.model.client.resource.DiskInfoTypeClient;
-import com.likya.tlossw.model.client.resource.MemoryInfoTypeClient;
-import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
-import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -1260,6 +1248,9 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 //		}
 //	}
 
+
+	/* bu kısım web tarafında yapılıyor artık*****************
+	 
 	// Web ekranindaki kaynak listesi agacinda herhangi bir Nagios Agent secildiginde buraya geliyor, sunucu da o agentin calistigi makinenin kullanim bilgisini donuyor
 	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient nagiosAgentInfoTypeClient) {
 
@@ -1393,6 +1384,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 
 		return nrpeDataInfoTypeClient;
 	}
+*/
 
 	@Override
 	public ArrayList<SWAgent> searchAgent(JmxUser jmxUser, String agentXML) throws XMLDBException {
