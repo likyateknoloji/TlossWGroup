@@ -17,57 +17,59 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class SpcMonitor implements Runnable {
-	
+
 	private HashMap<String, Job> jobQueue;
 	private ArrayList<SortType> jobQueueIndex;
-	
+
 	private Thread myExecuter;
-	
+
 	private Logger myLogger = Logger.getLogger(getClass());
 
 	public SpcMonitor(HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 		this.jobQueue = jobQueue;
 		this.jobQueueIndex = jobQueueIndex;
 	}
-	
+
 	@Override
 	public void run() {
-		
-		while(true) {
-		
+
+		while (true) {
+
 			Iterator<SortType> jobQueueIndexIterator = jobQueueIndex.iterator();
-			
+
 			while (jobQueueIndexIterator.hasNext()) {
-				
+
 				SortType sortType = jobQueueIndexIterator.next();
-				
+
 				Job scheduledJob = jobQueue.get(sortType.getJobId());
-				
-				JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
-				
-				JobProperties jobProperties = jobRuntimeProperties.getJobProperties();	
-				
-				StateNameDocument.StateName.Enum stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName();
-				SubstateNameDocument.SubstateName.Enum  substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName();
-				StatusNameDocument.StatusName.Enum  statusName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName();
-			
-				if(SpaceWideRegistry.isDebug) {
-					String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
-					logString += " [Job Name : " + jobProperties.getID() + "]";
-					logString += " [Tarih : " + DateUtils.getServerW3CDateTime() + "]";
-					logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
-					logString += " [Substattate Name : " + (substateName == null ? "" : substateName) + "]";
-					logString += " [Status Name : " + (statusName == null ? "" : statusName) + "]";
-					myLogger.info(logString);
+
+				if (scheduledJob != null) {
+					JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
+
+					JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+
+					StateNameDocument.StateName.Enum stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName();
+					SubstateNameDocument.SubstateName.Enum substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName();
+					StatusNameDocument.StatusName.Enum statusName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName();
+
+					if (SpaceWideRegistry.isDebug) {
+						String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
+						logString += " [Job Name : " + jobProperties.getID() + "]";
+						logString += " [Tarih : " + DateUtils.getServerW3CDateTime() + "]";
+						logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
+						logString += " [Substattate Name : " + (substateName == null ? "" : substateName) + "]";
+						logString += " [Status Name : " + (statusName == null ? "" : statusName) + "]";
+						myLogger.info(logString);
+					}
+				} else {
+					System.err.println("jobQueue ve jobQueueIndex uyumsuzluğu var !! İş listesinde olan işlerden biri jobId = " + sortType.getJobId() + " schedule edilemiyor.");
 				}
 			}
-			
 
-			
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
-				//	e.printStackTrace();
+				// e.printStackTrace();
 				myLogger.info("SpcMonitor harici olarak akamete uğratıldı !");
 				break;
 			}
