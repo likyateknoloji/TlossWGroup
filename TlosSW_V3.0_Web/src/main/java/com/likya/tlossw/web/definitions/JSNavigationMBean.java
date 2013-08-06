@@ -18,6 +18,7 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
@@ -164,24 +165,41 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		tlosProcessDataDocument.addNewTlosProcessData();
 		
 		TlosProcessData tlosProcessData = tlosProcessDataDocument.getTlosProcessData();
-		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
-		tlosProcessData.addNewBaseScenarioInfos().setUserId(getWebAppUser().getId());
 		
-		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) {
-			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
-			tlosProcessData.addNewScenario().set(scenario);	
-		} else {
-			tlosProcessData.addNewJobList();
-			JobProperties jobProperties = null;
-			try {
-				jobProperties = JobPropertiesDocument.Factory.parse(getJobPropertiesXML()).getJobProperties();
-			} catch (XmlException e) {
-				e.printStackTrace();
+		boolean ihtiyac = false;
+        
+		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor. Bunun yerine sadece gerekli bilgilerin alınması sağlanmalı. hakan & serkan 06.agu.2013
+		
+		// Ekrandan secilenin job veya senaryo olmasına göre 
+		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
+			if(getScenario().getID().equals("0")) { // kok senaryo ise
+				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
+				tlosProcessData.set(scenario);			
+			} else {
+				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());	
+				tlosProcessData.addNewScenario().set(scenario);
+				ihtiyac = true;
 			}
-
-			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
+		}
+		else {
+            // tek job ise
+		   tlosProcessData.addNewJobList();
+		   tlosProcessData.getJobList().addNewJobProperties().set(jobProperties.copy());
+		   ihtiyac = true;
 		}
 		
+		if(ihtiyac) {
+			
+			tlosProcessData.addNewBaseScenarioInfos().setJsName("Serbest isler");
+			tlosProcessData.getBaseScenarioInfos().setComment("Serbest isler burada yer alir");
+			tlosProcessData.getBaseScenarioInfos().setJsIsActive(JsIsActive.Enum.forString("YES"));
+			tlosProcessData.getBaseScenarioInfos().setUserId(getWebAppUser().getId());
+			
+			tlosProcessData.addNewTimeManagement();
+			tlosProcessData.addNewAdvancedScenarioInfos();
+			tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
+		}
+
 		if (tlosProcessData == null || ! XMLValidations.validateWithLogs(Logger.getLogger(getClass()), tlosProcessData)) {
 			throw new TlosFatalException("JSNavigationMBean.switchToTestPage : TlosProcessData is null or tlosProcessData xml is damaged !");
 		}
