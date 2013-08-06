@@ -398,7 +398,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			spcInfoTypeClient.setSpcId(spcInfoType.getSpcReferance().getSpcId());
 
 			if (scenarioId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
-				spcInfoTypeClient.setJsName(scenarioId);
+				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
+				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
 				spcInfoTypeClient.setSerbestFolder(true);
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
