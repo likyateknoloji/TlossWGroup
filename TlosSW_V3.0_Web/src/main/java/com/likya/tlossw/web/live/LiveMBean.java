@@ -29,9 +29,9 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 
 	private String liveJSTable = SCENARIO_PAGE;
 
-	public final static String SCENARIO_PAGE = "/inc/livePanels/scenarioLiveTree.xhtml";
-	public final static String JOB_PAGE = "/inc/livePanels/jobLiveTree.xhtml";
-	public final static String GRAPH_PAGE = "/inc/livePanels/scenarioGraphTreePanel.xhtml";
+	public final static String SCENARIO_PAGE = "scenarioLiveTree.xhtml";
+	public final static String JOB_PAGE = "jobLiveTree.xhtml";
+	public final static String GRAPH_PAGE = "scenarioGraphTreePanel.xhtml";
 
 	private boolean transformToLocalTime = false;
 
