@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlossw.model.tree.JobNode;
+import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -30,12 +31,16 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 	@ManagedProperty(value = "#{jobMBean}")
 	private JobMBean jobMBean;
 
+	@ManagedProperty(value = "#{monitorAgentMBean}")
+	private MonitorAgentMBean monitorAgentMBean;
+
 	private String activeLivePanel = RESOURCELIST_PANEL;
 
 	public final static String RESOURCELIST_PANEL = "resourceListPanel.xhtml";
 	public final static String RESOURCE_PANEL = "resourcePanel.xhtml";
 	public final static String TLOSAGENT_PANEL = "tlosAgentPanel.xhtml";
 	public final static String JOB_PANEL = "jobLiveTree.xhtml";
+	public final static String MONITORAGENT_PANEL = "monitorAgentPanel.xhtml";
 
 	private boolean transformToLocalTime = false;
 
@@ -75,6 +80,12 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 			getJobMBean().fillJobLivePanel(groupId, jobId);
 
 			activeLivePanel = JOB_PANEL;
+
+		} else if (nodeType.equals(ConstantDefinitions.TREE_MONITORAGENT)) {
+			MonitorAgentNode monitorAgentNode = (MonitorAgentNode) event.getTreeNode().getData();
+			getMonitorAgentMBean().fillMonitoringAgentInfo(monitorAgentNode.getMonitorAgentInfoTypeClient());
+
+			activeLivePanel = MONITORAGENT_PANEL;
 		}
 	}
 
@@ -108,6 +119,14 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJobMBean(JobMBean jobMBean) {
 		this.jobMBean = jobMBean;
+	}
+
+	public MonitorAgentMBean getMonitorAgentMBean() {
+		return monitorAgentMBean;
+	}
+
+	public void setMonitorAgentMBean(MonitorAgentMBean monitorAgentMBean) {
+		this.monitorAgentMBean = monitorAgentMBean;
 	}
 
 }

@@ -46,6 +46,8 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
+import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument;
+import com.likya.tlos.model.xmlbeans.nrperesults.NrpeDataDocument.NrpeData;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument;
 import com.likya.tlos.model.xmlbeans.permission.PermissionDocument.Permission;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument;
@@ -79,7 +81,10 @@ import com.likya.tlossw.model.DBAccessInfoTypeClient;
 import com.likya.tlossw.model.WSAccessInfoTypeClient;
 import com.likya.tlossw.model.auth.ResourcePermission;
 import com.likya.tlossw.model.auth.WebAppUser;
+import com.likya.tlossw.model.client.resource.MonitorAgentInfoTypeClient;
+import com.likya.tlossw.model.client.resource.NrpeDataInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
+import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.XmlBeansTransformer;
@@ -87,6 +92,7 @@ import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
+import com.likya.tlossw.web.utils.LiveUtils;
 
 @ManagedBean(name = "dbOperations")
 @SessionScoped
@@ -1031,7 +1037,7 @@ public class DBOperations implements Serializable {
 
 		return jobProperties;
 	}
-	
+
 	public JobProperties getTemplateJobFromId(String jobId) {
 
 		String xQueryStr = scenarioFunctionConstructor("hs:getTemplateJobFromId", jobId);
@@ -1481,38 +1487,27 @@ public class DBOperations implements Serializable {
 	}
 
 	/*
-	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int
-	 * jobCount) throws XMLDBException {
+	 * public ArrayList<Job> getLiveJobsScenarios(int derinlik, int runType, String orderType, int jobCount) throws XMLDBException {
 	 * 
 	 * TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
 	 * 
 	 * SpaceWideRegistry spaceWideRegistry = TlosSpaceWide.getSpaceWideRegistry();
 	 * 
-	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl +
-	 * "/moduleReportOperations.xquery\"; decNsRep + "
-	 * hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType +
-	 * "\"," + jobCount + ")";
+	 * String xQueryStr = xQueryNsHeader + hsNsUrl + xQueryModuleUrl + "/moduleReportOperations.xquery\"; decNsRep + " hs:getJobArray(hs:getJobsReport(" + derinlik + "," + runType + ",0, true()),\"" + orderType + "\"," + jobCount + ")";
 	 * 
-	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service =
-	 * (XPathQueryService) collection.getService("XPathQueryService", "1.0");
-	 * service.setProperty("indent", "yes");
+	 * Collection collection = existConnectionHolder.getCollection(); XPathQueryService service = (XPathQueryService) collection.getService("XPathQueryService", "1.0"); service.setProperty("indent", "yes");
 	 * 
 	 * ResourceSet result = service.query(xQueryStr); ResourceIterator i = result.getIterator();
 	 * 
 	 * ArrayList<Job> jobs = new ArrayList<Job>(); JobArray jobArray = null;
 	 * 
-	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String)
-	 * r.getContent();
+	 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
 	 * 
 	 * try {
 	 * 
-	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new
-	 * HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); //
-	 * xmlOption.setLoadSubstituteNamespaces(map);
+	 * // XmlOptions xmlOption = new XmlOptions(); // Map <String,String> map=new HashMap<String,String>(); // map.put("","http://www.likyateknoloji.com/XML_report_types"); // xmlOption.setLoadSubstituteNamespaces(map);
 	 * 
-	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException
-	 * e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) {
-	 * jobs.add(job); }
+	 * jobArray = JobArrayDocument.Factory.parse(xmlContent).getJobArray1(); } catch (XmlException e) { e.printStackTrace(); return null; } } for (Job job : jobArray.getJobArray()) { jobs.add(job); }
 	 * 
 	 * return jobs; }
 	 */
@@ -1600,20 +1595,13 @@ public class DBOperations implements Serializable {
 		/*
 		 * // alarmin gerceklestigi kaynak ve agant id'sini set ediyor
 		 * 
-		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr =
-		 * xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl +
-		 * "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData +
-		 * "\", " + alarm.getAgentId() + ")";
+		 * String dataFile = xmlsUrl + CommonConstantDefinitions.AGENT_DATA; xQueryStr = xQueryNsHeader + "lk=\"http://likya.tlos.com/\"" + xQueryModuleUrl + "/moduleAgentOperations.xquery\";" + decNsRes + "lk:searchAgentByAgentId(\"" + metaData + "\", " + alarm.getAgentId() + ")";
 		 * 
 		 * result = service.query(xQueryStr); i = result.getIterator(); SWAgent agent = null;
 		 * 
-		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent =
-		 * (String) r.getContent();
+		 * while (i.hasMoreResources()) { Resource r = i.nextResource(); String xmlContent = (String) r.getContent();
 		 * 
-		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch
-		 * (XmlException e) { e.printStackTrace(); } }
-		 * alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." +
-		 * alarm.getAgentId());
+		 * try { agent = SWAgentDocument.Factory.parse(xmlContent).getSWAgent(); break; } catch (XmlException e) { e.printStackTrace(); } } alarmInfoTypeClient.setResourceName(agent.getResource().getStringValue() + "." + alarm.getAgentId());
 		 */
 
 		alarmInfoTypeClient.setResourceName(alarm.getAgentId());
@@ -1766,10 +1754,7 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setAgentId(jobProperties.getAgentId());
 
 		/*
-		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent =
-		 * TlosSpaceWide.getSpaceWideRegistry
-		 * ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() +
-		 * "");
+		 * if (jobInfoTypeClient.getAgentId() > 0) { SWAgent agent = TlosSpaceWide.getSpaceWideRegistry ().getAgentManagerReference().getSwAgentsCache().get(jobInfoTypeClient.getAgentId() + "");
 		 * 
 		 * jobInfoTypeClient.setResourceName(agent.getResource().getStringValue()); }
 		 */
@@ -2068,6 +2053,26 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public NrpeDataInfoTypeClient retrieveNagiosAgentInfo(JmxUser jmxUser, MonitorAgentInfoTypeClient monitorAgentInfoTypeClient) {
+
+		// 1.ve 2. parametreler hangi araliktaki datanin gelecegi, 3. parametre makine adi
+		String xQueryStr = localFunctionConstructor("moduleNrpeOperations.xquery", "lk:nrpeOutput", CommonConstantDefinitions.lkNsUrl, "0", "5", toXSString(monitorAgentInfoTypeClient.getResourceName()));
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		NrpeData nrpeData = NrpeData.Factory.newInstance();
+
+		NrpeDataInfoTypeClient nrpeDataInfoTypeClient = new NrpeDataInfoTypeClient();
+
+		for (Object currentObject : objectList) {
+			nrpeData = ((NrpeDataDocument) currentObject).getNrpeData();
+
+			nrpeDataInfoTypeClient = LiveUtils.convertNrpeData(nrpeData);
+		}
+
+		return nrpeDataInfoTypeClient;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
@@ -2079,7 +2084,7 @@ public class DBOperations implements Serializable {
 	private String toXSString(int i) {
 		return TransformUtils.toXSString(i);
 	}
-	
+
 	private String toXSString(String s) {
 		return TransformUtils.toXSString(s);
 	}
