@@ -7,17 +7,75 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<h:form id="liveForm">
-		
+
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:fieldset id="monitorAgent" legend="#{msgs['tlos.live.panel.monitoragent.header']} - #{monitorAgentMBean.resourceName}:#{monitorAgentMBean.nrpePort}" style="width: 96%;">
+		<p:fieldset id="monitorAgent" legend="#{msgs['tlos.live.panel.monitoragent.header']} - #{monitorAgentMBean.resourceName}:#{monitorAgentMBean.nrpePort}" style="width: 60%;">
 
-			<p:panel>
+			<p:panel header="#{msgs['tlos.live.panel.monitoragent.cpu']}">
 
-				
+				<p:dataTable id="cpuDatatable" var="item" value="#{monitorAgentMBean.cpuInfoTypeClientList}" widgetVar="itemsTable" resizableColumns="true" rows="10">
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.cpu.onemin']}">
+						<h:outputText value="#{item.usedCpuOneMin}#{item.cpuUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.cpu.fivemin']}">
+						<h:outputText value="#{item.usedCpuFiveMin}#{item.cpuUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.cpu.fifteenmin']}">
+						<h:outputText value="#{item.usedCpuFifteenMin}#{item.cpuUnit}" />
+					</p:column>
+
+				</p:dataTable>
 
 			</p:panel>
-		
+
+			<br />
+
+			<p:panel header="#{msgs['tlos.live.panel.monitoragent.disk']}">
+
+				<p:dataTable id="diskDatatable" var="item" value="#{monitorAgentMBean.diskInfoTypeClientList}" widgetVar="itemsTable" resizableColumns="true" rows="10">
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.free']}" >
+						<h:outputText value="#{item.freeDisk} #{item.diskUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.used']}" >
+						<h:outputText value="#{item.usedDisk} #{item.diskUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.freepercentage']}">
+						<h:outputText value="#{item.freePercentage}%" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+			<br />
+
+			<p:panel header="#{msgs['tlos.live.panel.monitoragent.memory']}">
+
+				<p:dataTable id="memoryDatatable" var="item" value="#{monitorAgentMBean.memoryInfoTypeClientList}" widgetVar="itemsTable" resizableColumns="true" rows="10">
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.free']}" >
+						<h:outputText value="#{item.freeMemory} #{item.memoryUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.used']}" >
+						<h:outputText value="#{item.usedMemory} #{item.memoryUnit}" />
+					</p:column>
+
+					<p:column headerText="#{msgs['tlos.live.panel.monitoragent.disk.freepercentage']}">
+						<h:outputText value="#{item.freePercentage}%" />
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
 		</p:fieldset>
 	</h:form>
 
