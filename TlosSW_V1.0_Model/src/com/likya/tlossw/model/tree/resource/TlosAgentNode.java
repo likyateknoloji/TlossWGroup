@@ -19,6 +19,8 @@ public class TlosAgentNode implements Serializable {
 	
 	private String labelText;
 	
+	private boolean available;
+	
 	private ArrayList<JobInfoTypeClient> jobInfoTypeClientList = new ArrayList<JobInfoTypeClient>();
 	
 	public ArrayList<JobInfoTypeClient> getJobInfoTypeClientList() {
@@ -41,6 +43,14 @@ public class TlosAgentNode implements Serializable {
 
 	public TlosAgentInfoTypeClient getTlosAgentInfoTypeClient() {
 		return tlosAgentInfoTypeClient;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 	
 }
