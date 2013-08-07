@@ -41,7 +41,7 @@ public class MonitorAgentMBean extends TlosSWBaseBean implements Serializable {
 		memoryInfoTypeClientList = nrpeDataInfoTypeClient.getMemoryInfoTypeClientList();
 
 		// bos alan yuzde degerleri hesaplaniyor
-		//calculatePercentages();
+		calculatePercentages();
 	}
 
 	private void calculatePercentages() {

@@ -83,10 +83,10 @@ public class LiveUtils {
 					diskInfoTypeClient.setDiskUnit(response.getDiskArray(0).getBirim().toString());
 
 					for (int diskCnt = 0; diskCnt < response.getDiskArray().length; diskCnt++) {
-						if (response.getDiskArray(diskCnt).getForWhat().equals(ForWhat.USED)) {
+						if (response.getDiskArray(diskCnt).getForWhat().toString().equals(ForWhat.USED.toString())) {
 							diskInfoTypeClient.setUsedDisk(response.getDiskArray(diskCnt).getStringValue());
 
-						} else if (response.getDiskArray(diskCnt).getForWhat().equals(ForWhat.FREE)) {
+						} else if (response.getDiskArray(diskCnt).getForWhat().toString().equals(ForWhat.FREE.toString())) {
 							diskInfoTypeClient.setFreeDisk(response.getDiskArray(diskCnt).getStringValue());
 						}
 					}
@@ -100,10 +100,10 @@ public class LiveUtils {
 					memoryInfoTypeClient.setMemoryUnit(response.getMemArray(0).getBirim().toString());
 
 					for (int memCnt = 0; memCnt < response.getMemArray().length; memCnt++) {
-						if (response.getMemArray(memCnt).getForWhat().equals(ForWhat.USED)) {
+						if (response.getMemArray(memCnt).getForWhat().toString().equals(ForWhat.USED.toString())) {
 							memoryInfoTypeClient.setUsedMemory(response.getMemArray(memCnt).getStringValue());
 
-						} else if (response.getMemArray(memCnt).getForWhat().equals(ForWhat.FREE)) {
+						} else if (response.getMemArray(memCnt).getForWhat().toString().equals(ForWhat.FREE.toString())) {
 							memoryInfoTypeClient.setFreeMemory(response.getMemArray(memCnt).getStringValue());
 						}
 					}
