@@ -946,6 +946,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 					TlosAgentNode tlosAgentNode = new TlosAgentNode();
 					tlosAgentNode.setLabelText("Agent_" + agentId);
+					tlosAgentNode.setAvailable(tlosAgentInfoTypeClient.isOutJmxAvailable());
 					tlosAgentNode.setTlosAgentInfoTypeClient(tlosAgentInfoTypeClient);
 
 					//
