@@ -19,7 +19,8 @@ public class ConstantDefinitions {
 	public static final String TREE_JOB = "job";
 	public static final String TREE_UNKNOWN = "unknown";
 	public static final String TREE_DUMMY = "empty";
-
+	public static final Integer CACHE_TIMEOUT_VALUE = 200; //msec
+	
 	public static final String AGENT_NAME = "Agent";
 	public static final String SERVER_NAME = "Sunucu";
 
