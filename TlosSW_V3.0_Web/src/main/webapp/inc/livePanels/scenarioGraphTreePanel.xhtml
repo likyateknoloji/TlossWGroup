@@ -5,8 +5,8 @@
 
 	<h:form id="liveForm">
 
-		<p:panel>
-			<p:media player="flash" style="width:100%;height:90%;" value="/inc/livePanels/media/TlosSWScenarioTree.swf">
+		<p:panel id="graphPanel" style="width:100%;height:90%;">
+			<p:media player="flash" style="width:100%;height:100%;" value="/inc/livePanels/media/TlosSWScenarioTree.swf">
 				<f:param name="flashvars" value="panel=${scenarioMBean.selectedPanel}&amp;scenarioId=${scenarioMBean.selectedScenarioId}" />
 				<!-- >f:param name="src" value="/inc/livePanels/media/TlosSWScenarioTree.swf" /-->
 				<f:param name="play" value="true" />
