@@ -27,7 +27,7 @@
 					<p:commandButton id="startScenarioButton" value="#{msgs['tlos.live.pannel.scenario.start']}" rendered="#{scenarioMBean.spcInfoTypeClient.startable and security.StartScenario}"
 						actionListener="#{scenarioMBean.startScenarioAction}" onclick="if(!confirm('#{msgs['tlos.confirm.live.scenario.start']}')) return false;" />
 
-					<p:commandButton id="viewScenarioTree" value="#{msgs['tlos.main.navigation.panel.viewScenarioTree']}" action="#{liveMBean.viewScenarioTree}" />
+					<p:commandButton id="viewScenarioTree" value="#{msgs['tlos.main.navigation.panel.viewScenarioTree']}" action="#{liveMBean.viewScenarioTree}" update=":liveForm"/>
 
 				</h:panelGrid>
 			</p:panel>
