@@ -41,7 +41,7 @@ public class GraphViewServlet extends HttpServlet {
 		String panel = request.getParameter("panel");
 		String scenarioId = request.getParameter("scenarioId");
 		
-		WebAppUser webAppUser = (WebAppUser) request.getSession().getAttribute("webAppUser");
+		WebAppUser webAppUser = ((SessionMediator) request.getSession().getAttribute("sessionMediator")).getWebAppUser();
 		if(webAppUser == null) {
 	    	System.err.println(" Grafik çizimi için webAppUser bilgisi alınamadı. Error Code : 1985");
         }
