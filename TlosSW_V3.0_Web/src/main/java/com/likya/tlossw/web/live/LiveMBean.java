@@ -7,7 +7,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlossw.model.tree.JobNode;
@@ -67,9 +66,6 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 		liveJSTable = GRAPH_PAGE;
 		getScenarioMBean().setSelectedPanel(ConstantDefinitions.LIVE_TREE);
 		getScenarioMBean().setSelectedScenarioId(getScenarioMBean().getSpcInfoTypeClient().getSpcId());
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("liveForm");
 	}
 
 	public String getLiveJSTable() {
