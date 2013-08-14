@@ -79,7 +79,10 @@ public class OracleSQLSentenceExecuter extends SQLScriptExecuter {
 
 				startShellProcess(osqlClientNamePath, osqlClientName, null, this.getClass().getName(), myLogger);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
+				// startShellProcess() metodu icinde isin basarili ya da basarisiz olma durumuna gore zaten state bilgisi giriliyor
+				// asagidaki kisimdan dolayi basarisiz biten is bile en sonunda basarili gibi gorunuyor
+				// onun icin kaldirdim
+				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
 				handleException(err, myLogger);
