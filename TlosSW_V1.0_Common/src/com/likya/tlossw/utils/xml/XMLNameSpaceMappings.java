@@ -27,6 +27,7 @@ public class XMLNameSpaceMappings {
 		xmlNameSpaceMapping.put("ftp", "http://www.likyateknoloji.com/XML_ftp_adapter_types");
 		xmlNameSpaceMapping.put("lstn", "http://www.likyateknoloji.com/XML_listener_types");
 		xmlNameSpaceMapping.put("dbc", "http://www.likyateknoloji.com/XML_dbconnection_types");
+		xmlNameSpaceMapping.put("db", "http://www.likyateknoloji.com/XML_db_job_types");
 		xmlNameSpaceMapping.put("jsdl", "http://schemas.ggf.org/jsdl/2005/11/jsdl");
 		xmlNameSpaceMapping.put("jsdl-posix", "http://schemas.ggf.org/jsdl/2005/11/jsdl-posix");
 		xmlNameSpaceMapping.put("sweep", "http://schemas.ogf.org/jsdl/2009/03/sweep");
@@ -62,6 +63,7 @@ public class XMLNameSpaceMappings {
 		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_ftp_adapter_types", "ftp");
 		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_listener_types", "lstn");
 		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_dbconnection_types", "dbc");
+		xmlNameSpaceMapping.put("http://www.likyateknoloji.com/XML_db_job_types", "db");
 		xmlNameSpaceMapping.put("http://schemas.ggf.org/jsdl/2005/11/jsdl", "jsdl");
 		xmlNameSpaceMapping.put("http://schemas.ggf.org/jsdl/2005/11/jsdl-posix", "jsdl-posix");
 		xmlNameSpaceMapping.put("http://schemas.ogf.org/jsdl/2009/03/sweep", "sweep");
