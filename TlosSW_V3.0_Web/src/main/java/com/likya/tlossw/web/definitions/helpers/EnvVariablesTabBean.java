@@ -44,7 +44,7 @@ public class EnvVariablesTabBean extends BaseTabBean {
 
 		if (envVariableName == null || envVariableName.equals("") || envVariableValue == null || envVariableValue.equals("")) {
 
-			addMessage("addEnvVariable", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.envVariableValidationError", null);
+			addMessage("addEnvVariable", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.envVariable", null);
 
 			return;
 		}
