@@ -8,7 +8,6 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.xmlbeans.XmlCursor;
 import org.primefaces.component.datatable.DataTable;
-import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
@@ -20,7 +19,7 @@ import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 public class LocalParametersTabBean extends BaseTabBean {
 
 	private static final long serialVersionUID = -539345583609476380L;
-	
+
 	// localParameters
 	private String paramName;
 	private String paramDesc;
@@ -43,7 +42,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramDesc = "";
 		paramPreValue = "";
 		paramType = "";
-		
+
 		if (resetList) {
 			parameterList = new ArrayList<Parameter>();
 		}
@@ -82,9 +81,6 @@ public class LocalParametersTabBean extends BaseTabBean {
 		selectedParamName = paramName;
 
 		renderUpdateParamButton = true;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
 	}
 
 	public void deleteInputParamAction(ActionEvent e) {
@@ -93,9 +89,6 @@ public class LocalParametersTabBean extends BaseTabBean {
 		parameterList.remove(parameterIndex);
 
 		renderUpdateParamButton = false;
-
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("jobDefinitionForm:tabView:parametersPanel");
 	}
 
 	public void updateInputParameter() {

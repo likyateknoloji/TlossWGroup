@@ -420,6 +420,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		getBaseJobInfosTabBean().resetTab();
 		getStateInfosTabBean().resetTab();
+		getEnvVariablesTabBean().resetTab(true);
 		
 		super.resetPanelInputs();
 		
@@ -499,6 +500,13 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 				jSTree.initJSTree();
 			}
 
+			/*
+			 * Bu iki satırı TSW-793'ten dolayı ekledim.
+			 * İleride daha uygun bir çözüm bulunduğunda kaldırılabilir.
+			 * Merve
+			 */
+			resetPanelInputs();
+			fillTabs();
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
 		}

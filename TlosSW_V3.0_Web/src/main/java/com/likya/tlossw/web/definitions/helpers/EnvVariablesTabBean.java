@@ -32,12 +32,14 @@ public class EnvVariablesTabBean extends BaseTabBean {
 		super();
 	}
 
-	public void resetTab() {
+	public void resetTab(boolean resetList) {
 		envVariableName = "";
 		envVariableValue = "";
 		selectedEnvVariableName = "";
 
-		envVariableList = new ArrayList<Entry>();
+		if (resetList) {
+			envVariableList = new ArrayList<Entry>();
+		}
 	}
 
 	public void addEnvVariable() {
@@ -55,7 +57,7 @@ public class EnvVariablesTabBean extends BaseTabBean {
 
 		envVariableList.add(entry);
 
-		resetEnvVariableFields();
+		resetTab(false);
 	}
 
 	public void updateEnvVariable() {
@@ -70,7 +72,7 @@ public class EnvVariablesTabBean extends BaseTabBean {
 			}
 		}
 
-		resetEnvVariableFields();
+		resetTab(false);
 
 		setRenderUpdateEnvVariableButton(false);
 	}
@@ -91,12 +93,6 @@ public class EnvVariablesTabBean extends BaseTabBean {
 		envVariableList.remove(envVarIndex);
 
 		setRenderUpdateEnvVariableButton(false);
-	}
-
-	private void resetEnvVariableFields() {
-
-		envVariableName = "";
-		envVariableValue = "";
 	}
 
 	public void fillEnvVariables(Object refObject) {
