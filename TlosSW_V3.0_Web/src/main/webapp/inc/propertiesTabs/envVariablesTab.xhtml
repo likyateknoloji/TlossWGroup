@@ -51,19 +51,21 @@
 						</p:commandButton>
 
 						<p:commandButton value="#{msgs['tlos.button.delete']}"
-							onclick="confirmation.show()" />
-						<p:confirmDialog style="z-index: 999 !important;"
-							message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true"
-							header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
-							widgetVar="confirmation">
+							onclick="deleteEnvVar.show()" />
+						<p:dialog id="deleteEnvVar"	header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+							widgetVar="deleteEnvVar" resizable="false">
+
+							<h:outputText value="#{msgs['tlos.ask.delete.confirm']}" />
+
+							<br/><br/>
 							<p:commandButton immediate="true" process="@this"
 								value="#{msgs['tlos.ask.delete.confirm1']}"
-								onclick="confirmation.hide()"
+								onclick="deleteEnvVar.hide()"
 								actionListener="#{backingBean['deleteEnvVariableAction']}" 
 								update=":jobDefinitionForm:tabView:envVariablesPanel" />
 							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}"
-								onclick="confirmation.hide()" type="button" />
-						</p:confirmDialog>
+								onclick="deleteEnvVar.hide()" type="button" />
+						</p:dialog>
 
 					</p:column>
 

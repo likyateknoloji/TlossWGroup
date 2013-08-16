@@ -51,12 +51,17 @@
 							update=":jobDefinitionForm:tabView:parametersPanel" >
 						</p:commandButton>
 
-						<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" />
-						<p:confirmDialog id="paramDeleteDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
-							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="confirmation.hide()" 
+						<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="deleteParam.show()" />
+						<p:dialog id="paramDeleteDialog" header="#{msgs['tlos.ask.delete.cHeader']}" 
+							severity="alert" widgetVar="deleteParam" resizable="false">
+
+							<h:outputText value="#{msgs['tlos.ask.delete.confirm']}" />
+
+							<br/><br/>
+							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="deleteParam.hide()" 
 								update=":jobDefinitionForm:tabView:parametersPanel" actionListener="#{backingBean['deleteInputParamAction']}" />
-							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
-						</p:confirmDialog>
+							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}" onclick="deleteParam.hide()" type="button" />
+						</p:dialog>
 
 					</p:column>
 
