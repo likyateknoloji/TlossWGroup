@@ -31,21 +31,30 @@
 
 				<br />
 
-				<p:commandButton value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}" rendered="#{!backingBean.renderUpdateParamButton}" action="#{backingBean['addInputParameter']}" update=":jobDefinitionForm:tabView:parametersPanel" />
-				<p:commandButton value="#{msgs['tlos.button.update']}" rendered="#{backingBean.renderUpdateParamButton}" update=":jobDefinitionForm:tabView:parametersPanel" action="#{backingBean['updateInputParameter']}" />
+				<p:commandButton value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}" 
+					rendered="#{!backingBean.renderUpdateParamButton}" action="#{backingBean['addInputParameter']}" 
+					update=":jobDefinitionForm:tabView:parametersPanel"/>
+				<p:commandButton value="#{msgs['tlos.button.update']}" 
+					rendered="#{backingBean.renderUpdateParamButton}" action="#{backingBean['updateInputParameter']}" 
+					update=":jobDefinitionForm:tabView:parametersPanel"/>
 
 				<br />
 				<br />
 
-				<p:dataTable var="item" rows="10" id="parameterDataTable" rendered="#{not empty backingBean.parameterList}" value="#{backingBean.parameterList}" binding="#{backingBean.parameterTable}" paginator="true" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+				<p:dataTable var="item" rows="10" id="parameterDataTable" value="#{backingBean.parameterList}" 
+					binding="#{backingBean.parameterTable}" rendered="#{not empty backingBean.parameterList}"
+					paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" >
 
 					<p:column>
-						<p:commandButton value="#{msgs['tlos.button.update']}" actionListener="#{backingBean['editInputParamAction']}">
+						<p:commandButton value="#{msgs['tlos.button.update']}" actionListener="#{backingBean['editInputParamAction']}"
+							update=":jobDefinitionForm:tabView:parametersPanel" >
 						</p:commandButton>
 
 						<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="confirmation.show()" />
 						<p:confirmDialog id="paramDeleteDialog" style="z-index: 999 !important;" message="#{msgs['tlos.ask.delete.confirm']}" appendToBody="true" header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert" widgetVar="confirmation">
-							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="confirmation.hide()" actionListener="#{backingBean['deleteInputParamAction']}" />
+							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="confirmation.hide()" 
+								update=":jobDefinitionForm:tabView:parametersPanel" actionListener="#{backingBean['deleteInputParamAction']}" />
 							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}" onclick="confirmation.hide()" type="button" />
 						</p:confirmDialog>
 
