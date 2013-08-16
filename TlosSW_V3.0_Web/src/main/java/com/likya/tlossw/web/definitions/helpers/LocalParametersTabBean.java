@@ -30,6 +30,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 	private boolean renderUpdateParamButton = false;
 
 	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private Parameter selectedRow;
 
 	private transient DataTable parameterTable;
 
@@ -87,6 +88,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 		int parameterIndex = parameterTable.getRowIndex();
 		parameterList.remove(parameterIndex);
+		// parameterList.remove(selectedRow);
 
 		renderUpdateParamButton = false;
 	}
@@ -231,6 +233,14 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void setParameterList(ArrayList<Parameter> parameterList) {
 		this.parameterList = parameterList;
+	}
+
+	public Parameter getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(Parameter selectedRow) {
+		this.selectedRow = selectedRow;
 	}
 
 }
