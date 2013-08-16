@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.log4j.Logger;
@@ -89,7 +90,12 @@ public abstract class CpcBase implements Runnable {
 			String tmpPath = path + ".";
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			String scenarioId = tmpPath + EngineeConstants.LONELY_JOBS + "." + scenario.getID().toString();
+			String ek = new String("");
+			
+			StringTokenizer pathToken = new StringTokenizer(path, ".");
+			if(pathToken.countTokens() == 2) ek = new String(EngineeConstants.LONELY_JOBS + ".");
+				
+			String scenarioId = tmpPath + ek + scenario.getID().toString();
 
 			myLogger.info("   > " + scenarioId + " senaryosu yani scenario ID=" + scenario.getID().toString() + " isleniyor.");
 
