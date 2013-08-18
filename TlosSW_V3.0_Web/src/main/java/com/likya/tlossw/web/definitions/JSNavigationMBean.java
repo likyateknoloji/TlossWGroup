@@ -228,6 +228,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void handleJobDropAction(ActionEvent ae) {
 
+		if(currentPanelMBeanRef == null) {
+			setCurrentPanel(JobCommandType.INT_BATCH_PROCESS);
+			System.err.println("\ncurrentPanelMBeanRef = null o yüzden Batch process e set edildi. Çözülmeli !! \n");
+		}
 		((JobBasePanelBean) currentPanelMBeanRef).setDraggedWsJobNode(draggedWsNodeForDependency);
 		((JobBasePanelBean) currentPanelMBeanRef).setDraggedJobPath(draggedJobPathForDependency);
 	}
