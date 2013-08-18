@@ -3,6 +3,8 @@ package com.likya.tlossw.web.live;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import com.likya.tlossw.web.utils.ConstantDefinitions;
+
 public class CacheBase implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -42,7 +44,7 @@ public class CacheBase implements Serializable {
 	public Object get(int objectId) {
 		CacheItem cacheItem = cacheMap.get(objectId);
 		
-		if(cacheItem != null && (System.currentTimeMillis() - cacheItem.getInsertTime()) < 200) {
+		if(cacheItem != null && (System.currentTimeMillis() - cacheItem.getInsertTime()) < ConstantDefinitions.CACHE_TIMEOUT_VALUE) {
 			return cacheItem.getCacheObject();
 		}
 		
