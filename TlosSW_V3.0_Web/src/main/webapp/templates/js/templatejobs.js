@@ -278,7 +278,7 @@ function applyDragDrop() {
 						while (scenarioNode.parentNode.parentNode.parentNode.parentNode.className != treeContainerClassName) {
 							scenarioNode = scenarioNode.parentNode.parentNode.previousSibling;
 
-							jobPath = scenarioNode.lastChild.lastChild.value + "/" + jobPath;
+							jobPath = scenarioNode.lastChild.lastChild.value + "." + jobPath;
 						}
 
 						console.log("jobPath : " + jobPath);
