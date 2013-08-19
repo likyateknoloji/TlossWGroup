@@ -87,7 +87,7 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	private transient LikyaDayKeeper dayKeeperReference;
 	
-	private boolean isGünDönümüPeryodPassed = false;
+	private boolean isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed = false;
 
 	private boolean isSolsticePassed = false;
 
@@ -242,12 +242,12 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 		this.dayKeeperReference = dayKeeperReference;
 	}
 
-	public boolean isGünDönümüPeryodPassed() {
-		return isGünDönümüPeryodPassed;
+	public boolean isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed() {
+		return isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed;
 	}
 
-	public void setGünDönümüPeryodPassed(boolean isGünDönümüPeryodPassed) {
-		this.isGünDönümüPeryodPassed = isGünDönümüPeryodPassed;
+	public void setGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed(boolean isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed) {
+		this.isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed = isGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed;
 	}
 
 	public boolean isSolsticePassed() {
