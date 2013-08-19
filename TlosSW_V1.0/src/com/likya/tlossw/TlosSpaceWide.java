@@ -36,7 +36,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 	private static void parseArguments(String[] args) {
 
-		String USAGE_MSG = "Kullanım: TlosSpaceWide [-normalize] [-standby ]";
+		String USAGE_MSG = "KullanÄ±m: TlosSpaceWide [-normalize] [-standby ]";
 
 		String arg = "";
 		int i = 0;
@@ -100,11 +100,11 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		}
 
 		/**
-		 * isAgentEnabled değişkeni test çalıştırlması yanında
-		 * lisans ile de ilgili olarak seçimlik olmalıdır.
-		 * Şimdilik el yordamı ile değişiklik yapılsın.
+		 * isAgentEnabled deÄŸiÅŸkeni test Ã§alÄ±ÅŸtÄ±rlmasÄ± yanÄ±nda
+		 * lisans ile de ilgili olarak seÃ§imlik olmalÄ±dÄ±r.
+		 * ÅŸimdilik el yordamÄ± ile deÄŸiÅŸiklik yapÄ±lsÄ±n.
 		 * 
-		 * @author serkan taş
+		 * @author serkan taÅŸ
 		 *         22.09.2012
 		 */
 
@@ -120,11 +120,11 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		}
 
 		/**
-		 * isNagisoEnabled değişkeni test çalıştırlması yanında
-		 * lisans ile de ilgili olarak seçimlik olmalıdır.
-		 * Şimdilik el yordamı ile değişiklik yapılsın.
+		 * isNagisoEnabled deÄŸiÅŸkeni test Ã§alÄ±ÅŸtÄ±rÄ±lmasÄ± yanÄ±nda
+		 * lisans ile de ilgili olarak seÃ§imlik olmalÄ±dÄ±r.
+		 * ÅŸimdilik el yordamÄ± ile deÄŸiÅŸiklik yapÄ±lsÄ±n.
 		 * 
-		 * @author serkan taş
+		 * @author serkan taÅŸ
 		 *         22.09.2012
 		 */
 
@@ -135,11 +135,11 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		}
 
 		/**
-		 * isPerformanceManagerEnabled değişkeni test çalıştırlması yanında
-		 * lisans ile de ilgili olarak seçimlik olmalıdır.
-		 * Şimdilik el yordamı ile değişiklik yapılsın.
+		 * isPerformanceManagerEnabled deÄŸiÅŸkeni test Ã§alÄ±ÅŸtÄ±rlmasÄ± yanÄ±nda
+		 * lisans ile de ilgili olarak seÃ§imlik olmalÄ±dÄ±r.
+		 * ÅŸimdilik el yordamÄ± ile deÄŸiÅŸiklik yapÄ±lsÄ±n.
 		 * 
-		 * @author serkan taş
+		 * @author serkan taÅŸ
 		 *         22.09.2012
 		 */
 
@@ -189,35 +189,35 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		/** Start GUI Manager */
 
 		/**
-		 * programın normal olmayan bir şekilde sonlanması durumunda, son halini
-		 * diskten yükleyip tekrar baslayabilir. ValueBoolean in default degeri
+		 * programÄ±n normal olmayan bir ÅŸekilde sonlanmasÄ± durumunda, son halini
+		 * diskten yÃ¼kleyip tekrar baslayabilir. ValueBoolean in default degeri
 		 * #false#
 		 */
 		/**
-		 * @author serkan gun donumunun üzerinden bir peryod zaman geçip
-		 *         geçmediğini kontrol edelim Sistemde persistent = true ise
-		 *         veya bütün persist dosyaları temp dizine önceden yazılmış ise
-		 *         sistem daha önce çalışmış olduğundan recover edilmelidir bu
+		 * @author serkan gun donumunun Ã¼zerinden bir peryod zaman geÃ§ip
+		 *         geÃ§mediÄŸini kontrol edelim Sistemde persistent = true ise
+		 *         veya bÃ¼tÃ¼n persist dosyalarÄ± temp dizine Ã¶nceden yazÄ±lmÄ±ÅŸ ise
+		 *         sistem daha Ã¶nce Ã§alÄ±ÅŸmÄ±ÅŸ olduÄŸundan recover edilmelidir bu
 		 *         nedenle isFIRST_TIME = false olur.
 		 * 
 		 *         Ancak persisten = true ise ve en az bir tane persistence
-		 *         dosyası mevcut değil ise bu durumda sistem gerçekten ilk defa
-		 *         çalışmış olduğundan ve geçmişi olmadığından persistent
-		 *         değilmiş gibi çalışır ve bu nedenle de FIRST_TIME = true
-		 *         olarak kabul edilebilir. Aşağıdaki if kontrolüne girmez.
+		 *         dosyasÄ± mevcut deÄŸil ise bu durumda sistem gerÃ§ekten ilk defa
+		 *         Ã§alÄ±ÅŸmÄ±ÅŸ olduÄŸundan ve geÃ§miÅŸi olmadÄ±ÄŸÄ±ndan persistent
+		 *         deÄŸilmiÅŸ gibi Ã§alÄ±ÅŸÄ±r ve bu nedenle de FIRST_TIME = true
+		 *         olarak kabul edilebilir. AÅŸaÄŸÄ±daki if kontrolÃ¼ne girmez.
 		 **/
 
 		if (TlosSpaceWide.isRecoverable()) {
 			getSpaceWideRegistry().setFIRST_TIME(false);
-			initGünDönümüPeryodPassed();
+			initGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed();
 		}
 
 		/** gun donumunun gecip gecmedigini kontrol edelim **/
 		initSolsticePassed();
 
 		/**
-		 * @author serkan recover etme durumunda kullanıcı onayı sonrası
-		 *         çalışması gerekiyor.
+		 * @author serkan recover etme durumunda kullanÄ±cÄ± onayÄ± sonrasÄ±
+		 *         Ã§alÄ±ÅŸmasÄ± gerekiyor.
 		 * 
 		 */
 		if (!isRecoverable() || getSpaceWideRegistry().isSolsticePassed()) {
@@ -244,10 +244,10 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 			if (!getSpaceWideRegistry().isSolsticePassed()) {
 
 				/**
-				 * Uygulama ilk defa çalıştığından ya da süreç bilgilerini
-				 * saklamayacak şekilde çalıştırlıdığından, ve de henüz gün
-				 * dönümü saati geçmediğinden uygulama beklemeye geçer ve gün
-				 * dönümü saaati gelince çalışır.
+				 * Uygulama ilk defa Ã§alÄ±ÅŸtÄ±ÄŸÄ±ndan ya da sÃ¼reÃ§ bilgilerini
+				 * saklamayacak ÅŸekilde Ã§alÄ±ÅŸtÄ±rlÄ±dÄ±ÄŸÄ±ndan, ve de henÃ¼z gÃ¼n
+				 * dÃ¶nÃ¼mÃ¼ saati geÃ§mediÄŸinden uygulama beklemeye geÃ§er ve gÃ¼n
+				 * dÃ¶nÃ¼mÃ¼ saaati gelince Ã§alÄ±ÅŸÄ±r.
 				 */
 				logger.info(" 2 - Gundonumu gecmedi.");
 				logger.info("");
@@ -268,11 +268,11 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				logger.info("   KULLANICIYA SORUYORUM (HEMEN CALISTIR / BIR SONRAKI GUNDONUMUNU BEKLE) ");
 
 				/**
-				 * Ne yapılacağı ekran üzerinden kullanıcıya sorulacak :
+				 * Ne yapÄ±lacaÄŸÄ± ekran Ã¼zerinden kullanÄ±cÄ±ya sorulacak :
 				 * 
-				 * 1. DURUM : Hemen İşlemler çalıştırılmaya başlayabilir
+				 * 1. DURUM : Hemen iÅŸlemler Ã§alÄ±ÅŸtÄ±rÄ±lmaya baÅŸlayabilir
 				 * 
-				 * 2. DURUM : Bir sonraki gün dönümüne uyması istenebilir.
+				 * 2. DURUM : Bir sonraki gÃ¼n dÃ¶nÃ¼mÃ¼ne uymasÄ± istenebilir.
 				 */
 				getSpaceWideRegistry().setWaitConfirmOfGUI(true);
 
@@ -289,15 +289,15 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				logger.info("");
 
 				/**
-				 * Ne yapılacağı ekran üzerinden kullanıcıya sorulacak :
+				 * Ne yapÄ±lacaÄŸÄ± ekran Ã¼zerinden kullanÄ±cÄ±ya sorulacak :
 				 * 
-				 * 1. DURUM süreci kaldığı yerden devam ettirebilir (RECOVER).
+				 * 1. DURUM sÃ¼reci kaldÄ±ÄŸÄ± yerden devam ettirebilir (RECOVER).
 				 * 
-				 * 2. DURUM Eski işleri (raporlayıp veya raporlamayıp) Süreci
-				 * yeninde başlatabilir.
+				 * 2. DURUM Eski iÅŸleri (raporlayÄ±p veya raporlamayÄ±p) SÃ¼reci
+				 * yeninde baÅŸlatabilir.
 				 * 
-				 * 3. DURUM Eski işleri (raporlayıp veya raporlamayıp) uygulama
-				 * beklemeye geçer ve gün dönümü saaati gelince çalışır
+				 * 3. DURUM Eski iÅŸleri (raporlayÄ±p veya raporlamayÄ±p) uygulama
+				 * beklemeye geÃ§er ve gÃ¼n dÃ¶nÃ¼mÃ¼ saaati gelince Ã§alÄ±ÅŸÄ±r
 				 */
 				getSpaceWideRegistry().setWaitConfirmOfGUI(true);
 
@@ -310,16 +310,16 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				logger.info(" 2 - islerin guncel durumunu VT nina sakla.");
 
 				/**
-				 * Uygulama daha önce çalışmış olduğundan ve uygulamanın son gün
-				 * dönümü okuduğu zaman üzerinden bir peryod zamanından fazla
-				 * zaman geçtiğinden, eldeki islerin bilgileri VT'na raporlanıp,
-				 * uygulama beklemeye geçer ve gün dönümü saaati gelince
-				 * çalışır.
+				 * Uygulama daha Ã¶nce Ã§alÄ±ÅŸmÄ±ÅŸ olduÄŸundan ve uygulamanÄ±n son gÃ¼n
+				 * dÃ¶nÃ¼mÃ¼ okuduÄŸu zaman Ã¼zerinden bir peryod zamanÄ±ndan fazla
+				 * zaman geÃ§tiÄŸinden, eldeki islerin bilgileri VT'na raporlanÄ±p,
+				 * uygulama beklemeye geÃ§er ve gÃ¼n dÃ¶nÃ¼mÃ¼ saaati gelince
+				 * Ã§alÄ±ÅŸÄ±r.
 				 * 
-				 * NOT : Burada gün dönümü geçmiş ise çalışma bir sonraki gün
-				 * dönümüne göre oluşur, geçmemiş ise o gün içindeki gün
-				 * dönümüne göre oluşur, kısaca en yakın gün dönümüne göre
-				 * planlanır.
+				 * NOT : Burada gÃ¼n dÃ¶nÃ¼mÃ¼ geÃ§miÅŸ ise Ã§alÄ±ÅŸma bir sonraki gÃ¼n
+				 * dÃ¶nÃ¼mÃ¼ne gÃ¶re oluÅŸur, geÃ§memiÅŸ ise o gÃ¼n iÃ§indeki gÃ¼n
+				 * dÃ¶nÃ¼mÃ¼ne gÃ¶re oluÅŸur, kÄ±saca en yakÄ±n gÃ¼n dÃ¶nÃ¼mÃ¼ne gÃ¶re
+				 * planlanÄ±r.
 				 */
 
 				logger.info("TODO Report recovered info to db");
@@ -404,7 +404,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		 */
 
 		/**
-		 * BEYİN Stop CPC (Central process controller)
+		 * BEYÄ°N Stop CPC (Central process controller)
 		 */
 		shutDownDayKeeper();
 
@@ -417,7 +417,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		/*
 		 * tlosCommInterface = new TlosCommInterface(this);
 		 * 
-		 * schedulerLogger.info("İletişim arabirimi başlatılıyor...");
+		 * schedulerLogger.info("ï¿½letiï¿½im arabirimi baï¿½latï¿½lï¿½yor...");
 		 * tlosCommInterface = new TlosCommInterface(this);
 		 */
 
@@ -426,23 +426,23 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		 */
 
 		/*
-		 * schedulerLogger.info("Web arabirimi başlatılıyor ...");
+		 * schedulerLogger.info("Web arabirimi baï¿½latï¿½lï¿½yor ...");
 		 * TlosWebConsole tlosWebConsole = new TlosWebConsole(this);
 		 * schedulerLogger.info("Hostname : " + tlosWebConsole.getHostName() +
 		 * " " + "Port : " + tlosWebConsole.getHttpPort());
 		 * tlosWebConsole.initServer();
-		 * schedulerLogger.info("Web arabirimi başlatıldı !");
+		 * schedulerLogger.info("Web arabirimi baï¿½latï¿½ldï¿½ !");
 		 * 
-		 * schedulerLogger.info("Yönetim Konsolu başlatılıyor..."); try {
+		 * schedulerLogger.info("Yï¿½netim Konsolu baï¿½latï¿½lï¿½yor..."); try {
 		 * managementConsoleHandler =
 		 * ManagementConsole.initComm(tlosCommInterface,
 		 * tlosParameters.getManagementPort(),
 		 * tlosParameters.getManagementBufferSize()); new
 		 * Thread(managementConsoleHandler).start(); } catch (SocketException e)
-		 * { schedulerLogger.fatal("Yönetim Konsolu başlatılamadı !");
+		 * { schedulerLogger.fatal("Yï¿½netim Konsolu baï¿½latï¿½lamadï¿½ !");
 		 * schedulerLogger.fatal("Program sona erdi."); e.printStackTrace();
 		 * System.exit(-1); }
-		 * schedulerLogger.info("Yönetim Konsolu başlatıldı !");
+		 * schedulerLogger.info("Yï¿½netim Konsolu baï¿½latï¿½ldï¿½ !");
 		 */
 
 		/**
