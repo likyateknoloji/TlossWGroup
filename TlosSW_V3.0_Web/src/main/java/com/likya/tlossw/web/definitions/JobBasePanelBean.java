@@ -39,6 +39,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -527,10 +528,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	private String getDependencyTreePath(String treePath) {
 		String path = "";
 
-		StringTokenizer pathTokenizer = new StringTokenizer(treePath, "/");
+		StringTokenizer pathTokenizer = new StringTokenizer(treePath, ".");
 
 		while (pathTokenizer.hasMoreTokens()) {
-			String scenarioId = pathTokenizer.nextToken();
+			scenarioId = pathTokenizer.nextToken();
 
 			if (path.equals("")) {
 				path = scenarioId;
@@ -644,8 +645,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyItem.setJsType(JsType.JOB);
 
-		dependencyTreePath = getDependencyTreePath(draggedJobPath);
-
+		dependencyTreePath = getDependencyTreePath(EngineeConstants.LONELY_JOBS + '.' + draggedJobPath);
+		
 		dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 
 		if (dependencyType.equals(SUBSTATE) || dependencyType.equals(STATUS)) {
@@ -661,25 +662,29 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 
 		Item newItem = jobProperties.getDependencyList().addNewItem();
-		newItem.set(dependencyItem);
+		
 
-		composeDependencyExpression();
+		
 
 		String depJobName = draggedWsNode.getName();
 		String depJobId = draggedWsNode.getId();
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
 		
-		if(!dependencyTreePath.equals(scenarioId)) {
+		// TODO bagimlilik icin isi secip-cekip-biraktigimizda secilen isin scenarioid si senarioId deiskenine konuyor. Bu nedenle lokal bir bagimlilik gibi gorunuyor. Ama oyle degil. Halledene kadar if then else i kaldirdim.
+		// hepsine dependecypath konacak.
+		//if(!draggedJobPath.equals(scenarioId)) {
 			// Global dependency
 			dependencyItem.setJsPath(dependencyTreePath);
 			item.setValue(dependencyTreePath + "." + depJobId);
-		} else {
-			item.setValue(depJobId);
-		}
+		//} else {
+		//	item.setValue(depJobId);
+		//}
 
+		newItem.set(dependencyItem);
+
+		composeDependencyExpression();
 		
-
 		getManyJobDependencyList().add(item);
 
 		dependencyDialogShow = false;
