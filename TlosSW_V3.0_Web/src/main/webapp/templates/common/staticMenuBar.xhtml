@@ -101,6 +101,7 @@
 			<!-- p:menuitem value="Quit" actionListener="#{logoutBean.logout}" icon="ui-icon-close" / -->
 
 			<f:facet name="options">
+				<h:outputText value="#{sessionMediator.webAppUser.username}" style="font-size: 115%;margin-right:10px" ></h:outputText>
 				<!-- p:inputText style="margin-right:3px" / -->
 				<p:commandButton value="Logout" icon="ui-icon-extlink" action="#{logoutBean.logout}" />
 			</f:facet>
