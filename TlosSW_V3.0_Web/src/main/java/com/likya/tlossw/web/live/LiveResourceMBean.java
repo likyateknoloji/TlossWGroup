@@ -13,6 +13,7 @@ import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -49,6 +50,8 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 		getResourceMBean().setTransformToLocalTime(transformToLocalTime);
 		getTlosAgentMBean().setTransformToLocalTime(transformToLocalTime);
 		getJobMBean().setTransformToLocalTime(transformToLocalTime);
+
+		getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
