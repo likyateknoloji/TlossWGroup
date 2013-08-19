@@ -440,7 +440,7 @@ public class TlosSpaceWideBase {
 					//System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
 					System.exit(-1);
 				} else {
-					errprintln("Gün dönümü sonrası çalışma listesi alınamadı !");
+					errprintln("GÃ¼n dÃ¶nÃ¼mÃ¼ sonrasÄ± Ã§alÄ±ÅŸma listesi alÄ±namadÄ± !");
 					return;
 				}
 			}
@@ -449,7 +449,7 @@ public class TlosSpaceWideBase {
 			JobList jobList = getSpaceWideRegistry().getTlosProcessData().getJobList();
 
 			if (numOfScenarios == 0 && (jobList == null || jobList.getJobPropertiesArray().length == 0)) {
-				logger.info("Bugünün is listesi herhangi bir job veya senaryo içermiyor.Liste bos !!!");
+				logger.info("BugÃ¼nÃ¼n is listesi herhangi bir job veya senaryo iÃ§ermiyor.Liste bos !!!");
 				return;
 			} else {
 				logger.info("   > is listesi KDS nden sorgulandi ve islenmeye hazir !");
@@ -472,7 +472,7 @@ public class TlosSpaceWideBase {
 
 			cpcExecuterThread.setDaemon(true);
 			/**
-			 * Otomatik olarak başlatılmayacak, ekrandan başlat emrinin gelmesi
+			 * Otomatik olarak baÅŸlatÄ±lmayacak, ekrandan baÅŸlat emrinin gelmesi
 			 * beklenecek.
 			 */
 
@@ -531,21 +531,21 @@ public class TlosSpaceWideBase {
 	public boolean loadGlobalstateDefinitions() throws TlosRecoverException {
 
 		logger.info("");
-		logger.info("### Çalışma Durum Makinesi Tanımları Yöneticisi ####");
+		logger.info("### Ã‡alÄ±ÅŸma Durum Makinesi TanÄ±mlarÄ± YÃ¶neticisi ####");
 
 		if (getSpaceWideRegistry().getGlobalStateDefinition() == null) {
 
-			logger.info("Global durum tanımlarını yüklüyor...");
+			logger.info("Global durum tanÄ±mlarÄ±nÄ± yÃ¼klÃ¼yor...");
 
 			String dbData = null;
 			GlobalStateDefinition globalStateDefinition = DBUtils.getGlobalStateDefinitions();
 
 			/**
-			 * @author serkan Eğer persistence == true ise ve persisten edilen
-			 *         dosya yok ise, sistem sanki persistent değilmiş gibi
-			 *         davranıp veritabnından aldığı bilgiler ile yoluna devam
-			 *         eder. GlobalState tanımları için bu şekilde bir davranış
-			 *         görülmüştür.
+			 * @author serkan EÄŸer persistence == true ise ve persisten edilen
+			 *         dosya yok ise, sistem sanki persistent deÄŸilmiÅŸ gibi
+			 *         davranÄ±p veritabanÄ±ndan aldÄ±ÄŸÄ± bilgiler ile yoluna devam
+			 *         eder. GlobalState tanÄ±mlarÄ± iÃ§in bu ÅŸekilde bir davranÄ±ÅŸ
+			 *         gÃ¶rÃ¼lmÃ¼ÅŸtÃ¼r.
 			 */
 			if (isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistGlobalStatesFile, EngineeConstants.tempDir)) {
 				dbData = globalStateDefinition.xmlText();
@@ -565,7 +565,7 @@ public class TlosSpaceWideBase {
 				PersistenceUtils.persistGlobalStateDefinition(globalStateDefinition);
 			}
 
-			logger.info("Global durum tanımlarını yükledi !");
+			logger.info("Global durum tanÄ±mlarÄ±nÄ± yÃ¼kledi !");
 		}
 
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
@@ -599,13 +599,13 @@ public class TlosSpaceWideBase {
 		getSpaceWideRegistry().setCpcReference(null);
 	}
 
-	protected void initGünDönümüPeryodPassed() {
+	protected void initGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed() {
 
 		long currentTime = Calendar.getInstance().getTimeInMillis();
 		long diff = currentTime - getSpaceWideRegistry().getScenarioReadTime();
 
 		if ((diff / (1000 * 60 * 60 * 24)) > getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getPeriod().getPeriodValue().longValue()) {
-			getSpaceWideRegistry().setGünDönümüPeryodPassed(true);
+			getSpaceWideRegistry().setGÃ¼nDÃ¶nÃ¼mÃ¼PeryodPassed(true);
 		}
 
 		return;
@@ -790,8 +790,8 @@ public class TlosSpaceWideBase {
 			 */
 			System.out.print("Waiting server to die...");
 			/**
-			 * Aşağıdaki süre, http server üzerinden gelen kapatma isteğinin
-			 * cevabını http serverın hazmetmesi için gereken bir süre. Bu süre
+			 * AÅŸaÄŸÄ±daki sÃ¼re, http server Ã¼zerinden gelen kapatma isteÄŸinin
+			 * cevabÄ±nÄ± http serverÄ±n hazmetmesi iÃ§in gereken bir sÃ¼re. Bu sÃ¼re
 			 * beklenmez ise, http server hatalar veriyor.
 			 */
 			Thread.sleep(500);
