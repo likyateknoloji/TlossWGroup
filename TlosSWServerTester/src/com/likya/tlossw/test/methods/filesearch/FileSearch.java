@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import org.apache.commons.collections.buffer.CircularFifoBuffer;
 
+import com.likya.tlossw.core.spc.helpers.LimitedArrayList;
 import com.likya.tlossw.web.appmng.TraceBean;
 
 public class FileSearch {

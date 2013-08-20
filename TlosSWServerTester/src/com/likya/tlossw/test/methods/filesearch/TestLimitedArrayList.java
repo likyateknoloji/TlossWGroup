@@ -1,5 +1,7 @@
 package com.likya.tlossw.test.methods.filesearch;
 
+import com.likya.tlossw.core.spc.helpers.LimitedArrayList;
+
 
 public class TestLimitedArrayList {
 
