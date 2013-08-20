@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
+import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -78,9 +79,20 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.jobRuntimeProperties = jobRuntimeProperties;
 		this.globalLogger = globalLogger;
 
-		ExtractEvents.evaluate(this);
+		initLogEvents();
 	}
 	
+	private void initLogEvents() {
+		
+		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
+
+		if (logAnalysis != null && logAnalysis.getActive()) {
+			ExtractEvents.evaluate(this);
+		}
+		
+	}
+
 	public void setChanged() {
 		super.setChanged();
 	}
@@ -89,8 +101,17 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		localRun();
 
-		new LogAnalyser().evaluate(this);
+		performLogAnalyze();
 
+	}
+	
+	private void performLogAnalyze() {
+		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
+
+		if (logAnalysis != null && logAnalysis.getActive()) {
+			new LogAnalyser().evaluate(this);
+		}
 	}
 
 	protected abstract void localRun();
