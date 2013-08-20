@@ -209,7 +209,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 		if (TlosSpaceWide.isRecoverable()) {
 			getSpaceWideRegistry().setFIRST_TIME(false);
-			initGünDönümüPeryodPassed();
+			initGunDonumuPeryodPassed();
 		}
 
 		/** gun donumunun gecip gecmedigini kontrol edelim **/

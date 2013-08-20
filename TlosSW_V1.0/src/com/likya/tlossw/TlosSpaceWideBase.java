@@ -599,13 +599,13 @@ public class TlosSpaceWideBase {
 		getSpaceWideRegistry().setCpcReference(null);
 	}
 
-	protected void initGünDönümüPeryodPassed() {
+	protected void initGunDonumuPeryodPassed() {
 
 		long currentTime = Calendar.getInstance().getTimeInMillis();
 		long diff = currentTime - getSpaceWideRegistry().getScenarioReadTime();
 
 		if ((diff / (1000 * 60 * 60 * 24)) > getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getPeriod().getPeriodValue().longValue()) {
-			getSpaceWideRegistry().setGünDönümüPeryodPassed(true);
+			getSpaceWideRegistry().setGunDonumuPeryodPassed(true);
 		}
 
 		return;
