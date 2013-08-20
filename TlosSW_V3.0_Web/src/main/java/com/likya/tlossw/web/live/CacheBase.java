@@ -3,8 +3,6 @@ package com.likya.tlossw.web.live;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.likya.tlossw.web.utils.ConstantDefinitions;
-
 public class CacheBase implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -42,12 +40,18 @@ public class CacheBase implements Serializable {
 	private HashMap<Integer, CacheItem> cacheMap = new HashMap<Integer, CacheItem>();
 	
 	public Object get(int objectId) {
+		/**
+		 * Cache mekanizması yeniden kurgulanacak. Sonra devreye alıncak
+		 * 20.08.2013
+		 * @author serkan taş
+		 */
+		/*
 		CacheItem cacheItem = cacheMap.get(objectId);
 		
 		if(cacheItem != null && (System.currentTimeMillis() - cacheItem.getInsertTime()) < ConstantDefinitions.CACHE_TIMEOUT_VALUE) {
 			return cacheItem.getCacheObject();
 		}
-		
+		*/
 		return null;
 	}
 	
