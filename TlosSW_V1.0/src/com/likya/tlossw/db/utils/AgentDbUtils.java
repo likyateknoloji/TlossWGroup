@@ -290,7 +290,7 @@ public class AgentDbUtils extends DBBase {
 		
 		boolean returnValue = false;
 
-		String xQueryStr = agentFunctionConstructor("lk:checkAgent", "" + agentId, "" + userStopRequestValue);
+		String xQueryStr = agentFunctionConstructor("lk:updateUserStopRequestValueLock", "" + agentId, "" + userStopRequestValue);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
@@ -416,7 +416,7 @@ public class AgentDbUtils extends DBBase {
 			dbNrpeValue = "false()";
 		}
 		
-		String xQueryStr = agentFunctionConstructor("lk:checkAgent", resourceXML, dbNrpeValue);
+		String xQueryStr = agentFunctionConstructor("lk:updateNrpeValueLock", resourceXML, dbNrpeValue);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
