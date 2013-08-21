@@ -220,10 +220,10 @@ public class LogAnalyser {
 					switch (modeType) {
 
 					case ModeType.INT_NORMAL:
-						result = searchNormal(in.nextLine(), searchString, isCaseSensitive);
+						result = searchNormal(myLine, searchString, isCaseSensitive);
 						break;
 					case ModeType.INT_REG_EX:
-						result = searchRegEx(in.nextLine(), searchString, isCaseSensitive);
+						result = searchRegEx(myLine, searchString, isCaseSensitive);
 						break;
 					default:
 						throw new UnsupportedOperationException();
