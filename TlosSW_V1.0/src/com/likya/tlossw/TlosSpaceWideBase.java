@@ -115,6 +115,10 @@ public class TlosSpaceWideBase {
 
 			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
 			TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
+			
+			if (tlosConfigInfo == null || !XMLValidations.validateWithLogs(logger, tlosConfigInfo)) {
+				throw new TlosFatalException("DBUtils.getTlosConfig : getTlosConfig is null or tlosConfigInfo xml is damaged !");
+			}
 
 			getSpaceWideRegistry().setTlosSWConfigInfo(tlosConfigInfo);
 
