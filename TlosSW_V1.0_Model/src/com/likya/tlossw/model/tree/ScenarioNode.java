@@ -20,6 +20,23 @@ public class ScenarioNode extends WsScenarioNode {
 	private ArrayList<ScenarioNode> scenarioNodes = new ArrayList<ScenarioNode>();
 	private ArrayList<JobNode> jobNodes = new ArrayList<JobNode>();
 
+	public ScenarioNode() {
+		// TODO Auto-generated constructor stub
+		super();
+	}
+	
+	public ScenarioNode(ScenarioNode scenarioNode) {
+		super();
+		this.setId(scenarioNode.getId());
+		this.setInstanceId(scenarioNode.getInstanceId());
+		this.setLabelText(scenarioNode.getLabelText());
+		this.setLeafIcon(scenarioNode.getLeafIcon());
+		this.setName(scenarioNode.getName());
+		this.setPath(scenarioNode.getPath());
+		this.setScenarioNodes(scenarioNode.getScenarioNodes());
+		this.setSpcInfoTypeClient(scenarioNode.getSpcInfoTypeClient());
+	}
+	
 	public ArrayList<ScenarioNode> getScenarioNodes() {
 		return scenarioNodes;
 	}
