@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.Concurre
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
@@ -57,6 +59,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private AdvancedScenarioInfos advancedScenarioInfos;
 	private ConcurrencyManagement concurrencyManagement;
 	private LocalParameters localParameters;
+	private Scenario scenario;
 
 	// Senaryolarin baslama ve bitis bilgilerini de raporlama amacli dolduralim.
 	// ilk aklima gelen job da nasil yapildigina bakip oradan kopya cekmek oldu.
@@ -111,6 +114,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		myLogger.info("  >> Senaryo ismi : " + this.getBaseScenarioInfos().getJsName());
 		Iterator<JobRuntimeProperties> taskListIterator = taskList.iterator();
 
+		scenario = null;
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			jobRuntimeProperties.setTreePath(getSpcId());
@@ -550,6 +554,27 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public HashMap<String, Job> getJobQueue() {
 		return jobQueue;
+	}
+
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+	
+	// Bir senaryonun icindeki senaryoları veriyor
+	public HashMap<String, SpcInfoType> getSetOfScenarios() {
+		HashMap<String, SpcInfoType> map = new HashMap<String, SpcInfoType>();
+		Set<String> set = this.getSpcLookupTable().keySet();
+
+        for(String i : set)
+          if(i.indexOf(spcId + ".") != -1) {
+             map.put(i, this.getSpcLookupTable().get(i));
+          }
+
+		return map;
 	}
 
 }
