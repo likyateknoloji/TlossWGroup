@@ -97,7 +97,7 @@ public class LogAnalyser {
 	private void parseEvent(Event myEvent) {
 
 		if (myEvent != null && myEvent.getContent() != null) {
-			defaultLogContent = "" + myEvent.getContent();
+			defaultLogContent = "" + myEvent.getContent().getStringValue();
 			if (myEvent.getContent().getLogLineNumBack() != null) {
 				logLineNumBack = myEvent.getContent().getLogLineNumBack().intValue();
 			}
