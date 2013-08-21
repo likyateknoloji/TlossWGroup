@@ -82,8 +82,6 @@ public class LoginBean extends LoginBase implements Serializable {
 
 		logger.info("end : RegisteredLoginBean : login");
 
-		setSessionLoginParam(true);
-
 		return returnValue;
 
 	}
