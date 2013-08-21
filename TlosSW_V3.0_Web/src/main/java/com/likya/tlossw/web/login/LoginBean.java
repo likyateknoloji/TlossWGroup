@@ -80,6 +80,12 @@ public class LoginBean extends LoginBase implements Serializable {
 			returnValue = LOGIN_SUCCESS;
 		}
 
+		if(LOGIN_SUCCESS.equals(returnValue)) {
+			setSessionLoginParam(true);
+		} else {
+			setSessionLoginParam(false);
+		}
+		
 		logger.info("end : RegisteredLoginBean : login");
 
 		return returnValue;
@@ -103,7 +109,6 @@ public class LoginBean extends LoginBase implements Serializable {
 		if (returnObject instanceof WebAppUser) {
 
 			webAppUser = (WebAppUser) returnObject;
-			setSessionLoginParam(true);
 			// jmxAppUser.setAppUser(((JmxAppUser) o).getAppUser());
 
 			if (webAppUser.getResourceMapper().size() == 0) {
