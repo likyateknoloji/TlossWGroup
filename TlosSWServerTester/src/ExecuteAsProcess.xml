@@ -19,9 +19,8 @@
 			</com:jobTypeDetails>
 		</dat:jobInfos>
 		<dat:calendarId>5</dat:calendarId>
-		<dat:jobLogFile>DBJob.log</dat:jobLogFile>
-		<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs
-		</dat:jobLogPath>
+		<dat:jobLogFile>TlosEkran.log</dat:jobLogFile>
+		<dat:jobLogPath>/Users/serkan/programlar/dev/workspace/TlosSWServerTester/logs</dat:jobLogPath>
 		<dat:oSystem>Windows</dat:oSystem>
 		<dat:jobPriority>1</dat:jobPriority>
 		<com:userId>4</com:userId>
@@ -101,10 +100,16 @@
 		<dat:minPercentage>10</dat:minPercentage>
 	</dat:timeManagement>
 	<dat:logAnalysis id="1" active="true">
-		<dat:findWhat mode="regEx" direction="Up" matchCase="true">h[a-z]st</dat:findWhat>
+		<dat:findWhat mode="regEx" direction="Up" matchCase="true">h[a-z]st
+		</dat:findWhat>
 		<dat:action>
 			<dat:then>
-				<dat:event id="1" code="email" />
+				<dat:event id="1" code="email">
+					<com:EmailList>
+						<com:email>kursat.tas@likyateknoloji.com</com:email>
+					</com:EmailList>
+					<dat:content logLineNumBack="5" logLineNumForward="5">Bu bir uyaridir. Detaylar asagidadir;</dat:content>
+				</dat:event>
 				<dat:forcedResult active="true">
 					<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10.000+03:00">
 						<state-types:StateName>FINISHED</state-types:StateName>
@@ -113,6 +118,16 @@
 					</state-types:LiveStateInfo>
 				</dat:forcedResult>
 			</dat:then>
+			<dat:else>
+				<dat:event id="2" code="waitMe" />
+				<dat:forcedResult active="true">
+					<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10.000+03:00">
+						<state-types:StateName>FINISHED</state-types:StateName>
+						<state-types:SubstateName>COMPLETED</state-types:SubstateName>
+						<state-types:StatusName>SUCCESS</state-types:StatusName>
+					</state-types:LiveStateInfo>
+				</dat:forcedResult>
+			</dat:else>
 		</dat:action>
 	</dat:logAnalysis>
 </dat:jobProperties>
