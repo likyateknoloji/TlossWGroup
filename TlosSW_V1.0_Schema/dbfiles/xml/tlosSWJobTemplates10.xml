@@ -3,9 +3,9 @@
 <dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
                      xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
                      xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
-                     xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types"
-                     xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
+                     xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
+                     xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
 	<dat:baseScenarioInfos>
 		<com:jsName>Serbest isler</com:jsName>
 		<com:comment>Serbest isler burada yer alir</com:comment>
@@ -312,7 +312,7 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:30:00.000+02:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -331,208 +331,208 @@
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="22">
-	            <jsdl:JobDescription/>
-	            <dat:baseJobInfos>
-	                <com:jsName>Remote</com:jsName>
-	                <com:comment>Remote job</com:comment>
-	                <dat:jobInfos>
-	                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-	                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-	                    <com:jobTypeDetails>
-	                        <com:jobCommandType>REMOTE SHELL</com:jobCommandType>
-	                        <com:jobCommand>job1.bat</com:jobCommand>
-	                        <com:jobPath>C:\Users\test\Desktop</com:jobPath>
-	                        <com:specialParameters>
-	                            <rs:executeRShellParams>
-	                                <com:ipAddress>192.168.1.67</com:ipAddress>
-	                                <rs:port>22</rs:port>
-	                                <com:userName>test</com:userName>
-	                                <com:userPassword>test</com:userPassword>
-	                                <com:fileSeperator>\</com:fileSeperator>
-	                            </rs:executeRShellParams>
-	                        </com:specialParameters>
-	                    </com:jobTypeDetails>
-	                </dat:jobInfos>
-	                <dat:calendarId>1</dat:calendarId>
-	                <dat:jobLogFile>job1.log</dat:jobLogFile>
-	                <dat:jobLogPath>C:\Users\test\Desktop</dat:jobLogPath>
-	                <dat:oSystem>Windows</dat:oSystem>
-	                <dat:jobPriority>1</dat:jobPriority>
-	                <dat:jsIsActive>YES</dat:jsIsActive>
-	                <com:userId>1</com:userId>
-	            </dat:baseJobInfos>
-	            <dat:cascadingConditions>
-	                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-	                <dat:jobSafeToRestart>NO</dat:jobSafeToRestart>
-	                <dat:jobAutoRetry>NO</dat:jobAutoRetry>
-	            </dat:cascadingConditions>
-	            <dat:stateInfos>
-	                <state-types:LiveStateInfos>
-	                    <state-types:LiveStateInfo LSIDateTime="2013-05-18T14:24:07.254+03:00">
-	                        <state-types:StateName>PENDING</state-types:StateName>
-	                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-	                    </state-types:LiveStateInfo>
-	                </state-types:LiveStateInfos>
-	            </dat:stateInfos>
-	            <dat:advancedJobInfos>
-	                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-	            </dat:advancedJobInfos>
-	            <dat:concurrencyManagement>
-	                <com:concurrent>false</com:concurrent>
-	            </dat:concurrencyManagement>
-	            <dat:timeManagement>
-	                <dat:jsPlannedTime>
-	                    <dat:startTime>
-	                        <com:time>08:30:00.000+03:00</com:time>
-	                    </dat:startTime>
-	                </dat:jsPlannedTime>
-	                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-	                <dat:jsTimeOut>
-	                    <com:value_integer>3</com:value_integer>
-	                    <com:unit>HOURS</com:unit>
-	                </dat:jsTimeOut>
-	                <dat:expectedTime>
-	                    <com:value_integer>1</com:value_integer>
-	                    <com:unit>MINUTES</com:unit>
-	                </dat:expectedTime>
-	                <dat:tolerancePercentage>1</dat:tolerancePercentage>
-	                <dat:minPercentage>11</dat:minPercentage>
-	            </dat:timeManagement>
-	        </dat:jobProperties>
-	        <dat:jobProperties agentId="0" ID="23" >
-	            <jsdl:JobDescription/>
-	            <dat:baseJobInfos>
-	                <com:jsName>System</com:jsName>
-	                <com:comment>system command</com:comment>
-	                <dat:jobInfos>
-	                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-	                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-	                    <com:jobTypeDetails>
-	                        <com:jobCommandType>SYSTEM COMMAND</com:jobCommandType>
-	                        <com:jobCommand>calc.exe</com:jobCommand>
-	                        <com:jobPath>C:\Windows\System32</com:jobPath>
-	                    </com:jobTypeDetails>
-	                </dat:jobInfos>
-	                <dat:calendarId>1</dat:calendarId>
-	                <dat:jobLogFile>ExecuteAsProcess.log</dat:jobLogFile>
-	                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
-	                <dat:oSystem>Windows</dat:oSystem>
-	                <dat:jobPriority>1</dat:jobPriority>
-	                <dat:jsIsActive>YES</dat:jsIsActive>
-	                <com:userId>4</com:userId>
-	            </dat:baseJobInfos>
-	            <dat:cascadingConditions>
-	                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-	                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-	                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-	            </dat:cascadingConditions>
-	            <dat:stateInfos>
-	                <state-types:LiveStateInfos>
-	                    <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
-	                        <state-types:StateName>PENDING</state-types:StateName>
-	                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-	                    </state-types:LiveStateInfo>
-	                </state-types:LiveStateInfos>
-	            </dat:stateInfos>
-	            <dat:advancedJobInfos>
-	                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-	            </dat:advancedJobInfos>
-	            <dat:concurrencyManagement>
-	                <com:instanceId>11</com:instanceId>
-	                <com:concurrent>true</com:concurrent>
-	            </dat:concurrencyManagement>
-	            <dat:alarmPreference/>
-	            <dat:timeManagement>
-	                <dat:jsPlannedTime>
-	                    <dat:startTime>
-	                        <com:time>08:00:00</com:time>
-	                    </dat:startTime>
-	                    <dat:stopTime>
-	                        <com:time>23:00:00</com:time>
-	                    </dat:stopTime>
-	                </dat:jsPlannedTime>
-	                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-	                <dat:jsTimeOut>
-	                    <com:value_integer>1</com:value_integer>
-	                    <com:unit>MINUTES</com:unit>
-	                </dat:jsTimeOut>
-	                <dat:expectedTime>
-	                    <com:value_integer>100</com:value_integer>
-	                    <com:unit>MINUTES</com:unit>
-	                </dat:expectedTime>
-	                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-	                <dat:minPercentage>10</dat:minPercentage>
-	            </dat:timeManagement>
-	        </dat:jobProperties>
-	        <dat:jobProperties agentId="0" ID="24">
-	            <jsdl:JobDescription/>
-	            <dat:baseJobInfos>
-	                <com:jsName>Shell Script</com:jsName>
-	                <com:comment>Shell Script</com:comment>
-	                <dat:jobInfos>
-	                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-	                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-	                    <com:jobTypeDetails>
-	                        <com:jobCommandType>SHELL SCRIPT</com:jobCommandType>
-	                        <com:jobCommand>calc.exe</com:jobCommand>
-	                        <com:jobPath>C:\Windows\System32</com:jobPath>
-	                    </com:jobTypeDetails>
-	                </dat:jobInfos>
-	                <dat:calendarId>1</dat:calendarId>
-	                <dat:jobLogFile>executeinshell.log</dat:jobLogFile>
-	                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
-	                <dat:oSystem>Windows</dat:oSystem>
-	                <dat:jobPriority>1</dat:jobPriority>
-	                <dat:jsIsActive>YES</dat:jsIsActive>
-	                <com:userId>4</com:userId>
-	            </dat:baseJobInfos>
-	            <dat:cascadingConditions>
-	                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-	                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-	                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-	            </dat:cascadingConditions>
-	            <dat:stateInfos>
-	                <state-types:LiveStateInfos>
-	                    <state-types:LiveStateInfo LSIDateTime="2012-08-12T18:15:39.908+0300">
-	                        <state-types:StateName>PENDING</state-types:StateName>
-	                        <state-types:SubstateName>VALIDATED</state-types:SubstateName>
-	                    </state-types:LiveStateInfo>
-	                    <state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
-	                        <state-types:StateName>PENDING</state-types:StateName>
-	                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-	                    </state-types:LiveStateInfo>
-	                </state-types:LiveStateInfos>
-	            </dat:stateInfos>
-	            <dat:advancedJobInfos>
-	                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-	            </dat:advancedJobInfos>
-	            <dat:concurrencyManagement>
-	                <com:instanceId>11</com:instanceId>
-	                <com:concurrent>true</com:concurrent>
-	            </dat:concurrencyManagement>
-	            <dat:alarmPreference/>
-	            <dat:timeManagement>
-	                <dat:jsPlannedTime>
-	                    <dat:startTime>
-	                        <com:time>08:00:00</com:time>
-	                    </dat:startTime>
-	                    <dat:stopTime>
-	                        <com:time>23:00:00</com:time>
-	                    </dat:stopTime>
-	                </dat:jsPlannedTime>
-	                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-	                <dat:jsTimeOut>
-	                    <com:value_integer>1</com:value_integer>
-	                    <com:unit>MINUTES</com:unit>
-	                </dat:jsTimeOut>
-	                <dat:expectedTime>
-	                    <com:value_integer>100</com:value_integer>
-	                    <com:unit>MINUTES</com:unit>
-	                </dat:expectedTime>
-	                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-	                <dat:minPercentage>10</dat:minPercentage>
-	            </dat:timeManagement>
-	        </dat:jobProperties>
+				<jsdl:JobDescription/>
+				<dat:baseJobInfos>
+					<com:jsName>Remote</com:jsName>
+					<com:comment>Remote job</com:comment>
+					<dat:jobInfos>
+						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+						<com:jobTypeDetails>
+							<com:jobCommandType>REMOTE SHELL</com:jobCommandType>
+							<com:jobCommand>job1.bat</com:jobCommand>
+							<com:jobPath>C:\Users\test\Desktop</com:jobPath>
+							<com:specialParameters>
+								<rs:executeRShellParams>
+									<com:ipAddress>192.168.1.67</com:ipAddress>
+									<rs:port>22</rs:port>
+									<com:userName>test</com:userName>
+									<com:userPassword>test</com:userPassword>
+									<com:fileSeperator>\</com:fileSeperator>
+								</rs:executeRShellParams>
+							</com:specialParameters>
+						</com:jobTypeDetails>
+					</dat:jobInfos>
+					<dat:calendarId>1</dat:calendarId>
+					<dat:jobLogFile>job1.log</dat:jobLogFile>
+					<dat:jobLogPath>C:\Users\test\Desktop</dat:jobLogPath>
+					<dat:oSystem>Windows</dat:oSystem>
+					<dat:jobPriority>1</dat:jobPriority>
+					<dat:jsIsActive>YES</dat:jsIsActive>
+					<com:userId>1</com:userId>
+				</dat:baseJobInfos>
+				<dat:cascadingConditions>
+					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+					<dat:jobSafeToRestart>NO</dat:jobSafeToRestart>
+					<dat:jobAutoRetry>NO</dat:jobAutoRetry>
+				</dat:cascadingConditions>
+				<dat:stateInfos>
+					<state-types:LiveStateInfos>
+						<state-types:LiveStateInfo LSIDateTime="2013-05-18T14:24:07.254+03:00">
+							<state-types:StateName>PENDING</state-types:StateName>
+							<state-types:SubstateName>CREATED</state-types:SubstateName>
+						</state-types:LiveStateInfo>
+					</state-types:LiveStateInfos>
+				</dat:stateInfos>
+				<dat:advancedJobInfos>
+					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+				</dat:advancedJobInfos>
+				<dat:concurrencyManagement>
+					<com:concurrent>false</com:concurrent>
+				</dat:concurrencyManagement>
+				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+					</dat:jsPlannedTime>
+					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+					<dat:jsTimeOut>
+						<com:value_integer>3</com:value_integer>
+						<com:unit>HOURS</com:unit>
+					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>1</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>1</dat:tolerancePercentage>
+					<dat:minPercentage>11</dat:minPercentage>
+				</dat:timeManagement>
+			</dat:jobProperties>
+			<dat:jobProperties agentId="0" ID="23">
+				<jsdl:JobDescription/>
+				<dat:baseJobInfos>
+					<com:jsName>System</com:jsName>
+					<com:comment>system command</com:comment>
+					<dat:jobInfos>
+						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+						<com:jobTypeDetails>
+							<com:jobCommandType>SYSTEM COMMAND</com:jobCommandType>
+							<com:jobCommand>calc.exe</com:jobCommand>
+							<com:jobPath>C:\Windows\System32</com:jobPath>
+						</com:jobTypeDetails>
+					</dat:jobInfos>
+					<dat:calendarId>1</dat:calendarId>
+					<dat:jobLogFile>ExecuteAsProcess.log</dat:jobLogFile>
+					<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+					<dat:oSystem>Windows</dat:oSystem>
+					<dat:jobPriority>1</dat:jobPriority>
+					<dat:jsIsActive>YES</dat:jsIsActive>
+					<com:userId>4</com:userId>
+				</dat:baseJobInfos>
+				<dat:cascadingConditions>
+					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+					<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+					<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+				</dat:cascadingConditions>
+				<dat:stateInfos>
+					<state-types:LiveStateInfos>
+						<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+							<state-types:StateName>PENDING</state-types:StateName>
+							<state-types:SubstateName>CREATED</state-types:SubstateName>
+						</state-types:LiveStateInfo>
+					</state-types:LiveStateInfos>
+				</dat:stateInfos>
+				<dat:advancedJobInfos>
+					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+				</dat:advancedJobInfos>
+				<dat:concurrencyManagement>
+					<com:instanceId>11</com:instanceId>
+					<com:concurrent>true</com:concurrent>
+				</dat:concurrencyManagement>
+				<dat:alarmPreference/>
+				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:00:00.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+					<dat:jsTimeOut>
+						<com:value_integer>1</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
+				</dat:timeManagement>
+			</dat:jobProperties>
+			<dat:jobProperties agentId="0" ID="24">
+				<jsdl:JobDescription/>
+				<dat:baseJobInfos>
+					<com:jsName>Shell Script</com:jsName>
+					<com:comment>Shell Script</com:comment>
+					<dat:jobInfos>
+						<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+						<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+						<com:jobTypeDetails>
+							<com:jobCommandType>SHELL SCRIPT</com:jobCommandType>
+							<com:jobCommand>calc.exe</com:jobCommand>
+							<com:jobPath>C:\Windows\System32</com:jobPath>
+						</com:jobTypeDetails>
+					</dat:jobInfos>
+					<dat:calendarId>1</dat:calendarId>
+					<dat:jobLogFile>executeinshell.log</dat:jobLogFile>
+					<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+					<dat:oSystem>Windows</dat:oSystem>
+					<dat:jobPriority>1</dat:jobPriority>
+					<dat:jsIsActive>YES</dat:jsIsActive>
+					<com:userId>4</com:userId>
+				</dat:baseJobInfos>
+				<dat:cascadingConditions>
+					<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+					<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+					<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+				</dat:cascadingConditions>
+				<dat:stateInfos>
+					<state-types:LiveStateInfos>
+						<state-types:LiveStateInfo LSIDateTime="2012-08-12T18:15:39.908+0300">
+							<state-types:StateName>PENDING</state-types:StateName>
+							<state-types:SubstateName>VALIDATED</state-types:SubstateName>
+						</state-types:LiveStateInfo>
+						<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:40:10+03:00">
+							<state-types:StateName>PENDING</state-types:StateName>
+							<state-types:SubstateName>CREATED</state-types:SubstateName>
+						</state-types:LiveStateInfo>
+					</state-types:LiveStateInfos>
+				</dat:stateInfos>
+				<dat:advancedJobInfos>
+					<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+				</dat:advancedJobInfos>
+				<dat:concurrencyManagement>
+					<com:instanceId>11</com:instanceId>
+					<com:concurrent>true</com:concurrent>
+				</dat:concurrencyManagement>
+				<dat:alarmPreference/>
+				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:00:00.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+					<dat:jsTimeOut>
+						<com:value_integer>1</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
+				</dat:timeManagement>
+			</dat:jobProperties>
 		</dat:jobList>
 		<dat:timeManagement>
 			<dat:jsPlannedTime>
@@ -651,10 +651,10 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:00:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 						<dat:stopTime>
-							<com:time>23:00:00</com:time>
+							<com:time>23:00:00.000+03:00</com:time>
 						</dat:stopTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -795,7 +795,7 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:30:00.000+02:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -895,7 +895,7 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:30:00.000+02:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -1119,10 +1119,10 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:00:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 						<dat:stopTime>
-							<com:time>23:00:00</com:time>
+							<com:time>23:00:00.000+03:00</com:time>
 						</dat:stopTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -1226,10 +1226,10 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:00:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 						<dat:stopTime>
-							<com:time>23:00:00</com:time>
+							<com:time>23:00:00.000+03:00</com:time>
 						</dat:stopTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -1345,10 +1345,10 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:00:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 						<dat:stopTime>
-							<com:time>23:59:59</com:time>
+							<com:time>23:59:59.000+03:00</com:time>
 						</dat:stopTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -1425,10 +1425,10 @@
 				<dat:timeManagement>
 					<dat:jsPlannedTime>
 						<dat:startTime>
-							<com:time>08:00:00</com:time>
+							<com:time>08:30:00.000+03:00</com:time>
 						</dat:startTime>
 						<dat:stopTime>
-							<com:time>23:59:59</com:time>
+							<com:time>23:59:59.000+03:00</com:time>
 						</dat:stopTime>
 					</dat:jsPlannedTime>
 					<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -1535,11 +1535,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="13">
@@ -1590,11 +1606,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="14">
@@ -1645,11 +1677,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="15">
@@ -1700,11 +1748,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="16">
@@ -1755,11 +1819,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 			<dat:jobProperties agentId="0" ID="17">
@@ -1844,11 +1924,27 @@
 					<com:concurrent>false</com:concurrent>
 				</dat:concurrencyManagement>
 				<dat:timeManagement>
+					<dat:jsPlannedTime>
+						<dat:startTime>
+							<com:time>08:30:00.000+03:00</com:time>
+						</dat:startTime>
+						<dat:stopTime>
+							<com:time>23:59:59.000+03:00</com:time>
+						</dat:stopTime>
+					</dat:jsPlannedTime>
+					<com:timeZone>Europe/Istanbul</com:timeZone>
+					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
-						<com:unit>HOURS</com:unit>
+						<com:value_integer>10</com:value_integer>
+						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
+					<dat:expectedTime>
+						<com:value_integer>100</com:value_integer>
+						<com:unit>MINUTES</com:unit>
+					</dat:expectedTime>
+					<dat:tolerancePercentage>10</dat:tolerancePercentage>
+					<dat:minPercentage>10</dat:minPercentage>
 				</dat:timeManagement>
 			</dat:jobProperties>
 		</dat:jobList>
@@ -1931,18 +2027,18 @@
 				<com:userId>1</com:userId>
 			</dat:baseScenarioInfos>
 			<dat:jobList>
-			     <dat:jobProperties ID="9" agentId="0">
-		            <jsdl:JobDescription/>
-		            <dat:baseJobInfos>
-		                <com:jsName>Postgre SQL Script</com:jsName>
-		                <com:comment>db isi</com:comment>
-		                <dat:jobInfos>
-		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-		                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-		                    <com:jobTypeDetails>
-		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
-		                        <com:specialParameters>
-		                            <db:dbJobDefinition>
+				<dat:jobProperties ID="9" agentId="0">
+					<jsdl:JobDescription/>
+					<dat:baseJobInfos>
+						<com:jsName>Postgre SQL Script</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
 										<db:dbConnectionProperties>
 											<db:dbPropertiesId>4</db:dbPropertiesId>
 											<db:dbUserId>2</db:dbUserId>
@@ -1954,73 +2050,73 @@
 											<db:sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Postgres\PostgreSqlScipt\</db:sqlScriptFilePath>
 										</db:scriptProperties>
 									</db:dbJobDefinition>
-		                        </com:specialParameters>
-		                    </com:jobTypeDetails>
-		                </dat:jobInfos>
-		                <dat:calendarId>5</dat:calendarId>
-		                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
-		                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
-		                <dat:oSystem>Windows</dat:oSystem>
-		                <dat:jobPriority>1</dat:jobPriority>
-		                <dat:jsIsActive>YES</dat:jsIsActive>
-		                <com:userId>1</com:userId>
-		            </dat:baseJobInfos>
-		            <dat:cascadingConditions>
-		                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-		                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-		                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-		            </dat:cascadingConditions>
-		            <dat:stateInfos>
-		                <state-types:LiveStateInfos>
-		                    <state-types:LiveStateInfo LSIDateTime="2013-06-05T16:26:23.511+03:00">
-		                        <state-types:StateName>PENDING</state-types:StateName>
-		                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-		                    </state-types:LiveStateInfo>
-		                </state-types:LiveStateInfos>
-		            </dat:stateInfos>
-		            <dat:advancedJobInfos>
-		                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-		            </dat:advancedJobInfos>
-		            <dat:concurrencyManagement>
-		                <com:instanceId>11</com:instanceId>
-		                <com:concurrent>true</com:concurrent>
-		            </dat:concurrencyManagement>
-		            <dat:timeManagement>
-		                <dat:jsPlannedTime>
-		                    <dat:startTime>
-		                        <com:time>07:55:52.000+03:00</com:time>
-		                    </dat:startTime>
-		                    <dat:stopTime>
-		                        <com:time>22:55:52.000+03:00</com:time>
-		                    </dat:stopTime>
-		                </dat:jsPlannedTime>
-		                <com:timeZone>Europe/Istanbul</com:timeZone>
-		                <com:typeOfTime>Actual</com:typeOfTime>
-		                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-		                <dat:jsTimeOut>
-		                    <com:value_integer>1</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:jsTimeOut>
-		                <dat:expectedTime>
-		                    <com:value_integer>100</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:expectedTime>
-		                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-		                <dat:minPercentage>10</dat:minPercentage>
-		            </dat:timeManagement>
-		        </dat:jobProperties>
-		        <dat:jobProperties ID="10" agentId="0">
-		            <jsdl:JobDescription/>
-		            <dat:baseJobInfos>
-		                <com:jsName>Store Procedure</com:jsName>
-		                <com:comment>db isi</com:comment>
-		                <dat:jobInfos>
-		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-		                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-		                    <com:jobTypeDetails>
-		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
-		                        <com:specialParameters>
-			                        <db:dbJobDefinition>
+								</com:specialParameters>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>1</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2013-06-05T16:26:23.511+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>07:55:52.000+03:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>22:55:52.000+03:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<com:timeZone>Europe/Istanbul</com:timeZone>
+						<com:typeOfTime>Actual</com:typeOfTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
+				<dat:jobProperties ID="10" agentId="0">
+					<jsdl:JobDescription/>
+					<dat:baseJobInfos>
+						<com:jsName>Store Procedure</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
 										<db:dbConnectionProperties>
 											<db:dbPropertiesId>4</db:dbPropertiesId>
 											<db:dbUserId>2</db:dbUserId>
@@ -2029,65 +2125,65 @@
 										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
 										<db:storeProcedureProperties>
 											<db:sqlStoredProcedureSchemaName>tlossw</db:sqlStoredProcedureSchemaName>
-											<db:sqlStoredProcedurePackageName></db:sqlStoredProcedurePackageName>
+											<db:sqlStoredProcedurePackageName/>
 											<db:sqlStoredProcedureName>personel_ad()</db:sqlStoredProcedureName>
 										</db:storeProcedureProperties>
 									</db:dbJobDefinition>
 								</com:specialParameters>
-		                    </com:jobTypeDetails>
-		                </dat:jobInfos>
-		                <dat:calendarId>5</dat:calendarId>
-		                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
-		                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs</dat:jobLogPath>
-		                <dat:oSystem>Windows</dat:oSystem>
-		                <dat:jobPriority>1</dat:jobPriority>
-		                <dat:jsIsActive>YES</dat:jsIsActive>
-		                <com:userId>1</com:userId>
-		            </dat:baseJobInfos>
-		            <dat:cascadingConditions>
-		                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-		                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-		                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-		            </dat:cascadingConditions>
-		            <dat:stateInfos>
-		                <state-types:LiveStateInfos>
-		                    <state-types:LiveStateInfo LSIDateTime="2013-06-06T15:59:39.813+03:00">
-		                        <state-types:StateName>PENDING</state-types:StateName>
-		                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-		                    </state-types:LiveStateInfo>
-		                </state-types:LiveStateInfos>
-		            </dat:stateInfos>
-		            <dat:advancedJobInfos>
-		                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-		            </dat:advancedJobInfos>
-		            <dat:concurrencyManagement>
-		                <com:instanceId>11</com:instanceId>
-		                <com:concurrent>true</com:concurrent>
-		            </dat:concurrencyManagement>
-		            <dat:timeManagement>
-		                <dat:jsPlannedTime>
-		                    <dat:startTime>
-		                        <com:time>07:55:52.000+03:00</com:time>
-		                    </dat:startTime>
-		                    <dat:stopTime>
-		                        <com:time>22:55:52.000+03:00</com:time>
-		                    </dat:stopTime>
-		                </dat:jsPlannedTime>
-		                <com:timeZone>Europe/Istanbul</com:timeZone>
-		                <com:typeOfTime>Actual</com:typeOfTime>
-		                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-		                <dat:jsTimeOut>
-		                    <com:value_integer>1</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:jsTimeOut>
-		                <dat:expectedTime>
-		                    <com:value_integer>100</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:expectedTime>
-		                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-		                <dat:minPercentage>10</dat:minPercentage>
-		            </dat:timeManagement>
-		        </dat:jobProperties>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>1</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2013-06-06T15:59:39.813+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>07:55:52.000+03:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>22:55:52.000+03:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<com:timeZone>Europe/Istanbul</com:timeZone>
+						<com:typeOfTime>Actual</com:typeOfTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
 				<dat:jobProperties ID="11" agentId="0">
 					<jsdl:JobDescription/>
 					<dat:baseJobInfos>
@@ -2145,10 +2241,10 @@
 					<dat:timeManagement>
 						<dat:jsPlannedTime>
 							<dat:startTime>
-								<com:time>08:00:00</com:time>
+								<com:time>07:55:52.000+03:00</com:time>
 							</dat:startTime>
 							<dat:stopTime>
-								<com:time>23:00:00</com:time>
+								<com:time>23:00:00.000+03:00</com:time>
 							</dat:stopTime>
 						</dat:jsPlannedTime>
 						<com:timeZone>Europe/Istanbul</com:timeZone>
@@ -2285,16 +2381,16 @@
 					</dat:timeManagement>
 				</dat:jobProperties>
 				<dat:jobProperties ID="20" agentId="0">
-		            <jsdl:JobDescription/>
-		            <dat:baseJobInfos>
-		                <com:jsName>Oracle Store Procedure</com:jsName>
-		                <com:comment>db isi</com:comment>
-		                <dat:jobInfos>
-		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-		                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-		                    <com:jobTypeDetails>
-		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
-		                        <com:specialParameters>
+					<jsdl:JobDescription/>
+					<dat:baseJobInfos>
+						<com:jsName>Oracle Store Procedure</com:jsName>
+						<com:comment>db isi</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
 									<db:dbJobDefinition>
 										<db:dbConnectionProperties>
 											<db:dbPropertiesId>5</db:dbPropertiesId>
@@ -2304,77 +2400,77 @@
 										<db:dbAccessMethod>NATIVE</db:dbAccessMethod>
 										<db:storeProcedureProperties>
 											<db:sqlStoredProcedureSchemaName>test</db:sqlStoredProcedureSchemaName>
-											<db:sqlStoredProcedurePackageName></db:sqlStoredProcedurePackageName>
+											<db:sqlStoredProcedurePackageName/>
 											<db:sqlStoredProcedureName>PERSONEL_YUKLE(2,'mk','km')</db:sqlStoredProcedureName>
 										</db:storeProcedureProperties>
 									</db:dbJobDefinition>
 								</com:specialParameters>
-		                    </com:jobTypeDetails>
-		                </dat:jobInfos>
-		                <dat:calendarId>5</dat:calendarId>
-		                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
-		                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
-		                <dat:oSystem>Windows</dat:oSystem>
-		                <dat:jobPriority>1</dat:jobPriority>
-		                <dat:jsIsActive>YES</dat:jsIsActive>
-		                <com:userId>1</com:userId>
-		            </dat:baseJobInfos>
-		            <dat:cascadingConditions>
-		                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-		                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-		                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-		            </dat:cascadingConditions>
-		            <dat:stateInfos>
-		                <state-types:LiveStateInfos>
-		                    <state-types:LiveStateInfo LSIDateTime="2013-06-05T09:06:10.923+03:00">
-		                        <state-types:StateName>PENDING</state-types:StateName>
-		                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-		                    </state-types:LiveStateInfo>
-		                </state-types:LiveStateInfos>
-		            </dat:stateInfos>
-		            <dat:advancedJobInfos>
-		                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-		            </dat:advancedJobInfos>
-		            <dat:concurrencyManagement>
-		                <com:instanceId>11</com:instanceId>
-		                <com:concurrent>true</com:concurrent>
-		            </dat:concurrencyManagement>
-		            <dat:timeManagement>
-		                <dat:jsPlannedTime>
-		                    <dat:startTime>
-		                        <com:time>08:00:00.000+03:00</com:time>
-		                    </dat:startTime>
-		                    <dat:stopTime>
-		                        <com:time>23:00:00.000+03:00</com:time>
-		                    </dat:stopTime>
-		                </dat:jsPlannedTime>
-		                <com:timeZone>Europe/Istanbul</com:timeZone>
-		                <com:typeOfTime>Actual</com:typeOfTime>
-		                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-		                <dat:jsTimeOut>
-		                    <com:value_integer>1</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:jsTimeOut>
-		                <dat:expectedTime>
-		                    <com:value_integer>100</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:expectedTime>
-		                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-		                <dat:minPercentage>10</dat:minPercentage>
-		            </dat:timeManagement>
-		        </dat:jobProperties>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>1</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2013-06-05T09:06:10.923+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>08:00:00.000+03:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>23:00:00.000+03:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<com:timeZone>Europe/Istanbul</com:timeZone>
+						<com:typeOfTime>Actual</com:typeOfTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
 				<dat:jobProperties ID="21" agentId="0">
-		            <jsdl:JobDescription/>
-		            <dat:baseJobInfos>
-		                <com:jsName>Oracle SQL Script</com:jsName>
-		                <com:comment>orcl</com:comment>
-		                <dat:jobInfos>
-		                    <com:jobBaseType>NON_PERIODIC</com:jobBaseType>
-		                    <com:jobTypeDef>TIME BASED</com:jobTypeDef>
-		                    <com:jobTypeDetails>
-		                        <com:jobCommandType>DB JOBS</com:jobCommandType>
-		                        <com:specialParameters>
-		                            <db:dbJobDefinition>
+					<jsdl:JobDescription/>
+					<dat:baseJobInfos>
+						<com:jsName>Oracle SQL Script</com:jsName>
+						<com:comment>orcl</com:comment>
+						<dat:jobInfos>
+							<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+							<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+							<com:jobTypeDetails>
+								<com:jobCommandType>DB JOBS</com:jobCommandType>
+								<com:specialParameters>
+									<db:dbJobDefinition>
 										<db:dbConnectionProperties>
 											<db:dbPropertiesId>5</db:dbPropertiesId>
 											<db:dbUserId>3</db:dbUserId>
@@ -2386,61 +2482,61 @@
 											<db:sqlScriptFilePath>C:\Users\Administrator\Desktop\job_type_logs\databse_related\Oracle\Oracle_script\</db:sqlScriptFilePath>
 										</db:scriptProperties>
 									</db:dbJobDefinition>
-		                        </com:specialParameters>
-		                    </com:jobTypeDetails>
-		                </dat:jobInfos>
-		                <dat:calendarId>5</dat:calendarId>
-		                <dat:jobLogFile>DBJob.log</dat:jobLogFile>
-		                <dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
-		                <dat:oSystem>Windows</dat:oSystem>
-		                <dat:jobPriority>1</dat:jobPriority>
-		                <dat:jsIsActive>YES</dat:jsIsActive>
-		                <com:userId>1</com:userId>
-		            </dat:baseJobInfos>
-		            <dat:cascadingConditions>
-		                <dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
-		                <dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
-		                <dat:jobAutoRetry>YES</dat:jobAutoRetry>
-		            </dat:cascadingConditions>
-		            <dat:stateInfos>
-		                <state-types:LiveStateInfos>
-		                    <state-types:LiveStateInfo LSIDateTime="2013-06-04T17:45:16.658+03:00">
-		                        <state-types:StateName>PENDING</state-types:StateName>
-		                        <state-types:SubstateName>CREATED</state-types:SubstateName>
-		                    </state-types:LiveStateInfo>
-		                </state-types:LiveStateInfos>
-		            </dat:stateInfos>
-		            <dat:advancedJobInfos>
-		                <com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
-		            </dat:advancedJobInfos>
-		            <dat:concurrencyManagement>
-		                <com:instanceId>11</com:instanceId>
-		                <com:concurrent>true</com:concurrent>
-		            </dat:concurrencyManagement>
-		            <dat:timeManagement>
-		                <dat:jsPlannedTime>
-		                    <dat:startTime>
-		                        <com:time>08:00:00.000+03:00</com:time>
-		                    </dat:startTime>
-		                    <dat:stopTime>
-		                        <com:time>23:00:00.000+03:00</com:time>
-		                    </dat:stopTime>
-		                </dat:jsPlannedTime>
-		                <com:timeZone>Europe/Istanbul</com:timeZone>
-		                <com:typeOfTime>Actual</com:typeOfTime>
-		                <dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
-		                <dat:jsTimeOut>
-		                    <com:value_integer>1</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:jsTimeOut>
-		                <dat:expectedTime>
-		                    <com:value_integer>100</com:value_integer>
-		                    <com:unit>MINUTES</com:unit>
-		                </dat:expectedTime>
-		                <dat:tolerancePercentage>10</dat:tolerancePercentage>
-		                <dat:minPercentage>10</dat:minPercentage>
-		            </dat:timeManagement>
-		        </dat:jobProperties>
+								</com:specialParameters>
+							</com:jobTypeDetails>
+						</dat:jobInfos>
+						<dat:calendarId>5</dat:calendarId>
+						<dat:jobLogFile>DBJob.log</dat:jobLogFile>
+						<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+						<dat:oSystem>Windows</dat:oSystem>
+						<dat:jobPriority>1</dat:jobPriority>
+						<dat:jsIsActive>YES</dat:jsIsActive>
+						<com:userId>1</com:userId>
+					</dat:baseJobInfos>
+					<dat:cascadingConditions>
+						<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+						<dat:jobSafeToRestart>YES</dat:jobSafeToRestart>
+						<dat:jobAutoRetry>YES</dat:jobAutoRetry>
+					</dat:cascadingConditions>
+					<dat:stateInfos>
+						<state-types:LiveStateInfos>
+							<state-types:LiveStateInfo LSIDateTime="2013-06-04T17:45:16.658+03:00">
+								<state-types:StateName>PENDING</state-types:StateName>
+								<state-types:SubstateName>CREATED</state-types:SubstateName>
+							</state-types:LiveStateInfo>
+						</state-types:LiveStateInfos>
+					</dat:stateInfos>
+					<dat:advancedJobInfos>
+						<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+					</dat:advancedJobInfos>
+					<dat:concurrencyManagement>
+						<com:instanceId>11</com:instanceId>
+						<com:concurrent>true</com:concurrent>
+					</dat:concurrencyManagement>
+					<dat:timeManagement>
+						<dat:jsPlannedTime>
+							<dat:startTime>
+								<com:time>08:00:00.000+03:00</com:time>
+							</dat:startTime>
+							<dat:stopTime>
+								<com:time>23:00:00.000+03:00</com:time>
+							</dat:stopTime>
+						</dat:jsPlannedTime>
+						<com:timeZone>Europe/Istanbul</com:timeZone>
+						<com:typeOfTime>Actual</com:typeOfTime>
+						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+						<dat:jsTimeOut>
+							<com:value_integer>1</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:jsTimeOut>
+						<dat:expectedTime>
+							<com:value_integer>100</com:value_integer>
+							<com:unit>MINUTES</com:unit>
+						</dat:expectedTime>
+						<dat:tolerancePercentage>10</dat:tolerancePercentage>
+						<dat:minPercentage>10</dat:minPercentage>
+					</dat:timeManagement>
+				</dat:jobProperties>
 			</dat:jobList>
 			<dat:timeManagement>
 				<dat:jsPlannedTime>
