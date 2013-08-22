@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<alm-history:alarmHistory xmlns:alm-history="http://www.likyateknoloji.com/XML_alarm_history" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+                          xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:alm="http://www.likyateknoloji.com/XML_alarm_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_alarm_history ../xsds/tlosSWAlarmHistory_v_1_0.xsd">
+	<alm-history:alarm aHistoryId="1" agentId="hakan-laptop" runId="900">
+		<alm:creationDate>2011-05-30T09:30:10+02:00</alm:creationDate>
+		<alm:level>3</alm:level>
+		<alm-history:alarmId>1</alm-history:alarmId>
+		<alm:subscriber>
+			<alm:person id="3"/>
+            <alm:alarmChannelTypes>
+                <alm:warnBy id="1"/>
+                <alm:warnBy id="2"/>
+            </alm:alarmChannelTypes>
+		</alm:subscriber>
+		<alm:focus>
+			<alm:jobs>
+				<alm:job id="0" depth="1"/>
+			</alm:jobs>
+		</alm:focus>
+		<alm:caseManagement>
+			<alm:stateManagement>
+				<state-types:LiveStateInfo LSIDateTime="2011-05-30T09:30:10+02:00">
+					<state-types:StateName>FINISHED</state-types:StateName>
+					<state-types:SubstateName>COMPLETED</state-types:SubstateName>
+					<state-types:StatusName>FAILED</state-types:StatusName>
+				</state-types:LiveStateInfo>
+			</alm:stateManagement>
+		</alm:caseManagement>
+		<alm-history:caseOccured>
+			<alm:stateManagement>
+				<state-types:LiveStateInfo LSIDateTime="2013-05-01T09:40:10+02:00">
+                    <state-types:StateName>FINISHED</state-types:StateName>
+                    <state-types:SubstateName>COMPLETED</state-types:SubstateName>
+                    <state-types:StatusName>FAILED</state-types:StatusName>
+                </state-types:LiveStateInfo>
+			</alm:stateManagement>
+		</alm-history:caseOccured>
+	</alm-history:alarm>
+</alm-history:alarmHistory>

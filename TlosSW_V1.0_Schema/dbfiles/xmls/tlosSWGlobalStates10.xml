@@ -1,0 +1,208 @@
+<state-types:GlobalStateDefinition xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/state-types ../xsds/tlosSWState_v_1_0.xsd">
+    <state-types:GlobalState stId="1">
+        <state-types:StateName>PENDING</state-types:StateName>
+        <state-types:Code>1</state-types:Code>
+        <state-types:Desc>job's state before the running state</state-types:Desc>
+        <state-types:Substate substId="1">
+            <state-types:SubstateName>CREATED</state-types:SubstateName>
+            <state-types:Code>1</state-types:Code>
+            <state-types:Desc>job created in database</state-types:Desc>
+        </state-types:Substate>
+        <state-types:Substate substId="2">
+            <state-types:SubstateName>VALIDATED</state-types:SubstateName>
+            <state-types:Code>2</state-types:Code>
+            <state-types:Desc>job is validated</state-types:Desc>
+        </state-types:Substate>
+        <state-types:Substate substId="3">
+            <state-types:SubstateName>IDLED</state-types:SubstateName>
+            <state-types:Code>3</state-types:Code>
+            <state-types:Desc>job is idled</state-types:Desc>
+        </state-types:Substate>
+        <state-types:Substate substId="4">
+            <state-types:SubstateName>READY</state-types:SubstateName>
+            <state-types:Code>4</state-types:Code>
+            <state-types:Desc>job is ready</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>LOOKFOR-RESOURCE</state-types:StatusName>
+                <state-types:Desc>looking for an appropriate resource for the job</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>WAITING</state-types:StatusName>
+                <state-types:Desc>waiting for the right time and other conditions</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="3">
+                <state-types:StatusName>TRANSFERING</state-types:StatusName>
+                <state-types:Desc>job is transferring to the choisen resource</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="5">
+            <state-types:SubstateName>PAUSED</state-types:SubstateName>
+            <state-types:Code>5</state-types:Code>
+            <state-types:Desc>job is paused</state-types:Desc>
+        </state-types:Substate>
+    </state-types:GlobalState>
+    <state-types:GlobalState stId="2">
+        <state-types:StateName>RUNNING</state-types:StateName>
+        <state-types:Code>2</state-types:Code>
+        <state-types:Desc>job is working</state-types:Desc>
+        <state-types:Substate substId="1">
+            <state-types:SubstateName>STAGE-IN</state-types:SubstateName>
+            <state-types:Code>1</state-types:Code>
+            <state-types:Desc>Move files for the run if it needs</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>TIME-IN</state-types:StatusName>
+                <state-types:Desc>The job is in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>TIME-OUT</state-types:StatusName>
+                <state-types:Desc>The job is not in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="2">
+            <state-types:SubstateName>ON-RESOURCE</state-types:SubstateName>
+            <state-types:Code>2</state-types:Code>
+            <state-types:Desc>job is running on its chosen resource</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>TIME-IN</state-types:StatusName>
+                <state-types:Desc>The job is in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>TIME-OUT</state-types:StatusName>
+                <state-types:Desc>The job is not in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="3">
+            <state-types:SubstateName>MIGRATING</state-types:SubstateName>
+            <state-types:Code>3</state-types:Code>
+            <state-types:Desc>job is being migrated to a different resource</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>TIME-IN</state-types:StatusName>
+                <state-types:Desc>The job is in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>TIME-OUT</state-types:StatusName>
+                <state-types:Desc>The job is not in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="4">
+            <state-types:SubstateName>HELD</state-types:SubstateName>
+            <state-types:Code>4</state-types:Code>
+            <state-types:Desc>job is being held by the user</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>TIME-IN</state-types:StatusName>
+                <state-types:Desc>The job is in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>TIME-OUT</state-types:StatusName>
+                <state-types:Desc>The job is not in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="5">
+            <state-types:SubstateName>STAGE-OUT</state-types:SubstateName>
+            <state-types:Code>5</state-types:Code>
+            <state-types:Desc>Move resulted files for the run if it needs</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>TIME-IN</state-types:StatusName>
+                <state-types:Desc>The job is in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>TIME-OUT</state-types:StatusName>
+                <state-types:Desc>The job is not in its time window</state-types:Desc>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+    </state-types:GlobalState>
+    <state-types:GlobalState stId="3">
+        <state-types:StateName>FINISHED</state-types:StateName>
+        <state-types:Code>3</state-types:Code>
+        <state-types:Desc>job is finished</state-types:Desc>
+        <state-types:Substate substId="1">
+            <state-types:SubstateName>COMPLETED</state-types:SubstateName>
+            <state-types:Code>1</state-types:Code>
+            <state-types:Desc>job is completed</state-types:Desc>
+            <state-types:SubStateStatuses stsId="1">
+                <state-types:StatusName>SUCCESS</state-types:StatusName>
+                <state-types:Desc>job is completed with success</state-types:Desc>
+                <state-types:ReturnCodeList osType="Unix" rclId="1">
+                    <state-types:ReturnCode cdId="1">
+                        <state-types:Code>0</state-types:Code>
+                        <state-types:Desc>job's status OS return code</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+                <state-types:ReturnCodeList osType="Windows" rclId="2">
+                    <state-types:ReturnCode cdId="2">
+                        <state-types:Code>0</state-types:Code>
+                        <state-types:Desc>job's status OS return code</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="2">
+                <state-types:StatusName>FAILED</state-types:StatusName>
+                <state-types:Desc>job is completed with a problem, therefore it is failed</state-types:Desc>
+                <state-types:ReturnCodeList osType="Unix" rclId="1">
+                    <state-types:ReturnCode cdId="1">
+                        <state-types:Code>1</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                    <state-types:ReturnCode cdId="2">
+                        <state-types:Code>2</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                    <state-types:ReturnCode cdId="3">
+                        <state-types:Code>3</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+                <state-types:ReturnCodeList osType="Windows" rclId="2">
+                    <state-types:ReturnCode cdId="1">
+                        <state-types:Code>1</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                    <state-types:ReturnCode cdId="2">
+                        <state-types:Code>2</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                    <state-types:ReturnCode cdId="3">
+                        <state-types:Code>3</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+            </state-types:SubStateStatuses>
+            <state-types:SubStateStatuses stsId="3">
+                <state-types:StatusName>WARNING</state-types:StatusName>
+                <state-types:Desc>job is completed with a number of warnings</state-types:Desc>
+                <state-types:ReturnCodeList osType="Unix" rclId="1">
+                    <state-types:ReturnCode cdId="1">
+                        <state-types:Code>4</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+                <state-types:ReturnCodeList osType="Windows" rclId="2">
+                    <state-types:ReturnCode cdId="2">
+                        <state-types:Code>4</state-types:Code>
+                        <state-types:Desc>state-types:Desc</state-types:Desc>
+                    </state-types:ReturnCode>
+                </state-types:ReturnCodeList>
+            </state-types:SubStateStatuses>
+        </state-types:Substate>
+        <state-types:Substate substId="2">
+            <state-types:SubstateName>SKIPPED</state-types:SubstateName>
+            <state-types:Code>1</state-types:Code>
+            <state-types:Desc>job is skipped</state-types:Desc>
+        </state-types:Substate>
+        <state-types:Substate substId="3">
+            <state-types:SubstateName>STOPPED</state-types:SubstateName>
+            <state-types:Code>1</state-types:Code>
+            <state-types:Desc>job is stopped</state-types:Desc>
+        </state-types:Substate>
+    </state-types:GlobalState>
+    <state-types:GlobalState stId="4">
+        <state-types:StateName>FAILED</state-types:StateName>
+        <state-types:Code>4</state-types:Code>
+        <state-types:Desc>job is failed because of a system error or failure event</state-types:Desc>
+    </state-types:GlobalState>
+    <state-types:GlobalState stId="5">
+        <state-types:StateName>CANCELLED</state-types:StateName>
+        <state-types:Code>5</state-types:Code>
+        <state-types:Desc>job is cancelled because of a terminate activity request</state-types:Desc>
+    </state-types:GlobalState>
+</state-types:GlobalStateDefinition>

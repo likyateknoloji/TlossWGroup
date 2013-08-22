@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lstn:fileListener xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_listener_types tlosSWSJFileListener_v_1_0.xsd">
+	<lstn:fileNameType>fullText</lstn:fileNameType>
+	<lstn:pollingProperties>
+		<lstn:triggerFile>lstn:triggerFile</lstn:triggerFile>
+		<lstn:triggerFileDirectory>lstn:triggerFileDirectory</lstn:triggerFileDirectory>
+		<lstn:pollingType>create</lstn:pollingType>
+		<lstn:pollingFrequency>0</lstn:pollingFrequency>
+	</lstn:pollingProperties>
+	<lstn:readAndListFileProperties>
+		<lstn:recursive>true</lstn:recursive>
+		<lstn:includeFiles>lstn:includeFiles</lstn:includeFiles>
+		<lstn:includeWildcard>lstn:includeWildcard</lstn:includeWildcard>
+		<lstn:excludeFiles>lstn:excludeFiles</lstn:excludeFiles>
+		<lstn:excludeWildcard>lstn:excludeWildcard</lstn:excludeWildcard>
+	</lstn:readAndListFileProperties>
+	<lstn:repetationNumber>1</lstn:repetationNumber>
+</lstn:fileListener>

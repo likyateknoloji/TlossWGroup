@@ -1,0 +1,131 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<usr:user-infos xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:usr="http://www.likyateknoloji.com/XML_user_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_user_types ../xsds/tlosSWUser_v_1_0.xsd">
+    <usr:userList>
+        <usr:person id="1">
+            <com:name>admin</com:name>
+            <com:surname>admin</com:surname>
+            <com:TelList>
+                <com:tel>9999999999</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>tlos@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>admin</com:userName>
+            <com:userPassword>admin</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="3">
+            <com:name>hakan</com:name>
+            <com:surname>saribiyik</com:surname>
+            <com:TelList>
+                <com:tel>9999999999</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>hakan.saribiyik@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>hakan</com:userName>
+            <com:userPassword>admin</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="4">
+            <com:name>Murat</com:name>
+            <com:surname>Kahraman</com:surname>
+            <com:TelList>
+                <com:tel>5414265310</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>murat.kahraman@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>murat</com:userName>
+            <com:userPassword>murat</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="5">
+            <com:name>Kursad</com:name>
+            <com:surname>Tas</com:surname>
+            <com:TelList>
+                <com:tel>2164718155</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>kursat.tas@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>kursat</com:userName>
+            <com:userPassword>kursat</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="6">
+            <com:name>Nurkan</com:name>
+            <com:surname>Kurt</com:surname>
+            <com:TelList>
+                <com:tel>2164718155</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>nurkan.kurt@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>nurkan</com:userName>
+            <com:userPassword>nurkan</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="8">
+            <com:name>Ayhan</com:name>
+            <com:surname>Demirci</com:surname>
+            <com:TelList>
+                <com:tel>5422420033</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>ayhan.demirci@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>ayhan</com:userName>
+            <com:userPassword>ayhan</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="9">
+            <com:name>Ender</com:name>
+            <com:surname>Oztas</com:surname>
+            <com:TelList>
+                <com:tel>5332080800</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>ender.oztas@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>SUPERUSER</com:role>
+            <com:userName>ender</com:userName>
+            <com:userPassword>ender</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="10">
+            <com:name>Merve</com:name>
+            <com:surname>Ozbey</com:surname>
+            <com:TelList>
+                <com:tel>5492420210</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>merve.ozbey@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>merve</com:userName>
+            <com:userPassword>merve</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+        <usr:person id="13">
+            <com:name>Serkan</com:name>
+            <com:surname>Tas</com:surname>
+            <com:TelList>
+                <com:tel>5422420092</com:tel>
+            </com:TelList>
+            <com:EmailList>
+                <com:email>serkan.tas@likyateknoloji.com</com:email>
+            </com:EmailList>
+            <com:role>ADMIN</com:role>
+            <com:userName>serkan</com:userName>
+            <com:userPassword>serkan</com:userPassword>
+            <com:transformToLocalTime>false</com:transformToLocalTime>
+        </usr:person>
+    </usr:userList>
+</usr:user-infos>

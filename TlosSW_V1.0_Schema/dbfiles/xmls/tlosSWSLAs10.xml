@@ -1,0 +1,99 @@
+<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
+<sla:ServiceLevelAgreement
+	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SLA_types ../xsds/tlosSWSLA_v_1_0.xsd http://www.likyateknoloji.com/XML_common_types ../xsds/tlosSWOrtak_v_1_0.xsd">
+	<sla:SLA ID="1">
+		<sla:Organization>Yok</sla:Organization>
+		<sla:Name>Genel SLA</sla:Name>
+		<sla:Desc>Joblarin her birisinin dagitilmasi sirasinda uyulacak genel
+			SLA</sla:Desc>
+		<sla:CreationDate>2011-05-30T09:30:10+03:00</sla:CreationDate>
+		<sla:StartDate>2011-05-30T09:30:10.000+03:00</sla:StartDate>
+		<sla:EndDate>2013-05-30T09:30:10.000+03:00</sla:EndDate>
+		<sla:SInterval>
+			<sla:startTime>01:00:00.000+03:00</sla:startTime>
+			<sla:stopTime>22:30:00.000+03:00</sla:stopTime>
+		</sla:SInterval>
+		<sla:RInterval>
+			<sla:startTime>11:00:00.000+03:00</sla:startTime>
+			<sla:stopTime>12:30:00.000+03:00</sla:stopTime>
+		</sla:RInterval>
+		<sla:Priority>1</sla:Priority>
+		<sla:ResourcePool />
+		<sla:ResourceReq>
+			<sla:Hardware>
+				<sla:mem sla:birim="G" sla:forWhat="free" sla:condition="gt">2
+				</sla:mem>
+				<sla:cpu sla:birim="%" sla:timein="1" sla:condition="lt">80
+				</sla:cpu>
+				<sla:disk sla:birim="G" sla:forWhat="free" sla:condition="gt">2
+				</sla:disk>
+			</sla:Hardware>
+            <sla:Software>
+                <sla:Program licenseID="1">Tlos SW</sla:Program>
+                <sla:Program licenseID="2">SAS</sla:Program>
+            </sla:Software>
+		</sla:ResourceReq>
+		<sla:calendarId>5</sla:calendarId>
+		<sla:QueueFrame>
+			<sla:MaxTimeInQueue sla:birim="Min">100
+			</sla:MaxTimeInQueue>
+		</sla:QueueFrame>
+		<sla:ResolveIncident>
+			<sla:MaxTimeToResolve sla:birim="Min">30
+			</sla:MaxTimeToResolve>
+		</sla:ResolveIncident>
+		<sla:JobsInStatus>
+			<sla:NumberOfJobs sla:state="RUNNING">10</sla:NumberOfJobs>
+		</sla:JobsInStatus>
+		<com:userId>1</com:userId>
+	</sla:SLA>
+	<sla:SLA ID="2">
+		<sla:Organization>XXX</sla:Organization>
+		<sla:Name>Gune ozel SLA</sla:Name>
+		<sla:Desc>Istenen Kaynak(lar) belirli gunlerde kullanilma(ma)li
+		</sla:Desc>
+		<sla:CreationDate>2011-05-30T09:30:10+03:00</sla:CreationDate>
+		<sla:StartDate>2011-05-30T09:30:10.000+03:00</sla:StartDate>
+		<sla:EndDate>2012-05-30T09:30:10.000+03:00</sla:EndDate>
+		<sla:SInterval>
+			<sla:startTime>01:00:00.000+03:00</sla:startTime>
+			<sla:stopTime>22:30:00.000+03:00</sla:stopTime>
+		</sla:SInterval>
+		<sla:RInterval>
+			<sla:startTime>11:00:00.000+03:00</sla:startTime>
+			<sla:stopTime>12:30:00.000+03:00</sla:stopTime>
+		</sla:RInterval>
+		<sla:Priority>1</sla:Priority>
+        <sla:ResourcePool>
+            <sla:Resource order="1">laptop-hakan</sla:Resource>
+        </sla:ResourcePool>
+		<sla:ResourceReq>
+			<sla:Hardware>
+				<sla:mem sla:birim="M" sla:forWhat="free" sla:condition="gt">2048
+				</sla:mem>
+				<sla:cpu sla:birim="%" sla:timein="1" sla:condition="lt">80
+				</sla:cpu>
+				<sla:disk sla:birim="K" sla:forWhat="free" sla:condition="gt">2097152
+				</sla:disk>
+			</sla:Hardware>
+            <sla:Software>
+                <sla:Program licenseID="2">SAS</sla:Program>
+            </sla:Software>
+		</sla:ResourceReq>
+		<sla:calendarId>5</sla:calendarId>
+		<sla:QueueFrame>
+			<sla:MaxTimeInQueue sla:birim="Min">100
+			</sla:MaxTimeInQueue>
+		</sla:QueueFrame>
+		<sla:ResolveIncident>
+			<sla:MaxTimeToResolve sla:birim="Min">30
+			</sla:MaxTimeToResolve>
+		</sla:ResolveIncident>
+		<sla:JobsInStatus>
+			<sla:NumberOfJobs sla:state="RUNNING">3</sla:NumberOfJobs>
+		</sla:JobsInStatus>
+		<com:userId>1</com:userId>
+	</sla:SLA>
+</sla:ServiceLevelAgreement>

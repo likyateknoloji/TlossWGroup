@@ -1,0 +1,12 @@
+<nrp:NrpeData xmlns:nrp="http://www.likyateknoloji.com/XML_nrpe_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_nrpe_types ../xsds/tlosSWNrpe_v_1_0.xsd">
+	<nrpeCall xmlns="http://www.likyateknoloji.com/XML_nrpe_types"
+		entry-name="WINSRVSTD2012" port="5666" os="Windows">
+		<message time="2013-06-17T09:32:35+0300">
+			<response command="alias_cpu" value="OK CPU Load ok.|'15m'=5%;80;90; '5m'=17%;80;90; '1m'=18%;80;90; "/>
+			<response command="alias_disk" value="WARNING: C:\: 54.2G, D:\: Total: 108G - Used: 92.4G (85%) - Free: 15.8G (15%) &lt; warning|'C:\ %'=31%;20;10; 'C:\'=54.18G;15.60;7.80;0;78.02; 'D:\ %'=15%;20;10; 'D:\'=92.42G;21.63;10.81;0;108.18; "/>
+			<response command="alias_mem" value="OK: physical memory: 2.66G|'physical memory %'=33%;80;90; 'physical memory'=2.65G;6.39;7.19;0;7.99; "/>
+		</message>
+	</nrpeCall>
+</nrp:NrpeData>
