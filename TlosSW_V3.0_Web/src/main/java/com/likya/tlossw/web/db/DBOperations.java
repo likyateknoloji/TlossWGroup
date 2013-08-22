@@ -2072,6 +2072,21 @@ public class DBOperations implements Serializable {
 
 		return nrpeDataInfoTypeClient;
 	}
+	//XSLLoadException
+	public String getDbDoc(String xqueryMethod) {
+
+		String xQueryStr = localFunctionConstructorNS("moduleXslOperations.xquery", xqueryMethod, CommonConstantDefinitions.decNsFo + CommonConstantDefinitions.decNsXslfo, CommonConstantDefinitions.hsNsUrl);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		
+		for (Object currentObject : objectList) {
+			String tlosData = currentObject.toString();
+			
+			return tlosData;
+		}
+		
+		return null;
+	}
 
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
