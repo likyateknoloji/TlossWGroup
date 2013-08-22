@@ -47,7 +47,20 @@
     <servlet-mapping>
          <servlet-name>graphViewServlet</servlet-name>
          <url-pattern>/graphView/*</url-pattern>
-    </servlet-mapping>  
+    </servlet-mapping>
+    
+    <!-- viewFileServlet -->
+    <servlet>
+        <servlet-name>viewFileServlet</servlet-name>
+        <servlet-class>com.likya.tlossw.web.appmng.ViewFileServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <!-- viewFileServlet Mappings -->
+    <servlet-mapping>
+         <servlet-name>viewFileServlet</servlet-name>
+         <url-pattern>/viewFile/*</url-pattern>
+    </servlet-mapping>
     
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
