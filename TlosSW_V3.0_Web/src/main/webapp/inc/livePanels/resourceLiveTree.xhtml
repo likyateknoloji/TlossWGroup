@@ -36,11 +36,11 @@
 			</p:treeNode>
 
 			<p:treeNode type="tlosagent" expandedIcon="ui-icon-print" collapsedIcon="ui-icon-print">
-				<h:outputText value="#{node.labelText}" id="agentName" style="#{node.available ? 'color: green;' : 'color: gray;'}"/>
+				<h:outputText value="#{node.labelText}" id="agentName" style="#{node.available ? 'color: green;background-color:lightgreen' : 'color: gray;'}"/>
 			</p:treeNode>
 
 			<p:treeNode type="monitoragent" expandedIcon="ui-icon-image" collapsedIcon="ui-icon-image">
-				<h:outputText value="#{node.labelText}" id="monitoringName" style="#{node.monitorAgentInfoTypeClient.nrpeAvailable ? 'color: green;' : 'color: gray;'}"/>
+				<h:outputText value="#{node.labelText}" id="monitoringName" style="#{node.monitorAgentInfoTypeClient.nrpeAvailable ? 'color: green;background-color:lightgreen' : 'color: gray;'}"/>
 			</p:treeNode>
 
 			<p:treeNode type="default">
