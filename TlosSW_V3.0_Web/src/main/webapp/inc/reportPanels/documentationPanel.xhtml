@@ -1,0 +1,30 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title" value="Tlos SW Workload Automation Software v1.0 - User Management Page" />
+
+	<ui:define name="center">
+
+		<h:form id="docForm" prependId="false">
+
+			<p:growl id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:panel header="#{msgs['tlos.reports.tree.systemReport']}">
+
+				<h:outputLink value="/tlossw-webapp/viewFile?file=xsl.html" target="_blank">
+				    #{msgs['tlos.reports.report.html']}
+				</h:outputLink> 
+				
+				<h:commandLink value="#{msgs['tlos.reports.report.html']}" target="_self" actionListener="#{documentReportMBean.openHtmlAction}"/>
+
+			</p:panel>
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>
