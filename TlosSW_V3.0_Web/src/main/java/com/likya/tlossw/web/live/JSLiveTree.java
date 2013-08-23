@@ -64,19 +64,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			getSessionMediator().getWebAppUser().setViewRoleId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
 		}
 
-		// tlosSpaceWideNode = new TlosSpaceWideNode();
-		// tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(tlosSpaceWideNode);
-		// //tlosSpaceWideNode.getGunlukIslerNode().getInstanceNodes().get(key);
-		// TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("tlosSWData10.xml");
-		// System.out.println("Tree has been loaded !!");
-		//
-		// System.out.println("Job Tree olusturuluyor ..");
-		//
 		constructJSTree();
-		//
-		// // addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// // "Job Tree olusturuldu !", null);
-		// System.out.println("Job Tree olusturuldu !");
 
 	}
 
@@ -89,18 +77,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		DefaultTreeNode calisanIsler = new DefaultTreeNode(ConstantDefinitions.TREE_CALISANISLER, resolveMessage("likya.agac.calisan.isler"), root);
 
 		calisanIsler.getChildren().add(dummyNode);
-
-		// TreeNode scenarioRootNode = new DefaultTreeNode("scenario", resolveMessage("tlos.workspace.tree.scenario.root"), root);
-		// scenarioRootNode.setExpanded(true);
-		// setSelectedTreeNode(scenarioRootNode);
-		//
-		// if (tlosProcessData.getJobList() != null) {
-		// for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
-		// addJobNode(jobProperties, selectedTreeNode);
-		// }
-		// }
-
-		// constructTree(tlosProcessData.getScenarioArray());
+		calisanIsler.setExpanded(false);
 
 		constructInstanceNodes();
 
@@ -140,35 +117,6 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		TreeNode jobNode = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobProperties.getBaseJobInfos().getJsName() + " | " + jobProperties.getID(), selectedNode);
 	}
 
-	// public void constructTree(Scenario[] scenario) {
-	// for (Scenario children : scenario) {
-	// TreeNode scenarioNode = addScenario(children);
-	//
-	// if (children.getScenarioArray().length > 0) {
-	// selectedTreeNode = scenarioNode;
-	// constructTree(children.getScenarioArray());
-	// }
-	// }
-	//
-	// selectedTreeNode = selectedTreeNode.getParent();
-	// }
-	//
-	// public TreeNode addScenario(Scenario scenario) {
-	// TreeNode scenarioNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenario.getBaseScenarioInfos().getJsName() + " | " + scenario.getID(), selectedTreeNode);
-	//
-	// scenarioNode.setExpanded(true);
-	//
-	// if (scenario.getJobList() != null) {
-	// for (JobProperties jobProperties : scenario.getJobList().getJobPropertiesArray()) {
-	// addJobNode(jobProperties, scenarioNode);
-	// }
-	// } else {
-	// scenarioNode.getChildren().add(dummyNode);
-	// }
-	//
-	// return scenarioNode;
-	// }
-
 	public void treeAction(AjaxBehaviorEvent event) {
 		// log.info("LiveNavigationTree2 : treeAction  Begin :" + Utils.getCurrentTimeWithMilliseconds());
 		renderLiveTree();
@@ -177,7 +125,6 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public void renderLiveTree() {
 
-		// log.debug("LiveNavigationTree2 : renderLiveTree  Begin :" + Utils.getCurrentTimeWithMilliseconds());
 		Object liveTree = null;
 
 		if (liveTreeCache != null && tlosSpaceWideNode != null) {
@@ -224,6 +171,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		// Gunluk Isler expanded
 		if (calisanIslerNode.isExpanded()) {
 
+			calisanIslerNode.getChildren().remove(dummyNode);
 			// Bunlar instance listesi
 			int size = calisanIslerNode.getChildCount();
 
@@ -246,6 +194,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 						// Her bir senaryoyu aliyoruz
 						TreeNode tmpScenario = tmpInstanceFolder.getChildren().get(j);
+						tmpScenario.getChildren().remove(dummyNode);
+						
 						ScenarioNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
 
 						if (expendedNode != null) {
@@ -265,6 +215,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		ScenarioNode myScenarioNode = null;
 
 		if (scenarioNode.isExpanded()) {
+			scenarioNode.getChildren().remove(dummyNode);
+//			myScenarioNode = new ScenarioNode((ScenarioNode) scenarioNode.getData());
+
 			myScenarioNode = new ScenarioNode();
 			myScenarioNode.setSpcInfoTypeClient(((ScenarioNode) scenarioNode.getData()).getSpcInfoTypeClient());
 
@@ -277,6 +230,14 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				if (expendedNode != null) {
 					myScenarioNode.getScenarioNodes().add(expendedNode);
 				}
+				
+//				if (tmpScenario.getType().equalsIgnoreCase("job")) {
+//					myScenarioNode.getJobNodes().add( (JobNode) tmpScenario.getData() );
+//				}
+//				if (tmpScenario.getType().equalsIgnoreCase("scenario")) {
+//					myScenarioNode.getScenarioNodes().add( (ScenarioNode) tmpScenario.getData() );
+//				}
+
 			}
 		}
 
@@ -297,6 +258,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		if (calisanIsler.getChildren().size() == 0) {
 			calisanIsler.getChildren().add(dummyNode);
+			calisanIsler.setExpanded(false);
 		} else {
 			Iterator<TreeNode> gunlukIslerIterator = calisanIsler.getChildren().iterator();
 
@@ -309,7 +271,6 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 					instanceTreeNode.setExpanded(true);
 				}
 			}
-			// System.out.println("prepareRenderLiveTree . Gunluk isler hascode-->" + gunlukIsler.hashCode());
 		}
 		return calisanIsler;
 	}
@@ -434,13 +395,44 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public void onNodeExpand(NodeExpandEvent event) {
 		event.getTreeNode().setExpanded(true);
+//		ScenarioNode scenarioNode = null;
+//		if (event.getTreeNode().getData() instanceof ScenarioNode) {
+//				scenarioNode = (ScenarioNode) event.getTreeNode().getData(); 
+//				selectedSpcId = scenarioNode.getSpcInfoTypeClient().getSpcId();
+//				System.out.println(scenarioNode.getName());
+//				System.out.println(scenarioNode.getId());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getSpcId());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getJsName());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getJsId());
+//		} else if (event.getTreeNode().getData() instanceof InstanceNode) {
+//			InstanceNode instanceNode = null;
+//			instanceNode = (InstanceNode) event.getTreeNode().getData(); 
+//			String instanceId = instanceNode.getInstanceId().toString();
+////		    addMessage("jobTree", FacesMessage.SEVERITY_INFO,
+////				instanceId + " expanded", null);
+//		}
+//		else {
+//			selectedSpcId = null;
+//		}
 		treeAction(event);
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// event.getTreeNode().toString() + " expanded", null);
+
 	}
 
 	public void onNodeCollapse(NodeCollapseEvent event) {
 		event.getTreeNode().setExpanded(false);
+//		ScenarioNode scenarioNode = null;
+//		if (event.getTreeNode().getData() instanceof ScenarioNode) {
+//				scenarioNode = (ScenarioNode) event.getTreeNode().getData(); 
+//				selectedSpcId = scenarioNode.getSpcInfoTypeClient().getSpcId();
+//				System.out.println(scenarioNode.getName());
+//				System.out.println(scenarioNode.getId());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getSpcId());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getJsName());
+//				System.out.println(scenarioNode.getSpcInfoTypeClient().getJsId());
+//		}
+//		else {
+//			selectedSpcId = null;
+//		}
 		treeAction(event);
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// event.getTreeNode().toString() + " collapsed", null);
