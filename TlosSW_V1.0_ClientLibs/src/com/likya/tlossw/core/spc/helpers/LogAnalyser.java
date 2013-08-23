@@ -75,7 +75,7 @@ public class LogAnalyser {
 		if(logAction.getThen() != null || logAction.getElse() != null) {
 			
 			for(Object text : limitedArrayList.toArray()) {
-				defaultLogContent += text.toString();
+				defaultLogContent += text.toString() + "\n";
 			}
 			
 			job.setChanged();
