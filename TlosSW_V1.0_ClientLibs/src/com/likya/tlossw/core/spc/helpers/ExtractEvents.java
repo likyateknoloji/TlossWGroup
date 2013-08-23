@@ -30,20 +30,13 @@ public class ExtractEvents {
 
 			String [] distList = {};
 			
-			String content = "";
-			
 			if(logEvent.getEmailList() != null && logEvent.getEmailList().getEmailArray() != null) {
 				distList = logEvent.getEmailList().getEmailArray();
 			}
 
-			if(logEvent.getEmailList() != null && logEvent.getContent() != null) {
-				content = logEvent.getContent().getStringValue();
-			}
-
-			
 			switch (eventCode) {
 			case CodeType.INT_EMAIL:
-				job.addObserver(new EmailSenderEvent(globalRegistry, distList, content));
+				job.addObserver(new EmailSenderEvent(globalRegistry, distList));
 				break;
 			case CodeType.INT_WAIT_ME:
 				job.addObserver(new JobStartEvent(globalRegistry));
