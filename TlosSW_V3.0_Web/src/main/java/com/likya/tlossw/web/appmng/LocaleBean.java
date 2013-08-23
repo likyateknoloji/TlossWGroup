@@ -8,8 +8,9 @@ import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 /**
@@ -94,12 +95,18 @@ public class LocaleBean implements Serializable {
 		FacesContext.getCurrentInstance().getViewRoot().setLocale(toApply);
 	}
 
-	public void localeChanged(ValueChangeEvent event) {
-		if (event.getNewValue() != null) {
-			applyLocale(new Locale(event.getNewValue().toString()));
+//	public void localeChanged(ValueChangeEvent event) {
+//		if (event.getNewValue() != null) {
+//			applyLocale(new Locale(event.getNewValue().toString()));
+//		}
+//	}
+	public void localeChanged(AjaxBehaviorEvent event) {
+		if (event.getComponent().getAttributes() != null) {
+			String currentLanguage = (String) ((UIOutput)event.getSource()).getValue();
+			applyLocale(new Locale(currentLanguage));
 		}
 	}
-
+	
 	public static String getCurLanguage() {
 		return curLanguage;
 	}
