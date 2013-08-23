@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="#{localeBean.currentLanguage}"
+    xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -13,25 +14,25 @@
 <h:body>
 
 
-
-	<p:panel id="languagePanel" header="Dil Seçimi" style="width:50%">
+<h:form id="loginForm">
+	<p:panel id="languagePanel" header="#{msgs['tlos.login.language']}" style="width:50%">
 
 		<h:panelGrid id="languageGrid" columns="1" width="100%" styleClass="languageEntryInputTable">
 
-			<h:form id="loginForm1">
-
-				<p:selectOneMenu id="currentLang" styleClass="themeSelectOneMenu" value="#{localeBean.currentLanguage}" valueChangeListener="#{localeBean.localeChanged}" partialSubmit="true">
+			
+				<p:selectOneMenu id="currentLang" styleClass="themeSelectOneMenu" value="#{localeBean.currentLanguage}">
 					<f:selectItems value="#{localeBean.availableLocales}" />
-				</p:selectOneMenu>
-			</h:form>
 
+					<p:ajax listener="#{localeBean.localeChanged}" event="change" update=":loginForm:languagePanel, :loginEntryForm:loginInfoInputPanel"/>
+				</p:selectOneMenu>
+			
 		</h:panelGrid>
-	
 	</p:panel>
-	
+
+</h:form>
 	<h:form id="loginEntryForm">
 		<p:growl id="messages" showDetail="true" autoUpdate="true" />
-		<p:panel id="loginInfoInputPanel" header="Kullanıcı Bilgileri" style="width:50%">
+		<p:panel id="loginInfoInputPanel" header="#{msgs['tlos.login.userInfo']}" style="width:50%">
 
 			<h:panelGrid id="inputGrid" columns="1" width="100%" styleClass="loginEntryInputTable">
 
@@ -50,7 +51,7 @@
 					</h:inputSecret>
 				</h:panelGrid>
 
-				<p:commandButton value="Giriş" id="loginButton" action="#{loginBean.login}" update="messages"/>
+				<p:commandButton value="#{msgs['tlos.login.loginButton']}" id="loginButton" action="#{loginBean.login}" update="messages"/>
 
 			</h:panelGrid>
 			
