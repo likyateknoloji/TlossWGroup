@@ -9,7 +9,7 @@
 
 		<p:menubar>
 			<p:submenu label=" " icon="ui-icon-home">
-				<p:menuitem value="Home" url="/" icon="ui-icon-home" />
+				<p:menuitem value="#{msgs['tlos.menu.home']}" url="/" icon="ui-icon-home" />
 			</p:submenu>
 
 			<!-- p:submenu label="File" icon="ui-icon-document">
@@ -22,7 +22,7 @@
 				<p:menuitem value="Quit" url="#" />
 			</p:submenu-->
 
-			<p:submenu label="Definitions" icon="ui-icon-document">
+			<p:submenu label="#{msgs['tlos.menu.definitions']}" icon="ui-icon-document">
 				<p:menuitem value="Global Jobs &amp; Scenarios" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
 				<p:menuitem value="My Jobs &amp; Scenarios" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
 				<p:menuitem value="Calendars" url="/inc/definitionPanels/calendarSearchPanel.jsf" icon="ui-icon-document" />
@@ -35,7 +35,7 @@
 				</p:submenu>
 			</p:submenu>
 
-			<p:submenu label="Planning" icon="ui-icon-document">
+			<p:submenu label="#{msgs['tlos.menu.planning']}" icon="ui-icon-document">
 				<p:menuitem value="Available Resources" url="#" icon="ui-icon-document" />
 				<p:menuitem value="SLA Time Check" url="#" icon="ui-icon-document" />
 				<p:menuitem value="SLA Hardware Check" url="#" icon="ui-icon-document" />
