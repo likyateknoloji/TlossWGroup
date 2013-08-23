@@ -23,7 +23,7 @@ public class LogAnalyser {
 	private JobProperties jobProperties;
 	private LogAnalysis logAnalysis;
 	
-	private String defaultLogContent = "No default log content !";
+	private String defaultLogContent = "";
 	
 	private LimitedArrayList<Object> limitedArrayList = new LimitedArrayList<Object>();
 	private int logLineNumBack = 0;
@@ -97,7 +97,7 @@ public class LogAnalyser {
 	private void parseEvent(Event myEvent) {
 
 		if (myEvent != null && myEvent.getContent() != null) {
-			defaultLogContent = "" + myEvent.getContent().getStringValue();
+			defaultLogContent = myEvent.getContent().getStringValue() + "\n";
 			if (myEvent.getContent().getLogLineNumBack() != null) {
 				logLineNumBack = myEvent.getContent().getLogLineNumBack().intValue();
 			}
