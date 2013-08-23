@@ -14,21 +14,17 @@ public class EmailSenderEvent extends TlosBaseEvent {
 	private String[] emailList;
 	private String content = "İçerik Girilmedi !";
 
-	public EmailSenderEvent(GlobalRegistry globalRegistry, String[] emailList, String content) {
+	public EmailSenderEvent(GlobalRegistry globalRegistry, String[] emailList) {
 		super(globalRegistry);
 		this.emailList = emailList;
-		if (content != null) {
-			this.content = content;
-
-		}
 	}
 
 	public void update(Observable obj, Object arg) {
 
 		ArrayList<String> distList = new ArrayList<String>(Arrays.asList(emailList));
 		
-		if(arg.toString() != null) {
-			content += "\n" + arg.toString();
+		if(arg != null || !"".equals(arg)) {
+			content = arg.toString();
 		}
 
 		SimpleMail simpleMail = new SimpleMail("Log Analizi", content, distList);
