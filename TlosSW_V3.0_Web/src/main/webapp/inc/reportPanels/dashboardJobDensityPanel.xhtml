@@ -31,7 +31,7 @@
 					<p:commandButton id="densityStackedButton" value="#{msgs['tlos.button.chartStacked']}" update="density" ajax="true"
 						actionListener="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
 						
-                    <h:outputLabel for="stepForDensity" value="#{msgs['tlos.button.chartDensityStep']}" />  
+                    <h:outputLabel id="stepForDensity" value="#{msgs['tlos.button.chartDensityStep']}" />  
                     <p:inputText id="stepForDensityInput"   
                        value="#{jobsDensityGraphicsMBean.stepForDensity}" required="true" label="#{msgs['tlos.button.chartDensityStep']}">  
                        <f:validateLength minimum="1" maximum="2"/>  
