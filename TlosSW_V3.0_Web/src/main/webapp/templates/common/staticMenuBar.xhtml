@@ -23,8 +23,7 @@
 			</p:submenu-->
 
 			<p:submenu label="#{msgs['tlos.menu.definitions']}" icon="ui-icon-document">
-				<p:menuitem value="Global Jobs &amp; Scenarios" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
-				<p:menuitem value="My Jobs &amp; Scenarios" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
+				<p:menuitem value="Jobs" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
 				<p:menuitem value="Calendars" url="/inc/definitionPanels/calendarSearchPanel.jsf" icon="ui-icon-document" />
 				<p:menuitem value="Alarms" url="/inc/definitionPanels/alarmSearchPanel.jsf" icon="ui-icon-document" />
 				<p:menuitem value="Agents" url="/inc/definitionPanels/agentSearchPanel.jsf" icon="ui-icon-document" />
@@ -37,35 +36,61 @@
 
 			<p:submenu label="#{msgs['tlos.menu.planning']}" icon="ui-icon-document">
 				<p:menuitem value="Available Resources" url="#" icon="ui-icon-document" />
-				<p:menuitem value="SLA Time Check" url="#" icon="ui-icon-document" />
-				<p:menuitem value="SLA Hardware Check" url="#" icon="ui-icon-document" />
-				<p:menuitem value="SLA Program Provision Check" url="#" icon="ui-icon-document" />
+				<p:submenu label="SLA" icon="ui-icon-document">
+				  <p:menuitem value="Timing" url="#" icon="ui-icon-document" />
+				  <p:menuitem value="Hardware" url="#" icon="ui-icon-document" />
+				  <p:menuitem value="Program Provision" url="#" icon="ui-icon-document" />
+				</p:submenu>
 				<p:menuitem value="Find Resources" url="#" icon="ui-icon-document" />
 			</p:submenu>
 
 			<p:submenu label="WorkSpace" icon="ui-icon-document">
-				<p:menuitem value="Global Jobs &amp; Scenarios" url="#{staticMenuBean.globalLiveJsUrl}" icon="ui-icon-document" />
-				<p:menuitem value="My Jobs &amp; Scenarios" url="#{staticMenuBean.myLiveJsUrl}" icon="ui-icon-document" />
-				<p:menuitem value="Resources" url="/inc/livePanels/liveResources.jsf" icon="ui-icon-document" />
+			    <p:menuitem value="Jobs" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="Reporting" icon="ui-icon-document">
-				<p:menuitem value="Jobs &amp; Scenarios" url="/inc/reportPanels/dashboardPanel.jsf" icon="ui-icon-document" />
+			<p:submenu label="Monitoring" icon="ui-icon-document">
+				<p:submenu label="Jobs" url="#" icon="ui-icon-document">
+				  <p:submenu label="Production" url="#" icon="ui-icon-document">
+					<p:menuitem value="Tree" url="#{staticMenuBean.globalLiveJsUrl}" icon="ui-icon-document" />
+					<p:menuitem value="DashBoards" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
+				  </p:submenu>
+				  <p:submenu label="Test" url="#" icon="ui-icon-document">
+					<p:menuitem value="Tree" url="#{staticMenuBean.myLiveJsUrl}" icon="ui-icon-document" />
+				  </p:submenu>
+				</p:submenu>
+				<p:menuitem value="Resources" url="/inc/livePanels/liveResources.jsf" icon="ui-icon-document" />
 				<p:menuitem value="Alarms" url="#" icon="ui-icon-document" />
-				<p:menuitem value="Documentation" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" />
+				<p:submenu label="Queues" url="#" icon="ui-icon-document">
+					<p:menuitem value="Info Queue" url="#" icon="ui-icon-document" />
+					<p:menuitem value="Job Queue" url="#" icon="ui-icon-document" />
+				</p:submenu>
+			</p:submenu>
+			
+			<p:submenu label="Reporting" icon="ui-icon-document">
+			  <p:submenu label="Jobs" url="#" icon="ui-icon-document">
+				<p:menuitem value="States" url="/inc/reportPanels/dashboardStatePanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="Densities" url="/inc/reportPanels/dashboardJobDensityPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="Durations" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="Execution Zones" url="/inc/reportPanels/dashboardZonesOfExecutionsPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="Distributions" url="/inc/reportPanels/dashboardJobDistributionPanel.xhtml" icon="ui-icon-document" />
+			  </p:submenu>
+			  <p:menuitem value="Documentation" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" />
 			</p:submenu>
 
 			<p:submenu label="Administration" icon="ui-icon-document">
 				<p:menuitem value="Users" url="/inc/administrationPanels/userSearchPanel.jsf" icon="ui-icon-document" />
 				<p:menuitem value="Permissions" url="/inc/administrationPanels/permissionsPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Performance" url="#" icon="ui-icon-document" />
+				<p:submenu label="Databases" icon="ui-icon-document">
+				  <p:menuitem value="Connection" url="/inc/administrationPanels/dbConnectionSearchPanel.jsf" icon="ui-icon-document" />
+				  <p:menuitem value="Access" url="/inc/administrationPanels/dbAccessSearchPanel.jsf" icon="ui-icon-document" />
+				</p:submenu>
+				<p:submenu label="Web Services" icon="ui-icon-document">
+				  <p:menuitem value="Analysis" url="/inc/administrationPanels/webServiceWizardPanel.jsf" icon="ui-icon-document" />
+				  <p:menuitem value="Access" url="/inc/administrationPanels/wsAccessSearchPanel.jsf" icon="ui-icon-document" />
+				</p:submenu>
+				<p:menuitem value="FTP Access" url="/inc/administrationPanels/ftpAccessSearchPanel.jsf" icon="ui-icon-document" />
 				<p:menuitem value="BackUps" url="#" icon="ui-icon-document" />
 				<p:menuitem value="Audits" url="#" icon="ui-icon-document" />
-				<p:menuitem value="DB Connections" url="/inc/administrationPanels/dbConnectionSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="DB Access" url="/inc/administrationPanels/dbAccessSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Web Service Analysis" url="/inc/administrationPanels/webServiceWizardPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Web Service Access" url="/inc/administrationPanels/wsAccessSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="FTP Access" url="/inc/administrationPanels/ftpAccessSearchPanel.jsf" icon="ui-icon-document" />
 			</p:submenu>
 
 			<p:submenu label="Preferences" icon="ui-icon-document">
