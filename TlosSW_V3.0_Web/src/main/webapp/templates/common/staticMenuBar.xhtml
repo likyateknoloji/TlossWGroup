@@ -23,107 +23,89 @@
 			</p:submenu-->
 
 			<p:submenu label="#{msgs['tlos.menu.definitions']}" icon="ui-icon-document">
-				<p:menuitem value="Jobs" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
-				<p:menuitem value="Calendars" url="/inc/definitionPanels/calendarSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Alarms" url="/inc/definitionPanels/alarmSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Agents" url="/inc/definitionPanels/agentSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Resources" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
-				<p:submenu label="Advanced D." url="#" icon="ui-icon-document">
-					<p:menuitem value="SLAs" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
-					<p:menuitem value="Program Provision" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.definitions.jobs']}" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.definitions.calendars']}" url="/inc/definitionPanels/calendarSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.definitions.alarms']}" url="/inc/definitionPanels/alarmSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.definitions.agents']}" url="/inc/definitionPanels/agentSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.definitions.resources']}" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
+				<p:submenu label="#{msgs['tlos.menu.definitions.advanced']}" url="#" icon="ui-icon-document">
+					<p:menuitem value="#{msgs['tlos.menu.definitions.advanced.sla']}" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
+					<p:menuitem value="#{msgs['tlos.menu.definitions.advanced.progprov']}" url="/inc/definitionPanels/resourceSearchPanel.jsf" icon="ui-icon-document" />
 				</p:submenu>
 			</p:submenu>
 
 			<p:submenu label="#{msgs['tlos.menu.planning']}" icon="ui-icon-document">
-				<p:menuitem value="Available Resources" url="#" icon="ui-icon-document" />
-				<p:submenu label="SLA" icon="ui-icon-document">
-				  <p:menuitem value="Timing" url="#" icon="ui-icon-document" />
-				  <p:menuitem value="Hardware" url="#" icon="ui-icon-document" />
-				  <p:menuitem value="Program Provision" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.planning.availableResources']}" url="#" icon="ui-icon-document" />
+				<p:submenu label="#{msgs['tlos.menu.planning.sla']}" icon="ui-icon-document">
+				  <p:menuitem value="#{msgs['tlos.menu.planning.sla.timing']}" url="#" icon="ui-icon-document" />
+				  <p:menuitem value="#{msgs['tlos.menu.planning.sla.hardware']}" url="#" icon="ui-icon-document" />
+				  <p:menuitem value="#{msgs['tlos.menu.planning.sla.progProv']}" url="#" icon="ui-icon-document" />
 				</p:submenu>
-				<p:menuitem value="Find Resources" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.planning.findResources']}" url="#" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="WorkSpace" icon="ui-icon-document">
-			    <p:menuitem value="Jobs" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.workspace']}" icon="ui-icon-document">
+			    <p:menuitem value="#{msgs['tlos.menu.workspace.jobs']}" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="Monitoring" icon="ui-icon-document">
-				<p:submenu label="Jobs" url="#" icon="ui-icon-document">
-				  <p:submenu label="Production" url="#" icon="ui-icon-document">
-					<p:menuitem value="Tree" url="#{staticMenuBean.globalLiveJsUrl}" icon="ui-icon-document" />
-					<p:menuitem value="DashBoards" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.monitoring']}" icon="ui-icon-document">
+				<p:submenu label="#{msgs['tlos.menu.monitoring.jobs']}" url="#" icon="ui-icon-document">
+				  <p:submenu label="#{msgs['tlos.menu.monitoring.jobs.production']}" url="#" icon="ui-icon-document">
+					<p:menuitem value="#{msgs['tlos.menu.monitoring.jobs.production.tree']}" url="#{staticMenuBean.globalLiveJsUrl}" icon="ui-icon-document" />
+					<p:menuitem value="#{msgs['tlos.menu.monitoring.jobs.production.dashboard']}" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
 				  </p:submenu>
-				  <p:submenu label="Test" url="#" icon="ui-icon-document">
-					<p:menuitem value="Tree" url="#{staticMenuBean.myLiveJsUrl}" icon="ui-icon-document" />
+				  <p:submenu label="#{msgs['tlos.menu.monitoring.jobs.test']}" url="#" icon="ui-icon-document">
+					<p:menuitem value="#{msgs['tlos.menu.monitoring.jobs.test.tree']}" url="#{staticMenuBean.myLiveJsUrl}" icon="ui-icon-document" />
 				  </p:submenu>
 				</p:submenu>
-				<p:menuitem value="Resources" url="/inc/livePanels/liveResources.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Alarms" url="#" icon="ui-icon-document" />
-				<p:submenu label="Queues" url="#" icon="ui-icon-document">
-					<p:menuitem value="Info Queue" url="#" icon="ui-icon-document" />
-					<p:menuitem value="Job Queue" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.monitoring.resources']}" url="/inc/livePanels/liveResources.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.monitoring.alarms']}" url="#" icon="ui-icon-document" />
+				<p:submenu label="#{msgs['tlos.menu.monitoring.queues']}" url="#" icon="ui-icon-document">
+					<p:menuitem value="#{msgs['tlos.menu.monitoring.infoQueue']}" url="#" icon="ui-icon-document" />
+					<p:menuitem value="#{msgs['tlos.menu.monitoring.jobQueue']}" url="#" icon="ui-icon-document" />
 				</p:submenu>
 			</p:submenu>
 			
-			<p:submenu label="Reporting" icon="ui-icon-document">
-			  <p:submenu label="Jobs" url="#" icon="ui-icon-document">
-				<p:menuitem value="States" url="/inc/reportPanels/dashboardStatePanel.xhtml" icon="ui-icon-document" />
-				<p:menuitem value="Densities" url="/inc/reportPanels/dashboardJobDensityPanel.xhtml" icon="ui-icon-document" />
-				<p:menuitem value="Durations" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
-				<p:menuitem value="Execution Zones" url="/inc/reportPanels/dashboardZonesOfExecutionsPanel.xhtml" icon="ui-icon-document" />
-				<p:menuitem value="Distributions" url="/inc/reportPanels/dashboardJobDistributionPanel.xhtml" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.reporting']}" icon="ui-icon-document">
+			  <p:submenu label="#{msgs['tlos.menu.reporting.jobs']}" url="#" icon="ui-icon-document">
+				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.states']}" url="/inc/reportPanels/dashboardStatePanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.densities']}" url="/inc/reportPanels/dashboardJobDensityPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.durations']}" url="/inc/reportPanels/dashboardPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.executionZones']}" url="/inc/reportPanels/dashboardZonesOfExecutionsPanel.xhtml" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.distributions']}" url="/inc/reportPanels/dashboardJobDistributionPanel.xhtml" icon="ui-icon-document" />
 			  </p:submenu>
-			  <p:menuitem value="Documentation" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" />
+			  <p:menuitem value="#{msgs['tlos.menu.reporting.documentation']}" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="Administration" icon="ui-icon-document">
-				<p:menuitem value="Users" url="/inc/administrationPanels/userSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="Permissions" url="/inc/administrationPanels/permissionsPanel.jsf" icon="ui-icon-document" />
-				<p:submenu label="Databases" icon="ui-icon-document">
-				  <p:menuitem value="Connection" url="/inc/administrationPanels/dbConnectionSearchPanel.jsf" icon="ui-icon-document" />
-				  <p:menuitem value="Access" url="/inc/administrationPanels/dbAccessSearchPanel.jsf" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.administration']}" icon="ui-icon-document">
+				<p:menuitem value="#{msgs['tlos.menu.administration.users']}" url="/inc/administrationPanels/userSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.administration.permissions']}" url="/inc/administrationPanels/permissionsPanel.jsf" icon="ui-icon-document" />
+				<p:submenu label="#{msgs['tlos.menu.administration.databases']}" icon="ui-icon-document">
+				  <p:menuitem value="#{msgs['tlos.menu.administration.databases.connection']}" url="/inc/administrationPanels/dbConnectionSearchPanel.jsf" icon="ui-icon-document" />
+				  <p:menuitem value="#{msgs['tlos.menu.administration.databases.access']}" url="/inc/administrationPanels/dbAccessSearchPanel.jsf" icon="ui-icon-document" />
 				</p:submenu>
-				<p:submenu label="Web Services" icon="ui-icon-document">
-				  <p:menuitem value="Analysis" url="/inc/administrationPanels/webServiceWizardPanel.jsf" icon="ui-icon-document" />
-				  <p:menuitem value="Access" url="/inc/administrationPanels/wsAccessSearchPanel.jsf" icon="ui-icon-document" />
+				<p:submenu label="#{msgs['tlos.menu.administration.webservices']}" icon="ui-icon-document">
+				  <p:menuitem value="#{msgs['tlos.menu.administration.webservices.analysis']}" url="/inc/administrationPanels/webServiceWizardPanel.jsf" icon="ui-icon-document" />
+				  <p:menuitem value="#{msgs['tlos.menu.administration.webservices.access']}" url="/inc/administrationPanels/wsAccessSearchPanel.jsf" icon="ui-icon-document" />
 				</p:submenu>
-				<p:menuitem value="FTP Access" url="/inc/administrationPanels/ftpAccessSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="BackUps" url="#" icon="ui-icon-document" />
-				<p:menuitem value="Audits" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.administration.ftpAccess']}" url="/inc/administrationPanels/ftpAccessSearchPanel.jsf" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.administration.backups']}" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.administration.audits']}" url="#" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="Preferences" icon="ui-icon-document">
-				<p:menuitem value="Theme" url="#" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.preferences']}" icon="ui-icon-document">
+				<p:menuitem value="#{msgs['tlos.menu.preferences.theme']}" url="#" icon="ui-icon-document" />
 			</p:submenu>
 
-			<p:submenu label="Help" icon="ui-icon-help">
-				<p:submenu label="Welcome" icon="ui-icon-help">
-					<p:menuitem value="Overview" url="#" />
-					<p:menuitem value="Tutorials" url="#" />
-					<p:menuitem value="What's New" url="#" />
+			<p:submenu label="#{msgs['tlos.menu.help']}" icon="ui-icon-help">
+				<p:submenu label="#{msgs['tlos.menu.help.welcome']}" icon="ui-icon-help">
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.overview']}" url="#" />
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.tutorials']}" url="#" />
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.whatsNew']}" url="#" />
 				</p:submenu>
-				<p:menuitem value="Support" url="#" />
-				<p:menuitem value="About" url="#" />
-				<!-- p:submenu label="Search" icon="ui-icon-search">
-					<p:submenu label="Text">
-						<p:menuitem value="Workspace" url="#" />
-					</p:submenu>
-					<p:menuitem value="File" url="#" />
-				</p:submenu-->
+				<p:menuitem value="#{msgs['tlos.menu.help.support']}" url="#" />
+				<p:menuitem value="#{msgs['tlos.menu.help.about']}" url="#" />
 			</p:submenu>
-
-			<!-- p:submenu label="Actions" icon="ui-icon-gear">
-				<p:submenu label="Ajax" icon="ui-icon-refresh">
-					<p:menuitem value="Save" actionListener="#{menuBean.save}" icon="ui-icon-disk" update="messages" />
-					<p:menuitem value="Update" actionListener="#{menuBean.update}" icon="ui-icon-arrowrefresh-1-w" update="messages" />
-				</p:submenu>
-				<p:submenu label="Non-Ajax" icon="ui-icon-newwin">
-					<p:menuitem value="Delete" actionListener="#{menuBean.delete}" icon="ui-icon-close" update="messages" ajax="false" />
-				</p:submenu>
-			</p:submenu-->
-
-			<!-- p:menuitem value="Quit" actionListener="#{logoutBean.logout}" icon="ui-icon-close" / -->
 
 			<f:facet name="options">
 				<h:outputText value="#{sessionMediator.webAppUser.username}" style="font-size: 115%;margin-right:10px" ></h:outputText>
