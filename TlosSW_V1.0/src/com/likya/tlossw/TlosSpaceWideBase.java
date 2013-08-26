@@ -158,10 +158,10 @@ public class TlosSpaceWideBase {
 		String rights = resourceBaundle.getString(ResourceMapper.RIGHTS_KEY);
 
 		logger.info("************************************************************");
-		logger.info("*** Likya Bilgi Teknolojileri ve Iletisim Hiz. Ltd. Sti. ***");
+		logger.info("*** Likya Bilgi Teknolojileri ve İletişim Hiz. Ltd. Şti. ***");
 		logger.info("***      " + appName + " " + versionName + " " + getVersion() + "       ***");
 		logger.info("***           (c) 2013 " + rights + "                ***");
-		logger.info("***                 Istanbul - Turkiye                   ***");
+		logger.info("***                 İstanbul - Türkiye                   ***");
 		logger.info("************************************************************");
 		logger.info("");
 
@@ -311,23 +311,6 @@ public class TlosSpaceWideBase {
 	}
 
 	public void startDayKeeper() {
-
-		/*
-		 * Timer timer = new Timer(); DayKeeper myDayKeeper =
-		 * DayKeeper.getInstance(getEnterpriseRegistery());
-		 * //EnterpriseRegistery
-		 * .getEnterpriseLogger().info("Before Scheduling DayKeeper : " +
-		 * DateUtils.getDate(new Date(myDayKeeper.scheduledExecutionTime())));
-		 * //
-		 * System.out.println(DateUtils.getDate(myDayKeeper.getNextWorkTime()));
-		 * timer.scheduleAtFixedRate(myDayKeeper, myDayKeeper.getNextWorkTime(),
-		 * DayKeeper.getPeriod());
-		 * //System.out.println(DateUtils.getDate(myDayKeeper
-		 * .getNextWorkTime()));
-		 * //EnterpriseRegistery.getEnterpriseLogger().info
-		 * ("After Scheduling DayKeeper : " + DateUtils.getDate(new
-		 * Date(myDayKeeper.scheduledExecutionTime())));
-		 */
 
 		LikyaDayKeeper myDayKeeper = initDayKeeper();
 		Thread dayKeeperThread = new Thread(myDayKeeper);
