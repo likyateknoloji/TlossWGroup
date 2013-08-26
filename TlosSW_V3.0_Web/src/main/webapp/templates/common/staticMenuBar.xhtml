@@ -108,9 +108,12 @@
 			</p:submenu>
 
 			<f:facet name="options">
+			<p:outputPanel>
+			    <h:outputText id="personIcon" styleClass="ui-icon ui-icon-person" style="display: inline-block; position:relative; left:-5px;top:3px"/>
 				<h:outputText value="#{sessionMediator.webAppUser.username}" style="font-size: 115%;margin-right:10px" ></h:outputText>
 				<!-- p:inputText style="margin-right:3px" / -->
 				<p:commandButton value="#{msgs['tlos.button.logout']}" icon="ui-icon-extlink" action="#{logoutBean.logout}" />
+			</p:outputPanel>
 			</f:facet>
 		</p:menubar>
 	</ui:composition>
