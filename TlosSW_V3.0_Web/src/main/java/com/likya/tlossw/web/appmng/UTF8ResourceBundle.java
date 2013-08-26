@@ -43,8 +43,6 @@ public class UTF8ResourceBundle extends ResourceBundle {
 				locale = new Locale(Locale.getDefault().getLanguage());
 			}
 
-			locale = new Locale(Locale.getDefault().getLanguage());
-
 			String bundleName = toBundleName(baseName, locale);
 			String resourceName = toResourceName(bundleName, BUNDLE_EXTENSION);
 			ResourceBundle bundle = null;
