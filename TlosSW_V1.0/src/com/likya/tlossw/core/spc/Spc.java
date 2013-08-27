@@ -10,14 +10,12 @@ import javax.xml.transform.stream.StreamSource;
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
-import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -32,6 +30,7 @@ import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.helpers.SpcUtils;
+import com.likya.tlossw.core.spc.helpers.TimeZoneCalculator;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.db.utils.DBUtils;
@@ -356,7 +355,7 @@ public class Spc extends SpcBase {
 
 						Calendar startTime = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
 
-						boolean timeHasCome = calculateExecutionTime(startTime, jobProperties.getTimeManagement());
+						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(startTime, jobProperties.getTimeManagement());
 
 						// isin planlanan calisma zamani gecti mi?
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
@@ -439,61 +438,6 @@ public class Spc extends SpcBase {
 			}
 
 		}
-	}
-	
-	private boolean calculateExecutionTime(Calendar tmpTime, TimeManagement timeManagement) {
-		
-		// tmpTime Job daki zaman
-		// currentTime simdiki zaman
-		
-		boolean isDstExistWhenJobIsDefined = tmpTime.getTimeZone().useDaylightTime(); // Su an kullanılmıyor ama geliştirme henüz bitmedi. Lazım olacak.
-		
-		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi? 
-		String    jobTimeZone = timeManagement.getTimeZone();  // Job tanımında seçilen Time Zone
-		String  agentTimeZone = new String("America/Los_Angeles"); // Agent ın bulunduğu makinanın Time Zone bilgisi
-		
-		// tmpTime bilgisinde sadece hh:mm:ss var, YYYY:MM:DD bilgisini ekleyelim.
-        Calendar calendar = Calendar.getInstance();
-        
-        tmpTime.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        tmpTime.set(Calendar.MONTH , calendar.get(Calendar.MONTH));
-        tmpTime.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-
-		boolean timeHasCome = false;
-		
-		// Hangi tip zaman için işlem yapılacak?
-		TypeOfTime.Enum myType = timeManagement.getTypeOfTime(); 
-		
-		
-		String serverDateTimeStr   = DateUtils.getServerW3CDateTime();                         // Server da simdiki zaman
-		String jobDateTimeStr      = DateUtils.getW3CDateTime(tmpTime, jobTimeZone, myType);   // Job da belirtilen zaman
-		String agentDateTimeStr    = DateUtils.getW3CDateTime(tmpTime, agentTimeZone, myType); // Agent da calismasi gereken zaman
-		
-		System.out.println("Server saati      : " + serverDateTimeStr + "\n" + 
-		                   "Job saati         : " + jobDateTimeStr + "\n" + 
-				           "Agent yerel saati : " + agentDateTimeStr);
-		
-		Calendar serverDateTime      = DateUtils.dateToXmlTime(serverDateTimeStr, serverTimeZone); // Server da simdiki zaman
-		Calendar jobDateTime         = DateUtils.dateToXmlTime(jobDateTimeStr, jobTimeZone);       // Job da belirtilen zaman, Job daki zaman dilimine cevriliyor.
-		Calendar jobDateTimeAtServer = DateUtils.dateToXmlTime(jobDateTimeStr, serverTimeZone);    // Job da belirtilen zaman, TZ bilgisiine gore hesaplanıyor, Server daki zaman dilimine cevriliyor.
-		Calendar jobDateTimeAtAgent  = DateUtils.dateToXmlTime(agentDateTimeStr, serverTimeZone);  // Job da belirtilen zaman, agent TZ offset, Server daki zaman dilimine cevriliyor
-
-		switch (myType.intValue()) {
-		case TypeOfTime.INT_ACTUAL:
-		case TypeOfTime.INT_RECURRING:
-			timeHasCome = jobDateTime.before(serverDateTime);
-			break;
-
-		case TypeOfTime.INT_BROADCAST:
-			timeHasCome = jobDateTimeAtAgent.before(serverDateTime);
-			break;
-			
-		default:
-			break;
-		}
-		
-		return timeHasCome;
-		
 	}
 	
 	private void handleTransferRequestsOnDss(Job scheduledJob, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
