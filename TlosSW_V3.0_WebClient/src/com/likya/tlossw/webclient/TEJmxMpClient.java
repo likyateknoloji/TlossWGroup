@@ -24,15 +24,6 @@ import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 
 public class TEJmxMpClient extends TEJmxMpClientBase {
-	/*
-	String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
-	String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-	*/
-	
-
-	private static final int PIP = 2; 
-	private static final int PMI = 3; 
-	private static final int RFO = 4; 
 	
 	private TEJmxMpClient() {
 		// initCommanderInstance();
