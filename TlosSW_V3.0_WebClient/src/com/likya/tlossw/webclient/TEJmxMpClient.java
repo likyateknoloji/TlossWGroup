@@ -19,7 +19,6 @@ import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 
@@ -71,7 +70,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveJobListDetails", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + LJSTIP), "retrieveJobListDetails", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<JobInfoTypeClient>) o;
 		} catch (Exception e) {
@@ -543,24 +542,24 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		return null;
 	}
 	
-	public static ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode) {
-
-		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
-
-		Object[] paramList = { jmxUser, scenarioNode};
-		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "com.likya.tlossw.model.tree.ScenarioNode"};
-		Object o;
-
-		try {
-			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveTreeInfo", paramList, signature);
-			TEJmxMpClient.disconnect(jmxConnector);
-			return (ScenarioNode) o;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	public static ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode) {
+//
+//		JMXConnector jmxConnector = TEJmxMpClient.getJMXConnection();
+//
+//		Object[] paramList = { jmxUser, scenarioNode};
+//		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "com.likya.tlossw.model.tree.ScenarioNode"};
+//		Object o;
+//
+//		try {
+//			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
+//			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveTreeInfo", paramList, signature);
+//			TEJmxMpClient.disconnect(jmxConnector);
+//			return (ScenarioNode) o;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 	
 	public static TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode) {
 
@@ -571,7 +570,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			Object o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveTreeInfo", paramList, signature);
+			Object o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + LJSTIP), "getLiveTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			
 			TlosSpaceWideNode tmp = (TlosSpaceWideNode) o;
