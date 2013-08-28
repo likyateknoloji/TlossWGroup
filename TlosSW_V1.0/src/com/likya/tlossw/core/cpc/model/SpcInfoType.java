@@ -18,6 +18,7 @@ public class SpcInfoType implements Serializable {
 
 	private String jsId;
 	private String jsName;
+	private String spcId;
 	private boolean concurrent;
 	private String comment;
 
@@ -100,6 +101,14 @@ public class SpcInfoType implements Serializable {
 
 	public void setJsId(String jsId) {
 		this.jsId = jsId;
+	}
+
+	public String getSpcId() {
+		return spcId;
+	}
+
+	public void setSpcId(String spcId) {
+		this.spcId = spcId;
 	}
 
 }
