@@ -45,6 +45,23 @@ public class CpcUtils {
 		return scenario;
 	}
 	
+	public static Scenario getScenario(Scenario tmpScenario) {
+		
+		Scenario scenario = Scenario.Factory.newInstance();
+
+		scenario.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
+		scenario.setDependencyList(tmpScenario.getDependencyList());
+		scenario.setScenarioStatusList(tmpScenario.getScenarioStatusList());
+		scenario.setAlarmPreference(tmpScenario.getAlarmPreference());
+		scenario.setTimeManagement(tmpScenario.getTimeManagement());
+		scenario.setAdvancedScenarioInfos(tmpScenario.getAdvancedScenarioInfos());
+		scenario.setConcurrencyManagement(tmpScenario.getConcurrencyManagement());
+		scenario.setLocalParameters(tmpScenario.getLocalParameters());
+
+		return scenario;
+		
+	}
+	
 	public static SpcInfoType getSpcInfo(Spc spc, String userId, String instanceId, Scenario tmpScenario) {
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
@@ -87,6 +104,24 @@ public class CpcUtils {
 
 		spcInfoType.setScenario(scenario);
 		spcInfoType.setSpcReferance(spc);
+
+		return spcInfoType;
+	}
+	
+	public static SpcInfoType getSpcInfo(String userId, String instanceId, Scenario tmpScenario) {
+		
+		SpcInfoType spcInfoType = new SpcInfoType();
+		
+		spcInfoType.setJsId(tmpScenario.getID());
+		spcInfoType.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
+		spcInfoType.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
+		spcInfoType.setComment(tmpScenario.getBaseScenarioInfos().getComment());
+		spcInfoType.setUserId(userId);
+
+		Scenario scenario = CpcUtils.getScenario(tmpScenario);
+		
+		spcInfoType.setScenario(scenario);
+		spcInfoType.setSpcReferance(null);
 
 		return spcInfoType;
 	}
