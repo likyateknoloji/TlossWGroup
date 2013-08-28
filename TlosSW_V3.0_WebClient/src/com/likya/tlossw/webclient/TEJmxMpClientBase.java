@@ -33,8 +33,8 @@ public class TEJmxMpClientBase {
 			try {
 				ctx = new javax.naming.InitialContext();
 				jmxIpEnv = (String) ctx.lookup("java:comp/env/jmxIp");
-				jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxPort");
-				// jmxPort = (String) ctx.lookup("java:comp/env/jmxTlsPort"); // jmxtls icin
+				// jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxPort");
+				jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxTlsPort"); // jmxtls icin
 				isEnvRead = true;
 			} catch (NamingException e1) {
 				e1.printStackTrace();
@@ -57,8 +57,8 @@ public class TEJmxMpClientBase {
 
 				try {
 
-					// jmxConnector = JMXConnectorFactory.connect(url, getEnv());
-					jmxConnector = JMXConnectorFactory.connect(url);
+					jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+					// jmxConnector = JMXConnectorFactory.connect(url);
 					jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
 					logger.info(">> JMXMP Connection successfully established to " + url);
 
@@ -145,13 +145,21 @@ public class TEJmxMpClientBase {
 	protected static Map<String, String> getEnv() {
 		Map<String, String> env = new HashMap<String, String>();
 
-		if (System.getProperty("javax.net.ssl.trustStore") == null)
-			System.setProperty("javax.net.ssl.trustStore", "likyaKeystore");
-		if (System.getProperty("javax.net.ssl.keyStorePassword") == null)
-			System.setProperty("javax.net.ssl.keyStorePassword", "likya1!+");
-		if (System.getProperty("javax.net.ssl.keyStore") == null)
-			System.setProperty("javax.net.ssl.keyStore", "likyaKeystore");
-
+		if (System.getProperty("javax.net.ssl.trustStore") == null) {
+			//System.setProperty("javax.net.ssl.trustStore", "/Users/serkan/programlar/dev/workspace/TlosSW_V3.0_Web/likyaKeystore");
+			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
+		}
+		
+		if (System.getProperty("javax.net.ssl.keyStorePassword") == null) {
+			// System.setProperty("javax.net.ssl.keyStorePassword", "likya1!+");
+			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
+		}
+		
+		if (System.getProperty("javax.net.ssl.keyStore") == null) {
+			//System.setProperty("javax.net.ssl.keyStore", "/Users/serkan/programlar/dev/workspace/TlosSW_V3.0_Web/likyaKeystore");
+			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
+		}
+		
 		env.put("jmx.remote.profiles", "TLS");
 
 		return env;
