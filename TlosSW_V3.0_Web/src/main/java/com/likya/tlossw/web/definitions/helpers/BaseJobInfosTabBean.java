@@ -98,7 +98,7 @@ public class BaseJobInfosTabBean implements Serializable{
 		baseJobInfos.setCalendarId(Integer.parseInt(jobBasePanelBean.getJsCalendar()));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(jobBasePanelBean.getoSystem()));
 		if (jobPriority.isEmpty())
-			jobPriority = "1"; // default değer
+			jobPriority = "3"; // default değer
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
 
 		if (jobBasePanelBean.isJsActive()) {
