@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.log4j.Logger;
@@ -67,6 +66,11 @@ public abstract class CpcBase implements Runnable {
 			while (keyIterator.hasNext()) {
 				String key = keyIterator.next();
 				Spc spcreferance = spcMap.get(key).getSpcReferance();
+				
+				if(spcreferance == null) {
+					// No spc defined for this scenario, it is NOT a BUG !
+					continue;
+				}
 				spcreferance.setExecutionPermission(false, isForced);
 				while (spcreferance.getExecuterThread().isAlive()) {
 					try {
@@ -90,12 +94,12 @@ public abstract class CpcBase implements Runnable {
 			String tmpPath = path + ".";
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			String ek = new String("");
+			// String ek = new String("");
 			
-			StringTokenizer pathToken = new StringTokenizer(path, ".");
-			if(pathToken.countTokens() == 2) ek = new String(EngineeConstants.LONELY_JOBS + ".");
+			// StringTokenizer pathToken = new StringTokenizer(path, ".");
+			// if(pathToken.countTokens() == 2) ek = new String(EngineeConstants.LONELY_JOBS + ".");
 				
-			String scenarioId = tmpPath + ek + scenario.getID().toString();
+			String scenarioId = tmpPath + /* ek + */ scenario.getID().toString();
 
 			myLogger.info("   > " + scenarioId + " senaryosu yani scenario ID=" + scenario.getID().toString() + " isleniyor.");
 
@@ -368,26 +372,35 @@ public abstract class CpcBase implements Runnable {
 				// throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
 			}
 
-			if (jobList.getJobPropertiesArray().length == 0) {
+			if (jobList.getJobPropertiesArray().length == 0 && tmpScenarioList.get(scenarioId).getScenarioArray().length == 0) {
 				myLogger.error(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
 				myLogger.error(scenarioId + " isimli senaryo için spc başlatılmıyor !");
 				continue;
 			}
 
-			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
+			SpcInfoType spcInfoType = null;
 			
-			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+			if(!scenarioId.equals(localRoot + "." + EngineeConstants.LONELY_JOBS) && jobList.getJobPropertiesArray().length == 0) {
+				spcInfoType = CpcUtils.getSpcInfo(null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType.setSpcId(scenarioId);
+			} else {
+				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
+				
+				String userId = null; // Henüz ayarlanmadı !
+				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType.setSpcId(scenarioId);
+				
+				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+					if (!spc.initScenarioInfo()) {
+						myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+						Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 
-			scpLookupTable.put(scenarioId, spcInfoType);
-
-			if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
-				if (!spc.initScenarioInfo()) {
-					myLogger.warn(scenarioId + " isimli senaryo bilgileri y�klenemedi ya da is listesi bos geldi !");
-					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri y�klenemedi ya da is listesi bos geldi !");
-
-					System.exit(-1);
+						System.exit(-1);
+					}
 				}
 			}
+			
+			scpLookupTable.put(scenarioId, spcInfoType);
 
 			myLogger.info("  > Senaryo yuklendi !");
 
