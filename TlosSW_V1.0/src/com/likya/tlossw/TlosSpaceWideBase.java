@@ -30,7 +30,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.TlosRecoverException;
 import com.likya.tlossw.infobus.InfoBusManager;
 import com.likya.tlossw.infobus.servers.MailServer;
-import com.likya.tlossw.jmx.JMXServer;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.nagios.NagiosServer;
@@ -115,7 +114,7 @@ public class TlosSpaceWideBase {
 
 			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
 			TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
-			
+
 			if (tlosConfigInfo == null || !XMLValidations.validateWithLogs(logger, tlosConfigInfo)) {
 				throw new TlosFatalException("DBUtils.getTlosConfig : getTlosConfig is null or tlosConfigInfo xml is damaged !");
 			}
@@ -226,16 +225,22 @@ public class TlosSpaceWideBase {
 		}
 	}
 
-	protected void startJmxServer() {
+	protected void startJmxTlsServers() {
+		
 		if (useJmx) {
-			JMXServer.initialize();
+			String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
+			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+			
+			
+			// Prototip MC baslatmak icin gerekiyor.
+			/**
+			 * Artık prototip kaldırıldığından iptal ediyoruz.
+			 */
+			// JMXServer.initialize(MBeanArray, MBeanTypeArray);
+			
+			JMXTLSServer.initialize(MBeanArray, MBeanTypeArray);
 		}
-	}
-
-	protected void startJmxTLSServer() {
-		if (useJmx) {
-			JMXTLSServer.initialize();
-		}
+		
 	}
 
 	protected void startMailSystem() {
@@ -424,7 +429,7 @@ public class TlosSpaceWideBase {
 			} catch (TlosFatalException e) {
 				if (getSpaceWideRegistry().getCpcReference() == null) {
 					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-					//System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
+					// System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
 					System.exit(-1);
 				} else {
 					errprintln("Gün dönümü sonrası çalışma listesi alınamadı !");
@@ -508,7 +513,7 @@ public class TlosSpaceWideBase {
 
 			cpcTesterExecuterThread.start();
 
-		} 
+		}
 
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
 		logger.info("");
