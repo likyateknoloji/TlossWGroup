@@ -17,14 +17,12 @@ import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.D
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
 import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
-import com.likya.tlossw.model.client.spc.InfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.ScenarioNode;
-import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 
 /**
@@ -76,8 +74,6 @@ public interface ProcessInfoProviderMBean {
 
 	public Object runningJobs();
 
-	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime);
-
 	public JobInfoTypeClient retrieveJobDetails(JmxUser jmxUser, String groupId, String jobId, Boolean transformToLocalTime);
 
 	public ArrayList<String> retrieveViewFiles(JmxUser jmxUser);
@@ -92,11 +88,7 @@ public interface ProcessInfoProviderMBean {
 
 	public SpcInfoTypeClient retrieveSpcInfo(JmxUser jmxUser, String treePath);
 
-	public InfoTypeClient getInfoTypeClient(JmxUser jmxUser, String instanceId, String treePath);
-
 	public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode);
-
-	public TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode);
 
 	public WebSpaceWideRegistery retrieveSpaceWideRegistery(JmxUser jmxUser);
 
