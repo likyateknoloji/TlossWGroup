@@ -11,9 +11,31 @@
 				background-color: black;
 				font-weight: bold;
 			}
+			.success {
+				color: green;
+				background-color: black;
+				font-weight: bold;
+			}
+			.working {
+				color: blue;
+				background-color: black;
+				font-weight: bold;
+			}
+			.time-out {
+				color: purple;
+				background-color: black;
+				font-weight: bold;
+			}
+			.default {
+				color: orange;
+				background-color: black;
+				font-weight: bold;
+			}
 		</style>
 		
-		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" rowStyleClass="#{item.liveStateInfo.statusName eq 'FAILED' ? 'failed' : null}" widgetVar="itemsTable"
+		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" 
+		    rowStyleClass="#{backingBean.getStateColorsElement(item.liveStateInfo.statusName)}" 
+		    widgetVar="itemsTable"
 			resizableColumns="true" binding="#{backingBean.jobDataTable}" filteredValue="#{backingBean.filteredJobs}" emptyMessage="No records found with given criteria" sortMode="multiple" width="100%"
 			paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			rowsPerPageTemplate="5,10,15">
