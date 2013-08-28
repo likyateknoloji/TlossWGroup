@@ -78,11 +78,15 @@ public class Cpc extends CpcBase {
 
 					for (String spcId : spcLookupTable.keySet()) {
 
-						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
-
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
 
+						if(spc == null) {
+							// No spc defined for this scenario, it is NOT a BUG !
+							continue;
+						}
+						
+						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
 						/**
 						 * Bu thread daha once calistirildi mi? Degilse thread i
 						 * baslatabiliriz !!
