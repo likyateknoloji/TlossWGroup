@@ -167,6 +167,10 @@ public class AgentManager implements Runnable {
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
+				if(spc == null) {
+					// No spc defined for this scenario, it is NOT a BUG !
+					continue;
+				}
 				numOfWorkingJobs = spc.getNumOfJobsByAgent(agentId);
 				totNumberOfRunningJobs = totNumberOfRunningJobs + numOfWorkingJobs;
 			}
