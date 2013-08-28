@@ -3,6 +3,7 @@ package com.likya.tlossw.web.live;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -53,8 +54,16 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 
 	private LiveJobManagementBean liveJobManagementBean;
 	
+	private HashMap<String, String> stateColors = null;
+	
+	
 	@PostConstruct
 	public void init() {
+		stateColors = new HashMap<String, String>();
+		stateColors.put("FAILED", "failed");
+		stateColors.put("SUCCESS", "success");
+		stateColors.put("WORKING", "working");
+		stateColors.put("TIME-OUT", "time-out");
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
 	
@@ -275,4 +284,24 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		this.liveJobManagementBean = liveJobManagementBean;
 	}
 
+	public HashMap<String, String> getStateColors() {
+		return stateColors;
+	}
+
+	public String getStateColorsElement(String key) {
+		String result;
+		
+		result = stateColors.get(key);
+		
+		if(result == null) {
+			System.out.println("Status : " + key);
+			addMessage("getStateColorsElement", FacesMessage.SEVERITY_WARN, "Status Color Undefined for : " + key, null);
+		}
+		
+		return result == null ? "default" : result;
+	}
+	
+	public void setStateColors(HashMap<String, String> stateColors) {
+		this.stateColors = stateColors;
+	}
 }
