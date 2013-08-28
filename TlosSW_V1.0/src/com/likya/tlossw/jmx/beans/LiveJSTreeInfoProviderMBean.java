@@ -1,5 +1,8 @@
 package com.likya.tlossw.jmx.beans;
 
+import java.util.ArrayList;
+
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 
@@ -50,5 +53,8 @@ public interface LiveJSTreeInfoProviderMBean {
 	public void reset();
 	
 	public TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode);
+	
+	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime);
+
 
 }

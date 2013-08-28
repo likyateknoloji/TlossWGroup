@@ -22,7 +22,6 @@ import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 
 /**
@@ -88,7 +87,7 @@ public interface ProcessInfoProviderMBean {
 
 	public SpcInfoTypeClient retrieveSpcInfo(JmxUser jmxUser, String treePath);
 
-	public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode);
+//	public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode);
 
 	public WebSpaceWideRegistery retrieveSpaceWideRegistery(JmxUser jmxUser);
 

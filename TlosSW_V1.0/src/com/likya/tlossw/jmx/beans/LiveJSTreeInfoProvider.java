@@ -37,7 +37,6 @@ import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.date.DateUtils;
 
-
 public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 	@Override
@@ -49,7 +48,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 	@Override
 	public void setState(String s) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -61,9 +60,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	private boolean isTester(JmxUser jmxUser) {
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
@@ -72,7 +71,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		return false;
 	}
-	
+
 	private boolean treeLevelComparer(String treePath, String spcId) {
 		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
 		StringTokenizer spcToken = new StringTokenizer(spcId, ".");
@@ -87,9 +86,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = null;
 
-		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
-		int treeLevel = treePathToken.countTokens();
-		
+//		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
+//		int treeLevel = treePathToken.countTokens();
+
 		if (isTester(jmxUser)) {
 			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId());
 			instanceId = new String("" + jmxUser.getId());
@@ -104,46 +103,50 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		while (keyIterator.hasNext()) {
 
 			String spcId = keyIterator.next();
-			StringTokenizer spcIdToken = new StringTokenizer(spcId, ".");
-			
+
+			// StringTokenizer spcIdToken = new StringTokenizer(spcId, ".");
+
 			SpcInfoType spcInfoType = spcLookUpTable.get(spcId);
 
-			if (spcIdToken.countTokens() <= treeLevel + 1 &&  treeLevelComparer(treePath, spcId) ) {
-			
+			// if (spcIdToken.countTokens() <= treeLevel + 1 && treeLevelComparer(treePath, spcId)) {
+
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
-			spcInfoTypeClient.setSpcId(spcInfoType.getSpcReferance().getSpcId());
+			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId());
 
 			if (spcId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
-				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
-				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
-				spcInfoTypeClient.setJsId("0");
+				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
+				spcInfoTypeClient.setJsId(EngineeConstants.LONELY_JOBS);
 				spcInfoTypeClient.setSerbestFolder(true);
 			} else {
-				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
+				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
 				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
 			}
-			spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
-			spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
+			
+			if (spcInfoType.getSpcReferance() != null) {
+				// No spc defined for this scenario, it is NOT a BUG !
+				spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
+				spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
 
-			spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
-			spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
-			spcInfoTypeClient.setStopable(spcInfoType.getSpcReferance().isStopable());
-			spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
+				spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
+				spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
+				spcInfoTypeClient.setStopable(spcInfoType.getSpcReferance().isStopable());
+				spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
+			}
+			
+			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 
-			spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
-				
-			//if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcReferance().getSpcId())) {
-			//	spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(scenarioId, spcInfoTypeClient);
-			//}
-          }
+			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId())) {
+				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
+			}
+			// }
 
 		}
 
 		return spcLookUpTableTypeClient;
 	}
-	
+
 	public TlosSpaceWideNode createInstanceNodeObject(JmxUser jmxUser) {
-		
+
 		TlosSpaceWideNode tlosSpaceWideNodeObject = new TlosSpaceWideNode();
 
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
@@ -162,7 +165,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		return tlosSpaceWideNodeObject;
 	}
-	
+
 	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String treePath) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -192,7 +195,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		return spcLookUpTableTypeClient;
 	}
-	
+
 	private ScenarioNode scenarioListContainsSpc(ArrayList<ScenarioNode> scenarioNodes, String spcId) {
 		for (ScenarioNode scenarioNode : scenarioNodes) {
 			if (scenarioNode.getSpcInfoTypeClient().getSpcId().equals(spcId)) {
@@ -201,19 +204,19 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		}
 		return null;
 	}
-	
+
 	private ScenarioNode getDetails(JmxUser jmxUser, ScenarioNode treeNode) {
 
 		ScenarioNode newScenarioNode = new ScenarioNode();
 		newScenarioNode.setSpcInfoTypeClient(treeNode.getSpcInfoTypeClient());
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId());
-		
+
 		for (String spcId : spcLookUpTableTypeClient.getSpcInfoTypeClientList().keySet()) {
-			
+
 			ScenarioNode innerScenarioNode = scenarioListContainsSpc(treeNode.getScenarioNodes(), spcId);
-			
-			if(innerScenarioNode != null) {
+
+			if (innerScenarioNode != null) {
 				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
 				newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
 			} else {
@@ -224,10 +227,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
 			}
-			
-			
+
 		}
-		
+
 		ArrayList<JobInfoTypeClient> jobInfoTypeClientList = retrieveJobListDetails(jmxUser, treeNode.getSpcInfoTypeClient().getSpcId(), false);
 		for (JobInfoTypeClient jobInfoTypeClient : jobInfoTypeClientList) {
 			JobNode jobNode = new JobNode();
@@ -239,7 +241,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		return newScenarioNode;
 	}
-	
+
 	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
@@ -254,6 +256,10 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
 		} else {
 			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		}
+		
+		if (spcInfoType.getSpcReferance() == null) {
+			return jobInfoTypeClientList;
 		}
 
 		Iterator<SortType> jobQueueIndexIterator = spcInfoType.getSpcReferance().getJobQueueIndex().iterator();
@@ -342,33 +348,41 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 	/**
 	 * web ekranindaki senaryo ve joblarin oldugu agac render edilmeden once bu metodu cagirip guncel senaryo ve job bilgilerini aliyor
 	 */
-	public TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSpaceWideNode) {
-		// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-		// return null;
-		// }
+	public TlosSpaceWideNode getLiveTreeInfo(JmxUser jmxUser, TlosSpaceWideNode tlosSWReqNode) {
 
-		String selectedNodeId = null;
+		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+			return null;
+		}
+
+		TlosSpaceWideNode tlosSWRespNode = createInstanceNodeObject(jmxUser);
 		
-		TlosSpaceWideNode tlosSpaceWideServerNode = createInstanceNodeObject(jmxUser);
+		GunlukIslerNode gunlukIslerNodeServer = tlosSWRespNode.getGunlukIslerNode();
 
-		// ekranda instance dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, yoksa icinde instance gelmedigi icin girmiyor
-		GunlukIslerNode gunlukIslerNodeClient = tlosSpaceWideNode.getGunlukIslerNode();
+		GunlukIslerNode gunlukIslerNodeClient = tlosSWReqNode.getGunlukIslerNode();
+		
+		/**
+		 *  ekranda instance dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
+		 *  yoksa icinde instance gelmedigi icin girmiyor
+		 */
+		
 		if (gunlukIslerNodeClient != null) {
+			
+			HashMap<String, InstanceNode> serverInstanceNodes = gunlukIslerNodeServer.getInstanceNodes();
+			
+			HashMap<String, InstanceNode> clientInstanceNodes = gunlukIslerNodeClient.getInstanceNodes();
+			
 			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
 
-				HashMap<String, InstanceNode> clientInstanceNodes = gunlukIslerNodeClient.getInstanceNodes();
-				InstanceNode                  clientInstanceNode  = clientInstanceNodes.get(instanceId);
-				
-				HashMap<String, InstanceNode> serverInstanceNodes = tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes();
-				InstanceNode                  serverInstanceNode  = serverInstanceNodes.get(instanceId);
-				
-				InstanceNode currentServerInstance = tlosSpaceWideServerNode.getGunlukIslerNode().getInstanceNodes().get(instanceId);
+				InstanceNode clientInstanceNode = clientInstanceNodes.get(instanceId);
+
+				InstanceNode serverInstanceNode = serverInstanceNodes.get(instanceId);
+
 				// Okudugumuz instance'in altındaki senaryolari alip yeni TD'ye ekliyoruz
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				selectedNodeId = new String( "root." + clientInstanceNode.getInstanceId() );
-				
+				String selectedNodeId = new String("root." + clientInstanceNode.getInstanceId());
+
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, selectedNodeId).getSpcInfoTypeClientList();
 
@@ -378,24 +392,25 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 					ScenarioNode serverNode = new ScenarioNode();
 					serverNode.setSpcInfoTypeClient(spcInfoTypeClient);
-					currentServerInstance.getScenarioNodeMap().put(spcId, serverNode);
+					serverInstanceNode.getScenarioNodeMap().put(spcId, serverNode);
 				}
 
 				// Simdi ise, instance'in altindaki senaryolarin detaylarini alacaz.
-				//InstanceNode instanceNode = clientInstanceNodes.get(instanceId);
-				
+				// InstanceNode instanceNode = clientInstanceNodes.get(instanceId);
+
 				for (String spcId : clientInstanceNode.getScenarioNodeMap().keySet()) {
 					ScenarioNode myScenarioNode = clientInstanceNode.getScenarioNodeMap().get(spcId);
-					
+
 					ScenarioNode newScenarioNode = null;
 
 					newScenarioNode = getDetails(jmxUser, myScenarioNode);
 					serverInstanceNode.getScenarioNodeMap().put(spcId, newScenarioNode);
-				}	
+				}
 
 			}
 		}
-		return tlosSpaceWideServerNode;
+		
+		return tlosSWRespNode;
 	}
-	
+
 }

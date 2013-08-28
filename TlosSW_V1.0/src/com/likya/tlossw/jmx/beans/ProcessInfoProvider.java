@@ -60,7 +60,6 @@ import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
-import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
@@ -84,7 +83,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		return false;
 	}
-	
+
 	public boolean retrieveWaitConfirmOfGUI(JmxUser jmxUser) {
 		return TlosSpaceWide.getSpaceWideRegistry().isWaitConfirmOfGUI();
 	}
@@ -138,7 +137,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (jobRuntimeProperties == null) {
 			return null;
 		}
-		
+
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
@@ -413,57 +412,60 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
 
-		String scenarioId = spcInfoType.getSpcReferance().getSpcId();
+		String scenarioId = spcInfoType.getSpcId();
 
 		SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
 		spcInfoTypeClient.setSpcId(scenarioId);
-		String instanceId = spcInfoType.getSpcReferance().getConcurrencyManagement().getInstanceId();
-		if (scenarioId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
-			spcInfoTypeClient.setJsName(scenarioId);
-		} else {
-			spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
-			spcInfoTypeClient.setJsId(spcInfoType.getJsId());
-		}
-		spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
-		spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
 
-		spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
-		spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
-		spcInfoTypeClient.setStopable(spcInfoType.getSpcReferance().isStopable());
-		spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
+		if (spcInfoType.getSpcReferance() != null) {
+			String instanceId = spcInfoType.getSpcReferance().getConcurrencyManagement().getInstanceId();
+			if (scenarioId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
+				spcInfoTypeClient.setJsName(scenarioId);
+			} else {
+				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
+				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
+			}
+			spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
+			spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
+
+			spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
+			spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
+			spcInfoTypeClient.setStopable(spcInfoType.getSpcReferance().isStopable());
+			spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
+		}
 
 		return spcInfoTypeClient;
 	}
 
-//	public InfoTypeClient getInfoTypeClient(JmxUser jmxUser, String instanceId, String treePath) {
-//
-//		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-//			return null;
-//		}
-//
-//		InfoTypeClient infoTypeClient = new InfoTypeClient();
-//
-//		infoTypeClient.setJobInfoTypeClient(retrieveJobListDetails(jmxUser, treePath, false));
-//		infoTypeClient.setSpcLookUpTableTypeClient(retrieveSpcLookupTable(jmxUser, instanceId, treePath));
-//
-//		return infoTypeClient;
-//	}
+	// public InfoTypeClient getInfoTypeClient(JmxUser jmxUser, String instanceId, String treePath) {
+	//
+	// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+	// return null;
+	// }
+	//
+	// InfoTypeClient infoTypeClient = new InfoTypeClient();
+	//
+	// infoTypeClient.setJobInfoTypeClient(retrieveJobListDetails(jmxUser, treePath, false));
+	// infoTypeClient.setSpcLookUpTableTypeClient(retrieveSpcLookupTable(jmxUser, instanceId, treePath));
+	//
+	// return infoTypeClient;
+	// }
 
-	public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode) {
-
-		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-			return null;
-		}
-
-		ScenarioNode tree = new ScenarioNode();
-		// tree.setRoot(true);
-		//
-		// // getLiveTreeInfo(scenarioNode.getScenarioNodeList(),
-		// // tree.getScenarioNodeList());
-		// getLiveTreeInfo(scenarioNode.getScenarioNodeMap(), tree.getScenarioNodeMap());
-
-		return tree;
-	}
+	// public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode) {
+	//
+	// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
+	// return null;
+	// }
+	//
+	// ScenarioNode tree = new ScenarioNode();
+	// // tree.setRoot(true);
+	// //
+	// // // getLiveTreeInfo(scenarioNode.getScenarioNodeList(),
+	// // // tree.getScenarioNodeList());
+	// // getLiveTreeInfo(scenarioNode.getScenarioNodeMap(), tree.getScenarioNodeMap());
+	//
+	// return tree;
+	// }
 
 	public Object retrieveGlobalStates(JmxAgentUser jmxAgentUser) {
 		if (!JMXTLSServer.authorizeWeb(jmxAgentUser)) {
@@ -1012,13 +1014,13 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 
 		ArrayList<ResourceInfoTypeClient> resourceInfoList = new ArrayList<ResourceInfoTypeClient>();
-		
+
 		HashMap<String, ResourceNode> resourceList = AgentOperations.getResources(TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentsCache());
-		
+
 		for (ResourceNode resourceNode : resourceList.values()) {
 			resourceInfoList.add(resourceNode.getResourceInfoTypeClient());
 		}
-		
+
 		return resourceInfoList;
 	}
 
