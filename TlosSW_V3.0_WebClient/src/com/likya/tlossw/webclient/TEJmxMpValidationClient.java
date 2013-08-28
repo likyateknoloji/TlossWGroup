@@ -22,7 +22,7 @@ public class TEJmxMpValidationClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=7"), "checkFTPAccess", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + VE), "checkFTPAccess", paramList, signature);
 			TEJmxMpValidationClient.disconnect(jmxConnector);
 			return (String) o;
 		} catch (Exception e) {
