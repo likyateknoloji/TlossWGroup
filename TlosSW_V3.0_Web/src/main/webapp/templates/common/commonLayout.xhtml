@@ -2,14 +2,15 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html lang="#{localeBean.currentLanguage}" 
-    xmlns="http://www.w3.org/1999/xhtml"
+<html lang="#{localeBean.currentLanguage}"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:view id="mainPanel" encoding="UTF-8" contentType="text/html" locale="#{localeBean.currentLocale}">
+<f:view id="mainPanel" encoding="UTF-8" contentType="text/html"
+	locale="#{localeBean.currentLocale}">
 
 	<h:head>
 		<f:facet name="first">
@@ -17,16 +18,20 @@
 			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
 			<title>#{title}</title>
 		</f:facet>
-		
-        <script src="/tlossw-webapp/templates/js/templatejobs.js" type="text/javascript"/>
 
-		<link type="text/css" rel="stylesheet" href="/tlossw-webapp/themes/default.css" />
-		<link type="text/css" rel="stylesheet" href="/tlossw-webapp/themes/syntaxhighlighter.css" />
+		<script src="/tlossw-webapp/templates/js/templatejobs.js"
+			type="text/javascript" />
+
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/default.css" />
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/syntaxhighlighter.css" />
 
 		<!-- overflow ozelliklerini ekranda onde gorunmesi istedigimiz kisimlar icin koyduk
 			derecelendirmesini de z-index'e gore yaptik -->
-		
+
 		<style type="text/css">
+
 			.ui-layout-north {
 				z-index: 30 !important;
 				overflow: visible !important;
@@ -64,8 +69,49 @@
             .ui-layout-center .ui-layout-west .ui-layout-unit-content {
 				overflow: visible !important;
 			}
+			
+div#topx.ui-layout-unit {
+	z-index: 22 !important;
+	overflow: visible !important;
+}
 
-		</style>
+			div#left.ui-layout-unit {
+	z-index: 21 !important;
+	overflow: visible !important;
+}
+
+div#jobDefinitionForm:tabView:dependencyDialog.ui-dialog {
+	z-index: 2211 !important;
+	overflow: visible !important;
+}
+
+div#centerWest.ui-layout-unit {
+	z-index: 221 !important;
+	overflow: visible !important;
+}
+
+div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
+	z-index: 100 !important;
+	overflow: visible !important;
+}
+
+#topx.ui-layout-north {
+   border: 0;
+}
+
+#layoutUnit4jobsDef.ui-layout-north {
+   border: 0;
+}
+
+#top.ui-layout-north {
+   border: 0;
+}
+
+#liveForm:jobListDataTable:searchBox.ui-inputfield {
+  position : fixed;
+  left : 0;
+}
+</style>
 
 	</h:head>
 
@@ -75,35 +121,58 @@
 
 			<p:layoutUnit id="top" position="north" size="60">
 				<div id="north">
-					<ui:insert name="north">
-						<ui:include src="/templates/common/commonNorth.xhtml" />
-					</ui:insert>
-				</div>
-			</p:layoutUnit>
-
-			<p:layoutUnit id="left" position="west" size="300" resizable="true"
-				closable="true" collapsible="true" header="Quick Links"
-				visible="true" minSize="200">
-				<div id="west">
-					<ui:insert name="west">
-						Default West Content
-					</ui:insert>
+					<p:outputPanel>
+						<p:graphicImage value="/images/likyalg01.gif" />
+						<h:outputText
+							style="display: inline-block; position:relative; left:10px;top:-14px"
+							value="Likya Teknoloji &#169; 2008-2013" />
+						<h:outputLink
+							style="display: inline-block; position:relative; left:10px;top:-14px"
+							value="#{msgs['tlosui.company']} &#169; 2008-2013" />
+						<p:lightBox iframe="true" style="display: inline-block;">
+							<h:outputLink value="http://www.tlos.com.tr"
+								title="Tlos Workload Automation Solutions">
+								<h:outputText  style="font-size: 25px; display: inline-block; position:relative; left:190px;top:-10px" value="#{msgs['tlosui.title']}" />
+							</h:outputLink>
+						</p:lightBox>
+					</p:outputPanel>
 				</div>
 			</p:layoutUnit>
 
 			<p:layoutUnit id="center" position="center">
 				<div id="centerDiv">
-					<ui:insert name="center">
-						Default Center Content
-					</ui:insert>
+					<p:layout>
+						<p:layoutUnit id="topx" position="north" size="60">
+							<div id="northx">
+								<ui:insert name="north">
+									<ui:include src="/templates/common/commonNorth.xhtml" />
+								</ui:insert>
+							</div>
+						</p:layoutUnit>
+						<p:layoutUnit id="left" position="west" size="300"
+							resizable="true" closable="true" collapsible="true"
+							header="Quick Links" visible="true" minSize="300">
+							<div id="west">
+								<ui:insert name="west">
+						           Default West Content
+					            </ui:insert>
+							</div>
+						</p:layoutUnit>
+						<p:layoutUnit id="centerx" position="center">
+							<div id="centerDivx">
+								<ui:insert name="center">
+						           Default Center Content
+					            </ui:insert>
+							</div>
+						</p:layoutUnit>
+					</p:layout>
 				</div>
 			</p:layoutUnit>
-
 			<div id="images">
 				<ui:include src="/templates/common/commonImages.xhtml" />
 			</div>
 
-			<p:layoutUnit id="bottom" position="south" size="60">
+			<p:layoutUnit id="bottom" position="south" size="1">
 				<div id="south">
 					<ui:include src="/templates/common/commonSouth.xhtml" />
 				</div>
