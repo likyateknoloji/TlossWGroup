@@ -224,13 +224,8 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 			processQueueStarters();
 		}
 		
-		/** Start Jmx Server */
-		// Prototip MC baslatmak icin gerekiyor.
-		/**
-		 * Artık prototip kaldırıldığından iptal ediyoruz.
-		 */
-		// startJmxServer();
-		startJmxTLSServer();
+		/** Start Jmx & Tls Servers */
+		startJmxTlsServers();
 
 		/** Start HTTP server */
 		//startWebSystem();
