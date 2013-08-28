@@ -51,12 +51,12 @@ public class JMXTLSServer {
 	 * @author Serkan Taş 12.09.2012 
 	 * @param spaceWideRegistry
 	 */
-	public static void initialize(SpaceWideRegistry spaceWideRegistry ) {
+	public static void initialize(SpaceWideRegistry spaceWideRegistry) {
 		JMXTLSServer.spaceWideRegistry = spaceWideRegistry;
-		initialize();
+		//initialize();
 	}
 	
-	public static void initialize() {
+	public static void initialize(String MBeanArray[], String MBeanTypeArray[]) {
 
 		try {
 			setupTls();
@@ -68,9 +68,6 @@ public class JMXTLSServer {
 			mbeanServer = MBeanServerFactory.createMBeanServer();
 
 			logger.info("Created !");
-
-			String MBeanArray[] = { "LocalManager", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
-			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
 
 			for (int i = 0; i < MBeanArray.length; i++) {
 				ObjectName mbeanName = new ObjectName("MBeans:type=" + MBeanTypeArray[i]);
