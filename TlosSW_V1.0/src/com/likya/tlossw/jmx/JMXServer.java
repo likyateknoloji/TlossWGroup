@@ -21,16 +21,13 @@ public class JMXServer {
 	private static MBeanServer mbeanServer;
 	private static JMXConnectorServer jConnectorServer;
 
-	public static void initialize() {
+	public static void initialize(String MBeanArray[], String MBeanTypeArray[]) {
 
 		try {
 			System.out.print("Create the MBean server...");
 			mbeanServer = MBeanServerFactory.createMBeanServer();
 			JMRuntimeException("HATA : XXX");
 			System.out.println("Created !");
-
-			String MBeanArray[] = { "LocalManager", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter" , "WorkSpaceOperator" };
-			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
 
 			for (int i = 0; i < MBeanArray.length; i++) {
 				ObjectName mbeanName = new ObjectName("MBeans:type=" + MBeanTypeArray[i]);
