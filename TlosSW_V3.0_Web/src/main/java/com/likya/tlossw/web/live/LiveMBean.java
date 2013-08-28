@@ -3,6 +3,7 @@ package com.likya.tlossw.web.live;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -65,7 +66,11 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 	public void viewScenarioTree() {
 		liveJSTable = GRAPH_PAGE;
 		getScenarioMBean().setSelectedPanel(ConstantDefinitions.LIVE_TREE);
-		getScenarioMBean().setSelectedScenarioId(getScenarioMBean().getSpcInfoTypeClient().getSpcId());
+		if(getScenarioMBean().getSpcInfoTypeClient()==null) {
+			addMessage("viewScenarioTre", FacesMessage.SEVERITY_INFO,
+			  " You have to choose a Scenario first !", null);
+		}
+		else getScenarioMBean().setSelectedScenarioId(getScenarioMBean().getSpcInfoTypeClient().getSpcId());
 	}
 
 	public String getLiveJSTable() {
