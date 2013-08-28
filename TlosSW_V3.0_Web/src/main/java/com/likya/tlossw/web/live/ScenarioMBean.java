@@ -56,6 +56,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	
 	private HashMap<String, String> stateColors = null;
 	
+	private HashMap<String, String> stateIcons = null;
 	
 	@PostConstruct
 	public void init() {
@@ -64,6 +65,15 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		stateColors.put("SUCCESS", "success");
 		stateColors.put("WORKING", "working");
 		stateColors.put("TIME-OUT", "time-out");
+		stateColors.put("WAITING", "waiting");
+		
+		stateIcons = new HashMap<String, String>();
+		stateIcons.put("SUCCESS", "Flag_Green_24x24.png");
+		stateIcons.put("FAILED", "Flag_Red_24x24.png");
+		stateIcons.put("WORKING", "Flag_Light_Blue_24x24.png");
+		stateIcons.put("TIME-OUT", "Flag_Pink_24x24.png");
+		stateIcons.put("TIME-IN", "Flag_Orange_24x24.png");
+		stateIcons.put("WAITING", "Flag_Brown_24x24.png");
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
 	
@@ -303,5 +313,26 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	
 	public void setStateColors(HashMap<String, String> stateColors) {
 		this.stateColors = stateColors;
+	}
+
+	public HashMap<String, String> getStateIcons() {
+		return stateIcons;
+	}
+
+	public String getStateIconsElement(String key) {
+		String result;
+		
+		result = stateIcons.get(key);
+		
+		if(result == null) {
+			System.out.println("Status : " + key);
+			addMessage("getStateIconsElement", FacesMessage.SEVERITY_WARN, "Status Color Undefined for : " + key, null);
+		}
+		
+		return result == null ? "default" : result;
+	}
+	
+	public void setStateIcons(HashMap<String, String> stateIcons) {
+		this.stateIcons = stateIcons;
 	}
 }
