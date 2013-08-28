@@ -30,7 +30,7 @@ public class TEJmxMpWSClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=6"), "getWsOperationList", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + WEBSO), "getWsOperationList", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (WebService) o;
 		} catch (Exception e) {
@@ -56,7 +56,7 @@ public class TEJmxMpWSClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=6"), "callOperation", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + WEBSO), "callOperation", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return o.toString();
 		} catch (Exception e) {

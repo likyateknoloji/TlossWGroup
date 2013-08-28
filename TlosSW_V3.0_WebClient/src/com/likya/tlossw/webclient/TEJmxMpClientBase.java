@@ -25,6 +25,22 @@ public class TEJmxMpClientBase {
 	public static boolean isEnvRead = false;
 	public static String jmxIpEnv = null;
 	public static Integer jmxPortEnv = null;
+	
+	/*
+	String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
+	String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+	*/
+	
+
+	protected static final int PIP = 2; 
+	protected static final int PMI = 3; 
+	protected static final int RFO = 4;
+	protected static final int RDBO = 5;
+	
+	protected static final int WEBSO = 7;
+	protected static final int VE = 8;
+	protected static final int WSO = 9;
+	
 
 	public static JMXConnector getJMXConnection() {
 
