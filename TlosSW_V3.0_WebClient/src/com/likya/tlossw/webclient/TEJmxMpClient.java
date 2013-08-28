@@ -24,7 +24,16 @@ import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 
 public class TEJmxMpClient extends TEJmxMpClientBase {
+	/*
+	String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
+	String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+	*/
+	
 
+	private static final int PIP = 2; 
+	private static final int PMI = 3; 
+	private static final int RFO = 4; 
+	
 	private TEJmxMpClient() {
 		// initCommanderInstance();
 	}
@@ -47,7 +56,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveJobDetails", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveJobDetails", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (JobInfoTypeClient) o;
 		} catch (Exception e) {
@@ -71,7 +80,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveJobListDetails", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveJobListDetails", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<JobInfoTypeClient>) o;
 		} catch (Exception e) {
@@ -90,7 +99,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveSpcLookupTable", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveSpcLookupTable", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (SpcLookUpTableTypeClient) o;
 		} catch (Exception e) {
@@ -109,7 +118,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveSpcInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveSpcInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (SpcInfoTypeClient) o;
 		} catch (Exception e) {
@@ -130,7 +139,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "shutdown", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "shutdown", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,7 +156,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "stopJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "stopJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,7 +173,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "retryJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "retryJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,7 +189,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "doSuccess", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "doSuccess", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -196,7 +205,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "skipJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "skipJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -212,7 +221,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "pauseJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "pauseJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -228,7 +237,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "resumeJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "resumeJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -244,7 +253,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "startJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "startJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -260,7 +269,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		String[] signature = { "com.likya.tlossw.model.jmx.JmxUser", "java.lang.String" };
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "startUserBasedJob", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "startUserBasedJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -278,7 +287,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "getAvailableResourcesForJob", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "getAvailableResourcesForJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<Resource>)o;
 		} catch (Exception e) {
@@ -296,7 +305,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "assignAgentForJob", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "assignAgentForJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return ((Boolean) o).booleanValue();
 		} catch (Exception e) {
@@ -318,7 +327,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=3"), "checkFile", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + RFO), "checkFile", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return ((Boolean) o).booleanValue();
 		} catch (Exception e) {
@@ -336,7 +345,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=3"), "readFile", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + RFO), "readFile", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (StringBuffer) o;
 		} catch (Exception e) {
@@ -354,7 +363,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=3"), "checkFile", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + RFO), "checkFile", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (StringBuffer) o;
 		} catch (Exception e) {
@@ -373,7 +382,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveViewFiles", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveViewFiles", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<String>) o;
 		} catch (Exception e) {
@@ -391,7 +400,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "stopScenario", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "stopScenario", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -407,7 +416,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "restartScenario", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "restartScenario", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -423,7 +432,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "resumeScenario", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "resumeScenario", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -439,7 +448,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "suspendScenario", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "suspendScenario", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -456,7 +465,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "addJob", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "addJob", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return  (TlosJmxReturnValue) o;
 		} catch (Exception e) {
@@ -474,7 +483,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveTreeInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (TreeInfoType) o;
 		} catch (Exception e) {
@@ -494,7 +503,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveWaitConfirmOfGUI", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveWaitConfirmOfGUI", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return ((Boolean) o).booleanValue();
 		} catch (Exception e) {
@@ -516,7 +525,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveInstanceIds", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveInstanceIds", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<String>) o;
 		} catch (Exception e) {
@@ -534,7 +543,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getInfoTypeClient", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getInfoTypeClient", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (InfoTypeClient) o;
 		} catch (Exception e) {
@@ -553,7 +562,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getLiveTreeInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ScenarioNode) o;
 		} catch (Exception e) {
@@ -571,7 +580,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			Object o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getLiveTreeInfo", paramList, signature);
+			Object o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			
 			TlosSpaceWideNode tmp = (TlosSpaceWideNode) o;
@@ -595,7 +604,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "recover", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "recover", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -612,7 +621,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "shiftSolstice", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "shiftSolstice", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -629,7 +638,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "startOver", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "startOver", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -646,7 +655,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveSpaceWideRegistery", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveSpaceWideRegistery", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (WebSpaceWideRegistery) o;
 		} catch (Exception e) {
@@ -666,7 +675,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "forceCpcStart", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "forceCpcStart", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -697,7 +706,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getLiveResourceTreeInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getLiveResourceTreeInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (TlosSWResourceNode) o;
 		} catch (Exception e) {
@@ -724,7 +733,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "retrieveTlosAgentInfo", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "retrieveTlosAgentInfo", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (TlosAgentInfoTypeClient) o;
 		} catch (Exception e) {
@@ -752,7 +761,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getAgentsJobList", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getAgentsJobList", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<JobInfoTypeClient>) o;
 		} catch (Exception e) {
@@ -777,7 +786,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "deactivateTlosAgent", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "deactivateTlosAgent", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -800,7 +809,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "activateTlosAgent", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "activateTlosAgent", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -825,7 +834,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getAgentList", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getAgentList", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<SWAgent>) o;
 		} catch (Exception e) {
@@ -848,7 +857,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=2"), "restartScenarioTree", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PMI), "restartScenarioTree", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -871,7 +880,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "runningInstanceExists", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "runningInstanceExists", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return ((Boolean) o).booleanValue();
 		} catch (Exception e) {
@@ -898,7 +907,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getResourceInfoTypeClientList", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getResourceInfoTypeClientList", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<ResourceInfoTypeClient>) o;
 		} catch (Exception e) {
@@ -925,7 +934,7 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "getTlosAgentInfoTypeClientList", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "getTlosAgentInfoTypeClientList", paramList, signature);
 			TEJmxMpClient.disconnect(jmxConnector);
 			return (ArrayList<TlosAgentInfoTypeClient>) o;
 		} catch (Exception e) {
