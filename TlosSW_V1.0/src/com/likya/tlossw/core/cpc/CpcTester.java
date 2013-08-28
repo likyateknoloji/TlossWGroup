@@ -169,7 +169,8 @@ public class CpcTester extends CpcBase {
 			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
 
 			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
-
+			spcInfoType.setSpcId(scenarioId);
+			
 			scpLookupTable.put(scenarioId, spcInfoType);
 
 			if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
