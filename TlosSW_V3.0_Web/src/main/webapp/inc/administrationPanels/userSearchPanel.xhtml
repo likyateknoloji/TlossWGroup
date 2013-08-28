@@ -10,9 +10,9 @@
 
 	<ui:define name="north">
 		<h:form>
-			<p:menubar rendered="true" model="#{dynamicMenuItem.initMenu()}" />
+			<!-- p:menubar rendered="true" model="#{dynamicMenuItem.initMenu()}" /-->
+			<ui:include src="/templates/common/staticMenuBar.xhtml" />
 		</h:form>
-		<h:outputText>#{dynamicMenuItem.getSelectedMenuItem.getTitle}</h:outputText>
 
 	</ui:define>
 
