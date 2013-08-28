@@ -12,16 +12,6 @@
 				<p:menuitem value="#{msgs['tlos.menu.home']}" url="/" icon="ui-icon-home" />
 			</p:submenu>
 
-			<!-- p:submenu label="File" icon="ui-icon-document">
-				<p:submenu label="New" icon="ui-icon-contact">
-					<p:menuitem value="Project" url="#" />
-					<p:menuitem value="Other" url="#" />
-				</p:submenu>
-				<p:menuitem value="Open" url="#" />
-				<p:separator />
-				<p:menuitem value="Quit" url="#" />
-			</p:submenu-->
-
 			<p:submenu label="#{msgs['tlos.menu.definitions']}" icon="ui-icon-document">
 				<p:menuitem value="#{msgs['tlos.menu.definitions.jobs']}" url="#{staticMenuBean.myDefsUrl}" icon="ui-icon-document" />
 				<p:menuitem value="#{msgs['tlos.menu.definitions.calendars']}" url="/inc/definitionPanels/calendarSearchPanel.jsf" icon="ui-icon-document" />
@@ -34,7 +24,7 @@
 				</p:submenu>
 			</p:submenu>
 
-			<p:submenu label="#{msgs['tlos.menu.planning']}" icon="ui-icon-document">
+			<!-- p:submenu label="#{msgs['tlos.menu.planning']}" icon="ui-icon-document">
 				<p:menuitem value="#{msgs['tlos.menu.planning.availableResources']}" url="#" icon="ui-icon-document" />
 				<p:submenu label="#{msgs['tlos.menu.planning.sla']}" icon="ui-icon-document">
 				  <p:menuitem value="#{msgs['tlos.menu.planning.sla.timing']}" url="#" icon="ui-icon-document" />
@@ -42,7 +32,7 @@
 				  <p:menuitem value="#{msgs['tlos.menu.planning.sla.progProv']}" url="#" icon="ui-icon-document" />
 				</p:submenu>
 				<p:menuitem value="#{msgs['tlos.menu.planning.findResources']}" url="#" icon="ui-icon-document" />
-			</p:submenu>
+			</p:submenu -->
 
 			<p:submenu label="#{msgs['tlos.menu.workspace']}" icon="ui-icon-document">
 			    <p:menuitem value="#{msgs['tlos.menu.workspace.jobs']}" url="#{staticMenuBean.globalDefsUrl}" icon="ui-icon-document" />
@@ -59,11 +49,11 @@
 				  </p:submenu>
 				</p:submenu>
 				<p:menuitem value="#{msgs['tlos.menu.monitoring.resources']}" url="/inc/livePanels/liveResources.jsf" icon="ui-icon-document" />
-				<p:menuitem value="#{msgs['tlos.menu.monitoring.alarms']}" url="#" icon="ui-icon-document" />
+				<!-- p:menuitem value="#{msgs['tlos.menu.monitoring.alarms']}" url="#" icon="ui-icon-document" />
 				<p:submenu label="#{msgs['tlos.menu.monitoring.queues']}" url="#" icon="ui-icon-document">
 					<p:menuitem value="#{msgs['tlos.menu.monitoring.infoQueue']}" url="#" icon="ui-icon-document" />
 					<p:menuitem value="#{msgs['tlos.menu.monitoring.jobQueue']}" url="#" icon="ui-icon-document" />
-				</p:submenu>
+				</p:submenu-->
 			</p:submenu>
 			
 			<p:submenu label="#{msgs['tlos.menu.reporting']}" icon="ui-icon-document">
@@ -74,7 +64,7 @@
 				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.executionZones']}" url="/inc/reportPanels/dashboardZonesOfExecutionsPanel.xhtml" icon="ui-icon-document" />
 				<p:menuitem value="#{msgs['tlos.menu.reporting.jobs.distributions']}" url="/inc/reportPanels/dashboardJobDistributionPanel.xhtml" icon="ui-icon-document" />
 			  </p:submenu>
-			  <p:menuitem value="#{msgs['tlos.menu.reporting.documentation']}" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" />
+			  <!-- p:menuitem value="#{msgs['tlos.menu.reporting.documentation']}" url="/inc/reportPanels/documentationPanel.jsf" icon="ui-icon-document" /-->
 			</p:submenu>
 
 			<p:submenu label="#{msgs['tlos.menu.administration']}" icon="ui-icon-document">
@@ -89,8 +79,8 @@
 				  <p:menuitem value="#{msgs['tlos.menu.administration.webservices.access']}" url="/inc/administrationPanels/wsAccessSearchPanel.jsf" icon="ui-icon-document" />
 				</p:submenu>
 				<p:menuitem value="#{msgs['tlos.menu.administration.ftpAccess']}" url="/inc/administrationPanels/ftpAccessSearchPanel.jsf" icon="ui-icon-document" />
-				<p:menuitem value="#{msgs['tlos.menu.administration.backups']}" url="#" icon="ui-icon-document" />
-				<p:menuitem value="#{msgs['tlos.menu.administration.audits']}" url="#" icon="ui-icon-document" />
+				<!-- p:menuitem value="#{msgs['tlos.menu.administration.backups']}" url="#" icon="ui-icon-document" />
+				<p:menuitem value="#{msgs['tlos.menu.administration.audits']}" url="#" icon="ui-icon-document" /-->
 			</p:submenu>
 
 			<p:submenu label="#{msgs['tlos.menu.preferences']}" icon="ui-icon-document">
@@ -109,6 +99,10 @@
 
 			<f:facet name="options">
 			<p:outputPanel>
+			    <h:outputText id="dateTimeServer" styleClass="ui-icon ui-icon-clock" style="display: inline-block; position:relative; left:-90px;top:3px"/>
+                <h:outputLink id="dateTimeServerx" style="width: 140px; display: inline-block; position:relative; left:-80px; top:7px">
+			        <p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />
+		        </h:outputLink>
 			    <h:outputText id="personIcon" styleClass="ui-icon ui-icon-person" style="display: inline-block; position:relative; left:-5px;top:3px"/>
 				<h:outputText value="#{sessionMediator.webAppUser.username}" style="font-size: 115%;margin-right:10px" ></h:outputText>
 				<!-- p:inputText style="margin-right:3px" / -->
