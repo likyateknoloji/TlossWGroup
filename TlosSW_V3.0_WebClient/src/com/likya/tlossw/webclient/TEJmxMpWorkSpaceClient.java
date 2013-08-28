@@ -23,7 +23,7 @@ public class TEJmxMpWorkSpaceClient extends TEJmxMpClientBase {
 			
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
 			
-			mbeanServerConnection.invoke(new ObjectName("MBeans:type=8"), "addTestData", paramList, signature);
+			mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + WSO), "addTestData", paramList, signature);
 			
 			TEJmxMpClient.disconnect(jmxConnector);
 			
