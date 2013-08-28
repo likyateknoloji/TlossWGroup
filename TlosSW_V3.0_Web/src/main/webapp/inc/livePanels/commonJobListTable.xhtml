@@ -26,11 +26,24 @@
 				background-color: black;
 				font-weight: bold;
 			}
+			.waiting {
+				color: brown;
+				background-color: black;
+				font-weight: bold;
+			}
 			.default {
 				color: orange;
 				background-color: black;
 				font-weight: bold;
 			}
+			
+			.myShadow {
+			font-size:1em; text-shadow:0.03em 0.03em #000000;
+			}
+           .mystyle {
+              width : 30pt !important;           
+           }
+
 		</style>
 		
 		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" 
@@ -46,41 +59,48 @@
 					<p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="position:relative; left:400pt; width:150px" />
 				</p:outputPanel>
 			</f:facet>
-
-			<p:column headerText="#{msgs['tlos.live.pannel.job.jobName']}" sortBy="#{item.jobName}" filterBy="#{item.jobName}" filterMatchMode="contains">
-				<h:outputText value="#{item.jobName}" style="text-align: center;" />
+			
+			<p:column headerText="#{msgs['tlos.live.pannel.job.jobStatus']}" style="text-align: center;" styleClass="myShadow">
+                <p:commandLink styleClass="mystyle" action="#{backingBean.liveJobManagementBean['skipJobAction']}" >
+                   <h:graphicImage value="/images/#{backingBean.getStateIconsElement(item.liveStateInfo.statusName)}" />
+                </p:commandLink>
+				
+			</p:column>
+									
+			<p:column headerText="#{msgs['tlos.live.pannel.job.jobName']}" sortBy="#{item.jobName}" filterBy="#{item.jobName}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow">
+				<h:outputText value="#{item.jobName}"  />
 			</p:column>
 
-			<p:column headerText="#{msgs['tlos.live.pannel.job.stateInfo']}" sortBy="#{item.liveStateInfo.stateName}" filterBy="#{item.liveStateInfo.stateName}" filterMatchMode="contains">
-				<h:outputText value="#{item.liveStateInfo.stateName}" style="text-align: center;" />
+			<!-- p:column headerText="#{msgs['tlos.live.pannel.job.stateInfo']}" sortBy="#{item.liveStateInfo.stateName}" filterBy="#{item.liveStateInfo.stateName}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow">
+				<h:outputText value="#{item.liveStateInfo.stateName}" />
+			</p:column-->
+
+			<!-- p:column headerText="#{msgs['tlos.live.pannel.job.subState']}" sortBy="#{item.liveStateInfo.substateName}" filterBy="#{item.liveStateInfo.substateName}" filterMatchMode="contains"  style="text-align: center;" styleClass="myShadow">
+				<h:outputText value="#{item.liveStateInfo.substateName}" />
+			</p:column-->
+
+			<p:column headerText="#{msgs['tlos.live.pannel.job.status']}" sortBy="#{item.liveStateInfo.statusName}" filterBy="#{item.liveStateInfo.statusName}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow">
+				<h:outputText value="#{item.liveStateInfo.statusName}"/>
 			</p:column>
 
-			<p:column headerText="#{msgs['tlos.live.pannel.job.subState']}" sortBy="#{item.liveStateInfo.substateName}" filterBy="#{item.liveStateInfo.substateName}" filterMatchMode="contains">
-				<h:outputText value="#{item.liveStateInfo.substateName}" style="text-align: center;" />
-			</p:column>
 
-			<p:column headerText="#{msgs['tlos.live.pannel.job.status']}" sortBy="#{item.liveStateInfo.statusName}" filterBy="#{item.liveStateInfo.statusName}" filterMatchMode="contains">
-				<h:outputText value="#{item.liveStateInfo.statusName}" style="text-align: center;" />
-			</p:column>
-
-
-			<p:column headerText="#{msgs['tlos.live.pannel.job.plannedTime']}" sortBy="#{item.jobPlanTime}" filterBy="#{item.jobPlanTime}" filterMatchMode="contains">
+			<p:column headerText="#{msgs['tlos.live.pannel.job.plannedTime']}" sortBy="#{item.jobPlanTime}" filterBy="#{item.jobPlanTime}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow" >
 				<h:outputText value="#{item.jobPlanTime}" style="text-align: center;" />
 			</p:column>
 
-			<p:column headerText="#{msgs['tlos.live.pannel.job.execution']}" sortBy="#{item.plannedExecutionDate}" filterBy="#{item.plannedExecutionDate}" filterMatchMode="contains">
+			<p:column headerText="#{msgs['tlos.live.pannel.job.execution']}" sortBy="#{item.plannedExecutionDate}" filterBy="#{item.plannedExecutionDate}" filterMatchMode="contains" styleClass="myShadow">
 				<h:outputText value="#{item.plannedExecutionDate}" style="text-align: center;" />
 			</p:column>
 
-			<p:column headerText="#{msgs['tlos.live.pannel.job.duration']}" sortBy="#{item.workDuration}" filterBy="#{item.workDuration}" filterMatchMode="contains">
-				<h:outputText value="#{item.workDuration}" style="text-align: center;" />
+			<p:column headerText="#{msgs['tlos.live.pannel.job.duration']}" sortBy="#{item.workDuration}" filterBy="#{item.workDuration}" filterMatchMode="contains"  style="text-align: center;" styleClass="myShadow" >
+				<h:outputText value="#{item.workDuration}"/>
 			</p:column>
 
-			<p:column headerText="#{msgs['tlos.workspace.pannel.job.oSystem']}" sortBy="#{item.oSystem}" filterOptions="#{backingBean.osSelectItem}" filterMatchMode="exact">
-				<h:outputText value="#{item.oSystem}" style="text-align: center;" />
+			<p:column headerText="#{msgs['tlos.workspace.pannel.job.oSystem']}" sortBy="#{item.oSystem}" filterOptions="#{backingBean.osSelectItem}" filterMatchMode="exact"  style="text-align: center;" styleClass="myShadow" >
+				<h:outputText value="#{item.oSystem}"/>
 			</p:column>
 
-			<p:column>
+			<p:column  style="text-align: center;" styleClass="myShadow">
 				<f:facet name="header">
 					<h:outputText value="#{msgs['tlos.live.pannel.job.agent']}" />
 				</f:facet>
@@ -88,7 +108,7 @@
 				<h:outputText value="#{item.resourceName}.#{item.agentId}" rendered="#{item.resourceName ne null}" />
 			</p:column>
 
-			<p:column>
+			<p:column  style="text-align: center;" styleClass="myShadow">
 				<f:facet name="header">
 					<h:outputText value="#{msgs['tlos.live.pannel.scenario.manage']}" />
 				</f:facet>
