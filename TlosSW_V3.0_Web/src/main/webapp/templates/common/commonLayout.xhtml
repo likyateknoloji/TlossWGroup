@@ -111,6 +111,10 @@ div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
   position : fixed;
   left : 0;
 }
+
+	.myShadow {
+	  font-size:1em; text-shadow:0.03em 0.03em #000000;
+	}
 </style>
 
 	</h:head>
@@ -124,15 +128,12 @@ div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
 					<p:outputPanel>
 						<p:graphicImage value="/images/likyalg01.gif" />
 						<h:outputText
-							style="display: inline-block; position:relative; left:10px;top:-14px"
-							value="Likya Teknoloji &#169; 2008-2013" />
-						<h:outputLink
-							style="display: inline-block; position:relative; left:10px;top:-14px"
+							style="display: inline-block; position:relative; left:10px;top:-14px" styleClass="myShadow"
 							value="#{msgs['tlosui.company']} &#169; 2008-2013" />
 						<p:lightBox iframe="true" style="display: inline-block;">
 							<h:outputLink value="http://www.tlos.com.tr"
 								title="Tlos Workload Automation Solutions">
-								<h:outputText  style="font-size: 25px; display: inline-block; position:relative; left:190px;top:-10px" value="#{msgs['tlosui.title']}" />
+								<h:outputText  style="font-size: 25px; display: inline-block; position:relative; left:190px;top:-10px" value="#{msgs['tlosui.title']}" styleClass="myShadow"/>
 							</h:outputLink>
 						</p:lightBox>
 					</p:outputPanel>
