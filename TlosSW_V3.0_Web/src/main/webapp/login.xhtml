@@ -76,6 +76,10 @@
             color:#F2F2F2;
             text-shadow: 0 1px 1px rgba(255,255,255,0.3);
         }
+        
+		.loginShadow {
+		   font-size:1em; text-shadow:0.02em 0.02em #000000;
+		}
     </style>
 </h:head>
 
@@ -85,7 +89,7 @@
      <h:form id="loginForm">
     <div id="divContainer">
  
-        <h1 align="center"><h:outputLabel id="TlosSWHeadLine"
+        <h1 align="center"><h:outputLabel id="TlosSWHeadLine" styleClass="loginShadow"
 												value="#{msgs['tlos.login.definition']}" /></h1>
 
         <!-- HTML5 TABLE FORMATTED VIA CSS3-->
@@ -115,7 +119,7 @@
 								<p:row>
 									<p:column>
 										<a href="http://www.tlos.com.tr/"><h:outputLabel
-												style="text-align: center; font-size: 14pt;" id="TlosSWDef"
+												style="text-align: center; font-size: 14pt;" id="TlosSWDef" 
 												value="#{msgs['tlos.login.definition']}" /></a>
 										<br />
 									</p:column>
@@ -128,13 +132,13 @@
 									<p:growl id="messages" showDetail="true" autoUpdate="true" />
 									<p:panelGrid id="loginInfoInputPanel" columns="2">
 										<f:facet name="header">
-											<h:outputText style="text-align: center"
+											<h:outputText style="text-align: center" styleClass="loginShadow"
 												value="#{msgs['tlos.login.userInfo']}" />
 										</f:facet>
 
 										<p:row>
 											<p:column>
-												<h:outputLabel for="userNameInput2"
+												<h:outputLabel for="userNameInput2" styleClass="loginShadow"
 													value="#{msgs['tlos.login.username']}" />
 											</p:column>
 										</p:row>
@@ -152,7 +156,7 @@
 
 										<p:row>
 											<p:column>
-												<h:outputText value="#{msgs['tlos.login.password']}" />
+												<h:outputText value="#{msgs['tlos.login.password']}" styleClass="loginShadow"/>
 											</p:column>
 										</p:row>
 										<p:row>
@@ -174,7 +178,7 @@
 										</p:row>
 										<p:row>
 											<p:column colspan="2" style="text-align: center">
-												<p:commandButton value="#{msgs['tlos.login.loginButton']}"
+												<p:commandButton value="#{msgs['tlos.login.loginButton']}" styleClass="loginShadow"
 													id="loginButton" action="#{loginBean.login}"
 													update="messages" />
 											</p:column>
@@ -185,7 +189,7 @@
 												<p:column>
 													<p:selectOneMenu id="currentLang"
 														style="text-align: left; font-size: xx-small;"
-														styleClass="themeSelectOneMenu"
+														styleClass="themeSelectOneMenu loginShadow"
 														value="#{localeBean.currentLanguage}">
 														<f:selectItems value="#{localeBean.availableLocales}" />
 
@@ -210,9 +214,13 @@
             <!-- TABLE FOOTER-->
             <tfoot>
                <tr><td colspan="1">
-               <h:outputText value="#{msgs['tlos.login.disclamer']}" />
+               <h:outputText value="#{msgs['tlos.login.disclamer']}" styleClass="loginShadow"/>
 												</td></tr>
-                <tr><td colspan="1">Copyright &#9400; Likya Teknoloji &#169; 2008-2013 </td></tr>
+                <tr>
+                 <td colspan="1">
+                   <h:outputText value="Copyright &#9400; Likya Teknoloji &#169; 2008-2013 " styleClass="loginShadow"/>
+                 </td>
+                </tr>
             </tfoot>
         </table>
 
