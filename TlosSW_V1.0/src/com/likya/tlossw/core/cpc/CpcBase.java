@@ -312,16 +312,16 @@ public abstract class CpcBase implements Runnable {
 			instanceId = "" + Calendar.getInstance().getTimeInMillis();
 		}
 		myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmistir.");
-		String localRoot = getRootPath() + "." + instanceId;
+		String localRoot = CpcUtils.getRootScenarioPath(instanceId);
 		myLogger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
 
 		// Bir senaryoya ait olmayan is listesi
 
-		JobList lonelyJobList = tlosProcessData.getJobList();
+//		JobList lonelyJobList = tlosProcessData.getJobList();
 
-		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
-			myLogger.info("");
-			myLogger.info(" 6 - TlosProcessData icinde bir Senaryoya ait olmayan serbest isler listesi cikarilacak.");
+//		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
+//			myLogger.info("");
+//			myLogger.info(" 6 - TlosProcessData icinde bir Senaryoya ait olmayan serbest isler listesi cikarilacak.");
 			/*
 			 * if (!validateJobList(lonelyJobList)) { myLogger.info(
 			 * "     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir."
@@ -334,15 +334,16 @@ public abstract class CpcBase implements Runnable {
 			// Bu joblari, serbest olarak ekliyoruz listeye
 
 			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, instanceId);
-
+			myScenario.setID(EngineeConstants.LONELY_JOBS);
+			
 			// *** root sonrasina instanceid eklendi. *//*
 
-			tmpScenarioList.put(localRoot + "." + EngineeConstants.LONELY_JOBS, myScenario);
+			tmpScenarioList.put(CpcUtils.getRootScenarioPath(instanceId), myScenario);
 
 			// System.out.println("   > Validasyonda problem olmadigindan "+localRoot
 			// + "." + Cpc.LONELY_JOBS+" olarak Senaryo listesine eklendiler.");
-			myLogger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
-		}
+//			myLogger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
+//		}
 
 		myLogger.info("");
 		myLogger.info(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
@@ -380,7 +381,7 @@ public abstract class CpcBase implements Runnable {
 
 			SpcInfoType spcInfoType = null;
 			
-			if(!scenarioId.equals(localRoot + "." + EngineeConstants.LONELY_JOBS) && jobList.getJobPropertiesArray().length == 0) {
+			if(!scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) && jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
 			} else {
