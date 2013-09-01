@@ -112,14 +112,7 @@ public class TlosSpaceWideBase {
 			String xmlsUrl = ParsingUtils.getXmlsPath(dbUri);
 			getSpaceWideRegistry().setXmlsUrl(xmlsUrl);
 
-			// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
-			TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
-
-			if (tlosConfigInfo == null || !XMLValidations.validateWithLogs(logger, tlosConfigInfo)) {
-				throw new TlosFatalException("DBUtils.getTlosConfig : getTlosConfig is null or tlosConfigInfo xml is damaged !");
-			}
-
-			getSpaceWideRegistry().setTlosSWConfigInfo(tlosConfigInfo);
+			loadConfigData();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,6 +130,19 @@ public class TlosSpaceWideBase {
 		logger.info("############################################");
 
 		logger.info("");
+
+	}
+
+	private void loadConfigData() throws TlosFatalException {
+
+		// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
+		TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
+
+		if (tlosConfigInfo == null || !XMLValidations.validateWithLogs(logger, tlosConfigInfo)) {
+			throw new TlosFatalException("DBUtils.getTlosConfig : getTlosConfig is null or tlosConfigInfo xml is damaged !");
+		}
+
+		getSpaceWideRegistry().setTlosSWConfigInfo(tlosConfigInfo);
 
 	}
 
@@ -226,21 +232,20 @@ public class TlosSpaceWideBase {
 	}
 
 	protected void startJmxTlsServers() {
-		
+
 		if (useJmx) {
 			String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
 			String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-			
-			
+
 			// Prototip MC baslatmak icin gerekiyor.
 			/**
 			 * Artık prototip kaldırıldığından iptal ediyoruz.
 			 */
 			// JMXServer.initialize(MBeanArray, MBeanTypeArray);
-			
+
 			JMXTLSServer.initialize(MBeanArray, MBeanTypeArray);
 		}
-		
+
 	}
 
 	protected void startMailSystem() {
@@ -415,27 +420,7 @@ public class TlosSpaceWideBase {
 
 		if (!getSpaceWideRegistry().isUserSelectedRecover()) {
 
-			logger.info("   > is listesi KDS nden sorgulaniyor ...");
-
-			try {
-
-				TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
-
-				if (tlosProcessData == null || !XMLValidations.validateWithLogs(logger, tlosProcessData)) {
-					throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
-				}
-				getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
-
-			} catch (TlosFatalException e) {
-				if (getSpaceWideRegistry().getCpcReference() == null) {
-					errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
-					// System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
-					System.exit(-1);
-				} else {
-					errprintln("Gün dönümü sonrası çalışma listesi alınamadı !");
-					return;
-				}
-			}
+			loadDailyPlan();
 
 			int numOfScenarios = getSpaceWideRegistry().getTlosProcessData().getScenarioArray().length;
 			JobList jobList = getSpaceWideRegistry().getTlosProcessData().getJobList();
@@ -492,6 +477,33 @@ public class TlosSpaceWideBase {
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
 		logger.info("");
 
+	}
+	
+	private void loadDailyPlan() {
+		
+		logger.info("   > İş listesi KDS nden sorgulanıyor ...");
+
+		try {
+
+			TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
+
+			if (tlosProcessData == null || !XMLValidations.validateWithLogs(logger, tlosProcessData)) {
+				throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
+			}
+			getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
+
+		} catch (TlosFatalException e) {
+			if (getSpaceWideRegistry().getCpcReference() == null) {
+				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+				// System.out.println("Code : 1238 : Data.xml valide edilemedi veya null ");
+				System.exit(-1);
+			} else {
+				errprintln("Gün dönümü sonrası çalışma listesi alınamadı !");
+				return;
+			}
+		}
+		
+		logger.info("   > İş listesi KDS nden sorgulandı ! ...");
 	}
 
 	public void startCpcTester() {
