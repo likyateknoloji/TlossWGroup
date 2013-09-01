@@ -5,15 +5,19 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.cpc.CpcBase;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
+import com.likya.tlossw.model.engine.EngineeConstants;
 
 public class CpcUtils {
-
+	
 	public static Scenario getScenario(TlosProcessData tlosProcessData, String instanceId) {
 		
 		Scenario scenario = Scenario.Factory.newInstance();
 		scenario.setJobList(tlosProcessData.getJobList());
+		
+		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
 
 		tlosProcessData.getConcurrencyManagement().setInstanceId(instanceId);
 
@@ -124,6 +128,10 @@ public class CpcUtils {
 		spcInfoType.setSpcReferance(null);
 
 		return spcInfoType;
+	}
+	
+	public static String getRootScenarioPath(String instanceId) {
+		return CpcBase.getRootPath() + "." + instanceId + "." + EngineeConstants.LONELY_JOBS;
 	}
 
 }
