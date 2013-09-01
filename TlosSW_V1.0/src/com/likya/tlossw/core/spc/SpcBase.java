@@ -32,7 +32,7 @@ import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
-import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -128,7 +128,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
 				// PERIYODIK bir is ise;
-				if (!jobRuntimeProperties.getTreePath().equals(CpcBase.getRootPath() + "." + this.getConcurrencyManagement().getInstanceId() + "." + EngineeConstants.LONELY_JOBS)) {
+				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
 					globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
 					globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 					globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
@@ -189,7 +189,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-				if (!jobRuntimeProperties.getTreePath().equals(CpcBase.getRootPath() + "." + this.getConcurrencyManagement().getInstanceId() + "." + EngineeConstants.LONELY_JOBS)) {
+				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
 					globalLogger.warn("Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
 					globalLogger.warn("JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 					globalLogger.warn("TreePath : " + jobRuntimeProperties.getTreePath());
