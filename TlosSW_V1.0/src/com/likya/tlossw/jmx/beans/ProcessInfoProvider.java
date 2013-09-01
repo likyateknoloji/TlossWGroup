@@ -57,7 +57,6 @@ import com.likya.tlossw.model.client.resource.TlosAgentInfoTypeClient;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
-import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
@@ -66,6 +65,7 @@ import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.InstanceUtils;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
@@ -419,7 +419,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		if (spcInfoType.getSpcReferance() != null) {
 			String instanceId = spcInfoType.getSpcReferance().getConcurrencyManagement().getInstanceId();
-			if (scenarioId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
+			if (scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId))) {
 				spcInfoTypeClient.setJsName(scenarioId);
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
