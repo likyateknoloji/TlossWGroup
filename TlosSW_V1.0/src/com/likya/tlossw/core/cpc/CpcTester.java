@@ -135,7 +135,7 @@ public class CpcTester extends CpcBase {
 
 			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, "");
 			myScenario.setID(EngineeConstants.LONELY_JOBS);
-			tmpScenarioList.put(localRoot + "." + EngineeConstants.LONELY_JOBS, myScenario);
+			tmpScenarioList.put(CpcUtils.getRootScenarioPath(userId), myScenario);
 
 			logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
 		}
