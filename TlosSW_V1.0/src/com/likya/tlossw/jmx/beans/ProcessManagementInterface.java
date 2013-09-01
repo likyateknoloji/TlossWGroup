@@ -42,8 +42,8 @@ import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.MessagesCodeMapping;
 import com.likya.tlossw.model.TlosJmxReturnValue;
-import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.InstanceUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
@@ -83,8 +83,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		if (maxInstanceId == null) {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.ENGINE_INSTANCE_ABSENT), null);
 		}
-
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc("root." + maxInstanceId + "." + EngineeConstants.LONELY_JOBS, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+		
+		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(CpcUtils.getRootScenarioPath(maxInstanceId), TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().get(jobProperties.getID()) != null) {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.SCENARIO_DUPLICATEJOBNAME), null);
 		}
