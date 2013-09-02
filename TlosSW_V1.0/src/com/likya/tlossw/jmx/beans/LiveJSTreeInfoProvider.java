@@ -17,6 +17,7 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.cpc.CpcBase;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
@@ -381,7 +382,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				String selectedNodeId = new String("root." + clientInstanceNode.getInstanceId());
+				String selectedNodeId = new String(CpcBase.getRootPath() + "." + clientInstanceNode.getInstanceId());
 
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, selectedNodeId).getSpcInfoTypeClientList();
