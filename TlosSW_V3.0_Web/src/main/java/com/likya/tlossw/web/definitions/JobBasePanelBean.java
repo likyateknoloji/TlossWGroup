@@ -28,6 +28,7 @@ import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
 import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
+import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
 import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
@@ -190,6 +191,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillLocalParametersTab();
 		fillEnvVariablesTab();
 		fillAdvancedJobInfosTab();
+		fillLogAnalysisTab();
 	}
 
 	public void fillEnvVariablesTab() {
@@ -198,6 +200,17 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private void fillBaseInfosTab() {
 		getBaseJobInfosTabBean().fillBaseInfosTab();
+	}
+
+	public void fillLogAnalysisTab() {
+
+		LogAnalysis logAnalysis = null;
+
+		if (jobProperties != null) {
+			logAnalysis = jobProperties.getLogAnalysis();
+			getLogAnalyzingTabBean().fillLogAnalysisTab(logAnalysis);
+		}
+
 	}
 
 	public void fillTimeManagementTab() {
@@ -323,10 +336,28 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillAlarmPreference();
 		fillLocalParameters();
 		fillAdvancedJobInfos();
+		fillLogAnalysis();
 	}
 
 	private void fillBaseJobInfos() {
 		getBaseJobInfosTabBean().fillBaseJobInfos();
+	}
+
+	protected void fillLogAnalysis() {
+
+		LogAnalysis logAnalysis;
+
+		if (!getLogAnalyzingTabBean().isUseLogAnalyzer() || jobProperties == null) {
+			return;
+		}
+
+		if (jobProperties.getLogAnalysis()==null) {
+			logAnalysis = LogAnalysis.Factory.newInstance();
+		} else {
+			logAnalysis = jobProperties.getLogAnalysis();			
+		}
+		jobProperties.setLogAnalysis(getLogAnalyzingTabBean().fillLogAnalysis(logAnalysis));
+
 	}
 
 	protected void fillTimeManagement() {
