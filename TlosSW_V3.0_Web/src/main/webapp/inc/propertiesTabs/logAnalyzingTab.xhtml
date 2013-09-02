@@ -9,36 +9,195 @@
 				<p:panelGrid columns="4">
 					<h:outputText value="Analizi Yapılsın mı" />
 					<p:selectBooleanCheckbox value="#{backingBean.useLogAnalyzer}">
-						<p:ajax update=":jobDefinitionForm:tabView:logAnalyzingInfoPanel :jobDefinitionForm:tabView:customPanel" />
+						<p:ajax update=":jobDefinitionForm:tabView:customPanel" />
 					</p:selectBooleanCheckbox>
-				</p:panelGrid>
-			</p:panel>
-			<p:panel id="customPanel">
-				<p:outputPanel rendered="#{backingBean.useLogAnalyzer}">
-					<p:selectOneRadio id="customRadio" value="#{backingBean.searchType}" layout="custom">
-						<f:selectItem itemLabel="Option 1" itemValue="1" />
-						<f:selectItem itemLabel="Option 2" itemValue="2" />
-					</p:selectOneRadio>
 
-					<h:panelGrid columns="3">
-						<p:radioButton id="opt1" for="customRadio" itemIndex="0" />
-						<h:outputLabel for="opt1" value="Regex" />
-						<p:inputText />
-						<p:radioButton id="opt2" for="customRadio" itemIndex="1" />
-						<h:outputLabel for="opt2" value="String" />
-						<p:inputText />
-					</h:panelGrid>
-				</p:outputPanel>
-			</p:panel>
-			<p:panel id="logAnalyzingInfoPanel">
-				<p:panelGrid columns="10" rendered="#{backingBean.useLogAnalyzer}">
-					<h:outputText value="Options: " />
-					<p:selectOneRadio id="customRadio1" value="#{backingBean.searchType}">
-						<f:selectItem itemLabel="Send email" itemValue="1" />
-						<f:selectItem itemLabel="Return true" itemValue="2" />
-						<f:selectItem itemLabel="Return false" itemValue="2" />
-					</p:selectOneRadio>
 				</p:panelGrid>
+
+				<p:panel id="customPanel">
+					<p:outputPanel rendered="#{backingBean.useLogAnalyzer}">
+						<p:selectOneRadio id="customRadio" value="#{backingBean.searchType}" layout="custom">
+							<f:selectItem itemLabel="Option 1" itemValue="1" />
+							<f:selectItem itemLabel="Option 2" itemValue="2" />
+							<p:ajax update=":jobDefinitionForm:tabView:matchWholeword" />
+						</p:selectOneRadio>
+
+						<h:panelGrid columns="4">
+							<p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+							<h:outputLabel for="opt1" value="Regex" />
+							<p:inputText value="#{backingBean.regex}" />
+							<br />
+							<p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+							<h:outputLabel for="opt2" value="String" />
+
+							<p:inputText value="#{backingBean.string}" />
+						</h:panelGrid>
+
+						<p:panel id="matchWholeword">
+							<p:panelGrid columns="2" rendered="#{backingBean.searchType eq'2'}">
+								<h:outputText value="Tüm kelimeyi ara" rendered="#{backingBean.searchType eq'2'}" />
+								<p:selectBooleanCheckbox value="#{backingBean.matchWord}" rendered="#{backingBean.searchType eq'2'}">
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panelGrid columns="2">
+							<h:outputText value="Büyük/Küçük harf duyarlı" />
+							<p:selectBooleanCheckbox value="#{backingBean.matchCase}">
+
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+						<p:panel id="matchcasePanel">
+							<h:panelGrid columns="2">
+
+								<h:outputText value="Arama Yönü: " />
+								<h:selectOneMenu value="#{backingBean.direction}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="UP" itemValue="Up" />
+									<f:selectItem itemLabel="DOWN" itemValue="Down" />
+								</h:selectOneMenu>
+
+							</h:panelGrid>
+						</p:panel>
+
+						<p:panel id="panel" header="Then">
+							<h:panelGrid columns="4">
+								<h:outputText value="Event Tipi:" />
+								<p:selectOneMenu value="#{backingBean.code}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="E-mail" itemValue="email" />
+
+									<f:selectItem itemLabel="Wait me" itemValue="waitMe" />
+									<p:ajax update=":jobDefinitionForm:tabView:e_mail" />
+								</p:selectOneMenu>
+								<p:panelGrid id="e_mail" columns="2">
+									<h:outputText value="E-mail:" rendered="#{backingBean.code eq'email'}" />
+									<p:inputText value="#{backingBean.email}" rendered="#{backingBean.code eq'email'}" />
+								</p:panelGrid>
+							</h:panelGrid>
+							<br />
+							<p:panel id="dependePanel">
+								<f:facet name="header">  
+                                   Statü Değiştirme 
+                                  </f:facet>
+								<h:panelGrid columns="4">
+									<h:outputText value="Aktive et" />
+									<p:selectBooleanCheckbox value="#{backingBean.active}">
+										<p:ajax update=":jobDefinitionForm:tabView:depRules" />
+									</p:selectBooleanCheckbox>
+								</h:panelGrid>
+								<p:outputPanel id="depRules">
+									<p:panel id="toUpdate" rendered="#{backingBean.active}" header="life state info">
+										<h:panelGrid id="depenrule" columns="2">
+											<h:outputText value="#{msgs['tlos.popup.dependency.selectDepth']}" rendered="#{backingBean.active}" />
+											<p:selectOneRadio value="#{backingBean.dependencyType}" rendered="#{backingBean.active}">
+
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.state']}" itemValue="State" />
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.substate']}" itemValue="SubState" />
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.status']}" itemValue="Status" />
+												<p:ajax update="depRules" />
+											</p:selectOneRadio>
+										</h:panelGrid>
+									</p:panel>
+									<br />
+									<h:panelGrid columns="2">
+										<h:outputText value="#{msgs['tlos.popup.dependency.state']}" rendered="#{backingBean.active}" />
+										<p:selectOneMenu value="#{backingBean.depStateName}" rendered="#{backingBean.active}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobStateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="#{msgs['tlos.popup.dependency.substate']}" rendered="#{backingBean.dependencyType ne 'State' and backingBean.active}" />
+										<p:selectOneMenu value="#{backingBean.depSubstateName}" rendered="#{backingBean.dependencyType ne 'State' and backingBean.active}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobSubStateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="#{msgs['tlos.popup.dependency.status']}" rendered="#{backingBean.dependencyType eq 'Status' and backingBean.active}" />
+										<p:selectOneMenu value="#{backingBean.depStatusName}" rendered="#{backingBean.dependencyType eq 'Status'and backingBean.active}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobStatusNameList}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+								</p:outputPanel>
+							</p:panel>
+						</p:panel>
+
+						<p:panelGrid columns="4">
+							<h:outputText value="Else" />
+							<p:selectBooleanCheckbox value="#{backingBean.els}">
+								<p:ajax update=":jobDefinitionForm:tabView:statu" />
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+						<p:panel id="statu">
+							<h:panelGrid columns="4">
+								<h:outputText value="Event Tipi: " rendered="#{backingBean.els}" />
+								<p:selectOneMenu value="#{backingBean.codeElse}" rendered="#{backingBean.els}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="E-mail" itemValue="email" />
+									<f:selectItem itemLabel="Wait me" itemValue="waitMe" />
+									<p:ajax update=":jobDefinitionForm:tabView:email2" />
+								</p:selectOneMenu>
+								<p:panelGrid id="email2" columns="2">
+									<h:outputText value="E-mail:" rendered="#{backingBean.codeElse eq'email'}" />
+									<p:inputText value="#{backingBean.emailElse}" rendered="#{backingBean.codeElse eq'email'}" />
+								</p:panelGrid>
+							</h:panelGrid>
+							<br />
+
+							<p:panel rendered="#{backingBean.els}" header="Statü Değiştirme">
+
+								<h:panelGrid columns="4">
+									<h:outputText value="Aktive et" rendered="#{backingBean.els}" />
+									<p:selectBooleanCheckbox value="#{backingBean.activeElse}">
+										<p:ajax update=":jobDefinitionForm:tabView:depeRules" />
+									</p:selectBooleanCheckbox>
+								</h:panelGrid>
+								<p:outputPanel id="depeRules">
+									<p:panel rendered="#{backingBean.activeElse }" header="life state info">
+										<h:panelGrid id="depenrules" columns="2">
+											<h:outputText value="#{msgs['tlos.popup.dependency.selectDepth']}" rendered="#{backingBean.activeElse}" />
+											<p:selectOneRadio value="#{backingBean.dependencyTypeElse}" rendered="#{backingBean.activeElse }">
+
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.state']}" itemValue="State" />
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.substate']}" itemValue="SubState" />
+												<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.status']}" itemValue="Status" />
+												<p:ajax update="depeRules" />
+											</p:selectOneRadio>
+										</h:panelGrid>
+									</p:panel>
+									<br />
+									<h:panelGrid columns="2">
+										<h:outputText value="#{msgs['tlos.popup.dependency.state']}" rendered="#{backingBean.activeElse }" />
+										<p:selectOneMenu value="#{backingBean.depStateNameElse}" rendered="#{backingBean.activeElse}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobStateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="#{msgs['tlos.popup.dependency.substate']}" rendered="#{backingBean.dependencyTypeElse ne 'State' and backingBean.activeElse}" />
+										<p:selectOneMenu value="#{backingBean.depSubstateNameElse}" rendered="#{backingBean.dependencyTypeElse ne 'State' and backingBean.activeElse}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobSubStateNameList}" />
+										</p:selectOneMenu>
+
+										<h:outputText value="#{msgs['tlos.popup.dependency.status']}" rendered="#{backingBean.dependencyTypeElse eq 'Status' and backingBean.activeElse}" />
+										<p:selectOneMenu value="#{backingBean.depStatusNameElse}" rendered="#{backingBean.dependencyTypeElse eq 'Status'and backingBean.activeElse}">
+											<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+											<f:selectItems value="#{backingBean.jobStatusNameList}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+								</p:outputPanel>
+
+							</p:panel>
+
+						</p:panel>
+
+					</p:outputPanel>
+				</p:panel>
+
 			</p:panel>
 
 		</p:tab>
