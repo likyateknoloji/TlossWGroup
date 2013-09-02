@@ -9,14 +9,12 @@ import javax.faces.event.ActionEvent;
 import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
-import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
@@ -172,19 +170,18 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		
 		// Ekrandan secilenin job veya senaryo olmasına göre 
 		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
-			if(getScenario().getID().equals("0")) { // kok senaryo ise
-				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
-				tlosProcessData.set(scenario);			
-			} else {
+//			if(getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
+//				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
+//				tlosProcessData.set(scenario);			
+//			} else {
 				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());	
-				tlosProcessData.addNewScenario().set(scenario);
-				ihtiyac = true;
-			}
-		}
-		else {
+				tlosProcessData.set(scenario);
+				// ihtiyac = true;
+//			}
+		} else {
             // tek job ise
 		   tlosProcessData.addNewJobList();
-		   tlosProcessData.getJobList().addNewJobProperties().set(jobProperties.copy());
+		   tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		   ihtiyac = true;
 		}
 		
