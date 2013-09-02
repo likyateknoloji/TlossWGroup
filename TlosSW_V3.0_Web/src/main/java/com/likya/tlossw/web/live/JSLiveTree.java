@@ -294,7 +294,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			scenarioNode.setId(spcInfoTypeClient.getJsId());
 			scenarioNode.setName(spcInfoTypeClient.getJsName());
 
-			if (spcInfoTypeClient.isSerbestFolder()) {
+			if (spcInfoTypeClient.isRootFolder()) {
 				scenarioNode.setId(resolveMessage("tlos.live.tree.free"));
 			}
 			if (spcInfoTypeClient.getJsName() == null) {
