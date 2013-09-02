@@ -116,7 +116,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			if (spcId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
 				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
 				spcInfoTypeClient.setJsId(EngineeConstants.LONELY_JOBS);
-				spcInfoTypeClient.setSerbestFolder(true);
+				spcInfoTypeClient.setRootFolder(true);
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
 				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
