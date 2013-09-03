@@ -13,6 +13,7 @@ import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
 import com.likya.tlossw.model.auth.WebAppUser;
+import com.likya.tlossw.web.model.JSBuffer;
 
 @ManagedBean(name = "sessionMediator")
 @SessionScoped
@@ -31,7 +32,9 @@ public class SessionMediator implements Serializable {
 	private LocaleBean localeBean;
 	
 	private String documentId;
-	
+
+	private JSBuffer jsBuffer;
+
 	public ResourceBundle getMessageBundle() {
 		initMessageBundle();
 		return messageBundle;
@@ -99,6 +102,14 @@ public class SessionMediator implements Serializable {
 
 	public void setWebAppUser(WebAppUser webAppUser) {
 		this.webAppUser = webAppUser;
+	}
+
+	public JSBuffer getJsBuffer() {
+		return jsBuffer;
+	}
+
+	public void setJsBuffer(JSBuffer jsBuffer) {
+		this.jsBuffer = jsBuffer;
 	}
 
 }

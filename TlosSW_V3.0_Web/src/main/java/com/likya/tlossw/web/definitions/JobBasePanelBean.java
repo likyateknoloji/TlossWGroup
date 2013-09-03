@@ -48,6 +48,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.definitions.helpers.BaseJobInfosTabBean;
 import com.likya.tlossw.web.definitions.helpers.EnvVariablesTabBean;
 import com.likya.tlossw.web.definitions.helpers.StateInfosTabBean;
+import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ComboListUtils;
@@ -959,6 +960,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		String jobPropertiesXML = jobProperties.xmlText(xmlOptions);
 
 		return jobPropertiesXML;
+	}
+
+	public void copyJob() {
+		JSBuffer jsBuffer = new JSBuffer();
+		jsBuffer.setJob(true);
+		jsBuffer.setJsID(jobProperties.getID());
+	
+		getSessionMediator().setJsBuffer(jsBuffer);
 	}
 
 	public JobProperties getJobProperties() {

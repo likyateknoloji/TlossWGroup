@@ -32,6 +32,7 @@ import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
+import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -545,6 +546,19 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			super.fillDependencyDefinitionsTab(dependencyList);
 		}
 
+	}
+
+	public void copyScenario() {
+		JSBuffer jsBuffer = new JSBuffer();
+		jsBuffer.setJob(false);
+		jsBuffer.setJsID(scenario.getID());
+	
+		getSessionMediator().setJsBuffer(jsBuffer);
+	}
+
+	public void pasteJS() {
+		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
+		getDbOperations().copyMyDataToGlobalData(getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsID(), scenarioPath);
 	}
 
 	/*

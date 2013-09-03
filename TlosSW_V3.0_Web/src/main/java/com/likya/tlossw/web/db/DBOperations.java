@@ -2088,6 +2088,21 @@ public class DBOperations implements Serializable {
 		return null;
 	}
 
+	public boolean copyMyDataToGlobalData(int userId, boolean isJob, String jsId, String jsPath) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:functionName", toXSString(userId), isJob + "", toXSString(jsId), jsPath);
+
+		try {
+			@SuppressWarnings("unused")
+			ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}
