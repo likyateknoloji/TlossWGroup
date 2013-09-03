@@ -373,7 +373,19 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 		}
 	}
-	
+
+	public void copyJobAction() {
+		((JobBasePanelBean) currentPanelMBeanRef).copyJob();
+	}
+
+	public void copyScenarioAction() {
+		getScenarioDefinitionMBean().copyScenario();
+	}
+
+	public void pasteJSAction() {
+		getScenarioDefinitionMBean().pasteJS();
+	}
+
 	public String getJobDefCenterPanel() {
 		return jobDefCenterPanel;
 	}
