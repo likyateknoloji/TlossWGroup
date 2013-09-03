@@ -3,7 +3,7 @@ package com.likya.tlossw.web.model;
 public class JSBuffer {
 
 	private boolean isJob;
-	private String jsID;
+	private String jsId;
 
 	public boolean isJob() {
 		return isJob;
@@ -13,12 +13,13 @@ public class JSBuffer {
 		this.isJob = isJob;
 	}
 
-	public String getJsID() {
-		return jsID;
+	public String getJsId() {
+		return jsId;
 	}
 
-	public void setJsID(String jsID) {
-		this.jsID = jsID;
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
 	}
+
 
 }
