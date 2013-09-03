@@ -551,14 +551,14 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public void copyScenario() {
 		JSBuffer jsBuffer = new JSBuffer();
 		jsBuffer.setJob(false);
-		jsBuffer.setJsID(scenario.getID());
+		jsBuffer.setJsId(scenario.getID());
 	
 		getSessionMediator().setJsBuffer(jsBuffer);
 	}
 
 	public void pasteJS() {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
-		getDbOperations().copyMyDataToGlobalData(getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsID(), scenarioPath);
+		getDbOperations().copyMyDataToGlobalData(getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath);
 	}
 
 	/*
