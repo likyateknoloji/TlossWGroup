@@ -49,6 +49,12 @@
 			<p:menuitem value="Run Test"
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
+			<p:menuitem value="#{msgs['tlos.button.copy']}"
+				action="#{jsNavigationMBean.copyScenarioAction}"
+				icon="ui-icon-copy" />
+			<p:menuitem value="#{msgs['tlos.button.paste']}"
+				action="#{jsNavigationMBean.pasteJSAction}"
+				icon="ui-icon-paste" />
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">
@@ -58,6 +64,9 @@
 			<p:menuitem value="Run Test"
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
+			<p:menuitem value="#{msgs['tlos.button.copy']}"
+				action="#{jsNavigationMBean.copyJobAction}"
+				icon="ui-icon-copy" />
 		</p:contextMenu>
 
 		<p:tree value="#{jSTree.root}" var="node" id="tree" animate="true"
