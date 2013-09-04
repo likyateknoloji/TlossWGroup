@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeCollapseEvent;
@@ -25,6 +26,7 @@ import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
+import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
@@ -33,6 +35,9 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 995405464697116080L;
 
+	@ManagedProperty(value = "#{scenarioMBean}")
+	private ScenarioMBean scenarioMBean;
+	
 	private TreeNode root;
 
 	private TreeNode selectedJS;
@@ -91,6 +96,8 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
 
+		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
+		
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
 
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
@@ -300,6 +307,14 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
 		this.selectedTreeNode = selectedTreeNode;
+	}
+
+	public ScenarioMBean getScenarioMBean() {
+		return scenarioMBean;
+	}
+
+	public void setScenarioMBean(ScenarioMBean scenarioMBean) {
+		this.scenarioMBean = scenarioMBean;
 	}
 
 }
