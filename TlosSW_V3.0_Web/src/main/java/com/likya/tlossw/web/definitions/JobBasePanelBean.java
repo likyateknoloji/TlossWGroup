@@ -3,6 +3,7 @@ package com.likya.tlossw.web.definitions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
@@ -107,13 +108,13 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private Item dependencyItem;
 
-	private String dependencyType = STATE;
+	private String dependencyType = STATUS;
 
 	private String depStateName;
 
 	private String depSubstateName;
 
-	private String depStatusName;
+	private String depStatusName = StatusName.SUCCESS.toString();
 
 	private boolean dependencyInsertButton = true;
 
@@ -132,6 +133,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private Collection<SelectItem> osTypeList = null;
 
+	private HashMap<String, String> statusToSubstate = new HashMap<String, String>();
+	private HashMap<String, String> substateToState = new HashMap<String, String>();
 
 	abstract public void fillTabs();
 
@@ -178,7 +181,33 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		
 		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel Süre : ", startTime);
 
+		fill3S();
+	}
 
+	private void fill3S() {
+		statusToSubstate.put(StatusName.SUCCESS.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.WARNING.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.FAILED.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.TIME_IN.toString(), SubstateName.ON_RESOURCE.toString());
+		statusToSubstate.put(StatusName.TIME_OUT.toString(), SubstateName.ON_RESOURCE.toString());
+		statusToSubstate.put(StatusName.LOOKFOR_RESOURCE.toString(), SubstateName.READY.toString());
+		statusToSubstate.put(StatusName.WAITING.toString(), SubstateName.READY.toString());
+		statusToSubstate.put(StatusName.TRANSFERING.toString(), SubstateName.READY.toString());
+
+		substateToState.put(SubstateName.COMPLETED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.SKIPPED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.STOPPED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.STAGE_OUT.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.MIGRATING.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.ON_RESOURCE.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.HELD.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.STAGE_IN.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.PAUSED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.READY.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.IDLED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.VALIDATED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.CREATED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.DEACTIVATED.toString(), StateName.PENDING.toString());
 	}
 
 	public void fillJobPanel() {
@@ -451,6 +480,9 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
+		dependencyType = STATUS;
+		depStatusName = StatusName.SUCCESS.toString();
+
 		getBaseJobInfosTabBean().resetTab();
 		getStateInfosTabBean().resetTab();
 		getEnvVariablesTabBean().resetTab(true);
@@ -649,9 +681,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 		dependencyItem.setJsName(draggedWsNode.getName());
 		dependencyItem.setJsId(draggedWsNode.getId());
+		dependencyItem.setDependencyID("ID"+jsId+"_DEP_ID"+draggedWsNode.getId());
+		dependencyItem.setComment("JobID="+jsId+" is dependent to jobID="+draggedWsNode.getId());
 		depStateName = "";
 		depSubstateName = "";
-		depStatusName = "";
 
 		dependencyInsertButton = true;
 		dependencyDialogShow = true;
@@ -678,15 +711,26 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem.setJsType(JsType.JOB);
 
 		dependencyTreePath = getDependencyTreePath(EngineeConstants.LONELY_JOBS + '.' + draggedJobPath);
-		
-		dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
-
-		if (dependencyType.equals(SUBSTATE) || dependencyType.equals(STATUS)) {
-			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
-		}
 
 		if (dependencyType.equals(STATUS)) {
 			dependencyItem.getJsDependencyRule().setStatusName(StatusName.Enum.forString(depStatusName));
+
+			depSubstateName = statusToSubstate.get(depStatusName);
+			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
+
+			depStateName = substateToState.get(depSubstateName);
+			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
+		}
+
+		if (dependencyType.equals(SUBSTATE)) {
+			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
+
+			depStateName = substateToState.get(depSubstateName);
+			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
+		}
+
+		if (dependencyType.equals(STATE)) {
+			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
 		if (jobProperties.getDependencyList() == null || jobProperties.getDependencyList().sizeOfItemArray() == 0) {
@@ -749,21 +793,21 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			validationValue = false;
 		}
 
-		if (depStateName == null || depStateName.equals("")) {
-			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.state.choose", null);
-			validationValue = false;
-		}
+		if (dependencyType.equals(STATUS)) {
+			if (depStatusName == null || depStatusName.equals("")) {
+				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.status.choose", null);
+				validationValue = false;
+			}
 
-		if (dependencyType.equals(SUBSTATE) || dependencyType.equals(STATUS)) {
+		} else if (dependencyType.equals(SUBSTATE)) {
 			if (depSubstateName == null || depSubstateName.equals("")) {
 				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.subState.choose", null);
 				validationValue = false;
 			}
-		}
 
-		if (dependencyType.equals(STATUS)) {
-			if (depStatusName == null || depStatusName.equals("")) {
-				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.status.choose", null);
+		} else if (dependencyType.equals(STATE)) {
+			if (depStateName == null || depStateName.equals("")) {
+				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.state.choose", null);
 				validationValue = false;
 			}
 		}
@@ -778,15 +822,25 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
+		if (dependencyType.equals(STATUS)) {
+			dependencyItem.getJsDependencyRule().setStatusName(StatusName.Enum.forString(depStatusName));
+
+			depSubstateName = statusToSubstate.get(depStatusName);
+			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
+
+			depStateName = substateToState.get(depSubstateName);
+			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
+		}
+
+		if (dependencyType.equals(SUBSTATE)) {
+			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
+
+			depStateName = substateToState.get(depSubstateName);
+			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
+		}
+
 		if (dependencyType.equals(STATE)) {
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
-		} else if (dependencyType.equals(SUBSTATE)) {
-			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
-			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
-		} else {
-			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
-			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
-			dependencyItem.getJsDependencyRule().setStatusName(StatusName.Enum.forString(depStatusName));
 		}
 
 		composeDependencyExpression();
@@ -1205,6 +1259,22 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setScenarioId(String scenarioId) {
 		this.scenarioId = scenarioId;
+	}
+
+	public HashMap<String, String> getStatusToSubstate() {
+		return statusToSubstate;
+	}
+
+	public void setStatusToSubstate(HashMap<String, String> statusToSubstate) {
+		this.statusToSubstate = statusToSubstate;
+	}
+
+	public HashMap<String, String> getSubstateToState() {
+		return substateToState;
+	}
+
+	public void setSubstateToState(HashMap<String, String> substateToState) {
+		this.substateToState = substateToState;
 	}
 
 }
