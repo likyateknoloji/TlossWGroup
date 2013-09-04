@@ -10,7 +10,7 @@
 	</context-param>
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>#{themeSwitcherBean.theme}</param-value>
+		<param-value>#{userPreferencesBean.theme}</param-value>
 	</context-param>
 	<context-param>
 		<param-name>primefaces.THEME_FORMS</param-name>
