@@ -90,7 +90,7 @@
 				<h:inputHidden value="#{node.id}" id="scenarioId" />
 			</p:treeNode>
 
-			<p:treeNode id="jobNode" type="job" icon="ui-icon-carat-1-e">
+			<p:treeNode id="jobNode" type="job" icon="#{node.leafIcon}">
 				<h:outputText value="#{node.name}" id="jobName" />
 				<h:inputHidden value="#{node.id}" id="jobId" />
 			</p:treeNode>
