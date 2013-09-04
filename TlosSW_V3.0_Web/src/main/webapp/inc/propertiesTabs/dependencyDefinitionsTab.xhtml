@@ -43,19 +43,19 @@
 					widgetVar="depDialog" resizable="false" showEffect="show">
 					<p:panel id="dependencyDialogPanel">
 						<h:panelGrid columns="2">
-							<h:outputText
+							<h:outputText style="font-size:0.9em"
 								value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
 							<p:inputText value="#{backingBean.dependencyItem.jsName}"
 								disabled="true" />
-							<h:outputText
+							<h:outputText style="font-size:0.9em"
 								value="#{msgs['tlos.workspace.pannel.job.jobId']}" />
 							<p:inputText value="#{backingBean.dependencyItem.jsId}"
 								disabled="true" />
-							<h:outputText
+							<h:outputText style="font-size:0.9em"
 								value="#{msgs['tlos.popup.dependency.dependencyId']}" />
 							<p:inputText value="#{backingBean.dependencyItem.dependencyID}" />
 
-							<h:outputText value="#{msgs['tlos.popup.dependency.depComment']}" />
+							<h:outputText style="font-size:0.9em" value="#{msgs['tlos.popup.dependency.depComment']}" />
 							<p:inputText value="#{backingBean.dependencyItem.comment}"
 								style="width:200px;" />
 						</h:panelGrid>
@@ -67,18 +67,18 @@
 							id="depRule">
 
 							<h:panelGrid columns="2">
-								<h:outputText
+								<h:outputText style="font-size:0.9em"
 									value="#{msgs['tlos.popup.dependency.selectDepth']}" />
 								<p:selectOneRadio value="#{backingBean.dependencyType}">
 									<f:selectItem
-										itemLabel="#{msgs['tlos.popup.dependency.state']}"
-										itemValue="State" />
+										itemLabel="#{msgs['tlos.popup.dependency.status']}"
+										itemValue="Status" />
 									<f:selectItem
 										itemLabel="#{msgs['tlos.popup.dependency.substate']}"
 										itemValue="SubState" />
 									<f:selectItem
-										itemLabel="#{msgs['tlos.popup.dependency.status']}"
-										itemValue="Status" />
+										itemLabel="#{msgs['tlos.popup.dependency.state']}"
+										itemValue="State" />
 									<p:ajax update="depRule" />
 								</p:selectOneRadio>
 							</h:panelGrid>
@@ -86,17 +86,19 @@
 							<br />
 
 							<h:panelGrid columns="2">
-								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
-								<p:selectOneMenu value="#{backingBean.depStateName}">
+								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" 
+									rendered="#{backingBean.dependencyType eq 'State'}"/>
+								<p:selectOneMenu value="#{backingBean.depStateName}"
+									rendered="#{backingBean.dependencyType eq 'State'}">
 									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 										itemValue="" />
 									<f:selectItems value="#{backingBean.depStateNameList}" />
 								</p:selectOneMenu>
 
 								<h:outputText value="#{msgs['tlos.popup.dependency.substate']}"
-									rendered="#{backingBean.dependencyType ne 'State'}" />
+									rendered="#{backingBean.dependencyType eq 'SubState'}" />
 								<p:selectOneMenu value="#{backingBean.depSubstateName}"
-									rendered="#{backingBean.dependencyType ne 'State'}">
+									rendered="#{backingBean.dependencyType eq 'SubState'}">
 									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 										itemValue="" />
 									<f:selectItems value="#{backingBean.depSubstateNameList}" />
