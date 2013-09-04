@@ -13,6 +13,7 @@ import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.Resource;
 import com.likya.tlossw.model.auth.ResourceMapper;
 import com.likya.tlossw.model.auth.WebAppUser;
+import com.likya.tlossw.web.userpreferences.UserPreferencesBean;
 import com.likya.tlossw.web.model.JSBuffer;
 
 @ManagedBean(name = "sessionMediator")
@@ -31,10 +32,17 @@ public class SessionMediator implements Serializable {
 	@ManagedProperty(value = "#{localeBean}")
 	private LocaleBean localeBean;
 	
+	@ManagedProperty(value = "#{userPreferencesBean}")
+	private UserPreferencesBean userPreferencesBean;
+	
 	private String documentId;
-
-	private JSBuffer jsBuffer;
-
+	
+	private String jobStateIconCssPath;
+	
+	private String jobStateColorCssPath;
+	
+	private String jobIconCssPath;
+	
 	public ResourceBundle getMessageBundle() {
 		initMessageBundle();
 		return messageBundle;
@@ -104,6 +112,38 @@ public class SessionMediator implements Serializable {
 		this.webAppUser = webAppUser;
 	}
 
+	public String getJobStateIconCssPath() {
+		return jobStateIconCssPath;
+	}
+
+	public void setJobStateIconCssPath() {
+		this.jobStateIconCssPath = userPreferencesBean.getJobStateIconCssPath();
+	}
+
+	public String getJobStateColorCssPath() {
+		return jobStateColorCssPath;
+	}
+
+	public void setJobStateColorCssPath() {
+		this.jobStateColorCssPath = userPreferencesBean.getJobStateColorCssPath();
+	}
+
+	public String getJobIconCssPath() {
+		return jobIconCssPath;
+	}
+
+	public void setJobIconCssPath() {
+		this.jobIconCssPath = userPreferencesBean.getJobIconCssPath();
+	}
+
+	public UserPreferencesBean getUserPreferencesBean() {
+		return userPreferencesBean;
+	}
+
+	public void setUserPreferencesBean(UserPreferencesBean userPreferencesBean) {
+		this.userPreferencesBean = userPreferencesBean;
+	}
+
 	public JSBuffer getJsBuffer() {
 		return jsBuffer;
 	}
@@ -111,5 +151,4 @@ public class SessionMediator implements Serializable {
 	public void setJsBuffer(JSBuffer jsBuffer) {
 		this.jsBuffer = jsBuffer;
 	}
-
 }
