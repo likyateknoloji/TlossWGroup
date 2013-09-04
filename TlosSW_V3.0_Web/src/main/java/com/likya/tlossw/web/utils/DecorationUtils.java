@@ -1,5 +1,7 @@
 package com.likya.tlossw.web.utils;
 
+import java.util.HashMap;
+
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -7,6 +9,9 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 
 public class DecorationUtils {
 
+//	private static HashMap<String, String> stateMappings = null;
+	
+	private static HashMap<String, String> jobIconsMappings = null;
 	
 	/**
 	 * yeni state yapisina gore duzenleme yaptim, onceden burada olmayan substatelere varolan ikonlardan koydum gecici olarak.
@@ -16,68 +21,104 @@ public class DecorationUtils {
 	 * @return
 	 */
 	
-	public static String jobImageSetter(LiveStateInfo jobState) {
-		String imagePath = null;
+	public static String jobStateCSSMapper(LiveStateInfo jobState) {
+		String cssName = null;
 
 		if (jobState == null) {
-			imagePath = "ui-icon-help";
+			cssName = "ui-default-state";
 		} else {
 			if (jobState.getSubstateName() != null) {
 				switch (jobState.getSubstateName().intValue()) {
 				case SubstateName.INT_CREATED:
-					imagePath = "ui-icon-gear";
+					cssName = "ui-icon-gear";
 					break;
 				case SubstateName.INT_VALIDATED:
-					imagePath = "ui-icon-lightbulb";
+					cssName = "ui-icon-lightbulb";
 					break;
 				case SubstateName.INT_IDLED:
-					imagePath = "ui-icon-power";
+					cssName = "ui-default-state";
 					break;
 				case SubstateName.INT_READY:
-					imagePath = "ui-icon-clock";
+					cssName = "ui-waiting-state";
 					break;
 				case SubstateName.INT_PAUSED:
-					imagePath = "ui-icon-info";
+					cssName = "ui-icon-info";
 					break;
 				case SubstateName.INT_STAGE_IN:
-					imagePath = "ui-icon-arrowrefresh-1-s";
+					cssName = "ui-icon-arrowrefresh-1-s";
 					break;
 				case SubstateName.INT_MIGRATING:
-					imagePath = "ui-icon-extlink";
+					cssName = "ui-icon-extlink";
 					break;
 				case SubstateName.INT_ON_RESOURCE:
 					if (jobState.getStatusName() != null) {
 						if (jobState.getStatusName().equals(StatusName.TIME_IN)) {
-							imagePath = "ui-icon-play";
+							cssName = "ui-working-state";
 							break;
 						} else if (jobState.getStatusName().equals(StatusName.TIME_OUT)) {
-							imagePath = "ui-icon-notice";
+							cssName = "ui-timeout-state";
 							break;
 						}
 					}
 				case SubstateName.INT_HELD:
-					imagePath = "ui-icon-pause";
+					cssName = "ui-icon-pause";
 					break;
 				case SubstateName.INT_STAGE_OUT:
-					imagePath = "ui-icon-arrowrefresh-1-n";
+					cssName = "ui-icon-arrowrefresh-1-n";
 					break;
 				case SubstateName.INT_COMPLETED:
 					if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.SUCCESS))) {
-						imagePath = "ui-icon-check";
+						cssName = "ui-success-state";
 						break;
 					} else if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.FAILED))) {
-						imagePath = "ui-icon-alert";
+						cssName = "ui-failed-state";
 						break;
 					}
 				case SubstateName.INT_SKIPPED:
-					imagePath = "ui-icon-seek-next";
+					cssName = "ui-icon-seek-next";
 					break;
 				case SubstateName.INT_STOPPED:
-					imagePath = "ui-icon-cancel";
+					cssName = "ui-icon-cancel";
 					break;
 				}
 			}
 		}
-		return imagePath;
+		return cssName;
+	}
+	
+	public static String jobStateColorMappings(LiveStateInfo jobState) {
+		
+		return jobStateCSSMapper(jobState) + "-color";
+		
+	}
+	
+	public static String jobStateIconMappings(LiveStateInfo jobState) {
+		
+		return jobStateCSSMapper(jobState) + "-icon";
+		
+	}
+	
+	public static void jobCssSetter() {
+		
+		jobIconsMappings = new HashMap<String, String>();
+		jobIconsMappings.put("WEB SERVICE",    "ui-job-icon-ws");
+		jobIconsMappings.put("BATCH PROCESS",  "ui-job-icon-batch");
+		jobIconsMappings.put("DB JOBS",        "ui-job-icon-database");
+		jobIconsMappings.put("REMOTE SHELL",   "ui-job-icon-remote");
+		jobIconsMappings.put("SYSTEM COMMAND", "ui-job-icon-syscom");
+		jobIconsMappings.put("SHELL SCRIPT",   "ui-job-icon-shell-script");
+		jobIconsMappings.put("FILE PROCESS",   "ui-job-icon-file-read");
+		jobIconsMappings.put("FTP",            "ui-job-icon-ftp");
+		jobIconsMappings.put("FILE LISTENER",  "ui-job-icon-file-listener");
+		jobIconsMappings.put("PROCESS NODE",   "ui-job-icon-process-node");
+		
+	}
+
+	public static HashMap<String, String> getJobIconsMappings() {
+		return jobIconsMappings;
+	}
+
+	public void setJobIconsMappings(HashMap<String, String> jobIconsMappings) {
+		DecorationUtils.jobIconsMappings = jobIconsMappings;
 	}
 }
