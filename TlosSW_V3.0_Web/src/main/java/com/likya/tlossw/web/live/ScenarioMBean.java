@@ -16,12 +16,14 @@ import javax.faces.model.SelectItem;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.live.helpers.LiveJobManagementBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
+import com.likya.tlossw.web.utils.DecorationUtils;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
 
@@ -54,26 +56,13 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 
 	private LiveJobManagementBean liveJobManagementBean;
 	
-	private HashMap<String, String> stateColors = null;
-	
-	private HashMap<String, String> stateIcons = null;
+	private HashMap<String, String> jobIcons = null;
 	
 	@PostConstruct
 	public void init() {
-		stateColors = new HashMap<String, String>();
-		stateColors.put("FAILED", "failed");
-		stateColors.put("SUCCESS", "success");
-		stateColors.put("WORKING", "working");
-		stateColors.put("TIME-OUT", "time-out");
-		stateColors.put("WAITING", "waiting");
+
+		DecorationUtils.jobCssSetter();
 		
-		stateIcons = new HashMap<String, String>();
-		stateIcons.put("SUCCESS", "Flag_Green_24x24.png");
-		stateIcons.put("FAILED", "Flag_Red_24x24.png");
-		stateIcons.put("WORKING", "Flag_Light_Blue_24x24.png");
-		stateIcons.put("TIME-OUT", "Flag_Pink_24x24.png");
-		stateIcons.put("TIME-IN", "Flag_Orange_24x24.png");
-		stateIcons.put("WAITING", "Flag_Brown_24x24.png");
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
 	
@@ -294,45 +283,45 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		this.liveJobManagementBean = liveJobManagementBean;
 	}
 
-	public HashMap<String, String> getStateColors() {
-		return stateColors;
-	}
-
-	public String getStateColorsElement(String key) {
+	public String getJobStateColorCss(LiveStateInfo jobState) {
+		
 		String result;
 		
-		result = stateColors.get(key);
+		result = DecorationUtils.jobStateColorMappings(jobState);
+ 
+		return result;
+
+	}
+	
+	public String getJobStateIconCss(LiveStateInfo jobState) {
+		
+		String result;
+		
+		result = DecorationUtils.jobStateIconMappings(jobState);
+ 
+		return result;
+	}
+	
+	public String getJobIconsElement(String key) {
+		String result;
+		
+		jobIcons = DecorationUtils.getJobIconsMappings();
+		result = jobIcons.get(key);
 		
 		if(result == null) {
-			System.out.println("Status : " + key);
-			addMessage("getStateColorsElement", FacesMessage.SEVERITY_WARN, "Status Color Undefined for : " + key, null);
+			System.out.println("Job : " + key);
+			addMessage("getJobIconsElement", FacesMessage.SEVERITY_WARN, "Job Icon Undefined for : " + key, null);
 		}
 		
 		return result == null ? "default" : result;
 	}
 	
-	public void setStateColors(HashMap<String, String> stateColors) {
-		this.stateColors = stateColors;
+	public HashMap<String, String> getJobIcons() {
+		return jobIcons;
 	}
 
-	public HashMap<String, String> getStateIcons() {
-		return stateIcons;
+	public void setJobIcons(HashMap<String, String> jobIcons) {
+		this.jobIcons = jobIcons;
 	}
 
-	public String getStateIconsElement(String key) {
-		String result;
-		
-		result = stateIcons.get(key);
-		
-		if(result == null) {
-			System.out.println("Status : " + key);
-			addMessage("getStateIconsElement", FacesMessage.SEVERITY_WARN, "Status Color Undefined for : " + key, null);
-		}
-		
-		return result == null ? "default" : result;
-	}
-	
-	public void setStateIcons(HashMap<String, String> stateIcons) {
-		this.stateIcons = stateIcons;
-	}
 }
