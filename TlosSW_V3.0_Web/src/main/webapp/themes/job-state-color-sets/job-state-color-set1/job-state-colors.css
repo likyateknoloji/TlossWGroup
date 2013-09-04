@@ -1,0 +1,35 @@
+			.ui-failed-state-color {
+				color: #FF0099;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-success-state-color {
+				color: green;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-working-state-color {
+				color: blue;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-timeout-state-color {
+				color: purple;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-timein-state-color {
+				color: blue;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-waiting-state-color {
+				color: brown;
+				background-color: black;
+				font-weight: bold;
+			}
+			.ui-default-state-color {
+				color: red;
+				background-color: black;
+				font-weight: bold;
+			}

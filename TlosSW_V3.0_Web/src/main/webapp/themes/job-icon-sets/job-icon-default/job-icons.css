@@ -1,0 +1,39 @@
+.ui-job-icon-database {
+	background: url(../../../images/job-icon-sets/job-icon-default/Database_Add_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-batch {
+	background: url(../../../images/job-icon-sets/job-icon-default/Documents_x3_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-ws {
+	background: url(../../../images/job-icon-sets/job-icon-default/View_List_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-remote {
+	background: url(../../../images/job-icon-sets/job-icon-default/Hierarchy_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-syscom {
+	background: url(../../../images/job-icon-sets/job-icon-default/Ad_Dollars_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-shell-script {
+	background: url(../../../images/job-icon-sets/job-icon-default/Script_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-ftp {
+	background: url(../../../images/job-icon-sets/job-icon-default/Document_Form_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-file-read {
+	background: url(../../../images/job-icon-sets/job-icon-default/File_Open_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-file-listener {
+	background: url(../../../images/job-icon-sets/job-icon-default/Read_More_16x16.png) no-repeat !important;
+}
+
+.ui-job-icon-process-node {
+	background: url(../../../images/job-icon-sets/job-icon-default/Publish_16x16.png) no-repeat !important;
+}

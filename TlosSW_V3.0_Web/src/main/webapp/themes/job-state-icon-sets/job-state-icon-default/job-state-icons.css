@@ -1,0 +1,24 @@
+			.ui-success-state-icon {
+				.ui-icon-check !important;
+			}
+			.ui-failed-state-icon {
+				background: .ui-icon-alert !important;
+			}
+			.ui-working-state-icon {
+				background: .ui-icon-play !important;
+			}
+			.ui-timeout-state-icon {
+				background: .ui-icon-notice !important;
+			}
+			.ui-timein-state-icon {
+				background: .ui-icon-play !important;
+			}
+			.ui-waiting-state-icon {
+				background: .ui-icon-clock !important;
+			}
+			.ui-bytime-state-icon {
+				background: .ui-icon-clock !important;
+			}
+			.ui-default-state-icon {
+				background: .ui-icon-help !important;
+			}
