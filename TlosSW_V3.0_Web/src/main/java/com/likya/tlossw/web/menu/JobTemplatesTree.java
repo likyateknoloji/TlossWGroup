@@ -22,6 +22,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
@@ -33,6 +34,10 @@ public class JobTemplatesTree implements Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
+	
+	@ManagedProperty(value = "#{scenarioMBean}")
+	private ScenarioMBean scenarioMBean;
+	
 	private TreeNode root;
 
 	private TreeNode selectedJS;
@@ -76,8 +81,11 @@ public class JobTemplatesTree implements Serializable {
 
 		WsJobNode wsJobNode = new WsJobNode();
 		wsJobNode.setId(jobProperties.getID());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
-
+		
+		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
+		
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
 	}
 
@@ -178,6 +186,14 @@ public class JobTemplatesTree implements Serializable {
 
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
 		this.selectedTreeNode = selectedTreeNode;
+	}
+
+	public ScenarioMBean getScenarioMBean() {
+		return scenarioMBean;
+	}
+
+	public void setScenarioMBean(ScenarioMBean scenarioMBean) {
+		this.scenarioMBean = scenarioMBean;
 	}
 
 }
