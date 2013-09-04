@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+		
+		<p:growl id="msgs" showDetail="true" />
+
+		<p:panel header="#{msgs['tlos.menu.options.viewPreferences']}" style="margin-bottom:10px;">
+			<h:panelGrid columns="2" cellpadding="5">
+
+                <h:outputLabel for="themePreference" style="font-size:0.9em" value="#{msgs['tlos.options.viewPreferences.theme']}" /> 
+				<p:themeSwitcher id="themePreference" value="#{userPreferencesBean.theme}"
+					style="width:200px" effect="fade">
+					<f:selectItem itemLabel="#{msgs['tlos.options.viewPreferences.choose']}" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.themes}" />
+					<p:ajax listener="#{userPreferencesBean.saveTheme}" />
+				</p:themeSwitcher>
+
+                <h:outputLabel for="jobIconCssPath" style="font-size:0.9em" value="#{msgs['tlos.options.viewPreferences.jobIconSet']}" /> 
+				<p:selectOneMenu id="jobIconCssPath" style="width:200px"
+					value="#{userPreferencesBean.jobIconCssPath}">
+					<f:selectItem itemLabel="#{msgs['tlos.options.viewPreferences.choose']}" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobIconCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobIconCssPath}" />
+				</p:selectOneMenu>
+
+                <h:outputLabel for="jobStateColorCssPath" style="font-size:0.9em" value="#{msgs['tlos.options.viewPreferences.jobStateColorSet']}" />
+				<p:selectOneMenu id="jobStateColorCssPath" style="width:200px"
+					value="#{userPreferencesBean.jobStateColorCssPath}">
+					<f:selectItem itemLabel="#{msgs['tlos.options.viewPreferences.choose']}" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobStateColorCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobStateColorCssPath}" />
+				</p:selectOneMenu>
+
+                <h:outputLabel for="jobStateIconCssPath" style="font-size:0.9em" value="#{msgs['tlos.options.viewPreferences.jobStateIconSet']}" />
+				<p:selectOneMenu id="jobStateIconCssPath" style="width:200px"
+					value="#{userPreferencesBean.jobStateIconCssPath}">
+					<f:selectItem itemLabel="#{msgs['tlos.options.viewPreferences.choose']}" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobStateIconCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobStateIconCssPath}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+		</p:panel>
+
+
+
+</ui:composition>
