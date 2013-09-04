@@ -50,10 +50,10 @@
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
-				action="#{jsNavigationMBean.copyScenarioAction}"
+				action="#{jsNavigationMBean.copyScenarioAction(sessionMediator.documentId)}"
 				icon="ui-icon-copy" />
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
-				action="#{jsNavigationMBean.pasteJSAction}"
+				action="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
 				icon="ui-icon-paste" />
 		</p:contextMenu>
 
@@ -65,7 +65,7 @@
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
-				action="#{jsNavigationMBean.copyJobAction}"
+				action="#{jsNavigationMBean.copyJobAction(sessionMediator.documentId)}"
 				icon="ui-icon-copy" />
 		</p:contextMenu>
 
