@@ -2088,9 +2088,9 @@ public class DBOperations implements Serializable {
 		return null;
 	}
 
-	public boolean copyMyDataToGlobalData(int userId, boolean isJob, String jsId, String jsPath) {
+	public boolean copyJSToJS(String fromTree, String toTree, int userId, boolean isJob, String jsId, String jsPath) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:functionName", toXSString(userId), isJob + "", toXSString(jsId), jsPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:copyJStoJS", toXSString(fromTree), toXSString(toTree), toXSString(userId), isJob + "()", jsId, jsPath);
 
 		try {
 			@SuppressWarnings("unused")
