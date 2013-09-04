@@ -374,16 +374,16 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
-	public void copyJobAction() {
-		((JobBasePanelBean) currentPanelMBeanRef).copyJob();
+	public void copyJobAction(String fromTree) {
+		((JobBasePanelBean) currentPanelMBeanRef).copyJob(fromTree);
 	}
 
-	public void copyScenarioAction() {
-		getScenarioDefinitionMBean().copyScenario();
+	public void copyScenarioAction(String fromTree) {
+		getScenarioDefinitionMBean().copyScenario(fromTree);
 	}
 
-	public void pasteJSAction() {
-		getScenarioDefinitionMBean().pasteJS();
+	public void pasteJSAction(String toTree) {
+		getScenarioDefinitionMBean().pasteJS(toTree);
 	}
 
 	public String getJobDefCenterPanel() {
