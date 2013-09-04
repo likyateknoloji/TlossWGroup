@@ -83,18 +83,18 @@
 				<p:menuitem value="#{msgs['tlos.menu.administration.audits']}" url="#" icon="ui-icon-document" /-->
 			</p:submenu>
 
-			<p:submenu label="#{msgs['tlos.menu.preferences']}" icon="ui-icon-document">
-				<p:menuitem value="#{msgs['tlos.menu.preferences.theme']}" url="#" icon="ui-icon-document" />
+			<p:submenu label="#{msgs['tlos.menu.options']}" icon="ui-icon-document">
+				<p:menuitem value="#{msgs['tlos.menu.options.viewPreferences']}" url="/inc/preferencesPanels/userPreferences.jsf" icon="ui-icon-document" />
 			</p:submenu>
 
 			<p:submenu label="#{msgs['tlos.menu.help']}" icon="ui-icon-help">
 				<p:submenu label="#{msgs['tlos.menu.help.welcome']}" icon="ui-icon-help">
-					<p:menuitem value="#{msgs['tlos.menu.help.welcome.overview']}" url="#" />
-					<p:menuitem value="#{msgs['tlos.menu.help.welcome.tutorials']}" url="#" />
-					<p:menuitem value="#{msgs['tlos.menu.help.welcome.whatsNew']}" url="#" />
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.overview']}" url="/inc/documentationPanels/generalOutlook.xhtml" />
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.tutorials']}" url="/inc/documentationPanels/tutorial.xhtml" />
+					<p:menuitem value="#{msgs['tlos.menu.help.welcome.whatsNew']}" url="/inc/documentationPanels/whatsNew.xhtml" />
 				</p:submenu>
-				<p:menuitem value="#{msgs['tlos.menu.help.support']}" url="#" />
-				<p:menuitem value="#{msgs['tlos.menu.help.about']}" url="#" />
+				<p:menuitem value="#{msgs['tlos.menu.help.support']}" url="https://likyateknoloji.atlassian.net" />
+				<p:menuitem value="#{msgs['tlos.menu.help.about']}" url="http://www.likyateknoloji.com" />
 			</p:submenu>
 
 			<f:facet name="options">
