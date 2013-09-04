@@ -1016,9 +1016,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		return jobPropertiesXML;
 	}
 
-	public void copyJob() {
+	public void copyJob(String fromTree) {
 		JSBuffer jsBuffer = new JSBuffer();
 		jsBuffer.setJob(true);
+		jsBuffer.setFromTree(fromTree);
 		jsBuffer.setJsId(jobProperties.getID());
 	
 		getSessionMediator().setJsBuffer(jsBuffer);
