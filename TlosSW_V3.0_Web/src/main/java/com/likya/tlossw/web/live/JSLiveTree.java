@@ -40,6 +40,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 2287729115524041857L;
 
+	@ManagedProperty(value = "#{scenarioMBean}")
+	private ScenarioMBean scenarioMBean;
+	
 	private TreeNode root;
 
 	// private TreeNode calisanIsler;
@@ -362,13 +365,15 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			JobNode jobNode = new JobNode();
 			jobNode.setId(tmpJobNode.getId());
 			jobNode.setLabelText(jobText);
-
+			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setName(jobInfoTypeClient.getJobName());
 			if (jobInfoTypeClient.getLiveStateInfo() == null) {
 				System.out.println("jobInfoTypeClient.getLiveStateInfo() == null");
 			}
-			jobNode.setLeafIcon(DecorationUtils.jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
+			/* Bu jobType kullanilmiyor. Ben String e cevirip kullanabilir miyim? Hakan 31.08.2013 
+			 * jobNode.setJobType(jobInfoTypeClient.getJobCommandType().toString()); */
+			jobNode.setLeafIcon(DecorationUtils.jobStateIconMappings(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setPath(jobInfoTypeClient.getTreePath());
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, scenarioNode);
 			scenarioNodeTree.setExpanded(false);
@@ -466,6 +471,14 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public TlosSpaceWideNode getTlosSpaceWideNode() {
 		return tlosSpaceWideNode;
+	}
+
+	public ScenarioMBean getScenarioMBean() {
+		return scenarioMBean;
+	}
+
+	public void setScenarioMBean(ScenarioMBean scenarioMBean) {
+		this.scenarioMBean = scenarioMBean;
 	}
 
 }
