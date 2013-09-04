@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+	<h:form id="form">
 
-	<p:themeSwitcher value="#{themeSwitcherBean.theme}" style="width:155px"
-		effect="fade">
-		<f:selectItem itemLabel="Choose Theme" itemValue="" />
-		<f:selectItems value="#{themeSwitcherBean.themes}" />
-		<p:ajax listener="#{themeSwitcherBean.saveTheme}" />
-	</p:themeSwitcher>
+		<p:growl id="msgs" showDetail="true" />
+
+		<p:panel header="User Preferences" style="margin-bottom:10px;">
+			<h:panelGrid columns="2" cellpadding="5">
+
+				<p:themeSwitcher value="#{userPreferencesBean.theme}"
+					style="width:155px" effect="fade">
+					<f:selectItem itemLabel="Choose Theme" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.themes}" />
+					<p:ajax listener="#{userPreferencesBean.saveTheme}" />
+				</p:themeSwitcher>
+
+				<p:selectOneMenu id="jobIconCssPath"
+					value="#{userPreferencesBean.jobIconCssPath}">
+					<f:selectItem itemLabel="Select jobIconCssPath" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobIconCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobIconCssPath}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="jobStateColorCssPath"
+					value="#{userPreferencesBean.jobStateColorCssPath}">
+					<f:selectItem itemLabel="Select jobStateColorCssPath" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobStateColorCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobStateColorCssPath}" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu id="jobStateIconCssPath"
+					value="#{userPreferencesBean.jobStateIconCssPath}">
+					<f:selectItem itemLabel="Select jobStateIconCssPath" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.jobStateIconCssPaths}" />
+					<p:ajax listener="#{userPreferencesBean.saveJobStateIconCssPath}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<p:separator />
+
+			<p:commandButton value="Submit" update="msgs"
+				actionListener="#{pprBean.displayLocation}" id="btnSubmit" />
+
+		</p:panel>
+
+	</h:form>
+
 </ui:composition>
