@@ -1,0 +1,84 @@
+.ui-layout-north {
+	z-index: 30 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+.ui-growl {
+	width: 500px;
+}
+
+.ui-growl-message {
+	padding: 10 0 10px 10;
+	font-size: 12px;
+	width: 400px;
+	float: left;
+}
+
+.selectOneRadioColumn td {
+	border: none !important;
+}
+
+.ui-layout-center .ui-layout-north {
+	z-index: 5 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-center .ui-layout-west {
+	z-index: 21 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-center .ui-layout-west .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+div#topx.ui-layout-unit {
+	z-index: 22 !important;
+	overflow: visible !important;
+}
+
+div#left.ui-layout-unit {
+	z-index: 21 !important;
+	overflow: visible !important;
+}
+
+div#jobDefinitionForm:tabView:dependencyDialog.ui-dialog {
+	z-index: 2211 !important;
+	overflow: visible !important;
+}
+
+div#centerWest.ui-layout-unit {
+	z-index: 221 !important;
+	overflow: visible !important;
+}
+
+div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
+	z-index: 100 !important;
+	overflow: visible !important;
+}
+
+#topx.ui-layout-north {
+	border: 0;
+}
+
+#layoutUnit4jobsDef.ui-layout-north {
+	border: 0;
+}
+
+#top.ui-layout-north {
+	border: 0;
+}
+
+#liveForm:jobListDataTable:searchBox.ui-inputfield {
+	position: fixed;
+	left: 0;
+}
+
+.myShadow {
+	font-size: 1em;
+	text-shadow: 0.03em 0.03em #000000;
+}
