@@ -39,7 +39,7 @@
 				<h:inputHidden value="#{node.id}" id="jobGroupId" />
 			</p:treeNode>
 
-			<p:treeNode id="jobTemplateNode" type="job" icon="ui-icon-carat-1-e">
+			<p:treeNode id="jobTemplateNode" type="job" icon="#{node.leafIcon}">
 				<h:outputText value="#{node.name}" id="jobTemplateName" />
 				<h:inputHidden value="#{node.id}" id="jobTemplateId" />
 			</p:treeNode>
