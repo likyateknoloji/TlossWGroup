@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Tutorial Page" />
+
+	<ui:define name="center">
+
+		<p:tabView id="tabView">
+
+			<p:tab id="tab1" title="Kısa Giriş">
+				<h:panelGrid columns="3" cellpadding="10">
+<h:outputText id="tab1Text"
+						value="İş hayatının vazgeçilmez aktivitelerinden olan iş yapma sanatı, bilgi çağında iş yapmak için insandan daha çok makinalara iş ataması taptığında 
+						otomatikleştirme zaman içinde kaçınılmaz hale gelmiştir. Bilgi işlem dünyasında iş yapanlar bilgisayarlar olduğu için öncelikle batch iş çalıştırma popüler hale
+						gelmiştir. Genellikle çalışma esnasında kullanıcı ile doğrudan etkileştirme gerektirmeyen ama sonuçlarını kullanıcının beklediği bilgisayar programlarını 
+						tanımlama ve çalıştırmaya aynı anda birçokları çalıştırılabildiği için teknik olarak yığın çalıştırma (Batch Process) denmiştir. Belli zamanlarda çalışma 
+						özelliği nedeni ile bu işleri yöneten yazılımlara Scheduling yazılımları adı verilmiştir." />
+					<h:outputText id="tab12Text"
+						value="Daha sonraları iş akışının belli işlerin bitmesini beklediği, başarısız bitme durumunda alternatif işlerin çalıştırılması gerekliliği ve bunun
+						otomatik olarak yapılabilirliği kullanımı yaygınlaştırmıştır. İş akışı iş çalıştırmanın vazgeçilmezlerinden olmuştur. İş çeşitlerindeki artış ile 
+						yapılabilirliğin sınırları da genişlemiştir. FTP yapabilmek, Web Servis çağırabilmek, DOsya kopyalaması yapabilmek bunlardan bazılarıdır. " />
+					<h:outputText id="tab13Text"
+						value="Kullanıcı ile etkileşim bu süreçte zaman içinde gelişmiş ve işlerin batch işler olma özelliği sınırlamasının kaldırılmasına yol açmıştır. Bugün artık İş Süreçleri
+						Yönetimi olan (Business Process Management - BPM) ile İş Otomasyonu Yönetimi yapan yazılımlar arasındaki farklar gittikçe bulanıklaşmaktadır." />
+				</h:panelGrid>
+			</p:tab>
+
+			<p:tab id="tab2" title="İş Tanımlama">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:graphicImage id="tab2Img"
+						value="/images/godfather/godfather2.jpg" />
+					<h:outputText id="tab2Text"
+						value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.  
+            In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,  
+            killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows." />
+				</h:panelGrid>
+			</p:tab>
+
+			<p:tab id="tab3" title="İş Çalıştırma">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:graphicImage id="tab3Img"
+						value="/images/godfather/godfather3.jpg" />
+					<h:outputText id="tab3Text"
+						value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.  
+                Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+				</h:panelGrid>
+			</p:tab>
+
+		</p:tabView>
+
+	</ui:define>
+
+	<ui:define name="west">
+		<ui:include src="/inc/definitionPanels/jobTemplatesTree.xhtml" />
+	</ui:define>
+
+</ui:composition>
+
