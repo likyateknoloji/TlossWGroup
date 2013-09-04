@@ -37,6 +37,8 @@ public class SessionMediator implements Serializable {
 	
 	private String documentId;
 	
+	private JSBuffer jsBuffer;
+	
 	private String jobStateIconCssPath;
 	
 	private String jobStateColorCssPath;
