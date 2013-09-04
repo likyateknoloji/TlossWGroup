@@ -77,6 +77,10 @@ div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
 	border: 0;
 }
 
+#centerWest.ui-layout-west {
+	border: 0;
+}
+
 #liveForm:jobListDataTable:searchBox.ui-inputfield {
 	position: fixed	;
 	left: 0;
