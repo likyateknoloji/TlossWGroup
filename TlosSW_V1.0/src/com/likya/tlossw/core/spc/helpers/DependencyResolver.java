@@ -23,6 +23,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
+import com.likya.tlossw.utils.CpcUtils;
 
 public class DependencyResolver {
 	
@@ -61,7 +62,7 @@ public class DependencyResolver {
 				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
 				// Global bir bagimlilik
-				SpcInfoType spcInfoType = spcLookupTable.get(Cpc.getRootPath() + "." + instanceId + "." + item.getJsPath());
+				SpcInfoType spcInfoType = spcLookupTable.get(CpcUtils.getRootScenarioPath(instanceId) + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
 					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), instanceId, ownerJob.getJobRuntimeProperties().getTreePath(), spcLookupTable);
