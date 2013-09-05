@@ -9,7 +9,7 @@
 	<h:form id="jobTemplatesForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:contextMenu for="templateTree">
+		<p:contextMenu for="templateTree" nodeType="job">
 			<p:menuitem value="View" update="messages"
 				actionListener="#{jobTemplatesTree.displaySelectedSingle}"
 				icon="ui-icon-search" />
@@ -17,6 +17,11 @@
 				actionListener="#{jobTemplatesTree.deleteNode}" icon="ui-icon-close" />
 		</p:contextMenu>
 
+		<p:contextMenu for="templateTree" nodeType="jobGroup">
+			<p:menuitem value="#{msgs['tlos.button.paste']}"
+				action="#{jsNavigationMBean.pasteJSAction('templateData')}"
+				icon="ui-icon-paste" />
+		</p:contextMenu>
 
 		<p:tree value="#{jobTemplatesTree.root}" var="node" id="templateTree"
 			animate="true" style="width:296px;height:720px" dynamic="true"
