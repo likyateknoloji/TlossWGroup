@@ -187,8 +187,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		
 		if(ihtiyac) {
 			
-			tlosProcessData.addNewBaseScenarioInfos().setJsName("Serbest isler");
-			tlosProcessData.getBaseScenarioInfos().setComment("Serbest isler burada yer alir");
+			tlosProcessData.addNewBaseScenarioInfos().setJsName("Ana Senaryo");
+			tlosProcessData.getBaseScenarioInfos().setComment("Ana Senaryo burada yer alir");
 			tlosProcessData.getBaseScenarioInfos().setJsIsActive(JsIsActive.Enum.forString("YES"));
 			tlosProcessData.getBaseScenarioInfos().setUserId(getWebAppUser().getId());
 			
