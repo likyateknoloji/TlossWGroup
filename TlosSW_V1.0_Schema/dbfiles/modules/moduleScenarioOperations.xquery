@@ -285,6 +285,26 @@ declare function hs:updateScenarioLock($documentUrl as xs:string, $userId as xs:
 (:-----------------------------------------------------------------------------------------------------------:)
 (:---------------------------------------- Job operasyonlari ------------------------------------------------:)
 
+(:---- Screen copy-paste operations ----------------:)
+
+declare function hs:copyJStoJS($documentUrl as xs:string, $fromTree as xs:string, $toTree as xs:string, $userId as xs:string, $isJob as xs:boolean, $jsId as xs:integer, $pathOfJS) as element()*
+{    
+	let $selectedJS := if($isJob) 
+	                   then hs:getJobFromId($documentUrl, $userId, $fromTree, $jsId )
+	                   else hs:getScenarioFromId($documentUrl, $userId, $fromTree, $jsId )
+	
+    let $truePath := if($isJob) then 
+              hs:insertJobLock($documentUrl, $userId, $toTree, $selectedJS, $pathOfJS/dat:jobList)
+           else
+              hs:insertScenarioLock($documentUrl, $userId, $toTree, $selectedJS, $pathOfJS )
+	return $selectedJS
+		
+};
+
+(:--------------------------------------------------:)
+
+
+
 (: READ :)
 declare function hs:getJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobPath ,$jobName as xs:string) as element(dat:jobProperties)?
 {	
