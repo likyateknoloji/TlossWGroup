@@ -2,6 +2,7 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -155,7 +156,19 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
 	
+	public boolean getTestPermit() {
+		if(CommonConstantDefinitions.EXIST_MYDATA.equals(getSessionMediator().getDocumentId())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public String switchToTestPage() throws Exception {
+		
+		if(!getTestPermit()) {
+			addMessage("switchToTestPage", FacesMessage.SEVERITY_WARN, "tlos.warn.test.run", null);
+			return null;
+		}
 		
 		getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
 		
