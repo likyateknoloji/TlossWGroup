@@ -46,7 +46,7 @@
 				actionListener="#{scenarioDefinitionMBean.addNewScenario}"
 				action="#{jsNavigationMBean.switchToScenarioPanel}"
 				icon="ui-icon-plus" />
-			<p:menuitem value="Run Test"
+			<p:menuitem value="Run Test" rendered="#{jsNavigationMBean.testPermit}"
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
@@ -61,8 +61,8 @@
 			<p:menuitem value="#{msgs['tlos.button.delete']}"
 				onclick="deleteJobConfirmation.show()" icon="ui-icon-close" >
 			</p:menuitem>
-			<p:menuitem value="Run Test"
-				action="#{jsNavigationMBean.switchToTestPage}"
+			<p:menuitem value="Run Test" rendered="#{jsNavigationMBean.testPermit}"
+				action="#{jsNavigationMBean.switchToTestPage}" 
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
 				action="#{jsNavigationMBean.copyJobAction(sessionMediator.documentId)}"
