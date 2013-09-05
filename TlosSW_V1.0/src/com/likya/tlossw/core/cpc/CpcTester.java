@@ -15,7 +15,6 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.utils.CpcUtils;
@@ -77,6 +76,11 @@ public class CpcTester extends CpcBase {
 
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
+						
+						if(spc == null) {
+							// No spc defined for this scenario, it is NOT a BUG !
+							continue;
+						}
 
 						if (mySpcInfoType.isVirgin() && !spc.getExecuterThread().isAlive()) {
 
@@ -126,19 +130,19 @@ public class CpcTester extends CpcBase {
 		}
 
 		logger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
-		String localRoot = getRootPath() + "." + userId;
+		String localRoot = CpcUtils.getRootScenarioPath(userId);
 		logger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
 
-		JobList lonelyJobList = tlosProcessData.getJobList();
+//		JobList lonelyJobList = tlosProcessData.getJobList();
 
-		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
+//		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
 
-			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, "");
+			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, userId);
 			myScenario.setID(EngineeConstants.LONELY_JOBS);
 			tmpScenarioList.put(CpcUtils.getRootScenarioPath(userId), myScenario);
 
-			logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
-		}
+//			logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
+//		}
 
 		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
 
@@ -160,27 +164,24 @@ public class CpcTester extends CpcBase {
 				continue;
 			}
 
-			if (jobList.getJobPropertiesArray().length == 0) {
+			if (jobList.getJobPropertiesArray().length == 0 && tmpScenarioList.get(scenarioId).getScenarioArray().length == 0) {
 				logger.error(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
 				logger.error(scenarioId + " isimli senaryo için spc başlatılmıyor !");
 				continue;
 			}
 
-			Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
-
-			SpcInfoType spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
-			spcInfoType.setSpcId(scenarioId);
+			SpcInfoType spcInfoType = null;
+			
+			if(!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) && jobList.getJobPropertiesArray().length == 0) {
+				spcInfoType = CpcUtils.getSpcInfo(null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType.setSpcId(scenarioId);
+			} else {
+				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
+				spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
+				spcInfoType.setSpcId(scenarioId);
+			}
 			
 			scpLookupTable.put(scenarioId, spcInfoType);
-
-			if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
-				if (!spc.initScenarioInfo()) {
-					logger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
-					Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
-
-					System.exit(-1);
-				}
-			}
 
 			logger.info("  > Senaryo yuklendi !");
 
