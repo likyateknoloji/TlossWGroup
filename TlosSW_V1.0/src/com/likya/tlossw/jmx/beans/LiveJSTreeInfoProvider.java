@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
+import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
@@ -237,6 +238,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobNode.setId(jobInfoTypeClient.getJobId());
 			jobNode.setName(jobInfoTypeClient.getJobName());
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
+			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
 			newScenarioNode.getJobNodes().add(jobNode);
 		}
 
@@ -276,6 +278,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobInfoTypeClient.setJobName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
+			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
