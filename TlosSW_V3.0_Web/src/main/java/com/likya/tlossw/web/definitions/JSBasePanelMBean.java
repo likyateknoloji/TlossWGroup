@@ -38,14 +38,13 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private Collection<SelectItem> jobStateList;
 	private Collection<SelectItem> jobSubtateList;
 
-	
 	/**
-	 * Anlamları ile ilgili kısa bir açıklamada fayda var.
+	 * Job/Senaryo isim kontrol sabitleri
 	 */
-	public static final String NEW_NAME = "0";
-	public static final String DUPLICATE_NAME_AND_PATH = "1";
-	public static final String INNER_DUPLICATE_NAME = "2";
-	public static final String OUTER_DUPLICATE_NAME = "3";
+	public static final String NEW_NAME = "0"; // girilen isimde daha önce kaydedilmiş bir iş/senaryo yoksa 0
+	public static final String DUPLICATE_NAME_AND_PATH = "1"; // ayni path de aynı isimde bir iş/senaryo varsa 1
+	public static final String INNER_DUPLICATE_NAME = "2"; // iç senaryolarda aynı isimde bir iş/senaryo varsa 2
+	public static final String OUTER_DUPLICATE_NAME = "3"; // senaryonun dışında aynı isimde bir iş/senaryo varsa 3
 
 	private boolean isScenario = false;
 	private boolean jsActive = false;
