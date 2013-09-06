@@ -77,6 +77,12 @@ public class JobTemplatesTree implements Serializable {
 		constructTree(tlosProcessData.getScenarioArray());
 	}
 
+	public void reconstructJSTree() {
+
+		TlosProcessData tlosProcessData = dbOperations.getTlosTemplateDataXml();
+		constructJSTree(tlosProcessData);
+	}
+
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
 
 		WsJobNode wsJobNode = new WsJobNode();
