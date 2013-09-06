@@ -11,7 +11,7 @@ public class DecorationUtils {
 
 //	private static HashMap<String, String> stateMappings = null;
 	
-	private static HashMap<String, String> jobIconsMappings = null;
+	private static HashMap<Integer, String> jobIconsMappings = null;
 	
 	/**
 	 * yeni state yapisina gore duzenleme yaptim, onceden burada olmayan substatelere varolan ikonlardan koydum gecici olarak.
@@ -100,25 +100,25 @@ public class DecorationUtils {
 	
 	public static void jobCssSetter() {
 		
-		jobIconsMappings = new HashMap<String, String>();
-		jobIconsMappings.put("WEB SERVICE",    "ui-job-icon-ws");
-		jobIconsMappings.put("BATCH PROCESS",  "ui-job-icon-batch");
-		jobIconsMappings.put("DB JOBS",        "ui-job-icon-database");
-		jobIconsMappings.put("REMOTE SHELL",   "ui-job-icon-remote");
-		jobIconsMappings.put("SYSTEM COMMAND", "ui-job-icon-syscom");
-		jobIconsMappings.put("SHELL SCRIPT",   "ui-job-icon-shell-script");
-		jobIconsMappings.put("FILE PROCESS",   "ui-job-icon-file-read");
-		jobIconsMappings.put("FTP",            "ui-job-icon-ftp");
-		jobIconsMappings.put("FILE LISTENER",  "ui-job-icon-file-listener");
-		jobIconsMappings.put("PROCESS NODE",   "ui-job-icon-process-node");
+		jobIconsMappings = new HashMap<Integer, String>();
+		jobIconsMappings.put(1, "ui-job-icon-shell-script");  //SHELL SCRIPT
+		jobIconsMappings.put(2, "ui-job-icon-remote");        //REMOTE_SHELL
 		
+		jobIconsMappings.put(6, "ui-job-icon-syscom");        //SYSTEM COMMAND
+		jobIconsMappings.put(7, "ui-job-icon-ftp");           //FTP
+		jobIconsMappings.put(8, "ui-job-icon-file-read");     //FILE PROCESS
+		jobIconsMappings.put(9, "ui-job-icon-file-listener"); //FILE LISTENER
+		jobIconsMappings.put(10,"ui-job-icon-batch");         //BATCH PROCESS
+		jobIconsMappings.put(11,"ui-job-icon-process-node");  //PROCESS NODE
+		jobIconsMappings.put(12,"ui-job-icon-database");      //DB JOBS
+		jobIconsMappings.put(13,"ui-job-icon-ws");            //WEB SERVICE
 	}
 
-	public static HashMap<String, String> getJobIconsMappings() {
+	public static HashMap<Integer, String> getJobIconsMappings() {
 		return jobIconsMappings;
 	}
 
-	public void setJobIconsMappings(HashMap<String, String> jobIconsMappings) {
+	public void setJobIconsMappings(HashMap<Integer, String> jobIconsMappings) {
 		DecorationUtils.jobIconsMappings = jobIconsMappings;
 	}
 }
