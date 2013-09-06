@@ -308,10 +308,10 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	
 		Integer jobType = new Integer(JobCommandType.Enum.forString(key).intValue());
 
-		return getJobIconsElement(jobType);
+		return getJobIconsElementInt(jobType);
 	}
 	
-	public String getJobIconsElement(Integer key) {
+	public String getJobIconsElementInt(Integer key) {
 		String result;
 		
 		result = jobIcons.get(key);
