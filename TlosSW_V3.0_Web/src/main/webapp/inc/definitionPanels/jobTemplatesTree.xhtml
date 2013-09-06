@@ -33,7 +33,7 @@
 			<p:ajax event="collapse" update=":jobTemplatesForm:messages"
 				listener="#{jobTemplatesTree.onNodeCollapse}" />
 			<p:ajax event="select" update=":jobTemplatesForm:messages"
-				listener="#{jobTemplatesTree.onNodeSelect}" />
+				listener="#{jsNavigationMBean.onTemplateNodeSelect}" />
 			<p:ajax event="unselect" update=":jobTemplatesForm:messages"
 				listener="#{jobTemplatesTree.onNodeUnselect}" />
 
