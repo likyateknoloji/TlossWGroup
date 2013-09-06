@@ -88,7 +88,9 @@ public class JobTemplatesTree implements Serializable {
 		wsJobNode.setId(jobProperties.getID());
 		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		
+		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
 		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
 		
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
