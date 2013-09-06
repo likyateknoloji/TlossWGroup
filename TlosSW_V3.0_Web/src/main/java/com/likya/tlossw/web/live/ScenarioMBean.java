@@ -16,6 +16,7 @@ import javax.faces.model.SelectItem;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
+import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
@@ -56,12 +57,13 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 
 	private LiveJobManagementBean liveJobManagementBean;
 	
-	private HashMap<String, String> jobIcons = null;
+	private HashMap<Integer, String> jobIcons = null;
 	
 	@PostConstruct
 	public void init() {
 
 		DecorationUtils.jobCssSetter();
+		jobIcons = DecorationUtils.getJobIconsMappings();
 		
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
@@ -303,9 +305,15 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	}
 	
 	public String getJobIconsElement(String key) {
+	
+		Integer jobType = new Integer(JobCommandType.Enum.forString(key).intValue());
+
+		return getJobIconsElement(jobType);
+	}
+	
+	public String getJobIconsElement(Integer key) {
 		String result;
 		
-		jobIcons = DecorationUtils.getJobIconsMappings();
 		result = jobIcons.get(key);
 		
 		if(result == null) {
@@ -316,11 +324,11 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		return result == null ? "default" : result;
 	}
 	
-	public HashMap<String, String> getJobIcons() {
+	public HashMap<Integer, String> getJobIcons() {
 		return jobIcons;
 	}
 
-	public void setJobIcons(HashMap<String, String> jobIcons) {
+	public void setJobIcons(HashMap<Integer, String> jobIcons) {
 		this.jobIcons = jobIcons;
 	}
 
