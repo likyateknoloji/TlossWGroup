@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -130,6 +129,32 @@ public class JobTemplatesTree implements Serializable {
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
+	public void onNodeExpand(NodeExpandEvent event) {
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Expanded", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
+	}
+
+	public void onNodeCollapse(NodeCollapseEvent event) {
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Collapsed", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
+	}
+
+	
+
+	public void onNodeUnselect(NodeUnselectEvent event) {
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
+	}
+
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
@@ -152,38 +177,6 @@ public class JobTemplatesTree implements Serializable {
 
 	public void setSelectedJS(TreeNode selectedJS) {
 		this.selectedJS = selectedJS;
-	}
-
-	public void onNodeExpand(NodeExpandEvent event) {
-		/*
-		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Expanded", event.getTreeNode().toString());
-		 * 
-		 * FacesContext.getCurrentInstance().addMessage(null, message);
-		 */
-	}
-
-	public void onNodeCollapse(NodeCollapseEvent event) {
-		/*
-		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Collapsed", event.getTreeNode().toString());
-		 * 
-		 * FacesContext.getCurrentInstance().addMessage(null, message);
-		 */
-	}
-
-	public void onNodeSelect(NodeSelectEvent event) {
-		/*
-		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected", event.getTreeNode().toString());
-		 * 
-		 * FacesContext.getCurrentInstance().addMessage(null, message);
-		 */
-	}
-
-	public void onNodeUnselect(NodeUnselectEvent event) {
-		/*
-		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString());
-		 * 
-		 * FacesContext.getCurrentInstance().addMessage(null, message);
-		 */
 	}
 
 	public TreeNode getSelectedTreeNode() {
