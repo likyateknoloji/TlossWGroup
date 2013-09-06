@@ -17,6 +17,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.agent.AgentTypeDocument.AgentType;
+import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
@@ -230,6 +231,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			jobNode.setLeafIcon(DecorationUtils.jobStateIconMappings(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setPath(jobInfoTypeClient.getTreePath());
 
+			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
+			
 			TreeNode jobNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, treeNode);
 			jobNodeTree.setExpanded(false);
 		}
