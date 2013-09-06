@@ -53,8 +53,9 @@
 				action="#{jsNavigationMBean.copyScenarioAction(sessionMediator.documentId)}"
 				icon="ui-icon-copy" />
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
-				action="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
-				icon="ui-icon-paste" />
+				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
+				action="#{jSTree.reconstructJSTree(sessionMediator.documentId)}"
+				icon="ui-icon-paste" update="tree" />
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">

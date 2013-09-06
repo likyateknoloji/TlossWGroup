@@ -19,8 +19,9 @@
 
 		<p:contextMenu for="templateTree" nodeType="jobGroup">
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
-				action="#{jsNavigationMBean.pasteJSAction('templateData')}"
-				icon="ui-icon-paste" />
+				actionListener="#{jsNavigationMBean.pasteJSAction('templateData')}"
+				action="#{jobTemplatesTree.reconstructJSTree}"
+				icon="ui-icon-paste" update="templateTree"/>
 		</p:contextMenu>
 
 		<p:tree value="#{jobTemplatesTree.root}" var="node" id="templateTree"
