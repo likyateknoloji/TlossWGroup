@@ -150,6 +150,30 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		
 	}
 
+	public void onTemplateNodeSelect(NodeSelectEvent event) {
+
+		WsNode wsNode = (WsNode) event.getTreeNode().getData();
+
+		if (wsNode != null && wsNode.getId() != null && wsNode.getId().equals(ConstantDefinitions.TREE_ROOT)) {
+			return;
+		}
+
+		TreeNode treeNode = event.getTreeNode();
+		String selectedType;
+
+		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOBGROUP)) {
+			selectedType = new String(ConstantDefinitions.TREE_JOBGROUP);
+		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+			selectedType = new String(ConstantDefinitions.TREE_JOB);
+		} else {
+			selectedType = new String(ConstantDefinitions.TREE_UNKNOWN);
+		}
+
+		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOBGROUP)) {
+			getScenarioDefinitionMBean().setTemplateScenarioPath(false);
+		}
+	}
+
 	public void switchToScenarioPanel() {
 		jobDefCenterPanel = JSNavigationMBean.SCENARIO_PAGE;
 
