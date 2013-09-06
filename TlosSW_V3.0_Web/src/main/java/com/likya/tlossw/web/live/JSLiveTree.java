@@ -19,6 +19,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
@@ -368,11 +369,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setName(jobInfoTypeClient.getJobName());
+			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
+			
 			if (jobInfoTypeClient.getLiveStateInfo() == null) {
 				System.out.println("jobInfoTypeClient.getLiveStateInfo() == null");
 			}
-			/* Bu jobType kullanilmiyor. Ben String e cevirip kullanabilir miyim? Hakan 31.08.2013 
-			 * jobNode.setJobType(jobInfoTypeClient.getJobCommandType().toString()); */
 			jobNode.setLeafIcon(DecorationUtils.jobStateIconMappings(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setPath(jobInfoTypeClient.getTreePath());
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, scenarioNode);
