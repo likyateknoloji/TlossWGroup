@@ -32,6 +32,7 @@ import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
+import com.likya.tlossw.web.menu.JobTemplatesTree;
 import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -44,6 +45,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
+
+	@ManagedProperty(value = "#{jobTemplatesTree}")
+	private JobTemplatesTree jobTemplatesTree;
 
 	private Scenario scenario;
 
@@ -306,6 +310,15 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		fillScenarioPanel();
 	}
 
+	public void setTemplateScenarioPath(boolean insert) {
+		TreeNode selectedScenario = getJobTemplatesTree().getSelectedJS();
+
+		setJsInsertButton(insert);
+		setJsUpdateButton(!insert);
+
+		setTemplateScenarioTreePath(selectedScenario);
+	}
+
 	public void fillScenarioPanel() {
 		fillBaseScenarioInfosTab();
 		fillTimeManagementTab();
@@ -518,6 +531,33 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		scenarioPath = treePath + path; // Odaktaki senaryo path i full
 	}
 
+	private void setTemplateScenarioTreePath(TreeNode scenarioNode) {
+
+		WsScenarioNode wsScenarioNode = (WsScenarioNode) scenarioNode.getData();
+		String path = "";
+		treePath = ""; // Odaktaki senaryo path i
+		scenarioPathInScenario = ""; // Ekrandaki ağaçtaki node isimleri path i
+
+		if (!wsScenarioNode.getId().equalsIgnoreCase(ConstantDefinitions.TREE_ROOTID)) { // Seçilen nodun atası root
+			String scenarioNodeId = ((WsScenarioNode) scenarioNode.getData()).getId(); // Referans senaryo nodunun id si
+
+			path = "/dat:scenario[@ID = '" + scenarioNodeId + "']";
+			scenarioPathInScenario = scenarioPathInScenario + "/" + scenarioNodeId;
+			while (scenarioNode.getParent() != null && !((WsScenarioNode) scenarioNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+				scenarioNode = scenarioNode.getParent();
+				scenarioNodeId = ((WsScenarioNode) scenarioNode.getData()).getId();
+
+				treePath = "/dat:scenario[@ID = '" + scenarioNodeId + "']" + treePath;
+				scenarioPathInScenario = "/" + scenarioNodeId + scenarioPathInScenario;
+			}
+		}
+
+		scenarioPathInScenario = "/" + ConstantDefinitions.TREE_SCENARIOROOTID + scenarioPathInScenario;
+		treePath = "/dat:TlosProcessData" + treePath;
+
+		scenarioPath = treePath + path; // Odaktaki senaryo path i full
+	}
+
 	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteScenario() {
 		boolean result = true;
@@ -672,6 +712,22 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
+	}
+
+	public String getScenarioPath() {
+		return scenarioPath;
+	}
+
+	public void setScenarioPath(String scenarioPath) {
+		this.scenarioPath = scenarioPath;
+	}
+
+	public JobTemplatesTree getJobTemplatesTree() {
+		return jobTemplatesTree;
+	}
+
+	public void setJobTemplatesTree(JobTemplatesTree jobTemplatesTree) {
+		this.jobTemplatesTree = jobTemplatesTree;
 	}
 
 }
