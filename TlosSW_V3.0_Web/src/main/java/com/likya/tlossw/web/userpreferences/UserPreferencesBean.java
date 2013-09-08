@@ -87,7 +87,7 @@ public class UserPreferencesBean implements Serializable {
         advancedThemes.add(new Theme("afterdark", "afterdark.png"));
         advancedThemes.add(new Theme("afternoon", "afternoon.png"));
         //advancedThemes.add(new Theme("afterwork", "afterwork.png"));
-        advancedThemes.add(new Theme("aristo", "aristo.png"));
+        //advancedThemes.add(new Theme("aristo", "aristo.png"));
         // advancedThemes.add(new Theme("black-tie", "black-tie.png"));
         advancedThemes.add(new Theme("blitzer", "blitzer.png"));
         advancedThemes.add(new Theme("bluesky", "bluesky.png"));
@@ -126,7 +126,7 @@ public class UserPreferencesBean implements Serializable {
         themes.put("Afterdark", "afterdark");
         themes.put("Afternoon", "afternoon");
         //themes.put("Afterwork", "afterwork");
-        themes.put("Aristo", "aristo");
+        //themes.put("Aristo", "aristo");
         //themes.put("Black-Tie", "black-tie");
         themes.put("Blitzer", "blitzer");
         themes.put("Bluesky", "bluesky");
