@@ -8,6 +8,8 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+        <link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/deneme.css" />
 	<!-- 		<title>#{msgs['tlos.login.definition']}</title> -->
     <style type="text/css">
  
@@ -80,11 +82,13 @@
 		.loginShadow {
 		   font-size:1em; text-shadow:0.02em 0.02em #000000;
 		}
+
+
     </style>
 </h:head>
 
 <h:body>
- 
+
     <!-- CENTTERED COLUMN ON THE PAGE-->
      <h:form id="loginForm">
     <div id="divContainer">
@@ -113,7 +117,7 @@
 							<p:panelGrid id="TlosLogo" columns="2">
 								<p:row>
 									<p:column>
-										<a href="#"><p:graphicImage value="/images/likyalg01.gif" /></a>
+										<p:graphicImage value="/images/tlos_icon_trans_k.png" styleClass="tlos_icon_k" />
 									</p:column>
 								</p:row>
 								<p:row>
@@ -140,6 +144,7 @@
 											<p:column>
 												<h:outputLabel for="userNameInput2" styleClass="loginShadow"
 													value="#{msgs['tlos.login.username']}" />
+													
 											</p:column>
 										</p:row>
 										<p:row>
