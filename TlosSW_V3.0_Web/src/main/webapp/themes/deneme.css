@@ -1,0 +1,210 @@
+
+#stage2 {
+    background: none repeat scroll 0 0 #EFEFEF;
+    height: 100px;
+    position: relative;
+    text-align: right;
+}
+#box1 {
+    background: none repeat scroll 0 0 red;
+    border: 1px solid #666666;
+    color: #FFFFFF;
+    height: 100px;
+    position: absolute;
+    width: 100px;
+}
+#box2 {
+    background: none repeat scroll 0 0 #0000FF;
+    border: 1px solid #666666;
+    color: #FFFFFF;
+    height: 100px;
+    left: 120px;
+    position: absolute;
+    transition: all 1s ease-in-out 0s;
+    width: 100px;
+}
+#box1:hover + #box2 {
+    background: none repeat scroll 0 0 #FFFF00;
+    color: #000000;
+    left: 627px;
+    transform: rotate(360deg);
+}
+
+
+
+
+
+#stage3 {
+    background: none repeat scroll 0 0 #EFEFEF;
+    height: 100px;
+    position: relative;
+    text-align: right;
+}
+#box3 {
+    background: none repeat scroll 0 0 red;
+    border: 1px solid #666666;
+    color: #FFFFFF;
+    height: 100px;
+    position: absolute;
+    transition: all 1s ease-in-out 0s;
+    width: 100px;
+}
+#box3:hover {
+    width: 600px;
+}
+#box4 {
+	animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    background: none repeat scroll 0 0 #0000FF;
+    border: 1px solid #666666;
+    color: #FFFFFF;
+    height: 20px;
+    left: 120px;
+    position: absolute;
+    transition: all 1s ease-in-out 0s;
+    width: 20px;
+}
+#box4:hover {
+
+    background: none repeat scroll 0 0 #FFFF00;
+    border-radius: 10px 10px 10px 10px;
+    color: #000000;
+
+    transform: rotate(360deg);
+}
+#box3:hover + #box4 {
+    background: none repeat scroll 0 0 #FFFF00;
+    border-radius: 50px 50px 50px 50px;		
+    color: #000000;
+    left: 627px;
+    transform: rotate(360deg);
+}
+
+
+
+
+
+element.style {
+    border-color: #FF0000;
+}
+.showbox {
+    transition: all 1s ease-in-out 0s;
+}
+.showbox {
+	animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    background-color: #FFFFFF;
+    border: 2px solid green;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin: 4em 1em;
+    text-align: center;
+    width: 30px;
+}
+
+
+.showbox {
+    transition: all 1s ease-in-out 0s;
+}
+.slideright:hover {
+    transform: translate(3em, 0px);
+}
+.rotate:hover {
+	
+    transform: rotate(720deg);
+   
+}
+.slideleft:hover {
+    transform: translate(-3em, 1em);
+}
+.scale:hover {
+    transform: scale(2);
+}
+
+
+.showoff, .showoff2 {
+    margin: 2em 6em;
+}
+.showoff2, .showoff:hover {
+    border-color: #FF0000;
+    border-radius: 1em 1em 1em 1em;
+    transform: scale(2);
+}
+.showoff2:hover {
+    border-color: #008000;
+    border-radius: 0 0 0 0;
+    transform: scale(1);
+}
+
+/* keyframes for animation;  simple 0 to 360 */
+
+@-moz-keyframes spin {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+}
+#raysDemoHolder {
+    height: 80px;
+    margin: 100px 0 0 200px;
+    position: relative;
+    width: 80px;
+}
+#raysLogo {
+    background: url("../images/homeLogo.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 233px;
+    left: 0;
+    position: absolute;
+    text-indent: -3000px;
+    top: 0;
+    width: 300px;
+    z-index: 2;
+}
+#rays {
+    animation-duration: 50000ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    background: url("../images/tlos_icon_trans_k.png") no-repeat scroll 0 0 transparent;
+    height: 80px;
+    left: 0px;
+    position: absolute;
+    top: -0px;
+    width: 80px;
+}
+#rays:hover {
+}
+
+.tlos_icon_k {
+    animation-duration: 10000ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    background: url("/images/tlos_icon_trans_k.png") no-repeat scroll 0 0 transparent;
+    height: 60px;
+    left: 0px;
+    position: relative;
+    top: -0px;
+    width: 60px;
+}
+
+.tlos_icon_kkk {
+    animation-duration: 20000ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+    animation-timing-function: linear;
+    background: url("/images/tlos_icon_trans_kkk.png") no-repeat scroll 0 0 transparent;
+    height: 40px;
+    left: 0px;
+    position: relative;
+    top: -0px;
+    width: 40px;
+}
