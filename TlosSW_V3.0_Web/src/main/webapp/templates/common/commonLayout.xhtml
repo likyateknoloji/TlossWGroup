@@ -28,12 +28,17 @@
 			href="/tlossw-webapp/themes/syntaxhighlighter.css" />
         <link type="text/css" rel="stylesheet"
 			href="/tlossw-webapp/themes/main.css" />
-        <link type="text/css" rel="stylesheet"
-			href="/tlossw-webapp/themes/job-icon-sets/#{userPreferencesBean.jobIconCssPath}/job-icons.css" /> <!-- job-icon-set1 -->
-        <link type="text/css" rel="stylesheet"
-			href="/tlossw-webapp/themes/job-state-color-sets/#{userPreferencesBean.jobStateColorCssPath}/job-state-colors.css" /> <!-- job-state-color-default -->
-        <link type="text/css" rel="stylesheet"
-			href="/tlossw-webapp/themes/job-state-icon-sets/#{userPreferencesBean.jobStateIconCssPath}/job-state-icons.css" /> <!--   job-state-icon-flags  -->
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/deneme.css" />
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/job-icon-sets/#{userPreferencesBean.jobIconCssPath}/job-icons.css" />
+		<!-- job-icon-set1 -->
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/job-state-color-sets/#{userPreferencesBean.jobStateColorCssPath}/job-state-colors.css" />
+		<!-- job-state-color-default -->
+		<link type="text/css" rel="stylesheet"
+			href="/tlossw-webapp/themes/job-state-icon-sets/#{userPreferencesBean.jobStateIconCssPath}/job-state-icons.css" />
+		<!--   job-state-icon-flags  -->
 		<!-- overflow ozelliklerini ekranda onde gorunmesi istedigimiz kisimlar icin koyduk
 			derecelendirmesini de z-index'e gore yaptik -->
 
@@ -50,16 +55,18 @@
     		<p:layoutUnit id="top" position="north" size="60">
 				<div id="north">
 					<p:outputPanel>
-						<p:graphicImage value="/images/likyalg01.gif" />
+						<p:graphicImage value="/images/tlos_icon_trans_kkk.png"
+							styleClass="tlos_icon_kkk" />
 						<h:outputText
-							style="display: inline-block; position:relative; left:10px;top:-14px" styleClass="myShadow"
-							value="#{msgs['tlosui.company']} &#169; 2008-2013" />
-						<p:lightBox iframe="true" style="display: inline-block;">
-							<h:outputLink value="http://www.tlos.com.tr"
-								title="Tlos Workload Automation Solutions">
-								<h:outputText  style="font-size: 25px; display: inline-block; position:relative; left:190px;top:-10px" value="#{msgs['tlosui.title']}" styleClass="myShadow"/>
-							</h:outputLink>
-						</p:lightBox>
+							style="display: inline-block; font-size:1.5em; position:relative; left:10px;top:-14px"
+							styleClass="myShadow" value="#{msgs['tlosui.title']}" />
+						<p:outputPanel style="position:absolute; right:0px">
+							<p:graphicImage value="/images/likyalg01.gif" />
+							<h:outputText
+								style="display: inline-block; position:relative; left:0px;top:-14px"
+								styleClass="myShadow"
+								value="#{msgs['tlosui.company']} &#169; 2008-2013" />
+						</p:outputPanel>
 					</p:outputPanel>
 				</div>
 			</p:layoutUnit>  
