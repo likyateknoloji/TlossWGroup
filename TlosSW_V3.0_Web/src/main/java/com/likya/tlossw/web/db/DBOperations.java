@@ -153,7 +153,7 @@ public class DBOperations implements Serializable {
 	}
 
 	private String scenarioFunctionConstructor(String functionName, String... param) {
-		return localFunctionConstructorNS("moduleScenarioOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt, CommonConstantDefinitions.hsNsUrl, param);
+		return localFunctionConstructorNS("moduleScenarioOperations.xquery", functionName, CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsSt + CommonConstantDefinitions.decNsJsdl, CommonConstantDefinitions.hsNsUrl, param);
 	}
 
 	private String userFunctionConstructor(String functionName, String... param) {
@@ -1083,7 +1083,7 @@ public class DBOperations implements Serializable {
 
 	public String getJobExistence(int userId, String dataId, String jobPath, String jobName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistence", toXSString(userId), toXSString(dataId), jobPath, "\"" + jobName + "\"");
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistence", toXSString(userId), toXSString(dataId), jobPath, toXSString(jobName));
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
