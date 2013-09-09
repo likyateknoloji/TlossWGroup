@@ -57,12 +57,14 @@ declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:st
   let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
                  then
                    $docName
-                 else
-                   let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
-    			   let $exist := if(doc-available($userDoc)) 
-                                 then () 
-                                 else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
-                   return $userDoc
+                 else if( not(fn:compare( $whichData, "jobTemplates" )) ) 
+				      then met:getMetaData($documentUrl, "jobTemplates")
+					  else
+                        let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
+    			        let $exist := if(doc-available($userDoc)) 
+                                      then () 
+                                      else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
+                        return $userDoc
   return $result
 };
 
