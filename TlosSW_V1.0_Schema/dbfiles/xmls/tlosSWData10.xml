@@ -1,4 +1,3 @@
-<!-- Created for the TLOS Scheduler http://www.likyatekNOloji.com -->
 <dat:TlosProcessData xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
     <dat:baseScenarioInfos>
         <com:jsName>Serbest isler</com:jsName>
