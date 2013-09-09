@@ -311,6 +311,7 @@ declare function hs:copyJStoJS($documentUrl as xs:string, $fromTree as xs:string
           $baseJobInfos/dat:jobInfos, 
           $baseJobInfos/dat:calendarId, 
           $baseJobInfos/dat:jobLogFile, 
+		  $baseJobInfos/dat:jobLogPath, 
           $baseJobInfos/dat:oSystem, 
           $baseJobInfos/dat:jobPriority, 
           $baseJobInfos/dat:jsIsActive, 
