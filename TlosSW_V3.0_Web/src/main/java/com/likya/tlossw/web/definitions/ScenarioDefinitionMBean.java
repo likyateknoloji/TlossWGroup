@@ -423,7 +423,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		// iç senaryolarda aynı isimde bir senaryo varsa 2
 		// senaryonun dışında aynı isimde bir senaryo varsa 3
 		if (scenarioCheckResult != null) {
-			if (scenarioCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 
 				Scenario scenarioDefinition = getDbOperations().getScenario(getWebAppUser().getId(), getDocumentId(), scenarioPath, scenarioName);
 
@@ -432,13 +432,13 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 					addMessage("scenarioUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
 					return false;
 				}
-			} else if (scenarioCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+			} else if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.INNER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(true);
 
 				return false;
 
-			} else if (scenarioCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+			} else if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.OUTER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(false);
 
@@ -457,16 +457,16 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		// iç senaryolarda aynı isimde bir senaryo varsa 2
 		// senaryonun dışında aynı isimde bir senaryo varsa 3
 		if (scenarioCheckResult != null) {
-			if (scenarioCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 				addMessage("scenarioInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.scenario.name.duplicate", null);
 				return false;
-			} else if (scenarioCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+			} else if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.INNER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(true);
 
 				return false;
 
-			} else if (scenarioCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+			} else if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.OUTER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(false);
 
@@ -600,7 +600,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public void pasteJS(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setToTree(toTree);
-		getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath);
+		getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName());
 	}
 
 	/*

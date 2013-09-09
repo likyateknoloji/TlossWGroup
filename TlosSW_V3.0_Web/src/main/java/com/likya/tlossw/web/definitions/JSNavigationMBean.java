@@ -28,6 +28,7 @@ import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.validation.XMLValidations;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
@@ -420,7 +421,31 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void pasteJSAction(String toTree) {
+		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
+		
+		if (jsBuffer.isJob()) {
+			
+			boolean uniqueName = jobCheckUpForCopy(toTree, getScenarioDefinitionMBean().getScenarioPath(), jsBuffer.getJsName());
+			if (!uniqueName) {
+				//TODO CopyOf sayısı hesaplanacak
+				jsBuffer.setNewJSName("CopyOf" + jsBuffer.getJsName());
+			}
+		} else {
+			//TODO senaryo tarafı yapılacak
+		}
 		getScenarioDefinitionMBean().pasteJS(toTree);
+	}
+
+	public boolean jobCheckUpForCopy(String documentId, String jobPathInScenario, String jobName) {
+
+		String jobCheckResult = getDbOperations().getJobExistence(getWebAppUser().getId(), documentId, jobPathInScenario + "/dat:jobList", jobName);
+
+		if (jobCheckResult != null) {
+			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public String getJobDefCenterPanel() {

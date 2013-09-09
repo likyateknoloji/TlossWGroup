@@ -53,6 +53,7 @@ import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
 import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ComboListUtils;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 
 public abstract class JobBasePanelBean extends JSBasePanelMBean implements Serializable {
@@ -619,7 +620,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		// iç senaryolarda aynı isimde bir iş varsa 2
 		// senaryonun dışında aynı isimde bir iş varsa 3
 		if (jobCheckResult != null) {
-			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 
 				JobProperties job = getDbOperations().getJob(getWebAppUser().getId(), getDocumentId(), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
@@ -628,13 +629,13 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 					addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 					return false;
 				}
-			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+			} else if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.INNER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(true);
 
 				return false;
 
-			} else if (jobCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+			} else if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.OUTER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(false);
 
@@ -653,16 +654,16 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		// iç senaryolarda aynı isimde bir iş varsa 2
 		// senaryonun dışında aynı isimde bir iş varsa 3
 		if (jobCheckResult != null) {
-			if (jobCheckResult.equalsIgnoreCase(DUPLICATE_NAME_AND_PATH)) {
+			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 				addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.info.job.name.duplicate", null);
 				return false;
-			} else if (jobCheckResult.equalsIgnoreCase(INNER_DUPLICATE_NAME)) {
+			} else if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.INNER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(true);
 
 				return false;
 
-			} else if (jobCheckResult.equalsIgnoreCase(OUTER_DUPLICATE_NAME)) {
+			} else if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.OUTER_DUPLICATE_NAME)) {
 				setJsNameConfirmDialog(true);
 				setInnerJsNameDuplicate(false);
 
@@ -1021,6 +1022,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		jsBuffer.setJob(true);
 		jsBuffer.setFromTree(fromTree);
 		jsBuffer.setJsId(jobProperties.getID());
+		jsBuffer.setJsName(jobProperties.getBaseJobInfos().getJsName());
 	
 		getSessionMediator().setJsBuffer(jsBuffer);
 	}

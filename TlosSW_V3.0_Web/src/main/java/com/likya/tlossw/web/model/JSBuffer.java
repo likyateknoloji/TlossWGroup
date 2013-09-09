@@ -4,6 +4,8 @@ public class JSBuffer {
 
 	private boolean isJob;
 	private String jsId;
+	private String jsName;
+	private String newJSName;
 	private String fromTree;
 	private String toTree;
 
@@ -37,6 +39,22 @@ public class JSBuffer {
 
 	public void setToTree(String toTree) {
 		this.toTree = toTree;
+	}
+
+	public String getNewJSName() {
+		return newJSName;
+	}
+
+	public void setNewJSName(String newJSName) {
+		this.newJSName = newJSName;
+	}
+
+	public String getJsName() {
+		return jsName;
+	}
+
+	public void setJsName(String jsName) {
+		this.jsName = jsName;
 	}
 
 
