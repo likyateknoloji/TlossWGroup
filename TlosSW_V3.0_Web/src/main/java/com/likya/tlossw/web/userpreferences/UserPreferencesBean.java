@@ -73,6 +73,8 @@ public class UserPreferencesBean implements Serializable {
         jobStateIconCssPaths = new TreeMap<String, String>();
         jobStateIconCssPaths.put("Default", "job-state-icon-default");
         jobStateIconCssPaths.put("Flags", "job-state-icon-flags");
+        jobStateIconCssPaths.put("Geo Animations", "job-state-icon-geo-animated");
+        jobStateIconCssPaths.put("Whirling Balls", "job-state-icon-ball-animated");
         
         jobStateColorCssPaths = new TreeMap<String, String>();
         jobStateColorCssPaths.put("Default", "job-state-color-default");
