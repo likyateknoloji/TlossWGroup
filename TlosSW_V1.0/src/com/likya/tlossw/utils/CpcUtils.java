@@ -131,7 +131,11 @@ public class CpcUtils {
 	}
 	
 	public static String getRootScenarioPath(String instanceId) {
-		return CpcBase.getRootPath() + "." + instanceId + "." + EngineeConstants.LONELY_JOBS;
+		return getInstancePath(instanceId) + "." + EngineeConstants.LONELY_JOBS;
+	}
+	
+	public static String getInstancePath(String instanceId) {
+		return CpcBase.getRootPath() + "." + instanceId;
 	}
 
 }
