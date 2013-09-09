@@ -27,6 +27,7 @@
 				<p:outputPanel id="searchBox">
 					<h:outputText value="#{msgs['tlos.search.all']}" />
 					<p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="position:relative; left:400pt; width:150px" />
+					<p:watermark for="globalFilter" value="#{msgs['tlos.live.pannel.job.searchInAllFields']}" />
 				</p:outputPanel>
 			</f:facet>
 			
