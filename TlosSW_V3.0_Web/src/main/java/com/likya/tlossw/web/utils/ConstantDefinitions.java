@@ -30,4 +30,11 @@ public class ConstantDefinitions {
 	public static final String LIVE_TREE = "live";
 	public static final String DEFINITION_TREE = "workspace";
 
+	/**
+	 * Job/Senaryo isim kontrol sabitleri
+	 */
+	public static final String NEW_NAME = "0"; // girilen isimde daha önce kaydedilmiş bir iş/senaryo yoksa 0
+	public static final String DUPLICATE_NAME_AND_PATH = "1"; // ayni path de aynı isimde bir iş/senaryo varsa 1
+	public static final String INNER_DUPLICATE_NAME = "2"; // iç senaryolarda aynı isimde bir iş/senaryo varsa 2
+	public static final String OUTER_DUPLICATE_NAME = "3"; // senaryonun dışında aynı isimde bir iş/senaryo varsa 3
 }
