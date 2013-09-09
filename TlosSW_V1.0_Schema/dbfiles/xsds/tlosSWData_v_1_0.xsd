@@ -145,6 +145,7 @@
 				<xs:element ref="lt:comment" minOccurs="0"/>
 				<xs:element ref="jobInfos"/>
 				<xs:element ref="calendarId" minOccurs="0"/>
+				<xs:element ref="periodInfo" minOccurs="0"/>
 				<xs:element ref="jobLogFile"/>
 				<xs:element ref="jobLogPath"/>
 				<xs:element ref="oSystem"/>
@@ -339,6 +340,16 @@
 				<xs:enumeration value="NO"/>
 			</xs:restriction>
 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="periodInfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lt:comment"/>
+			</xs:sequence>
+			<xs:attribute name="step" use="required" type="xs:time"/>
+			<xs:attribute name="counter" default="0" use="optional" type="xs:integer"/>
+			<xs:attribute name="maxCount" use="optional" type="xs:integer"/>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="resourceRequirement">
 		<xs:complexType>
