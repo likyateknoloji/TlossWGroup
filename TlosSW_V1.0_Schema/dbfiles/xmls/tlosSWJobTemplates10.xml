@@ -1,5 +1,3 @@
-
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"
                      xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types"
                      xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
