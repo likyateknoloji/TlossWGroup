@@ -8,6 +8,7 @@ declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
 declare namespace dat="http://www.likyateknoloji.com/XML_data_types";
 declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace fn = "http://www.w3.org/2005/xpath-functions";
+declare namespace jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl";
 
 (:
 Mapping
@@ -293,8 +294,37 @@ declare function hs:copyJStoJS($documentUrl as xs:string, $fromTree as xs:string
 	                   then hs:getJobFromId($documentUrl, $userId, $fromTree, $jsId )
 	                   else hs:getScenarioFromId($documentUrl, $userId, $fromTree, $jsId )
 	
+    let $baseJobInfos := $selectedJS/dat:baseJobInfos
+    
+    let $nextId := if($isJob) 
+                   then sq:getNextId($documentUrl, "jobId") 
+                   else sq:getNextId($documentUrl, "scenarioId")
+
+    let $newJob := 
+      element dat:jobProperties { 
+        attribute agentId {$selectedJS/@agentId }, 
+        attribute ID { $nextId },
+        $selectedJS/jsdl:JobDescription,
+        element dat:baseJobInfos { 
+        element com:jsName { $newJSName },
+          $baseJobInfos/com:comment,
+          $baseJobInfos/dat:jobInfos, 
+          $baseJobInfos/dat:calendarId, 
+          $baseJobInfos/dat:jobLogFile, 
+          $baseJobInfos/dat:oSystem, 
+          $baseJobInfos/dat:jobPriority, 
+          $baseJobInfos/dat:jsIsActive, 
+          $baseJobInfos/com:userId
+      },
+      $selectedJS/dat:cascadingConditions,
+      $selectedJS/dat:stateInfos,
+      $selectedJS/dat:advancedJobInfos,
+      $selectedJS/dat:concurrencyManagement,
+      $selectedJS/dat:timeManagement
+    }
+	
     let $truePath := if($isJob) then 
-              hs:insertJobLock($documentUrl, $userId, $toTree, $selectedJS, $pathOfJS/dat:jobList)
+              hs:insertJobLock($documentUrl, $userId, $toTree, $newJob, $pathOfJS/dat:jobList)
            else
               hs:insertScenarioLock($documentUrl, $userId, $toTree, $selectedJS, $pathOfJS )
 	return $selectedJS
