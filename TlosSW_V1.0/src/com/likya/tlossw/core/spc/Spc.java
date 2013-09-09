@@ -296,8 +296,6 @@ public class Spc extends SpcBase {
 				getGlobalLogger().error("  > HATA : Indexde bulunan " + sortType.getJobId() + " li iş Kuyrukta bulunaMAdı !!");
 				getGlobalLogger().error("		İş kontrolden geçememiş olabilir. Lütfen log dosyalarını kontrol ediniz. ");
 				getGlobalLogger().error("  > UYARI : Bir sonraki işe geçiyor.");
-				// TODO Bu işin index'ten de çıkarılmasında fayda var.
-				// 31.07.2013 Serkan Taş
 				continue;
 			}
 			
