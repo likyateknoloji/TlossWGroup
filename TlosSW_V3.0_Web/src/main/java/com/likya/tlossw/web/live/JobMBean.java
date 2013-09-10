@@ -32,6 +32,9 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
+	@ManagedProperty(value = "#{scenarioMBean}")
+	private ScenarioMBean scenarioMBean;
+	
 	private JobInfoTypeClient jobInTyCl;
 	private JobProperties job;
 
@@ -320,6 +323,14 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	public void setLiveJobManagementBean(LiveJobManagementBean liveJobManagementBean) {
 		this.liveJobManagementBean = liveJobManagementBean;
+	}
+
+	public ScenarioMBean getScenarioMBean() {
+		return scenarioMBean;
+	}
+
+	public void setScenarioMBean(ScenarioMBean scenarioMBean) {
+		this.scenarioMBean = scenarioMBean;
 	}
 
 }
