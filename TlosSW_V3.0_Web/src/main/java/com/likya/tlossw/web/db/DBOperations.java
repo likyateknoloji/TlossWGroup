@@ -2103,6 +2103,23 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
+	public ArrayList<JobProperties> getJobExistenceList(int userId, String dataId, String jobPath, String jobName) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobExistenceResults", toXSString(userId), toXSString(dataId), jobPath, toXSString(jobName));
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		ArrayList<JobProperties> jobList = new ArrayList<JobProperties>();
+
+		JobProperties jobProperties = null;
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
+			jobList.add(jobProperties);
+		}
+
+		return jobList;
+	}
+
 	public ExistConnectionHolder getExistConnectionHolder() {
 		return existConnectionHolder;
 	}

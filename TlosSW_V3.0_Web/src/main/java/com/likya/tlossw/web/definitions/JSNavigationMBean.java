@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -420,20 +421,68 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		getScenarioDefinitionMBean().copyScenario(fromTree);
 	}
 
+	private String calculateCopiedJobName(String toTree, String jobPathInScenario) {
+
+		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
+
+		ArrayList<JobProperties> jobList = getDbOperations().getJobExistenceList(getWebAppUser().getId(), toTree, jobPathInScenario + "/dat:jobList", "CopyOf" + jsBuffer.getJsName());
+		String copyOfJobName = "CopyOf" + jsBuffer.getJsName();
+
+		if (jobList == null || jobList.size() == 0) {
+			return copyOfJobName;
+		} else {
+			int copyOfMax = 0;
+
+			for (JobProperties job : jobList) {
+				String jobName = job.getBaseJobInfos().getJsName();
+
+				int leftParanthesisIndex = jobName.indexOf('(');
+
+				if (leftParanthesisIndex == -1) {
+					if (jobName.equals(copyOfJobName) && copyOfMax < 1) {
+						copyOfMax = 1;
+					}
+				} else {
+
+					String copyIndex = jobName.substring(leftParanthesisIndex + 1);
+					int rightParanthesisIndex = copyIndex.indexOf(')');
+
+					if (rightParanthesisIndex != -1) {
+						copyIndex = copyIndex.substring(0, rightParanthesisIndex);
+
+						try {
+							int copyIndexInt = Integer.parseInt(copyIndex);
+
+							if (copyOfMax < copyIndexInt) {
+								copyOfMax = copyIndexInt;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+
+			return copyOfJobName + "(" + ++copyOfMax + ")";
+		}
+	}
+
 	public void pasteJSAction(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
-		
+
+		String jobPathInScenario = getScenarioDefinitionMBean().getScenarioPath();
+
 		if (jsBuffer.isJob()) {
-			
-			boolean uniqueName = jobCheckUpForCopy(toTree, getScenarioDefinitionMBean().getScenarioPath(), jsBuffer.getJsName());
+
+			boolean uniqueName = jobCheckUpForCopy(toTree, jobPathInScenario, jsBuffer.getJsName());
+
 			if (!uniqueName) {
-				//TODO CopyOf sayısı hesaplanacak
-				jsBuffer.setNewJSName("CopyOf" + jsBuffer.getJsName());
+				jsBuffer.setNewJSName(calculateCopiedJobName(toTree, jobPathInScenario));
 			} else {
 				jsBuffer.setNewJSName(jsBuffer.getJsName());
 			}
 		} else {
-			//TODO senaryo tarafı yapılacak
+			// TODO senaryo tarafı yapılacak
 		}
 		getScenarioDefinitionMBean().pasteJS(toTree);
 	}
