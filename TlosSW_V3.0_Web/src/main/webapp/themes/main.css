@@ -8,7 +8,7 @@
 }
 
 .ui-panel .ui-panel-titlebar {
-    padding: 0.5em 5em 0.3em;
+	padding: 0.5em 5em 0.3em;
 }
 
 .ui-growl {
@@ -82,12 +82,15 @@ div#jobDefinitionForm:tabView:dependencyDefTab.ui-tabs-panel {
 }
 
 #liveForm:jobListDataTable:searchBox.ui-inputfield {
-	position: fixed	;
+	position: fixed;
 	left: 0;
 }
-
+/*
 .myShadow {
 	font-size: 1em;
 	text-shadow: 0.03em 0.03em #000000;
-}
+}*/
 
+.mystyle {
+	width: 30pt !important;
+}
