@@ -60,7 +60,7 @@ public class CpcTester extends CpcBase {
 
 					getSpaceWideRegistry().setParameters(myPramList);
 				}
-				
+
 				arrangeParameters(getSpaceWideRegistry().getParameters());
 
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
@@ -76,8 +76,8 @@ public class CpcTester extends CpcBase {
 
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
-						
-						if(spc == null) {
+
+						if (spc == null) {
 							// No spc defined for this scenario, it is NOT a BUG !
 							continue;
 						}
@@ -133,16 +133,16 @@ public class CpcTester extends CpcBase {
 		String localRoot = CpcUtils.getRootScenarioPath(userId);
 		logger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
 
-//		JobList lonelyJobList = tlosProcessData.getJobList();
+		// JobList lonelyJobList = tlosProcessData.getJobList();
 
-//		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
+		// if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
 
-			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, userId);
-			myScenario.setID(EngineeConstants.LONELY_JOBS);
-			tmpScenarioList.put(CpcUtils.getRootScenarioPath(userId), myScenario);
+		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, userId);
+		myScenario.setID(EngineeConstants.LONELY_JOBS);
+		tmpScenarioList.put(localRoot, myScenario);
 
-//			logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
-//		}
+		// logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
+		// }
 
 		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
 
@@ -171,16 +171,20 @@ public class CpcTester extends CpcBase {
 			}
 
 			SpcInfoType spcInfoType = null;
-			
-			if(!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) && jobList.getJobPropertiesArray().length == 0) {
+
+			if (!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) && jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
 			} else {
 				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
+				if (!spc.initScenarioInfo()) {
+					logger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+					continue;
+				}
 			}
-			
+
 			scpLookupTable.put(scenarioId, spcInfoType);
 
 			logger.info("  > Senaryo yuklendi !");
