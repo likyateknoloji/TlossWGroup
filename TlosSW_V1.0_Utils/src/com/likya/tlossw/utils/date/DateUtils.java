@@ -783,8 +783,10 @@ public class DateUtils {
 
 		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
 
-		LocalTime jobLocalTime = dtf.parseLocalTime(time);
-		DateTime tx = jobLocalTime.toDateTimeToday(zonex);
+		//LocalTime jobLocalTime = dtf.parseLocalTime(time);
+		// DateTime tx = jobLocalTime.toDateTimeToday(zonex);
+		
+		DateTime tx = dtf.parseDateTime(time);
 		
 		// TODO Locale için doğru seçim konusunda birşeyler yapmak lazım.
 		return tx.toCalendar(Locale.US);
