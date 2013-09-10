@@ -140,7 +140,7 @@ public class DefinitionUtils {
 		//LocalTime jobLocalTime = new LocalTime( time, zonex);
 
 		LocalDate tx = new LocalDate();
-		DateTime dtx = tx.toDateTime(jobLocalTime).toDateTime(zonex);
+		DateTime dtx = tx.toDateTime(jobLocalTime, zonex);
 
 		//		StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
 		//		Integer hour, minute, second, millisecond;
