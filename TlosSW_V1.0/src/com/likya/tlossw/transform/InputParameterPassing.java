@@ -177,7 +177,7 @@ public class InputParameterPassing {
 
 			} else { // Global bir bağımlılık
 
-				SpcInfoType spcInfoType = spcLookupTable.get(CpcUtils.getRootScenarioPath(getInstanceId()) + "." + item.getJsPath());
+				SpcInfoType spcInfoType = spcLookupTable.get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
