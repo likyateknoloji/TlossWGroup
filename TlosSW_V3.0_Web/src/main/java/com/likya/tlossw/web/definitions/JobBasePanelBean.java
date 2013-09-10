@@ -143,13 +143,13 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private BaseJobInfosTabBean baseJobInfosTabBean;
 	private EnvVariablesTabBean envVariablesTabBean;
-	private StateInfosTabBean stateInfosTabBean; 
+	private StateInfosTabBean stateInfosTabBean;
 
 	public void initJobPanel() {
 
 		long startTime = System.currentTimeMillis();
 		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel", startTime);
-		
+
 		super.init();
 
 		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
@@ -179,7 +179,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		resetPanelInputs();
 
 		System.out.println(getClass().getName());
-		
+
 		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel Süre : ", startTime);
 
 		fill3S();
@@ -382,10 +382,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			return;
 		}
 
-		if (jobProperties.getLogAnalysis()==null) {
+		if (jobProperties.getLogAnalysis() == null) {
 			logAnalysis = LogAnalysis.Factory.newInstance();
 		} else {
-			logAnalysis = jobProperties.getLogAnalysis();			
+			logAnalysis = jobProperties.getLogAnalysis();
 		}
 		jobProperties.setLogAnalysis(getLogAnalyzingTabBean().fillLogAnalysis(logAnalysis));
 
@@ -418,32 +418,26 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private void fillCascadingConditions() {
-		
+
 		jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.Enum.forString(BeanUtils.boolToWord(runEvenIfFailed)));
 
 		jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.Enum.forString(BeanUtils.boolToWord(jobSafeToRestart)));
 
 		jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.Enum.forString(BeanUtils.boolToWord(jobAutoRetry)));
-		
+
 		/*
-		if (runEvenIfFailed) {
-			jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.YES);
-		} else {
-			jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.NO);
-		}
-
-		if (jobSafeToRestart) {
-			jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.YES);
-		} else {
-			jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.NO);
-		}
-
-		if (jobAutoRetry) {
-			jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.YES);
-		} else {
-			jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.NO);
-		}
-		*/
+		 * if (runEvenIfFailed) {
+		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.YES); } else {
+		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.NO); }
+		 * 
+		 * if (jobSafeToRestart) {
+		 * jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.YES); } else
+		 * { jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.NO); }
+		 * 
+		 * if (jobAutoRetry) {
+		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.YES); } else {
+		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.NO); }
+		 */
 	}
 
 	private void fillStateInfos() {
@@ -487,9 +481,9 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		getBaseJobInfosTabBean().resetTab();
 		getStateInfosTabBean().resetTab();
 		getEnvVariablesTabBean().resetTab(true);
-		
+
 		super.resetPanelInputs();
-		
+
 	}
 
 	protected void fillConcurrencyManagement() {
@@ -567,9 +561,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			}
 
 			/*
-			 * Bu iki satırı TSW-793'ten dolayı ekledim.
-			 * İleride daha uygun bir çözüm bulunduğunda kaldırılabilir.
-			 * Merve
+			 * Bu iki satırı TSW-793'ten dolayı ekledim. İleride daha uygun bir çözüm bulunduğunda
+			 * kaldırılabilir. Merve
 			 */
 			resetPanelInputs();
 			fillTabs();
@@ -682,8 +675,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 		dependencyItem.setJsName(draggedWsNode.getName());
 		dependencyItem.setJsId(draggedWsNode.getId());
-		dependencyItem.setDependencyID("ID"+jsId+"_DEP_ID"+draggedWsNode.getId());
-		dependencyItem.setComment("JobID="+jsId+" is dependent to jobID="+draggedWsNode.getId());
+		dependencyItem.setDependencyID("ID" + jsId + "_DEP_ID" + draggedWsNode.getId());
+		dependencyItem.setComment("JobID=" + jsId + " is dependent to jobID=" + draggedWsNode.getId());
 		depStateName = "";
 		depSubstateName = "";
 
@@ -740,23 +733,24 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		Item newItem = jobProperties.getDependencyList().addNewItem();
 		
-
-		
-
 		String depJobName = draggedWsNode.getName();
 		String depJobId = draggedWsNode.getId();
 		SelectItem item = new SelectItem();
 		item.setLabel(depJobName);
 		
-		// TODO bagimlilik icin isi secip-cekip-biraktigimizda secilen isin scenarioid si senarioId deiskenine konuyor. Bu nedenle lokal bir bagimlilik gibi gorunuyor. Ama oyle degil. Halledene kadar if then else i kaldirdim.
-		// hepsine dependecypath konacak.
-		//if(!draggedJobPath.equals(scenarioId)) {
+		String treePathOfCurrentJob = jobPathInScenario.replace('/', '.');
+		
+		if(treePathOfCurrentJob != null && treePathOfCurrentJob.endsWith(".")) {
+			treePathOfCurrentJob = treePathOfCurrentJob.substring(0, treePathOfCurrentJob.length() - 1);
+		}
+		
+		if(!(dependencyTreePath.equals(treePathOfCurrentJob))) {
 			// Global dependency
 			dependencyItem.setJsPath(dependencyTreePath);
 			item.setValue(dependencyTreePath + "." + depJobId);
-		//} else {
-		//	item.setValue(depJobId);
-		//}
+		} else {
+			item.setValue(depJobId);
+		}
 
 		newItem.set(dependencyItem);
 
@@ -1023,7 +1017,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		jsBuffer.setFromTree(fromTree);
 		jsBuffer.setJsId(jobProperties.getID());
 		jsBuffer.setJsName(jobProperties.getBaseJobInfos().getJsName());
-	
+
 		getSessionMediator().setJsBuffer(jsBuffer);
 	}
 
@@ -1114,7 +1108,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	public void setOsTypeList(Collection<SelectItem> osTypeList) {
 		this.osTypeList = osTypeList;
 	}
-
 
 	public String[] getSelectedJobDependencyList() {
 		return selectedJobDependencyList;
