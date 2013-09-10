@@ -429,6 +429,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			if (!uniqueName) {
 				//TODO CopyOf sayısı hesaplanacak
 				jsBuffer.setNewJSName("CopyOf" + jsBuffer.getJsName());
+			} else {
+				jsBuffer.setNewJSName(jsBuffer.getJsName());
 			}
 		} else {
 			//TODO senaryo tarafı yapılacak
