@@ -54,7 +54,7 @@
 			<p:treeNode id="jobNode" type="job" icon="#{node.leafIcon}">
 			  <h:panelGroup style="position:relative; top:-3px">
 			     <p:commandLink style="display: inline-block; position:relative; left:-1px;top:3px" styleClass="ui-icon #{liveMBean.scenarioMBean.getJobIconsElementInt(node.jobType)}" />
-				 <h:outputText value=" #{node.name}" id="jobName" />
+				 <h:outputText styleClass="#{liveMBean.scenarioMBean.getJobStateColorCss(node.jobInfoTypeClient.liveStateInfo)}" value=" #{node.name}" id="jobName" />
 			  </h:panelGroup>
 			</p:treeNode>
 
