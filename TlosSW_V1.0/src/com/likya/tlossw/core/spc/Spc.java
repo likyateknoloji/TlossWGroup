@@ -351,9 +351,7 @@ public class Spc extends SpcBase {
 
 					if (jobStartType.equals(JobTypeDef.TIME_BASED.toString())) {
 
-						Calendar startTime = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
-
-						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(startTime, jobProperties.getTimeManagement());
+                        boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
 
 						// isin planlanan calisma zamani gecti mi?
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
