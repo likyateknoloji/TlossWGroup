@@ -377,6 +377,18 @@ declare function hs:getJobExistence($documentUrl as xs:string, $userId as xs:str
     return  $sonuc
 };
 
+declare function hs:getJobExistenceResults($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobPath as node()*, $jobName as xs:string) as element(dat:jobProperties)*
+{    
+    let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
+    
+    let $doc := doc($dataDocumentUrl)
+    let $refPath := $doc//$jobPath
+    
+    for $job in $refPath/dat:jobProperties
+        where fn:matches($job//com:jsName/text(), $jobName)
+        return $job
+};
+
 (:hs:getJobExistence(xs:string("tlosSWData10.xml"), /dat:TlosProcessData/dat:scenario/dat:jobList, xs:string("job1.bat"), 13) :)
 
 declare function hs:getJobFromJobName($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobName as xs:string) as element(dat:jobProperties)?
