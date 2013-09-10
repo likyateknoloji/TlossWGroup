@@ -5,17 +5,6 @@
 <h:body>
 	<ui:composition>
 
-		<style>
-			
-			.myShadow {
-			font-size:1em; text-shadow:0.03em 0.03em #000000;
-			}
-           .mystyle {
-              width : 30pt !important;           
-           }
-
-		</style>
-		
 		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" 
 		    rowStyleClass="#{backingBean.getJobStateColorCss(item.liveStateInfo)}" 
 		    widgetVar="itemsTable"
