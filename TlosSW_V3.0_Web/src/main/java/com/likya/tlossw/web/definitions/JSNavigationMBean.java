@@ -214,10 +214,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		tlosProcessData.addNewJobList();
 
-		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor. 
+		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor.
 		// Bunun yerine sadece gerekli bilgilerin alınması sağlanmalı. hakan & serkan 06.agu.2013
 
-		// Ekrandan secilenin job veya senaryo olmasına göre 
+		// Ekrandan secilenin job veya senaryo olmasına göre
 		if (currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
 			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
 			if (getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
@@ -391,8 +391,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		// isi agaca insert edildikten sonra ekledigimiz icin bu kismi kaldirdim
 		/*
-		 * if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) { ((JobBasePanelBean)
-		 * currentPanelMBeanRef).deleteJob(); }
+		 * if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) { ((JobBasePanelBean) currentPanelMBeanRef).deleteJob(); }
 		 */
 	}
 
@@ -466,21 +465,41 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	public void pasteJSAction(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 
-		String jobPathInScenario = getScenarioDefinitionMBean().getScenarioPath();
+		String jsPathInScenario = getScenarioDefinitionMBean().getScenarioPath();
 
 		if (jsBuffer.isJob()) {
 
-			boolean uniqueName = jobCheckUpForCopy(toTree, jobPathInScenario, jsBuffer.getJsName());
+			boolean uniqueName = jobCheckUpForCopy(toTree, jsPathInScenario, jsBuffer.getJsName());
 
 			if (!uniqueName) {
-				jsBuffer.setNewJSName(calculateCopiedJobName(toTree, jobPathInScenario));
-			} else {
-				jsBuffer.setNewJSName(jsBuffer.getJsName());
+				jsBuffer.setNewJSName(calculateCopiedJobName(toTree, jsPathInScenario));
 			}
+
 		} else {
-			// TODO senaryo tarafı yapılacak
+			boolean uniqueName = scenarioCheckUpForCopy(toTree, jsPathInScenario, jsBuffer.getJsName());
+
+			if (!uniqueName) {
+				jsBuffer.setNewJSName("CopyOf" + jsBuffer.getJsName());
+			}
 		}
+
+		if (jsBuffer.getNewJSName() == null) {
+			jsBuffer.setNewJSName(jsBuffer.getJsName());
+		}
+
 		getScenarioDefinitionMBean().pasteJS(toTree);
+	}
+
+	public boolean scenarioCheckUpForCopy(String documentId, String scenarioPathInScenario, String scenarioName) {
+
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), documentId, scenarioPathInScenario + "/dat:jobList", scenarioName);
+
+		if (scenarioCheckResult != null) {
+			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean jobCheckUpForCopy(String documentId, String jobPathInScenario, String jobName) {
