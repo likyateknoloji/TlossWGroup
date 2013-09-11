@@ -23,6 +23,7 @@ import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -39,7 +40,7 @@ import com.likya.tlossw.webclient.TEJmxMpWorkSpaceClient;
 public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1393726981346371091L;
-	
+
 	@ManagedProperty(value = "#{batchProcessPanelMBean}")
 	private BatchProcessPanelMBean batchProcessPanelMBean;
 
@@ -76,7 +77,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	private String jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 
 	public final static String SCENARIO_PAGE = "/inc/definitionPanels/scenarioDef.xhtml";
-	
+
 	public final static String DEFAULT_TEST_PAGE = "/inc/livePanels/testLiveJS.xhtml";
 
 	public WsNode draggedTemplateName = new WsNode();
@@ -112,16 +113,15 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		selectedJSPath = "";
-		
-		String scenarioId = ((WsNode)treeNode.getParent().getData()).getId();
 
-		while (!((WsNode)treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
-			selectedJSPath = ((WsNode)treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
+		String scenarioId = ((WsNode) treeNode.getParent().getData()).getId();
+
+		while (!((WsNode) treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+			selectedJSPath = ((WsNode) treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
 			treeNode = treeNode.getParent();
 		}
 
 		String jsId = wsNode.getId();
-		
 
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
@@ -149,7 +149,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 				getScenarioDefinitionMBean().initializeScenarioPanel(false);
 			}
 		}
-		
+
 	}
 
 	public void onTemplateNodeSelect(NodeSelectEvent event) {
@@ -181,70 +181,65 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		currentPanelMBeanRef = getScenarioDefinitionMBean();
 	}
-	
+
 	public boolean getTestPermit() {
-		if(CommonConstantDefinitions.EXIST_MYDATA.equals(getSessionMediator().getDocumentId())) {
+		if (CommonConstantDefinitions.EXIST_MYDATA.equals(getSessionMediator().getDocumentId())) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public String switchToTestPage() throws Exception {
-		
-		if(!getTestPermit()) {
+
+		if (!getTestPermit()) {
 			addMessage("switchToTestPage", FacesMessage.SEVERITY_WARN, "tlos.warn.test.run", null);
 			return null;
 		}
-		
+
 		getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_MYDATA);
-		
+
 		TlosProcessDataDocument tlosProcessDataDocument = TlosProcessDataDocument.Factory.newInstance();
 		tlosProcessDataDocument.addNewTlosProcessData();
-		
+
 		TlosProcessData tlosProcessData = tlosProcessDataDocument.getTlosProcessData();
-		
-		boolean ihtiyac = false;
-        
-		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor. Bunun yerine sadece gerekli bilgilerin alınması sağlanmalı. hakan & serkan 06.agu.2013
-		
+
+		tlosProcessData.addNewBaseScenarioInfos().setJsName("Ana Senaryo");
+		tlosProcessData.getBaseScenarioInfos().setComment("Ana Senaryo burada yer alir");
+		tlosProcessData.getBaseScenarioInfos().setJsIsActive(JsIsActive.YES);
+		tlosProcessData.getBaseScenarioInfos().setUserId(getWebAppUser().getId());
+
+		tlosProcessData.addNewTimeManagement();
+		tlosProcessData.addNewAdvancedScenarioInfos();
+		tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
+
+		tlosProcessData.addNewJobList();
+
+		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor. 
+		// Bunun yerine sadece gerekli bilgilerin alınması sağlanmalı. hakan & serkan 06.agu.2013
+
 		// Ekrandan secilenin job veya senaryo olmasına göre 
-		if(currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
-//			if(getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
-//				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
-//				tlosProcessData.set(scenario);			
-//			} else {
-				Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());	
+		if (currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
+			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
+			if (getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
 				tlosProcessData.set(scenario);
-				// ihtiyac = true;
-//			}
+			} else {
+				Scenario[] myScenarios = { scenario };
+				tlosProcessData.setScenarioArray(myScenarios);
+			}
 		} else {
-            // tek job ise
-		   tlosProcessData.addNewJobList();
-		   tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
-		   ihtiyac = true;
-		}
-		
-		if(ihtiyac) {
-			
-			tlosProcessData.addNewBaseScenarioInfos().setJsName("Ana Senaryo");
-			tlosProcessData.getBaseScenarioInfos().setComment("Ana Senaryo burada yer alir");
-			tlosProcessData.getBaseScenarioInfos().setJsIsActive(JsIsActive.Enum.forString("YES"));
-			tlosProcessData.getBaseScenarioInfos().setUserId(getWebAppUser().getId());
-			
-			tlosProcessData.addNewTimeManagement();
-			tlosProcessData.addNewAdvancedScenarioInfos();
-			tlosProcessData.addNewConcurrencyManagement().setInstanceId(getWebAppUser().getId() + "");
+			// tek job ise
+			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
 
-		if (tlosProcessData == null || ! XMLValidations.validateWithLogs(Logger.getLogger(getClass()), tlosProcessData)) {
+		if (tlosProcessData == null || !XMLValidations.validateWithLogs(Logger.getLogger(getClass()), tlosProcessData)) {
 			throw new TlosFatalException("JSNavigationMBean.switchToTestPage : TlosProcessData is null or tlosProcessData xml is damaged !");
 		}
-		
+
 		TEJmxMpWorkSpaceClient.addTestData(getWebAppUser(), tlosProcessDataDocument.toString());
-		
+
 		return DEFAULT_TEST_PAGE;
 	}
-	
+
 	public String getJobPropertiesXML() {
 		QName qName = JobProperties.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
@@ -264,7 +259,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void handleJobDropAction(ActionEvent ae) {
 
-		if(currentPanelMBeanRef == null) {
+		if (currentPanelMBeanRef == null) {
 			setCurrentPanel(JobCommandType.INT_BATCH_PROCESS);
 			System.err.println("\ncurrentPanelMBeanRef = null o yüzden Batch process e set edildi. Çözülmeli !! \n");
 		}
@@ -278,7 +273,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		case JobCommandType.INT_SYSTEM_COMMAND:
 			currentPanelMBeanRef = getSystemCommandPanelMBean();
-			
+
 			jobDefCenterPanel = BeanUtils.SYSTEM_COMMAND_PAGE;
 			break;
 
@@ -339,7 +334,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		default:
 			break;
 		}
-		
+
 		((JSDefPanelInterface) currentPanelMBeanRef).init();
 	}
 
@@ -369,7 +364,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		setCurrentPanel(jobType);
 
 		((JobBasePanelBean) currentPanelMBeanRef).setScenarioId(scenarioId);
-		
+
 		if (jobProperties != null) {
 			((JobBasePanelBean) currentPanelMBeanRef).setJobProperties(jobProperties);
 
@@ -395,9 +390,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		jobDefCenterPanel = BeanUtils.DEFAULT_DEF_PAGE;
 
 		// isi agaca insert edildikten sonra ekledigimiz icin bu kismi kaldirdim
-		/* if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) {
-			((JobBasePanelBean) currentPanelMBeanRef).deleteJob();
-		}*/
+		/*
+		 * if (((JobBasePanelBean) currentPanelMBeanRef).isJsInsertButton()) { ((JobBasePanelBean)
+		 * currentPanelMBeanRef).deleteJob(); }
+		 */
 	}
 
 	public void deleteScenarioAction() {
