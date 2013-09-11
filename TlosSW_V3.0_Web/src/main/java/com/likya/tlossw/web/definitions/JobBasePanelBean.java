@@ -63,8 +63,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jSTree;
 
-	public final static String PERIOD_TIME_PARAM = "Period Time";
-
 	public final static String CONFIRM = "confirm";
 
 	public final static String NONE = "none";
