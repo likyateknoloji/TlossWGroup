@@ -593,6 +593,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		jsBuffer.setJob(false);
 		jsBuffer.setFromTree(fromTree);
 		jsBuffer.setJsId(scenario.getID());
+		jsBuffer.setJsName(scenario.getBaseScenarioInfos().getJsName());
 	
 		getSessionMediator().setJsBuffer(jsBuffer);
 	}
