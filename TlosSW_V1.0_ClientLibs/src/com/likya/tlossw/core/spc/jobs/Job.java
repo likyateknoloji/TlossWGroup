@@ -11,6 +11,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
@@ -26,6 +27,7 @@ import com.likya.tlossw.core.spc.helpers.ExtractEvents;
 import com.likya.tlossw.core.spc.helpers.GenericInfoSender;
 import com.likya.tlossw.core.spc.helpers.LogAnalyser;
 import com.likya.tlossw.core.spc.helpers.ParamList;
+import com.likya.tlossw.core.spc.helpers.PeriodCalculations;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.helpers.WatchDogTimer;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -81,16 +83,16 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		initLogEvents();
 	}
-	
+
 	private void initLogEvents() {
-		
+
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
 
 		if (logAnalysis != null && logAnalysis.getActive()) {
 			ExtractEvents.evaluate(this);
 		}
-		
+
 	}
 
 	public void setChanged() {
@@ -103,8 +105,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		performLogAnalyze();
 
+		periodicRepeatativity();
 	}
-	
+
 	private void performLogAnalyze() {
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		LogAnalysis logAnalysis = jobProperties.getLogAnalysis();
@@ -112,6 +115,22 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		if (logAnalysis != null && logAnalysis.getActive()) {
 			new LogAnalyser().evaluate(this);
 		}
+	}
+
+	private void periodicRepeatativity() {
+
+		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+		if (jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+			Date nextPeriodTime = PeriodCalculations.forward(jobProperties);
+			if(nextPeriodTime != null) {
+				// yeni zamana kuruldu
+				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+			} else {
+				// yeni zamana kurulmadı, artık çalışmayacak
+				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED);
+			}
+		}
+
 	}
 
 	protected abstract void localRun();
