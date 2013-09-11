@@ -492,7 +492,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public boolean scenarioCheckUpForCopy(String documentId, String scenarioPathInScenario, String scenarioName) {
 
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), documentId, scenarioPathInScenario + "/dat:jobList", scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), documentId, scenarioPathInScenario, scenarioName);
 
 		if (scenarioCheckResult != null) {
 			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
