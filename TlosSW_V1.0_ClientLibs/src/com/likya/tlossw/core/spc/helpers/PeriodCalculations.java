@@ -13,7 +13,7 @@ public class PeriodCalculations {
 
 		PeriodInfo periodInfo = jobProperties.getBaseJobInfos().getPeriodInfo();
 		
-		if(periodInfo.getCounter().intValue() >= periodInfo.getMaxCount().intValue()) {
+		if(periodInfo.getMaxCount() == null || periodInfo.getCounter().intValue() >= periodInfo.getMaxCount().intValue()) {
 			return null;
 		}
 		
