@@ -1,23 +1,20 @@
 package com.likya.tlossw.web.definitions.helpers;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Collection;
 
 import javax.faces.model.SelectItem;
 
 import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
-import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
-import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPriorityDocument.JobPriority;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlos.model.xmlbeans.data.PeriodInfoDocument.PeriodInfo;
 import com.likya.tlossw.web.definitions.JobBasePanelBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 
@@ -66,14 +63,10 @@ public class BaseJobInfosTabBean implements Serializable{
 			jobTypeDef = baseJobInfos.getJobInfos().getJobTypeDef().toString();
 			jobBaseType = baseJobInfos.getJobInfos().getJobBaseType().toString();
 
-			if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
-				for (Parameter param : baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray()) {
-					if (param.getName().equals(JobBasePanelBean.PERIOD_TIME_PARAM)) {
-						// periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime());
-						String timeOutputFormat = new String("HH:mm:ss");
-						periodTime = DefinitionUtils.calendarToStringTimeFormat(param.getValueTime(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
-					}
-				}
+			if (jobBaseType.equals(JobBaseType.PERIODIC.toString()) && baseJobInfos.getPeriodInfo() != null) {
+				PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
+				String timeOutputFormat = new String("HH:mm:ss");
+				periodTime = DefinitionUtils.calendarToStringTimeFormat(periodInfo.getStep(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
 			}
 
 			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
@@ -98,7 +91,7 @@ public class BaseJobInfosTabBean implements Serializable{
 		baseJobInfos.setCalendarId(Integer.parseInt(jobBasePanelBean.getJsCalendar()));
 		baseJobInfos.setOSystem(OSystem.Enum.forString(jobBasePanelBean.getoSystem()));
 		if (jobPriority.isEmpty())
-			jobPriority = "3"; // default değer
+			jobPriority = JobPriority.X_3.toString(); // "3"; // default değer
 		baseJobInfos.setJobPriority(JobPriority.Enum.forString(jobPriority));
 
 		if (jobBasePanelBean.isJsActive()) {
@@ -112,27 +105,12 @@ public class BaseJobInfosTabBean implements Serializable{
 
 		// periyodik is ise onunla ilgili alanlari dolduruyor
 		if (jobBaseType.equals(JobBaseType.PERIODIC.toString())) {
-
-			SpecialParameters specialParameters;
-			if (baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters() == null) {
-				specialParameters = SpecialParameters.Factory.newInstance();
-			} else {
-				specialParameters = baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters();
+			if(baseJobInfos.getPeriodInfo() == null) {
+				baseJobInfos.addNewPeriodInfo();
 			}
-
-			InParam inParam = InParam.Factory.newInstance();
-
-			Parameter parameter = Parameter.Factory.newInstance();
-			parameter.setName(JobBasePanelBean.PERIOD_TIME_PARAM);
-			parameter.setValueTime(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
-			parameter.setId(new BigInteger("1"));
-
-			inParam.addNewParameter();
-			inParam.setParameterArray(0, parameter);
-
-			specialParameters.setInParam(inParam);
-
-			jobInfos.getJobTypeDetails().setSpecialParameters(specialParameters);
+			PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
+			periodInfo.setComment("No Comment");
+			periodInfo.setStep(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
 		}
 
 		jobInfos.setJobTypeDef(JobTypeDef.Enum.forString(jobTypeDef));
