@@ -126,24 +126,24 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 
-			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-				// PERIYODIK bir is ise;
-				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
-					globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
-					globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-					globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
-
-				} else { // TODO PARAMETRE ekleme
-					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
-					myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
-					// myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
-					// jobRuntimeProperties);
-				}
-			} else {
+//			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+//				// PERIYODIK bir is ise;
+//				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
+//					globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
+//					globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
+//					globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
+//
+//				} else { // TODO PARAMETRE ekleme
+//					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
+//					myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
+//					// myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
+//					// jobRuntimeProperties);
+//				}
+//			} else {
 				// myLogger.info("     << Peryodik olmayan "+jobRuntimeProperties.getJobProperties().getJsName()+" isi calistirilmaya hazir ! >>");
 				myLogger.info("     > Peryodik olmayan " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " isi calistirilmaya hazir !");
 				myJob = getMyJob(jobRuntimeProperties);
-			}
+//			}
 			
 			if (myJob != null && jobId != null) {
 				// isi jobQueue ya ID si ile birlikte koyalim.
