@@ -28,6 +28,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlossw.web.utils.DecorationUtils;
+
 @ManagedBean(name = "userPreferencesBean")
 @SessionScoped
 public class UserPreferencesBean implements Serializable {
@@ -165,7 +168,26 @@ public class UserPreferencesBean implements Serializable {
         //themes.put("UI-Lightness", "ui-lightness");
         //themes.put("Vader", "vader");
     }
-   
+
+	public String getJobStateColorCss(LiveStateInfo jobState) {
+		
+		String result;
+		
+		result = DecorationUtils.jobStateColorMappings(jobState);
+ 
+		return result;
+
+	}
+	
+	public String getJobStateIconCss(LiveStateInfo jobState) {
+		
+		String result;
+		
+		result = DecorationUtils.jobStateIconMappings(jobState);
+ 
+		return result;
+	}
+
     public void setUp(UserPreferences up) {
         this.up = up;
     }

@@ -17,7 +17,6 @@ import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
@@ -285,25 +284,6 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		this.liveJobManagementBean = liveJobManagementBean;
 	}
 
-	public String getJobStateColorCss(LiveStateInfo jobState) {
-		
-		String result;
-		
-		result = DecorationUtils.jobStateColorMappings(jobState);
- 
-		return result;
-
-	}
-	
-	public String getJobStateIconCss(LiveStateInfo jobState) {
-		
-		String result;
-		
-		result = DecorationUtils.jobStateIconMappings(jobState);
- 
-		return result;
-	}
-	
 	public String getJobIconsElement(String key) {
 	
 		Integer jobType = new Integer(JobCommandType.Enum.forString(key).intValue());
