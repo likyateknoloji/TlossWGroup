@@ -124,11 +124,12 @@ return $tektek
 
 } ;
 
-declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration) as node()
+declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration, $includeNonResultedRuns as xs:boolean) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
 	  
-  let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1)
+ 
+  let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1, $includeNonResultedRuns, true())
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
   let $endDateTimex := xs:dateTime(if($hepsi/@overallStop  eq '') then current-dateTime() else $hepsi/@overallStop)+xs:dayTimeDuration('PT10S')
 
