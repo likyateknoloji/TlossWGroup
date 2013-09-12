@@ -92,8 +92,9 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		
         ohlcModel = new OhlcChartModel();  
 
+        String includeNonResultedRuns = "true()";
 		try {
-			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount);
+			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount, includeNonResultedRuns);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
