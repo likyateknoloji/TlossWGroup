@@ -49,6 +49,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 	private JobArray jobsArray;
 
+	private List<Number>intervals;
 	private String overallDuration;
 	private String minWorkingTimeStat;
 	private String maxWorkingTimeStat;
@@ -57,6 +58,8 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	private BigInteger scenarioCount;
 	private String overallStartTime;
 	private String overallEndTime;
+	private Double totalDurationNormalized;
+	private BigDecimal totalDurationBD;
 	
 	@PostConstruct
 	public void init() {
@@ -120,10 +123,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		int runId = 0;
 		int jobId =0;
 		String refRunIdBolean = "true()";
+		String nonFinishedJobsIncluded = "false()";
 		
 		LocalStats localStats = null;
 		try {
-			localStats = getDbOperations().getStatsReport(derinlik, runId, jobId, refRunIdBolean);
+			localStats = getDbOperations().getStatsReport(derinlik, runId, jobId, refRunIdBolean, nonFinishedJobsIncluded);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -148,14 +152,15 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		
 		Double maxTolWorkingTime = new Double(expWorkingTimeStat + expWorkingTimeStat*(tolerancePer/100.0));
 		// göstergede ençok max süreden %25 fazlası olabilsin. Bu değere kadar toleransın 2 katı yüzde koydum şimdilik.
-		Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
-		
+		///////Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
+		Double maxmaxTolWorkingTime = new Double(maxWorkingTime + maxWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
+				
 		int deger = (int) (Math.min(minWorkingTimeStat, minTolWorkingTime)/2);
 		Double sifir = new Double(deger);
 		
 		// Renk bolgelerini belirliyoruz...
 		
-		List<Number> intervals = new ArrayList<Number>();
+		intervals = new ArrayList<Number>();
 		intervals.add(sifir);
 		if(minTolWorkingTime < minWorkingTime ) {
 			intervals.add(minTolWorkingTime); 
@@ -202,13 +207,13 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		  intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		}
 		try {
-			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true()", "xs:string(\"descending\")", 1);
+			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true()", "xs:string(\"descending\")", 1, "true()");
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
 		Double totalDuration = new Double(0.0);
-		BigDecimal totalDurationBD = new BigDecimal(0);
-		Double totalDurationNormalized = new Double(0.0);
+		totalDurationBD = new BigDecimal(0);
+		totalDurationNormalized = new Double(0.0);
 		String overallStart = "N/A";
 		String overallStop = "N/A";
 		
@@ -344,7 +349,48 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		this.expWorkingTimeStat = expWorkingTimeStat;
 	}
 
+	public Double getTotalDurationNormalized() {
+		return totalDurationNormalized;
+	}
 
+	public void setTotalDurationNormalized(Double totalDurationNormalized) {
+		this.totalDurationNormalized = totalDurationNormalized;
+	}
+
+    public String[] findZone() {
+    	String zones[][] = {
+    			{ resolveMessage("tlos.report.gauge.problem"), resolveMessage("tlos.report.gauge.problemExp") },
+    			{ resolveMessage("tlos.report.gauge.blue"), resolveMessage("tlos.report.gauge.blueExplanation") },
+    			{ resolveMessage("tlos.report.gauge.yellow1"), resolveMessage("tlos.report.gauge.yellow1Explanation") },
+    			{ resolveMessage("tlos.report.gauge.green"),resolveMessage("tlos.report.gauge.greenExplanation") },
+    			{ resolveMessage("tlos.report.gauge.yellow2"),resolveMessage("tlos.report.gauge.yellow2Explanation") },
+    			{ resolveMessage("tlos.report.gauge.red"),resolveMessage("tlos.report.gauge.redExplanation") }
+    	};
+    	
+    	int sonuc = 0;
+    	for(int i=0; i< intervals.size(); i++)
+    		if( totalDurationNormalized.compareTo((Double) intervals.get(i)) < 0) {
+    		  sonuc = i;	
+    		  break;
+    		} 
+    	return zones[sonuc];
+    }
+
+	public BigDecimal getTotalDurationBD() {
+		return totalDurationBD;
+	}
+
+	public void setTotalDurationBD(BigDecimal totalDurationBD) {
+		this.totalDurationBD = totalDurationBD;
+	}
+
+	public List<Number> getIntervals() {
+		return intervals;
+	}
+
+	public void setIntervals(List<Number> intervals) {
+		this.intervals = intervals;
+	}
 
  
 }
