@@ -1,7 +1,7 @@
 /*
  * Tlos_V2.0MC_JmxMp_Gxt
  * com.likya.tlos.omc : TEJmxMpClientBase.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : Apr 13, 2009 10:10:44 AM
  */
 
@@ -29,6 +29,9 @@ public class TSWServerJmxClientBase {
 	private static JMXConnector jmxConnectorForHeartBeat = null;
 	
 	public static boolean tryReconnect = true;
+
+	protected static final int PIP = 2;
+	protected static final int AO = 6; 
 
 	protected static JMXConnector getJMXTLSConnectionForComm(String host, Integer port) {
 

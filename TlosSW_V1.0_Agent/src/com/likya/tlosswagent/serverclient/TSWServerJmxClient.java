@@ -23,8 +23,8 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 
 		if (jmxConnector == null) {
 			logger.info("getJMXTLSConnection is null !");
-			logger.error("  > Server'a baðlantý saðlanamadý !!!!");
-			TlosSWAgentBase.errprintln("  > Server'a baðlantý saðlanamadý [host:" + host + ", " + "port:" + port + "], agent sonlandýrýlýyor !!!!");
+			logger.error("  > Server'a baï¿½lantï¿½ saï¿½lanamadï¿½ !!!!");
+			TlosSWAgentBase.errprintln("  > Server'a baï¿½lantï¿½ saï¿½lanamadï¿½ [host:" + host + ", " + "port:" + port + "], agent sonlandï¿½rï¿½lï¿½yor !!!!");
 			System.exit(-1);
 		}
 
@@ -33,7 +33,7 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=5"), "retrieveGlobalStates", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + AO), "retrieveGlobalStates", paramList, signature);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -59,7 +59,7 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=5"), "checkJmxUser", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + AO), "checkJmxUser", paramList, signature);
 			checkJmx = (Integer) o;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,7 +82,7 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=5"), "txMessageHandle", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + AO), "txMessageHandle", paramList, signature);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -112,7 +112,7 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=5"), "pulse", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + AO), "pulse", paramList, signature);
 		} catch (IOException ioe) {
 			System.out.println(ioe.getLocalizedMessage());
 			try {
@@ -143,7 +143,7 @@ public class TSWServerJmxClient extends TSWServerJmxClientBase {
 		Object o;
 		try {
 			MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=1"), "runningJobs", paramList, signature);
+			o = mbeanServerConnection.invoke(new ObjectName("MBeans:type=" + PIP), "runningJobs", paramList, signature);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
