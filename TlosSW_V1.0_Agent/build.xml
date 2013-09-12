@@ -27,7 +27,7 @@
 		
 		<manifest file="MANIFEST.MF">
 			<attribute name="Main-Class" value="com.likya.tlosswagent.TlosSWAgent"/>
-			<attribute name="Class-Path" value="tlossw-model-V${version.num}${buildchar}${minor.number}.jar tlossw-common-V${version.num}${buildchar}${minor.number}.jar tlossw-utils-V${version.num}${buildchar}${minor.number}.jar tlossw-clientlibs-V${version.num}${buildchar}${minor.number}.jar tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar" />
+			<attribute name="Class-Path" value="tlossw-model-V${version.num}${buildchar}${minor.number}.jar tlossw-common-V${version.num}${buildchar}${minor.number}.jar tlossw-utils-V${version.num}${buildchar}${minor.number}.jar tlossw-clientlibs-V${version.num}${buildchar}${minor.number}.jar tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar commons-collections-3.2.1.jar commons-logging-1.1.1.jar log4j-1.2.15.jar xbean.jar jmxremote.jar jmxremote_optional.jar rmissl.jar commons-net-3.0.1.jar commons-vfs-1.0.jar joda-time-2.2.jar" />
 		</manifest>  
 		
 		<jar jarfile="${jar}" manifest="MANIFEST.MF">
