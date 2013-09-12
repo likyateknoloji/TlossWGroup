@@ -120,7 +120,7 @@ public class BaseJobInfosTabBean implements Serializable{
 			periodInfo.setStep(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
 
 			if (maxCount > 0) {
-				periodInfo.setMaxCount(new BigInteger(maxCount + ""));
+				periodInfo.setMaxCount(BigInteger.valueOf(maxCount));
 			}
 		}
 
