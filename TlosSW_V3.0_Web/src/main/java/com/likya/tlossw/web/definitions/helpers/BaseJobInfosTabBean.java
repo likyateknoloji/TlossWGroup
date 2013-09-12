@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.definitions.helpers;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Collection;
 
 import javax.faces.model.SelectItem;
@@ -28,6 +29,7 @@ public class BaseJobInfosTabBean implements Serializable{
 
 	/* periodic job */
 	private String periodTime;
+	private int maxCount;
 
 	private String jobBaseType;
 
@@ -48,6 +50,7 @@ public class BaseJobInfosTabBean implements Serializable{
 		jobPriority = JobPriority.X_1.toString();
 		jobBaseType = JobBaseType.NON_PERIODIC.toString();
 		periodTime = "";
+		maxCount = 0;
 		jobTypeDef = JobTypeDef.TIME_BASED.toString();
 		eventTypeDef = EventTypeDef.FILE.toString();
 	}
@@ -67,6 +70,10 @@ public class BaseJobInfosTabBean implements Serializable{
 				PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
 				String timeOutputFormat = new String("HH:mm:ss");
 				periodTime = DefinitionUtils.calendarToStringTimeFormat(periodInfo.getStep(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
+
+				if (periodInfo.getMaxCount() != null) {
+					maxCount = periodInfo.getMaxCount().intValue();
+				}
 			}
 
 			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
@@ -111,6 +118,10 @@ public class BaseJobInfosTabBean implements Serializable{
 			PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
 			periodInfo.setComment("No Comment");
 			periodInfo.setStep(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
+
+			if (maxCount > 0) {
+				periodInfo.setMaxCount(new BigInteger(maxCount + ""));
+			}
 		}
 
 		jobInfos.setJobTypeDef(JobTypeDef.Enum.forString(jobTypeDef));
@@ -213,6 +224,14 @@ public class BaseJobInfosTabBean implements Serializable{
 
 	public void setJobBasePanelBean(JobBasePanelBean jobBasePanelBean) {
 		this.jobBasePanelBean = jobBasePanelBean;
+	}
+
+	public int getMaxCount() {
+		return maxCount;
+	}
+
+	public void setMaxCount(int maxCount) {
+		this.maxCount = maxCount;
 	}
 
 }

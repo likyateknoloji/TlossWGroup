@@ -88,29 +88,6 @@
 					<h:outputText value="" />
 					<h:outputText value="" />
 
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
-					<p:selectOneMenu id="jobBaseType"
-						value="#{backingBean.jobBaseType}">
-						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
-						<p:ajax update=":jobDefinitionForm:jobDef"></p:ajax>
-					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}" />
-					<p:inputMask value="#{backingBean.periodTime}"
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"
-						mask="99:99:99" required="true"
-						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" >
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputMask>
-
-					<h:outputText value=""
-						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
-					<h:outputText value=""
-						rendered="#{backingBean.jobBaseType ne 'PERIODIC'}" />
-
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
 					<p:selectOneMenu id="jobtype"
 						value="#{backingBean.jobTypeDef}">
@@ -132,6 +109,33 @@
 						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
 					<h:outputText value=""
 						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
+				</p:panelGrid>
+				<br/>
+
+				<p:panelGrid id="jobTypeGrid" columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
+					<p:selectOneMenu id="jobBaseType"
+						value="#{backingBean.jobBaseType}">
+						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
+						<p:ajax update=":jobDefinitionForm:jobDef"></p:ajax>
+					</p:selectOneMenu>
+
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}" />
+					<p:inputMask value="#{backingBean.periodTime}"
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"
+						mask="99:99:99" required="true"
+						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" >
+						<p:ajax partialSubmit="true"></p:ajax>
+					</p:inputMask>
+					
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}" 
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
+					<p:inputText value="#{backingBean.maxCount}" label="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}" 
+						type="integer" rendered="#{backingBean.jobBaseType eq 'PERIODIC'}">
+					</p:inputText>
 				</p:panelGrid>
 			</p:panel>
 		</p:tab>
