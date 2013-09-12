@@ -28,11 +28,10 @@
 							</p:inputText>
 
 							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.jobCommandFile']}" />
-							<p:inputText value="#{shellScriptPanelMBean.jobCommand}"
-								required="true"
-								requiredMessage="#{msgs['tlos.validation.job.command']}">
-							</p:inputText>
+								value="#{msgs['tlos.workspace.pannel.job.command']}" />
+							<p:inputTextarea value="#{shellScriptPanelMBean.jobCommand}"
+								autoResize="false" required="true" style="width: 150pt"
+								requiredMessage="#{msgs['tlos.validation.job.command']}" />
 						</p:panelGrid>
 					</p:panel>
 				</p:tab>
