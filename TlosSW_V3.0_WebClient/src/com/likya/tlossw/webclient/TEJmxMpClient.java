@@ -577,9 +577,10 @@ public class TEJmxMpClient extends TEJmxMpClientBase {
 			
 			return tmp;
 		} catch (Exception e) {
+			System.out.println("\nServer ile baglanti problemi var. Kontrol ediniz !\n");
 			e.printStackTrace();
 		}
-		System.out.println("getLiveTreeInfo NULL olmamali !! ");
+		
 		return null;
 	}
 	/**
