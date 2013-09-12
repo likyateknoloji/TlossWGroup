@@ -146,7 +146,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				// sunucudan guncel is listelerini aliyor
 				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				if (tlosSpaceWideNode == null) {
-					System.out.println("tlosSpaceWideNode == null");
+					System.out.println("Çalışma ağacı bilgileri Sunucudan alınamdı! Sunucu kapalı olabilir veya bağlantıda problem var.");
 				}
 				if (liveTreeCache == null) {
 					System.out.println("liveTreeCache == null");
