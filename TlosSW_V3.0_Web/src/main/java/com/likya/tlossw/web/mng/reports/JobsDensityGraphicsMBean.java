@@ -133,7 +133,8 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 					TransformUtils.toXSString("TIME-IN"),
 					"xs:dateTime(\"2013-07-25T17:04:00.205+03:00\")",
 					"xs:dateTime(\"2013-07-25T17:06:16.363+03:00\")",
-					"xs:dayTimeDuration('PT" + stepForDensity + "S')");
+					"xs:dayTimeDuration('PT" + stepForDensity + "S')",
+					"false()");
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
