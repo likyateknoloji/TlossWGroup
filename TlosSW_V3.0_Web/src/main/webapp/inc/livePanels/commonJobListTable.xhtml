@@ -6,7 +6,7 @@
 	<ui:composition>
 
 		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" 
-		    rowStyleClass="#{backingBean.getJobStateColorCss(item.liveStateInfo)}" 
+		    rowStyleClass="#{userPreferencesBean.getJobStateColorCss(item.liveStateInfo)}" 
 		    widgetVar="itemsTable"
 			resizableColumns="true" binding="#{backingBean.jobDataTable}" filteredValue="#{backingBean.filteredJobs}" emptyMessage="No records found with given criteria" sortMode="multiple" width="100%"
 			paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -22,7 +22,7 @@
 			
 			<p:column headerText="#{msgs['tlos.live.pannel.job.jobStatus']}" style="text-align: center;" styleClass="myShadow">
 			  <h:panelGroup style="position:relative; top:-3px">
-			     <p:commandLink style="display: inline-block; position:relative; left:-1px;top:3px" styleClass="ui-icon #{backingBean.getJobStateIconCss(item.liveStateInfo)}" />
+			     <p:commandLink style="display: inline-block; position:relative; left:-1px;top:3px" styleClass="ui-icon #{userPreferencesBean.getJobStateIconCss(item.liveStateInfo)}" />
 			  </h:panelGroup>
 			</p:column>
 									

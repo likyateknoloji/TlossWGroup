@@ -57,7 +57,7 @@
 					<p:inputText value="#{jobMBean.jobInTyCl.jobPriority}" readonly="true" maxlength="500" style="width: 150px;" />
 
 					<h:outputText value="#{msgs['tlos.live.pannel.job.status']}" />
-					<p:inputText styleClass="#{jobMBean.scenarioMBean.getJobStateColorCss(jobMBean.jobInTyCl.liveStateInfo)}" value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
+					<p:inputText styleClass="#{userPreferencesBean.getJobStateColorCss(jobMBean.jobInTyCl.liveStateInfo)}" value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
 				</p:panelGrid>
 				
 					<!-- h:outputText value="#{msgs['tlos.live.pannel.job.stateInfo']}" />
