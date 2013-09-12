@@ -86,8 +86,9 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
                  output of the getJobsReport function,
 				 "ascending|descending" for ascending or descending ordered jobs based on real work time,
 				 number of maksimum jobs in the array
+				  Whether unfinished jobs used for stats
  * 
- *  * hs:getJobArray(hs:getJobsReport(1,-1,0, true()),"descending",10)
+ *  * hs:getJobArray(hs:getJobsReport(1,-1,0, true()),"descending",10, false())
  * @return 
  */
 
@@ -95,8 +96,10 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		CartesianChartModel curDurationModel = new CartesianChartModel();
 
+		String includeNonResultedRuns = "true()";
+		
 		try {
-			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount);
+			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount, includeNonResultedRuns);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
