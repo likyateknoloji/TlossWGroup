@@ -75,14 +75,12 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		model = new DefaultDashboardModel();
 		DashboardColumn column1 = new DefaultDashboardColumn();
 		DashboardColumn column2 = new DefaultDashboardColumn();
-		DashboardColumn column3 = new DefaultDashboardColumn();
 
 		column1.addWidget("gauge");
-		column1.addWidget("info");
+		column2.addWidget("info");
 
 		model.addColumn(column1);
 		model.addColumn(column2);
-		model.addColumn(column3);
 
 		createMeterGaugeModel();
 
