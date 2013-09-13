@@ -25,9 +25,8 @@ public class PeriodCalculations {
 		GDuration gDuration = periodInfo.getStep();
 
 		long periodOfRepeatance = getDurationInMilliSecs(gDuration);
-
+		
 		Calendar startTime = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
-
 		Date myDate = findNextPeriod(startTime.getTime(), periodOfRepeatance);
 
 		Date myStartTime = changeYMDPart(myDate, startTime.getTime());
