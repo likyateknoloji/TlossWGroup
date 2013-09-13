@@ -70,8 +70,8 @@ public class BaseJobInfosTabBean implements Serializable{
 
 			if (jobBaseType.equals(JobBaseType.PERIODIC.toString()) && baseJobInfos.getPeriodInfo() != null) {
 				PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
-				String timeOutputFormat = new String("HH:mm:ss");
-				periodTime = DefinitionUtils.getDurationString(periodInfo.getStep(), timeOutputFormat);
+				// String timeOutputFormat = new String("HH:mm:ss");
+				periodTime = DefinitionUtils.getDurationString(periodInfo.getStep());
 				// periodTime = DefinitionUtils.calendarToStringTimeFormat(periodInfo.getStep(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
 				// periodTime = periodInfo.getStep().getHour() + ":" + periodInfo.getStep().getMinute() + ":" + periodInfo.getStep().getSecond();
 				if (periodInfo.getMaxCount() != null) {
