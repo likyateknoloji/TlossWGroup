@@ -12,8 +12,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -36,11 +38,16 @@ public class JobQueueOperations {
 			Iterator<Job> jobsIterator = jobQueue.values().iterator();
 			while (jobsIterator.hasNext()) {
 				Job scheduledJob = jobsIterator.next();
+				
+				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+				if(JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+					return false;
+				}
 				//SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
 				//SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
 				try {
-					if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos() != null) {
-						if (!scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
+					if (jobProperties.getStateInfos() != null) {
+						if (!jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
 							return false;
 						}
 					} else {
