@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.xmlbeans.GDuration;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -51,6 +52,18 @@ public class DefinitionUtils {
 
 			return formatter.format(date.getTime());
 		}
+	}
+	
+	public static String getDurationString(GDuration gDuration, String timeOutputFormat) {
+		
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR, gDuration.getHour());
+        cal.set(Calendar.MINUTE, gDuration.getMinute());
+        cal.set(Calendar.SECOND, gDuration.getSecond());
+        
+        String time = new SimpleDateFormat(timeOutputFormat).format(cal.getTime());
+        
+        return time;
 	}
 
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
