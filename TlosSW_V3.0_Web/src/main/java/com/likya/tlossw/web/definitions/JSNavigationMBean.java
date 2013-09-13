@@ -2,6 +2,7 @@ package com.likya.tlossw.web.definitions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -228,6 +229,12 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			}
 		} else {
 			// tek job ise
+			Calendar calendar = Calendar.getInstance();
+			Calendar jobCalendar = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
+			jobCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+			jobCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+			jobCalendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+			jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setDate(jobCalendar);
 			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
 
