@@ -6,6 +6,8 @@ import java.util.Collection;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.xmlbeans.GDuration;
+
 import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
@@ -69,8 +71,9 @@ public class BaseJobInfosTabBean implements Serializable{
 			if (jobBaseType.equals(JobBaseType.PERIODIC.toString()) && baseJobInfos.getPeriodInfo() != null) {
 				PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
 				String timeOutputFormat = new String("HH:mm:ss");
-				periodTime = DefinitionUtils.calendarToStringTimeFormat(periodInfo.getStep(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
-
+				periodTime = DefinitionUtils.getDurationString(periodInfo.getStep(), timeOutputFormat);
+				// periodTime = DefinitionUtils.calendarToStringTimeFormat(periodInfo.getStep(), jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone(), timeOutputFormat);
+				// periodTime = periodInfo.getStep().getHour() + ":" + periodInfo.getStep().getMinute() + ":" + periodInfo.getStep().getSecond();
 				if (periodInfo.getMaxCount() != null) {
 					maxCount = periodInfo.getMaxCount().intValue();
 				}
@@ -117,8 +120,14 @@ public class BaseJobInfosTabBean implements Serializable{
 			}
 			PeriodInfo periodInfo = baseJobInfos.getPeriodInfo();
 			periodInfo.setComment("No Comment");
-			periodInfo.setStep(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
-
+			// periodInfo.setStep(DefinitionUtils.dateToXmlTime(periodTime, jobBasePanelBean.getTimeManagementTabBean().getSelectedTZone()));
+			
+			String myArr [] = periodTime.split(":");
+			String gDurationStr = "PT" + myArr[0] + "H" + myArr[1] + "M" + myArr[2] + "S";
+					
+			GDuration gDuration = new GDuration(gDurationStr);
+			
+			periodInfo.setStep(gDuration);
 			if (maxCount > 0) {
 				periodInfo.setMaxCount(BigInteger.valueOf(maxCount));
 			}
