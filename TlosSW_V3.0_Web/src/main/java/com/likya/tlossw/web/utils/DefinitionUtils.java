@@ -53,17 +53,20 @@ public class DefinitionUtils {
 			return formatter.format(date.getTime());
 		}
 	}
-	
-	public static String getDurationString(GDuration gDuration, String timeOutputFormat) {
+
+	public static String getDurationString(GDuration gDuration) {
 		
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR, gDuration.getHour());
-        cal.set(Calendar.MINUTE, gDuration.getMinute());
-        cal.set(Calendar.SECOND, gDuration.getSecond());
-        
-        String time = new SimpleDateFormat(timeOutputFormat).format(cal.getTime());
-        
-        return time;
+		String timeStr = "";
+
+		int hour = gDuration.getHour();
+		int minute = gDuration.getMinute();
+		int second = gDuration.getSecond();
+		
+		if(hour < 10) { timeStr += "0" + hour; } else { timeStr += "" + hour;}  
+		if(minute < 10) { timeStr += ":0" + minute; } else { timeStr += ":" + minute;}  
+		if(second < 10) { timeStr += ":0" + second; } else { timeStr += ":" + second;}  
+		
+		return timeStr;
 	}
 
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
