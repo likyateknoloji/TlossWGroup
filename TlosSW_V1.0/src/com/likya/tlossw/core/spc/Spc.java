@@ -171,6 +171,12 @@ public class Spc extends SpcBase {
 				}
 
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
+				/**
+				 * @author serkan
+				 * 13.09.2013
+				 * Ek : İşlerin içinde en az bir tane tekrarlı iş var ise, 
+				 * süreç sonlanMAmalı
+				 */
 				if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
 					getLiveStateInfo().setStateName(StateName.FINISHED);
 					getLiveStateInfo().setSubstateName(SubstateName.COMPLETED);
