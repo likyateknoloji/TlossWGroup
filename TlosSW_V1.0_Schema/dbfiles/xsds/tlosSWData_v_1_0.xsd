@@ -344,8 +344,9 @@
 	<xs:element name="periodInfo">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment"/>
+				<xs:element ref="lt:comment" minOccurs="0"/>
 			</xs:sequence>
+			<xs:attribute name="relativeStart" use="optional" type="xs:boolean" default="true"/>
 			<xs:attribute name="step" use="required" type="xs:duration"/>
 			<xs:attribute name="counter" default="0" use="optional" type="xs:integer"/>
 			<xs:attribute name="maxCount" use="optional" type="xs:integer"/>
