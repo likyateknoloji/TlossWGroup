@@ -3,19 +3,34 @@ package com.likya.tlossw.core.spc.helpers;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.xmlbeans.GDate;
 import org.apache.xmlbeans.GDuration;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.PeriodInfoDocument.PeriodInfo;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 
 public class PeriodCalculations {
+	
+	public static Calendar forward(JobProperties jobProperties) {
 
-	public static Date forward(JobProperties jobProperties) {
-
-		PeriodInfo periodInfo = jobProperties.getBaseJobInfos().getPeriodInfo();
-
+		PeriodInfo periodInfo         = jobProperties.getBaseJobInfos().getPeriodInfo();
+		TimeManagement timeManagement = jobProperties.getTimeManagement();
+		
+		String selectedTZone = timeManagement.getTimeZone();
+		Calendar startTime   = timeManagement.getJsPlannedTime().getStartTime().getTime();
+		
 		if (periodInfo.getMaxCount() == null || periodInfo.getCounter().intValue() >= periodInfo.getMaxCount().intValue()) {
 			return null;
 		}
@@ -26,33 +41,35 @@ public class PeriodCalculations {
 
 		long periodOfRepeatance = getDurationInMilliSecs(gDuration);
 		
-		Calendar startTime = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
-		Date myDate = findNextPeriod(startTime.getTime(), periodOfRepeatance);
+		Calendar startDateTime = dateToXmlTime(startTime.toString(), selectedTZone);
 
-		Date myStartTime = changeYMDPart(myDate, startTime.getTime());
-		Calendar myStartCalendar = Calendar.getInstance();
-		myStartCalendar.setTime(myStartTime);
-		jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setDate(myStartCalendar);
+		// Alternative way of finding datetime from time with timeZone
+		// String startDateTimeStr = calendarToStringTimeFormat(startTime, selectedTZone, timeOutputFormat);
+
+		Calendar newDateTime = findNextPeriod(startDateTime, periodOfRepeatance, selectedTZone);
+		
+		jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setTime(newDateTime);
 
 		if (jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
 			Calendar stopTime = jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime();
-			Date myStopTime = changeYMDPart(myDate, stopTime.getTime());
-			Calendar myStopCalendar = Calendar.getInstance();
-			myStopCalendar.setTime(myStartTime);
-			jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().setDate(myStopCalendar);
+			Calendar stopDateTime = dateToXmlTime(stopTime.toString(), selectedTZone);
+
+			jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().setTime(stopDateTime);
+			
+			// Serkan burayi konusalim. Simdilik cikardim. Hs
 
 			// ST : Bu kısım yeninden kurgulanmalı !! boolean notInScheduledDays = Arrays.binarySearch(TlosServer.getTlosParameters().getScheduledDays(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) < 0;
 
-			if (!checkStayInDay(myDate) || myDate.after(myStopTime) || myDate.before(myStartTime) /* notInScheduledDays */) {
-				// ST : Bu kısım yeninden kurgulanmalı
-				// iterateNextDate(jobProperties);
-				// myDate = jobProperties.getTime();
-
-				myDate = null;
-			}
+//			if (!checkStayInDay(myDate) || myDate.after(myStopTime) || myDate.before(myStartTime) /* notInScheduledDays */) {
+//				// ST : Bu kısım yeninden kurgulanmalı
+//				// iterateNextDate(jobProperties);
+//				// myDate = jobProperties.getTime();
+//
+//				myDate = null;
+//			}
 		}
 
-		return myDate;
+		return newDateTime;
 	}
 
 	/*
@@ -90,32 +107,21 @@ public class PeriodCalculations {
 	 * jobProperties.setTime(restrictedDailyIterator.next()); }
 	 */
 
-	private static Date findNextPeriod(Date nextPeriodTime, long period) {
+	private static Calendar findNextPeriod(Calendar startDateTime, long period, String selectedTZone) {
 
-		// zatem ms olarak geliyor period = period * 1000; // Convert to milliseconds
-		Date currentTime = Calendar.getInstance().getTime();
-		// System.out.println(currentTime + "\n" + nextPeriodTime);
+		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
+		
+		// construct DateTime from JDK Date
+		DateTime dt = new DateTime(startDateTime, zonex);
+		
+		Period periodInJoda = new Period(period);
 
-		long diffDate = currentTime.getTime() - nextPeriodTime.getTime();
-
-		if (diffDate < 0) {
-			return nextPeriodTime;
-		}
-
-		long divDate = diffDate / period;
-		// System.out.println(diffDate);
-		// System.out.println(divDate * period);
-		if ((divDate * period) < diffDate) {
-			++divDate;
-		}
-
-		long newTime = divDate * period;
-		// System.out.println(newTime);
-		nextPeriodTime = new Date(nextPeriodTime.getTime() + newTime);
-		// System.out.println(nextPeriodTime.getTime() + newTime);
-
-		// System.out.println(nextPeriodTime);
-		return nextPeriodTime;
+		DateTime newDateTime = dt.plus(periodInJoda);
+		
+		//String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+		//String dateStr = newDateTime.toString(outputFormat);
+		
+		return newDateTime.toCalendar(Locale.ENGLISH);
 	}
 
 	public static Date changeYMDPart(Date firstDate, Date secondDate) {
@@ -160,4 +166,31 @@ public class PeriodCalculations {
 		return durationInMillis;
 	}
 
+	public static Calendar dateToXmlTime(String time, String selectedTZone) {
+
+		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
+
+		DateTimeParser[] parsers = { DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
+
+		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+
+		LocalTime jobLocalTime = dtf.parseLocalTime(time);
+
+		LocalDate tx = new LocalDate(zonex);
+		DateTime dtx = tx.toDateTime(jobLocalTime, zonex);
+
+		return dtx.toCalendar(Locale.US);
+	}
+	
+	// Alternative way of finding datetime from time with timeZone
+	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
+
+		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+		LocalTime jobLocalTime = new LocalTime(time);
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
+		String timeString = jobLocalTime.toDateTimeToday(zone).toString(formatter);
+
+		return timeString;
+	}
+	
 }
