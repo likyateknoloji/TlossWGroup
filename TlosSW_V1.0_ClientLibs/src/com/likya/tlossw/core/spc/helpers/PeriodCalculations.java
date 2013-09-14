@@ -22,15 +22,15 @@ import com.likya.tlos.model.xmlbeans.data.PeriodInfoDocument.PeriodInfo;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 
 public class PeriodCalculations {
-	
+
 	public static Calendar forward(JobProperties jobProperties) {
 
-		PeriodInfo periodInfo         = jobProperties.getBaseJobInfos().getPeriodInfo();
+		PeriodInfo periodInfo = jobProperties.getBaseJobInfos().getPeriodInfo();
 		TimeManagement timeManagement = jobProperties.getTimeManagement();
-		
+
 		String selectedTZone = timeManagement.getTimeZone();
-		Calendar startTime   = timeManagement.getJsPlannedTime().getStartTime().getTime();
-		
+		Calendar startTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
+
 		if (periodInfo.getMaxCount() == null || periodInfo.getCounter().intValue() >= periodInfo.getMaxCount().intValue()) {
 			return null;
 		}
@@ -40,14 +40,14 @@ public class PeriodCalculations {
 		GDuration gDuration = periodInfo.getStep();
 
 		long periodOfRepeatance = getDurationInMilliSecs(gDuration);
-		
+
 		Calendar startDateTime = dateToXmlTime(startTime.toString(), selectedTZone);
 
 		// Alternative way of finding datetime from time with timeZone
 		// String startDateTimeStr = calendarToStringTimeFormat(startTime, selectedTZone, timeOutputFormat);
 
-		Calendar newDateTime = findNextPeriod(startDateTime, periodOfRepeatance, selectedTZone);
-		
+		Calendar newDateTime = findNextPeriod(startDateTime, periodOfRepeatance, selectedTZone, periodInfo.getRelativeStart());
+
 		jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setTime(newDateTime);
 
 		if (jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
@@ -55,18 +55,18 @@ public class PeriodCalculations {
 			Calendar stopDateTime = dateToXmlTime(stopTime.toString(), selectedTZone);
 
 			jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().setTime(stopDateTime);
-			
+
 			// Serkan burayi konusalim. Simdilik cikardim. Hs
 
 			// ST : Bu kısım yeninden kurgulanmalı !! boolean notInScheduledDays = Arrays.binarySearch(TlosServer.getTlosParameters().getScheduledDays(), Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) < 0;
 
-//			if (!checkStayInDay(myDate) || myDate.after(myStopTime) || myDate.before(myStartTime) /* notInScheduledDays */) {
-//				// ST : Bu kısım yeninden kurgulanmalı
-//				// iterateNextDate(jobProperties);
-//				// myDate = jobProperties.getTime();
-//
-//				myDate = null;
-//			}
+			//			if (!checkStayInDay(newDateTime) || newDateTime.after(myStopTime) || newDateTime.before(myStartTime) /* notInScheduledDays */) {
+			//				// ST : Bu kısım yeninden kurgulanmalı
+			//				// iterateNextDate(jobProperties);
+			//				// myDate = jobProperties.getTime();
+			//
+			//				myDate = null;
+			//			}
 		}
 
 		return newDateTime;
@@ -107,20 +107,50 @@ public class PeriodCalculations {
 	 * jobProperties.setTime(restrictedDailyIterator.next()); }
 	 */
 
-	private static Calendar findNextPeriod(Calendar startDateTime, long period, String selectedTZone) {
+	private static Calendar findNextPeriod(Calendar startDateTime, long period, String selectedTZone, boolean isRelativeStart) {
+
+		Date currentTime = Calendar.getInstance().getTime();
+		
+		if (isRelativeStart) {
+			startDateTime.setTime(currentTime);
+		} else {
+			
+			long diffDate = currentTime.getTime() - startDateTime.getTimeInMillis();
+
+			if (diffDate < 0) {
+				return startDateTime;
+			}
+
+			long divDate = diffDate / period;
+
+			if ((divDate * period) < diffDate) {
+				++divDate;
+			}
+
+			period = divDate * period;
+
+		}
+		
+		Calendar returnCal = addPeriod(startDateTime, period, selectedTZone);
+
+		return returnCal;
+
+	}
+
+	private static Calendar addPeriod(Calendar startDateTime, long period, String selectedTZone) {
 
 		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
-		
+
 		// construct DateTime from JDK Date
 		DateTime dt = new DateTime(startDateTime, zonex);
-		
+
 		Period periodInJoda = new Period(period);
 
 		DateTime newDateTime = dt.plus(periodInJoda);
-		
+
 		//String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 		//String dateStr = newDateTime.toString(outputFormat);
-		
+
 		return newDateTime.toCalendar(Locale.ENGLISH);
 	}
 
@@ -139,17 +169,17 @@ public class PeriodCalculations {
 		return calendarSecond.getTime();
 	}
 
-	private static boolean checkStayInDay(Date date) {
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-
-		if (cal.get(Calendar.DAY_OF_MONTH) != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
-			return false;
-		}
-
-		return true;
-	}
+	//	private static boolean checkStayInDay(Date date) {
+	//
+	//		Calendar cal = Calendar.getInstance();
+	//		cal.setTime(date);
+	//
+	//		if (cal.get(Calendar.DAY_OF_MONTH) != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
 	private static long getDurationInMilliSecs(GDuration gDuration) {
 
@@ -181,7 +211,7 @@ public class PeriodCalculations {
 
 		return dtx.toCalendar(Locale.US);
 	}
-	
+
 	// Alternative way of finding datetime from time with timeZone
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
 
@@ -192,5 +222,5 @@ public class PeriodCalculations {
 
 		return timeString;
 	}
-	
+
 }
