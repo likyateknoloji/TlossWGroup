@@ -121,7 +121,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		if (jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-			Date nextPeriodTime = PeriodCalculations.forward(jobProperties);
+			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
+			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
+			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
 			if(nextPeriodTime != null) {
 				// yeni zamana kuruldu
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
