@@ -1,5 +1,4 @@
 .ui-success-state-icon {
-	border-radius: 10px 10px 10px 10px;
 	background: none repeat scroll 0 0 #008000;
 	border: 1px solid #666666;
 	color: #FFFFFF;
@@ -7,21 +6,9 @@
 	right: 3px;
 	position: relative;
 	width: 14px;
-	display: block;
-	background-color: #008000;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#008000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #008000);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #008000);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #008000);
-	background-image: -o-linear-gradient(top, #f7f7f7, #008000);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
 }
 
-.ui-failed-state-icon {
+.ui-failed-state-icon { 
 	border-radius: 10px 10px 10px 10px;
 	background: none repeat scroll 0 0 #FF0000;
 	border: 1px solid #666666;
@@ -30,22 +17,15 @@
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #FF0000;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #FF0000);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #FF0000);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #FF0000);
-	background-image: -o-linear-gradient(top, #f7f7f7, #FF0000);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
 }
 
-
+.ui-failed-state-icon + .green-square {
+	background: none repeat scroll 0 0 #FFFF00;
+	border-radius: 50px 50px 50px 50px;
+	color: #000000;
+	left: 627px;
+	transform: rotate(360deg);
+}
 
 .ui-working-state-icon {
 	animation-duration: 4000ms;
@@ -53,26 +33,13 @@
 	animation-name: spin;
 	animation-timing-function: linear;
 	border-radius: 10px 10px 10px 10px;
-	background: none repeat scroll 0 0 #ADD8E6;
+	background: none repeat scroll 0 0 #0000FF;
 	border: 1px solid #666666;
 	color: #FFFFFF;
 	height: 14px;
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #ADD8E6;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #ADD8E6);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #ADD8E6);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #ADD8E6);
-	background-image: -o-linear-gradient(top, #f7f7f7, #ADD8E6);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
 }
 
 .ui-timeout-state-icon {
@@ -81,34 +48,13 @@
 	animation-name: spin;
 	animation-timing-function: linear;
 	border-radius: 10px 10px 10px 10px;
-	background: none repeat scroll 0 0 #ADD8E6;
+	background: none repeat scroll 0 0 #FFC0CB;
 	border: 1px solid #666666;
 	color: #FFFFFF;
 	height: 14px;
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #FF69B4;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #FF69B4);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #FF69B4);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #FF69B4);
-	background-image: -o-linear-gradient(top, #f7f7f7, #FF69B4);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
-}
-
-.ui-timein-state-icon+.green-square {
-	background: none repeat scroll 0 0 #FFFF00;
-	border-radius: 50px 50px 50px 50px;
-	color: #000000;
-	left: 627px;
-	transform: rotate(360deg);
 }
 
 .ui-waiting-state-icon {
@@ -117,26 +63,13 @@
 	animation-name: spin;
 	animation-timing-function: linear;
 	border-radius: 10px 10px 10px 10px;
-	background: none repeat scroll 0 0 #8B4513;
+	background: none repeat scroll 0 0 #A52A2A;
 	border: 1px solid #666666;
 	color: #FFFFFF;
 	height: 14px;
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #8B4513;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -o-linear-gradient(top, #f7f7f7, #8B4513);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
 }
 
 .ui-bytime-state-icon {
@@ -145,31 +78,18 @@
 	animation-name: spin;
 	animation-timing-function: linear;
 	border-radius: 10px 10px 10px 10px;
-	background: none repeat scroll 0 0 #8B4513;
+	background: none repeat scroll 0 0 #A52A2A;
 	border: 1px solid #666666;
 	color: #FFFFFF;
 	height: 14px;
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #8B4513;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #8B4513);
-	background-image: -o-linear-gradient(top, #f7f7f7, #8B4513);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
 }
 
 .ui-default-state-icon {
 	animation-duration: 4000ms;
-	animation-iteration-count: 4;
+	animation-iteration-count: 3;
 	animation-name: spin;
 	animation-timing-function: linear;
 	border-radius: 10px 10px 10px 10px;
@@ -180,34 +100,6 @@
 	right: 3px;
 	position: relative;
 	width: 14px;
-	
-	display: block;
-	background-color: #FFA500;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7),
-		to(#FF0000) );
-	background-image: -webkit-linear-gradient(top, #f7f7f7, #FFA500);
-	background-image: -moz-linear-gradient(top, #f7f7f7, #FFA500);
-	background-image: -ms-linear-gradient(top, #f7f7f7, #FFA500);
-	background-image: -o-linear-gradient(top, #f7f7f7, #FFA500);
-	text-align: center;
-	line-height: 14px;
-	border-radius: 50%;
-	box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
-}
-
-.green-square {
-	animation-duration: 4000ms;
-	animation-iteration-count: infinite;
-	animation-name: spin;
-	animation-timing-function: linear;
-	background: none repeat scroll 0 0 #0000FF;
-	border: 1px solid #666666;
-	color: #FFFFFF;
-	height: 16px;
-	left: 0px;
-	position: relative;
-	transition: all 1s ease-in-out 0s;
-	width: 16px;
 }
 
 #box4:hover {
