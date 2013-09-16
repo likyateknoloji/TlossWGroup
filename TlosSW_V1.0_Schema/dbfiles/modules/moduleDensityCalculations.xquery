@@ -52,9 +52,9 @@ let $stateName := xs:string("FINISHED")
 let $substateName := xs:string("COMPLETED")
 let $statusName := xs:string("SUCCESS")
 :)
-declare function density:focusedRecords($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:focusedRecords($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $reportParameters as element(rep:reportParameters) ) as node()
 {
-    let $getJobs := hs:getJobsReport($documentUrl, 1,0,0, true())
+    let $getJobs := hs:getJobsReport($documentUrl, $reportParameters)
 
     let $sonuc := 
               for $jobProperties in $getJobs/dat:jobProperties
@@ -83,22 +83,21 @@ declare function density:focusedRecords($documentUrl as xs:string, $startDateTim
   return <focused>{ $sonuc } </focused>
 } ;
 
-declare function density:SSSInterval($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:SSSInterval($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $reportParameters as element(rep:reportParameters) ) as node()
 {
-  let $focused := density:focusedRecords($documentUrl, $startDateTime, $endDateTime)
-
+  let $focused := density:focusedRecords($documentUrl, $startDateTime, $endDateTime, $reportParameters)
   let $tektek :=
-  let $sonuc := for $liveStateInfo in $focused/rep:group
-               return $liveStateInfo
+     let $sonuc := for $liveStateInfo in $focused/rep:group
+                   return $liveStateInfo
  
-  return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </rep:data>
-return $tektek
+     return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </rep:data>
+  return $tektek
 
 } ;
 
-declare function density:calcStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime) as node()
+declare function density:calcStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $reportParameters as element(rep:reportParameters) ) as node()
 {
-let $focused := density:SSSInterval($documentUrl, $startDateTime, $endDateTime)
+let $focused := density:SSSInterval($documentUrl, $startDateTime, $endDateTime, $reportParameters)
 
 let $tektek :=
   let $sonuc := for $liveStateInfos in $focused/rep:group
@@ -124,12 +123,12 @@ return $tektek
 
 } ;
 
-declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration, $includeNonResultedRuns as xs:boolean) as node()
+declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration, $reportParameters as element(rep:reportParameters) ) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
 	  
  
-  let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, 1, 0, 0, true()), "descending", 1, $includeNonResultedRuns, true())
+  let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
   let $endDateTimex := xs:dateTime(if($hepsi/@overallStop  eq '') then current-dateTime() else $hepsi/@overallStop)+xs:dayTimeDuration('PT10S')
 
@@ -147,7 +146,7 @@ declare function density:recStat($documentUrl as xs:string, $stateName as xs:str
        let $kac := xs:integer($n)-1
        let $startDTime := $startDateTimex+ $kac*$step 
        let $endDTime := $startDateTimex+ $n*$step
-       let $fonk := density:calcStat($documentUrl, $stateName, $substateName, $statusName, $startDTime, $endDTime)
+       let $fonk := density:calcStat($documentUrl, $stateName, $substateName, $statusName, $startDTime, $endDTime, $reportParameters)
       return $fonk           
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
    else ()
