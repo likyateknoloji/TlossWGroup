@@ -1428,9 +1428,9 @@ public class DBOperations implements Serializable {
 		return true;
 	}
 
-	public LocalStats getStatsReport(int derinlik, int runId, int jobId, String refPoint, String nonFinishedJobsIncluded) throws XMLDBException {
+	public LocalStats getStatsReport(String reportParametersXML) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", derinlik + "", runId + "", jobId + "", refPoint, nonFinishedJobsIncluded);
+		String xQueryStr = reportFunctionConstructor("hs:calculateBaseStats", reportParametersXML);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -1442,9 +1442,9 @@ public class DBOperations implements Serializable {
 		return localStats;
 	}
 
-	public JobArray getOverallReport(int derinlik, int runType, int jobId, String refPoint, String orderType, int jobCount, String includeNonResultedRuns) throws XMLDBException {
+	public JobArray getOverallReport(String reportParametersXML) throws XMLDBException {
 
-		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + derinlik, "" + runType, "" + jobId, refPoint, orderType, "" + jobCount, includeNonResultedRuns);
+		String xQueryStr = reportFunctionConstructor("hs:getOverallReport", "" + reportParametersXML);
 
 		JobArray jobArray = null;
 
@@ -1526,11 +1526,11 @@ public class DBOperations implements Serializable {
 		return agent;
 	}
 
-	public Statistics getDensityReport(String state, String substate, String status, String startDateTime, String endDateTime, String step, String nonFinishedJobsIncluded) throws XMLDBException {
+	public Statistics getDensityReport(String state, String substate, String status, String startDateTime, String endDateTime, String step, String reportParametersXML) throws XMLDBException {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, state, substate, status, startDateTime, endDateTime, step, nonFinishedJobsIncluded);
+		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, state, substate, status, startDateTime, endDateTime, step, reportParametersXML);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
