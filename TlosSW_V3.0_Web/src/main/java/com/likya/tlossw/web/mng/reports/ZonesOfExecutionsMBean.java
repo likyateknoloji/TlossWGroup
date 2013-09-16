@@ -16,8 +16,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
@@ -26,8 +28,12 @@ import org.primefaces.model.DefaultDashboardModel;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.xmldb.api.base.XMLDBException;
 
+import com.likya.tlos.model.xmlbeans.report.OrderByType;
+import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
+import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -60,6 +66,10 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	private String overallEndTime;
 	private Double totalDurationNormalized;
 	private BigDecimal totalDurationBD;
+	private Boolean isFinished;
+	private BigDecimal totalDurationInSec;
+	private BigInteger numberOfJobs;
+	private BigInteger numberOfScenarios;
 	
 	@PostConstruct
 	public void init() {
@@ -105,7 +115,26 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	
 	private void createMeterGaugeModel() {
 
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
 		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("0");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(0));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
 		/*
 		 * 0 : mavi
            min çalışma süresi : sari
@@ -117,15 +146,10 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
            timeout süresi
 		 */
-		int derinlik = 1;
-		int runId = 0;
-		int jobId =0;
-		String refRunIdBolean = "true()";
-		String nonFinishedJobsIncluded = "false()";
 		
 		LocalStats localStats = null;
 		try {
-			localStats = getDbOperations().getStatsReport(derinlik, runId, jobId, refRunIdBolean, nonFinishedJobsIncluded);
+			localStats = getDbOperations().getStatsReport(reportParametersXML);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -161,11 +185,13 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		intervals = new ArrayList<Number>();
 		intervals.add(sifir);
 		if(minTolWorkingTime < minWorkingTime ) {
-			intervals.add(minTolWorkingTime); 
+			if(minTolWorkingTime > sifir) intervals.add(minTolWorkingTime); 
+			else intervals.add(minTolWorkingTime+0.1);
 			intervals.add(minWorkingTime);
 		}
 		else {
-			intervals.add(minWorkingTime);
+			if(minWorkingTime > sifir) intervals.add(minWorkingTime);
+			else intervals.add(minWorkingTime+0.1);
 			intervals.add(minTolWorkingTime); 
 		}
 		
@@ -205,15 +231,17 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		  intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		}
 		try {
-			jobsArray = getDbOperations().getOverallReport(1, 0, 0, "true()", "xs:string(\"descending\")", 1, "true()");
+			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
 		Double totalDuration = new Double(0.0);
 		totalDurationBD = new BigDecimal(0);
 		totalDurationNormalized = new Double(0.0);
+		totalDurationInSec = new BigDecimal(0);
 		String overallStart = "N/A";
 		String overallStop = "N/A";
+		isFinished=false;
 		
 		if(jobsArray.sizeOfJobArray() > 0) {
 		  totalDuration = jobsArray.getTotalDurationInSec().doubleValue();
@@ -221,6 +249,10 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		  totalDurationNormalized = totalDuration;
 		  overallStart = jobsArray.getOverallStart().toString();
 		  overallStop = jobsArray.getOverallStop().toString();
+		  isFinished = jobsArray.getIsFinished();
+		  totalDurationInSec = jobsArray.getTotalDurationInSec();
+		  numberOfJobs = jobsArray.getNumberOfJobs();
+		  numberOfScenarios = jobsArray.getNumberOfScenarios();
 		}
 		//ibre sinirlari asmasin ..
 		if(totalDuration.compareTo(sifir)<0) {
@@ -237,8 +269,10 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		setMinWorkingTimeStat(numberToTimeFormat(localStats.getMin()));
 		setMaxWorkingTimeStat(numberToTimeFormat(localStats.getMax()));
 		setExpWorkingTimeStat(numberToTimeFormat(localStats.getAvg()));
-		setJobCount(jobsArray.getNumberOfJobs());
-		//setScenarioCount(jobsArray.getNumberOfScenarios());
+		setJobCount(numberOfJobs);
+		setScenarioCount(numberOfScenarios);
+		setIsFinished(isFinished);
+		setTotalDurationInSec(totalDurationInSec);
 		setOverallStartTime(overallStart);
 		setOverallEndTime(overallStop);
 		
@@ -358,11 +392,12 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
     public String[] findZone() {
     	String zones[][] = {
     			{ resolveMessage("tlos.report.gauge.problem"), resolveMessage("tlos.report.gauge.problemExp") },
-    			{ resolveMessage("tlos.report.gauge.blue"), resolveMessage("tlos.report.gauge.blueExplanation") },
-    			{ resolveMessage("tlos.report.gauge.yellow1"), resolveMessage("tlos.report.gauge.yellow1Explanation") },
-    			{ resolveMessage("tlos.report.gauge.green"),resolveMessage("tlos.report.gauge.greenExplanation") },
-    			{ resolveMessage("tlos.report.gauge.yellow2"),resolveMessage("tlos.report.gauge.yellow2Explanation") },
-    			{ resolveMessage("tlos.report.gauge.red"),resolveMessage("tlos.report.gauge.redExplanation") }
+    			{ resolveMessage("tlos.report.gauge.blue"), isFinished ? resolveMessage("tlos.report.gauge.finished.blueExplanation"):resolveMessage("tlos.report.gauge.running.blueExplanation") },
+    			{ resolveMessage("tlos.report.gauge.yellow1"), isFinished ? resolveMessage("tlos.report.gauge.finished.yellow1Explanation") : resolveMessage("tlos.report.gauge.running.yellow1Explanation")},
+    			{ resolveMessage("tlos.report.gauge.green1"), isFinished ? resolveMessage("tlos.report.gauge.finished.green1Explanation"):resolveMessage("tlos.report.gauge.running.green1Explanation") },
+    			{ resolveMessage("tlos.report.gauge.green2"), isFinished ? resolveMessage("tlos.report.gauge.finished.green2Explanation"):resolveMessage("tlos.report.gauge.running.green2Explanation") },
+    			{ resolveMessage("tlos.report.gauge.yellow2"), isFinished ? resolveMessage("tlos.report.gauge.finished.yellow2Explanation"):resolveMessage("tlos.report.gauge.running.yellow2Explanation") },
+    			{ resolveMessage("tlos.report.gauge.red"), isFinished ? resolveMessage("tlos.report.gauge.finished.redExplanation"):resolveMessage("tlos.report.gauge.running.redExplanation") }
     	};
     	
     	int sonuc = 0;
@@ -388,6 +423,38 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 	public void setIntervals(List<Number> intervals) {
 		this.intervals = intervals;
+	}
+
+	public Boolean getIsFinished() {
+		return isFinished;
+	}
+
+	public void setIsFinished(Boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	public BigDecimal getTotalDurationInSec() {
+		return totalDurationInSec;
+	}
+
+	public void setTotalDurationInSec(BigDecimal totalDurationInSec) {
+		this.totalDurationInSec = totalDurationInSec;
+	}
+
+	public BigInteger getNumberOfJobs() {
+		return numberOfJobs;
+	}
+
+	public void setNumberOfJobs(BigInteger numberOfJobs) {
+		this.numberOfJobs = numberOfJobs;
+	}
+
+	public BigInteger getNumberOfScenarios() {
+		return numberOfScenarios;
+	}
+
+	public void setNumberOfScenarios(BigInteger numberOfScenarios) {
+		this.numberOfScenarios = numberOfScenarios;
 	}
 
  
