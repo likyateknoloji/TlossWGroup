@@ -24,13 +24,16 @@ First Release Date : 2 Jan 2013
 UpdateDate :
 Purpose : Reporting of jobs and their duration and other time related things.
 Usage : First step, get related Jobs with getJobsReport(
-                 Number of runs that dealt with for the report, 
+                 Which document,
+                 Number of items that dealt with for the report for the chosen run id, scenario id, job id combination, 
                  Run Id for which we are focusing and take a referans point, if its value is 0 then it means we are focusing the last run,
-				 Job Id if we focusing just a job, or enter 0 for all job related with the second argument,
+				 Scenario Id if we focusing the jobs within a scenario, or enter 0 for all scenarios related with the run id,
+				 Job Id if we focusing just a job, or enter 0 for all job related with the run id and scenario id given,
 				 true() if we choose the run id as a referance point, false() otherwise
+				 Whether unfinished jobs used for stats
 				 ) function
 example;
-				 let $run := local:getJobsReport(1,1792,0, true())
+				 let $run := hs:getJobsReport(1,1792,0, true())
 
 Second step, get job array with requested data with getJobArray(
                  output of the getJobsReport function,
@@ -39,24 +42,38 @@ Second step, get job array with requested data with getJobArray(
 				 Whether unfinished jobs used for stats
                  ) function
 example;
-return local:getJobArray($run, "ascending", 15, false())
+return hs:getJobArray($run, "ascending", 15, false())
 
 :)
 
-declare function hs:calculateBaseStats($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $includeNonResultedRuns as xs:boolean) as node()*
+declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()*
 {
+  let $runId := $reportParameters/@runId
   let $runIdx := if( $runId = 0 ) then sq:getId($documentUrl, "runId") (: son run :)
     					 else $runId
 
-  let $isJob := if( $jobId eq 0 ) then false() else true()
+  let $jobId := $reportParameters/@jobId
+  let $isJob := if( compare($jobId, '0') eq 0 ) then false() else true()
   
   (: Burada son run i bilerek dikkate almiyoruz, ondan onceki 3 run in ortalamasi yeterli :)
   let $localStats :=
     let $arasonuc := <arasonuc> {
                       for $i in (1,2,3)
-                       let $getPerStats := hs:getJobsReport($documentUrl, $numberOfElement,$runIdx - $i ,$jobId, $refRunIdBolean)
+					   let $reportParametersNew := <rep:reportParameters includeNonResultedJobs="{xs:boolean($reportParameters/@includeNonResultedJobs)}" 
+					                                                     jobId="{$reportParameters/@jobId}" 
+																		 justFirstLevel="{$reportParameters/@justFirstLevel}" 
+																		 maxNumberOfElement="{$reportParameters/@maxNumberOfElement}" 
+																		 refRunIdBoolean="{$reportParameters/@refRunIdBoolean}" 
+																		 runId="{$runIdx - $i}" 
+																		 scenarioId="{$reportParameters/@scenarioId}"
+																		 maxNumOfListedJobs="{$reportParameters/@maxNumOfListedJobs}"
+																		 orderBy="{$reportParameters/@orderBy}"
+																		 isCumulative="{xs:boolean($reportParameters/@isCumulative)}" 
+																		 order="{$reportParameters/@order}"/>
+				  
+                       let $getPerStats := hs:getJobsReport($documentUrl, $reportParametersNew)   (: $numberOfElement,$runIdx - $i ,$jobId, $refRunIdBolean, $includeNonResultedRuns) :)
                        let $getPerStatsExists := if(exists($getPerStats)) then $getPerStats else ()
-                       let $hepsi := hs:getJobArray($getPerStatsExists,"descending",50, $includeNonResultedRuns, $isJob)/@totalDurationInSec
+                       let $hepsi := hs:getJobArray($getPerStatsExists, $reportParametersNew)/@totalDurationInSec
                       return <stat> { $hepsi } </stat>
                      }
                      </arasonuc>
@@ -85,31 +102,61 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $numberOfEleme
   return $localStats
 };
 
-declare function hs:getJobsReport($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
+declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()*
 {
+(: let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs :)
+let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
+let $runId := $reportParameters/@runId
+let $scenarioId := $reportParameters/@scenarioId
+let $jobId := $reportParameters/@jobId
+let $refRunIdBoolean := xs:boolean($reportParameters/@refRunIdBoolean)
+let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
+
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 
     let $runIdFound := if ($runId = 0) then sq:getId($documentUrl, "runId")
                        else if ($runId < 0) then sq:getId($documentUrl, "runId") + $runId
-	                   else $runId 
+                       else $runId 
 
     let $posUpper := max(for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-	                 where $runx[@id = $runIdFound] or not($refRunIdBolean)
+	                 where $runx[@id = $runIdFound] or not($refRunIdBoolean)
 	                 return $pos)
 
-    let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
+    let $posLower := if ($posUpper - $maxNumberOfElement > 0) then $posUpper - $maxNumberOfElement else 0
 
-    let $sonuc := for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-		  where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
+    let $runElements := for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
+		  where $pos > $posLower and $pos <=$posUpper
 		  order by $runx/@id descending
                   return $runx
-				  
-    let $sonuc2 := for $runx in $sonuc//dat:jobProperties
-		  where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and not(@agentId='0'))]
-		  order by $runx/@id descending
-                  return $runx
-				  
-    return <all> { $sonuc2 } </all>
+
+   let $requestedJobs := 
+                        if($scenarioId = 0) then
+                         if($justFirstLevel)
+                         then (: $rootScenarioFirstLevelJobs :)
+                           for $runx in $runElements//dat:TlosProcessData/dat:jobList/dat:jobProperties
+                           where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+		                   order by $runx/@id descending
+                           return $runx
+                         else (: $rootScenarioAllJobs :)
+                           for $runx in $runElements//dat:TlosProcessData//dat:jobProperties
+                           where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                           order by $runx/@id descending
+                           return $runx
+                        else
+                         if($justFirstLevel)
+                         then (: $otherScenarioFirstLevelJobs :)
+                          for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]/dat:jobList/dat:jobProperties
+                          where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                          order by $runx/@id descending
+                          return $runx
+                         else (: $otherScenarioAllJobs :)
+                          for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]//dat:jobProperties
+                          where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                          order by $runx/@id descending
+                          return $runx
+                  
+    return <all> { $requestedJobs } </all>
 };
 
 (: Special DateTime format; source : http://www.w3.org/TR/xpath-functions/#dt-dayTimeDuration
@@ -117,80 +164,239 @@ declare function hs:getJobsReport($documentUrl as xs:string, $numberOfElement as
    For example, to indicate a duration of 3 days, 10 hours and 30 minutes, one would write: P3DT10H30M.
 :)
 
-declare function hs:getJobArray($n as node()*, $order as xs:string, $maxNumOfListedJobs as xs:int, $includeNonResultedRuns as xs:boolean, $isJob as xs:boolean) as node()*
+declare function hs:getJobArrayTest($n as node()*, $reportParameters as element(rep:reportParameters)) as node()
 {
+(:
+let $runId := $reportParameters/@runId
+let $scenarioId := $reportParameters/@scenarioId
+let $jobId := $reportParameters/@jobId
+let $refRunIdBoolean := $reportParameters/@refRunIdBoolean
+let $justFirstLevel := $reportParameters/@justFirstLevel
+let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
+:)
+let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
+let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $orderBy := $reportParameters/@orderBy
+let $isCumulative := xs:boolean($reportParameters/@isCumulative)
+let $order := $reportParameters/@order
+
   let $resultArrayAsc := <rep:jobArray> {
-    for $job in $n//dat:jobProperties[boolean(@agentId) and not(@agentId='0')]
-	(: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
-     let $startdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date else xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime)))
-     let $starttime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time else xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime)))
-     let $stopdate := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date else xs:string("N/A")
-     let $stoptime := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) then $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time else xs:string("N/A")
+     for $job in $n/dat:jobProperties[boolean(@agentId) and boolean(@LSIDateTime) ] (: boolean(@LSIDateTime) :)
+    (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
+    
+     let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
+      
+     let $startdate := hs:getJobStartDate( $job )
+     let $starttime := hs:getJobStartTime( $job )
+                       
+     let $stopdate  := hs:getJobStopDate( $job )
+     let $stoptime  := hs:getJobStopTime( $job )
 
-     let $startdatetime := fn:dateTime(xs:date($startdate),xs:time($starttime)) - xs:dateTime("1970-01-01T00:00:00-00:00")
-     let $stopdatetime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime) ) 
-	                      then xs:dateTime("1970-01-01T00:00:00-00:00") - xs:dateTime("1970-01-01T00:00:00-00:01")
-						  else fn:dateTime($stopdate,$stoptime) - xs:dateTime("1970-01-01T00:00:00-00:00") 
+     let $startDateTime := xs:string( dateTime($startdate, $starttime) )
+     let $stopDateTime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
+                               then xs:string( fn:adjust-dateTime-to-timezone( current-dateTime(), timezone-from-dateTime($startDateTime)) )
+        					   else xs:string(dateTime($stopdate, $stoptime))
+                                         
+     let $datetimeDTD :=  xs:dateTime($stopDateTime) - xs:dateTime($startDateTime)
 
-     let $startdatetimeDTD := xs:dayTimeDuration($startdatetime) div xs:dayTimeDuration('PT1S')
-     let $stopdatetimeDTD  := xs:dayTimeDuration($stopdatetime) div xs:dayTimeDuration('PT1S') 
-	 let $datetimeDTD := $stopdatetimeDTD - $startdatetimeDTD
-
-	 let $ordertime := if( hs:nACheck($startdatetime) or hs:nACheck($stopdatetime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
-
-     let $startTimeFormatted := concat(substring($startdate, 1, 10), 'T', $starttime) 
-     let $stopTimeFormatted := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
-	                           then xs:string("N/A")
-							   else concat(substring($stopdate, 1, 10), 'T', $stoptime) 
-
-     let $diffInTime := if( hs:nACheck($stopdate) ) 
-	                    then xs:dayTimeDuration('-PT1S') 
+     let $ordertime := if( hs:nACheck($starttime) or hs:nACheck($stoptime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
+            
+     let $diffInTime := if( hs:nACheck($stopdate) and not($includeNonResultedJobs) )
+                        then xs:dayTimeDuration('-PT1S')
 					    else $datetimeDTD
-    order by $ordertime
-    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startTimeFormatted}" stopTime="{$stopTimeFormatted}"> { $diffInTime }</rep:job>
-    } </rep:jobArray>
+                        
+     where $isJobFinished or $includeNonResultedJobs
+     order by $ordertime             
+    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}"> { $diffInTime }</rep:job>
+    }
+    </rep:jobArray>
+      return $order
+};
 
+declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:reportParameters)) as node()
+{
+(:
+let $runId := $reportParameters/@runId
+let $scenarioId := $reportParameters/@scenarioId
+let $jobId := $reportParameters/@jobId
+let $refRunIdBoolean := $reportParameters/@refRunIdBoolean
+let $justFirstLevel := $reportParameters/@justFirstLevel
+let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
+:)
+let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
+let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $orderBy := $reportParameters/@orderBy
+let $isCumulative := xs:boolean($reportParameters/@isCumulative)
+let $order := $reportParameters/@order
+
+  let $resultArrayAsc := <rep:jobArray> {
+     for $job in $n/dat:jobProperties[boolean(@agentId) and boolean(@LSIDateTime) ] (: boolean(@LSIDateTime) :)
+    (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
+    
+     let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
+      
+     let $startdate := hs:getJobStartDate( $job )
+     let $starttime := hs:getJobStartTime( $job )
+                       
+     let $stopdate  := hs:getJobStopDate( $job )
+     let $stoptime  := hs:getJobStopTime( $job )
+
+     let $startDateTime := xs:string( dateTime($startdate, $starttime) )
+     let $stopDateTime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
+                               then xs:string( fn:adjust-dateTime-to-timezone( current-dateTime(), timezone-from-dateTime($startDateTime)) )
+            				   else xs:string(dateTime($stopdate, $stoptime))
+                                         
+     let $datetimeDTD :=  hs:total-seconds-from-duration( xs:dateTime($stopDateTime) - xs:dateTime($startDateTime))
+
+     let $ordertime := if( hs:nACheck($starttime) or hs:nACheck($stoptime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
+            
+     let $diffInTime := if( hs:nACheck($stopdate) and not($includeNonResultedJobs) )
+                        then xs:dayTimeDuration('-PT1S')
+					    else $datetimeDTD
+     let $orderByTD := if( compare($orderBy, xs:string("DURATION")) = 0 ) 
+                       then $ordertime 
+                       else if( compare($orderBy, xs:string("STARTTIME")) = 0 )
+                       then dateTime($startdate, $starttime)
+                       else dateTime($stopdate, $stoptime)
+                       
+     where $isJobFinished or $includeNonResultedJobs
+     order by $orderByTD             
+    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}" isFinished="{$isJobFinished}"> { $diffInTime }</rep:job>
+    }
+    </rep:jobArray>
+    
   let $numberOfJobs := count($resultArrayAsc/rep:job) 
-  let $numberOfScenarios := count($n//dat:scenario) 
+  let $numberOfScenarios := count($n//dat:scenario)
   let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if( hs:nACheck($min/@startTime) ) then current-dateTime() else xs:dateTime($min/@startTime))
   let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if( hs:nACheck($max/@stopTime) ) then xs:dateTime("1970-01-01T00:00:00-00:01") else xs:dateTime($max/@stopTime))
-  (:
-     let $maxStopDateTimeDTD := xs:dayTimeDuration($maxStopDateTime) div xs:dayTimeDuration('PT1S')
-     let $minStartDateTimeDTD  := xs:dayTimeDuration($minStartDateTime) div xs:dayTimeDuration('PT1S') 
-	 let $totalDurationInSec := $maxStopDateTimeDTD - $minStartDateTimeDTD
-  :)
   
-
-
-  
-   let $totalDurationBetweenFirstAndLastJobs := $maxStopDateTime - $minStartDateTime 
+  let $totalDurationBetweenFirstAndLastJobs := $maxStopDateTime - $minStartDateTime
    
-   let $durationList := 
-    for $min in $resultArrayAsc/rep:job 
-    where not(hs:nACheck($min/@stopTime)) or $includeNonResultedRuns
+  let $durationList := 
+    for $dur in $resultArrayAsc/rep:job
+    where not(hs:nACheck($dur/@stopTime)) or $includeNonResultedJobs (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
     return
-      if( hs:nACheck($min/@stopTime) and not($includeNonResultedRuns) ) then 0 else $min
-															   
-   let $totalDurationInSec := if($isJob) then sum(data($durationList))
-                                         else fn:days-from-duration($totalDurationBetweenFirstAndLastJobs)*24*60*60+fn:hours-from-duration($totalDurationBetweenFirstAndLastJobs)*60*60+fn:minutes-from-duration($totalDurationBetweenFirstAndLastJobs)*60+fn:seconds-from-duration($totalDurationBetweenFirstAndLastJobs) 
+      $dur
 
-  return
-    if(not(exists($n))) then <rep:jobArray totalDurationInSec = "0" overallStart="N/A" overallStop="N/A" numberOfJobs="0" maxNumOfListedJobs="0" numberOfScenarios="0">  </rep:jobArray> 
-    else if(compare($order, "ascending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
-    else if(compare($order, "descending") eq 0) then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
-    else <rep:jobArray>-1</rep:jobArray>   
+
+  let $isUnfinishedCount := 
+    count( for $dur in $resultArrayAsc/rep:job
+           where ( not(hs:nACheck($dur/@stopTime)) or $includeNonResultedJobs) and not(xs:boolean($dur/@isFinished)) (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
+           return $dur )
+  
+  let $isFinished := if( $isUnfinishedCount>0 ) then false() else true()
+  
+  let $totalDurationInSec := if($isCumulative) then sum(data($durationList))
+                                               else hs:total-seconds-from-duration($totalDurationBetweenFirstAndLastJobs)
+                                             
+
+  
+  return     
+      if(not(exists($n))) 
+      then <rep:jobArray totalDurationInSec = "0" overallStart="N/A" overallStop="N/A" isFinished="true" numberOfJobs="0" maxNumOfListedJobs="0" numberOfScenarios="0">  </rep:jobArray> 
+      else 
+          if(compare($order, xs:string("ascending")) eq 0) 
+          then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" isFinished="{$isFinished}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { $resultArrayAsc/rep:job[position()<=$maxNumOfListedJobs]} </rep:jobArray>
+          else 
+              if(compare($order, xs:string("descending")) eq 0) 
+              then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" isFinished="{$isFinished}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
+              else <rep:jobArray>-1</rep:jobArray>   
+      
 };
 
 
-declare function hs:getOverallReport($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean, $order as xs:string, $maxNumOfListedJobs as xs:int, $includeNonResultedRuns as xs:boolean) as node()*
+declare function hs:getOverallReport($documentUrl as xs:string, $reportParameters as element(rep:reportParameters)) as node()*
 {
-  let $isJob := if( $jobId eq 0 ) then false() else true()
+  let $jobId := $reportParameters/@jobId
+  let $isJob := if( $jobId eq '0' ) then false() else true()
 	
-  let $jobsReport := hs:getJobsReport($documentUrl, $numberOfElement, $runId , $jobId, $refRunIdBolean)
-  let $result     := hs:getJobArray($jobsReport , $order, $maxNumOfListedJobs, $includeNonResultedRuns, $isJob)
+  let $jobsReport := hs:getJobsReport($documentUrl, $reportParameters)
+  let $result     := hs:getJobArray($jobsReport , $reportParameters)
   return $result
 };
 
+declare function hs:getJobStartDate($job as element(dat:jobProperties) ) as xs:string 
+{
+  
+     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) 
+                       then 
+                           $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
+                       else 
+                           xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime)))
+                           
+    return $date
+    
+};
+
+declare function hs:getJobStartTime($job as element(dat:jobProperties) ) as xs:string 
+{
+  
+     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) 
+                       then 
+                           $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time
+                       else 
+                           xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime)))
+                           
+    return $date
+    
+};
+
+declare function hs:getJobStopDate($job as element(dat:jobProperties) ) as xs:string 
+{
+  
+     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) 
+                       then 
+                           $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date
+                       else 
+                           xs:string("N/A")
+                           
+    return $date
+    
+};
+
+declare function hs:getJobStopTime($job as element(dat:jobProperties) ) as xs:string 
+{
+  
+     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) 
+                       then 
+                           $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time
+                       else 
+                           xs:string("N/A")
+                           
+    return $date
+    
+};
+
+declare function hs:get-dayTimeDuration-from-dateTimes($dateTime1 as xs:dateTime) as xs:dayTimeDuration
+{
+    $dateTime1 - xs:dateTime("1970-01-01T00:00:00-00:00")
+};
+
+declare function hs:get-dayTimeDuration-from-dateTimes($dateTime1 as xs:dateTime, $dateTime2 as xs:dateTime) as xs:dayTimeDuration
+{
+    $dateTime1 - $dateTime2
+};
+
+declare function hs:isJobFinished( $states as element(state-types:LiveStateInfos) ) as xs:boolean
+{
+    if( compare( $states/state-types:LiveStateInfo[position() = 1]/state-types:StateName/text(), xs:string("FINISHED")) eq 0 ) 
+    then true() 
+    else false()
+};
+
+declare function hs:total-seconds-from-duration 
+  ( $duration as xs:dayTimeDuration? )  as xs:decimal? {
+       
+   $duration div xs:dayTimeDuration('PT1S')
+ } ;
+ 
+
+declare function hs:total-duration-from-seconds
+  ( $duration as xs:decimal )  as xs:dayTimeDuration? {
+       
+   $duration * xs:dayTimeDuration('PT1S')
+ } ;
+ 
 declare function hs:stringToDateTime($t1 as xs:string)
 {
     (: Degisik tarih formatlari icin dusunuldu. 2011-10-13T15:08:31+0300 veya 2011-10-13T15:08:31.91+0300 veya 2011-10-13T15:08:31.897+0300 :)
