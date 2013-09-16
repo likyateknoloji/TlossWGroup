@@ -2,6 +2,7 @@ package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -11,8 +12,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DashboardReorderEvent;
@@ -22,6 +25,10 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
+import com.likya.tlos.model.xmlbeans.report.OrderByType;
+import com.likya.tlos.model.xmlbeans.report.OrderType;
+import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -52,7 +59,28 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		System.out.println(parameter_value);
 		
-		curDurationModel = createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("0");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(0));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+		
+		curDurationModel = createCurCategoryModel(reportParametersXML);
 		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
@@ -69,11 +97,54 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	
 	public void refreshCurDurationChart() {
 
-		createCurCategoryModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("1");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(1));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+		
+		createCurCategoryModel(reportParametersXML);
 	}
 
 	public void refreshPrevDurationChart() {
-		createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
+		
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("1");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(1));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+		
+		createCurCategoryModel(reportParametersXML);
 	}
 /**
  * 	get related Jobs with getJobsReport(
@@ -92,14 +163,14 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
  * @return 
  */
 
-	private CartesianChartModel createCurCategoryModel(int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount) {
+	private CartesianChartModel createCurCategoryModel(String reportParametersXML) {
 
 		CartesianChartModel curDurationModel = new CartesianChartModel();
 
 		String includeNonResultedRuns = "true()";
 		
 		try {
-			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount, includeNonResultedRuns);
+			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
