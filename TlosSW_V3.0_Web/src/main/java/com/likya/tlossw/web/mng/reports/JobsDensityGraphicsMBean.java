@@ -13,8 +13,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
@@ -23,8 +25,12 @@ import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
+import com.likya.tlos.model.xmlbeans.report.OrderByType;
+import com.likya.tlos.model.xmlbeans.report.OrderType;
+import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
 import com.likya.tlos.model.xmlbeans.report.StatisticsDocument.Statistics;
 import com.likya.tlossw.utils.transform.TransformUtils;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -123,6 +129,27 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 		denseModel = new CartesianChartModel();
 
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("0");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(0));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+			
 		HashMap<String, StatsByAgent> agentMap = new HashMap<String, StatsByAgent>();
 		StatsByAgent statsByAgent = null;
 
@@ -134,12 +161,12 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 					"xs:dateTime(\"2013-07-25T17:04:00.205+03:00\")",
 					"xs:dateTime(\"2013-07-25T17:06:16.363+03:00\")",
 					"xs:dayTimeDuration('PT" + stepForDensity + "S')",
-					"false()");
+					reportParametersXML);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-
-		setSizeOfReport(densityJobCountList.getDataArray(0).getCount());
+		
+		if(densityJobCountList.sizeOfDataArray() > 0 ) setSizeOfReport(densityJobCountList.getDataArray(0).getCount());
 
 		Integer numberOfJobsInThisGroup = new Integer(0);
 		int agentId;
