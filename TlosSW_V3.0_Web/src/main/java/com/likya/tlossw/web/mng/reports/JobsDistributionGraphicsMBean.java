@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -10,16 +11,22 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.chart.OhlcChartModel;
 import org.primefaces.model.chart.OhlcChartSeries;
 import org.xmldb.api.base.XMLDBException;
 
+import com.likya.tlos.model.xmlbeans.report.OrderByType;
+import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
+import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
+import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -57,7 +64,28 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 
 		System.out.println(parameter_value);
 
-		createOhlcModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("0");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(0));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+		
+		createOhlcModel(reportParametersXML);
 
 		logger.info("end : init");
 
@@ -80,7 +108,29 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		}
 	
 	public void refreshOhlcChart() {
-		createOhlcModel(1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		
+		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		
+		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
+		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setIsCumulative(true);
+		reportParameters.setJobId("1");
+		reportParameters.setJustFirstLevel(true);
+		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
+		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
+		reportParameters.setOrder(OrderType.DESCENDING);
+		reportParameters.setOrderBy(OrderByType.DURATION);
+		reportParameters.setRefRunIdBoolean(true);
+		reportParameters.setRunId(BigInteger.valueOf(1));
+		reportParameters.setScenarioId("0");
+		
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		String reportParametersXML = reportParameters.xmlText(xmlOptions);
+		
+		createOhlcModel(reportParametersXML);
 
 	}
 
@@ -88,13 +138,12 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		return param - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(param));
 	}
 	
-	private void createOhlcModel(int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount) {
+	private void createOhlcModel(String reportParametersXML) {
 		
         ohlcModel = new OhlcChartModel();  
 
-        String includeNonResultedRuns = "true()";
 		try {
-			jobsArray = getDbOperations().getOverallReport(derinlik, runType, jobId, refPoint, orderType, jobCount, includeNonResultedRuns);
+			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
