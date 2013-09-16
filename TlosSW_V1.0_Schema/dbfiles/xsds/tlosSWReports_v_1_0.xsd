@@ -1,6 +1,7 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_report_types"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/XML_report_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:rep="http://www.likyateknoloji.com/XML_report_types" targetNamespace="http://www.likyateknoloji.com/XML_report_types"
 	elementFormDefault="qualified">
 	<xs:element name="reportAll">
 		<xs:complexType>
@@ -140,6 +141,8 @@
 			<xs:attribute name="overallStop" use="required" type="xs:dateTime" />
 			<xs:attribute name="totalDurationInSec" use="required"
 				type="xs:decimal" />
+			<xs:attribute name="isFinished" default="true" use="optional"
+				type="xs:boolean" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="job">
@@ -150,8 +153,52 @@
 					<xs:attribute name="jname" use="required" type="xs:string" />
 					<xs:attribute name="startTime" use="required" type="xs:dateTime" />
 					<xs:attribute name="stopTime" use="required" type="xs:dateTime" />
+					<xs:attribute name="isFinished" default="true" use="optional"
+						type="xs:boolean" />
 				</xs:extension>
 			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="orderType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ascending" />
+			<xs:enumeration value="descending" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="orderByType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DURATION" />
+			<xs:enumeration value="STARTTIME" />
+			<xs:enumeration value="ENDTIME" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="reportParameters">
+		<xs:complexType>
+			<xs:attribute name="includeNonResultedJobs" default="true"
+				use="optional" type="xs:boolean" />
+			<xs:attribute name="jobId" default="0" use="optional"
+				type="xs:string" />
+			<xs:attribute name="justFirstLevel" default="false" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="maxNumberOfElement" default="1"
+				use="optional" type="xs:integer" />
+			<xs:attribute name="refRunIdBoolean" default="true" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="runId" default="0" use="optional"
+				type="xs:integer" />
+			<xs:attribute name="scenarioId" default="0" use="optional"
+				type="xs:string" />
+			<xs:attribute name="orderBy" default="DURATION" use="optional"
+				type="orderByType" />
+			<xs:attribute name="isCumulative" default="true" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="order" default="descending" use="optional"
+				type="orderType" />
+			<xs:attribute name="maxNumOfListedJobs" default="10"
+				use="optional" type="xs:integer" />
 		</xs:complexType>
 	</xs:element>
 
