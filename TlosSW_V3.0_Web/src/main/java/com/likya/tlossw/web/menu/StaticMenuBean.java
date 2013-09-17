@@ -16,13 +16,15 @@ public class StaticMenuBean implements Serializable {
 	
 	private final String DEF_URLS = "/inc/definitionPanels/jobsDef.jsf?";
 	private final String LIVE_JS= "/inc/livePanels/liveJobsScenarios.jsf?";
+	private final String DEPLOYMENT = "/inc/definitionPanels/deploymentPage.jsf?";
 
 	private String globalDefsUrl;
 	private String myDefsUrl;
 	
 	private String globalLiveJsUrl;
 	private String myLiveJsUrl;
-	
+
+	private String deploymentUrl;
 
 	@PostConstruct
 	public void init() {
@@ -31,7 +33,8 @@ public class StaticMenuBean implements Serializable {
 		
 		globalLiveJsUrl = LIVE_JS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA;
 		myLiveJsUrl = LIVE_JS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_MYDATA;
-		
+
+		deploymentUrl = DEPLOYMENT + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA;
 	}
 
 
@@ -72,6 +75,16 @@ public class StaticMenuBean implements Serializable {
 
 	public void setMyLiveJsUrl(String myLiveJsUrl) {
 		this.myLiveJsUrl = myLiveJsUrl;
+	}
+
+
+	public String getDeploymentUrl() {
+		return deploymentUrl;
+	}
+
+
+	public void setDeploymentUrl(String deploymentUrl) {
+		this.deploymentUrl = deploymentUrl;
 	}
 
 

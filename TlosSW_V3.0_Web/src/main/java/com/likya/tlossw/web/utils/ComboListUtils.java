@@ -41,11 +41,11 @@ public class ComboListUtils {
 	public static Collection<SelectItem> constructJobSubStateList() {
 
 		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobSubtateList = WebInputUtils.fillJobSubstateList();
+		Collection<SelectItem> jobSubstateList = WebInputUtils.fillJobSubstateList();
 		logTimeInfo("JobBaseBean.WebInputUtils.fillJobSubstateList Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
-		return jobSubtateList;
+		return jobSubstateList;
 	}
 
 	public static Collection<SelectItem> constructJobStatusNameList() {

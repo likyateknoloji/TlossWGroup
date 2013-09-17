@@ -122,9 +122,9 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	private boolean jobSafeToRestart;
 	private boolean jobAutoRetry;
 
-	/* live state info */
-	private String stateName;
-	private String subStateName;
+//	/* live state info */
+//	private String stateName;
+//	private String subStateName;
 
 	private JobStatusList jobStatusList;
 
@@ -221,6 +221,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillEnvVariablesTab();
 		fillAdvancedJobInfosTab();
 		fillLogAnalysisTab();
+
+		if (getDocumentId().equals(CommonConstantDefinitions.EXIST_MYDATA)) {
+			fillDevelopmentLifeCycleTab();
+		}
+	}
+
+	public void fillDevelopmentLifeCycleTab() {
+		getDevelopmentLifeCycleTabBean().fillDevelopmentLifeCycleTab(jobProperties);
 	}
 
 	public void fillEnvVariablesTab() {
@@ -292,10 +300,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private void fillStateInfosTab() {
 		if (jobProperties != null) {
-			if (!isJsInsertButton()) {
+			/*if (!isJsInsertButton()) {
 				stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().toString();
 				subStateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
-			}
+			} merve */
 
 			// durum tanimi yapildiysa alanlari dolduruyor
 			if (jobProperties.getStateInfos() != null && jobProperties.getStateInfos().getJobStatusList() != null) {
@@ -458,14 +466,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			// ilk live state bilgisini burada ekliyor
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_CREATED);
 
-		} else {
+		}/* else {
 			if (stateName != null && !stateName.equals("") && subStateName != null && !subStateName.equals("")) {
 				int stateIntValue = StateName.Enum.forString(stateName).intValue();
 				int substateIntValue = SubstateName.Enum.forString(subStateName).intValue();
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, stateIntValue, substateIntValue);
 			}
-		}
+		} merve */
 	}
 
 	public void resetPanelInputs() {
@@ -479,6 +487,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		getBaseJobInfosTabBean().resetTab();
 		getStateInfosTabBean().resetTab();
 		getEnvVariablesTabBean().resetTab(true);
+		getDevelopmentLifeCycleTabBean().resetTab();
 
 		super.resetPanelInputs();
 
@@ -1075,7 +1084,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		this.jobAutoRetry = jobAutoRetry;
 	}
 
-	public String getStateName() {
+	/*public String getStateName() {
 		return stateName;
 	}
 
@@ -1089,7 +1098,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setSubStateName(String subStateName) {
 		this.subStateName = subStateName;
-	}
+	} merve */
 
 	public JobStatusList getJobStatusList() {
 		return jobStatusList;

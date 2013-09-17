@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.definitions.helpers.AdvancedJobInfosTab;
 import com.likya.tlossw.web.definitions.helpers.AlarmPreferencesTabBean;
+import com.likya.tlossw.web.definitions.helpers.DevelopmentLifeCycleTabBean;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
 import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
@@ -36,7 +37,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private Collection<SelectItem> jobStatusNameList;
 	private Collection<SelectItem> agentChoiceMethodList;
 	private Collection<SelectItem> jobStateList;
-	private Collection<SelectItem> jobSubtateList;
+	private Collection<SelectItem> jobSubstateList;
 
 	private boolean isScenario = false;
 	private boolean jsActive = false;
@@ -67,6 +68,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 	private AdvancedJobInfosTab advancedJobInfosTab;
 	private AlarmPreferencesTabBean alarmPreferencesTabBean;
+	private DevelopmentLifeCycleTabBean developmentLifeCycleTabBean;
 
 	public void init() {
 		timeManagementTabBean = new TimeManagementTabBean(this, isScenario);
@@ -74,6 +76,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		localParametersTabBean = new LocalParametersTabBean();
 		advancedJobInfosTab = new AdvancedJobInfosTab(this);
 		alarmPreferencesTabBean = new AlarmPreferencesTabBean(this);
+		developmentLifeCycleTabBean = new DevelopmentLifeCycleTabBean(this);
 	}
 
 	public void switchInsertUpdateButtons() {
@@ -434,12 +437,20 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		this.jobStateList = jobStateList;
 	}
 
-	public Collection<SelectItem> getJobSubtateList() {
-		return jobSubtateList;
+	public Collection<SelectItem> getJobSubstateList() {
+		return jobSubstateList;
 	}
 
-	public void setJobSubtateList(Collection<SelectItem> jobSubtateList) {
-		this.jobSubtateList = jobSubtateList;
+	public void setJobSubstateList(Collection<SelectItem> jobSubstateList) {
+		this.jobSubstateList = jobSubstateList;
+	}
+
+	public DevelopmentLifeCycleTabBean getDevelopmentLifeCycleTabBean() {
+		return developmentLifeCycleTabBean;
+	}
+
+	public void setDevelopmentLifeCycleTabBean(DevelopmentLifeCycleTabBean developmentLifeCycleTabBean) {
+		this.developmentLifeCycleTabBean = developmentLifeCycleTabBean;
 	}
 
 	// public int getGmt() {
