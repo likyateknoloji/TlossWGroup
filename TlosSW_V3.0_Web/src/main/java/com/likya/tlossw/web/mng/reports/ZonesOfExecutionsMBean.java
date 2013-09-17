@@ -16,10 +16,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.MutableDateTime;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
@@ -28,14 +29,23 @@ import org.primefaces.model.DefaultDashboardModel;
 import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.xmldb.api.base.XMLDBException;
 
-import com.likya.tlos.model.xmlbeans.report.OrderByType;
-import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
-import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
-import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+
+/*
+ * 0 : mavi
+   min çalışma süresi : sari
+   beklenen çalışma süresi -tolerans: yeşil
+   beklenen çalışma süresi : yeşil
+   beklenen çalışma süresi +tolerans: yeşil
+   maximum çalışma süresi : sarı
+   out of time : kırmızı
+
+   timeout süresi
+ */
 
 @ManagedBean(name = "zonesOfExecutionsMBean")
 @ViewScoped
@@ -45,8 +55,6 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
- 
-	
 	private static final long serialVersionUID = 2570957528954820036L;
 	private static final Logger logger = Logger.getLogger(ZonesOfExecutionsMBean.class);
 
@@ -71,6 +79,8 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	private BigInteger numberOfJobs;
 	private BigInteger numberOfScenarios;
 	
+	ReportsParameters reportParameters = null;
+	
 	@PostConstruct
 	public void init() {
 
@@ -88,10 +98,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 		column1.addWidget("gauge");
 		column2.addWidget("info");
+		column2.addWidget("stats");
 
 		model.addColumn(column1);
 		model.addColumn(column2);
-
+		
 		createMeterGaugeModel();
 
 		logger.info("end : init");
@@ -115,41 +126,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	
 	private void createMeterGaugeModel() {
 
-		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
-		
-		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
-		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
-		reportParameters.setIncludeNonResultedJobs(true);
-		reportParameters.setIsCumulative(true);
-		reportParameters.setJobId("0");
-		reportParameters.setJustFirstLevel(true);
-		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
-		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
-		reportParameters.setOrder(OrderType.DESCENDING);
-		reportParameters.setOrderBy(OrderByType.DURATION);
-		reportParameters.setRefRunIdBoolean(true);
-		reportParameters.setRunId(BigInteger.valueOf(0));
-		reportParameters.setScenarioId("0");
-		
-		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
-		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
-
-		String reportParametersXML = reportParameters.xmlText(xmlOptions);
-		/*
-		 * 0 : mavi
-           min çalışma süresi : sari
-           beklenen çalışma süresi -tolerans: yeşil
-           beklenen çalışma süresi : yeşil
-           beklenen çalışma süresi +tolerans: yeşil
-           maximum çalışma süresi : sarı
-           out of time : kırmızı
-
-           timeout süresi
-		 */
+		reportParameters = new ReportsParameters();
 		
 		LocalStats localStats = null;
 		try {
-			localStats = getDbOperations().getStatsReport(reportParametersXML);
+			localStats = getDbOperations().getStatsReport( reportParameters.getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -176,7 +157,8 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		// göstergede ençok max süreden %25 fazlası olabilsin. Bu değere kadar toleransın 2 katı yüzde koydum şimdilik.
 		///////Double maxmaxTolWorkingTime = new Double(maxTolWorkingTime + maxTolWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
 		Double maxmaxTolWorkingTime = new Double(maxWorkingTime + maxWorkingTime*(Math.min(tolerancePer*2/100.0, 25)));
-				
+		
+		/* Ekranda gozukecek en kucuk deger yani goreceli sifir ne olacak */
 		int deger = (int) (Math.min(minWorkingTimeStat, minTolWorkingTime)/2);
 		Double sifir = new Double(deger);
 		
@@ -231,7 +213,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		  intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		}
 		try {
-			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
+			jobsArray = getDbOperations().getOverallReport( reportParameters.getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -265,7 +247,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		MeterGaugeChartModel meterGaugeModel = new MeterGaugeChartModel(totalDurationNormalized, intervals, ticks); 
 		setMeterGaugeModel(meterGaugeModel);
 		
-		setOverallDuration(numberToTimeFormat(totalDurationBD));
+		setOverallDuration(numberToDayTimeFormat(totalDurationBD));
 		setMinWorkingTimeStat(numberToTimeFormat(localStats.getMin()));
 		setMaxWorkingTimeStat(numberToTimeFormat(localStats.getMax()));
 		setExpWorkingTimeStat(numberToTimeFormat(localStats.getAvg()));
@@ -292,6 +274,22 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		    new SimpleDateFormat("HH:mm:ss.SSS").format(cal.getTime());
 		
 		return timeString;
+	}
+	
+	public String numberToDayTimeFormat(BigDecimal number) {
+		
+		MutableDateTime epoch = new MutableDateTime();
+		epoch.setDate(0); //Set to Epoch time
+		
+		DateTime dt = new DateTime(totalDurationBD.longValue()*1000);
+		
+		String timepart = dt.toString("HH:mm:ss.SSS");
+		Days days = Days.daysBetween(epoch, dt);
+		String daypart = "";
+		
+		if(days.getDays()>0) daypart = days.getDays() + " " + resolveMessage("tlos.report.gauge.days")+" ";
+		
+		return daypart + timepart;
 	}
 	
 	public DashboardModel getModel() {
@@ -406,7 +404,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
     		  sonuc = i;	
     		  break;
     		} 
-    	return zones[sonuc];
+    	return totalDurationNormalized.compareTo((Double) intervals.get(intervals.size() - 2)) > 0 ? zones[intervals.size() - 1] : zones[sonuc];
     }
 
 	public BigDecimal getTotalDurationBD() {
@@ -457,5 +455,15 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		this.numberOfScenarios = numberOfScenarios;
 	}
 
- 
+    public String getJSStateText() {
+    	return isFinished ? resolveMessage("tlos.report.gauge.jsStateInText.finished") : resolveMessage("tlos.report.gauge.jsStateInText.running");
+    }
+    
+    public String getJSEndText() {
+    	return isFinished ? resolveMessage("tlos.report.gauge.overallEndTime") : resolveMessage("tlos.report.gauge.reportTime");
+    }
+    
+    public String getStatSampleNumberText() {
+    	return resolveMessage("tlos.report.gauge.statsText1")+ " "+ reportParameters.getStatSampleNumber() + " " + resolveMessage("tlos.report.gauge.statsText2");
+    }
 }
