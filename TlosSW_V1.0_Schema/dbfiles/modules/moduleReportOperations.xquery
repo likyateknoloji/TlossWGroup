@@ -49,6 +49,8 @@ return hs:getJobArray($run, "ascending", 15, false())
 declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()*
 {
   let $runId := $reportParameters/@runId
+  let $statSampleNumber := $reportParameters/@statSampleNumber
+  
   let $runIdx := if( $runId = 0 ) then sq:getId($documentUrl, "runId") (: son run :)
     					 else $runId
 
@@ -58,7 +60,7 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
   (: Burada son run i bilerek dikkate almiyoruz, ondan onceki 3 run in ortalamasi yeterli :)
   let $localStats :=
     let $arasonuc := <arasonuc> {
-                      for $i in (1,2,3)
+                      for $i in (1 to $statSampleNumber)
 					   let $reportParametersNew := <rep:reportParameters includeNonResultedJobs="{xs:boolean($reportParameters/@includeNonResultedJobs)}" 
 					                                                     jobId="{$reportParameters/@jobId}" 
 																		 justFirstLevel="{$reportParameters/@justFirstLevel}" 
@@ -66,16 +68,22 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
 																		 refRunIdBoolean="{$reportParameters/@refRunIdBoolean}" 
 																		 runId="{$runIdx - $i}" 
 																		 scenarioId="{$reportParameters/@scenarioId}"
-																		 maxNumOfListedJobs="{$reportParameters/@maxNumOfListedJobs}"
 																		 orderBy="{$reportParameters/@orderBy}"
 																		 isCumulative="{xs:boolean($reportParameters/@isCumulative)}" 
-																		 order="{$reportParameters/@order}"/>
+																		 order="{$reportParameters/@order}"
+																		 maxNumOfListedJobs="{$reportParameters/@maxNumOfListedJobs}"
+																		 statSampleNumber="{$reportParameters/@statSampleNumber}"
+																		 />
 				  
                        let $getPerStats := hs:getJobsReport($documentUrl, $reportParametersNew)   (: $numberOfElement,$runIdx - $i ,$jobId, $refRunIdBolean, $includeNonResultedRuns) :)
                        let $getPerStatsExists := if(exists($getPerStats)) then $getPerStats else ()
-                       let $hepsi := hs:getJobArray($getPerStatsExists, $reportParametersNew)/@totalDurationInSec
-                      return <stat> { $hepsi } </stat>
-                     }
+                       let $sonuc :=  hs:getJobArray($getPerStatsExists, $reportParametersNew)
+                       let $hepsi := $sonuc/@totalDurationInSec
+                       let $overallStart := $sonuc/@overallStart
+                       let $overallStop := $sonuc/@overallStop
+                      where $overallStart!=""
+                      return <stat> {$hepsi, $overallStart, $overallStop} </stat>
+                      }
                      </arasonuc>
 
     let $temiz :=    for $i in $arasonuc/stat
@@ -87,15 +95,24 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
     }
                      </arasonuc>
 	
+    let $overallStartt :=    min(for $i in $arasonuc/stat
+                     return xs:dateTime($i/@overallStart))
+    let $overallStopp :=    max(for $i in $arasonuc/stat
+                     return xs:dateTime($i/@overallStop))
+                     
 	let $maxx := round-half-to-even( max($temizArasonuc/stat/@totalDurationInSec), 2)
 	let $minn := round-half-to-even( min($temizArasonuc/stat/@totalDurationInSec), 2)
 	let $ortalamaa := round-half-to-even( avg($temizArasonuc/stat/@totalDurationInSec), 2)
-	
+
+
+    
     let $max :=  if(empty($maxx)) then 0 else $maxx
     let $min := if(empty($minn)) then 0 else $minn
     let $ortalama := if(empty($ortalamaa)) then 0 else $ortalamaa
-	
-    return <rep:localStats> <rep:max> { $max } </rep:max><rep:min> { $min } </rep:min><rep:avg>{ $ortalama } </rep:avg> 
+    let $overallStart := if(empty($overallStartt)) then 0 else $overallStartt
+    let $overallStop := if(empty($overallStopp)) then 0 else $overallStopp
+      
+    return <rep:localStats overallStart="{$overallStart}" overallStop="{$overallStop}"> <rep:max> { $max } </rep:max><rep:min> { $min } </rep:min><rep:avg>{ $ortalama } </rep:avg> 
            </rep:localStats>
 
     
@@ -217,6 +234,7 @@ declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:
 {
 (:
 let $runId := $reportParameters/@runId
+let $runId := $reportParameters/@runId
 let $scenarioId := $reportParameters/@scenarioId
 let $jobId := $reportParameters/@jobId
 let $refRunIdBoolean := $reportParameters/@refRunIdBoolean
@@ -270,7 +288,7 @@ let $order := $reportParameters/@order
   let $minStartDateTime := min(for $min in $resultArrayAsc/rep:job return if( hs:nACheck($min/@startTime) ) then current-dateTime() else xs:dateTime($min/@startTime))
   let $maxStopDateTime :=  max(for $max in $resultArrayAsc/rep:job return if( hs:nACheck($max/@stopTime) ) then xs:dateTime("1970-01-01T00:00:00-00:01") else xs:dateTime($max/@stopTime))
   
-  let $totalDurationBetweenFirstAndLastJobs := $maxStopDateTime - $minStartDateTime
+  let $totalDurationBetweenFirstAndLastJobs := xs:dateTime($maxStopDateTime) - xs:dateTime($minStartDateTime)
    
   let $durationList := 
     for $dur in $resultArrayAsc/rep:job
