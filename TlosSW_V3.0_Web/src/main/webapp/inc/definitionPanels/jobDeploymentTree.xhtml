@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="jobDeploymentForm">
+		<p:growl id="messages" showDetail="true" sticky="false" />
+
+		<p:tree value="#{deploymentTree.root}" var="node" id="deploymentTree"
+			animate="true" style="width:296px;height:720px" dynamic="true"
+			selectionMode="single" selection="#{deploymentTree.selectedJS}">
+
+			<p:ajax event="expand" update=":jobDeploymentForm:messages"
+				listener="#{deploymentTree.onNodeExpand}" />
+			<p:ajax event="collapse" update=":jobDeploymentForm:messages"
+				listener="#{deploymentTree.onNodeCollapse}" />
+			<p:ajax event="select" update=":jobDeploymentForm:messages"
+				listener="#{deploymentTree.onNodeSelect}" />
+			<p:ajax event="unselect" update=":jobDeploymentForm:messages"
+				listener="#{deploymentTree.onNodeUnselect}" />
+
+			<p:treeNode id="scenarioNode" type="scenario"
+				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
+				<h:outputText value="#{node.name}" id="scenarioName"
+					style="font-weight: bold;font-size: 115%;" />
+				<h:inputHidden value="#{node.id}" id="scenarioId" />
+			</p:treeNode>
+
+			<p:treeNode id="jobNode" type="job" icon="#{node.leafIcon}">
+				<h:outputText value="#{node.name}" id="jobName" />
+				<h:inputHidden value="#{node.id}" id="jobId" />
+			</p:treeNode>
+
+		</p:tree>
+
+		<p:resizable for="deploymentTree" />
+
+	</h:form>
+
+</ui:composition>

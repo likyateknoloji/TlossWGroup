@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="devLifeCycleTab"
+			title="#{msgs['tlos.workspace.pannel.job.developmentLifeCycle']}"
+			rendered="#{sessionMediator.documentId eq 'mydata'}">
+
+			<p:panel id="statePanel" header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}">
+				<p:panelGrid columns="2">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.status']}" />
+					<p:selectOneMenu value="#{backingBean.subStateName}" style="width: 100pt" >
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItems value="#{backingBean.jobSubStateNameList}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+			</p:panel>
+			
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
