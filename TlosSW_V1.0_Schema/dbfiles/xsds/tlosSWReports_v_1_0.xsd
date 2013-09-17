@@ -199,6 +199,8 @@
 				type="orderType" />
 			<xs:attribute name="maxNumOfListedJobs" default="10"
 				use="optional" type="xs:integer" />
+			<xs:attribute name="statSampleNumber" default="3"
+				use="optional" type="xs:short" />
 		</xs:complexType>
 	</xs:element>
 
@@ -237,6 +239,10 @@
 				<xs:element ref="min" />
 				<xs:element ref="avg" />
 			</xs:sequence>
+			<xs:attribute name="overallStart"
+				use="optional" type="xs:dateTime" />
+			<xs:attribute name="overallStop"
+				use="optional" type="xs:dateTime" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="max" type="xs:decimal" />
