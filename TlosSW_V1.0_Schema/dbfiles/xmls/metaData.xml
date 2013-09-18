@@ -19,6 +19,7 @@
 		<meta:document id="plan" type="xml">tlosSWDailyPlan10.xml</meta:document>
 		<meta:document id="scenarios" type="xml">tlosSWDailyScenarios10.xml</meta:document>
 		<meta:document id="sjData" type="xml">tlosSWData10.xml</meta:document>
+		<meta:document id="deploymentData" type="xml">tlosSWDeploymentData10.xml</meta:document>
 		<meta:document id="dbConnectionProfiles" type="xml">tlosSWDBConnectionProfiles10.xml</meta:document>
 		<meta:document id="dbConnections" type="xml">tlosSWDBConnections10.xml</meta:document>
 		<meta:document id="errors" type="xml">tlosSWErrors10.xml</meta:document>
