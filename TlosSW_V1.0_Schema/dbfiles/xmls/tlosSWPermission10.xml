@@ -1182,4 +1182,10 @@
         </per:roles>
         <per:resource type="button">ResourceClear</per:resource>
     </per:permission>
+    <per:permission id="166">
+        <per:roles>
+            <per:role>ADMIN</per:role>
+        </per:roles>
+        <per:resource type="menu">DeploymentMenu</per:resource>
+    </per:permission>
 </per:permissions>
