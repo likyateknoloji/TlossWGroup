@@ -417,6 +417,20 @@ public class DBOperations implements Serializable {
 		return tlosProcessData;
 	}
 
+	public TlosProcessData getDeploymentDataXml(int userId, String dataId) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getDeploymentDataXml", toXSString(userId), toXSString(dataId));
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		TlosProcessData tlosProcessData = TlosProcessData.Factory.newInstance();
+		for (Object currentObject : objectList) {
+			tlosProcessData = ((TlosProcessDataDocument) currentObject).getTlosProcessData();
+		}
+
+		return tlosProcessData;
+	}
+
 	public TlosProcessData getTlosTemplateDataXml() {
 
 		String xQueryStr = scenarioFunctionConstructor("hs:getTlosTemplateDataXml");

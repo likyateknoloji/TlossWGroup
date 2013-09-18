@@ -51,7 +51,7 @@ public class DeploymentTree extends TlosSWBaseBean implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), documentId);
+		TlosProcessData tlosProcessData = getDbOperations().getDeploymentDataXml(getWebAppUser().getId(), documentId);
 		System.out.println("Tree has been loaded !!");
 
 		System.out.println("Job Tree olusturuluyor ..");
