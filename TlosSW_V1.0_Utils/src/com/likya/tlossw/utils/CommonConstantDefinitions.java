@@ -88,6 +88,7 @@ public class CommonConstantDefinitions {
 	public static final String EXIST_DOCID = "docId";
 	public static final String EXIST_MYDATA = "mydata";
 	public static final String EXIST_GLOBALDATA = "globaldata";
+	public static final String EXIST_DEPLOYMENTDATA = "deploymentdata";
 
 	/**
 	 * Validasyon testlerinde kullanılan tanımlamalar.
