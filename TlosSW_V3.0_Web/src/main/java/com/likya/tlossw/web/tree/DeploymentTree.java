@@ -47,14 +47,11 @@ public class DeploymentTree extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSTree() {
 
-		String documentId = getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID);
-		if (documentId != null) {
-			getSessionMediator().setDocumentId(documentId);
-		}
+		String documentId = CommonConstantDefinitions.EXIST_DEPLOYMENTDATA;
 
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), getDocumentId());
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), documentId);
 		System.out.println("Tree has been loaded !!");
 
 		System.out.println("Job Tree olusturuluyor ..");
