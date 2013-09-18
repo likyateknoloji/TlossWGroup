@@ -28,6 +28,15 @@ declare function hs:getTlosDataXml($documentUrl as xs:string, $userId as xs:stri
 	return $tlosProcessData 
 };
 
+(: burada dönen datanın içinde sadece deployment statüsündeki iş ve senaryolar olmalı, şimdilik hepsini dönüyor. merve :)
+declare function hs:getDeploymentDataXml($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as element(dat:TlosProcessData)?
+{
+	let $dataDocumentUrl := met:getDataDocument($documentUrl, $userId, $whichData)
+
+	for $tlosProcessData in doc($dataDocumentUrl)/dat:TlosProcessData
+	return $tlosProcessData 
+};
+
 declare function hs:getTlosTemplateDataXml($documentUrl as xs:string) as element(dat:TlosProcessData)?
 {
    let $templateDataDocumentUrl := met:getMetaData($documentUrl, "jobTemplates")
