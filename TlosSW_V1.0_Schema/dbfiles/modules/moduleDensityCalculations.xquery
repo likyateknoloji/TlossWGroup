@@ -115,18 +115,24 @@ let $tektek :=
                     let $rightState := if(compare($stateName, $liveStateInfo/state-types:StateName/text()) eq 0) then true() else false()
                     let $rightSubstate := if(compare($substateName, $liveStateInfo/state-types:SubstateName/text()) eq 0) then true() else false()
                     let $rightStatus := if(compare($statusName, $liveStateInfo/state-types:StatusName/text()) eq 0) then true() else false()
+                    let $finishedState := $liveStateInfo/following-sibling::state-types:LiveStateInfo[state-types:StateName eq xs:string("FINISHED")]
+                    let $finishedValue := if(exists($finishedState)) 
+                                                                  then 
+                                                                    true()
+                                                                  else 
+                                                                    false() 
                     where (
                             (($startDateTime < $lSIDateTime) and ( $endDateTime > $lSIDateTime )) or 
                             (($startDateTime > $lSIDateTime) and ($startDateTime < $lSIDateTimeEnd))
                            )
                            and $rightState and $rightSubstate and $rightStatus
-                    return $liveStateInfo
+                    return <a>{ $liveStateInfo, <finish>{ $finishedValue } </finish> }</a>
                            
-              return if(exists($lsi)) then <rep:group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/@LSIDateTime}" LSIDateTimeEnd="{$lsi/@LSIDateTimeEnd}"/>
+              return if(exists($lsi)) then <rep:group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/@LSIDateTime}" LSIDateTimeEnd="{$lsi/@LSIDateTimeEnd}" isFinished="{data($lsi/finish)}"/>
                      else ()
  
   return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}" count="{count($sonuc)}"> { $sonuc } </rep:data>
-return $tektek 
+return $tektek
 
 } ;
 
