@@ -69,15 +69,22 @@ declare function density:focusedRecords($documentUrl as xs:string, $startDateTim
                                      for $liveStateInfo in $liveStateInfosSorted/state-types:LiveStateInfo
                                      let $lSIDateTime := density:stringToDateTime($liveStateInfo/@LSIDateTime)
                                      let $lSIDateTimeNext := $liveStateInfo/following-sibling::state-types:LiveStateInfo[1]/@LSIDateTime
-                                     let $lSIDateTimeNextValue := if(exists($lSIDateTimeNext)) then density:stringToDateTime($lSIDateTimeNext) else $lSIDateTime
+                                     let $lSIDateTimeNextValue := if(exists($lSIDateTimeNext)) 
+                                                                  then 
+                                                                    density:stringToDateTime($lSIDateTimeNext) 
+                                                                  else 
+                                                                    if (compare( xs:string("FINISHED") , $liveStateInfo/state-types:StateName/text()) eq 0) 
+                                                                    then $lSIDateTime 
+                                                                    else current-dateTime() 
                                      where
                                        (($startDateTime < $lSIDateTime) and ( $endDateTime > $lSIDateTime )) or 
-                                       (($startDateTime > $lSIDateTime) and (exists($lSIDateTimeNext) and $startDateTime < $lSIDateTimeNextValue))
+                                       (($startDateTime > $lSIDateTime) and ($startDateTime < $lSIDateTimeNextValue)) 
                                      return <state-types:LiveStateInfo LSIDateTime="{$lSIDateTime}" LSIDateTimeEnd="{$lSIDateTimeNextValue}">
                                               { $liveStateInfo/* }
                                             </state-types:LiveStateInfo>
                                     } </rep:group>
-                                  
+									
+              where  $jobProperties/@LSIDateTime!=""                    
               return  $fish
               
   return <focused>{ $sonuc } </focused>
@@ -126,8 +133,8 @@ return $tektek
 declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration, $reportParameters as element(rep:reportParameters) ) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
-	  
- 
+      
+  let $maxNumberOfInterval := 100
   let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
   let $endDateTimex := xs:dateTime(if($hepsi/@overallStop  eq '') then current-dateTime() else $hepsi/@overallStop)+xs:dayTimeDuration('PT10S')
@@ -139,15 +146,32 @@ declare function density:recStat($documentUrl as xs:string, $stateName as xs:str
   let $sonuc :=
    if($endDateTimex > $startDateTimex) then
     let $diff := $endDateTimex - $startDateTimex
-    let $numberOfInterval := xs:integer($diff div $step)
+    let $numberOfIntervalCalc := xs:integer($diff div $step)
+    
+    let $stepCalc := 
+      if($numberOfIntervalCalc > $maxNumberOfInterval) 
+      then 
+       (: Aralik cok buyukse step kucuk oldugunda hesaplama cok uzun surer. Bunun icin optimizasyon yapiyoruz.:)
+        hs:total-duration-from-seconds( hs:total-seconds-from-duration($diff) div $maxNumberOfInterval )
+      else 
+        $step
+        
+    let $numberOfInterval := 
+      if($numberOfIntervalCalc > $maxNumberOfInterval) 
+      then 
+       (: Aralik cok buyukse step kucuk oldugunda hesaplama cok uzun surer. Bunun icin optimizasyon yapiyoruz.:)
+        xs:integer($diff div $stepCalc)
+      else 
+        $numberOfIntervalCalc
+
     let $sonuc :=
       let $seq := 1 to $numberOfInterval
       for $n in $seq
        let $kac := xs:integer($n)-1
-       let $startDTime := $startDateTimex+ $kac*$step 
-       let $endDTime := $startDateTimex+ $n*$step
+       let $startDTime := $startDateTimex+ $kac*$stepCalc 
+       let $endDTime := $startDateTimex+ $n*$stepCalc
        let $fonk := density:calcStat($documentUrl, $stateName, $substateName, $statusName, $startDTime, $endDTime, $reportParameters)
-      return $fonk           
+      return $fonk      
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
    else ()
 
