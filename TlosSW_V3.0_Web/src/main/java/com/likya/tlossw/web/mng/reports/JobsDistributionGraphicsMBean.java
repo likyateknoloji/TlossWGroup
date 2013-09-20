@@ -29,6 +29,8 @@ import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParam
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+import com.likya.tlos.model.xmlbeans.report.FilterByResult;
 
 @ManagedBean(name = "jobsDistributionGraphicsMBean")
 @ViewScoped 
@@ -54,6 +56,8 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 	
 	private JobArray jobsArray;
 
+	ReportsParameters reportParameters = null;
+	
 	@PostConstruct
 	public void init() {
 
@@ -64,28 +68,9 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 
 		System.out.println(parameter_value);
 
-		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		reportParameters = new ReportsParameters();
 		
-		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
-		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
-		reportParameters.setIncludeNonResultedJobs(true);
-		reportParameters.setIsCumulative(true);
-		reportParameters.setJobId("0");
-		reportParameters.setJustFirstLevel(true);
-		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
-		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
-		reportParameters.setOrder(OrderType.DESCENDING);
-		reportParameters.setOrderBy(OrderByType.DURATION);
-		reportParameters.setRefRunIdBoolean(true);
-		reportParameters.setRunId(BigInteger.valueOf(0));
-		reportParameters.setScenarioId("0");
-		
-		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
-		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
-
-		String reportParametersXML = reportParameters.xmlText(xmlOptions);
-		
-		createOhlcModel(reportParametersXML);
+		createOhlcModel(reportParameters.getReportParametersXML());
 
 		logger.info("end : init");
 
@@ -109,28 +94,7 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 	
 	public void refreshOhlcChart() {
 		
-		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
-		
-		// int derinlik, int runType, int jobId,  String refPoint, String orderType, int jobCount
-		// 1, 0, 0, "true()", "xs:string(\"descending\")", 10);
-		reportParameters.setIncludeNonResultedJobs(true);
-		reportParameters.setIsCumulative(true);
-		reportParameters.setJobId("1");
-		reportParameters.setJustFirstLevel(true);
-		reportParameters.setMaxNumberOfElement(BigInteger.valueOf(1));
-		reportParameters.setMaxNumOfListedJobs(BigInteger.valueOf(10));
-		reportParameters.setOrder(OrderType.DESCENDING);
-		reportParameters.setOrderBy(OrderByType.DURATION);
-		reportParameters.setRefRunIdBoolean(true);
-		reportParameters.setRunId(BigInteger.valueOf(1));
-		reportParameters.setScenarioId("0");
-		
-		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
-		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
-
-		String reportParametersXML = reportParameters.xmlText(xmlOptions);
-		
-		createOhlcModel(reportParametersXML);
+		createOhlcModel(reportParameters.getReportParametersXML());
 
 	}
 
