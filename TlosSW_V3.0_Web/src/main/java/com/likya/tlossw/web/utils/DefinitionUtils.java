@@ -1,11 +1,15 @@
 package com.likya.tlossw.web.utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 import javax.faces.model.SelectItem;
 
@@ -69,6 +73,48 @@ public class DefinitionUtils {
 		return timeStr;
 	}
 
+	public static Calendar stringToCalendar(String dateStr, String format, String timeZone) {
+		
+		DateFormat formatter = new SimpleDateFormat(format);
+		java.util.Date date = null;
+		try {
+			date = formatter.parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TimeZone timeZonex = TimeZone.getTimeZone(timeZone);
+		Calendar myDate = Calendar.getInstance();
+		myDate.setTime(date);
+		myDate.setTimeZone(timeZonex);
+		return myDate;
+	}
+	
+	public static Calendar intervalCalendar(String dateStr, String format, String timeZone) {
+		
+		DateFormat formatter = new SimpleDateFormat(format);
+		java.util.Date date = null;
+		try {
+			date = formatter.parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    Calendar c = new GregorianCalendar();
+
+       c.clear();                   // clears all fields in the calendar
+	   c.setTimeZone(TimeZone.getTimeZone("UTC"));
+       c.set(Calendar.YEAR, 1970);
+       c.set(Calendar.MONTH, 0);    // recall that Java months are zero based
+       c.set(Calendar.DATE, 1);
+       c.set(Calendar.HOUR, 0);
+       c.set(Calendar.MINUTE, 0);
+       c.set(Calendar.SECOND, 10);
+
+		return c;
+	}
+	
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
 		//String timeStr = zeroCheck(date.get(Calendar.HOUR_OF_DAY) + "") + ":" + zeroCheck(date.get(Calendar.MINUTE) + "") + ":" + zeroCheck(date.get(Calendar.SECOND) + "");
 
