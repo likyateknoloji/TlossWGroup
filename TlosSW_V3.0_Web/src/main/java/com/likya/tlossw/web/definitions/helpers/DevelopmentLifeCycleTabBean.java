@@ -63,7 +63,7 @@ public class DevelopmentLifeCycleTabBean extends BaseTabBean {
 				int statusIntValue = StatusName.INT_REQUEST;
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, stateIntValue, substateIntValue, statusIntValue);
-			} else {
+			} else if (substateIntValue != SubstateName.INT_CREATED) {
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, stateIntValue, substateIntValue);
 			}
 		}

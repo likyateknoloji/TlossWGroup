@@ -479,6 +479,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void deployJobAction(String fromTree) {
 		((JobBasePanelBean) currentPanelMBeanRef).copyJob(fromTree);
+
+		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
+		jsBuffer.setNewJSName(jsBuffer.getJsName());
+
 		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
 
