@@ -153,6 +153,64 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	}
 
+	public void onDeploymentNodeSelect(NodeSelectEvent event) {
+
+		WsNode wsNode = (WsNode) event.getTreeNode().getData();
+
+		if (wsNode != null && wsNode.getId() != null && wsNode.getId().equals(ConstantDefinitions.TREE_ROOT)) {
+			return;
+		}
+
+		TreeNode treeNode = event.getTreeNode();
+
+		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
+			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
+		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+			selectedType = new String(ConstantDefinitions.TREE_JOB);
+		} else {
+			selectedType = new String(ConstantDefinitions.TREE_UNKNOWN);
+		}
+
+		selectedJSPath = "";
+
+		String scenarioId = ((WsNode) treeNode.getParent().getData()).getId();
+
+		while (!((WsNode) treeNode.getParent().getData()).getId().equals(ConstantDefinitions.TREE_ROOTID)) {
+			selectedJSPath = ((WsNode) treeNode.getParent().getData()).getId() + "/" + selectedJSPath;
+			treeNode = treeNode.getParent();
+		}
+
+		String jsId = wsNode.getId();
+
+		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
+
+			int jobType = ((WsJobNode) wsNode).getJobType();
+			boolean isInsert = false;
+
+			jobProperties = null;
+
+			if (Integer.parseInt(jsId) > 0) {
+				jobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, jsId);
+			} else {
+				isInsert = true;
+			}
+
+			initializeSelectedJobPanel(jobType, scenarioId, isInsert);
+
+		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
+			scenario = null;
+			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
+
+			if (scenario != null) {
+				switchToScenarioPanel();
+				((JSDefPanelInterface) currentPanelMBeanRef).init();
+				getScenarioDefinitionMBean().setScenario(scenario);
+				getScenarioDefinitionMBean().initializeScenarioPanel(false);
+			}
+		}
+
+	}
+
 	public void onTemplateNodeSelect(NodeSelectEvent event) {
 
 		WsNode wsNode = (WsNode) event.getTreeNode().getData();
@@ -417,6 +475,11 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void copyJobAction(String fromTree) {
 		((JobBasePanelBean) currentPanelMBeanRef).copyJob(fromTree);
+	}
+
+	public void deployJobAction(String fromTree) {
+		((JobBasePanelBean) currentPanelMBeanRef).copyJob(fromTree);
+		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
 
 	public void copyScenarioAction(String fromTree) {

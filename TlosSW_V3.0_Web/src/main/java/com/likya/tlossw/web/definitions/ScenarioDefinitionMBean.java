@@ -601,6 +601,11 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public void pasteJS(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setToTree(toTree);
+
+		if (jsBuffer.getFromTree().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
+				&& toTree.equals(CommonConstantDefinitions.EXIST_GLOBALDATA)) {
+			scenarioPath = "/dat:TlosProcessData";
+		}
 		getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName());
 	}
 

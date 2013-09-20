@@ -187,6 +187,13 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 		updateJobDefinition();
 	}
 
+	public void sendDeploymentRequest() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		insertJobDeploymentRequest();
+	}
+
 	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;

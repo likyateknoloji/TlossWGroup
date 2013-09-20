@@ -54,7 +54,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	// concurrencyManagement
 	private boolean concurrent;
 
-
 	private List<SelectItem> manyJobDependencyList = new ArrayList<SelectItem>();
 	private String dependencyExpression;
 
@@ -91,16 +90,13 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 				String depPathAndName = item.getJsPath() + "." + item.getJsId();
 
 				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel("ID:" + item.getJsId() + " > " + item.getJsName() );
+				selectItem.setLabel("ID:" + item.getJsId() + " > " + item.getJsName());
 				selectItem.setValue(depPathAndName);
 
 				/*
-				 * bir iş aynı isimli ama farklı pathlerdeki iki işe bağımlı olarak
-				 * tanımlanabiliyor, db ye de kaydediliyor ama aşağıdaki kontrol olunca güncellemek
-				 * istendiğinde sadece bir tanesi görüntülendiği için commentledim.
+				 * bir iş aynı isimli ama farklı pathlerdeki iki işe bağımlı olarak tanımlanabiliyor, db ye de kaydediliyor ama aşağıdaki kontrol olunca güncellemek istendiğinde sadece bir tanesi görüntülendiği için commentledim.
 				 * 
-				 * boolean var = false; for (SelectItem temp : manyJobDependencyList) { if
-				 * (temp.getLabel().equals(selectItem.getLabel())) var = true; }
+				 * boolean var = false; for (SelectItem temp : manyJobDependencyList) { if (temp.getLabel().equals(selectItem.getLabel())) var = true; }
 				 * 
 				 * if (!var) manyJobDependencyList.add(selectItem);
 				 */
@@ -126,10 +122,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 		localParametersTabBean.resetTab(true);
 		alarmPreferencesTabBean.resetTab();
-		
+
 	}
 
-	
 	public boolean isScenario() {
 		return isScenario;
 	}
@@ -227,7 +222,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getJsCalendarList() {
-		if(jsCalendarList == null) {
+		if (jsCalendarList == null) {
 			jsCalendarList = ComboListUtils.constructJsCalendarList(getDbOperations().getCalendars());
 		}
 		return jsCalendarList;
@@ -254,7 +249,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getoSystemList() {
-		if(oSystemList == null) {
+		if (oSystemList == null) {
 			oSystemList = ComboListUtils.constructOSystemList();
 		}
 		return oSystemList;
@@ -273,7 +268,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getTzList() {
-		if(tzList == null) {
+		if (tzList == null) {
 			tzList = ComboListUtils.constructTzList();
 		}
 		return tzList;
@@ -284,7 +279,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getTypeOfTimeList() {
-		if(typeOfTimeList == null) {
+		if (typeOfTimeList == null) {
 			typeOfTimeList = ComboListUtils.constructTypeOfTimeList();
 		}
 		return typeOfTimeList;
@@ -295,9 +290,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getAlarmList() {
-		if(alarmList == null) {
+		if (alarmList == null) {
 			alarmList = ComboListUtils.constructAlarmList(getDbOperations().getAlarms());
-		}		
+		}
 		return alarmList;
 	}
 
@@ -306,9 +301,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getDefinedAgentList() {
-		if(definedAgentList == null) {
+		if (definedAgentList == null) {
 			definedAgentList = ComboListUtils.constructDefinedAgentList(getDbOperations().getAgents());
-		}	
+		}
 		return definedAgentList;
 	}
 
@@ -317,9 +312,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getJsSLAList() {
-		if(jsSLAList == null) {
+		if (jsSLAList == null) {
 			jsSLAList = ComboListUtils.constructJsSLAList(getDbOperations().getSlaList());
-		}	
+		}
 		return jsSLAList;
 	}
 
@@ -328,9 +323,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getResourceNameList() {
-		if(resourceNameList == null) {
+		if (resourceNameList == null) {
 			resourceNameList = ComboListUtils.constructResourceNameList(getDbOperations().getResources());
-		}	
+		}
 		return resourceNameList;
 	}
 
@@ -339,9 +334,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getJobBaseTypeList() {
-		if(jobBaseTypeList == null) {
+		if (jobBaseTypeList == null) {
 			jobBaseTypeList = ComboListUtils.constructJobBaseTypeList();
-		}	
+		}
 		return jobBaseTypeList;
 	}
 
@@ -350,9 +345,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getEventTypeDefList() {
-		if(eventTypeDefList == null) {
+		if (eventTypeDefList == null) {
 			eventTypeDefList = ComboListUtils.constructEventTypeDefList();
-		}	
+		}
 		return eventTypeDefList;
 	}
 
@@ -361,7 +356,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getJobTypeDefList() {
-		if(jobTypeDefList == null) {
+		if (jobTypeDefList == null) {
 			jobTypeDefList = ComboListUtils.constructJobTypeDefList();
 		}
 		return jobTypeDefList;
@@ -372,7 +367,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getRelativeTimeOptionList() {
-		if(relativeTimeOptionList == null) {
+		if (relativeTimeOptionList == null) {
 			relativeTimeOptionList = ComboListUtils.constructRelativeTimeOptionList();
 		}
 		return relativeTimeOptionList;
@@ -383,7 +378,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getUnitTypeList() {
-		if(unitTypeList == null) {
+		if (unitTypeList == null) {
 			unitTypeList = ComboListUtils.constructUnitTypeList();
 		}
 		return unitTypeList;
@@ -394,32 +389,32 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	}
 
 	public Collection<SelectItem> getJobStateNameList() {
-		if(jobStateNameList == null) {
+		if (jobStateNameList == null) {
 			jobStateNameList = ComboListUtils.constructJobStateList();
 		}
 		return jobStateNameList;
 	}
 
 	public Collection<SelectItem> getJobSubStateNameList() {
-		if(jobSubStateNameList == null) {
+		if (jobSubStateNameList == null) {
 			jobSubStateNameList = ComboListUtils.constructJobSubStateList();
 		}
 		return jobSubStateNameList;
 	}
-	
+
 	public Collection<SelectItem> getJobStatusNameList() {
-		if(jobStatusNameList == null) {
+		if (jobStatusNameList == null) {
 			jobStatusNameList = ComboListUtils.constructJobStatusNameList();
 		}
 		return jobStatusNameList;
 	}
-	
+
 	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
 		this.jobStatusNameList = jobStatusNameList;
 	}
 
 	public Collection<SelectItem> getAgentChoiceMethodList() {
-		if(agentChoiceMethodList == null) {
+		if (agentChoiceMethodList == null) {
 			agentChoiceMethodList = ComboListUtils.constructAgentChoiceMethodList();
 		}
 		return agentChoiceMethodList;

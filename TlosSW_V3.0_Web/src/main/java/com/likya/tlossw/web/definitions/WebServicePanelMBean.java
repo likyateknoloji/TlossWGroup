@@ -92,6 +92,13 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 		updateJobDefinition();
 	}
 
+	public void sendDeploymentRequest() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		insertJobDeploymentRequest();
+	}
+
 	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 

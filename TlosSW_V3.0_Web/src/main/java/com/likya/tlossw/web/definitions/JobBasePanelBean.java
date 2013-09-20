@@ -221,10 +221,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillEnvVariablesTab();
 		fillAdvancedJobInfosTab();
 		fillLogAnalysisTab();
-
-		if (getDocumentId().equals(CommonConstantDefinitions.EXIST_MYDATA)) {
-			fillDevelopmentLifeCycleTab();
-		}
+		fillDevelopmentLifeCycleTab();
 	}
 
 	public void fillDevelopmentLifeCycleTab() {
@@ -374,6 +371,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		fillLocalParameters();
 		fillAdvancedJobInfos();
 		fillLogAnalysis();
+		fillDevelopmentLifeCycle();
+	}
+
+	protected void fillDevelopmentLifeCycle() {
+		getDevelopmentLifeCycleTabBean().fillLiveStateInfo(jobProperties);
 	}
 
 	private void fillBaseJobInfos() {
@@ -459,12 +461,12 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			}
 		}
 
-		if (isJsInsertButton() || isJsUpdateButton()) {
+		if (isJsInsertButton()) {
 			LiveStateInfos liveStateInfos = LiveStateInfos.Factory.newInstance();
 			jobProperties.getStateInfos().setLiveStateInfos(liveStateInfos);
 
 			// ilk live state bilgisini burada ekliyor
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_CREATED);
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_CREATED, StatusName.INT_DEVELOPMENT);
 
 		}/* else {
 			if (stateName != null && !stateName.equals("") && subStateName != null && !subStateName.equals("")) {
@@ -575,6 +577,15 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			fillTabs();
 		} else {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_ERROR, "tlos.error.job.update", null);
+		}
+	}
+
+	public void insertJobDeploymentRequest() {
+
+		if (getDbOperations().insertJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+			addMessage("jobDeploymentRequest", FacesMessage.SEVERITY_INFO, "tlos.success.job.deployRequest", null);
+		} else {
+			addMessage("jobDeploymentRequest", FacesMessage.SEVERITY_ERROR, "tlos.error.job.deployRequest", null);
 		}
 	}
 

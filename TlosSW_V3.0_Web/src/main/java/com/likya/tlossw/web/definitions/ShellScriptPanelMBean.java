@@ -69,6 +69,13 @@ public class ShellScriptPanelMBean extends JobBasePanelBean implements Serializa
 		updateJobDefinition();
 	}
 
+	public void sendDeploymentRequest() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		insertJobDeploymentRequest();
+	}
+
 	public static Logger getLogger() {
 		return logger;
 	}

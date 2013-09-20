@@ -65,6 +65,13 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 		updateJobDefinition();
 	}
 
+	public void sendDeploymentRequest() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		insertJobDeploymentRequest();
+	}
+
 	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);

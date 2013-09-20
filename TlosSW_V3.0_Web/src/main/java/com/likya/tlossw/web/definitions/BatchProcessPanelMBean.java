@@ -69,6 +69,13 @@ public class BatchProcessPanelMBean extends JobBasePanelBean implements Serializ
 		updateJobDefinition();
 	}
 
+	public void sendDeploymentRequest() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		insertJobDeploymentRequest();
+	}
+
 	public static Logger getLogger() {
 		return logger;
 	}
