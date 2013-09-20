@@ -136,10 +136,17 @@ return $tektek
 
 } ;
 
-declare function density:recStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $step as xs:dayTimeDuration, $reportParameters as element(rep:reportParameters) ) as node()
+declare function density:recStat($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()
 {
   (: Otomatik zaman penceresi hesabi icin :)
       
+  let $stateName := $reportParameters/state-types:LiveStateInfo/state-types:StateName/text()
+  let $substateName := $reportParameters/state-types:LiveStateInfo/state-types:SubstateName/text()
+  let $statusName := $reportParameters/state-types:LiveStateInfo/state-types:StatusName/text()
+  let $startDateTime  := xs:dateTime($reportParameters/rep:startDateTime/text())
+  let $endDateTime := xs:dateTime($reportParameters/rep:endDateTime/text())
+  let $step := hs:get-dayTimeDuration-from-dateTimes( adjust-dateTime-to-timezone( xs:dateTime($reportParameters/rep:stepForDensity ), xs:dayTimeDuration('-PT0H')))
+
   let $maxNumberOfInterval := 100
   let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
