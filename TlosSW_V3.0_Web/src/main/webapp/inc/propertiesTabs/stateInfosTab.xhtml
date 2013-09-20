@@ -81,20 +81,6 @@
 
 			</p:panel>
 
-			<p:panel header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}" rendered="#{backingBean.jsUpdateButton and !backingBean.scenario}">
-				<p:panelGrid columns="4">
-					<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
-					<p:selectOneMenu value="#{backingBean.stateName}" style="width: 100pt">
-						<f:selectItem itemLabel="PENDING" itemValue="PENDING" />
-					</p:selectOneMenu>
-
-					<h:outputText value="#{msgs['tlos.popup.dependency.substate']}" />
-					<p:selectOneMenu value="#{backingBean.subStateName}" style="width: 100pt">
-						<f:selectItem itemLabel="CREATED" itemValue="CREATED" />
-						<f:selectItem itemLabel="DEACTIVATED" itemValue="DEACTIVATED" />
-					</p:selectOneMenu>
-				</p:panelGrid>
-			</p:panel>
 		</p:tab>
 	</ui:composition>
 </h:body>
