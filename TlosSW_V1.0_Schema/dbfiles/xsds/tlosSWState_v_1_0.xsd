@@ -73,6 +73,10 @@
                 <xs:enumeration value="BYTIME"/>
                 <xs:enumeration value="BYUSER"/>
                 <xs:enumeration value="BYEVENT"/>
+                <xs:enumeration value="DEVELOPMENT"/>
+                <xs:enumeration value="TEST"/>
+                <xs:enumeration value="REQUEST"/>
+                <xs:enumeration value="DEPLOYED"/>
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
@@ -93,6 +97,7 @@
             <xs:restriction base="xs:string">
                 <xs:enumeration value="CREATED"/>
                 <xs:enumeration value="DEACTIVATED"/>
+                <xs:enumeration value="DEPLOYMENT"/>
                 <xs:enumeration value="VALIDATED"/>
                 <xs:enumeration value="IDLED"/>
                 <xs:enumeration value="READY"/>
