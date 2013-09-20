@@ -10,15 +10,20 @@
 	<ui:composition>
 		<p:tab id="devLifeCycleTab"
 			title="#{msgs['tlos.workspace.pannel.job.developmentLifeCycle']}"
-			rendered="#{sessionMediator.documentId eq 'mydata'}">
+			rendered="#{backingBean.statusName eq 'TEST'}">
 
 			<p:panel id="statePanel" header="#{msgs['tlos.workspace.pannel.job.jobStateDef']}">
-				<p:panelGrid columns="2">
+				<p:panelGrid columns="3">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.status']}" />
 					<p:selectOneMenu value="#{backingBean.subStateName}" style="width: 100pt" >
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.jobSubStateNameList}" />
+						<p:ajax update="statePanel"></p:ajax>
 					</p:selectOneMenu>
+					
+					<p:commandButton value="#{msgs['tlos.button.deploymentRequest']}" 
+						rendered="#{backingBean.subStateName eq 'DEPLOYMENT'}" 
+						action="#{backingBean.jsBasePanelMBean['sendDeploymentRequest']}" />
 				</p:panelGrid>
 			</p:panel>
 			

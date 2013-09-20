@@ -9,7 +9,13 @@
 	<h:form id="jobDeploymentForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
 
-		<p:tree value="#{deploymentTree.root}" var="node" id="deploymentTree"
+		<p:contextMenu for="deploymentTree" nodeType="job">
+			<p:menuitem value="#{msgs['tlos.button.deploy']}"
+				action="#{jsNavigationMBean.deployJobAction('deploymentdata')}"
+				icon="ui-icon-deploy" update=":jsTreeForm:tree"/>
+		</p:contextMenu>
+
+		<p:tree id="deploymentTree" value="#{deploymentTree.root}" var="node"
 			animate="true" style="width:296px;height:720px" dynamic="true"
 			selectionMode="single" selection="#{deploymentTree.selectedJS}">
 
@@ -17,8 +23,8 @@
 				listener="#{deploymentTree.onNodeExpand}" />
 			<p:ajax event="collapse" update=":jobDeploymentForm:messages"
 				listener="#{deploymentTree.onNodeCollapse}" />
-			<p:ajax event="select" update=":jobDeploymentForm:messages"
-				listener="#{deploymentTree.onNodeSelect}" />
+			<p:ajax event="select" update=":jobDefinitionForm"
+				listener="#{jsNavigationMBean.onDeploymentNodeSelect}" />
 			<p:ajax event="unselect" update=":jobDeploymentForm:messages"
 				listener="#{deploymentTree.onNodeUnselect}" />
 
