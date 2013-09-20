@@ -12,7 +12,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -292,11 +291,6 @@ public class DeploymentTree extends TlosSWBaseBean implements Serializable {
 	public void onNodeCollapse(NodeCollapseEvent event) {
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
 		// event.getTreeNode().toString() + " collapsed", null);
-	}
-
-	public void onNodeSelect(NodeSelectEvent event) {
-		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
-		// event.getTreeNode().toString() + " selected", null);
 	}
 
 	public void onNodeUnselect(NodeUnselectEvent event) {
