@@ -202,9 +202,11 @@
 				<xs:element name="includedJobs" default="ALL" type="filterByResult" />
 				<xs:element name="startDateTime" minOccurs="0" type="dateTimeType" />
 				<xs:element name="endDateTime" minOccurs="0" type="dateTimeType" />
-				<xs:element name="stepForDensity" minOccurs="0" type="timeType" />
-				<xs:element ref="state-types:LiveStateInfo" maxOccurs="unbounded" />
+				<xs:element name="stepForDensity" minOccurs="0" type="dateTimeType" />
+				<xs:element ref="state-types:LiveStateInfo" minOccurs="0"/>
 			</xs:sequence>
+			<xs:attribute name="includeNonResultedJobs" default="false" use="optional"
+				type="xs:boolean" />
 			<xs:attribute name="jobId" default="0" use="optional"
 				type="xs:string" />
 			<xs:attribute name="justFirstLevel" default="false" use="optional"
