@@ -2,18 +2,23 @@ package com.likya.tlossw.web.mng.reports.helpers;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.Calendar;
 
-import javax.faces.bean.ManagedProperty;
 import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 import org.xmldb.api.base.XMLDBException;
 
+import com.likya.tlos.model.xmlbeans.report.FilterByResult;
 import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
 import com.likya.tlos.model.xmlbeans.report.OrderByType;
 import com.likya.tlos.model.xmlbeans.report.OrderByType.Enum;
 import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
+import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.db.DBOperations;
 
@@ -53,7 +58,7 @@ public class ReportsParameters implements Serializable {
 		includeNonResultedJobs = true;
 		jobId = "0";
 		justFirstLevel = false;
-		maxNumberOfElement = new BigInteger("1");
+		maxNumberOfElement = BigInteger.valueOf(1);
 		refRunIdBoolean = true;
 		runId = new BigInteger("0");
 		scenarioId = "0";
@@ -66,7 +71,23 @@ public class ReportsParameters implements Serializable {
 		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 
-		reportParameters.setIncludeNonResultedJobs(includeNonResultedJobs);
+		Calendar startDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul");
+		Calendar endDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"),"Europe/Istanbul");
+
+		Calendar stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.intervalCalendar(new String("1970-01-01T00:00:30"), new String("yyyy-MM-dd'T'HH:mm:ss"), "GMT-0:00");
+	      
+		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
+		
+		liveStateInfo.setStateName(StateName.RUNNING);
+		liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
+		liveStateInfo.setStatusName(StatusName.TIME_IN);
+		reportParameters.setLiveStateInfo(liveStateInfo);
+		
+		reportParameters.setIncludedJobs(FilterByResult.RESULTED);
+		reportParameters.setIncludeNonResultedJobs(true);
+		reportParameters.setStartDateTime(startDate);
+		reportParameters.setEndDateTime(endDate);
+		reportParameters.setStepForDensity(stepForDensity);
 		reportParameters.setJobId(jobId);
 		reportParameters.setJustFirstLevel(justFirstLevel);
 		reportParameters.setMaxNumberOfElement(maxNumberOfElement);
@@ -78,6 +99,7 @@ public class ReportsParameters implements Serializable {
 		reportParameters.setOrder(order);
 		reportParameters.setMaxNumOfListedJobs(maxNumOfListedJobs);
 		reportParameters.setStatSampleNumber(statSampleNumber);
+		reportParameters.setMaxNumberOfIntervals((short) 100);
 		
 		reportParametersXML = reportParameters.xmlText(xmlOptions);
 	}
