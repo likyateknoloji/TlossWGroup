@@ -450,7 +450,7 @@ declare function hs:insertJobLock($documentUrl as xs:string, $userId as xs:strin
 
 declare function hs:insertJob($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string, $jobProperty as element(dat:jobProperties),$jobPath)
 {	
-    let $dataDocumentUrl := if(compare($whichData, xs:string("mydata")) eq 0 or compare($whichData, xs:string("globaldata")) eq 0 ) 
+    let $dataDocumentUrl := if(compare($whichData, xs:string("mydata")) eq 0 or compare($whichData, xs:string("globaldata")) eq 0 or compare($whichData, xs:string("deploymentdata")) eq 0) 
 	                        then met:getDataDocument($documentUrl, $userId, $whichData)
 	                        else 
 							  if(compare($whichData, xs:string("jobTemplates")) eq 0) 
