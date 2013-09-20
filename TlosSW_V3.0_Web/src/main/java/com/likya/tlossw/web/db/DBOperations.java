@@ -1540,11 +1540,11 @@ public class DBOperations implements Serializable {
 		return agent;
 	}
 
-	public Statistics getDensityReport(String state, String substate, String status, String startDateTime, String endDateTime, String step, String reportParametersXML) throws XMLDBException {
+	public Statistics getDensityReport(String reportParametersXML) throws XMLDBException {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, state, substate, status, startDateTime, endDateTime, step, reportParametersXML);
+		String xQueryStr = localFunctionConstructor("moduleDensityCalculations.xquery", "density:recStat", CommonConstantDefinitions.densityNsUrl, reportParametersXML);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
