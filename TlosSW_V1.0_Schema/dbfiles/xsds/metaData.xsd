@@ -24,7 +24,7 @@
   <xs:element name="collection">
     <xs:complexType>
       <xs:simpleContent>
-        <xs:extension base="xs:NCName">
+        <xs:extension base="xs:string">
           <xs:attribute name="type" use="required" type="xs:NCName"/>
         </xs:extension>
       </xs:simpleContent>
