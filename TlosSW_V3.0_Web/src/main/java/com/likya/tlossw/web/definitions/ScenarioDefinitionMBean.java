@@ -606,7 +606,12 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 				&& toTree.equals(CommonConstantDefinitions.EXIST_GLOBALDATA)) {
 			scenarioPath = "/dat:TlosProcessData";
 		}
-		getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName());
+
+		if (getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName())) {
+			addMessage("jsDeployment", FacesMessage.SEVERITY_INFO, "tlos.success.js.deployment", null);
+		} else {
+			addMessage("jsDeployment", FacesMessage.SEVERITY_ERROR, "tlos.error.js.deployment", null);
+		}
 	}
 
 	/*

@@ -49,31 +49,6 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 		}
 	}
 
-	public void insertJsAction() {
-		if (validateTimeManagement()) {
-			fillJobProperties();
-			fillJobPropertyDetails();
-
-			insertJobDefinition();
-		}
-	}
-
-	public void updateJsAction() {
-		fillJobProperties();
-		fillJobPropertyDetails();
-
-		updateJobDefinition();
-	}
-
-	public void sendDeploymentRequest() {
-		if (!isJsOverrideAndDeployDialog()) {
-			fillJobProperties();
-			fillJobPropertyDetails();
-		}
-
-		insertJobDeploymentRequest();
-	}
-
 	public void fillJobPropertyDetails() {
 		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);

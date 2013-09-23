@@ -580,6 +580,34 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
+	@Override
+	public void insertJsAction() {
+		if (validateTimeManagement()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+
+			insertJobDefinition();
+		}
+	}
+
+	@Override
+	public void updateJsAction() {
+		fillJobProperties();
+		fillJobPropertyDetails();
+
+		updateJobDefinition();
+	}
+
+	@Override
+	public void sendDeploymentRequest() {
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
+
+		insertJobDeploymentRequest();
+	}
+
 	public void insertJobDeploymentRequest() {
 
 		boolean result = false;

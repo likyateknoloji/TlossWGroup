@@ -53,31 +53,6 @@ public class BatchProcessPanelMBean extends JobBasePanelBean implements Serializ
 		jobTypeDetails.setJobPath(jobPath);
 	}
 
-	public void insertJsAction() {
-		if (validateTimeManagement()) {
-			fillJobProperties();
-			fillJobPropertyDetails();
-
-			insertJobDefinition();
-		}
-	}
-
-	public void updateJsAction() {
-		fillJobProperties();
-		fillJobPropertyDetails();
-
-		updateJobDefinition();
-	}
-
-	public void sendDeploymentRequest() {
-		if (!isJsOverrideAndDeployDialog()) {
-			fillJobProperties();
-			fillJobPropertyDetails();
-		}
-
-		insertJobDeploymentRequest();
-	}
-
 	public static Logger getLogger() {
 		return logger;
 	}

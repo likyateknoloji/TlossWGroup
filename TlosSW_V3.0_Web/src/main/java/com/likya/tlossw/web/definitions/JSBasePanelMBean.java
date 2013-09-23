@@ -128,6 +128,18 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	}
 
+	@Override
+	public void sendDeploymentRequest() {
+	}
+
+	@Override
+	public void insertJsAction() {
+	}
+
+	@Override
+	public void updateJsAction() {
+	}
+
 	public void cancelOverrideJsDeployment(ActionEvent actionEvent) {
 		setJsOverrideAndDeployDialog(false);
 	}
