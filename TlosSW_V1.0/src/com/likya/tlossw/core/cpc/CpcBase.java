@@ -34,6 +34,7 @@ import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
+import com.likya.tlossw.utils.validation.XMLValidations;
 
 public abstract class CpcBase implements Runnable {
 
@@ -113,6 +114,8 @@ public abstract class CpcBase implements Runnable {
 	}
 
 	protected boolean validateJobList(JobList jobList) {
+		
+		XMLValidations.validateWithCode(jobList, myLogger);
 
 		Hashtable<String, String> testTable = new Hashtable<String, String>();
 
