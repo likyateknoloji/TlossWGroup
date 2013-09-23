@@ -12,7 +12,7 @@ public class WatchDogTimer extends Thread {
 
 	private Thread ownerOfTimer;
 	private long timeout;
-	private int counter = 0;
+	//	private int counter = 0;
 
 	private Job job;
 
@@ -27,34 +27,34 @@ public class WatchDogTimer extends Thread {
 	}
 
 	public void run() {
-		while (true) {
-			try {
-				if (timeout < 0) {
-					System.out.println("WARNING : TIME-OUT for " + job.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + "[XXXX " + timeout + "XXXX");
-					timeout = 36000;
-					System.out.println("WARNING : TIME-OUT is negative setting it to deafault " + timeout);
-				}
-				Thread.sleep(timeout);
-				if (!Boolean.parseBoolean(job.getJobRuntimeProperties().getJobProperties().getCascadingConditions().getJobAutoRetry().toString())) {
-					if (counter < 1) {
-						LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties().getJobProperties(), StateName.RUNNING, SubstateName.ON_RESOURCE, StatusName.TIME_OUT);
-						++counter;
-						myLogger.info("WatchDogTimer : Auto restart is false, waiting for last time !");
-						job.sendStatusChangeInfo(ownerOfTimer.getName());
-						continue;
-					}
-				}
+		//		while (true) {
+		try {
+			if (timeout < 0) {
+				System.out.println("WARNING : TIME-OUT for " + job.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + "[XXXX " + timeout + "XXXX");
+				timeout = 36000;
+				System.out.println("WARNING : TIME-OUT is negative setting it to deafault " + timeout);
+			}
+			Thread.sleep(timeout);
+			if (!Boolean.parseBoolean(job.getJobRuntimeProperties().getJobProperties().getCascadingConditions().getJobAutoRetry().toString())) {
+				//					if (counter < 1) {
+				LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties().getJobProperties(), StateName.RUNNING, SubstateName.ON_RESOURCE, StatusName.TIME_OUT);
+				//						++counter;
+				myLogger.info("WatchDogTimer : Auto restart is false, waiting forever !");
+				job.sendStatusChangeInfo(ownerOfTimer.getName());
+				//						continue;
+				//					}
+			} else {
 
 				myLogger.info("WatchDogTimer : Interrupting job executer !" + job.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-
 				ownerOfTimer.interrupt();
 				// job.terminate();
-			} catch (InterruptedException e) {
-				// e.printStackTrace();
 			}
-			this.job = null;
-			this.ownerOfTimer = null;
-			break;
+		} catch (InterruptedException e) {
+			// e.printStackTrace();
 		}
+		this.job = null;
+		this.ownerOfTimer = null;
+		//			break;
 	}
+	//	}
 }
