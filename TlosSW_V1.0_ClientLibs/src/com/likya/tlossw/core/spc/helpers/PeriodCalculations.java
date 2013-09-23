@@ -31,10 +31,13 @@ public class PeriodCalculations {
 		String selectedTZone = timeManagement.getTimeZone();
 		Calendar startTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
 
-		if (periodInfo.getMaxCount() == null || periodInfo.getCounter().intValue() >= periodInfo.getMaxCount().intValue()) {
+		if (periodInfo.getMaxCount() == null || (periodInfo.getCounter().intValue() + 1) >= periodInfo.getMaxCount().intValue()) {
 			return null;
 		}
 
+		System.out.println("periodInfo.getMaxCount().intValue() : " + periodInfo.getMaxCount().intValue());
+		System.out.println("periodInfo.getCounter().intValue() : " + periodInfo.getCounter().intValue());
+		
 		periodInfo.setCounter(BigInteger.valueOf(periodInfo.getCounter().intValue() + 1));
 
 		GDuration gDuration = periodInfo.getStep();
