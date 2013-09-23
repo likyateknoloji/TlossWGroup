@@ -53,6 +53,12 @@
 				action="#{jsNavigationMBean.copyScenarioAction(sessionMediator.documentId)}"
 				icon="ui-icon-copy" />
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
+				rendered="#{sessionMediator.documentId ne 'globaldata'}"
+				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
+				action="#{jSTree.reconstructJSTree(sessionMediator.documentId)}"
+				icon="ui-icon-paste" update="tree" />
+			<p:menuitem value="#{msgs['tlos.button.deployHere']}"
+				rendered="#{sessionMediator.documentId eq 'globaldata'}"
 				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
 				action="#{jSTree.reconstructJSTree(sessionMediator.documentId)}"
 				icon="ui-icon-paste" update="tree" />
