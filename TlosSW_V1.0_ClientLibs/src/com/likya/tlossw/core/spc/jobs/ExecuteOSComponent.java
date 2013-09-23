@@ -62,6 +62,17 @@ public abstract class ExecuteOSComponent extends Job {
 
 		ProcessBuilder processBuilder = null;
 		
+		/**
+		 * @author serkan taş
+		 * processBuilder.directory sets the directory of data needed for the process, 
+		 * not sets exact path of process, especially on MacOs
+		 */
+		if(jobPath.endsWith("/")) {
+			jobCommand = jobPath + jobCommand;
+		} else {
+			jobCommand = jobPath + "/" + jobCommand;
+		}
+		
 		myLogger.info(" >>" + logLabel + jobKey + " Çalıştırılacak komut : " + jobCommand);
 		
 		if (isShell) {
