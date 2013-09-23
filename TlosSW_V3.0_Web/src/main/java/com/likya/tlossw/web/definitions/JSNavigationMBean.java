@@ -296,7 +296,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
 
-		if (tlosProcessData == null || !XMLValidations.validateWithLogs(Logger.getLogger(getClass()), tlosProcessData)) {
+		if (tlosProcessData == null || !XMLValidations.validateWithXSDAndLog(Logger.getLogger(getClass()), tlosProcessData)) {
 			throw new TlosFatalException("JSNavigationMBean.switchToTestPage : TlosProcessData is null or tlosProcessData xml is damaged !");
 		}
 
