@@ -16,6 +16,7 @@ import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
+import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -336,14 +337,14 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		jobRealTime = JsRealTime.Factory.newInstance();
 
-		com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime startTimeTemp = com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime.Factory.newInstance();
+		StartTime startTimeTemp = StartTime.Factory.newInstance();
 		startTimeTemp.setTime(startTime);
 		startTimeTemp.setDate(startTime);
 		jobRealTime.setStartTime(startTimeTemp);
 
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
-		// TODO Buray� incelememiz gerekiyor 01.08.2012 Serkan Ta�
+		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
 		sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
