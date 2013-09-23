@@ -482,8 +482,6 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setNewJSName(jsBuffer.getJsName());
-
-		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
 
 	public void copyScenarioAction(String fromTree) {
