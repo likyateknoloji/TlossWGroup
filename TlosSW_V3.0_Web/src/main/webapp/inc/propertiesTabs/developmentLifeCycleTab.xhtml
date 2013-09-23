@@ -23,8 +23,26 @@
 					
 					<p:commandButton value="#{msgs['tlos.button.deploymentRequest']}" 
 						rendered="#{backingBean.subStateName eq 'DEPLOYMENT'}" 
-						action="#{backingBean.jsBasePanelMBean['sendDeploymentRequest']}" />
+						action="#{backingBean.jsBasePanelMBean['sendDeploymentRequest']}" 
+						update=":jobDefinitionForm" />
 				</p:panelGrid>
+				
+				<p:dialog id="overrideConfirmDialog" visible="#{backingBean.jsBasePanelMBean.jsOverrideAndDeployDialog}" resizable="false" showEffect="show"
+					header="#{msgs['tlos.confirm.workspace.duplicateJob.header']}" severity="alert" widgetVar="confirmation" 
+					width="300px" >
+		
+					<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJob.text']}" />
+					
+					<br/>
+					<br/>
+					<p:panel id="confirmDialogPanel">
+						<p:commandButton id="confirmOverride" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
+							actionListener="#{backingBean.jsBasePanelMBean['sendDeploymentRequest']}" update=":jobDefinitionForm" />
+						<p:commandButton id="decline" value="#{msgs['tlos.button.cancel']}" oncomplete="confirmation.hide()"
+							actionListener="#{backingBean.jsBasePanelMBean['cancelOverrideJsDeployment']}" update=":jobDefinitionForm"/>
+			    	</p:panel>
+			    </p:dialog>
+			    
 			</p:panel>
 			
 		</p:tab>
