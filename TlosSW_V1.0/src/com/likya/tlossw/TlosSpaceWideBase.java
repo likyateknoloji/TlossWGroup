@@ -138,7 +138,7 @@ public class TlosSpaceWideBase {
 		// TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfigInfo();
 		TlosConfigInfo tlosConfigInfo = DBUtils.getTlosConfig();
 
-		if (tlosConfigInfo == null || !XMLValidations.validateWithLogs(logger, tlosConfigInfo)) {
+		if (tlosConfigInfo == null || !XMLValidations.validateWithXSDAndLog(logger, tlosConfigInfo)) {
 			throw new TlosFatalException("DBUtils.getTlosConfig : getTlosConfig is null or tlosConfigInfo xml is damaged !");
 		}
 
@@ -487,7 +487,7 @@ public class TlosSpaceWideBase {
 
 			TlosProcessData tlosProcessData = DBUtils.getTlosDailyData(0, 0);
 
-			if (tlosProcessData == null || !XMLValidations.validateWithLogs(logger, tlosProcessData)) {
+			if (tlosProcessData == null || !XMLValidations.validateWithXSDAndLog(logger, tlosProcessData)) {
 				throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
 			}
 			getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
