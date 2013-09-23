@@ -1115,7 +1115,7 @@ public class DBOperations implements Serializable {
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
-		JobProperties jobProperties = JobProperties.Factory.newInstance();
+		JobProperties jobProperties = null;
 		for (Object currentObject : objectList) {
 			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
 		}

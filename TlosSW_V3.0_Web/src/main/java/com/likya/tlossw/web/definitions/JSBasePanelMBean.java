@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
@@ -44,6 +45,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	private boolean jsNameConfirmDialog = false;
 	private boolean innerJsNameDuplicate = false;
+
+	private boolean jsOverrideAndDeployDialog = false;
 
 	private boolean jsInsertButton = false;
 	private boolean jsUpdateButton = false;
@@ -123,6 +126,10 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		localParametersTabBean.resetTab(true);
 		alarmPreferencesTabBean.resetTab();
 
+	}
+
+	public void cancelOverrideJsDeployment(ActionEvent actionEvent) {
+		setJsOverrideAndDeployDialog(false);
 	}
 
 	public boolean isScenario() {
@@ -446,6 +453,14 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	public void setDevelopmentLifeCycleTabBean(DevelopmentLifeCycleTabBean developmentLifeCycleTabBean) {
 		this.developmentLifeCycleTabBean = developmentLifeCycleTabBean;
+	}
+
+	public boolean isJsOverrideAndDeployDialog() {
+		return jsOverrideAndDeployDialog;
+	}
+
+	public void setJsOverrideAndDeployDialog(boolean jsOverrideAndDeployDialog) {
+		this.jsOverrideAndDeployDialog = jsOverrideAndDeployDialog;
 	}
 
 	// public int getGmt() {

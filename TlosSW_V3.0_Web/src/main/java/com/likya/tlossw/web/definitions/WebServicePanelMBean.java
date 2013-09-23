@@ -93,8 +93,10 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 	}
 
 	public void sendDeploymentRequest() {
-		fillJobProperties();
-		fillJobPropertyDetails();
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
 
 		insertJobDeploymentRequest();
 	}

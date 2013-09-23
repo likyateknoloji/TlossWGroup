@@ -133,8 +133,10 @@ public class FileListenerPanelMBean extends JobBasePanelBean implements Serializ
 	}
 
 	public void sendDeploymentRequest() {
-		fillJobProperties();
-		fillJobPropertyDetails();
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
 
 		insertJobDeploymentRequest();
 	}

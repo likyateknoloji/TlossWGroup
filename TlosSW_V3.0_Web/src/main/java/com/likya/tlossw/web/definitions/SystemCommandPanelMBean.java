@@ -66,8 +66,10 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 	}
 
 	public void sendDeploymentRequest() {
-		fillJobProperties();
-		fillJobPropertyDetails();
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
 
 		insertJobDeploymentRequest();
 	}

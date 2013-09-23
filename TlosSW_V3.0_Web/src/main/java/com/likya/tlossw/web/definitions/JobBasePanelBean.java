@@ -582,11 +582,37 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void insertJobDeploymentRequest() {
 
-		if (getDbOperations().insertJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		boolean result = false;
+
+		if (!isJsOverrideAndDeployDialog()) {
+			if (!jobIdCheckUp()) {
+				return;
+			}
+
+			result = getDbOperations().insertJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+		} else {
+			setJsOverrideAndDeployDialog(false);
+
+			result = getDbOperations().updateJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+		}
+
+		if (result) {
 			addMessage("jobDeploymentRequest", FacesMessage.SEVERITY_INFO, "tlos.success.job.deployRequest", null);
 		} else {
 			addMessage("jobDeploymentRequest", FacesMessage.SEVERITY_ERROR, "tlos.error.job.deployRequest", null);
 		}
+	}
+
+	private boolean jobIdCheckUp() {
+
+		JobProperties job = getDbOperations().getJobFromId(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, jobProperties.getID());
+
+		if (job != null) {
+			setJsOverrideAndDeployDialog(true);
+			return false;
+		}
+
+		return true;
 	}
 
 	private boolean getJobId() {

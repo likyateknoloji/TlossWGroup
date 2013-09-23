@@ -274,8 +274,10 @@ public class FTPPanelMBean extends JobBasePanelBean implements Serializable {
 	}
 
 	public void sendDeploymentRequest() {
-		fillJobProperties();
-		fillJobPropertyDetails();
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
 
 		insertJobDeploymentRequest();
 	}

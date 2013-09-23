@@ -89,8 +89,10 @@ public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	public void sendDeploymentRequest() {
-		fillJobProperties();
-		fillJobPropertyDetails();
+		if (!isJsOverrideAndDeployDialog()) {
+			fillJobProperties();
+			fillJobPropertyDetails();
+		}
 
 		insertJobDeploymentRequest();
 	}
