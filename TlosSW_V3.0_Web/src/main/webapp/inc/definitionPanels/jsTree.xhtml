@@ -37,6 +37,34 @@
 				onclick="deleteJobConfirmation.hide()" type="button" />
 		</p:confirmDialog>
 
+		<p:dialog id="jsDeploymentDialog"
+			style="z-index: 999 !important;"
+			appendToBody="true"
+			header="#{msgs['tlos.workspace.pannel.job.deployment.options']}" severity="alert"
+			widgetVar="jsDeploymentDialog">
+			
+			<p:panelGrid columns="1" >
+				<h:outputText value="#{msgs['tlos.workspace.pannel.job.deployment.options.text']}" />
+				
+				<p:selectOneMenu value="#{jsNavigationMBean.jsDeploymentOption}" >
+					<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+					<f:selectItem itemLabel="#{msgs['tlos.combo.deploy.solstice']}" itemValue="1" />
+					<f:selectItem itemLabel="#{msgs['tlos.combo.deploy.period']}" itemValue="2" />
+					<f:selectItem itemLabel="#{msgs['tlos.combo.deploy.time']}" itemValue="3" />
+					<f:selectItem itemLabel="#{msgs['tlos.combo.deploy.now']}" itemValue="4" />
+					<p:ajax partialSubmit="true"></p:ajax>
+				</p:selectOneMenu>
+			</p:panelGrid>
+			
+			<br/>
+			<br/>
+					
+			<p:commandButton immediate="true" process="@this"
+				value="#{msgs['tlos.button.ok']}"
+				update="tree :jobDefinitionForm" onclick="jsDeploymentDialog.hide()"
+				actionListener="#{jsNavigationMBean.setJSDeploymentOption}" />
+		</p:dialog>
+
 		<p:contextMenu for="tree" nodeType="scenario">
 			<p:menuitem value="#{msgs['tlos.button.delete']}"
 				onclick="deleteScenarioConfirmation.show()" icon="ui-icon-close" >
@@ -59,9 +87,8 @@
 				icon="ui-icon-paste" update="tree" />
 			<p:menuitem value="#{msgs['tlos.button.deployHere']}"
 				rendered="#{sessionMediator.documentId eq 'globaldata'}"
-				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.documentId)}"
-				action="#{jSTree.reconstructJSTree(sessionMediator.documentId)}"
-				icon="ui-icon-paste" update="tree" />
+				onclick="jsDeploymentDialog.show()"
+				icon="ui-icon-paste" update="tree :jobDefinitionForm" />
 		</p:contextMenu>
 
 		<p:contextMenu for="tree" nodeType="job">
