@@ -136,6 +136,11 @@
 					<p:inputText value="#{backingBean.maxCount}" label="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}" 
 						type="integer" rendered="#{backingBean.jobBaseType eq 'PERIODIC'}">
 					</p:inputText>
+
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.periodic.relativeStart']}" 
+						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
+					<p:selectBooleanCheckbox value="#{backingBean.relativeStart}" rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
+
 				</p:panelGrid>
 			</p:panel>
 		</p:tab>
