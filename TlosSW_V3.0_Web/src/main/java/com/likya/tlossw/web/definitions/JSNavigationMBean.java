@@ -95,6 +95,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	private Object currentPanelMBeanRef;
 
+	private String jsDeploymentOption;
+
 	public void onNodeSelect(NodeSelectEvent event) {
 
 		WsNode wsNode = (WsNode) event.getTreeNode().getData();
@@ -534,6 +536,23 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 	}
 
+	public void deployJSAction() {
+
+		pasteJSAction(CommonConstantDefinitions.EXIST_GLOBALDATA);
+
+		getScenarioDefinitionMBean().getJsTree().reconstructJSTree(CommonConstantDefinitions.EXIST_GLOBALDATA);
+	}
+
+	public void setJSDeploymentOption(ActionEvent actionEvent) {
+
+		// TODO burada işin çalışma zamanı ayarlanacak
+		System.out.println("set deployment option");
+
+		// ConstantDefinitions.DEPLOY_SOLSTICE;
+
+		deployJSAction();
+	}
+
 	public void pasteJSAction(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 
@@ -736,6 +755,14 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setShellScriptPanelMBean(ShellScriptPanelMBean shellScriptPanelMBean) {
 		this.shellScriptPanelMBean = shellScriptPanelMBean;
+	}
+
+	public String getJsDeploymentOption() {
+		return jsDeploymentOption;
+	}
+
+	public void setJsDeploymentOption(String jsDeploymentOption) {
+		this.jsDeploymentOption = jsDeploymentOption;
 	}
 
 }

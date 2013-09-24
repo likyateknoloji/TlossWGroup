@@ -37,4 +37,13 @@ public class ConstantDefinitions {
 	public static final String DUPLICATE_NAME_AND_PATH = "1"; // ayni path de aynı isimde bir iş/senaryo varsa 1
 	public static final String INNER_DUPLICATE_NAME = "2"; // iç senaryolarda aynı isimde bir iş/senaryo varsa 2
 	public static final String OUTER_DUPLICATE_NAME = "3"; // senaryonun dışında aynı isimde bir iş/senaryo varsa 3
+
+	/**
+	 * Deployment seçenekleri
+	 */
+	public static final String DEPLOY_SOLSTICE = "1";
+	public static final String DEPLOY_PERIOD = "2";
+	public static final String DEPLOY_TIME = "3";
+	public static final String DEPLOY_NOW = "4";
+
 }
