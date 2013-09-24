@@ -32,6 +32,7 @@ public class BaseJobInfosTabBean implements Serializable{
 	/* periodic job */
 	private String periodTime;
 	private int maxCount;
+	private boolean relativeStart = true;
 
 	private String jobBaseType;
 
@@ -53,6 +54,7 @@ public class BaseJobInfosTabBean implements Serializable{
 		jobBaseType = JobBaseType.NON_PERIODIC.toString();
 		periodTime = "";
 		maxCount = 0;
+		relativeStart = true;
 		jobTypeDef = JobTypeDef.TIME_BASED.toString();
 		eventTypeDef = EventTypeDef.FILE.toString();
 	}
@@ -77,6 +79,8 @@ public class BaseJobInfosTabBean implements Serializable{
 				if (periodInfo.getMaxCount() != null) {
 					maxCount = periodInfo.getMaxCount().intValue();
 				}
+
+				relativeStart = periodInfo.getRelativeStart();
 			}
 
 			if (jobTypeDef.equals(JobTypeDef.EVENT_BASED.toString())) {
@@ -131,6 +135,8 @@ public class BaseJobInfosTabBean implements Serializable{
 			if (maxCount > 0) {
 				periodInfo.setMaxCount(BigInteger.valueOf(maxCount));
 			}
+
+			periodInfo.setRelativeStart(relativeStart);
 		}
 
 		jobInfos.setJobTypeDef(JobTypeDef.Enum.forString(jobTypeDef));
@@ -241,6 +247,14 @@ public class BaseJobInfosTabBean implements Serializable{
 
 	public void setMaxCount(int maxCount) {
 		this.maxCount = maxCount;
+	}
+
+	public boolean isRelativeStart() {
+		return relativeStart;
+	}
+
+	public void setRelativeStart(boolean relativeStart) {
+		this.relativeStart = relativeStart;
 	}
 
 }
