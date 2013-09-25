@@ -27,7 +27,8 @@
 			</p:column>
 									
 			<p:column headerText="#{msgs['tlos.live.pannel.job.jobName']}" sortBy="#{item.jobName}" filterBy="#{item.jobName}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow">
-				<h:outputText value="#{item.jobName}"  />
+				<p:commandLink value="#{item.jobName}" action="#{backingBean.openJobConfirmDialogAction}"
+					update=":liveForm" oncomplete="jobConfirmDialog.show()" />
 			</p:column>
 
 			<!-- p:column headerText="#{msgs['tlos.live.pannel.job.stateInfo']}" sortBy="#{item.liveStateInfo.stateName}" filterBy="#{item.liveStateInfo.stateName}" filterMatchMode="contains" style="text-align: center;" styleClass="myShadow">
@@ -114,6 +115,25 @@
 				</h:panelGrid>
 			</p:panel>
 		</p:dialog>
+
+		<p:confirmDialog id="jobConfirmDialog"
+			style="z-index: 999 !important;"
+			header="#{msgs['tlos.ask.switch.job.panel']}" appendToBody="true"
+			message="#{msgs['tlos.ask.switch.job.panel.confirm']}" severity="alert"
+			widgetVar="jobConfirmDialog">
+			<p:commandButton immediate="true" process="@this"
+				value="#{msgs['tlos.button.ok']}"
+				rendered="#{backingBean.scenarioPanel}"
+				update=":liveForm" onclick="jobConfirmDialog.hide()"
+				actionListener="#{liveMBean.openJobPageAction(backingBean.selectedRow)}" />
+			<p:commandButton immediate="true" process="@this"
+				value="#{msgs['tlos.button.ok']}"
+				rendered="#{!backingBean.scenarioPanel}"
+				update=":liveForm" onclick="jobConfirmDialog.hide()"
+				actionListener="#{liveResourceMBean.openJobPageAction(backingBean.selectedRow)}" />
+			<p:commandButton value="#{msgs['tlos.button.cancel']}"
+				onclick="jobConfirmDialog.hide()" type="button" />
+		</p:confirmDialog>
 
 	</ui:composition>
 </h:body>
