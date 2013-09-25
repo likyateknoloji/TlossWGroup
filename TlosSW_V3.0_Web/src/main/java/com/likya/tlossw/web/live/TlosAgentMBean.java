@@ -46,6 +46,8 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 
 	private boolean transformToLocalTime;
 
+	private boolean isScenarioPanel = false;
+
 	private LiveJobManagementBean liveJobManagementBean;
 
 	@PostConstruct
@@ -87,7 +89,11 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 	public void refreshTlosAgentPanel() {
 		initializeTlosAgentPanel(tlosAgentInfoTypeClient.getAgentId());
 	}
-	
+
+	public void openJobConfirmDialogAction() {
+		selectedRow = (JobInfoTypeClient) jobDataTable.getRowData();
+	}
+
 	@Override
 	public void refreshLivePanel(String scenarioPath) {
 	}
@@ -184,6 +190,14 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 	public JobInfoTypeClient getJobInTyCl() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean isScenarioPanel() {
+		return isScenarioPanel;
+	}
+
+	public void setScenarioPanel(boolean isScenarioPanel) {
+		this.isScenarioPanel = isScenarioPanel;
 	}
 
 }

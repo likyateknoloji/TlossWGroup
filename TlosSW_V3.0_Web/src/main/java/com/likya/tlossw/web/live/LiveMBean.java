@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -63,11 +64,17 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 
 	}
 
+	public void openJobPageAction(JobInfoTypeClient job) {
+		getJobMBean().fillJobLivePanel(job.getTreePath(), job.getJobId());
+
+		liveJSTable = JOB_PAGE;
+	}
+
 	public void viewScenarioTree() {
 		liveJSTable = GRAPH_PAGE;
 		getScenarioMBean().setSelectedPanel(ConstantDefinitions.LIVE_TREE);
 		if(getScenarioMBean().getSpcInfoTypeClient()==null) {
-			addMessage("viewScenarioTre", FacesMessage.SEVERITY_INFO,
+			addMessage("viewScenarioTree", FacesMessage.SEVERITY_INFO,
 			  " You have to choose a Scenario first !", null);
 		}
 		else getScenarioMBean().setSelectedScenarioId(getScenarioMBean().getSpcInfoTypeClient().getSpcId());

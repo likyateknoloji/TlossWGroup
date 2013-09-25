@@ -57,6 +57,8 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	private LiveJobManagementBean liveJobManagementBean;
 	
 	private HashMap<Integer, String> jobIcons = null;
+
+	private boolean isScenarioPanel = true;
 	
 	@PostConstruct
 	public void init() {
@@ -178,6 +180,10 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	@Override
 	public JobInfoTypeClient getJobInTyCl() {
 		return null;
+	}
+
+	public void openJobConfirmDialogAction() {
+		selectedRow = (JobInfoTypeClient) jobDataTable.getRowData();
 	}
 
 	public ArrayList<JobInfoTypeClient> getJobInfoList() {
@@ -310,6 +316,14 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 
 	public void setJobIcons(HashMap<Integer, String> jobIcons) {
 		this.jobIcons = jobIcons;
+	}
+
+	public boolean isScenarioPanel() {
+		return isScenarioPanel;
+	}
+
+	public void setScenarioPanel(boolean isScenarioPanel) {
+		this.isScenarioPanel = isScenarioPanel;
 	}
 
 }

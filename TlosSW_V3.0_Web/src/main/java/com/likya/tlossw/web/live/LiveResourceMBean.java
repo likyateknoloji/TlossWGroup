@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
@@ -90,6 +91,12 @@ public class LiveResourceMBean extends TlosSWBaseBean implements Serializable {
 
 			activeLivePanel = MONITORAGENT_PANEL;
 		}
+	}
+
+	public void openJobPageAction(JobInfoTypeClient job) {
+		getJobMBean().fillJobLivePanel(job.getTreePath(), job.getJobId());
+
+		activeLivePanel = JOB_PANEL;
 	}
 
 	public String getActiveLivePanel() {
