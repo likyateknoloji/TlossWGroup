@@ -100,6 +100,13 @@
 
 					</p:panel>
 				</p:dashboard>
+
+				<br />
+
+				<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+					<ui:param name="backingBean" value="#{zonesOfExecutionsMBean}" />
+				</ui:include>
+
 			</p:fieldset>
 
 		</h:form>

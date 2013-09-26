@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:commandButton style="float:right;"
+		value="#{msgs['tlos.button.chart.changeParams']}"
+		oncomplete="parametersDialog.show();"
+		update=":dashboardReports:parametersPanel" />
+
+	<p:dialog id="paramDialog" widgetVar="parametersDialog" resizable="false" 
+		showEffect="show" header="#{msgs['tlos.report.param.header']}">
+		<p:panelGrid columns="4" id="parametersPanel">
+			<h:outputText value="#{msgs['tlos.report.param.jobId']}" />
+			<p:inputText value="#{backingBean.reportParameters.jobId}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.runId']}" />
+			<p:inputText value="#{backingBean.reportParameters.runId}" type="integer" />
+
+			<h:outputText value="#{msgs['tlos.report.param.refRunIdBoolean']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.refRunIdBoolean}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.maxNumberOfElement']}" />
+			<p:inputText value="#{backingBean.reportParameters.maxNumberOfElement}" type="integer" />
+		</p:panelGrid>
+
+		<br />
+
+		<p:panelGrid columns="4" rendered="#{backingBean.activeReportPanel ne 'stateReport'}">
+			<h:outputText value="#{msgs['tlos.report.param.includeNonResultedJobs']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.includeNonResultedJobs}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.justFirstLevel']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.justFirstLevel}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.scenarioId']}" />
+			<p:inputText value="#{backingBean.reportParameters.scenarioId}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.isCumulative']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.isCumulative}" />
+
+			<h:outputText value="#{msgs['tlos.report.param.maxNumOfListedJobs']}" />
+			<p:inputText value="#{backingBean.reportParameters.maxNumOfListedJobs}" type="integer" />
+
+			<h:outputText value="#{msgs['tlos.report.param.order']}" />
+			<p:selectOneMenu value="#{backingBean.reportParameters.order}" style="width: 100pt">
+				<f:selectItems value="#{backingBean.orderList}" />
+			</p:selectOneMenu>
+
+			<h:outputText value="#{msgs['tlos.report.param.orderBy']}" />
+			<p:selectOneMenu value="#{backingBean.reportParameters.orderBy}" style="width: 100pt">
+				<f:selectItems value="#{backingBean.orderByList}" />
+			</p:selectOneMenu>
+		</p:panelGrid>
+
+		<br />
+
+		<p:panelGrid id="filterAndTimePanel" columns="4" 
+			rendered="#{backingBean.activeReportPanel eq 'zonesReport' or backingBean.activeReportPanel eq 'densityReport'}" >
+			<h:outputText value="#{msgs['tlos.report.param.includedJobs']}" />
+			<p:selectOneMenu value="#{backingBean.reportParameters.includedJobs}" style="width: 100pt">
+				<f:selectItems value="#{backingBean.includedJobsTypeList}" />
+				<p:ajax partialSubmit="true"></p:ajax>
+			</p:selectOneMenu>
+
+			<h:outputText value="#{msgs['tlos.report.param.enterTimeInterval']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.enterTimeInterval}">
+				<p:ajax update="filterAndTimePanel"></p:ajax>
+			</p:selectBooleanCheckbox>
+
+			<h:outputText value="#{msgs['tlos.report.param.startDate']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:calendar value="#{backingBean.reportParameters.startDate}" id="startDate" showOn="focus" navigator="true"
+				rendered="#{backingBean.enterTimeInterval}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</p:calendar>
+
+			<h:outputText value="#{msgs['tlos.report.param.startTime']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:inputMask value="#{backingBean.reportParameters.startTime}" mask="99:99:99" rendered="#{backingBean.enterTimeInterval}"/>
+
+			<h:outputText value="#{msgs['tlos.report.param.endDate']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:calendar value="#{backingBean.reportParameters.endDate}" id="endDate" showOn="focus" navigator="true"
+				rendered="#{backingBean.enterTimeInterval}">
+				<f:convertDateTime pattern="dd.MM.yyyy" />
+			</p:calendar>
+
+			<h:outputText value="#{msgs['tlos.report.param.endTime']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:inputMask value="#{backingBean.reportParameters.endTime}" mask="99:99:99" rendered="#{backingBean.enterTimeInterval}"/>
+
+			<h:outputText value="#{msgs['tlos.report.param.maxNumberOfIntervals']}" />
+			<p:inputText value="#{backingBean.reportParameters.maxNumberOfIntervals}" type="integer" >
+				<p:ajax partialSubmit="true"></p:ajax>
+			</p:inputText>
+		</p:panelGrid>
+
+		<br />
+
+		<h:panelGrid id="statePanel" columns="1"
+			rendered="#{backingBean.activeReportPanel eq 'zonesReport' or backingBean.activeReportPanel eq 'densityReport'}">
+
+			<h:panelGrid columns="2">
+				<h:outputText style="font-size:0.9em" value="#{msgs['tlos.report.param.selectStateDepth']}" />
+				<p:selectOneRadio value="#{backingBean.stateDepthType}">
+					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.status']}" itemValue="Status" />
+					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.substate']}" itemValue="SubState" />
+					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.state']}" itemValue="State" />
+					<p:ajax update="statePanel" />
+				</p:selectOneRadio>
+			</h:panelGrid>
+
+			<p:panelGrid columns="2">
+				<h:outputText value="#{msgs['tlos.popup.dependency.state']}" rendered="#{backingBean.stateDepthType eq 'State'}" />
+				<p:selectOneMenu value="#{backingBean.stateName}" rendered="#{backingBean.stateDepthType eq 'State'}">
+					<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+					<f:selectItems value="#{backingBean.stateNameList}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="#{msgs['tlos.popup.dependency.substate']}" rendered="#{backingBean.stateDepthType eq 'SubState'}" />
+				<p:selectOneMenu value="#{backingBean.substateName}" rendered="#{backingBean.stateDepthType eq 'SubState'}">
+					<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+					<f:selectItems value="#{backingBean.substateNameList}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="#{msgs['tlos.popup.dependency.status']}" rendered="#{backingBean.stateDepthType eq 'Status'}" />
+				<p:selectOneMenu value="#{backingBean.statusName}" rendered="#{backingBean.stateDepthType eq 'Status'}">
+					<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+					<f:selectItems value="#{backingBean.statusNameList}" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+
+		</h:panelGrid>
+
+		<br />
+
+		<p:panelGrid columns="2" rendered="#{backingBean.activeReportPanel eq 'densityReport'}">
+			<h:outputText value="#{msgs['tlos.report.param.stepForDensity']}" />
+			<p:inputMask value="#{backingBean.reportParameters.stepForDensity}" mask="99:99:99" />
+		</p:panelGrid>
+
+		<p:panelGrid columns="2" rendered="#{backingBean.activeReportPanel eq 'zonesReport'}">
+			<h:outputText value="#{msgs['tlos.report.param.statSampleNumber']}" />
+			<p:inputText value="#{backingBean.reportParameters.statSampleNumber}" type="integer" />
+		</p:panelGrid>
+
+		<p:commandButton style="float:right;"
+			value="#{msgs['tlos.button.ok']}"
+			actionListener="#{backingBean.refreshReport}"
+			oncomplete="parametersDialog.hide();"
+			update=":dashboardReports" />
+
+		<br />
+		<br />
+
+	</p:dialog>
+
+</ui:composition>

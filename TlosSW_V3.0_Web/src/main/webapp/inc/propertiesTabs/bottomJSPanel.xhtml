@@ -1,80 +1,76 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:body>
-	<ui:composition>
-		<p:commandButton style="float:right;"
-			value="#{msgs['tlos.button.save']}"
-			rendered="#{backingBean.jsInsertButton}"
-			oncomplete="jsActiveDialog.show()"
-			update=":jobDefinitionForm:jsActivePanel" />
+	<p:commandButton style="float:right;"
+		value="#{msgs['tlos.button.save']}"
+		rendered="#{backingBean.jsInsertButton}"
+		oncomplete="jsActiveDialog.show()"
+		update=":jobDefinitionForm:jsActivePanel" />
 
-		<p:commandButton style="float:right;"
-			value="#{msgs['tlos.button.update']}"
-			rendered="#{backingBean.jsUpdateButton}"
-			oncomplete="jsActiveDialog.show()"
-			update=":jobDefinitionForm:jsActivePanel" />
-			
-		<p:commandButton style="float:right;" immediate="true"
-			value="#{msgs['tlos.button.cancel']}" 
-			action="#{jsNavigationMBean.cancelJsAction}"
-			update=":jobDefinitionForm :jsTreeForm"
-			oncomplete="activateDraggable()"/>
+	<p:commandButton style="float:right;"
+		value="#{msgs['tlos.button.update']}"
+		rendered="#{backingBean.jsUpdateButton}"
+		oncomplete="jsActiveDialog.show()"
+		update=":jobDefinitionForm:jsActivePanel" />
+		
+	<p:commandButton style="float:right;" immediate="true"
+		value="#{msgs['tlos.button.cancel']}" 
+		action="#{jsNavigationMBean.cancelJsAction}"
+		update=":jobDefinitionForm :jsTreeForm"
+		oncomplete="activateDraggable()"/>
 
-		<p:dialog id="jsActiveDialog" widgetVar="jsActiveDialog" resizable="false" showEffect="show">
-			<p:panelGrid columns="3" id="jsActivePanel">
-				<h:outputText value="#{msgs['tlos.workspace.pannel.job.jsActive']}" />
-				<p:selectBooleanCheckbox value="#{backingBean.jsActive}" />
+	<p:dialog id="jsActiveDialog" widgetVar="jsActiveDialog" resizable="false" showEffect="show">
+		<p:panelGrid columns="3" id="jsActivePanel">
+			<h:outputText value="#{msgs['tlos.workspace.pannel.job.jsActive']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.jsActive}" />
 
-				<p:commandButton value="#{msgs['tlos.button.ok']}"
-					rendered="#{backingBean.jsInsertButton}"
-					action="#{backingBean['insertJsAction']}"
-					update=":jobDefinitionForm :jsTreeForm:tree" 
-					oncomplete="jsActiveDialog.hide();" 
-					onsuccess="activateDraggable()"/>
+			<p:commandButton value="#{msgs['tlos.button.ok']}"
+				rendered="#{backingBean.jsInsertButton}"
+				action="#{backingBean['insertJsAction']}"
+				update=":jobDefinitionForm :jsTreeForm:tree" 
+				oncomplete="jsActiveDialog.hide();" 
+				onsuccess="activateDraggable()"/>
 
-				<p:commandButton value="#{msgs['tlos.button.ok']}"
-					rendered="#{backingBean.jsUpdateButton}"
-					action="#{backingBean['updateJsAction']}"
-					update=":jobDefinitionForm :jsTreeForm:tree" 
-					oncomplete="jsActiveDialog.hide();" 
-					onsuccess="activateDraggable()"/>
-			</p:panelGrid>
-		</p:dialog>
+			<p:commandButton value="#{msgs['tlos.button.ok']}"
+				rendered="#{backingBean.jsUpdateButton}"
+				action="#{backingBean['updateJsAction']}"
+				update=":jobDefinitionForm :jsTreeForm:tree" 
+				oncomplete="jsActiveDialog.hide();" 
+				onsuccess="activateDraggable()"/>
+		</p:panelGrid>
+	</p:dialog>
 
-		<p:dialog id="jsNameConfirmDialog" visible="#{backingBean.jsNameConfirmDialog}" resizable="false" showEffect="show"
-			header="#{msgs['tlos.confirm.workspace.duplicateJSName.header']}" severity="alert" widgetVar="confirmation" 
-			width="300px">
+	<p:dialog id="jsNameConfirmDialog" visible="#{backingBean.jsNameConfirmDialog}" resizable="false" showEffect="show"
+		header="#{msgs['tlos.confirm.workspace.duplicateJSName.header']}" severity="alert" widgetVar="confirmation" 
+		width="300px">
 
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.inner']}" 
-				rendered="#{backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.outer']}" 
-				rendered="#{!backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
-			
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.inner']}" 
-				rendered="#{backingBean.innerJsNameDuplicate and backingBean.scenario}" />
-			<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.outer']}" 
-				rendered="#{!backingBean.innerJsNameDuplicate and backingBean.scenario}" />
+		<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.inner']}" 
+			rendered="#{backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
+		<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateJobName.outer']}" 
+			rendered="#{!backingBean.innerJsNameDuplicate and !backingBean.scenario}" />
+		
+		<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.inner']}" 
+			rendered="#{backingBean.innerJsNameDuplicate and backingBean.scenario}" />
+		<h:outputText value="#{msgs['tlos.confirm.workspace.duplicateScenarioName.outer']}" 
+			rendered="#{!backingBean.innerJsNameDuplicate and backingBean.scenario}" />
 
-			<br/>
-			<br/>
-			<p:panel id="confirmDialogPanel">
-				<p:commandButton id="confirmInsert" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['insertJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jsInsertButton}" onsuccess="activateDraggable()"/>
-				<p:commandButton id="confirmUpdate" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['updateJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
-					rendered="#{backingBean.jsUpdateButton}" onsuccess="activateDraggable()"/>
-				<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
-					actionListener="#{backingBean['cancelInsertOrUpdateJsAction']}"/>
-	    	</p:panel>
-	    </p:dialog>
+		<br/>
+		<br/>
+		<p:panel id="confirmDialogPanel">
+			<p:commandButton id="confirmInsert" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
+				actionListener="#{backingBean['insertJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
+				rendered="#{backingBean.jsInsertButton}" onsuccess="activateDraggable()"/>
+			<p:commandButton id="confirmUpdate" value="#{msgs['tlos.button.yes']}" oncomplete="confirmation.hide()"
+				actionListener="#{backingBean['updateJsWithDuplicateName']}" update=":jobDefinitionForm :jsTreeForm:tree"
+				rendered="#{backingBean.jsUpdateButton}" onsuccess="activateDraggable()"/>
+			<p:commandButton id="decline" value="#{msgs['tlos.button.no']}" oncomplete="confirmation.hide()"
+				actionListener="#{backingBean['cancelInsertOrUpdateJsAction']}"/>
+    	</p:panel>
+    </p:dialog>
 
-	</ui:composition>
-</h:body>
-</html>
+</ui:composition>

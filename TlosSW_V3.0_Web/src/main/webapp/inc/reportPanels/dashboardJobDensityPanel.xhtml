@@ -40,6 +40,12 @@
 						actionListener="#{jobsDensityGraphicsMBean.changeDensityStep}" />
 				</p:panel>
 
+				<br />
+
+				<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+					<ui:param name="backingBean" value="#{jobsDensityGraphicsMBean}" />
+				</ui:include>
+		
 			</p:fieldset>
 
 		</h:form>
