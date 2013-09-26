@@ -147,6 +147,12 @@ public class TlosSpaceWideBase {
 	}
 
 	protected void initApplication() {
+		
+		String isDebug = System.getProperty("LTDEBUG");
+		
+		if (isDebug != null) {
+			SpaceWideRegistry.isDebug = Boolean.parseBoolean(isDebug);
+		}
 
 		ResourceBundle resourceBaundle = null;
 		try {
