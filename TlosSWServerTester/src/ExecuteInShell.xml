@@ -14,8 +14,10 @@
 			<com:jobTypeDef>TIME BASED</com:jobTypeDef>
 			<com:jobTypeDetails>
 				<com:jobCommandType></com:jobCommandType>
-				<com:jobCommand>open iPhoto.app</com:jobCommand>
-				<com:jobPath>/Applications</com:jobPath>
+				<com:jobCommand>job1.sh</com:jobCommand>
+				<com:jobPath>/Users/serkan/Desktop/tlosTest</com:jobPath>
+				<!-- com:jobCommand>open iPhoto.app</com:jobCommand>
+				<com:jobPath>/Applications</com:jobPath-->
 			</com:jobTypeDetails>
 		</dat:jobInfos>
 		<dat:calendarId>5</dat:calendarId>
@@ -90,8 +92,8 @@
 		</dat:jsPlannedTime>
 		<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 		<dat:jsTimeOut>
-			<com:value_integer>1</com:value_integer>
-			<com:unit>MINUTES</com:unit>
+			<com:value_integer>15</com:value_integer>
+			<com:unit>SECONDS</com:unit>
 		</dat:jsTimeOut>
 		<dat:expectedTime>
 			<com:value_integer>100</com:value_integer>
