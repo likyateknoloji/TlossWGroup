@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -35,6 +36,9 @@ import com.likya.tlos.model.xmlbeans.calendar.ValidFromDocument.ValidFrom;
 import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
 import com.likya.tlos.model.xmlbeans.common.DateDocument.Date;
 import com.likya.tlos.model.xmlbeans.common.TimeDocument.Time;
+import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
+import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 
 public class DefinitionUtils {
 
@@ -494,6 +498,44 @@ public class DefinitionUtils {
 			return id;
 		else
 			return null;
+	}
+
+	public static HashMap<String, String> fillStatusToSubstateList() {
+
+		HashMap<String, String> statusToSubstate = new HashMap<String, String>();
+
+		statusToSubstate.put(StatusName.SUCCESS.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.WARNING.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.FAILED.toString(), SubstateName.COMPLETED.toString());
+		statusToSubstate.put(StatusName.TIME_IN.toString(), SubstateName.ON_RESOURCE.toString());
+		statusToSubstate.put(StatusName.TIME_OUT.toString(), SubstateName.ON_RESOURCE.toString());
+		statusToSubstate.put(StatusName.LOOKFOR_RESOURCE.toString(), SubstateName.READY.toString());
+		statusToSubstate.put(StatusName.WAITING.toString(), SubstateName.READY.toString());
+		statusToSubstate.put(StatusName.TRANSFERING.toString(), SubstateName.READY.toString());
+
+		return statusToSubstate;
+	}
+
+	public static HashMap<String, String> fillSubstateToStateList() {
+
+		HashMap<String, String> substateToState = new HashMap<String, String>();
+
+		substateToState.put(SubstateName.COMPLETED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.SKIPPED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.STOPPED.toString(), StateName.FINISHED.toString());
+		substateToState.put(SubstateName.STAGE_OUT.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.MIGRATING.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.ON_RESOURCE.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.HELD.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.STAGE_IN.toString(), StateName.RUNNING.toString());
+		substateToState.put(SubstateName.PAUSED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.READY.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.IDLED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.VALIDATED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.CREATED.toString(), StateName.PENDING.toString());
+		substateToState.put(SubstateName.DEACTIVATED.toString(), StateName.PENDING.toString());
+
+		return substateToState;
 	}
 
 }

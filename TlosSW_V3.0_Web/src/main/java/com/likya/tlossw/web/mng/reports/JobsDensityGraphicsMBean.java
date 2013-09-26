@@ -13,31 +13,23 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.MeterGaugeChartModel;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
-import com.likya.tlos.model.xmlbeans.report.OrderByType;
-import com.likya.tlos.model.xmlbeans.report.OrderType;
-import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
 import com.likya.tlos.model.xmlbeans.report.StatisticsDocument.Statistics;
-import com.likya.tlossw.utils.transform.TransformUtils;
-import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "jobsDensityGraphicsMBean")
 @ViewScoped
-public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
+public class JobsDensityGraphicsMBean extends ReportBase implements
 		Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
@@ -63,8 +55,6 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 	private ArrayList<Job> jobsArray;
 
-	ReportsParameters reportParameters = null;
-
 	@PostConstruct
 	public void init() {
 
@@ -79,6 +69,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 		logger.info("end : init");
 
+		setActiveReportPanel(ConstantDefinitions.JOB_DENSITY_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -130,7 +121,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 		denseModel = new CartesianChartModel();
 
-		reportParameters = new ReportsParameters();
+		setReportParameters(new ReportsParameters());
 		
 		//ReportParameters reportParameters = ReportParameters.Factory.newInstance();
 		
@@ -139,7 +130,7 @@ public class JobsDensityGraphicsMBean extends TlosSWBaseBean implements
 
 		
 		try {
-			densityJobCountList = getDbOperations().getDensityReport( reportParameters.getReportParametersXML() );
+			densityJobCountList = getDbOperations().getDensityReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}

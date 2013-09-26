@@ -3,6 +3,7 @@ package com.likya.tlossw.web.mng.reports.helpers;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -12,7 +13,6 @@ import org.xmldb.api.base.XMLDBException;
 import com.likya.tlos.model.xmlbeans.report.FilterByResult;
 import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
 import com.likya.tlos.model.xmlbeans.report.OrderByType;
-import com.likya.tlos.model.xmlbeans.report.OrderByType.Enum;
 import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
@@ -41,12 +41,20 @@ public class ReportsParameters implements Serializable {
 	private Boolean refRunIdBoolean;
 	private BigInteger runId;
 	private String scenarioId;
-	private Enum orderBy;
+	private String orderBy;
 	private Boolean isCumulative;
-	private com.likya.tlos.model.xmlbeans.report.OrderType.Enum order;
+	private String order;
 	private BigInteger maxNumOfListedJobs;
 	private Short statSampleNumber;
 	private LocalStats statParameters = null;
+	private String includedJobs;
+	private Short maxNumberOfIntervals;
+	private Date startDate;
+	private String startTime;
+	private Date endDate;
+	private String endTime;
+	private LiveStateInfo liveStateInfo;
+	private String stepForDensity;
 	
 	/* computed */
 
@@ -62,9 +70,9 @@ public class ReportsParameters implements Serializable {
 		refRunIdBoolean = true;
 		runId = new BigInteger("0");
 		scenarioId = "0";
-		orderBy = OrderByType.DURATION;
+		orderBy = OrderByType.DURATION.toString();
 		isCumulative = false;
-		order = OrderType.DESCENDING;
+		order = OrderType.DESCENDING.toString();
 		maxNumOfListedJobs = new BigInteger("11");
 		statSampleNumber = 3;
 		
@@ -94,9 +102,9 @@ public class ReportsParameters implements Serializable {
 		reportParameters.setRefRunIdBoolean(refRunIdBoolean);
 		reportParameters.setRunId(runId);
 		reportParameters.setScenarioId(scenarioId);
-		reportParameters.setOrderBy(orderBy);
+		reportParameters.setOrderBy(OrderByType.Enum.forString(orderBy));
 		reportParameters.setIsCumulative(isCumulative);
-		reportParameters.setOrder(order);
+		reportParameters.setOrder(OrderType.Enum.forString(order));
 		reportParameters.setMaxNumOfListedJobs(maxNumOfListedJobs);
 		reportParameters.setStatSampleNumber(statSampleNumber);
 		reportParameters.setMaxNumberOfIntervals((short) 100);
@@ -196,25 +204,6 @@ public class ReportsParameters implements Serializable {
 	}
 
 
-	public Enum getOrderBy() {
-		return orderBy;
-	}
-
-
-	public void setOrderBy(Enum orderBy) {
-		this.orderBy = orderBy;
-	}
-
-
-	public com.likya.tlos.model.xmlbeans.report.OrderType.Enum getOrder() {
-		return order;
-	}
-
-
-	public void setOrder(com.likya.tlos.model.xmlbeans.report.OrderType.Enum order) {
-		this.order = order;
-	}
-
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
@@ -237,6 +226,106 @@ public class ReportsParameters implements Serializable {
 
 	public void setStatSampleNumber(Short statSampleNumber) {
 		this.statSampleNumber = statSampleNumber;
+	}
+
+
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
+
+	public String getOrder() {
+		return order;
+	}
+
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+
+	public String getIncludedJobs() {
+		return includedJobs;
+	}
+
+
+	public void setIncludedJobs(String includedJobs) {
+		this.includedJobs = includedJobs;
+	}
+
+
+	public Short getMaxNumberOfIntervals() {
+		return maxNumberOfIntervals;
+	}
+
+
+	public void setMaxNumberOfIntervals(Short maxNumberOfIntervals) {
+		this.maxNumberOfIntervals = maxNumberOfIntervals;
+	}
+
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+
+	public LiveStateInfo getLiveStateInfo() {
+		return liveStateInfo;
+	}
+
+
+	public void setLiveStateInfo(LiveStateInfo liveStateInfo) {
+		this.liveStateInfo = liveStateInfo;
+	}
+
+
+	public String getStepForDensity() {
+		return stepForDensity;
+	}
+
+
+	public void setStepForDensity(String stepForDensity) {
+		this.stepForDensity = stepForDensity;
 	}
 
 }

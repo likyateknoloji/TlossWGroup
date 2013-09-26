@@ -14,20 +14,20 @@ import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlossw.web.appmng.TraceBean;
 
 public class ComboListUtils {
-	
+
 	public static void logTimeInfo(String header, long timeInfo) {
-		if(timeInfo == 0) {
+		if (timeInfo == 0) {
 			System.out.println(header);
 		} else {
-			System.out.println(header + TraceBean.dateDiffWithNow(timeInfo) + "ms");		
+			System.out.println(header + TraceBean.dateDiffWithNow(timeInfo) + "ms");
 		}
-	
+
 	}
 
 	public static void logTimeInfo(String header) {
 		logTimeInfo(header, 0);
 	}
-	
+
 	public static Collection<SelectItem> constructJobStateList() {
 
 		long startTime = System.currentTimeMillis();
@@ -57,7 +57,7 @@ public class ComboListUtils {
 
 		return jobStatusNameList;
 	}
-	
+
 	public static Collection<SelectItem> constructOSystemList() {
 
 		long startTime = System.currentTimeMillis();
@@ -209,4 +209,33 @@ public class ComboListUtils {
 		return options;
 	}
 
+	public static Collection<SelectItem> constructOrderList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> orderList = WebInputUtils.fillOrderList();
+		logTimeInfo("constructOrderList fill things Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return orderList;
+	}
+
+	public static Collection<SelectItem> constructOrderByList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> orderByList = WebInputUtils.fillOrderByList();
+		logTimeInfo("constructOrderByList fill things Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return orderByList;
+	}
+
+	public static Collection<SelectItem> constructIncludedJobsTypeList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> includedJobsTypeList = WebInputUtils.fillIncludedJobsTypeList();
+		logTimeInfo("constructIncludedJobsTypeList fill things Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return includedJobsTypeList;
+	}
 }

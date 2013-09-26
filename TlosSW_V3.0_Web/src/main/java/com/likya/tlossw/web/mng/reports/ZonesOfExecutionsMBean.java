@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -31,9 +32,9 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.LocalStatsDocument.LocalStats;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 /*
  * 0 : mavi
@@ -49,7 +50,7 @@ import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
 
 @ManagedBean(name = "zonesOfExecutionsMBean")
 @ViewScoped
-public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
+public class ZonesOfExecutionsMBean extends ReportBase implements
 		Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
@@ -79,8 +80,6 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	private BigInteger numberOfJobs;
 	private BigInteger numberOfScenarios;
 	
-	ReportsParameters reportParameters = null;
-	
 	@PostConstruct
 	public void init() {
 
@@ -107,6 +106,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 
 		logger.info("end : init");
 
+		setActiveReportPanel(ConstantDefinitions.ZONES_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -126,11 +126,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 	
 	private void createMeterGaugeModel() {
 
-		reportParameters = new ReportsParameters();
+		setReportParameters(new ReportsParameters());
 		
 		LocalStats localStats = null;
 		try {
-			localStats = getDbOperations().getStatsReport( reportParameters.getReportParametersXML() );
+			localStats = getDbOperations().getStatsReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -213,7 +213,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		  intervals.set(intervalIndex, maxmaxTolWorkingTime);
 		}
 		try {
-			jobsArray = getDbOperations().getOverallReport( reportParameters.getReportParametersXML() );
+			jobsArray = getDbOperations().getOverallReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -290,6 +290,11 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
 		if(days.getDays()>0) daypart = days.getDays() + " " + resolveMessage("tlos.report.gauge.days")+" ";
 		
 		return daypart + timepart;
+	}
+
+	public void refreshReport(ActionEvent actionEvent) {
+		System.out.println("aaa");
+		
 	}
 	
 	public DashboardModel getModel() {
@@ -464,6 +469,7 @@ public class ZonesOfExecutionsMBean extends TlosSWBaseBean implements
     }
     
     public String getStatSampleNumberText() {
-    	return resolveMessage("tlos.report.gauge.statsText1")+ " "+ reportParameters.getStatSampleNumber() + " " + resolveMessage("tlos.report.gauge.statsText2");
+    	return resolveMessage("tlos.report.gauge.statsText1")+ " "+ getReportParameters().getStatSampleNumber() + " " + resolveMessage("tlos.report.gauge.statsText2");
     }
+
 }

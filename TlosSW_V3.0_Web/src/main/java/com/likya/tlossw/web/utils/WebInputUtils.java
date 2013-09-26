@@ -37,6 +37,9 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.ProcessedFilesOperationTypeDocum
 import com.likya.tlos.model.xmlbeans.ftpadapter.TransportProviderDocument;
 import com.likya.tlos.model.xmlbeans.listener.PollingTypeDocument.PollingType;
 import com.likya.tlos.model.xmlbeans.processnode.ProcessDocument.Process.Source;
+import com.likya.tlos.model.xmlbeans.report.FilterByResult;
+import com.likya.tlos.model.xmlbeans.report.OrderByType;
+import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.sla.SLADocument.SLA;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -50,42 +53,42 @@ public class WebInputUtils {
 
 	public static Collection<SelectItem> fillTZList() {
 		Collection<SelectItem> tZList = null;
-		//Collection<SelectItem> tZList2 = null;
+		// Collection<SelectItem> tZList2 = null;
 		String day = null;
-		
+
 		Set<String> availId2 = DateTimeZone.getAvailableIDs();
 		tZList = new ArrayList<SelectItem>();
 		// checking available Ids
 
-	      Iterator<String> itr = availId2.iterator();
-	      
-	      while(itr.hasNext()) {
-	         Object element = itr.next();
-	         SelectItem item2 = new SelectItem();
-				day = element.toString();
-				item2.setValue(day);
-				item2.setLabel(day);
-				tZList.add(item2);
-	         //System.out.print(element + " ");
-	      }
-	      
-//		tZList = new ArrayList<SelectItem>();
-//		// getting available Ids
-//		String[] availId = TimeZone.getAvailableIDs();
-//
-//		// checking available Ids
-//		System.out.println("Available Ids are: ");
-//		for (int i = 0; i < availId.length; i++) {
-//			//System.out.println(availId[i]);
-//			SelectItem item = new SelectItem();
-//			day = availId[i];
-//			item.setValue(day);
-//			item.setLabel(day);
-//			tZList.add(item);
-//		}
+		Iterator<String> itr = availId2.iterator();
+
+		while (itr.hasNext()) {
+			Object element = itr.next();
+			SelectItem item2 = new SelectItem();
+			day = element.toString();
+			item2.setValue(day);
+			item2.setLabel(day);
+			tZList.add(item2);
+			// System.out.print(element + " ");
+		}
+
+		// tZList = new ArrayList<SelectItem>();
+		// // getting available Ids
+		// String[] availId = TimeZone.getAvailableIDs();
+		//
+		// // checking available Ids
+		// System.out.println("Available Ids are: ");
+		// for (int i = 0; i < availId.length; i++) {
+		// //System.out.println(availId[i]);
+		// SelectItem item = new SelectItem();
+		// day = availId[i];
+		// item.setValue(day);
+		// item.setLabel(day);
+		// tZList.add(item);
+		// }
 		return tZList;
 	}
-	
+
 	public static Collection<SelectItem> fillTypesOfTimeList() {
 		String tot = null;
 
@@ -100,7 +103,7 @@ public class WebInputUtils {
 		}
 		return typeOfTimeList;
 	}
-	
+
 	public static Collection<SelectItem> fillCalendarList(ArrayList<CalendarProperties> calendarList) {
 		Collection<SelectItem> jsCalendarList = new ArrayList<SelectItem>();
 
@@ -113,7 +116,7 @@ public class WebInputUtils {
 
 		return jsCalendarList;
 	}
-	
+
 	public static Collection<SelectItem> fillAlarmList(ArrayList<Alarm> alarmList) {
 		Collection<SelectItem> jsAlarmList = new ArrayList<SelectItem>();
 
@@ -666,5 +669,53 @@ public class WebInputUtils {
 		}
 
 		return sftpTransportProviderList;
+	}
+
+	public static Collection<SelectItem> fillOrderList() {
+		String order = null;
+
+		Collection<SelectItem> orderList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < OrderType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			order = OrderType.Enum.table.forInt(i + 1).toString();
+			item.setValue(order);
+			item.setLabel(order);
+			orderList.add(item);
+		}
+
+		return orderList;
+	}
+
+	public static Collection<SelectItem> fillOrderByList() {
+		String order = null;
+
+		Collection<SelectItem> orderByList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < OrderByType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			order = OrderByType.Enum.table.forInt(i + 1).toString();
+			item.setValue(order);
+			item.setLabel(order);
+			orderByList.add(item);
+		}
+
+		return orderByList;
+	}
+
+	public static Collection<SelectItem> fillIncludedJobsTypeList() {
+		String type = null;
+
+		Collection<SelectItem> includedJobsTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < FilterByResult.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			type = FilterByResult.Enum.table.forInt(i + 1).toString();
+			item.setValue(type);
+			item.setLabel(type);
+			includedJobsTypeList.add(item);
+		}
+
+		return includedJobsTypeList;
 	}
 }

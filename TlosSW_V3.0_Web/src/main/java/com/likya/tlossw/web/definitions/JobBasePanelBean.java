@@ -67,10 +67,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public final static String NONE = "none";
 
-	public final static String STATE = "State";
-	public final static String SUBSTATE = "SubState";
-	public final static String STATUS = "Status";
-
 	public final static String SERBEST = "serbest";
 
 	public final static String FULLTEXT = "fullText";
@@ -107,7 +103,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private Item dependencyItem;
 
-	private String dependencyType = STATUS;
+	private String dependencyType = ConstantDefinitions.STATUS;
 
 	private String depStateName;
 
@@ -184,29 +180,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private void fill3S() {
-		statusToSubstate.put(StatusName.SUCCESS.toString(), SubstateName.COMPLETED.toString());
-		statusToSubstate.put(StatusName.WARNING.toString(), SubstateName.COMPLETED.toString());
-		statusToSubstate.put(StatusName.FAILED.toString(), SubstateName.COMPLETED.toString());
-		statusToSubstate.put(StatusName.TIME_IN.toString(), SubstateName.ON_RESOURCE.toString());
-		statusToSubstate.put(StatusName.TIME_OUT.toString(), SubstateName.ON_RESOURCE.toString());
-		statusToSubstate.put(StatusName.LOOKFOR_RESOURCE.toString(), SubstateName.READY.toString());
-		statusToSubstate.put(StatusName.WAITING.toString(), SubstateName.READY.toString());
-		statusToSubstate.put(StatusName.TRANSFERING.toString(), SubstateName.READY.toString());
-
-		substateToState.put(SubstateName.COMPLETED.toString(), StateName.FINISHED.toString());
-		substateToState.put(SubstateName.SKIPPED.toString(), StateName.FINISHED.toString());
-		substateToState.put(SubstateName.STOPPED.toString(), StateName.FINISHED.toString());
-		substateToState.put(SubstateName.STAGE_OUT.toString(), StateName.RUNNING.toString());
-		substateToState.put(SubstateName.MIGRATING.toString(), StateName.RUNNING.toString());
-		substateToState.put(SubstateName.ON_RESOURCE.toString(), StateName.RUNNING.toString());
-		substateToState.put(SubstateName.HELD.toString(), StateName.RUNNING.toString());
-		substateToState.put(SubstateName.STAGE_IN.toString(), StateName.RUNNING.toString());
-		substateToState.put(SubstateName.PAUSED.toString(), StateName.PENDING.toString());
-		substateToState.put(SubstateName.READY.toString(), StateName.PENDING.toString());
-		substateToState.put(SubstateName.IDLED.toString(), StateName.PENDING.toString());
-		substateToState.put(SubstateName.VALIDATED.toString(), StateName.PENDING.toString());
-		substateToState.put(SubstateName.CREATED.toString(), StateName.PENDING.toString());
-		substateToState.put(SubstateName.DEACTIVATED.toString(), StateName.PENDING.toString());
+		statusToSubstate = DefinitionUtils.fillStatusToSubstateList();
+		substateToState = DefinitionUtils.fillSubstateToStateList();
 	}
 
 	public void fillJobPanel() {
@@ -483,7 +458,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem = Item.Factory.newInstance();
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
-		dependencyType = STATUS;
+		dependencyType = ConstantDefinitions.STATUS;
 		depStatusName = StatusName.SUCCESS.toString();
 
 		getBaseJobInfosTabBean().resetTab();
@@ -778,7 +753,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyTreePath = getDependencyTreePath(EngineeConstants.LONELY_JOBS + '.' + draggedJobPath);
 
-		if (dependencyType.equals(STATUS)) {
+		if (dependencyType.equals(ConstantDefinitions.STATUS)) {
 			dependencyItem.getJsDependencyRule().setStatusName(StatusName.Enum.forString(depStatusName));
 
 			depSubstateName = statusToSubstate.get(depStatusName);
@@ -788,14 +763,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
-		if (dependencyType.equals(SUBSTATE)) {
+		if (dependencyType.equals(ConstantDefinitions.SUBSTATE)) {
 			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
 
 			depStateName = substateToState.get(depSubstateName);
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
-		if (dependencyType.equals(STATE)) {
+		if (dependencyType.equals(ConstantDefinitions.STATE)) {
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
@@ -860,19 +835,19 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			validationValue = false;
 		}
 
-		if (dependencyType.equals(STATUS)) {
+		if (dependencyType.equals(ConstantDefinitions.STATUS)) {
 			if (depStatusName == null || depStatusName.equals("")) {
 				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.status.choose", null);
 				validationValue = false;
 			}
 
-		} else if (dependencyType.equals(SUBSTATE)) {
+		} else if (dependencyType.equals(ConstantDefinitions.SUBSTATE)) {
 			if (depSubstateName == null || depSubstateName.equals("")) {
 				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.subState.choose", null);
 				validationValue = false;
 			}
 
-		} else if (dependencyType.equals(STATE)) {
+		} else if (dependencyType.equals(ConstantDefinitions.STATE)) {
 			if (depStateName == null || depStateName.equals("")) {
 				addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.state.choose", null);
 				validationValue = false;
@@ -889,7 +864,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 
-		if (dependencyType.equals(STATUS)) {
+		if (dependencyType.equals(ConstantDefinitions.STATUS)) {
 			dependencyItem.getJsDependencyRule().setStatusName(StatusName.Enum.forString(depStatusName));
 
 			depSubstateName = statusToSubstate.get(depStatusName);
@@ -899,14 +874,14 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
-		if (dependencyType.equals(SUBSTATE)) {
+		if (dependencyType.equals(ConstantDefinitions.SUBSTATE)) {
 			dependencyItem.getJsDependencyRule().setSubstateName(SubstateName.Enum.forString(depSubstateName));
 
 			depStateName = substateToState.get(depSubstateName);
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
-		if (dependencyType.equals(STATE)) {
+		if (dependencyType.equals(ConstantDefinitions.STATE)) {
 			dependencyItem.getJsDependencyRule().setStateName(StateName.Enum.forString(depStateName));
 		}
 
@@ -971,16 +946,16 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		if (jsDependencyRule.getSubstateName() != null) {
 			depSubstateName = dependencyItem.getJsDependencyRule().getSubstateName().toString();
-			dependencyType = SUBSTATE;
+			dependencyType = ConstantDefinitions.SUBSTATE;
 
 			if (jsDependencyRule.getStatusName() != null) {
 				depStatusName = jsDependencyRule.getStatusName().toString();
-				dependencyType = STATUS;
+				dependencyType = ConstantDefinitions.STATUS;
 			} else {
 				depStatusName = "";
 			}
 		} else {
-			dependencyType = STATE;
+			dependencyType = ConstantDefinitions.STATE;
 			depSubstateName = "";
 			depStatusName = "";
 		}

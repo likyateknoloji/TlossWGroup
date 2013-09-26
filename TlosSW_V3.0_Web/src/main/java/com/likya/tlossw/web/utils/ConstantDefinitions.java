@@ -46,4 +46,20 @@ public class ConstantDefinitions {
 	public static final String DEPLOY_TIME = "3";
 	public static final String DEPLOY_NOW = "4";
 
+	/**
+	 * Raporlama ekrabları sabitleri
+	 */
+	public static final String ZONES_REPORT = "zonesReport";
+	public static final String JOB_DENSITY_REPORT = "densityReport";
+	public static final String JOB_DURATION_REPORT = "durationReport";
+	public static final String JOB_DISTRIBUTION_REPORT = "distributionReport";
+	public static final String JOB_STATE_REPORT = "stateReport";
+
+	/**
+	 * job durum sabitleri
+	 */
+	public final static String STATE = "State";
+	public final static String SUBSTATE = "SubState";
+	public final static String STATUS = "Status";
+
 }
