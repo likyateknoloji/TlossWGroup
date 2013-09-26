@@ -5,6 +5,7 @@ import java.util.TimeZone;
 
 import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
+import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class TimeZoneCalculator {
@@ -24,7 +25,7 @@ public class TimeZoneCalculator {
 		
 		startTime.setTimeZone(tz);
 		
-		boolean isDstExistWhenJobIsDefined = startTime.getTimeZone().useDaylightTime(); // Su an kullanılmıyor ama geliştirme henüz bitmedi. Lazım olacak.
+		// boolean isDstExistWhenJobIsDefined = startTime.getTimeZone().useDaylightTime(); // Su an kullanılmıyor ama geliştirme henüz bitmedi. Lazım olacak.
 		
 		// tmpTime bilgisinde sadece hh:mm:ss var, YYYY:MM:DD bilgisini ekleyelim.										
 		Calendar calendar = Calendar.getInstance();
@@ -42,10 +43,14 @@ public class TimeZoneCalculator {
 		String jobDateTimeStr = DateUtils.getW3CDateTime(startTime, jobTimeZone, myType); // Job da belirtilen zaman
 		String agentDateTimeStr = DateUtils.getW3CDateTime(startTime, agentTimeZone, myType); // Agent da calismasi gereken zaman
 
-		System.out.println("Server saati      : " + serverDateTimeStr + "\n" + "Job saati         : " + jobDateTimeStr + "\n" + "Agent yerel saati : " + agentDateTimeStr);
-
+		if(SpaceWideRegistry.isDebug) {
+			System.out.println("Server saati      : " + serverDateTimeStr);
+			System.out.println("Job saati         : " + jobDateTimeStr);
+			System.out.println("Agent yerel saati : " + agentDateTimeStr);
+		}
+		
 		Calendar serverDateTime = DateUtils.dateToXmlTime(serverDateTimeStr, serverTimeZone); // Server da simdiki zaman
-		Calendar jobDateTime = DateUtils.dateToXmlTime(jobDateTimeStr, jobTimeZone); // Job da belirtilen zaman, Job daki zaman dilimine cevriliyor.
+		// Calendar jobDateTime = DateUtils.dateToXmlTime(jobDateTimeStr, jobTimeZone); // Job da belirtilen zaman, Job daki zaman dilimine cevriliyor.
 		Calendar jobDateTimeAtServer = DateUtils.dateToXmlTime(jobDateTimeStr, serverTimeZone); // Job da belirtilen zaman, TZ bilgisine gore hesaplanıyor, Server daki zaman dilimine cevriliyor.
 		Calendar jobDateTimeAtAgent = DateUtils.dateToXmlTime(agentDateTimeStr, serverTimeZone); // Job da belirtilen zaman, agent TZ offset, Server daki zaman dilimine cevriliyor
 
