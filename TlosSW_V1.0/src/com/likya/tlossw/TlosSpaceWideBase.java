@@ -496,6 +496,9 @@ public class TlosSpaceWideBase {
 			if (tlosProcessData == null || !XMLValidations.validateWithXSDAndLog(logger, tlosProcessData)) {
 				throw new TlosFatalException("DBUtils.getTlosDailyData : TlosProcessData is null or tlosProcessData xml is damaged !");
 			}
+			
+			getSpaceWideRegistry().setScenarioReadTime(Calendar.getInstance().getTimeInMillis());
+			
 			getSpaceWideRegistry().setTlosProcessData(tlosProcessData);
 
 		} catch (TlosFatalException e) {
