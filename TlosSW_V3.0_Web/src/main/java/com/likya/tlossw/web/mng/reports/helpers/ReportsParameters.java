@@ -24,15 +24,12 @@ import com.likya.tlossw.web.db.DBOperations;
 
 public class ReportsParameters implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2448886436692898113L;
 
 	private DBOperations dbOperations;
-	
+
 	String reportParametersXML = null;
-	
+
 	/* user inputs */
 	private Boolean includeNonResultedJobs;
 	private String jobId;
@@ -55,14 +52,13 @@ public class ReportsParameters implements Serializable {
 	private String endTime;
 	private LiveStateInfo liveStateInfo;
 	private String stepForDensity;
-	
+
 	/* computed */
 
-	
 	public ReportsParameters() {
 		// TODO Auto-generated constructor stub
 		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
-		
+
 		includeNonResultedJobs = true;
 		jobId = "0";
 		justFirstLevel = false;
@@ -75,22 +71,22 @@ public class ReportsParameters implements Serializable {
 		order = OrderType.DESCENDING.toString();
 		maxNumOfListedJobs = new BigInteger("11");
 		statSampleNumber = 3;
-		
+
 		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
 
 		Calendar startDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul");
-		Calendar endDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"),"Europe/Istanbul");
+		Calendar endDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul");
 
 		Calendar stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.intervalCalendar(new String("1970-01-01T00:00:30"), new String("yyyy-MM-dd'T'HH:mm:ss"), "GMT-0:00");
-	      
+
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
-		
+
 		liveStateInfo.setStateName(StateName.RUNNING);
 		liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
 		liveStateInfo.setStatusName(StatusName.TIME_IN);
 		reportParameters.setLiveStateInfo(liveStateInfo);
-		
+
 		reportParameters.setIncludedJobs(FilterByResult.RESULTED);
 		reportParameters.setIncludeNonResultedJobs(true);
 		reportParameters.setStartDateTime(startDate);
@@ -108,21 +104,20 @@ public class ReportsParameters implements Serializable {
 		reportParameters.setMaxNumOfListedJobs(maxNumOfListedJobs);
 		reportParameters.setStatSampleNumber(statSampleNumber);
 		reportParameters.setMaxNumberOfIntervals((short) 100);
-		
+
 		reportParametersXML = reportParameters.xmlText(xmlOptions);
 	}
 
-
 	public void setStatParameters() {
-	
+
 		try {
-			statParameters = getDbOperations().getStatsReport( getReportParametersXML() );
+			statParameters = getDbOperations().getStatsReport(getReportParametersXML());
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public String getReportParametersXML() {
 		return reportParametersXML;
 	}
@@ -203,126 +198,101 @@ public class ReportsParameters implements Serializable {
 		this.maxNumOfListedJobs = maxNumOfListedJobs;
 	}
 
-
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
-
 
 	public LocalStats getStatParameters() {
 		return statParameters;
 	}
 
-
 	public void setStatParameters(LocalStats statParameters) {
 		this.statParameters = statParameters;
 	}
-
 
 	public Short getStatSampleNumber() {
 		return statSampleNumber;
 	}
 
-
 	public void setStatSampleNumber(Short statSampleNumber) {
 		this.statSampleNumber = statSampleNumber;
 	}
-
 
 	public String getOrderBy() {
 		return orderBy;
 	}
 
-
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
 	}
-
 
 	public String getOrder() {
 		return order;
 	}
 
-
 	public void setOrder(String order) {
 		this.order = order;
 	}
-
 
 	public String getIncludedJobs() {
 		return includedJobs;
 	}
 
-
 	public void setIncludedJobs(String includedJobs) {
 		this.includedJobs = includedJobs;
 	}
-
 
 	public Short getMaxNumberOfIntervals() {
 		return maxNumberOfIntervals;
 	}
 
-
 	public void setMaxNumberOfIntervals(Short maxNumberOfIntervals) {
 		this.maxNumberOfIntervals = maxNumberOfIntervals;
 	}
-
 
 	public Date getStartDate() {
 		return startDate;
 	}
 
-
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-
 
 	public String getStartTime() {
 		return startTime;
 	}
 
-
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-
 
 	public Date getEndDate() {
 		return endDate;
 	}
 
-
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
 
 	public String getEndTime() {
 		return endTime;
 	}
 
-
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-
 
 	public LiveStateInfo getLiveStateInfo() {
 		return liveStateInfo;
 	}
 
-
 	public void setLiveStateInfo(LiveStateInfo liveStateInfo) {
 		this.liveStateInfo = liveStateInfo;
 	}
 
-
 	public String getStepForDensity() {
 		return stepForDensity;
 	}
-
 
 	public void setStepForDensity(String stepForDensity) {
 		this.stepForDensity = stepForDensity;
