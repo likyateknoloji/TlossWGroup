@@ -142,4 +142,9 @@ public class TransformUtils {
 	public static String toXSString(String stringData) {
 		return "xs:string(\"" + stringData + "\")";
 	}
+	
+	public static String toXSBoolean(Boolean booleanData) {
+		return booleanData ? "true()" : "false()";
+	}
+	
 }
