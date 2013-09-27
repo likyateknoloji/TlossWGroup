@@ -15,6 +15,7 @@ import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
@@ -141,7 +142,10 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
-		jobBaseReportList = getDbOperations().getJobResultList(getWebAppUser().getId(), getDocumentId(), jobInTyCl.getJobId(), 3, transformToLocalTime);
+		
+		String docId = getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[DocMetaDataHolder.FIRST_COLUMN];
+		
+		jobBaseReportList = getDbOperations().getJobResultList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -152,7 +156,10 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
-		job = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), jobInTyCl.getJobId());
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+				
+		job = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId());
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
