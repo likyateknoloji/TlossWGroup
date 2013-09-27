@@ -1,7 +1,6 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -11,40 +10,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.namespace.QName;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.event.DashboardReorderEvent;
 import org.primefaces.model.chart.OhlcChartModel;
 import org.primefaces.model.chart.OhlcChartSeries;
 import org.xmldb.api.base.XMLDBException;
 
-import com.likya.tlos.model.xmlbeans.report.OrderByType;
-import com.likya.tlos.model.xmlbeans.report.OrderType;
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
-import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
-import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
-import com.likya.tlos.model.xmlbeans.report.FilterByResult;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "jobsDistributionGraphicsMBean")
 @ViewScoped 
-public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Serializable {
+public class JobsDistributionGraphicsMBean extends ReportBase implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6736991439032005658L;
-
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
-	
 
 	private static final Logger logger = Logger.getLogger(JobsDistributionGraphicsMBean.class);
 
@@ -56,8 +44,6 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 	
 	private JobArray jobsArray;
 
-	ReportsParameters reportParameters = null;
-	
 	@PostConstruct
 	public void init() {
 
@@ -68,12 +54,13 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 
 		System.out.println(parameter_value);
 
-		reportParameters = new ReportsParameters();
+		setReportParameters(new ReportsParameters());
 		
-		createOhlcModel(reportParameters.getReportParametersXML());
+		createOhlcModel(getReportParameters().getReportParametersXML());
 
 		logger.info("end : init");
 
+		setActiveReportPanel(ConstantDefinitions.JOB_DISTRIBUTION_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -81,7 +68,6 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		message.setSeverity(FacesMessage.SEVERITY_INFO);
 		message.setSummary("Reordered: " + event.getWidgetId());
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
-
 	}
 	
 	public String getChartSeriesColors() {
@@ -93,9 +79,7 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		}
 	
 	public void refreshOhlcChart() {
-		
-		createOhlcModel(reportParameters.getReportParametersXML());
-
+		createOhlcModel(getReportParameters().getReportParametersXML());
 	}
 
 	public long getMilliSec(long param) {
@@ -111,7 +95,6 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-
 		
 		//BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
 		Calendar overallStart = Calendar.getInstance();
@@ -146,11 +129,12 @@ public class JobsDistributionGraphicsMBean extends TlosSWBaseBean implements Ser
 					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
 					(double) TimeUnit.MILLISECONDS.toSeconds(figure.getTimeInMillis() - overallStart.getTimeInMillis())
 					));
-			
 		}
+	}
 
-
-
+	public void refreshReport(ActionEvent actionEvent) {
+		System.out.println("aaa");
+		
 	}
 
 	public DBOperations getDbOperations() {

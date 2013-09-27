@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.DashboardReorderEvent;
@@ -19,20 +20,20 @@ import org.primefaces.model.chart.PieChartModel;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
+import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "currentStatesOfJobsMBean")
 @ViewScoped
-public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
-		Serializable {
+public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable {
+
+	private static final long serialVersionUID = -7887788251298280405L;
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
-	private static final long serialVersionUID = 2570957528954820036L;
-	private static final Logger logger = Logger
-			.getLogger(CurrentStatesOfJobsMBean.class);
+	private static final Logger logger = Logger.getLogger(CurrentStatesOfJobsMBean.class);
 	private PieChartModel pieDashboardModel;
 
 	private DashboardModel model;
@@ -59,8 +60,7 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 		logger.info("begin : init");
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		String parameter_value = (String) facesContext.getExternalContext()
-				.getRequestParameterMap().get("id");
+		String parameter_value = (String) facesContext.getExternalContext().getRequestParameterMap().get("id");
 
 		System.out.println(parameter_value);
 
@@ -85,7 +85,10 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 		createPieModel();
 
 		logger.info("end : init");
+		
+		setReportParameters(new ReportsParameters());
 
+		setActiveReportPanel(ConstantDefinitions.JOB_STATE_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -95,7 +98,6 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 		message.setDetail("Item index: " + event.getItemIndex()
 				+ ", Column index: " + event.getColumnIndex()
 				+ ", Sender index: " + event.getSenderColumnIndex());
-
 	}
 
 	public void refreshDashboardChart() {
@@ -258,7 +260,11 @@ public class CurrentStatesOfJobsMBean extends TlosSWBaseBean implements
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
 			}
 		}
+	}
 
+	public void refreshReport(ActionEvent actionEvent) {
+		System.out.println("aaa");
+		
 	}
 
 	public PieChartModel getPieDashboardModel() {

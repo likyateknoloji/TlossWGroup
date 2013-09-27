@@ -2,7 +2,6 @@ package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
@@ -12,10 +11,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.xml.namespace.QName;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.DashboardReorderEvent;
@@ -25,22 +23,19 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
-import com.likya.tlos.model.xmlbeans.report.OrderByType;
-import com.likya.tlos.model.xmlbeans.report.OrderType;
-import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
-import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "mostLongestJobsReportMBean")
 @ViewScoped 
-public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serializable {
+public class MostLongestJobsReportMBean extends ReportBase implements Serializable {
 	
+	private static final long serialVersionUID = -9017679707795179195L;
+
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 	
-	private static final long serialVersionUID = 2570957528954820036L;
 	private static final Logger logger = Logger.getLogger(MostLongestJobsReportMBean.class);
  
 	private CartesianChartModel curDurationModel;
@@ -49,8 +44,6 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 	private int sizeOfReport;
 	
 	private JobArray jobsArray;
-	
-	ReportsParameters reportParameters = null;
 	
 	@PostConstruct
 	public void init() {
@@ -62,13 +55,14 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		System.out.println(parameter_value);
 		
-		reportParameters = new ReportsParameters();
+		setReportParameters(new ReportsParameters());
 		
-		curDurationModel = createCurCategoryModel(reportParameters.getReportParametersXML() );
+		curDurationModel = createCurCategoryModel(getReportParameters().getReportParametersXML() );
 		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
 
+		setActiveReportPanel(ConstantDefinitions.JOB_DURATION_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -76,17 +70,16 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		message.setSeverity(FacesMessage.SEVERITY_INFO);
 		message.setSummary("Reordered: " + event.getWidgetId());
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
-
 	}
 	
 	public void refreshCurDurationChart() {
 
-		createCurCategoryModel(reportParameters.getReportParametersXML() );
+		createCurCategoryModel(getReportParameters().getReportParametersXML() );
 	}
 
 	public void refreshPrevDurationChart() {
 		
-		createCurCategoryModel(reportParameters.getReportParametersXML() );
+		createCurCategoryModel(getReportParameters().getReportParametersXML() );
 	}
 /**
  * 	get related Jobs with getJobsReport(
@@ -109,7 +102,7 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 
 		CartesianChartModel curDurationModel = new CartesianChartModel();
 
-		String includeNonResultedRuns = "true()";
+//		String includeNonResultedRuns = "true()";
 		
 		try {
 			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
@@ -148,6 +141,11 @@ public class MostLongestJobsReportMBean extends TlosSWBaseBean implements Serial
 		
 		curDurationModel.addSeries(jobs);
         return curDurationModel;
+	}
+
+	public void refreshReport(ActionEvent actionEvent) {
+		System.out.println("aaa");
+		
 	}
 
 	public CartesianChartModel getPrevDurationModel() {

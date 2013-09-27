@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.DashboardReorderEvent;
@@ -29,15 +30,13 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean(name = "jobsDensityGraphicsMBean")
 @ViewScoped
-public class JobsDensityGraphicsMBean extends ReportBase implements
-		Serializable {
+public class JobsDensityGraphicsMBean extends ReportBase implements Serializable {
 
 	@ManagedProperty(value = "#{dbOperations}")
 	private DBOperations dbOperations;
 
 	private static final long serialVersionUID = 2570957528954820036L;
-	private static final Logger logger = Logger
-			.getLogger(JobsDensityGraphicsMBean.class);
+	private static final Logger logger = Logger.getLogger(JobsDensityGraphicsMBean.class);
 
 	private CartesianChartModel denseModel;
 	private Statistics densityJobCountList;
@@ -79,13 +78,10 @@ public class JobsDensityGraphicsMBean extends ReportBase implements
 		message.setDetail("Item index: " + event.getItemIndex()
 				+ ", Column index: " + event.getColumnIndex()
 				+ ", Sender index: " + event.getSenderColumnIndex());
-
 	}
 
 	public void resetJobReportAction() {
-
 		jobsArray = new ArrayList<Job>();
-
 	}
 
 	public String getChartSeriesColors() {
@@ -101,13 +97,10 @@ public class JobsDensityGraphicsMBean extends ReportBase implements
 		else stacked = true;
 		
 		createDenseModel();
-
 	}
 
 	public void changeDensityStep() {
-		
 		createDenseModel();
-
 	}
 	
     public void itemSelect(ItemSelectEvent event) {  
@@ -191,6 +184,12 @@ public class JobsDensityGraphicsMBean extends ReportBase implements
 		}
 		setMaxValue(maxMax.longValue());
 	}
+
+	public void refreshReport(ActionEvent actionEvent) {
+		System.out.println("aaa");
+		
+	}
+
 	/*
 	private void createDenseModelOld() {
 		denseModel = new CartesianChartModel();
