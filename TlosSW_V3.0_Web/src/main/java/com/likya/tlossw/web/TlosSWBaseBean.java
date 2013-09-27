@@ -37,6 +37,13 @@ public abstract class TlosSWBaseBean {
 	}
 
 
+	public String getDocId(Integer columnId) {
+		
+		String docId = getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[columnId-1];	
+		
+		return docId;
+	}
+	
 	public void addMessage(String formName, String fieldName, String errorMessage, String miscText) {
 
 		ResourceBundle messages = sessionMediator.getMessageBundle();
@@ -87,8 +94,8 @@ public abstract class TlosSWBaseBean {
 		this.dbOperations = dbOperations;
 	}
 
-	public String getDocumentId() {
-		return getSessionMediator().getDocumentId();
+	public int getDocumentScope(String documentId) {
+		return getSessionMediator().getDocumentScope(documentId);
 	}
 
 	public WebAppUser getWebAppUser() {
