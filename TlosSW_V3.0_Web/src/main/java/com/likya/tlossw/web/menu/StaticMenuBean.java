@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import com.likya.tlossw.model.MetaDataType;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 
 @ManagedBean
@@ -14,9 +15,9 @@ public class StaticMenuBean implements Serializable {
 	
 	private static final long serialVersionUID = -4808029867793610016L;
 	
-	private final String DEF_URLS = "/inc/definitionPanels/jobsDef.jsf?";
-	private final String LIVE_JS= "/inc/livePanels/liveJobsScenarios.jsf?";
-	private final String DEPLOYMENT = "/inc/definitionPanels/deploymentPage.jsf?";
+	private final String DEF_BASE_URL = "/inc/definitionPanels/jobsDef.jsf?";
+	private final String LIVEJS_BASE_URL = "/inc/livePanels/liveJobsScenarios.jsf?";
+	private final String DEPLOYMENT_BASE_URL = "/inc/definitionPanels/deploymentPage.jsf?";
 
 	private String globalDefsUrl;
 	private String myDefsUrl;
@@ -28,13 +29,15 @@ public class StaticMenuBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		globalDefsUrl = DEF_URLS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA;
-		myDefsUrl = DEF_URLS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_MYDATA;
 		
-		globalLiveJsUrl = LIVE_JS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA;
-		myLiveJsUrl = LIVE_JS + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_MYDATA;
+		globalDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.GLOBAL;
+		myDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.LOCAL;
+		
+		globalLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.GLOBAL;
+		myLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.LOCAL;
 
-		deploymentUrl = DEPLOYMENT + CommonConstantDefinitions.EXIST_DOCID + "=" + CommonConstantDefinitions.EXIST_GLOBALDATA;
+		deploymentUrl = DEPLOYMENT_BASE_URL + CommonConstantDefinitions.FIRST_COLUMN + "=" + MetaDataType.LOCAL + "&" + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.GLOBAL;
+	
 	}
 
 
@@ -86,8 +89,5 @@ public class StaticMenuBean implements Serializable {
 	public void setDeploymentUrl(String deploymentUrl) {
 		this.deploymentUrl = deploymentUrl;
 	}
-
-
-
 
 }
