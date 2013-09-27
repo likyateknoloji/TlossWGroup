@@ -19,18 +19,19 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
-import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.TreeBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
-public class DeploymentTree extends TlosSWBaseBean implements Serializable {
+public class DeploymentTree extends TreeBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 4913948572151517463L;
 
@@ -45,14 +46,31 @@ public class DeploymentTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
+		
+		long startTime = System.currentTimeMillis();
+		
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, CommonConstantDefinitions.FIRST_COLUMN, DocMetaDataHolder.FIRST_COLUMN);
 
-		String documentId = CommonConstantDefinitions.EXIST_DEPLOYMENTDATA;
+		/*
+		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1);
+		if (scopeId1 != null) {
+			getSessionMediator().setScopeId1(Boolean.valueOf(scopeId1));
+		} 
+		else { // default olarak global data ile calisilir
+			getSessionMediator().setScopeId1(Boolean.valueOf(true));
+		}
+
+		getSessionMediator().setDocumentId1( CommonConstantDefinitions.EXIST_DEPLOYMENTDATA );
+		getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId1(), getSessionMediator().getScopeId1() );
+		
 
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getDbOperations().getDeploymentDataXml(getWebAppUser().getId(), documentId);
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
 		System.out.println("Tree has been loaded !!");
 
+		 */
+		
 		System.out.println("Job Tree olusturuluyor ..");
 
 		constructJSTree(tlosProcessData);
@@ -87,7 +105,7 @@ public class DeploymentTree extends TlosSWBaseBean implements Serializable {
 
 	public void reconstructJSTree(String documentId) {
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), documentId);
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("deploymentData", getWebAppUser().getId(),  getDocumentScope("deploymentData"));
 		constructJSTree(tlosProcessData);
 	}
 
