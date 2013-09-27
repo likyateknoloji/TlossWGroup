@@ -214,19 +214,42 @@ public class SessionMediator implements Serializable {
 		return returnValue;
 	}
 
+	public int getDocumentScopeByIndex(Integer index) {
+
+		HashMap<String, Integer> documentScopes = webSpaceWideRegistery.getDocMetaDataInfo().getDocumentScopes();
+
+		if (documentScopes.isEmpty()) {
+			initMetaData();
+		}
+
+		Integer returnValue = documentScopes.get(index-1);
+
+		if (returnValue == null) {
+			returnValue = MetaDataType.GLOBAL;
+		}
+
+		System.out.println("Sonuç = " + index + "," + returnValue);
+
+		return returnValue;
+	}
+	
 	public void setDocumentScope(String documentId, Integer scope) {
 		webSpaceWideRegistery.getDocMetaDataInfo().getDocumentScopes().put(documentId, scope);
 	}
 
-	public String getScopeText(Boolean scopeId) {
+	public String getScopeText(Integer scopeId) {
 
-		String result = scopeId ? CommonConstantDefinitions.EXIST_GLOBALDATA : CommonConstantDefinitions.EXIST_MYDATA;
+		String result = scopeId == 1 ? CommonConstantDefinitions.EXIST_GLOBALDATA : CommonConstantDefinitions.EXIST_MYDATA;
 
 		return result;
 	}
 
-	public Boolean getReverseScope(Boolean scopeId) {
-		return scopeId ? false : true;
+	public Integer getReverseScope(Integer scopeId) {
+		return scopeId == 1 ? 2 : 1;
+	}
+
+	public Integer getScope(Integer column) {
+		return getDocumentScope(webSpaceWideRegistery.getDocMetaDataInfo().getCurrentDocs()[column - 1]);
 	}
 
 }
