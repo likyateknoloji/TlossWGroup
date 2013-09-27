@@ -29,9 +29,11 @@ import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
+import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.menu.JobTemplatesTree;
 import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
@@ -46,6 +48,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
 
+	@ManagedProperty(value = "#{sessionMediator}")
+	private SessionMediator sessionMediator;
+	
 	@ManagedProperty(value = "#{jobTemplatesTree}")
 	private JobTemplatesTree jobTemplatesTree;
 
@@ -259,7 +264,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().insertScenario(getWebAppUser().getId(), getDocumentId(), getScenarioXML(), scenarioPath)) {
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().insertScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getScenarioXML(), scenarioPath)) {
 
 			WsScenarioNode swScenarioNode = new WsScenarioNode();
 			swScenarioNode.setName(scenarioName);
@@ -289,7 +296,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().updateScenario(getWebAppUser().getId(), getDocumentId(), scenarioPath, getScenarioXML())) {
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().updateScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, getScenarioXML())) {
 			jsTree.initJSTree();
 
 			addMessage("scenarioUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.update", null);
@@ -416,7 +425,10 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	private boolean scenarioCheckUpForUpdate() {
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), getDocumentId(), treePath, scenarioName);
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), treePath, scenarioName);
 
 		// bu isimde bir senaryo yoksa 0
 		// ayni path de aynı isimde bir senaryo varsa 1
@@ -425,7 +437,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		if (scenarioCheckResult != null) {
 			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 
-				Scenario scenarioDefinition = getDbOperations().getScenario(getWebAppUser().getId(), getDocumentId(), scenarioPath, scenarioName);
+				Scenario scenarioDefinition = getDbOperations().getScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, scenarioName);
 
 				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
 				if (scenarioDefinition == null || !scenarioDefinition.getID().equals(getScenario().getID())) {
@@ -450,7 +462,10 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	private boolean scenarioCheckUp() {
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), getDocumentId(), scenarioPath, scenarioName);
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, scenarioName);
 
 		// bu isimde bir senaryo yoksa 0
 		// ayni path de aynı isimde bir senaryo varsa 1
@@ -561,7 +576,10 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	// senaryoya sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteScenario() {
 		boolean result = true;
-		if (getDbOperations().deleteScenario(getWebAppUser().getId(), getDocumentId(), scenarioPath, getScenarioXML())) {
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().deleteScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, getScenarioXML())) {
 			removeScenarioSubtree(scenarioPathInScenario);
 			addMessage("scenarioDelete", FacesMessage.SEVERITY_INFO, "tlos.success.scenario.delete", null);
 		} else {
@@ -739,6 +757,14 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void setJobTemplatesTree(JobTemplatesTree jobTemplatesTree) {
 		this.jobTemplatesTree = jobTemplatesTree;
+	}
+
+	public SessionMediator getSessionMediator() {
+		return sessionMediator;
+	}
+
+	public void setSessionMediator(SessionMediator sessionMediator) {
+		this.sessionMediator = sessionMediator;
 	}
 
 }
