@@ -129,6 +129,9 @@ public class LoginBean extends LoginBase implements Serializable {
 //			WebSpaceWideRegistery webSpaceWideRegistery = TEJmxMpClient.retrieveWebSpaceWideRegistery(jmxAppUser);
 //			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
 
+			WebSpaceWideRegistery webSpaceWideRegistery = new WebSpaceWideRegistery();
+			getSessionMediator().setWebSpaceWideRegistery(webSpaceWideRegistery);
+
 			userManager.addUser(webAppUser);
 			
 			return LOGIN_SUCCESS;
