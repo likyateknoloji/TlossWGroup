@@ -11,10 +11,6 @@
 package com.likya.tlossw;
 
 import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -22,23 +18,14 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-public class StopTlos {
-	
-	private static Map<String, String> env = new HashMap<String, String>();	
+public class StopTlos extends LocalJmx {
 
 	public static void main(String[] args) {
 
-		String ipAddr = null;
-		try {
-			InetAddress addr = InetAddress.getLocalHost();
-
-			// Get IP Address
-			ipAddr = addr.getHostAddress();
-		} catch (UnknownHostException e) {
-		}
-
 		try {
 
+			String ipAddr = getIpAddress();
+			
 			Object[] paramList = { ipAddr.toString() };
 			String[] signature = { "java.lang.String" };
 
@@ -80,16 +67,4 @@ public class StopTlos {
 		}
 	}
 
-	protected static void setUpTls() {
-
-		if (System.getProperty("javax.net.ssl.trustStore") == null)
-			System.setProperty("javax.net.ssl.trustStore", "likyaKeystore");
-		if (System.getProperty("javax.net.ssl.keyStorePassword") == null)
-			System.setProperty("javax.net.ssl.keyStorePassword", "likya1!+");
-		if (System.getProperty("javax.net.ssl.keyStore") == null)
-			System.setProperty("javax.net.ssl.keyStore", "likyaKeystore");
-
-		env.put("jmx.remote.profiles", "TLS");
-		env.put("jmx.remote.tls.need.client.authentication", "true");
-	}
 }
