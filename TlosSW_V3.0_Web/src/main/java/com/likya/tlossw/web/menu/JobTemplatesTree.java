@@ -20,6 +20,8 @@ import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
+import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
@@ -27,7 +29,7 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
-public class JobTemplatesTree implements Serializable {
+public class JobTemplatesTree  extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = -8098932616833921105L;
 
@@ -46,8 +48,19 @@ public class JobTemplatesTree implements Serializable {
 	@PostConstruct
 	public void initJSTree() {
 		
+		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1);
+		if (scopeId1 != null) {
+			getSessionMediator().setScopeId1(Boolean.valueOf(scopeId1));
+		} 
+		else { // default olarak global data ile calisilir
+			getSessionMediator().setScopeId1(Boolean.valueOf(true));
+		}
+
+		getSessionMediator().setDocumentId1( CommonConstantDefinitions.EXIST_TEMPLATEDATA );
+		getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId1(), getSessionMediator().getScopeId1() );
+		
 		long startTime = System.currentTimeMillis();
-		TlosProcessData tlosProcessData = dbOperations.getTlosTemplateDataXml();
+		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml( getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()) );
 		ComboListUtils.logTimeInfo("JobTemplatesTree.initJSTree.dbOperations.getTlosTemplateDataXml() Süre : " , startTime);
 
 		startTime = System.currentTimeMillis();
@@ -78,7 +91,7 @@ public class JobTemplatesTree implements Serializable {
 
 	public void reconstructJSTree() {
 
-		TlosProcessData tlosProcessData = dbOperations.getTlosTemplateDataXml();
+		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
 		constructJSTree(tlosProcessData);
 	}
 
