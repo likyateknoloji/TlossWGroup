@@ -19,6 +19,7 @@ import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument.AlarmRepor
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.web.mng.alarm.AlarmBaseBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.WebAlarmUtils;
@@ -41,11 +42,13 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 		
 		logger.info("begin : init");
 		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
 			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getWebAppUser().getId(), getDocumentId(), 5)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 5)));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -110,12 +113,13 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 		setAlarmName(null);
 		setAlarmReportJob(null);
 		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
 		
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
 			setAlarmNameList(WebAlarmUtils.fillAlarmNameList(getDbOperations().getAlarms()));
 			setAlarmRoleList(WebAlarmUtils.fillAlarmRoleList(getDbOperations().getUsers()));
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getWebAppUser().getId(), getDocumentId(), 5)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 5)));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
