@@ -41,6 +41,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -512,7 +513,9 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().insertJob(getWebAppUser().getId(), getDocumentId(), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().insertJob(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
 			addJobNodeToScenarioPath();
 
@@ -534,7 +537,9 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			setJsNameConfirmDialog(false);
 		}
 
-		if (getDbOperations().updateJob(getWebAppUser().getId(), getDocumentId(), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().updateJob( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
 
 			// isin adi degistirildiyse agactaki adini degistiriyor
@@ -591,12 +596,12 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			if (!jobIdCheckUp()) {
 				return;
 			}
-
-			result = getDbOperations().insertJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+	
+			result = getDbOperations().insertJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
 		} else {
 			setJsOverrideAndDeployDialog(false);
 
-			result = getDbOperations().updateJob(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+			result = getDbOperations().updateJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
 		}
 
 		if (result) {
@@ -608,7 +613,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean jobIdCheckUp() {
 
-		JobProperties job = getDbOperations().getJobFromId(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, jobProperties.getID());
+		JobProperties job = getDbOperations().getJobFromId(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), jobProperties.getID());
 
 		if (job != null) {
 			setJsOverrideAndDeployDialog(true);
@@ -653,7 +658,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private boolean jobCheckUpForUpdate() {
-		String jobCheckResult = getDbOperations().getJobExistence(getWebAppUser().getId(), getDocumentId(), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String jobCheckResult = getDbOperations().getJobExistence(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 		// bu isimde bir iş yoksa 0
 		// ayni path de aynı isimde bir iş varsa 1
@@ -662,7 +670,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
 
-				JobProperties job = getDbOperations().getJob(getWebAppUser().getId(), getDocumentId(), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+				JobProperties job = getDbOperations().getJob( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 				// id aynı ise kendi adını değiştirmeden güncellediği için uyarı vermiyor
 				if (!job.getID().equals(jobProperties.getID())) {
@@ -687,7 +695,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private boolean jobCheckUp() {
-		String jobCheckResult = getDbOperations().getJobExistence(getWebAppUser().getId(), getDocumentId(), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String jobCheckResult = getDbOperations().getJobExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
 		// bu isimde bir iş yoksa 0
 		// ayni path de aynı isimde bir iş varsa 1
@@ -732,7 +743,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private boolean checkDependencyValidation() {
-		JobProperties draggedJobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), draggedWsNode.getId());
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		JobProperties draggedJobProperties = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), draggedWsNode.getId());
 
 		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
@@ -1035,7 +1049,10 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	// işe sağ tıklayarak sil dediğimizde buraya geliyor
 	public boolean deleteJob() {
 		boolean result = true;
-		if (getDbOperations().deleteJob(getWebAppUser().getId(), getDocumentId(), DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		if (getDbOperations().deleteJob( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
 			jSTree.removeJobNode(jobPathInScenario, jobProperties.getID());
 			addMessage("jobDelete", FacesMessage.SEVERITY_INFO, "tlos.success.job.delete", null);
 		} else {
