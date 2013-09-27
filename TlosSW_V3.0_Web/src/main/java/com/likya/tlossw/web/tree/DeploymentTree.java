@@ -49,7 +49,7 @@ public class DeploymentTree extends TreeBaseBean implements Serializable {
 		
 		long startTime = System.currentTimeMillis();
 		
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, CommonConstantDefinitions.FIRST_COLUMN, DocMetaDataHolder.FIRST_COLUMN);
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, CommonConstantDefinitions.FIRST_COLUMN_STR, DocMetaDataHolder.FIRST_COLUMN);
 
 		/*
 		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1);
@@ -105,7 +105,7 @@ public class DeploymentTree extends TreeBaseBean implements Serializable {
 
 	public void reconstructJSTree(String documentId) {
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("deploymentData", getWebAppUser().getId(),  getDocumentScope("deploymentData"));
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml("deploymentData", getWebAppUser().getId(), getSessionMediator().getDocumentScope("deploymentData") );
 		constructJSTree(tlosProcessData);
 	}
 
