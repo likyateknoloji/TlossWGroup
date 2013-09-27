@@ -8,6 +8,14 @@ public class CommonConstantDefinitions {
 	// public static final String rootUrl = "//db/";
 	// public static final String dbHost = "/";
 	
+	public static final String FIRST_COLUMN_STR = "firstColumn";
+	public static final String SECOND_COLUMN_STR = "secondColumn";
+	
+	public static final String VIEW_SCOPE = "viewScope";
+	
+	public static final String EXIST_MYDATA = "My Space";
+	public static final String EXIST_GLOBALDATA = "Global Space";
+	
 	public static final String modulePath = "/modules/";
 	public static final String xmlsPath = "/xmls/";
 	
@@ -60,7 +68,7 @@ public class CommonConstantDefinitions {
 	public static final String wsoNsUrl = "wso=\"http://wso.tlos.com/\"";
 	public static final String fcNsUrl = "fc=\"http://fc.tlos.com/\"";
 	public static final String dssNsUrl = "dss=\"http://tlos.dss.com/\"";
-	public static final String metaNsUrl = "dss=\"http://meta.tlos.com/\"";
+	public static final String metaNsUrl = "met=\"http://meta.tlos.com/\"";
 	public static final String densityNsUrl = "density=\"http://density.tlos.com/\"";
 
 	public static final String decNsRes = "declare namespace res = \"http://www.likyateknoloji.com/resource-extension-defs\";";
@@ -85,11 +93,13 @@ public class CommonConstantDefinitions {
 	public static final String decNsMeta = "declare namespace  meta = \"http://www.likyateknoloji.com/XML_metaData_types\";";
 	public static final String decNsJsdl = "declare namespace  jsdl = \"http://schemas.ggf.org/jsdl/2005/11/jsdl\";";
 	
-	public static final String EXIST_DOCID = "docId";
-	public static final String EXIST_MYDATA = "mydata";
-	public static final String EXIST_GLOBALDATA = "globaldata";
-	public static final String EXIST_DEPLOYMENTDATA = "deploymentdata";
-
+	/**
+	 * MetaDataId ler
+	 */
+	public static final String EXIST_DEPLOYMENTDATA = "deploymentData";
+	public static final String EXIST_TEMPLATEDATA = "jobTemplates";
+	public static final String EXIST_SJDATA = "sjData";
+	
 	/**
 	 * Validasyon testlerinde kullanılan tanımlamalar.
 	 */
