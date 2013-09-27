@@ -18,10 +18,11 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
-import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.TreeBaseBean;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
@@ -29,8 +30,8 @@ import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
-public class JobTemplatesTree  extends TlosSWBaseBean implements Serializable {
-
+public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
+	
 	private static final long serialVersionUID = -8098932616833921105L;
 
 	@ManagedProperty(value = "#{dbOperations}")
@@ -48,9 +49,13 @@ public class JobTemplatesTree  extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSTree() {
 		
-		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1);
+		long startTime = System.currentTimeMillis();
+		
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, CommonConstantDefinitions.FIRST_COLUMN_STR, DocMetaDataHolder.FIRST_COLUMN);
+		/*
+		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.FIRST_COLUMN_STR);
 		if (scopeId1 != null) {
-			getSessionMediator().setScopeId1(Boolean.valueOf(scopeId1));
+			getSessionMediator().getWebSpaceWideRegistery().ScopeId1(Boolean.valueOf(scopeId1));
 		} 
 		else { // default olarak global data ile calisilir
 			getSessionMediator().setScopeId1(Boolean.valueOf(true));
@@ -61,6 +66,8 @@ public class JobTemplatesTree  extends TlosSWBaseBean implements Serializable {
 		
 		long startTime = System.currentTimeMillis();
 		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml( getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()) );
+		*/
+		
 		ComboListUtils.logTimeInfo("JobTemplatesTree.initJSTree.dbOperations.getTlosTemplateDataXml() Süre : " , startTime);
 
 		startTime = System.currentTimeMillis();
@@ -91,7 +98,8 @@ public class JobTemplatesTree  extends TlosSWBaseBean implements Serializable {
 
 	public void reconstructJSTree() {
 
-		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
+		//TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, CommonConstantDefinitions.FIRST_COLUMN_STR, DocMetaDataHolder.FIRST_COLUMN);
 		constructJSTree(tlosProcessData);
 	}
 
