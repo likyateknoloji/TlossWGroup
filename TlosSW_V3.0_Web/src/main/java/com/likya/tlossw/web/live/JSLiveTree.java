@@ -30,6 +30,7 @@ import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.common.Security;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DecorationUtils;
@@ -43,6 +44,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{scenarioMBean}")
 	private ScenarioMBean scenarioMBean;
+	
+	@ManagedProperty(value = "#{sessionMediator}")
+	private SessionMediator sessionMediator;
 	
 	private TreeNode root;
 
@@ -64,8 +68,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSLiveTree() {
 
-		if (getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID) != null) {
-			getSessionMediator().getWebAppUser().setViewRoleId(getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID));
+		if (getPassedParameter().get(CommonConstantDefinitions.FIRST_COLUMN_STR) != null) {
+			//getSessionMediator().getScopeText( getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1) )
+			getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA); // MetaDataType.GLOBAL
 		}
 
 		constructJSTree();
