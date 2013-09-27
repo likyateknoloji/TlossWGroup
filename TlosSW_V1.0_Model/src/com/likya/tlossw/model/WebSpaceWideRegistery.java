@@ -10,6 +10,8 @@ public class WebSpaceWideRegistery implements Serializable {
 	private boolean isFirstTime = false;
 	private boolean isPersistent = false;
 	private int instanceCount = 0;
+	
+	private DocMetaDataHolder docMetaDataInfo;
 
 	public boolean getWaitConfirmOfGUI() {
 		return waitConfirmOfGUI;
@@ -41,6 +43,14 @@ public class WebSpaceWideRegistery implements Serializable {
 
 	public void setInstanceCount(int instanceCount) {
 		this.instanceCount = instanceCount;
+	}
+
+	public DocMetaDataHolder getDocMetaDataInfo() {
+		return docMetaDataInfo;
+	}
+
+	public void setDocMetaDataInfo(DocMetaDataHolder docMetaDataInfo) {
+		this.docMetaDataInfo = docMetaDataInfo;
 	}
 
 
