@@ -30,13 +30,13 @@ public class StaticMenuBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		
-		globalDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.GLOBAL;
-		myDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.LOCAL;
+		globalDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
+		myDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
 		
 		globalLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.GLOBAL;
 		myLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.LOCAL;
 
-		deploymentUrl = DEPLOYMENT_BASE_URL + CommonConstantDefinitions.FIRST_COLUMN + "=" + MetaDataType.LOCAL + "&" + CommonConstantDefinitions.SECOND_COLUMN + "=" + MetaDataType.GLOBAL;
+		deploymentUrl = DEPLOYMENT_BASE_URL + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
 	
 	}
 
