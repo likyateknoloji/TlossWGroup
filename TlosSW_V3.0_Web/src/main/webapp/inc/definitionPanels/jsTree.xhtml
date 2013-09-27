@@ -81,12 +81,12 @@
 				action="#{jsNavigationMBean.copyScenarioAction(sessionMediator.getScope(1))}"
 				icon="ui-icon-copy" />
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
-				rendered="#{sessionMediator.getScope(1) eq 'Global Space'}"
+				rendered="#{sessionMediator.getScopeText(sessionMediator.getScope(1)) eq 'Global Space'}"
 				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.getScope(1))}"
 				action="#{jSTree.reconstructJSTree(sessionMediator.getScope(1))}"
 				icon="ui-icon-paste" update="tree" />
 			<p:menuitem value="#{msgs['tlos.button.deployHere']}"
-				rendered="#{sessionMediator.getScope(1) eq 'Global Space'}"
+				rendered="#{sessionMediator.getScopeText(sessionMediator.getScope(1)) eq 'Global Space'}"
 				onclick="jsDeploymentDialog.show()"
 				icon="ui-icon-paste" update="tree :jobDefinitionForm" />
 		</p:contextMenu>
