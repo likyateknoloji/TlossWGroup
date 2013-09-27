@@ -32,15 +32,16 @@ public abstract class TreeBaseBean extends TlosSWBaseBean implements Serializabl
 		*/
 		
 		String columnScope = getPassedParameter().get(scope);
-		
-		getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[columnId] = currentDocId;
+
+		//getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().setCurrentDoc(currentDocId, columnId);
+		getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[columnId-1] = currentDocId;
 		
 		if (columnScope != null) {
-			getSessionMediator().setDocumentScope(currentDocId, columnScope);
+			getSessionMediator().setDocumentScope(currentDocId, Integer.valueOf(columnScope));
 		}
 		
 		
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(currentDocId, getWebAppUser().getId(), getDocumentScope(currentDocId));
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(currentDocId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(currentDocId));
 		
 		System.out.println("Tree has been loaded !!");
 		
