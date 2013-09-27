@@ -24,6 +24,8 @@ import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.DocMetaDataHolder;
+import com.likya.tlossw.model.MetaDataType;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
@@ -125,7 +127,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		String jsId = wsNode.getId();
-
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
 			int jobType = ((WsJobNode) wsNode).getJobType();
@@ -134,7 +138,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			jobProperties = null;
 
 			if (Integer.parseInt(jsId) > 0) {
-				jobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), getDocumentId(), jsId);
+				jobProperties = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
 			} else {
 				isInsert = true;
 			}
@@ -143,7 +147,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
-			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
+			scenario = getDbOperations().getScenarioFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
 
 			if (scenario != null) {
 				switchToScenarioPanel();
@@ -184,6 +188,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		String jsId = wsNode.getId();
 
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
 			int jobType = ((WsJobNode) wsNode).getJobType();
@@ -192,7 +198,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			jobProperties = null;
 
 			if (Integer.parseInt(jsId) > 0) {
-				jobProperties = getDbOperations().getJobFromId(getWebAppUser().getId(), CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, jsId);
+				jobProperties = getDbOperations().getJobFromId(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
 			} else {
 				isInsert = true;
 			}
@@ -201,7 +207,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		} else if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			scenario = null;
-			scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), jsId);
+			scenario = getDbOperations().getScenarioFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
 
 			if (scenario != null) {
 				switchToScenarioPanel();
@@ -244,7 +250,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public boolean getTestPermit() {
-		if (CommonConstantDefinitions.EXIST_MYDATA.equals(getSessionMediator().getDocumentId())) {
+		
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN);
+		
+		if (getSessionMediator().getDocumentScope(docId) == MetaDataType.LOCAL) {
 			return true;
 		}
 		return false;
@@ -280,7 +289,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		// Ekrandan secilenin job veya senaryo olmasına göre
 		if (currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
-			Scenario scenario = getDbOperations().getScenarioFromId(getWebAppUser().getId(), getDocumentId(), getScenario().getID());
+			String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+			
+			Scenario scenario = getDbOperations().getScenarioFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getScenario().getID());
 			if (getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
 				tlosProcessData.set(scenario);
 			} else {
@@ -316,7 +327,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleDropAction(ActionEvent ae) {
-		jobProperties = getDbOperations().getTemplateJobFromId(draggedTemplateName.getId());
+		jobProperties = getDbOperations().getJobFromId(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA), draggedTemplateName.getId());
 		jobProperties.setID("0");
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
@@ -484,6 +495,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setNewJSName(jsBuffer.getJsName());
+
+		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
 
 	public void copyScenarioAction(String fromTree) {
@@ -494,7 +507,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 
-		ArrayList<JobProperties> jobList = getDbOperations().getJobExistenceList(getWebAppUser().getId(), toTree, jobPathInScenario + "/dat:jobList", "CopyOf" + jsBuffer.getJsName());
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		ArrayList<JobProperties> jobList = getDbOperations().getJobExistenceList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobPathInScenario + "/dat:jobList", "CopyOf" + jsBuffer.getJsName());
 		String copyOfJobName = "CopyOf" + jsBuffer.getJsName();
 
 		if (jobList == null || jobList.size() == 0) {
@@ -581,9 +596,11 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		getScenarioDefinitionMBean().pasteJS(toTree);
 	}
 
-	public boolean scenarioCheckUpForCopy(String documentId, String scenarioPathInScenario, String scenarioName) {
+	public boolean scenarioCheckUpForCopy(String scopeId, String scenarioPathInScenario, String scenarioName) {
 
-		String scenarioCheckResult = getDbOperations().getScenarioExistence(getWebAppUser().getId(), documentId, scenarioPathInScenario, scenarioName);
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPathInScenario, scenarioName);
 
 		if (scenarioCheckResult != null) {
 			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
@@ -593,9 +610,11 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		return true;
 	}
 
-	public boolean jobCheckUpForCopy(String documentId, String jobPathInScenario, String jobName) {
+	public boolean jobCheckUpForCopy( String toTree, String jobPathInScenario, String jobName) {
 
-		String jobCheckResult = getDbOperations().getJobExistence(getWebAppUser().getId(), documentId, jobPathInScenario + "/dat:jobList", jobName);
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		
+		String jobCheckResult = getDbOperations().getJobExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobPathInScenario + "/dat:jobList", jobName);
 
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
