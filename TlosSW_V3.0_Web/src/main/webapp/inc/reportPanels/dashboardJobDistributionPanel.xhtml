@@ -16,7 +16,7 @@
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
 			<p:fieldset legend="Job Distribution Graphics" widgetVar="dashWidget"
-				style="width: 1500px;">
+				style="width: 1300px;">
 
 				<p:panel id="density" header="Overall Job Execution Density">
 
@@ -32,6 +32,12 @@
 						action="#{jobsDistributionGraphicsMBean.refreshOhlcChart}" />
 				</p:panel>
 
+				<br />
+
+				<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+					<ui:param name="backingBean" value="#{jobsDistributionGraphicsMBean}" />
+				</ui:include>
+				
 			</p:fieldset>
 
 		</h:form>

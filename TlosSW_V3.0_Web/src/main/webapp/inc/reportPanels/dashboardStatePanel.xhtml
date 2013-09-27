@@ -10,13 +10,12 @@
 
 	<ui:define name="center">
 
-
 		<h:form id="dashboardReports" prependId="false">
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
 			<p:fieldset legend="#{msgs['tlos.reports.chartState.header']}"
-				widgetVar="dashWidget" style="width: 1500px;">
+				widgetVar="dashWidget" style="width: 1300px;">
 
 				<p:dashboard id="board" model="#{currentStatesOfJobsMBean.model}">
 					<p:ajax event="reorder"
@@ -114,10 +113,16 @@
 							action="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
 					</p:panel>
 
-
 				</p:dashboard>
-			</p:fieldset>
 
+				<br />
+	
+				<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+					<ui:param name="backingBean" value="#{currentStatesOfJobsMBean}" />
+				</ui:include>
+
+			</p:fieldset>
+			
 		</h:form>
 	</ui:define>
 	<ui:define name="west">

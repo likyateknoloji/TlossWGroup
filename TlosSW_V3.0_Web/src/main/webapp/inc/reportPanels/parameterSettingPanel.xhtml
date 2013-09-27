@@ -97,7 +97,7 @@
 
 		<br />
 
-		<h:panelGrid id="statePanel" columns="1"
+		<h:panelGrid id="jsStatePanel" columns="1"
 			rendered="#{backingBean.activeReportPanel eq 'zonesReport' or backingBean.activeReportPanel eq 'densityReport'}">
 
 			<h:panelGrid columns="2">
@@ -106,7 +106,7 @@
 					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.status']}" itemValue="Status" />
 					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.substate']}" itemValue="SubState" />
 					<f:selectItem itemLabel="#{msgs['tlos.popup.dependency.state']}" itemValue="State" />
-					<p:ajax update="statePanel" />
+					<p:ajax update="jsStatePanel" />
 				</p:selectOneRadio>
 			</h:panelGrid>
 

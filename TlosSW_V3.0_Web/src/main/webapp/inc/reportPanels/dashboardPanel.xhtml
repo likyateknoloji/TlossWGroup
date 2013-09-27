@@ -16,7 +16,7 @@
 			<p:messages id="messages" showDetail="true" autoUpdate="true" />
 
 			<p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget"
-				style="width: 1500px;">
+				style="width: 1300px;">
 
 
                     <p:poll interval="15" update="top10" />
@@ -50,7 +50,11 @@
 						</p:dialog>
 					</p:panel>
 
+					<br />
 
+					<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+						<ui:param name="backingBean" value="#{mostLongestJobsReportMBean}" />
+					</ui:include>
 
 			</p:fieldset>
 
