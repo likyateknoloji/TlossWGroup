@@ -53,6 +53,7 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.FacesUtils;
 import com.likya.tlossw.web.utils.WebAlarmUtils;
@@ -124,10 +125,12 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		try {
+			
+			String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
 			// ilk 20 iş ekranda görünecek
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(getWebAppUser().getId(), getDocumentId(), 20)));
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 20)));
 
-			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList(getWebAppUser().getId(), getDocumentId())));
+			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId) ) ));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
