@@ -20,18 +20,19 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
-import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.TreeBaseBean;
 import com.likya.tlossw.web.appmng.TraceBean;
 import com.likya.tlossw.web.live.ScenarioMBean;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 
 @ManagedBean
 @ViewScoped
-public class JSTree extends TlosSWBaseBean implements Serializable {
+public class JSTree extends TreeBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 995405464697116080L;
 
@@ -46,19 +47,11 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-
-		String documentId = getPassedParameter().get(CommonConstantDefinitions.EXIST_DOCID);
-		if (documentId != null) {
-			getSessionMediator().setDocumentId(documentId);
-		}
-
+		
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), getDocumentId());
-		System.out.println("Tree has been loaded !!");
-
-		System.out.println("Job Tree olusturuluyor ..");
-
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA, CommonConstantDefinitions.SECOND_COLUMN, DocMetaDataHolder.SECOND_COLUMN);
+		
 		constructJSTree(tlosProcessData);
 
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
@@ -91,7 +84,7 @@ public class JSTree extends TlosSWBaseBean implements Serializable {
 
 	public void reconstructJSTree(String documentId) {
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(getWebAppUser().getId(), documentId);
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(CommonConstantDefinitions.EXIST_SJDATA, getWebAppUser().getId(), getDocumentScope(CommonConstantDefinitions.EXIST_SJDATA));
 		constructJSTree(tlosProcessData);
 	}
 
