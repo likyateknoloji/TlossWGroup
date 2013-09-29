@@ -31,6 +31,7 @@ import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
@@ -86,25 +87,25 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath) {
 
-		HashMap<String, SpcInfoType> spcLookUpTable = null;
+		HashMap<ScenarioPathType, SpcInfoType> spcLookUpTable = null;
 
 //		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
 //		int treeLevel = treePathToken.countTokens();
 
 		if (isTester(jmxUser)) {
-			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId());
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId()).getTable();
 			instanceId = new String("" + jmxUser.getId());
 		} else {
-			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable().getTable();
 		}
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
 
-		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
+		Iterator<ScenarioPathType> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
 
-			String spcId = keyIterator.next();
+			ScenarioPathType spcId = keyIterator.next();
 
 			// StringTokenizer spcIdToken = new StringTokenizer(spcId, ".");
 
@@ -138,7 +139,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 
 			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId())) {
-				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
+				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId.getFullPath(), spcInfoTypeClient);
 			}
 			// }
 
@@ -256,7 +257,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		SpcInfoType spcInfoType = null;
 
 		if (isTester(jmxUser)) {
-			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
 		} else {
 			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
@@ -279,7 +280,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath().getFullPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
