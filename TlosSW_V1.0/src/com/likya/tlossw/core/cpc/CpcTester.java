@@ -1,6 +1,5 @@
 package com.likya.tlossw.core.cpc;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,7 +9,6 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
@@ -52,16 +50,7 @@ public class CpcTester extends CpcBase {
 
 				logger.info(" 1 - İşlem başlasın !");
 
-				if (getSpaceWideRegistry().getParameters() == null) {
-
-					getSpaceWideRegistry().setScenarioReadTime(Calendar.getInstance().getTimeInMillis());
-
-					ArrayList<Parameter> myPramList = prepareParameterList();
-
-					getSpaceWideRegistry().setParameters(myPramList);
-				}
-
-				arrangeParameters(getSpaceWideRegistry().getParameters());
+				initParameters();
 
 				if (spcLookupTable == null || spcLookupTable.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
