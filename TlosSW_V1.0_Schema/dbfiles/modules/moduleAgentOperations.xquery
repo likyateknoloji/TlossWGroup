@@ -18,7 +18,7 @@ $sequencesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWSequenceData10.xml")
 
 declare function lk:getAgents($documentUrl as xs:string) as element()* 
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
   
 	for $agents in doc($agentDocumentUrl)/agnt:SWAgents
 	return  $agents
@@ -46,14 +46,14 @@ declare function lk:checkAgent($documentUrl as xs:string, $agent as element(agnt
 
 declare function lk:searchAgent($documentUrl as xs:string, $host as xs:string, $jmxport as xs:short)  as element(agnt:SWAgent)? 
 {
-   let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+   let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
    
    return doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent[res:Resource = $host and agnt:jmxTlsPort = $jmxport]
 };
 
 declare function lk:searchAgent($documentUrl as xs:string, $searchAgent as element(agnt:SWAgent)) as element(agnt:SWAgent)* 
  {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
 	return if ((fn:contains(fn:lower-case($agent/res:Resource), fn:lower-case($searchAgent/res:Resource)) or data($searchAgent/res:Resource)="")
@@ -75,7 +75,7 @@ declare function lk:searchAgent($documentUrl as xs:string, $searchAgent as eleme
 (: ornek kullanim lk:agentList(1,2) ilk iki eleman :)
 declare function lk:agentList($documentUrl as xs:string, $firstElement as xs:int, $lastElement as xs:int) as element(agnt:SWAgent)* 
  {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent[position() = ($firstElement to $lastElement)]
 	return $agent
@@ -84,7 +84,7 @@ declare function lk:agentList($documentUrl as xs:string, $firstElement as xs:int
 (: ornek kullanim lk:searchAgentByjmxPort('5555') :)
 declare function lk:searchAgentByjmxPort($documentUrl as xs:string, $searchjmxPort as xs:string) as element(agnt:SWAgent)* 
  {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
     for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
     where $agent/agnt:jmxTlsPort=$searchjmxPort
@@ -93,7 +93,7 @@ declare function lk:searchAgentByjmxPort($documentUrl as xs:string, $searchjmxPo
 
 declare function lk:searchAgentByAgentId($documentUrl as xs:string, $id as xs:integer) as element(agnt:SWAgent)? 
  {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
 	where $agent/@id = $id
@@ -102,7 +102,7 @@ declare function lk:searchAgentByAgentId($documentUrl as xs:string, $id as xs:in
 
 declare function lk:insertAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
     let $sonuc := util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:insertAgent($documentUrl, $agent))     
     return true()
@@ -110,7 +110,7 @@ declare function lk:insertAgentLock($documentUrl as xs:string, $agent as element
 
 declare function lk:insertAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as node()*
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
     let $XXX := $agent
     let $nextId := sq:getNextId($documentUrl, "agentId")	
@@ -156,7 +156,7 @@ declare function lk:insertAgent($documentUrl as xs:string, $agent as element(agn
 
 declare function lk:deleteAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent))
  {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	for $agentdon in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
 	where $agentdon/@id = $agent/@id
@@ -165,14 +165,14 @@ declare function lk:deleteAgent($documentUrl as xs:string, $agent as element(agn
 
 declare function lk:deleteAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent))
 {
-   let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+   let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
    
    return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent, lk:deleteAgent($documentUrl, $agent))     
 };
 
 declare function lk:updateAgent($documentUrl as xs:string, $agent as element(agnt:SWAgent)) as xs:boolean
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
     let $varmi := 	for $agentdon in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
 	                where $agentdon/@id = $agent/@id
@@ -188,21 +188,21 @@ declare function lk:updateAgent($documentUrl as xs:string, $agent as element(agn
 
 declare function lk:updateAgentLock($documentUrl as xs:string, $agent as element(agnt:SWAgent))
 {
-   let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+   let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
    
    return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent, lk:updateAgent($documentUrl, $agent))     
 };
 
 declare function lk:updateUserStopRequestValueLock($documentUrl as xs:string, $agentId as xs:int, $userStopRequestValue as xs:string)
 {
-   let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+   let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
    
    return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateUserStopRequestValue($documentUrl, $agentId, $userStopRequestValue))
 };
 
 declare function lk:updateUserStopRequestValue($documentUrl as xs:string, $agentId as xs:int, $userStopRequestValue as xs:string)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	let $doc := doc($agentDocumentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:userStopRequest with $userStopRequestValue		
@@ -211,7 +211,7 @@ declare function lk:updateUserStopRequestValue($documentUrl as xs:string, $agent
 
 declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int, $updateValue as xs:boolean, $islem as xs:string) as xs:boolean
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 
     let $doc := doc($agentDocumentUrl)
     let $sonuc := if ($islem = "outJMX" and data($doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:outJmxAvailable) != $updateValue) then
@@ -231,7 +231,7 @@ declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int
 (:
 declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int, $jmxValue as xs:boolean)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	let $doc := doc($agentDocumentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:jmxAvailable with $jmxValue		
@@ -241,14 +241,14 @@ declare function lk:updateJmxValue($documentUrl as xs:string, $agentId as xs:int
 
 declare function lk:updateJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $jmxValue as xs:boolean, $islem as xs:string)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateJmxValue($documentUrl, $agentId, $jmxValue, $islem))
 };
 
 (:
 declare function lk:updateInJmxValue($documentUrl as xs:string, $agentId as xs:int, $inJmxValue as xs:boolean){
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	let $doc := doc($agentDocumentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:inJmxAvailable with $inJmxValue		
@@ -257,14 +257,14 @@ declare function lk:updateInJmxValue($documentUrl as xs:string, $agentId as xs:i
 
 declare function lk:updateInJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $inJmxValue as xs:boolean)
 {   
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateInJmxValue($documentUrl, $agentId, $inJmxValue))
 };
 
 declare function lk:updateOutJmxValue($documentUrl as xs:string, $agentId as xs:int, $outJmxValue as xs:boolean)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	let $doc := doc($agentDocumentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[@id=data($agentId)]/agnt:outJmxAvailable with $outJmxValue		
@@ -273,7 +273,7 @@ declare function lk:updateOutJmxValue($documentUrl as xs:string, $agentId as xs:
 
 declare function lk:updateOutJmxValueLock($documentUrl as xs:string, $agentId as xs:int, $outJmxValue as xs:boolean)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateOutJmxValue($documentUrl, $agentId, $outJmxValue))
 };
@@ -281,7 +281,7 @@ declare function lk:updateOutJmxValueLock($documentUrl as xs:string, $agentId as
 
 declare function lk:updateNrpeValue($documentUrl as xs:string, $host as element(res:Resource), $nrpeValue as xs:boolean)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	let $doc := doc($agentDocumentUrl)
 	let $update := update value $doc/agnt:SWAgents/agnt:SWAgent[res:Resource=$host]/agnt:nrpeAvailable with $nrpeValue		
@@ -290,7 +290,7 @@ declare function lk:updateNrpeValue($documentUrl as xs:string, $host as element(
 
 declare function lk:updateNrpeValueLock($documentUrl as xs:string, $host as element(res:Resource), $nrpeValue as xs:boolean)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateNrpeValue($documentUrl, $host, $nrpeValue))
 };
@@ -305,7 +305,7 @@ declare function lk:updateAgentToAvailable($documentUrl as xs:string, $agentId a
 
 declare function lk:updateAgentToAvailableLock($documentUrl as xs:string, $agentId as xs:int)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateAgentToAvailable($documentUrl, $agentId))
 };
@@ -320,14 +320,14 @@ declare function lk:updateAgentToUnAvailable($documentUrl as xs:string, $agentId
 
 declare function lk:updateAgentToUnAvailableLock($documentUrl as xs:string, $agentId as xs:int)
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	return util:exclusive-lock(doc($agentDocumentUrl)/agnt:SWAgents, lk:updateAgentToUnAvailable($documentUrl, $agentId))
 };
 
 declare function lk:getResorces($documentUrl as xs:string) as element()*
 {
-    let $agentDocumentUrl := met:getMetaData($documentUrl, "agents")
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
 	for $resources in distinct-values(doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent/res:Resource)
 	return
