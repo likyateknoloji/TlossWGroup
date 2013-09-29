@@ -114,7 +114,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// if (spcIdToken.countTokens() <= treeLevel + 1 && treeLevelComparer(treePath, spcId)) {
 
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
-			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId());
+			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId().getFullPath());
 
 			if (spcId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
 				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
@@ -138,7 +138,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			
 			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 
-			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId())) {
+			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId().getFullPath())) {
 				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId.getFullPath(), spcInfoTypeClient);
 			}
 			// }
