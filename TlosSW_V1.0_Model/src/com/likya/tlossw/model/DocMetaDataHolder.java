@@ -1,10 +1,13 @@
 package com.likya.tlossw.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import com.likyateknoloji.xmlMetaDataTypes.MetaDataDocument.MetaData;
 
-public class DocMetaDataHolder {
+public class DocMetaDataHolder implements Serializable {
+
+	private static final long serialVersionUID = 534978859176228488L;
 
 	public static final int FIRST_COLUMN = 1;
 	public static final int SECOND_COLUMN = 2;
