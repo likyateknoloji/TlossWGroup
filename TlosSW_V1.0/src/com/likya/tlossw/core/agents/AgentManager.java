@@ -18,6 +18,7 @@ import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.TlosRecoverException;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -163,9 +164,9 @@ public class AgentManager implements Runnable {
 			int numOfWorkingJobs = 0;
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 				if(spc == null) {
 					// No spc defined for this scenario, it is NOT a BUG !
