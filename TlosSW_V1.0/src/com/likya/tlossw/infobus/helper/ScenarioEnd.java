@@ -10,6 +10,7 @@ package com.likya.tlossw.infobus.helper;
 import java.util.Date;
 
 import com.likya.tlossw.model.infobus.InfoType;
+import com.likya.tlossw.model.path.ScenarioPathType;
 
 /**
  * Senaryonun bitisi sirasinda belirlenmis olmasi gereken; 
@@ -22,17 +23,10 @@ public class ScenarioEnd implements InfoType {
 
 	private static final long serialVersionUID = 1355434222323320780L;
 	
-	private String scenarioId;
+	private ScenarioPathType scenarioId;
 	private Date endDate;
 	private int jobCount;
 
-	public String getScenarioId() {
-		return scenarioId;
-	}
-
-	public void setScenarioId(String scenarioId) {
-		this.scenarioId = scenarioId;
-	}
 
 	public Date getEndDate() {
 		return endDate;
@@ -48,6 +42,14 @@ public class ScenarioEnd implements InfoType {
 
 	public void setJobCount(int jobCount) {
 		this.jobCount = jobCount;
+	}
+
+	public ScenarioPathType getScenarioId() {
+		return scenarioId;
+	}
+
+	public void setScenarioId(ScenarioPathType scenarioId) {
+		this.scenarioId = scenarioId;
 	}
 
 }
