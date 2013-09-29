@@ -5,6 +5,9 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.DocMetaDataHolder;
+import com.likya.tlossw.model.MetaDataType;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 
 public abstract class TreeBaseBean extends TlosSWBaseBean implements Serializable {
 
@@ -12,7 +15,24 @@ public abstract class TreeBaseBean extends TlosSWBaseBean implements Serializabl
 	
 	private static final Logger logger = Logger.getLogger(TreeBaseBean.class);
 
-	protected TlosProcessData getTlosProcessData(String currentDocId, String scope, int columnId){
+	protected TlosProcessData getTlosProcessData(String currentDocId){
+		
+		String scope;
+		int columnId;
+		
+		String doc1Id = getPassedParameter().get("doc1Id");
+		String doc2Id = getPassedParameter().get("doc2Id");
+		
+		if(doc1Id.equalsIgnoreCase(currentDocId)) {
+			scope = CommonConstantDefinitions.FIRST_COLUMN_STR;
+			columnId = DocMetaDataHolder.FIRST_COLUMN;
+		} else if(doc2Id.equalsIgnoreCase(currentDocId)) {
+			scope = CommonConstantDefinitions.SECOND_COLUMN_STR;
+			columnId = DocMetaDataHolder.SECOND_COLUMN;
+		} else {
+			System.err.println("FAzladan giriyor. Arastir !!");
+			return null;
+		}
 		
 		/*
 
@@ -36,16 +56,16 @@ public abstract class TreeBaseBean extends TlosSWBaseBean implements Serializabl
 		//getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().setCurrentDoc(currentDocId, columnId);
 		getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[columnId-1] = currentDocId;
 		
-		if (columnScope != null) {
-			getSessionMediator().setDocumentScope(currentDocId, Integer.valueOf(columnScope));
+		if (columnScope == null) { 
+			columnScope = ""+MetaDataType.GLOBAL; // GLOBAL
 		}
-		
+		getSessionMediator().setDocumentScope(currentDocId, Integer.valueOf(columnScope));
 		
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(currentDocId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(currentDocId));
 		
-		System.out.println("Tree has been loaded !!");
+		System.out.println(">> "+ currentDocId + " tree has been loaded !!");
 		
-		logger.info("Tree has been loaded !!");
+		logger.info(">> "+ currentDocId + " tree has been loaded !!");
 		
 		return tlosProcessData;
 		
