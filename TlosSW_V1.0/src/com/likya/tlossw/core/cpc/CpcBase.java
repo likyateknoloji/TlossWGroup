@@ -4,14 +4,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
-import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
@@ -29,9 +27,10 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.validation.XMLValidations;
@@ -58,19 +57,22 @@ public abstract class CpcBase implements Runnable {
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-			HashMap<String, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable().getTable();
 
-			Iterator<String> keyIterator = spcMap.keySet().iterator();
+			Iterator<ScenarioPathType> keyIterator = spcMap.keySet().iterator();
 
 			while (keyIterator.hasNext()) {
-				String key = keyIterator.next();
+
+				ScenarioPathType key = keyIterator.next();
 				Spc spcreferance = spcMap.get(key).getSpcReferance();
-				
-				if(spcreferance == null) {
+
+				if (spcreferance == null) {
 					// No spc defined for this scenario, it is NOT a BUG !
 					continue;
 				}
+
 				spcreferance.setExecutionPermission(false, isForced);
+
 				while (spcreferance.getExecuterThread().isAlive()) {
 					try {
 						Thread.sleep(100);
@@ -78,27 +80,24 @@ public abstract class CpcBase implements Runnable {
 						e.printStackTrace();
 					}
 				}
+
 				spcreferance.setExecuterThread(null);
+
 			}
 		}
 
 	}
 
-	protected void linearizeScenarios(String path, Scenario[] scenarios, HashMap<String, Scenario> scenarioList) {
+	protected void linearizeScenarios(ScenarioPathType path, Scenario[] scenarios, HashMap<ScenarioPathType, Scenario> scenarioList) {
 
 		ArrayIterator scenaryoListIterator = new ArrayIterator(scenarios);
 
 		while (scenaryoListIterator.hasNext()) {
 
-			String tmpPath = path + ".";
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			// String ek = new String("");
-			
-			// StringTokenizer pathToken = new StringTokenizer(path, ".");
-			// if(pathToken.countTokens() == 2) ek = new String(EngineeConstants.LONELY_JOBS + ".");
-				
-			String scenarioId = tmpPath + /* ek + */ scenario.getID().toString();
+			ScenarioPathType scenarioId = new ScenarioPathType();
+			scenarioId.add(scenario.getID().toString());
 
 			myLogger.info("   > " + scenarioId + " senaryosu yani scenario ID=" + scenario.getID().toString() + " isleniyor.");
 
@@ -112,119 +111,8 @@ public abstract class CpcBase implements Runnable {
 	}
 
 	protected boolean validateJobList(JobList jobList) {
-		
+
 		XMLValidations.validateWithCode(jobList, myLogger);
-
-		Hashtable<String, String> testTable = new Hashtable<String, String>();
-
-		// for (int index = 0; index < jobList.sizeOfJobPropertiesArray(); index++) {
-
-		// jobList.setJobPropertiesArray(index,
-		// ApplyXslt.transform(jobList.getJobPropertiesArray(index)));
-		// try {
-		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
-		// "/dat:jobProperties/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
-		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
-		// "/dat:jobProperties[@ID=\"2\" and @agentId=\"0\"]/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
-		// System.out.println("xpath");
-		// applyXPath.queryJobWithXPath(jobList.getJobPropertiesArray(index),
-		// "//dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters");
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
-		// }
-
-		ArrayIterator jobListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
-		String validationRequired = "NO";
-		
-		while (jobListIterator.hasNext()) {
-			
-			JobProperties jobPropertiesType = (JobProperties) (jobListIterator.next());
-
-			// String validationRequired =
-			// jobPropertiesType.getBaseJobInfos().getOSystem().toString();
-			// if(validationRequired.equalsIg<noreCase("windows")) break;
-
-			String jobId = jobPropertiesType.getID();
-			String jobName = jobPropertiesType.getBaseJobInfos().getJsName();
-
-			// if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals("BATCH PROCESS")) {
-			// jobPropertiesType.getJobDescription().getApplication().getPOSIXApplication().getArgumentArray(1);
-			// jobPropertiesType.getSweep().getAssignmentArray(0).getParameterArray(0);
-			// String inputs[] = null;
-			// String xpath = "//jsdl-posix:Argument[3]";
-			// String xpath =
-			// "substring(//jsdl-posix:Argument[3]/text(), 2, 3)";
-			// try {
-			// inputs = ApplyXPath.queryXmlWithXPath(jobPropertiesType,
-			// xpath);
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-			// }
-
-			if (validationRequired.equalsIgnoreCase("NO")) {
-				break;
-
-			}
-
-			myLogger.info("   > Is Id si: " + jobId);
-			myLogger.info("   > Is Adı : " + jobName);
-			myLogger.info("   > Listeye eklemek icin validasyon yapiyorum. ");
-
-			if (!testTable.containsKey(jobId)) {
-
-				testTable.put(jobId, jobId);
-				myLogger.info("     > OK isim validated.");
-
-			} else {
-
-				myLogger.error("Ayni Id ile birden fazla anahtar kullanilamaz ! => " + jobId);
-				myLogger.info("     > Hayir, serbest joblar icinde ayni Id ile birden fazla is kullanilamaz.");
-
-				return false;
-			}
-
-			if (jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString().equals(JobCommandType.SHELL_SCRIPT)) {
-
-				myLogger.debug("  Verilan shell komutunun kontrolu icin buraya birseyler eklemek lazim !!");
-				// TODO verilan shell komutunun kontrolu icin buraya birseyler
-				// eklemek lazim.
-
-				return false;
-			}
-
-			// TODO jobpath in sonunda / olup olmamasi kontrol edilmeli, yoksa
-			// eklenmeli.
-
-			String jobCommandType = jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString();
-			String fileNameWtihPath = jobPropertiesType.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath() + jobCommandType;
-
-			if (jobCommandType != null && jobCommandType.equals(JobCommandType.SYSTEM_COMMAND) && !FileUtils.checkFile(fileNameWtihPath)) {
-				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : id : " + jobId + " name : " + jobName + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
-
-				return false;
-			} else if (jobCommandType.equals(JobCommandType.BATCH_PROCESS) && (!FileUtils.checkFile(fileNameWtihPath) && jobPropertiesType.getBaseJobInfos().getOSystem().toString().equals("Windows"))) {
-				myLogger.debug("     > HATA : Belirtilen dosya " + fileNameWtihPath + " bulunamadi. ");
-				myLogger.fatal("HATA : id : " + jobId + " name : " + jobName + " için belirtilen is dosyasi bulunamadi -> " + jobCommandType);
-
-				return false;
-			} else {
-				if (jobCommandType.equals("FTP")) {
-					myLogger.debug("     > FTP : Validasyon icin bir kontrol koy! ");
-				} else {
-					myLogger.info("     > OK Belirtilen dosya " + fileNameWtihPath + " bulundu. ");
-				}
-			}
-
-			/* VALIDATED state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobPropertiesType, StateName.INT_PENDING, SubstateName.INT_VALIDATED);
-
-			// TODO infoBusManager i bilgilendir.
-
-		}
 
 		return true;
 	}
@@ -255,13 +143,16 @@ public abstract class CpcBase implements Runnable {
 		return transformTable;
 	}
 
-	public static void dumpSpcLookupTable(String instanceId, HashMap<String, SpcInfoType> spcLookupTable) {
+	public static void dumpSpcLookupTable(String instanceId, SpcLookupTable spcLookupTable) {
+
+		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
 
 		System.out.println("**************************Dumping SpcLookupTable ***************************************");
-		System.out.println("sizo of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
+		System.out.println("sizo of spcLookupTable for instanceId : " + instanceId + " is " + table.size());
 
-		for (String spcKey : spcLookupTable.keySet()) {
-			System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
+		
+		for (ScenarioPathType spcKey : table.keySet()) {
+			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId());
 		}
 
 		System.out.println("***************************************************************************************");
@@ -270,18 +161,14 @@ public abstract class CpcBase implements Runnable {
 
 	public static void dumpSpcLookupTables(SpaceWideRegistry spaceWideRegistry) {
 
-		// Set<String> myMap = spcLookupTable.keySet();
-		// Iterator<String> myIterator = myMap.iterator();
 		System.out.println("**************************Dumping SpcLookupTables ***************************************");
 		Logger.getLogger(CpcBase.class).info("  >>> **************************Dumping SpcLookupTables ***************************************");
-		// while(myIterator.hasNext()) {
-		// System.out.println("Spc ID : " +
-		// spcLookupTable.get(myIterator.next()).getSpcReferance().getSpcId());
-		// }
+
 		for (String instanceId : spaceWideRegistry.getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = spaceWideRegistry.getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+
 			if (spcLookupTable == null) {
 				System.out.println("Current instance have no scenarios ! InstanceId : " + instanceId);
 				Logger.getLogger(CpcBase.class).warn("  >>> WARNING : Current instance have no scenarios ! InstanceId : " + instanceId);
@@ -290,7 +177,7 @@ public abstract class CpcBase implements Runnable {
 			System.out.println("size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
 			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
 
-			for (String spcKey : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcKey : spcLookupTable.keySet()) {
 				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
 				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
 			}
@@ -300,65 +187,78 @@ public abstract class CpcBase implements Runnable {
 		Logger.getLogger(CpcBase.class).info("***************************************************************************************");
 
 	}
-
-	protected HashMap<String, SpcInfoType> prepareSpcLookupTable(TlosProcessData tlosProcessData) throws TlosException {
-
-		HashMap<String, SpcInfoType> scpLookupTable = new HashMap<String, SpcInfoType>();
-
-		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
-
-		String instanceId = tlosProcessData.getInstanceId();
-
-		if (instanceId == null) {
-			instanceId = "" + Calendar.getInstance().getTimeInMillis();
+	
+	protected String getInstanceId(TlosProcessData tlosProcessData, boolean isTest) {
+		
+		String instanceId = null;
+		
+		if(isTest) {
+			String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
+			if (userId == null || userId.equals("")) {
+				userId = "" + Calendar.getInstance().getTimeInMillis();
+			}
+			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
+			instanceId = userId;
+		} else {
+			instanceId = tlosProcessData.getInstanceId();
+			if (instanceId == null) {
+				instanceId = "" + Calendar.getInstance().getTimeInMillis();
+			}
+			myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmiştir.");
 		}
-		myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmistir.");
-		String localRoot = CpcUtils.getRootScenarioPath(instanceId);
-		myLogger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
+		
+		return instanceId;
+	}
 
-		// Bir senaryoya ait olmayan is listesi
+	protected HashMap<ScenarioPathType, Scenario> performLinearization(String instanceId, TlosProcessData tlosProcessData) {
 
-//		JobList lonelyJobList = tlosProcessData.getJobList();
+		HashMap<ScenarioPathType, Scenario> tmpScenarioList = new HashMap<ScenarioPathType, Scenario>();
 
-//		if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
-//			myLogger.info("");
-//			myLogger.info(" 6 - TlosProcessData icinde bir Senaryoya ait olmayan serbest isler listesi cikarilacak.");
-			/*
-			 * if (!validateJobList(lonelyJobList)) { myLogger.info(
-			 * "     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir."
-			 * ); myLogger.error(
-			 * "Cpc Job List validation failed, process state changed to WAITING !"
-			 * ); throw new TlosException(
-			 * "Cpc Job List validation failed, process state changed to WAITING !"
-			 * ); }
-			 */
-			// Bu joblari, serbest olarak ekliyoruz listeye
+		ScenarioPathType scenarioPathType = new ScenarioPathType();
 
-			Scenario myScenario = CpcUtils.getScenario(tlosProcessData, instanceId);
-			myScenario.setID(EngineeConstants.LONELY_JOBS);
-			
-			// *** root sonrasina instanceid eklendi. *//*
+		scenarioPathType.setInstanceId(instanceId);
+		scenarioPathType.setId(EngineeConstants.LONELY_JOBS);
 
-			tmpScenarioList.put(CpcUtils.getRootScenarioPath(instanceId), myScenario);
+		myLogger.info("   > iş ağacının işlenmekte olan dalı " + scenarioPathType.getFullPath() + " olarak belirlenmiştir.");
 
-			// System.out.println("   > Validasyonda problem olmadigindan "+localRoot
-			// + "." + Cpc.LONELY_JOBS+" olarak Senaryo listesine eklendiler.");
-//			myLogger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
-//		}
+		// Bu joblari, serbest olarak ekliyoruz listeye
+
+		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, instanceId);
+		myScenario.setID(EngineeConstants.LONELY_JOBS);
+		
+		// *** root sonrasina instanceid eklendi. *//*
+
+		tmpScenarioList.put(scenarioPathType /*CpcUtils.getRootScenarioPath(instanceId)*/, myScenario);
 
 		myLogger.info("");
-		myLogger.info(" 7 - Senaryolar, lineerlestirilme islemine tabi tutulacak.");
-		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
+		myLogger.info(" 7 - Senaryolar, lineerleştirilme işlemine tabi tutulacak.");
+		
+		linearizeScenarios(scenarioPathType, tlosProcessData.getScenarioArray(), tmpScenarioList);
+		
+		myLogger.info("   > Lineerleştirilme işlemi OK.");
+		
+		return tmpScenarioList;
+		
+	}
 
-		myLogger.info("   > Lineerlestirilme islemi OK.");
-		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
+	protected SpcLookupTable prepareSpcLookupTable(TlosProcessData tlosProcessData) throws TlosException {
+
+		SpcLookupTable spcLookupTable = new SpcLookupTable();
+
+		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		
+		String instanceId = getInstanceId(tlosProcessData, false);
+
+		HashMap<ScenarioPathType, Scenario> tmpScenarioList = performLinearization(instanceId, tlosProcessData);
+
+		Iterator<ScenarioPathType> keyIterator = tmpScenarioList.keySet().iterator();
 
 		myLogger.info("");
-		myLogger.info(" 8 - TlosProcessData icindeki Senaryolardaki islerin listesi cikarilacak.");
+		myLogger.info(" 8 - TlosProcessData içindeki senaryolardaki işlerin listesi çıkarılacak.");
 
 		while (keyIterator.hasNext()) {
 
-			String scenarioId = keyIterator.next();
+			ScenarioPathType scenarioId = keyIterator.next();
 
 			myLogger.info("");
 			myLogger.info("  > Senaryo ismi : " + scenarioId);
@@ -381,17 +281,17 @@ public abstract class CpcBase implements Runnable {
 			}
 
 			SpcInfoType spcInfoType = null;
+			String userId = null; // Henüz ayarlanmadı !
 			
-			if(!scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) && jobList.getJobPropertiesArray().length == 0) {
-				spcInfoType = CpcUtils.getSpcInfo(null, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
+				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
 			} else {
 				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
-				
-				String userId = null; // Henüz ayarlanmadı !
+
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
-				
+
 				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 					if (!spc.initScenarioInfo()) {
 						myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
@@ -401,8 +301,8 @@ public abstract class CpcBase implements Runnable {
 					}
 				}
 			}
-			
-			scpLookupTable.put(scenarioId, spcInfoType);
+
+			table.put(new ScenarioPathType(scenarioId), spcInfoType);
 
 			myLogger.info("  > Senaryo yuklendi !");
 
@@ -411,7 +311,7 @@ public abstract class CpcBase implements Runnable {
 		myLogger.info("");
 		myLogger.info(" > Senaryolarin ve islerin SPC (spcLookUpTable) senaryo agacina yuklenme islemi bitti !");
 
-		return scpLookupTable;
+		return spcLookupTable;
 	}
 
 	protected ArrayList<Parameter> prepareParameterList() throws GlobalParameterLoadException {
@@ -502,7 +402,7 @@ public abstract class CpcBase implements Runnable {
 
 		arrangeParameters(getSpaceWideRegistry().getParameters());
 	}
-	
+
 	public Thread getExecuterThread() {
 		return executerThread;
 	}
