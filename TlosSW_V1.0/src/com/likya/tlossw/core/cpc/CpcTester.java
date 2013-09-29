@@ -1,6 +1,5 @@
 package com.likya.tlossw.core.cpc;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -14,7 +13,8 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.exceptions.TlosException;
-import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.SpcLookupTable;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -28,7 +28,7 @@ public class CpcTester extends CpcBase {
 
 	private Logger logger = Logger.getLogger(CpcTester.class);
 
-	private HashMap<String, SpcInfoType> spcLookupTable = new HashMap<String, SpcInfoType>();
+	SpcLookupTable spcLookupTable = new SpcLookupTable();
 
 	private boolean loop = true;
 
@@ -37,7 +37,7 @@ public class CpcTester extends CpcBase {
 	}
 
 	public synchronized void addTestData(TlosProcessData tlosProcessData) throws TlosException {
-		spcLookupTable.putAll(prepareTestTable(tlosProcessData));
+		spcLookupTable = prepareTestTable(tlosProcessData);
 	}
 
 	public void run() {
@@ -52,18 +52,20 @@ public class CpcTester extends CpcBase {
 
 				initParameters();
 
-				if (spcLookupTable == null || spcLookupTable.size() == 0) {
+				HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+				
+				if (table == null || table.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
 				} else {
 
 					logger.info("");
 					logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
 
-					for (String spcId : spcLookupTable.keySet()) {
+					for (ScenarioPathType spcId : table.keySet()) {
 
-						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
+						logger.info("   > Senaryo " + spcId.getFullPath() + " calistiriliyor !");
 
-						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
+						SpcInfoType mySpcInfoType = table.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
 
 						if (spc == null) {
@@ -78,6 +80,8 @@ public class CpcTester extends CpcBase {
 							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
 							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
 
+							logger.info("     > Senaryo " + spcId.getFullPath() + " aktive edildi !");
+							
 							spc.getExecuterThread().start();
 
 						}
@@ -106,43 +110,25 @@ public class CpcTester extends CpcBase {
 
 	}
 
-	protected HashMap<String, SpcInfoType> prepareTestTable(TlosProcessData tlosProcessData) throws TlosException {
+	protected SpcLookupTable prepareTestTable(TlosProcessData tlosProcessData) throws TlosException {
 
-		HashMap<String, SpcInfoType> scpLookupTable = new HashMap<String, SpcInfoType>();
+		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
-		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
+		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		
+		// Using userId as instanceId for test routine
+		String userId = getInstanceId(tlosProcessData, false);
+		
+		HashMap<ScenarioPathType, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
 
-		String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
-
-		if (userId == null || userId.equals("")) {
-			userId = "" + Calendar.getInstance().getTimeInMillis();
-		}
-
-		logger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
-		String localRoot = CpcUtils.getRootScenarioPath(userId);
-		logger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
-
-		// JobList lonelyJobList = tlosProcessData.getJobList();
-
-		// if (lonelyJobList != null && lonelyJobList.getJobPropertiesArray().length > 0) {
-
-		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, userId);
-		myScenario.setID(EngineeConstants.LONELY_JOBS);
-		tmpScenarioList.put(localRoot, myScenario);
-
-		// logger.info("   > Serbest isler " + localRoot + "." + EngineeConstants.LONELY_JOBS + " olarak Senaryo listesine eklendiler.");
-		// }
-
-		linearizeScenarios(localRoot, tlosProcessData.getScenarioArray(), tmpScenarioList);
-
-		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
+		Iterator<ScenarioPathType> keyIterator = tmpScenarioList.keySet().iterator();
 
 		logger.info("");
 		logger.info(" 8 - TlosProcessData icindeki Senaryolardaki islerin listesi cikarilacak.");
 
 		while (keyIterator.hasNext()) {
 
-			String scenarioId = keyIterator.next();
+			ScenarioPathType scenarioId = keyIterator.next();
 
 			logger.info("");
 			logger.info("  > Senaryo ismi : " + scenarioId);
@@ -161,20 +147,22 @@ public class CpcTester extends CpcBase {
 
 			SpcInfoType spcInfoType = null;
 
-			if (!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) && jobList.getJobPropertiesArray().length == 0) {
+			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
 			} else {
 				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
+				
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioId);
+				
 				if (!spc.initScenarioInfo()) {
 					logger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 					continue;
 				}
 			}
 
-			scpLookupTable.put(scenarioId, spcInfoType);
+			table.put(new ScenarioPathType(scenarioId), spcInfoType);
 
 			logger.info("  > Senaryo yuklendi !");
 
@@ -183,7 +171,7 @@ public class CpcTester extends CpcBase {
 		logger.info("");
 		logger.info(" > Senaryolarin ve islerin SPC (spcLookUpTable) senaryo agacina yuklenme islemi bitti !");
 
-		return scpLookupTable;
+		return spcLookupTable;
 	}
 
 	public boolean isLoop() {
@@ -194,17 +182,22 @@ public class CpcTester extends CpcBase {
 		this.loop = loop;
 	}
 
-	public HashMap<String, SpcInfoType> getSpcLookupTable(String userId) {
+	public SpcLookupTable getSpcLookupTable(String userId) {
+		
+		SpcLookupTable tmpLookupTable = new SpcLookupTable();
+		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
 
-		HashMap<String, SpcInfoType> tmpMap = new HashMap<String, SpcInfoType>();
+		HashMap<ScenarioPathType, SpcInfoType> tmpMap = new HashMap<ScenarioPathType, SpcInfoType>();
 
-		for (String key : spcLookupTable.keySet()) {
-			if (userId.equals(spcLookupTable.get(key).getUserId())) {
-				tmpMap.put(key, spcLookupTable.get(key));
+		for (ScenarioPathType key : table.keySet()) {
+			if (userId.equals(table.get(key).getUserId())) {
+				tmpMap.put(key, table.get(key));
 			}
 		}
+		
+		tmpLookupTable.setTable(tmpMap);
 
-		return tmpMap;
+		return tmpLookupTable;
 	}
 
 }
