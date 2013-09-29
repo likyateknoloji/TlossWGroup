@@ -1,7 +1,5 @@
 package com.likya.tlossw.core.spc.helpers;
 
-import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
@@ -12,10 +10,10 @@ import com.likya.tlos.model.xmlbeans.error.ErrTypeDocument.ErrType;
 import com.likya.tlos.model.xmlbeans.error.SWErrorDocument.SWError;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.db.utils.ErrorDbUtils;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.TlosSWError;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -108,7 +106,7 @@ public class SWErrorOperations {
 		throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 	}
 
-	public static void logErrorForSpcInfoType(Logger logger, String jsName, String itemJsPath, String instanceId, String treePath, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
+	public static void logErrorForSpcInfoType(Logger logger, String jsName, String itemJsPath, String instanceId, String treePath, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
 
 		logger.error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + instanceId + "." + itemJsPath);
 		logger.error("     > Ana is adi : " + jsName);
