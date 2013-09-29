@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.RunTimeUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -20,7 +21,7 @@ public class JobRuntimeProperties implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String treePath;
+	private ScenarioPathType treePath;
 	
 	private JobProperties jobProperties;
 	
@@ -180,14 +181,6 @@ public class JobRuntimeProperties implements Serializable {
 		this.realExecutionDate = realExecutionDate;
 	}
 
-	public String getTreePath() {
-		return treePath;
-	}
-
-	public void setTreePath(String treePath) {
-		this.treePath = treePath;
-	}
-
 	public LiveStateInfo getPreviousLiveStateInfo() {
 		return previousLiveStateInfo;
 	}
@@ -234,6 +227,14 @@ public class JobRuntimeProperties implements Serializable {
 
 	public DbConnectionProfile getDbConnectionProfile() {
 		return dbConnectionProfile;
+	}
+
+	public ScenarioPathType getTreePath() {
+		return treePath;
+	}
+
+	public void setTreePath(ScenarioPathType treePath) {
+		this.treePath = treePath;
 	}
 
 }
