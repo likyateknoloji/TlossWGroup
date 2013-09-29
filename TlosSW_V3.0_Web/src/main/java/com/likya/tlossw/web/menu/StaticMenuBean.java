@@ -30,13 +30,13 @@ public class StaticMenuBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		
-		globalDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
-		myDefsUrl = DEF_BASE_URL + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
+		globalDefsUrl = DEF_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_TEMPLATEDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
+		myDefsUrl = DEF_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_TEMPLATEDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
 		
-		globalLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.GLOBAL;
-		myLiveJsUrl = LIVEJS_BASE_URL + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.LOCAL;
+		globalLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.GLOBAL;
+		myLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.LOCAL;
 
-		deploymentUrl = DEPLOYMENT_BASE_URL + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
+		deploymentUrl = DEPLOYMENT_BASE_URL +  "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_DEPLOYMENTDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
 	
 	}
 
