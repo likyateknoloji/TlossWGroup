@@ -16,6 +16,7 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.db.utils.ErrorDbUtils;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.TlosSWError;
+import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class SWErrorOperations {
@@ -100,7 +101,7 @@ public class SWErrorOperations {
 		logger.error("     > Genel bagimlilik tanimi yapilan :");
 		logger.error("     > Ana is adi : " + jsName);
 		logger.error("     > Bagli is : " + itemJsName + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-		logger.error("     >    Dizin : " + Cpc.getRootPath() + "." + instanceId + "." + itemJsPath);
+		logger.error("     >    Dizin : " + BasePathType.getRootPath() + "." + instanceId + "." + itemJsPath);
 		logger.error("     > 	Yukaridaki is  " + spcId + " adli senaryoda bulunamadi !");
 		logger.error("     > Uygulama sona eriyor !");
 		logger.info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
@@ -109,13 +110,13 @@ public class SWErrorOperations {
 
 	public static void logErrorForSpcInfoType(Logger logger, String jsName, String itemJsPath, String instanceId, String treePath, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
 
-		logger.error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + instanceId + "." + itemJsPath);
+		logger.error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + instanceId + "." + itemJsPath);
 		logger.error("     > Ana is adi : " + jsName);
 		logger.error("     > Ana senaryo yolu : " + treePath);
 		logger.error("     > Uygulama sona eriyor !");
 		logger.info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 		Cpc.dumpSpcLookupTable(instanceId, spcLookupTable);
-		throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + instanceId + "." + itemJsPath);
+		throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + instanceId + "." + itemJsPath);
 	}
 
 	public static void logErrorForItemJsId(Logger logger, String jsName, String itemJsName, String treePath, String Id) throws UnresolvedDependencyException {
