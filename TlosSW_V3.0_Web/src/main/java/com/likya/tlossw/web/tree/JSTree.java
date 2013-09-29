@@ -64,10 +64,10 @@ public class JSTree extends TreeBaseBean implements Serializable {
 		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId2(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId2()));
 		
 		*/
-		
+
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA, CommonConstantDefinitions.SECOND_COLUMN_STR, DocMetaDataHolder.SECOND_COLUMN);
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA);
 		
 		constructJSTree(tlosProcessData);
 
