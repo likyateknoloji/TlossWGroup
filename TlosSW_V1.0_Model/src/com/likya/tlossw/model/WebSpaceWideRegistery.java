@@ -12,6 +12,10 @@ public class WebSpaceWideRegistery implements Serializable {
 	private int instanceCount = 0;
 	
 	private DocMetaDataHolder docMetaDataInfo;
+	
+	public WebSpaceWideRegistery() {
+		this.docMetaDataInfo = new DocMetaDataHolder();
+	}
 
 	public boolean getWaitConfirmOfGUI() {
 		return waitConfirmOfGUI;
