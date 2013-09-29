@@ -31,7 +31,9 @@ import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -42,7 +44,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private LiveStateInfo liveStateInfo;
 
-	private String spcId;
+	private ScenarioPathType spcId;
 	private String jsName;
 	private String comment;
 	private String instanceId;
@@ -95,7 +97,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	
 	protected boolean isTester = false;
 
-	public SpcBase(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
+	public SpcBase(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
 		this.isTester = isTester;
 		this.spcId = spcId;
@@ -502,10 +504,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return spaceWideRegistry;
 	}
 
-	public String getSpcId() {
-		return spcId;
-	}
-
 	public ArrayList<SortType> getJobQueueIndex() {
 		return jobQueueIndex;
 	}
@@ -542,7 +540,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.userId = userId;
 	}
 
-	public HashMap<String, SpcInfoType> getSpcLookupTable() {
+	public SpcLookupTable getSpcLookupTable() {
 		
 		if(isTester) {
 			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);			
@@ -565,16 +563,20 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 	
 	// Bir senaryonun icindeki senaryoları veriyor
-	public HashMap<String, SpcInfoType> getSetOfScenarios() {
-		HashMap<String, SpcInfoType> map = new HashMap<String, SpcInfoType>();
-		Set<String> set = this.getSpcLookupTable().keySet();
+	public HashMap<ScenarioPathType, SpcInfoType> getSetOfScenarios() {
+		HashMap<ScenarioPathType, SpcInfoType> map = new HashMap<ScenarioPathType, SpcInfoType>();
+		Set<ScenarioPathType> set = this.getSpcLookupTable().getTable().keySet();
 
-        for(String i : set)
-          if(i.indexOf(spcId + ".") != -1) {
-             map.put(i, this.getSpcLookupTable().get(i));
+        for(ScenarioPathType i : set)
+          if(i.getFullPath().indexOf(spcId + ".") != -1) {
+             map.put(i, this.getSpcLookupTable().getTable().get(i));
           }
 
 		return map;
+	}
+
+	public ScenarioPathType getSpcId() {
+		return spcId;
 	}
 
 }
