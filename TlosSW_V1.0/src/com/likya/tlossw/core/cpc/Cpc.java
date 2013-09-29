@@ -19,6 +19,8 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.SpcLookupTable;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -64,7 +66,7 @@ public class Cpc extends CpcBase {
 
 					InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-					HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+					HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 					if (spcLookupTable == null) {
 						logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
@@ -75,7 +77,7 @@ public class Cpc extends CpcBase {
 					logger.info("");
 					logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
 
-					for (String spcId : spcLookupTable.keySet()) {
+					for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
@@ -85,7 +87,7 @@ public class Cpc extends CpcBase {
 							continue;
 						}
 
-						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
+						logger.info("   > Senaryo " + spcId.getFullPath() + " calistiriliyor !");
 						/**
 						 * Bu thread daha once calistirildi mi? Degilse thread i
 						 * baslatabiliriz !!
@@ -97,7 +99,7 @@ public class Cpc extends CpcBase {
 							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
 							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
 
-							logger.info("     > Senaryo " + spcId + " aktive edildi !");
+							logger.info("     > Senaryo " + spcId.getFullPath() + " aktive edildi !");
 
 							/** Senaryonun thread lerle calistirildigi yer !! **/
 							spc.getExecuterThread().start();
@@ -146,7 +148,7 @@ public class Cpc extends CpcBase {
 
 	private void freshDataLoad(TlosProcessData tlosProcessData) throws TlosException {
 
-		logger.info("   > Hayir, ilk eleman olacak !");
+		logger.info("   > Hayır, ilk eleman olacak !");
 
 		/**
 		 * Senaryo ve isler spcLookUpTable a yani senaryo agacina
@@ -155,14 +157,14 @@ public class Cpc extends CpcBase {
 		 * 
 		 **/
 
-		HashMap<String, SpcInfoType> spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
+		SpcLookupTable spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
 		/*
 		 * scpLookUpTable olusturuldu. Olusan bu tablo InstanceID ile
 		 * iliskilendirilecek.
 		 */
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, InstanceID = " + tlosProcessData.getInstanceId() + " ile ilişkilendirilecek.");
 
 		InstanceInfoType instanceInfoType = new InstanceInfoType();
 		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
@@ -170,7 +172,7 @@ public class Cpc extends CpcBase {
 
 		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
 
-		logger.info("   > OK iliskilendirildi.");
+		logger.info("   > OK ilişkilendirildi.");
 
 		if (spcLookUpTable == null) {
 			logger.warn("   >>> SPC (spcLookUpTable) senaryo agaci BOS !!");
@@ -184,12 +186,12 @@ public class Cpc extends CpcBase {
 
 		logger.info("   > Evet, " + getSpaceWideRegistry().getInstanceLookupTable().size() + ". eleman olacak !");
 
-		HashMap<String, SpcInfoType> spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
+		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
 
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
-			checkConcurrency(spcLookupTableNew, spcLookupTable);
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			checkConcurrency(spcLookupTableNew.getTable(), spcLookupTable);
 		}
 
 		logger.info("");
@@ -226,9 +228,9 @@ public class Cpc extends CpcBase {
 
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 
 				Spc spc = new Spc(spcId, getSpaceWideRegistry(), null, isUserSelectedRecover, false);
 				LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
@@ -284,9 +286,9 @@ public class Cpc extends CpcBase {
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 
 				if (!spc.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
@@ -310,11 +312,11 @@ public class Cpc extends CpcBase {
 		return;
 	}
 
-	private void checkConcurrency(HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableMaster) throws TlosException {
+	private void checkConcurrency(HashMap<ScenarioPathType, SpcInfoType> spcLookupTableNew, HashMap<ScenarioPathType, SpcInfoType> spcLookupTableMaster) throws TlosException {
 
-		for (String spcId : spcLookupTableNew.keySet()) {
+		for (ScenarioPathType spcId : spcLookupTableNew.keySet()) {
 
-			String keyStr = containsScenario(spcId, spcLookupTableMaster);
+			ScenarioPathType keyStr = containsScenario(spcId, spcLookupTableMaster);
 
 			if (keyStr != null) {
 
@@ -334,7 +336,7 @@ public class Cpc extends CpcBase {
 						mydependencyItem.setJsDependencyRule(myDependencyRule);
 
 						mydependencyItem.setJsName(spcInfoTypeMaster.getSpcReferance().getBaseScenarioInfos().getJsName());
-						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId());
+						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId().getFullPath());
 						mydependencyItem.setJsType(JsType.SCENARIO);
 
 						DependencyList myDependencyList = DependencyList.Factory.newInstance();
@@ -357,7 +359,7 @@ public class Cpc extends CpcBase {
 						mydependencyItem.setJsDependencyRule(myDependencyRule);
 
 						mydependencyItem.setJsName(spcInfoTypeMaster.getSpcReferance().getBaseScenarioInfos().getJsName());
-						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId());
+						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId().getFullPath());
 						mydependencyItem.setJsType(JsType.SCENARIO);
 
 						String dependecyExpression = mydependencyItem.getDependencyID();
@@ -376,27 +378,13 @@ public class Cpc extends CpcBase {
 
 	}
 
-	private String containsScenario(String scenarioId, HashMap<String, SpcInfoType> spcLookupTableMaster) {
+	private ScenarioPathType containsScenario(ScenarioPathType scenarioId, HashMap<ScenarioPathType, SpcInfoType> spcLookupTableMaster) {
 
-		Iterator<String> keyIterator = spcLookupTableMaster.keySet().iterator();
-
-		String tmpScenarioId = scenarioId;
-
-		tmpScenarioId = tmpScenarioId.substring(tmpScenarioId.indexOf('.') + 1); // For
-		// root
-		tmpScenarioId = tmpScenarioId.substring(tmpScenarioId.indexOf('.') + 1); // For
-		// isntance
-
-		String tmpMasterScenarioId = null;
+		Iterator<ScenarioPathType> keyIterator = spcLookupTableMaster.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
-			String masterScenarioId = keyIterator.next();
-			tmpMasterScenarioId = masterScenarioId.substring(masterScenarioId.indexOf('.') + 1); // For
-			// root
-			tmpMasterScenarioId = tmpMasterScenarioId.substring(tmpMasterScenarioId.indexOf('.') + 1); // For
-			// isntance
-			// id
-			if (tmpScenarioId.equals(tmpMasterScenarioId)) {
+			ScenarioPathType masterScenarioId = keyIterator.next();
+			if (scenarioId.getAbsolutePath().equals(masterScenarioId.getAbsolutePath())) {
 				return masterScenarioId;
 			}
 		}
