@@ -50,6 +50,7 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.XSLLoadException;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -67,16 +68,16 @@ public class DBUtils extends DBBase {
 		for (String instanceId : spaceWideRegistry.getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = spaceWideRegistry.getInstanceLookupTable().get(instanceId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
-				HashMap<String, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId);
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+				HashMap<String, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId.getFullPath());
 				Iterator<Job> jobsIterator = jobQueue.values().iterator();
 
 				while (jobsIterator.hasNext()) {
 					Job scheduledJob = jobsIterator.next();
 					JobProperties myJobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-					updateJob(myJobProperties, ParsingUtils.getJobXPath(spcId));
+					updateJob(myJobProperties, ParsingUtils.getJobXPath(spcId.getFullPath()));
 				}
 			}
 		}
