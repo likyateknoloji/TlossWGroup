@@ -8,7 +8,7 @@ public class BasePathType {
 	
 	private ArrayList<String>  pathArray =  new ArrayList<String>();
 
-	public static String getRootpath() {
+	public static String getRootPath() {
 		return rootPath;
 	}
 
