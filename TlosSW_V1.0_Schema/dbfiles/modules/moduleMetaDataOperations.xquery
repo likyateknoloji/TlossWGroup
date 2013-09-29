@@ -14,29 +14,53 @@ declare namespace  dat="http://www.likyateknoloji.com/XML_data_types";
    esas       : xmldb:exist://localhost:8093/exist/xmlrpc/db/TLOSSW/xmls/tlosSWData10id5.xml
    kullanilan : /db/TLOSSW/xmls/tlosSWData10id5.xml
 :)
-declare function met:getScenariosDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
-{
-  let $initialDoc :=
-   <TlosProcessDataAll>
-   </TlosProcessDataAll>
 
-  let $docName := met:getMetaData($documentUrl, "scenarios")
-  let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
-                 then
-                   $docName
-                 else
-				   let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
-    			   let $exist := if(doc-available($userDoc)) 
-                                 then () 
-                                 else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
-                   return $userDoc
+declare function met:findDocPath($documentUrl as xs:string, $docId as xs:string, $fullPath as xs:boolean) as xs:string {
+  let $seperator := "/"
+  let $basePath := xs:string("xmls")
+  let $metaDataFile := xs:string("metaData.xml")
+  let $metaDataFileFull := xs:string(concat( $documentUrl, $seperator, $basePath, $seperator, $metaDataFile))
+  
+  let $metaDataFile := doc($metaDataFileFull)
+  let $fileName := $metaDataFile/meta:metaData/meta:documentInfo/meta:document[@id eq $docId]
+  let $typeData := $metaDataFile/meta:metaData/meta:documentInfo/meta:document[@id eq $docId]/@type
+  let $collectionPath := $metaDataFile/meta:metaData/meta:dbInfo/meta:collection[@type eq $typeData]
+  
+  let $result := if(exists($collectionPath)) 
+                  then
+                    let $path := concat( $documentUrl, $seperator, $collectionPath, $seperator )
+                    let $res := if( $fullPath ) 
+                                   then concat( $path , $fileName )
+                                   else $path
+                    return $res
+                  else ""
   return $result
 };
 
-declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:string, $whichData as xs:string) as xs:string?
+declare function met:getScopedDocument($documentUrl as xs:string, $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $initialDoc as node()?) as xs:string?
 {
-  let $initialDoc :=
-<dat:TlosProcessData xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
+  let $docName := met:findDocPath($documentUrl, $docId, true())
+  let $result := if( $userId eq "0" or $isGlobal ) 
+                 then
+    			   let $exist := if(doc-available($docName)) 
+                                 then ()
+                                 else xmldb:store(met:findDocPath(substring-after($documentUrl, 'xmlrpc'), $docId, false()), $docName, $initialDoc)
+                   return $docName
+                 else
+                   let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
+    			   let $exist := if(doc-available($userDoc)) 
+                                 then () 
+                                 else xmldb:store(met:findDocPath(substring-after($documentUrl, 'xmlrpc'), $docId, false()), $userDoc, $initialDoc)
+                   return $userDoc
+  return $result
+};    
+
+declare function met:getDataDocument($documentUrl as xs:string, $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean) as xs:string?
+{
+  
+  let $initialDoc := 
+  if( not(fn:compare( $docId, "sjData" )) or not(fn:compare( $docId, "deploymentData" )) or not(fn:compare( $docId, "jobTemplates" ))) then
+   <dat:TlosProcessData xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
     <dat:baseScenarioInfos>
         <com:jsName>Serbest isler</com:jsName>
         <com:comment>Serbest isler burada yer alir</com:comment>
@@ -51,66 +75,36 @@ declare function met:getDataDocument($documentUrl as xs:string, $userId as xs:st
     <dat:concurrencyManagement>
         <com:concurrent>true</com:concurrent>
     </dat:concurrencyManagement>
-</dat:TlosProcessData>
-   
-  let $docName := met:getMetaData($documentUrl, "sjData")
-  let $result := if( $userId eq "0" or not(fn:compare( $whichData, "globaldata" )) ) 
-                 then
-                   $docName
-                 else if( not(fn:compare( $whichData, "jobTemplates" )) ) 
-				      then met:getMetaData($documentUrl, "jobTemplates")
-					  else if( not(fn:compare( $whichData, "mydata" )) )
-                        then 
-                        	let $userDoc := replace( $docName, "\.xml", concat("id", $userId, ".xml"))
-    			        	let $exist := if(doc-available($userDoc)) 
-                                      then () 
-                                      else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
-                        return $userDoc
-                      else
-                        let $deploymentDocName := met:getMetaData($documentUrl, "deploymentData")
-                        let $userDoc := replace( $deploymentDocName, "\.xml", concat("id", $userId, ".xml"))
-    			        let $exist := if(doc-available($userDoc)) 
-                                      then () 
-                                      else xmldb:store(met:xmlCollectionLocation(substring-after($documentUrl, 'xmlrpc')), $userDoc, $initialDoc)
-                        return $userDoc
+   </dat:TlosProcessData>
+  else  
+   if( not(fn:compare( $docId, "scenarios" )) ) then
+     <TlosProcessDataAll>
+     </TlosProcessDataAll>
+     else
+	 ()
+  
+  
+  let $result := met:getScopedDocument( $documentUrl, $docId, $userId, $isGlobal, $initialDoc)
+      
   return $result
-};
-
-
-declare function met:xmlCollectionLocation($documentUrl as xs:string) as xs:string
-{
-  let $seperator := "/"
-  let $xmlCollection := xs:string("xmls")
-  return xs:string(concat($documentUrl, $seperator, $xmlCollection, $seperator))
-};
-
-declare function met:xslCollectionLocation($documentUrl as xs:string) as xs:string
-{
-  let $seperator := "/"
-  let $xslCollection := xs:string("xsls")
-  return xs:string(concat($documentUrl, $seperator, $xslCollection, $seperator))
 };
 
 declare function met:getMetaData($documentUrl as xs:string, $docId as xs:string) as xs:string?
 {    
-    let $metaDataFile := xs:string("metaData.xml")
-    (: let $subCol := $docXml/meta:metaData/meta:dbInfo/meta:collection[@type eq "xml"] :)
     
-    let $metaDataFileFull := xs:string(concat( met:xmlCollectionLocation($documentUrl), $metaDataFile))
-    (:
-    let $prefix := $docXml/meta:metaData/meta:dbInfo/meta:prefix/text()
-    let $rootCol := $docXml/meta:metaData/meta:dbInfo/meta:rootCollection/text()
-    :)
+    let $metaDataFileFull := met:findDocPath($documentUrl, xs:string("metaData"), true())
     
-    let $result := if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]) 
-        then 
-    		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xml"]
-    		return xs:string(concat( met:xmlCollectionLocation($documentUrl), $docFullName))
-    	else if (doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"])
-    	then 
-    		let $docFullName := doc($metaDataFileFull)/meta:metaData/meta:documentInfo/meta:document[@id eq xs:string($docId) and @type eq "xsl"]
-    		return xs:string(concat( met:xslCollectionLocation($documentUrl), $docFullName))
-    	else ()
+    let $result := met:findDocPath($documentUrl, $docId, true())
+    
+	return $result
+};
+
+declare function met:readMetaData($documentUrl as xs:string) as element(meta:metaData)
+{    
+    
+    let $metaDataFileFull := met:findDocPath($documentUrl, xs:string("metaData"), true())
+    
+    let $result := doc($metaDataFileFull)/meta:metaData
     
 	return $result
 };
