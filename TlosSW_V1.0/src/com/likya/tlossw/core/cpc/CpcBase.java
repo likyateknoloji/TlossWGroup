@@ -46,8 +46,6 @@ public abstract class CpcBase implements Runnable {
 	private SpaceWideRegistry spaceWideRegistry;
 	private Logger myLogger;
 
-	private final static String rootPath = "root";
-
 	transient private Thread executerThread;
 
 	public CpcBase(SpaceWideRegistry spaceWideRegistry) {
@@ -499,10 +497,6 @@ public abstract class CpcBase implements Runnable {
 
 	public void setExecuterThread(Thread executerThread) {
 		this.executerThread = executerThread;
-	}
-
-	public static String getRootPath() {
-		return rootPath;
 	}
 
 	public boolean isExecutionPermission() {
