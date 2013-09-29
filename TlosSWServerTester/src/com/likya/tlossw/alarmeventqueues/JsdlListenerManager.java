@@ -105,7 +105,7 @@ public class JsdlListenerManager implements Runnable {
 							 * bitis zamanlarinin
 							 */
 
-							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId().getFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
 							// DBUtils.updateJob(jobProperties,
 							// ParsingUtils.getJobXPath(jobAllInfo.getSpcId()));
 							logger.info("  > ");

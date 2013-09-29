@@ -16,6 +16,7 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
@@ -37,7 +38,7 @@ public class TestSpc extends TestSuit {
 		String fileName1 = "src/demo1.xml";
 		String fileName2 = "src/demo2.xml";
 
-		String spcId = "TestSpc_" + System.currentTimeMillis();
+		ScenarioPathType spcId = new ScenarioPathType("TestSpc_" + System.currentTimeMillis());
 		String instanceId = "TestInstance_" + +System.currentTimeMillis();
 
 		JobProperties jobProperties1 = getJobPropertiesFromFile(fileName1);
@@ -91,7 +92,7 @@ public class TestSpc extends TestSuit {
 			while (myRunner.isAlive()) {
 				Thread.sleep(1000);
 				if (serveOnce) {
-					System.out.println("Hala canlÝ !");
+					System.out.println("Hala canlï¿½ !");
 					serveOnce = false;
 				}
 			}
@@ -164,7 +165,7 @@ public class TestSpc extends TestSuit {
 		// spc.setLocalParameters(tmpScenario.getLocalParameters());
 
 		if (!spc.initScenarioInfo() || spc.getJobQueue().size() == 0) {
-			myLogger.warn(spcId + " isimli senaryo bilgileri yŸklenemedi ya da is listesi bos geldi !");
+			myLogger.warn(spcId + " isimli senaryo bilgileri yï¿½klenemedi ya da is listesi bos geldi !");
 			System.exit(-1);
 		}
 		return spc;
