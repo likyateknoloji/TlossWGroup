@@ -651,8 +651,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				TlosSpaceWide.getSpaceWideRegistry().setJmxUser(jmxUser);
 				TlosSpaceWide.getSpaceWideRegistry().setRecovered(true);
 			} else {
-				logger.error(" > isPersist = true oldu�u halde recover i�lemi ba�ar�s�z oldu !");
-				logger.error(" > devam etmek i�in tempo dizini temizleyin ya da isPersist = false yap�p uygulamay� tekrar ba�lat�n !");
+				logger.error(" > isPersist = true olduğu halde recover işlemi başarısız oldu !");
+				logger.error(" > devam etmek için tempo dizini temizleyin ya da isPersist = false yapıp uygulamayı tekrar başlatın !");
 				System.exit(-1);
 			}
 			
@@ -671,14 +671,22 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				}
 			}
 		} else {
-			logger.warn("isPersisten = false oldu�u halde recover talebi istenemez !");
+			logger.warn("isPersisten = false olduğu halde recover talebi istenemez !");
 		}
 	}
 
 	public void shiftSolstice(JmxUser jmxUser, boolean backupReports) {
+		
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return;
 		}
+		
+		shiftSolstice(backupReports);
+
+		return; 
+	}
+	
+	public void shiftSolstice(boolean backupReports) {
 
 		TlosSpaceWide.getSpaceWideRegistry().setWaitConfirmOfGUI(false);
 
@@ -699,6 +707,12 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return;
 		}
+		
+		startOver(backupReports);
+
+	}
+	
+	public void startOver(boolean backupReports) {
 
 		TlosSpaceWide.getSpaceWideRegistry().setWaitConfirmOfGUI(false);
 
