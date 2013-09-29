@@ -134,7 +134,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 						JobAllInfo jobAllInfo = (JobAllInfo) infoType;
 						JobProperties jobProperties = jobAllInfo.getJobProperties();
 
-						DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+						DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId().getFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
 
 						if (debug) {
 							logger.info("  > ");
