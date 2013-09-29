@@ -21,6 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class JobQueueOperations {
@@ -62,7 +63,7 @@ public class JobQueueOperations {
 		return true;
 	}
 
-	public static void dumpJobQueue(String spcID, HashMap<String, Job> jobQueue) {
+	public static void dumpJobQueue(ScenarioPathType spcId, HashMap<String, Job> jobQueue) {
 
 		@SuppressWarnings("unused")
 		String queueDumpInfo = " JOB QUEUE >> ";
@@ -107,7 +108,7 @@ public class JobQueueOperations {
 			// Logger.getLogger(SpcBase.class).info("     > "+ this.getJsName()
 			// + " senaryosunda guncel is Sayisi : " + getJobQueue().size());
 			if(SpaceWideRegistry.isDebug) {
-				SpaceWideRegistry.getGlobalLogger().info("     > " + spcID + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
+				SpaceWideRegistry.getGlobalLogger().info("     > " + spcId.getFullPath() + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
 			}
 		}
 
@@ -123,8 +124,10 @@ public class JobQueueOperations {
 	 *            : Spc'ye ait iş listesi
 	 * @return
 	 */
-	public static boolean persistJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean persistJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
+		String fileName = scenarioPathType.getFullPath();
+		
 		FileOutputStream fos = null;
 		FileOutputStream fosIdx = null;
 		ObjectOutputStream out = null;
@@ -155,8 +158,10 @@ public class JobQueueOperations {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean recoverJobQueue(String fileName, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean recoverJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
+		String fileName = scenarioPathType.getFullPath();
+		
 		FileInputStream fis = null;
 		FileInputStream fisIdx = null;
 		ObjectInputStream in = null;
