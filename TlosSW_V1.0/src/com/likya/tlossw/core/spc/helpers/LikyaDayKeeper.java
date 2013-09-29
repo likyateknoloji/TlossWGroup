@@ -6,7 +6,6 @@ import java.util.Date;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
-
 public final class LikyaDayKeeper implements Runnable {
 
 	private boolean executePermission = true;
@@ -46,33 +45,27 @@ public final class LikyaDayKeeper implements Runnable {
 
 	public void run() {
 
-		boolean restartAllScenarios = false;
-		int i = 0;
 		while (executePermission) {
 
 			Date currentTime = Calendar.getInstance().getTime();
-            
-			restartAllScenarios = spaceWideRegistry.isRestartAllScenarios();
-			i++;
-			if (solsticeTime.before(currentTime) || restartAllScenarios || ( i < 2 ? true : false) ) {
-				
-				spaceWideRegistry.setRestartAllScenarios(false);
-				
+
+			if (solsticeTime.before(currentTime)) {
+
 				SpaceWideRegistry.getGlobalLogger().info("");
-				SpaceWideRegistry.getGlobalLogger().info("   > Gundonumu gelmistir !!");
-				
+				SpaceWideRegistry.getGlobalLogger().info("   > Gündönümü gelmiştir !!");
+
 				shiftSolsticeTime();
-			
+
 				SpaceWideRegistry.getGlobalLogger().info("   > is yuku islenmesi sureci baslamistir !!");
 				spaceWideRegistry.getSpaceWideReference().startCpc();
-			
-			} else if(isForced) {
-			
+
+			} else if (isForced) {
+
 				isForced = false;
 				spaceWideRegistry.getSpaceWideReference().startCpc();
-			
+
 			}
-			
+
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -84,14 +77,14 @@ public final class LikyaDayKeeper implements Runnable {
 	public void shiftSolsticeTime() {
 
 		Calendar nextTime = Calendar.getInstance();
-		
-		SpaceWideRegistry.getGlobalLogger().info("   > Simdi : "+ DateUtils.getDate(nextTime.getTime()));
+
+		SpaceWideRegistry.getGlobalLogger().info("   > Şimdi : " + DateUtils.getDate(nextTime.getTime()));
 
 		nextTime.setTime(solsticeTime);
 		nextTime.add(Calendar.HOUR, fONCE_PER_PERIOD);
 
-		SpaceWideRegistry.getGlobalLogger().info("   > Surec sonrasi yeni Gundonumu : "+DateUtils.getDate(nextTime.getTime())+" olarak set edilecektir.");
-	
+		SpaceWideRegistry.getGlobalLogger().info("   > Süreç sonrası yeni Gündönümü : " + DateUtils.getDate(nextTime.getTime()) + " olarak set edilecektir.");
+
 		solsticeTime = nextTime.getTime();
 
 	}
