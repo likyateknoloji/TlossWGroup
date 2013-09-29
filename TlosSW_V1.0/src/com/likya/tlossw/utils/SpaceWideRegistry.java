@@ -17,6 +17,7 @@ import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
 import com.likya.tlossw.core.cpc.CpcTester;
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.exceptions.TlosException;
@@ -31,6 +32,8 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private static final long serialVersionUID = 579016499754067105L;
 
 	private transient static SpaceWideRegistry spaceWideRegistry;
+	
+	private int currentState = AppState.NOT_STARTED;
 	
 	public static boolean isDebug = true;
 
@@ -385,6 +388,14 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setGunDonumuPeryodPassed(boolean isGunDonumuPeryodPassed) {
 		this.isGunDonumuPeryodPassed = isGunDonumuPeryodPassed;
+	}
+
+	public int getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentState(int currentState) {
+		this.currentState = currentState;
 	}
 
 }
