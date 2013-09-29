@@ -12,6 +12,7 @@ package com.likya.tlossw.jmx.beans;
 
 
 
+
 /**
  * This is the management interface explicitly defined for the
  * "SimpleStandard" standard MBean.
@@ -62,6 +63,10 @@ public interface LocalManagerMBean {
      */
     
 	public void shutdown(String str);
+	
+	public void shiftSolstice(boolean backupReports);
+	
+	public void startOver(boolean backupReports);
 	
 	// public void redeploy(String str);
 
