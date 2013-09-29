@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.jmx.mp.helper : ProcessInfoProvider.java
- * @author Serkan Ta�
+ * @author Serkan Taş
  * Tarih : Apr 6, 2009 2:19:17 PM
  */
 
@@ -798,7 +798,4 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		AgentDbUtils.updateUserStopRequestValue(agentId, UserStopRequest.NULL.toString());
 	}
 
-	public void restartScenarioTree(JmxUser jmxUser) {
-		TlosSpaceWide.getSpaceWideRegistry().setRestartAllScenarios(true);
-	}
 }
