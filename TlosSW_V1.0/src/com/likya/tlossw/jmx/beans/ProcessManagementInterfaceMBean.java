@@ -114,5 +114,4 @@ public interface ProcessManagementInterfaceMBean {
 
 	public boolean assignAgentForJob(JmxUser jmxUser, String jobPath, String agentId);
 
-	public void restartScenarioTree(JmxUser jmxUser);
 }
