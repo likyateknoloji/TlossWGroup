@@ -10,7 +10,7 @@ package com.likya.tlossw.jmx.beans;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.likya.tlossw.TlosSpaceWide;;
+import com.likya.tlossw.TlosSpaceWide;
 
 public class LocalManager implements LocalManagerMBean {
 	
@@ -30,6 +30,14 @@ public class LocalManager implements LocalManagerMBean {
 		}
 
 		TlosSpaceWide.stopSpacewide();
+	}
+	
+	public void shiftSolstice(boolean backupReports) {
+		new ProcessManagementInterface().shiftSolstice(backupReports);
+	}
+	
+	public void startOver(boolean backupReports) {
+		new ProcessManagementInterface().startOver(backupReports);
 	}
 	
 	/*
