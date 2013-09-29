@@ -51,7 +51,7 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 		
 		long startTime = System.currentTimeMillis();
 		
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, CommonConstantDefinitions.FIRST_COLUMN_STR, DocMetaDataHolder.FIRST_COLUMN);
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA);
 		/*
 		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.FIRST_COLUMN_STR);
 		if (scopeId1 != null) {
@@ -80,6 +80,7 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
+		if(tlosProcessData==null) return;
 		WsScenarioNode rootNode = new WsScenarioNode();
 		rootNode.setId(ConstantDefinitions.TREE_ROOTID);
 		rootNode.setName(ConstantDefinitions.TREE_ROOT);
@@ -99,7 +100,7 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 	public void reconstructJSTree() {
 
 		//TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, CommonConstantDefinitions.FIRST_COLUMN_STR, DocMetaDataHolder.FIRST_COLUMN);
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA);
 		constructJSTree(tlosProcessData);
 	}
 
