@@ -5,10 +5,10 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.cpc.CpcBase;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.path.BasePathType;
 
 public class CpcUtils {
 	
@@ -135,7 +135,7 @@ public class CpcUtils {
 	}
 	
 	public static String getInstancePath(String instanceId) {
-		return CpcBase.getRootPath() + "." + instanceId;
+		return BasePathType.getRootPath() + "." + instanceId;
 	}
 
 }
