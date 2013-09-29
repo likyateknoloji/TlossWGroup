@@ -18,7 +18,6 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.CpcBase;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
@@ -31,6 +30,7 @@ import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
@@ -385,7 +385,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				String selectedNodeId = new String(CpcBase.getRootPath() + "." + clientInstanceNode.getInstanceId());
+				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientInstanceNode.getInstanceId());
 
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, selectedNodeId).getSpcInfoTypeClientList();
