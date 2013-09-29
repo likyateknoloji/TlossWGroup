@@ -17,12 +17,12 @@
 			<p:layoutUnit id="layoutUnit4jobsDef" position="north" resizable="true" size="35">
 				<ui:param name="title1" value="Main Menu" />
 				<ui:param name="title2" value="Definitions" />
-				<ui:param name="title3" value="#{sessionMediator.documentId}" />
+				<ui:param name="title3" value="#{sessionMediator.getScopeText(sessionMediator.getScope(1))}" />
 				<ui:param name="title4" value="" />
 
 				<ui:param name="title1link" value="/" />
 				<ui:param name="title2link" value="deploymentPage.jsf" />
-				<ui:param name="title3link" value="deploymentPage.jsf?docId=#{sessionMediator.documentId}" />
+				<ui:param name="title3link" value="deploymentPage.jsf?scopeId1=#{sessionMediator.getScope(1)}" />
 				<ui:param name="title4link"
 					value="Tlos SW Workload Automation Software v1.0 - Job Deployment Page" />
 				<h:form>
@@ -36,7 +36,7 @@
 
 			<p:layoutUnit id="centerWest" position="west" resizable="true"
 				size="300" minSize="200" maxSize="400">
-				<ui:include src="/inc/definitionPanels/jsTree.xhtml" />
+				<ui:include src="/inc/definitionPanels/jobDeploymentTree.xhtml" />
 			</p:layoutUnit>
 
 			<p:layoutUnit position="center" id="centerLayout">
@@ -54,7 +54,7 @@
 	</ui:define>
 
 	<ui:define name="west">
-		<ui:include src="/inc/definitionPanels/jobDeploymentTree.xhtml" />
+		<ui:include src="/inc/definitionPanels/jsTree.xhtml" />
 	</ui:define>
 
 </ui:composition>
