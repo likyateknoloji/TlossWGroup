@@ -24,7 +24,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
 import com.likya.tlossw.core.agents.AgentManager;
-import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.dss.DssVisionaire;
 import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
@@ -39,7 +38,9 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -59,11 +60,11 @@ public class Spc extends SpcBase {
 
 	private boolean isRecovered = false;
 
-	public Spc(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
+	public Spc(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
 		this(spcId, spaceWideRegistry, taskList, false, false);
 	}
 
-	public Spc(String spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
+	public Spc(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
 
 		super(spcId, spaceWideRegistry, taskList, isTester);
 
@@ -350,7 +351,7 @@ public class Spc extends SpcBase {
 					 * TODO
 					 */
 					if (scheduledJob.getFirstLoop()) {
-						DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(getSpcId()));
+						DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(getSpcId().getFullPath()));
 					}
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
@@ -507,7 +508,7 @@ public class Spc extends SpcBase {
 		 */
 
 		Thread starterThread = new Thread(scheduledJob);
-		starterThread.setName(this.getSpcId());
+		starterThread.setName(this.getSpcId().getFullPath());
 		scheduledJob.setMyExecuter(starterThread);
 
 		getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " isi icin <Server> da bir thread acildi !");
@@ -597,7 +598,7 @@ public class Spc extends SpcBase {
 		// PARAMETRE atamalari burada yapilir.
 
 		// LOCAL VE GLOBAL
-		HashMap<String, SpcInfoType> spcLookupTable = getSpcLookupTable();
+		SpcLookupTable spcLookupTable = getSpcLookupTable();
 		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
 		HashMap<Integer, ArrayList<Parameter>> parameterListAll = TlosSpaceWide.getSpaceWideRegistry().getAllParameters();
 		ArrayList<Parameter> parameterList = parameterListAll.get(agentId);
