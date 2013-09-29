@@ -413,15 +413,15 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
 
-		String scenarioId = spcInfoType.getSpcId();
+		ScenarioPathType scenarioId = spcInfoType.getSpcId();
 
 		SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
-		spcInfoTypeClient.setSpcId(scenarioId);
+		spcInfoTypeClient.setSpcId(scenarioId.getFullPath());
 
 		if (spcInfoType.getSpcReferance() != null) {
 			String instanceId = spcInfoType.getSpcReferance().getConcurrencyManagement().getInstanceId();
 			if (scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId))) {
-				spcInfoTypeClient.setJsName(scenarioId);
+				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
 				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
