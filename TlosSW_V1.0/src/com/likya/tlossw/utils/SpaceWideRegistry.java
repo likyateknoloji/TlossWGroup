@@ -106,8 +106,6 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	
 	private boolean waitConfirmOfGUI = false;
 	
-	private boolean restartAllScenarios = false;
-	
 	public static SpaceWideRegistry getInstance() {
 		if(spaceWideRegistry == null) {
 			spaceWideRegistry = new SpaceWideRegistry(globalLogger);
@@ -316,14 +314,6 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setParameters(ArrayList<Parameter> parameters) {
 		this.parameters = parameters;
-	}
-
-	public boolean isRestartAllScenarios() {
-		return restartAllScenarios;
-	}
-
-	public void setRestartAllScenarios(boolean restartAllScenarios) {
-		this.restartAllScenarios = restartAllScenarios;
 	}
 
 	public PerformanceManager getPerformanceManagerReference() {
