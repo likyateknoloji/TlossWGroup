@@ -40,7 +40,9 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.ApplyXPath;
@@ -72,9 +74,9 @@ public class InputParameterPassing {
 		String[] result;
 		InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceIdd);
 
-		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+		HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-		for (String spcId : spcLookupTable.keySet()) {
+		for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 
 			Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 			try {
@@ -112,7 +114,7 @@ public class InputParameterPassing {
 		return null;
 	}
 
-	public synchronized boolean setInputParameterViaDependency(HashMap<String, Job> jobQueue, Job ownerJob, HashMap<String, SpcInfoType> spcLookupTable) throws UnresolvedDependencyException {
+	public synchronized boolean setInputParameterViaDependency(HashMap<String, Job> jobQueue, Job ownerJob, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
 
 		JobProperties ownerJobProperties = ownerJob.getJobRuntimeProperties().getJobProperties();
 		DependencyList dependentJobList = ownerJobProperties.getDependencyList();
@@ -178,7 +180,7 @@ public class InputParameterPassing {
 
 			} else { // Global bir bağımlılık
 
-				SpcInfoType spcInfoType = spcLookupTable.get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
+				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
