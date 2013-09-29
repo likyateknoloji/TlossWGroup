@@ -157,7 +157,7 @@ public class CpcTester extends CpcBase {
 				spcInfoType.setSpcId(scenarioId);
 				
 				if (!spc.initScenarioInfo()) {
-					logger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+					logger.warn(scenarioId.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 					continue;
 				}
 			}
