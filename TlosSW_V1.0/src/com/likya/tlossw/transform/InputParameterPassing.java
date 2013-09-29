@@ -40,6 +40,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
+import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.ApplyXPath;
@@ -162,7 +163,7 @@ public class InputParameterPassing {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-					getMyLogger().error("     >    Dizin : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     >    Dizin : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 					getMyLogger().error("     > 	Yukaridaki is  yerel senaryoda bulunamadi !");
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
@@ -180,13 +181,13 @@ public class InputParameterPassing {
 				SpcInfoType spcInfoType = spcLookupTable.get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
-					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
-					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 
 				Job depJob /* jobb */= spcInfoType.getSpcReferance().getJobQueue().get(jobId);
@@ -198,7 +199,6 @@ public class InputParameterPassing {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-					getMyLogger().error("     >    Dizin : " + Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 					getMyLogger().error("     > 	Yukaridaki is  " + spcInfoType.getSpcReferance().getSpcId() + " adli senaryoda bulunamadi !");
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
