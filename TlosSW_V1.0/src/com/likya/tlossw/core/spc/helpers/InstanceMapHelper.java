@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.core.spc.helpers : InstanceMapHelper.java
- * @author Serkan Taþ
+ * @author Serkan Taï¿½
  * Tarih : 13.Nis.2010 11:34:26
  */
 
@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
+import com.likya.tlossw.model.path.ScenarioPathType;
 
 
 public class InstanceMapHelper {
@@ -20,7 +21,7 @@ public class InstanceMapHelper {
 		for (String instanceId : instanceLookUpTable.keySet()) {
 			InstanceInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
 			if(spcLookupTable.containsKey(spcId)) {
 				return spcLookupTable.get(spcId);
@@ -37,7 +38,7 @@ public class InstanceMapHelper {
 			
 			InstanceInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
 			if(spcLookupTable.containsKey(spcId)) {
 				return spcLookupTable.get(spcId);
