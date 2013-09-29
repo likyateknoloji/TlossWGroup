@@ -491,6 +491,18 @@ public abstract class CpcBase implements Runnable {
 		TlosSpaceWide.getSpaceWideRegistry().setAllParameters(allParameter);
 	}
 
+	protected void initParameters() throws GlobalParameterLoadException {
+
+		// if (getSpaceWideRegistry().getParameters() == null) {
+
+		ArrayList<Parameter> myPramList = prepareParameterList();
+
+		getSpaceWideRegistry().setParameters(myPramList);
+		// }
+
+		arrangeParameters(getSpaceWideRegistry().getParameters());
+	}
+	
 	public Thread getExecuterThread() {
 		return executerThread;
 	}
