@@ -1,7 +1,5 @@
 package com.likya.tlossw.core.cpc;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -11,7 +9,6 @@ import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -35,7 +32,7 @@ public class Cpc extends CpcBase {
 
 	private Logger logger = SpaceWideRegistry.getGlobalLogger();
 
-	private boolean isRegular = true;
+	// private boolean isRegular = true;
 
 	public Cpc(SpaceWideRegistry spaceWideRegistry) {
 		super(spaceWideRegistry);
@@ -51,12 +48,14 @@ public class Cpc extends CpcBase {
 			try {
 
 				logger.info("");
-				logger.info(" 2 - Recover islemi gerekli mi?");
+				logger.info(" 2 - Recover işlemi gerekli mi?");
 
-				if (!isUserSelectedRecover) {
-					handleNormalExecution();
-				} else {
+				if (isUserSelectedRecover) {
+					logger.info("   > Evet, recover işlemi gerekli !");
 					handleRecoverdExecution();
+				} else {
+					logger.info("   > Hayır, recover işlemi gerekli değil !");
+					handleDailyExecution();
 				}
 
 				// Her bir instance icin senaryolari aktive et !
@@ -81,11 +80,11 @@ public class Cpc extends CpcBase {
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
 
-						if(spc == null) {
+						if (spc == null) {
 							// No spc defined for this scenario, it is NOT a BUG !
 							continue;
 						}
-						
+
 						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
 						/**
 						 * Bu thread daha once calistirildi mi? Degilse thread i
@@ -145,118 +144,77 @@ public class Cpc extends CpcBase {
 
 	}
 
-	private void handleNormalExecution() throws TlosException {
+	private void freshDataLoad(TlosProcessData tlosProcessData) throws TlosException {
 
-		logger.info("   > Hayir, recover islemi gerekli degil !");
+		logger.info("   > Hayir, ilk eleman olacak !");
 
-		if (isRegular) {
-			/** InstanceLookupTable **/
-			logger.info("");
-			logger.info(" 3 - Instance Tablosu kontrolu ve temizligi yapilacak.");
-			checkAndCleanSpcLookUpTables();
-			logger.info("   > Yapildi !");
+		/**
+		 * Senaryo ve isler spcLookUpTable a yani senaryo agacina
+		 * yerlestirilecek. Bunun icin islerin validasyonu da
+		 * gerceklestirilecek.
+		 * 
+		 **/
+
+		HashMap<String, SpcInfoType> spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
+		/*
+		 * scpLookUpTable olusturuldu. Olusan bu tablo InstanceID ile
+		 * iliskilendirilecek.
+		 */
+
+		logger.info("");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+
+		InstanceInfoType instanceInfoType = new InstanceInfoType();
+		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
+		instanceInfoType.setSpcLookupTable(spcLookUpTable);
+
+		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+
+		logger.info("   > OK iliskilendirildi.");
+
+		if (spcLookUpTable == null) {
+			logger.warn("   >>> SPC (spcLookUpTable) senaryo agaci BOS !!");
+			logger.info("   >>> SPC (spcLookUpTable) senaryo agaci BOS !!");
 		}
+	}
+
+	private void loadOnLiveSystem(TlosProcessData tlosProcessData) throws TlosException {
+
+		checkAndCleanSpcLookUpTables();
+
+		logger.info("   > Evet, " + getSpaceWideRegistry().getInstanceLookupTable().size() + ". eleman olacak !");
+
+		HashMap<String, SpcInfoType> spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
+
+		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			checkConcurrency(spcLookupTableNew, spcLookupTable);
+		}
+
+		logger.info("");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+
+		InstanceInfoType instanceInfoType = new InstanceInfoType();
+		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId() + " olarak belirlendi.");
+
+		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
+		instanceInfoType.setSpcLookupTable(spcLookupTableNew);
+
+		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+		logger.info("   > OK iliskilendirildi.");
+	}
+
+	private void handleDailyExecution() throws TlosException {
 
 		TlosProcessData tlosProcessData = getSpaceWideRegistry().getTlosProcessData();
 
-		getSpaceWideRegistry().setScenarioReadTime(Calendar.getInstance().getTimeInMillis());
-
-		ArrayList<Parameter> myPramList = prepareParameterList();
-
-		getSpaceWideRegistry().setParameters(myPramList);
-
-		arrangeParameters(myPramList);
-		/*
-		 * logger.info(" 3,5 - Global Parametreler Yukleniyor..");
-		 * ArrayList<Parameter> parameterList = DBUtils.getTlosParameters();
-		 * 
-		 * for(int i = 0; i < parameterList.size(); i++) { String paramName =
-		 * parameterList.get(i).getName(); String paramPreValueString =
-		 * parameterList.get(i).getPreValue().getStringValue();
-		 * BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
-		 * String paramDesc = parameterList.get(i).getDesc();
-		 * }
-		 * 
-		 * logger.info("   > Yuklendi !");
-		 */
-
-		// logger.info("");
-		// logger.info(" 4 - isPersistent ozelligi konulu kontroller yapilacak.");
-		//
-		// /**
-		// * @author serkan TODO Persist edemezse ne yap�laca�� konusunda bir
-		// * karar vermek gerekir.
-		// */
-		//
-		// if (TlosSpaceWide.isPersistent()) {
-		// if (!PersistenceUtils.persistSWRegistery()) {
-		// logger.warn("CPC nin Diske yazilmasi islemi gerceklesMEdi !!");
-		// } else {
-		// logger.warn("CPC nin Diske yazilmasi islemi gerceklesti !!");
-		// }
-		// }
-		//
-		// logger.info("   > Yapildi !");
-		// logger.info("");
-		logger.info(" 5 - TlosProcessData, Instance Tablosu na ikinci yada daha buyuk eleman olarak mi eklenecek?.");
+		initParameters();
 
 		if (getSpaceWideRegistry().getInstanceLookupTable().size() == 0) {
-
-			logger.info("   > Hayir, ilk eleman olacak !");
-
-			/**
-			 * Senaryo ve isler spcLookUpTable a yani senaryo agacina
-			 * yerlestirilecek. Bunun icin islerin validasyonu da
-			 * gerceklestirilecek.
-			 * 
-			 **/
-
-			HashMap<String, SpcInfoType> spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
-			/*
-			 * scpLookUpTable olusturuldu. Olusan bu tablo InstanceID ile
-			 * iliskilendirilecek.
-			 */
-
-			logger.info("");
-			logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
-
-			InstanceInfoType instanceInfoType = new InstanceInfoType();
-			instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
-			instanceInfoType.setSpcLookupTable(spcLookUpTable);
-
-			getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
-
-			logger.info("   > OK iliskilendirildi.");
-
-			if (spcLookUpTable == null) {
-				logger.warn("   >>> SPC (spcLookUpTable) senaryo agaci BOS !!");
-				logger.info("   >>> SPC (spcLookUpTable) senaryo agaci BOS !!");
-			}
-
+			freshDataLoad(tlosProcessData);
 		} else {
-
-			logger.info("   > Evet, " + getSpaceWideRegistry().getInstanceLookupTable().size() + ". eleman olacak !");
-
-			HashMap<String, SpcInfoType> spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
-
-			for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-				InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-				HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
-				checkConcurrency(spcLookupTableNew, spcLookupTable);
-			}
-
-			logger.info("");
-			logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
-
-			InstanceInfoType instanceInfoType = new InstanceInfoType();
-			logger.info("   > Instance ID = " + tlosProcessData.getInstanceId() + " olarak belirlendi.");
-
-			instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
-			instanceInfoType.setSpcLookupTable(spcLookupTableNew);
-
-			getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
-			logger.info("   > OK iliskilendirildi.");
-
+			loadOnLiveSystem(tlosProcessData);
 		}
 
 		return;
@@ -311,13 +269,13 @@ public class Cpc extends CpcBase {
 		return;
 	}
 
-	public boolean isRegular() {
-		return isRegular;
-	}
-
-	public void setRegular(boolean isRegular) {
-		this.isRegular = isRegular;
-	}
+	// public boolean isRegular() {
+	// return isRegular;
+	// }
+	//
+	// public void setRegular(boolean isRegular) {
+	// this.isRegular = isRegular;
+	// }
 
 	private void checkAndCleanSpcLookUpTables() {
 
