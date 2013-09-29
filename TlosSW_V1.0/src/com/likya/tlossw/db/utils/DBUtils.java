@@ -61,7 +61,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 public class DBUtils extends DBBase {
 	
 	private static final String dbUserId = TransformUtils.toXSString("0");
-	private static final String dbDocId = TransformUtils.toXSString(CommonConstantDefinitions.EXIST_GLOBALDATA);
+	private static final String dbDocId = TransformUtils.toXSString("sjData");
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
@@ -93,7 +93,7 @@ public class DBUtils extends DBBase {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 		
-		String xQueryStr = scenarioFunctionConstructor("hs:updateLiveJobLock", dbUserId, dbDocId, jobPropetiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:updateLiveJobLock", dbDocId, dbUserId, "true()", jobPropetiesXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
@@ -115,7 +115,7 @@ public class DBUtils extends DBBase {
 
 		String jobPropetiesXML = jobProperties.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", dbUserId, dbDocId, jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
+		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", dbDocId, dbUserId, "true()", jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
@@ -325,7 +325,7 @@ public class DBUtils extends DBBase {
 		
 		String jobPropertiesXML = XmlUtils.getJobPropertiesXML(jobProperties);
 		
-		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", dbUserId, dbDocId, jobPropertiesXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", dbDocId, dbUserId, "true()", jobPropertiesXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
@@ -345,7 +345,7 @@ public class DBUtils extends DBBase {
 
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", dbUserId, dbDocId, liveStateInfoXML, jobPath);
+		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", dbDocId, dbUserId, "true()", liveStateInfoXML, jobPath);
 		
 		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
