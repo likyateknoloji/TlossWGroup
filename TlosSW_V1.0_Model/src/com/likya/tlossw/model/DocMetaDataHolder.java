@@ -13,7 +13,7 @@ public class DocMetaDataHolder {
 
 	private String[] currentDocs = { null, null };
 
-	private HashMap<String, String> documentScopes = new HashMap<String, String>();
+	private HashMap<String, Integer> documentScopes = new HashMap<String, Integer>();
 
 	public MetaData getMetaData() {
 		return metaData;
@@ -23,11 +23,11 @@ public class DocMetaDataHolder {
 		this.metaData = metaData;
 	}
 
-	public HashMap<String, String> getDocumentScopes() {
+	public HashMap<String, Integer> getDocumentScopes() {
 		return documentScopes;
 	}
 
-	public void setDocumentScopes(HashMap<String, String> documentScopes) {
+	public void setDocumentScopes(HashMap<String, Integer> documentScopes) {
 		this.documentScopes = documentScopes;
 	}
 
@@ -39,5 +39,16 @@ public class DocMetaDataHolder {
 		this.currentDocs = currentDocs;
 	}
 
-
+//	public String getCurrentDoc(Integer index) {
+//		return currentDocs[index];
+//	}
+//	
+//	public void setCurrentDoc(String currentDoc, Integer index) {
+//		if(index.equals(1) || index.equals(2)) {
+//			this.currentDocs[index-1] = currentDoc;
+//		} else {
+//			this.currentDocs[0] = currentDoc;
+//		}
+//	}
+	
 }
