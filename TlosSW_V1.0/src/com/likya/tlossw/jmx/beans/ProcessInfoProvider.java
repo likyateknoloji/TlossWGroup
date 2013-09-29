@@ -59,6 +59,7 @@ import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.TreeInfoType;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.jmx.JmxUser;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.model.tree.resource.MonitorAgentNode;
 import com.likya.tlossw.model.tree.resource.ResourceListNode;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
@@ -115,7 +116,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		SpcInfoType spcInfoType = null;
 
 		if (isTester(jmxUser)) {
-			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(groupId);
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
 		} else {
 			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
@@ -146,7 +147,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath().getFullPath());
 		jobInfoTypeClient.setJobPath(baseJobInfos.getJobInfos().getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(baseJobInfos.getJobLogPath());
 		jobInfoTypeClient.setJobLogName(baseJobInfos.getJobLogFile());
@@ -357,14 +358,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		TreeInfoType treeInfoType = new TreeInfoType();
 		HashMap<String, ScenarioStatus> scenarioList = new HashMap<String, ScenarioStatus>();
 
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable();
-		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
+		HashMap<ScenarioPathType, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable().getTable();
+		Iterator<ScenarioPathType> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
 
 			ScenarioStatus scenarioStatus = new ScenarioStatus();
 
-			String scenarioId = keyIterator.next();
+			ScenarioPathType scenarioId = keyIterator.next();
 			SpcInfoType spcInfoType = spcLookUpTable.get(scenarioId);
 
 			if ((scenariodIdList != null) && scenariodIdList.indexOf(spcInfoType.getSpcReferance().getSpcId()) > 0) {
@@ -389,7 +390,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			}
 
 			scenarioStatus.setScenarioStatus(JobQueueOperations.isJobQueueOver(spcInfoType.getSpcReferance().getJobQueue()));
-			scenarioList.put(scenarioId, scenarioStatus);
+			scenarioList.put(scenarioId.getFullPath(), scenarioStatus);
 
 		}
 
@@ -407,7 +408,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		SpcInfoType spcInfoType = null;
 
 		if (isTester(jmxUser)) {
-			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").get(treePath);
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(treePath);
 		} else {
 			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
 		}
@@ -484,9 +485,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 				Iterator<Job> jobsIterator = spc.getJobQueue().values().iterator();
 
@@ -803,9 +804,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable();
+			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (String spcId : spcLookupTable.keySet()) {
+			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 
 				// verilen agent id'ye gore o agentta calisan, o senaryo icindeki isleri getiriyor
@@ -832,7 +833,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath().getFullPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
