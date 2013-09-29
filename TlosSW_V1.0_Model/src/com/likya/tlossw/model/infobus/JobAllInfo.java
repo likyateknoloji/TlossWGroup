@@ -1,6 +1,7 @@
 package com.likya.tlossw.model.infobus;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlossw.model.path.ScenarioPathType;
 
 /**
  * Job ile ilgili calistirmalarda temel bilgileri aldigimiz class. JobProperties
@@ -15,7 +16,7 @@ public class JobAllInfo implements InfoType {
 	private static final long serialVersionUID = -4207776239698697355L;
 	
 	private JobProperties jobProperties;
-	private String spcId;
+	private ScenarioPathType spcId;
 
 	public JobProperties getJobProperties() {
 		return jobProperties;
@@ -25,11 +26,11 @@ public class JobAllInfo implements InfoType {
 		this.jobProperties = jobProperties;
 	}
 
-	public String getSpcId() {
+	public ScenarioPathType getSpcId() {
 		return spcId;
 	}
 
-	public void setSpcId(String spcId) {
+	public void setSpcId(ScenarioPathType spcId) {
 		this.spcId = spcId;
 	}
 
