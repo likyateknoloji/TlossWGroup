@@ -23,6 +23,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
+import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.utils.CpcUtils;
 
 public class DependencyResolver {
@@ -166,7 +167,7 @@ public class DependencyResolver {
 					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), instanceLookUpTable);
 
 					if (spcInfoType == null) {
-						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + Cpc.getRootPath() + "." + instanceId + "." + item.getJsPath());
+						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + instanceId + "." + item.getJsPath());
 						logger.error("Ana senaryo adı : " + spcId);
 						logger.error("Ana senaryo yolu : " + jsName);
 						logger.error("Uygulama sona eriyor !");
