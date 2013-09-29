@@ -209,7 +209,7 @@ public class SessionMediator implements Serializable {
 			returnValue = MetaDataType.GLOBAL;
 		}
 
-		System.out.println("Sonuç = " + documentId + "," + returnValue);
+		//System.out.println("Sonuç = " + documentId + "," + returnValue);
 
 		return returnValue;
 	}
@@ -243,7 +243,7 @@ public class SessionMediator implements Serializable {
 
 		return result;
 	}
-
+	
 	public Integer getReverseScope(Integer scopeId) {
 		return scopeId == 1 ? 2 : 1;
 	}
@@ -252,4 +252,10 @@ public class SessionMediator implements Serializable {
 		return getDocumentScope(webSpaceWideRegistery.getDocMetaDataInfo().getCurrentDocs()[column - 1]);
 	}
 
+	public String getCurrentDoc(int column) {
+		
+		String head = webSpaceWideRegistery.getDocMetaDataInfo().getCurrentDocs()[column - 1];
+		String result = head == null ? "Quick Links" : head;
+		return result;
+	}
 }
