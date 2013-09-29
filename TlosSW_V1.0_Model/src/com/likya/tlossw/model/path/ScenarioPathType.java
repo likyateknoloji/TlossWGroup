@@ -13,9 +13,8 @@ public class ScenarioPathType extends BasePathType {
 	 * 1 : root : root
 	 * 2 : instance : instance
 	 * 3 : root.instance.x.y.z.c.id : full path
-	 * 4 : x.y.z.c : simple path
-	 * 5 : root.instance.x.y.z.c : absolute path
-	 * 6 : id : id
+	 * 4 : x.y.z.c.id : absolute path
+	 * 5 : id : id
 	 */
 
 	public ScenarioPathType() {
@@ -70,11 +69,15 @@ public class ScenarioPathType extends BasePathType {
 	public String getAbsolutePath() {
 		String listString = "";
 
-		for (int i = 0; i < getPathArray().size() - 1; i ++) {
-			listString += getPathArray().get(i) + ".";
-		}
+		if(getPathArray().size() > 2) {
+			for (int i = 2; i < getPathArray().size(); i ++) {
+				listString += getPathArray().get(i) + ".";
+			}
+			return listString.substring(0, listString.length() - 1);
+		} 
 		
-		return listString.substring(0, listString.length() - 1);
+		return listString;
+		
 	}
 
 	public String getId() {
@@ -91,11 +94,7 @@ public class ScenarioPathType extends BasePathType {
 		if(getPathArray().size() > 2) {
 			getPathArray().set(2, idText);
 		} else {
-			try {
-				throw new TlosException("No id exist, use add method instead !");
-			} catch (TlosException e) {
-				e.printStackTrace();
-			}
+			getPathArray().add(idText);
 		}
 	}
 
@@ -114,10 +113,6 @@ public class ScenarioPathType extends BasePathType {
 			return;
 		}
 		getPathArray().add(idText);
-	}
-
-	public String toString() {
-		return getFullPath();
 	}
 
 	private boolean hasDots(String item, String itemName) {
