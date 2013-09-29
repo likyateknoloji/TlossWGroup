@@ -187,7 +187,7 @@ public class Dss {
 							Logger.getLogger(Dss.class).info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 							
 							job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
-							DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
+							DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath().getFullPath()));
 							// DBUtils.insertJobInTheBeginning(jobProperties,
 							// ParsingUtils.getJobXFullPath(job.getJobRuntimeProperties().getTreePath(),jobProperties.getID(),""+resource.getAgentid(),job.getJobRuntimeProperties().getJobProperties().getLSIDateTime()));
 

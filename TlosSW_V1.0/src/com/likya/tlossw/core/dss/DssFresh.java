@@ -278,7 +278,7 @@ public class DssFresh {
 
 				job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
 
-				DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
+				DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath().getFullPath()));
 
 				/* TRANSFERING state i ekle */
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
