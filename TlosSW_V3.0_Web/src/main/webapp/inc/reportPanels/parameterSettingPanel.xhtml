@@ -89,6 +89,16 @@
 			<h:outputText value="#{msgs['tlos.report.param.endTime']}" rendered="#{backingBean.enterTimeInterval}"/>
 			<p:inputMask value="#{backingBean.reportParameters.endTime}" mask="99:99:99" rendered="#{backingBean.enterTimeInterval}"/>
 
+			<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTZone}" filter="true" filterMatchMode="startsWith" rendered="#{backingBean.enterTimeInterval}">
+				<f:selectItems value="#{backingBean.TZList}" />
+			</p:selectOneMenu>
+
+			<h:outputText value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" rendered="#{backingBean.enterTimeInterval}"/>
+			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTypeOfTime}" filter="true" filterMatchMode="startsWith" rendered="#{backingBean.enterTimeInterval}">
+				<f:selectItems value="#{backingBean.typeOfTimeList}" />
+			</p:selectOneMenu>
+
 			<h:outputText value="#{msgs['tlos.report.param.maxNumberOfIntervals']}" />
 			<p:inputText value="#{backingBean.reportParameters.maxNumberOfIntervals}" type="integer" >
 				<p:ajax partialSubmit="true"></p:ajax>
@@ -136,7 +146,7 @@
 
 		<p:panelGrid columns="2" rendered="#{backingBean.activeReportPanel eq 'densityReport'}">
 			<h:outputText value="#{msgs['tlos.report.param.stepForDensity']}" />
-			<p:inputMask value="#{backingBean.reportParameters.stepForDensity}" mask="99:99:99" />
+			<p:inputMask value="#{backingBean.stepForDensity}" mask="99:99:99" />
 		</p:panelGrid>
 
 		<p:panelGrid columns="2" rendered="#{backingBean.activeReportPanel eq 'zonesReport'}">
