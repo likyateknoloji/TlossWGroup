@@ -38,7 +38,7 @@ public class JSTree extends TreeBaseBean implements Serializable {
 
 	@ManagedProperty(value = "#{scenarioMBean}")
 	private ScenarioMBean scenarioMBean;
-	
+
 	private TreeNode root;
 
 	private TreeNode selectedJS;
@@ -47,28 +47,28 @@ public class JSTree extends TreeBaseBean implements Serializable {
 
 	@PostConstruct
 	public void initJSTree() {
-		
+
 		/*
-
-		String scopeId2 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID2);
-		if (scopeId2 != null) {
-			getSessionMediator().setScopeId2(Boolean.valueOf(scopeId2));
-		}
-
-		getSessionMediator().setDocumentId2( CommonConstantDefinitions.EXIST_SJDATA );
-		getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId2(), getSessionMediator().getScopeId2() );
-		
-		
-		long startTime = System.currentTimeMillis();
-
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId2(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId2()));
-		
-		*/
+		 * 
+		 * String scopeId2 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID2);
+		 * if (scopeId2 != null) {
+		 * getSessionMediator().setScopeId2(Boolean.valueOf(scopeId2));
+		 * }
+		 * 
+		 * getSessionMediator().setDocumentId2( CommonConstantDefinitions.EXIST_SJDATA );
+		 * getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId2(), getSessionMediator().getScopeId2() );
+		 * 
+		 * 
+		 * long startTime = System.currentTimeMillis();
+		 * 
+		 * TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId2(), getWebAppUser().getId(),
+		 * getDocumentScope(getSessionMediator().getDocumentId2()));
+		 */
 
 		long startTime = System.currentTimeMillis();
 
 		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA);
-		
+
 		constructJSTree(tlosProcessData);
 
 		// addMessage("jobTree", FacesMessage.SEVERITY_INFO,
@@ -77,31 +77,34 @@ public class JSTree extends TreeBaseBean implements Serializable {
 	}
 
 	public void constructJSTree(TlosProcessData tlosProcessData) {
-		WsScenarioNode rootNode = new WsScenarioNode();
-		rootNode.setId(ConstantDefinitions.TREE_ROOTID);
-		rootNode.setName(ConstantDefinitions.TREE_ROOT);
+		if (tlosProcessData != null) {
+			WsScenarioNode rootNode = new WsScenarioNode();
+			rootNode.setId(ConstantDefinitions.TREE_ROOTID);
+			rootNode.setName(ConstantDefinitions.TREE_ROOT);
 
-		root = new DefaultTreeNode(rootNode, null);
+			root = new DefaultTreeNode(rootNode, null);
 
-		WsScenarioNode wsScenarioNode = new WsScenarioNode();
-		wsScenarioNode.setId(ConstantDefinitions.TREE_SCENARIOROOTID);
-		wsScenarioNode.setName(resolveMessage("tlos.workspace.tree.scenario.root"));
+			WsScenarioNode wsScenarioNode = new WsScenarioNode();
+			wsScenarioNode.setId(ConstantDefinitions.TREE_SCENARIOROOTID);
+			wsScenarioNode.setName(resolveMessage("tlos.workspace.tree.scenario.root"));
 
-		TreeNode scenarioRootNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, root);
-		scenarioRootNode.setExpanded(true);
-		setSelectedTreeNode(scenarioRootNode);
+			TreeNode scenarioRootNode = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, wsScenarioNode, root);
+			scenarioRootNode.setExpanded(true);
+			setSelectedTreeNode(scenarioRootNode);
 
-		if (tlosProcessData.getJobList() != null) {
-			for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
-				addJobNode(jobProperties, selectedTreeNode);
+			if (tlosProcessData.getJobList() != null) {
+				for (JobProperties jobProperties : tlosProcessData.getJobList().getJobPropertiesArray()) {
+					addJobNode(jobProperties, selectedTreeNode);
+				}
 			}
+			constructTree(tlosProcessData.getScenarioArray());
+
 		}
-		constructTree(tlosProcessData.getScenarioArray());
 	}
 
 	public void reconstructJSTree(String documentId) {
 
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( CommonConstantDefinitions.EXIST_SJDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_SJDATA) );
+		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml(CommonConstantDefinitions.EXIST_SJDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_SJDATA));
 		constructJSTree(tlosProcessData);
 	}
 
@@ -112,8 +115,8 @@ public class JSTree extends TreeBaseBean implements Serializable {
 		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
 
-		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
-		
+		wsJobNode.setLeafIcon(getScenarioMBean().getJobIconsElement(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString()));
+
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
 
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
@@ -157,7 +160,7 @@ public class JSTree extends TreeBaseBean implements Serializable {
 		if (pathTokenizer.hasMoreTokens()) {
 			pathTokenizer.nextToken();
 		}
-				
+
 		while (pathTokenizer.hasMoreTokens()) {
 			scenarioIdList.add(pathTokenizer.nextToken());
 		}
