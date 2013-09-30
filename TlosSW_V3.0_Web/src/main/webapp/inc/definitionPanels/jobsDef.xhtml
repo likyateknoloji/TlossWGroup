@@ -17,12 +17,12 @@
 			<p:layoutUnit id="layoutUnit4jobsDef" position="north" resizable="true" size="35">
 				<ui:param name="title1" value="Main Menu" />
 				<ui:param name="title2" value="Definitions" />
-				<ui:param name="title3" value="#{sessionMediator.getScopeText(sessionMediator.getScope(1))}" />
+				<ui:param name="title3" value=" #{sessionMediator.getCurrentDoc(2)} #{sessionMediator.getScopeText(sessionMediator.getScope(2))}" />
 				<ui:param name="title4" value="" />
 
 				<ui:param name="title1link" value="/" />
 				<ui:param name="title2link" value="jobsDef.jsf" />
-				<ui:param name="title3link" value="jobsDef.jsf?secondColumn2=#{sessionMediator.getScope(1)}" />
+				<ui:param name="title3link" value="jobsDef.jsf?secondColumn2=#{sessionMediator.getScope(2)}" />
 				<ui:param name="title4link"
 					value="Tlos SW Workload Automation Software v1.0 - Job Definitions Page" />
 				<h:form>
