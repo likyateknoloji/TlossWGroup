@@ -6,11 +6,17 @@ import java.util.HashMap;
 
 import javax.faces.model.SelectItem;
 
+import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
+import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
 import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.utils.WebInputUtils;
 
 public class ReportBase extends TlosSWBaseBean implements Serializable {
 
@@ -24,6 +30,8 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 	private Collection<SelectItem> stateNameList;
 	private Collection<SelectItem> substateNameList;
 	private Collection<SelectItem> statusNameList;
+	private Collection<SelectItem> tZList;
+	private Collection<SelectItem> typeOfTimeList;
 
 	private String activeReportPanel = ConstantDefinitions.JOB_DURATION_REPORT;
 
@@ -34,8 +42,56 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 	private String substateName;
 	private String statusName;
 
+	private String stepForDensity;
+
 	private HashMap<String, String> statusToSubstate;
 	private HashMap<String, String> substateToState;
+
+	public void fillTimeProperties() {
+
+		ReportParameters reportParams = reportParameters.getReportParams();
+
+		if (isEnterTimeInterval()) {
+			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(reportParameters.getStartDate(), reportParameters.getStartTime(), reportParameters.getSelectedTZone()));
+			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(reportParameters.getEndDate(), reportParameters.getEndTime(), reportParameters.getSelectedTZone()));
+		} else {
+			reportParams.setStartDateTime(reportParameters.getStartDateCalendar());
+			reportParams.setEndDateTime(reportParameters.getEndDateCalendar());
+		}
+	}
+
+	public void fillStepForDensity() {
+		reportParameters.getReportParams().setStepForDensity(DefinitionUtils.dateToXmlTime(stepForDensity, reportParameters.getSelectedTZone()));
+	}
+
+	public void fillStateProperties() {
+
+		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
+
+		if (stateDepthType.equals(ConstantDefinitions.STATUS)) {
+
+			liveStateInfo.setStatusName(StatusName.Enum.forString(statusName));
+
+			substateName = getStatusToSubstate().get(statusName);
+			liveStateInfo.setSubstateName(SubstateName.Enum.forString(substateName));
+
+			stateName = getSubstateToState().get(substateName);
+			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
+		}
+
+		if (stateDepthType.equals(ConstantDefinitions.SUBSTATE)) {
+			liveStateInfo.setSubstateName(SubstateName.Enum.forString(substateName));
+
+			stateName = getSubstateToState().get(substateName);
+			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
+		}
+
+		if (stateDepthType.equals(ConstantDefinitions.STATE)) {
+			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
+		}
+
+		reportParameters.getReportParams().setLiveStateInfo(liveStateInfo);
+	}
 
 	public ReportsParameters getReportParameters() {
 		return reportParameters;
@@ -179,6 +235,36 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public void setStatusNameList(Collection<SelectItem> statusNameList) {
 		this.statusNameList = statusNameList;
+	}
+
+	public Collection<SelectItem> getTZList() {
+		if (tZList == null) {
+			tZList = WebInputUtils.fillTZList();
+		}
+		return tZList;
+	}
+
+	public void setTZList(Collection<SelectItem> tZList) {
+		this.tZList = tZList;
+	}
+
+	public Collection<SelectItem> getTypeOfTimeList() {
+		if (typeOfTimeList == null) {
+			typeOfTimeList = WebInputUtils.fillTypesOfTimeList();
+		}
+		return typeOfTimeList;
+	}
+
+	public void setTypeOfTimeList(Collection<SelectItem> typeOfTimeList) {
+		this.typeOfTimeList = typeOfTimeList;
+	}
+
+	public String getStepForDensity() {
+		return stepForDensity;
+	}
+
+	public void setStepForDensity(String stepForDensity) {
+		this.stepForDensity = stepForDensity;
 	}
 
 }

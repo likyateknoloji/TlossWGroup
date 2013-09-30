@@ -144,8 +144,7 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		System.out.println("aaa");
-		
+		curDurationModel = createCurCategoryModel(getReportParameters().getReportParametersXML() );
 	}
 
 	public CartesianChartModel getPrevDurationModel() {

@@ -121,7 +121,9 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 
 	private void createMeterGaugeModel() {
 
-		setReportParameters(new ReportsParameters());
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+		}
 
 		LocalStats localStats = null;
 		try {
@@ -286,8 +288,11 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		System.out.println("aaa");
 
+		fillTimeProperties();
+		fillStateProperties();
+
+		createMeterGaugeModel();
 	}
 
 	public DashboardModel getModel() {

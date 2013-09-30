@@ -28,55 +28,47 @@ public class ReportsParameters implements Serializable {
 
 	private DBOperations dbOperations;
 
+	private ReportParameters reportParams;
+
 	String reportParametersXML = null;
 
 	/* user inputs */
-	private Boolean includeNonResultedJobs;
-	private String jobId;
-	private Boolean justFirstLevel;
-	private BigInteger maxNumberOfElement;
-	private Boolean refRunIdBoolean;
-	private BigInteger runId;
-	private String scenarioId;
-	private String orderBy;
-	private Boolean isCumulative;
-	private String order;
-	private BigInteger maxNumOfListedJobs;
-	private Short statSampleNumber;
+	private Boolean includeNonResultedJobs = true;
+	private String jobId = "0";
+	private Boolean justFirstLevel = false;
+	private BigInteger maxNumberOfElement = BigInteger.valueOf(1);;
+	private Boolean refRunIdBoolean = true;
+	private BigInteger runId = BigInteger.valueOf(0);
+	private String scenarioId = "0";
+	private String orderBy = OrderByType.DURATION.toString();
+	private Boolean isCumulative = false;
+	private String order = OrderType.DESCENDING.toString();
+	private BigInteger maxNumOfListedJobs = new BigInteger("11");
+	private Short statSampleNumber = 3;
 	private LocalStats statParameters = null;
-	private String includedJobs;
-	private Short maxNumberOfIntervals;
+	private String includedJobs = FilterByResult.RESULTED.toString();
+	private Short maxNumberOfIntervals = (short) 100;
+	private LiveStateInfo liveStateInfo;
+	private String stepForDensity;
+
+	private Calendar startDateCalendar;
+	private Calendar endDateCalendar;
 	private Date startDate;
 	private String startTime;
 	private Date endDate;
 	private String endTime;
-	private LiveStateInfo liveStateInfo;
-	private String stepForDensity;
+
+	private String selectedTZone = "Europe/Istanbul";
+	private String selectedTypeOfTime;
 
 	/* computed */
 
 	public ReportsParameters() {
 		// TODO Auto-generated constructor stub
-		ReportParameters reportParameters = ReportParameters.Factory.newInstance();
+		reportParams = ReportParameters.Factory.newInstance();
 
-		includeNonResultedJobs = true;
-		jobId = "0";
-		justFirstLevel = false;
-		maxNumberOfElement = BigInteger.valueOf(1);
-		refRunIdBoolean = true;
-		runId = new BigInteger("0");
-		scenarioId = "0";
-		orderBy = OrderByType.DURATION.toString();
-		isCumulative = false;
-		order = OrderType.DESCENDING.toString();
-		maxNumOfListedJobs = new BigInteger("11");
-		statSampleNumber = 3;
-
-		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
-		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
-
-		Calendar startDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul");
-		Calendar endDate = com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul");
+		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul"));
+		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul"));
 
 		Calendar stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.intervalCalendar(new String("1970-01-01T00:00:30"), new String("yyyy-MM-dd'T'HH:mm:ss"), "GMT-0:00");
 
@@ -85,27 +77,31 @@ public class ReportsParameters implements Serializable {
 		liveStateInfo.setStateName(StateName.RUNNING);
 		liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
 		liveStateInfo.setStatusName(StatusName.TIME_IN);
-		reportParameters.setLiveStateInfo(liveStateInfo);
+		reportParams.setLiveStateInfo(liveStateInfo);
 
-		reportParameters.setIncludedJobs(FilterByResult.RESULTED);
-		reportParameters.setIncludeNonResultedJobs(true);
-		reportParameters.setStartDateTime(startDate);
-		reportParameters.setEndDateTime(endDate);
-		reportParameters.setStepForDensity(stepForDensity);
-		reportParameters.setJobId(jobId);
-		reportParameters.setJustFirstLevel(justFirstLevel);
-		reportParameters.setMaxNumberOfElement(maxNumberOfElement);
-		reportParameters.setRefRunIdBoolean(refRunIdBoolean);
-		reportParameters.setRunId(runId);
-		reportParameters.setScenarioId(scenarioId);
-		reportParameters.setOrderBy(OrderByType.Enum.forString(orderBy));
-		reportParameters.setIsCumulative(isCumulative);
-		reportParameters.setOrder(OrderType.Enum.forString(order));
-		reportParameters.setMaxNumOfListedJobs(maxNumOfListedJobs);
-		reportParameters.setStatSampleNumber(statSampleNumber);
-		reportParameters.setMaxNumberOfIntervals((short) 100);
+		reportParams.setStartDateTime(startDateCalendar);
+		reportParams.setEndDateTime(endDateCalendar);
+		reportParams.setStepForDensity(stepForDensity);
 
-		reportParametersXML = reportParameters.xmlText(xmlOptions);
+		fillReportParameters();
+	}
+
+	private void fillReportParameters() {
+
+		reportParams.setIncludedJobs(FilterByResult.Enum.forString(includedJobs));
+		reportParams.setIncludeNonResultedJobs(includeNonResultedJobs);
+		reportParams.setJobId(jobId);
+		reportParams.setJustFirstLevel(justFirstLevel);
+		reportParams.setMaxNumberOfElement(maxNumberOfElement);
+		reportParams.setRefRunIdBoolean(refRunIdBoolean);
+		reportParams.setRunId(runId);
+		reportParams.setScenarioId(scenarioId);
+		reportParams.setOrderBy(OrderByType.Enum.forString(orderBy));
+		reportParams.setIsCumulative(isCumulative);
+		reportParams.setOrder(OrderType.Enum.forString(order));
+		reportParams.setMaxNumOfListedJobs(maxNumOfListedJobs);
+		reportParams.setStatSampleNumber(statSampleNumber);
+		reportParams.setMaxNumberOfIntervals(maxNumberOfIntervals);
 	}
 
 	public void setStatParameters() {
@@ -119,6 +115,14 @@ public class ReportsParameters implements Serializable {
 	}
 
 	public String getReportParametersXML() {
+
+		fillReportParameters();
+
+		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
+		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
+
+		reportParametersXML = reportParams.xmlText(xmlOptions);
+
 		return reportParametersXML;
 	}
 
@@ -250,6 +254,30 @@ public class ReportsParameters implements Serializable {
 		this.maxNumberOfIntervals = maxNumberOfIntervals;
 	}
 
+	public LiveStateInfo getLiveStateInfo() {
+		return liveStateInfo;
+	}
+
+	public void setLiveStateInfo(LiveStateInfo liveStateInfo) {
+		this.liveStateInfo = liveStateInfo;
+	}
+
+	public String getStepForDensity() {
+		return stepForDensity;
+	}
+
+	public void setStepForDensity(String stepForDensity) {
+		this.stepForDensity = stepForDensity;
+	}
+
+	public ReportParameters getReportParams() {
+		return reportParams;
+	}
+
+	public void setReportParams(ReportParameters reportParams) {
+		this.reportParams = reportParams;
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -282,20 +310,36 @@ public class ReportsParameters implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public LiveStateInfo getLiveStateInfo() {
-		return liveStateInfo;
+	public String getSelectedTZone() {
+		return selectedTZone;
 	}
 
-	public void setLiveStateInfo(LiveStateInfo liveStateInfo) {
-		this.liveStateInfo = liveStateInfo;
+	public void setSelectedTZone(String selectedTZone) {
+		this.selectedTZone = selectedTZone;
 	}
 
-	public String getStepForDensity() {
-		return stepForDensity;
+	public String getSelectedTypeOfTime() {
+		return selectedTypeOfTime;
 	}
 
-	public void setStepForDensity(String stepForDensity) {
-		this.stepForDensity = stepForDensity;
+	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
+		this.selectedTypeOfTime = selectedTypeOfTime;
+	}
+
+	public Calendar getStartDateCalendar() {
+		return startDateCalendar;
+	}
+
+	public void setStartDateCalendar(Calendar startDateCalendar) {
+		this.startDateCalendar = startDateCalendar;
+	}
+
+	public Calendar getEndDateCalendar() {
+		return endDateCalendar;
+	}
+
+	public void setEndDateCalendar(Calendar endDateCalendar) {
+		this.endDateCalendar = endDateCalendar;
 	}
 
 }

@@ -122,6 +122,10 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		pieTimeoutCount = 0;
 		
 		try {
+			// TODO raporlarla ilgili excelde güncel iş durumları raporu sütununda 4 tane parametre var.
+			// derinlik parametresinin bunlardan hangisine karşılık geldiğinden emin olamadığım için ellemedim.
+			// hep sabir parametre gittiği için de ekrandan paremetreleri değiştirmeyle sonuçlar değişmiyor, hep aynı şeyler geliyor.
+			// merve
 			reportBaseList = getDbOperations().getDashboardReport(derinlik);
 		} catch (XMLDBException e) {
 			e.printStackTrace();
@@ -263,8 +267,7 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		System.out.println("aaa");
-		
+		createPieModel();
 	}
 
 	public PieChartModel getPieDashboardModel() {

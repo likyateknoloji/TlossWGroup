@@ -133,8 +133,7 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		System.out.println("aaa");
-		
+		createOhlcModel(getReportParameters().getReportParametersXML());
 	}
 
 	public DBOperations getDbOperations() {

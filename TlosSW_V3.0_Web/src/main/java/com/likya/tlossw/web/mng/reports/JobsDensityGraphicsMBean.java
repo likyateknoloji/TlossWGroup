@@ -46,8 +46,6 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 	
 	private boolean stacked = false;
 	
-	private int stepForDensity = 10;
-
 	private BigInteger sizeOfReport;
 
 	private String pieColorList;
@@ -114,7 +112,9 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 
 		denseModel = new CartesianChartModel();
 
-		setReportParameters(new ReportsParameters());
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+		}
 		
 		//ReportParameters reportParameters = ReportParameters.Factory.newInstance();
 		
@@ -123,7 +123,7 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 
 		
 		try {
-			densityJobCountList = getDbOperations().getDensityReport( getReportParameters().getReportParametersXML() );
+			densityJobCountList = getDbOperations().getDensityReport(getReportParameters().getReportParametersXML());
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -186,8 +186,12 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		System.out.println("aaa");
-		
+
+		fillTimeProperties();
+		fillStateProperties();
+		fillStepForDensity();
+
+		createDenseModel();
 	}
 
 	/*
@@ -284,18 +288,6 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 
 	public boolean isStacked() {
 		return stacked;
-	}
-
-	public void setStacked(boolean stacked) {
-		this.stacked = stacked;
-	}
-
-	public int getStepForDensity() {
-		return stepForDensity;
-	}
-
-	public void setStepForDensity(int stepForDensity) {
-		this.stepForDensity = stepForDensity;
 	}
 
 
