@@ -25,7 +25,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 
 public class DependencyResolver {
@@ -64,9 +63,8 @@ public class DependencyResolver {
 				}
 				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
-				ScenarioPathType scenarioPathType = new ScenarioPathType(CpcUtils.getInstancePath(instanceId) + "." + item.getJsPath());
 				// Global bir bagimlilik
-				SpcInfoType spcInfoType = spcLookupTable.getTable().get(scenarioPathType);
+				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(instanceId) + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
 					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), instanceId, ownerJob.getJobRuntimeProperties().getTreePath().getFullPath(), spcLookupTable);
