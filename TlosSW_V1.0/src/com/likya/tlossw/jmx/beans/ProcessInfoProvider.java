@@ -358,14 +358,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		TreeInfoType treeInfoType = new TreeInfoType();
 		HashMap<String, ScenarioStatus> scenarioList = new HashMap<String, ScenarioStatus>();
 
-		HashMap<ScenarioPathType, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable().getTable();
-		Iterator<ScenarioPathType> keyIterator = spcLookUpTable.keySet().iterator();
+		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable().getTable();
+		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
 
 			ScenarioStatus scenarioStatus = new ScenarioStatus();
 
-			ScenarioPathType scenarioId = keyIterator.next();
+			String scenarioId = keyIterator.next();
 			SpcInfoType spcInfoType = spcLookUpTable.get(scenarioId);
 
 			if ((scenariodIdList != null) && scenariodIdList.indexOf(spcInfoType.getSpcReferance().getSpcId()) > 0) {
@@ -390,7 +390,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			}
 
 			scenarioStatus.setScenarioStatus(JobQueueOperations.isJobQueueOver(spcInfoType.getSpcReferance().getJobQueue()));
-			scenarioList.put(scenarioId.getFullPath(), scenarioStatus);
+			scenarioList.put(scenarioId, scenarioStatus);
 
 		}
 
@@ -485,9 +485,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 				Iterator<Job> jobsIterator = spc.getJobQueue().values().iterator();
 
@@ -804,9 +804,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 
 				// verilen agent id'ye gore o agentta calisan, o senaryo icindeki isleri getiriyor

@@ -8,7 +8,6 @@ import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.model.client.resource.ResourceInfoTypeClient;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.model.tree.resource.ResourceNode;
 import com.likya.tlossw.utils.ConstantDefinitions;
 
@@ -18,9 +17,9 @@ public class AgentOperations {
 		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 				spc.failAgentJobs(agentId);
 			}

@@ -31,7 +31,6 @@ import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
@@ -87,7 +86,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath) {
 
-		HashMap<ScenarioPathType, SpcInfoType> spcLookUpTable = null;
+		HashMap<String, SpcInfoType> spcLookUpTable = null;
 
 //		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
 //		int treeLevel = treePathToken.countTokens();
@@ -101,11 +100,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
 
-		Iterator<ScenarioPathType> keyIterator = spcLookUpTable.keySet().iterator();
+		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
 
-			ScenarioPathType spcId = keyIterator.next();
+			String spcId = keyIterator.next();
 
 			// StringTokenizer spcIdToken = new StringTokenizer(spcId, ".");
 
@@ -139,7 +138,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 
 			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId().getFullPath())) {
-				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId.getFullPath(), spcInfoTypeClient);
+				spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 			}
 			// }
 

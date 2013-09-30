@@ -66,7 +66,7 @@ public class Cpc extends CpcBase {
 
 					InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-					HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+					HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 					if (spcLookupTable == null) {
 						logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
@@ -77,7 +77,7 @@ public class Cpc extends CpcBase {
 					logger.info("");
 					logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
 
-					for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+					for (String spcId : spcLookupTable.keySet()) {
 
 						SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
@@ -87,7 +87,7 @@ public class Cpc extends CpcBase {
 							continue;
 						}
 
-						logger.info("   > Senaryo " + spcId.getFullPath() + " calistiriliyor !");
+						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
 						/**
 						 * Bu thread daha once calistirildi mi? Degilse thread i
 						 * baslatabiliriz !!
@@ -99,7 +99,7 @@ public class Cpc extends CpcBase {
 							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
 							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
 
-							logger.info("     > Senaryo " + spcId.getFullPath() + " aktive edildi !");
+							logger.info("     > Senaryo " + spcId + " aktive edildi !");
 
 							/** Senaryonun thread lerle calistirildigi yer !! **/
 							spc.getExecuterThread().start();
@@ -190,7 +190,7 @@ public class Cpc extends CpcBase {
 
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			checkConcurrency(spcLookupTableNew.getTable(), spcLookupTable);
 		}
 
@@ -228,11 +228,11 @@ public class Cpc extends CpcBase {
 
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 
-				Spc spc = new Spc(spcId, getSpaceWideRegistry(), null, isUserSelectedRecover, false);
+				Spc spc = new Spc(new ScenarioPathType(spcId), getSpaceWideRegistry(), null, isUserSelectedRecover, false);
 				LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
 				myLiveStateInfo.setStateName(StateName.PENDING);
@@ -286,9 +286,9 @@ public class Cpc extends CpcBase {
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 
 				if (!spc.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
@@ -312,11 +312,11 @@ public class Cpc extends CpcBase {
 		return;
 	}
 
-	private void checkConcurrency(HashMap<ScenarioPathType, SpcInfoType> spcLookupTableNew, HashMap<ScenarioPathType, SpcInfoType> spcLookupTableMaster) throws TlosException {
+	private void checkConcurrency(HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableMaster) throws TlosException {
 
-		for (ScenarioPathType spcId : spcLookupTableNew.keySet()) {
+		for (String spcId : spcLookupTableNew.keySet()) {
 
-			ScenarioPathType keyStr = containsScenario(spcId, spcLookupTableMaster);
+			String keyStr = containsScenario(spcId, spcLookupTableMaster);
 
 			if (keyStr != null) {
 
@@ -378,13 +378,16 @@ public class Cpc extends CpcBase {
 
 	}
 
-	private ScenarioPathType containsScenario(ScenarioPathType scenarioId, HashMap<ScenarioPathType, SpcInfoType> spcLookupTableMaster) {
+	private String containsScenario(String scenarioId, HashMap<String, SpcInfoType> spcLookupTableMaster) {
 
-		Iterator<ScenarioPathType> keyIterator = spcLookupTableMaster.keySet().iterator();
+		Iterator<String> keyIterator = spcLookupTableMaster.keySet().iterator();
 
+		ScenarioPathType tmpPath = new ScenarioPathType(scenarioId);
+		
 		while (keyIterator.hasNext()) {
-			ScenarioPathType masterScenarioId = keyIterator.next();
-			if (scenarioId.getAbsolutePath().equals(masterScenarioId.getAbsolutePath())) {
+			String masterScenarioId = keyIterator.next();
+			ScenarioPathType masterPath = new ScenarioPathType(masterScenarioId);
+			if (tmpPath.getAbsolutePath().equals(masterPath.getAbsolutePath())) {
 				return masterScenarioId;
 			}
 		}

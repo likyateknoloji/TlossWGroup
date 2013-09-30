@@ -563,12 +563,12 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 	
 	// Bir senaryonun icindeki senaryoları veriyor
-	public HashMap<ScenarioPathType, SpcInfoType> getSetOfScenarios() {
-		HashMap<ScenarioPathType, SpcInfoType> map = new HashMap<ScenarioPathType, SpcInfoType>();
-		Set<ScenarioPathType> set = this.getSpcLookupTable().getTable().keySet();
+	public HashMap<String, SpcInfoType> getSetOfScenarios() {
+		HashMap<String, SpcInfoType> map = new HashMap<String, SpcInfoType>();
+		Set<String> set = this.getSpcLookupTable().getTable().keySet();
 
-        for(ScenarioPathType i : set)
-          if(i.getFullPath().indexOf(spcId + ".") != -1) {
+        for(String i : set)
+          if(i.indexOf(spcId + ".") != -1) {
              map.put(i, this.getSpcLookupTable().getTable().get(i));
           }
 

@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
-import com.likya.tlossw.model.path.ScenarioPathType;
 
 
 public class InstanceMapHelper {
@@ -21,7 +20,7 @@ public class InstanceMapHelper {
 		for (String instanceId : instanceLookUpTable.keySet()) {
 			InstanceInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
 			if(spcLookupTable.containsKey(spcId)) {
 				return spcLookupTable.get(spcId);
@@ -38,7 +37,7 @@ public class InstanceMapHelper {
 			
 			InstanceInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
 			if(spcLookupTable.containsKey(spcId)) {
 				return spcLookupTable.get(spcId);

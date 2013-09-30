@@ -57,13 +57,13 @@ public abstract class CpcBase implements Runnable {
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable().getTable();
 
-			Iterator<ScenarioPathType> keyIterator = spcMap.keySet().iterator();
+			Iterator<String> keyIterator = spcMap.keySet().iterator();
 
 			while (keyIterator.hasNext()) {
 
-				ScenarioPathType key = keyIterator.next();
+				String key = keyIterator.next();
 				Spc spcreferance = spcMap.get(key).getSpcReferance();
 
 				if (spcreferance == null) {
@@ -88,7 +88,7 @@ public abstract class CpcBase implements Runnable {
 
 	}
 
-	protected void linearizeScenarios(ScenarioPathType path, Scenario[] scenarios, HashMap<ScenarioPathType, Scenario> scenarioList) {
+	protected void linearizeScenarios(ScenarioPathType path, Scenario[] scenarios, HashMap<String, Scenario> scenarioList) {
 
 		ArrayIterator scenaryoListIterator = new ArrayIterator(scenarios);
 
@@ -96,12 +96,12 @@ public abstract class CpcBase implements Runnable {
 
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			ScenarioPathType scenarioId = new ScenarioPathType();
+			ScenarioPathType scenarioId = new ScenarioPathType(path);
 			scenarioId.add(scenario.getID().toString());
 
-			myLogger.info("   > " + scenarioId + " senaryosu yani scenario ID=" + scenario.getID().toString() + " isleniyor.");
+			myLogger.info("   > " + scenarioId.getFullPath() + " senaryosu yani scenario ID = " + scenario.getID().toString() + " işleniyor.");
 
-			scenarioList.put(scenarioId, scenario);
+			scenarioList.put(scenarioId.getFullPath(), scenario);
 
 			if (scenario.getScenarioArray().length != 0) {
 				linearizeScenarios(scenarioId, scenario.getScenarioArray(), scenarioList);
@@ -145,13 +145,13 @@ public abstract class CpcBase implements Runnable {
 
 	public static void dumpSpcLookupTable(String instanceId, SpcLookupTable spcLookupTable) {
 
-		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
 		System.out.println("**************************Dumping SpcLookupTable ***************************************");
 		System.out.println("sizo of spcLookupTable for instanceId : " + instanceId + " is " + table.size());
 
 		
-		for (ScenarioPathType spcKey : table.keySet()) {
+		for (String spcKey : table.keySet()) {
 			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId());
 		}
 
@@ -167,7 +167,7 @@ public abstract class CpcBase implements Runnable {
 		for (String instanceId : spaceWideRegistry.getInstanceLookupTable().keySet()) {
 
 			InstanceInfoType instanceInfoType = spaceWideRegistry.getInstanceLookupTable().get(instanceId);
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 			if (spcLookupTable == null) {
 				System.out.println("Current instance have no scenarios ! InstanceId : " + instanceId);
@@ -177,7 +177,7 @@ public abstract class CpcBase implements Runnable {
 			System.out.println("size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
 			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
 
-			for (ScenarioPathType spcKey : spcLookupTable.keySet()) {
+			for (String spcKey : spcLookupTable.keySet()) {
 				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
 				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
 			}
@@ -210,9 +210,9 @@ public abstract class CpcBase implements Runnable {
 		return instanceId;
 	}
 
-	protected HashMap<ScenarioPathType, Scenario> performLinearization(String instanceId, TlosProcessData tlosProcessData) {
+	protected HashMap<String, Scenario> performLinearization(String instanceId, TlosProcessData tlosProcessData) {
 
-		HashMap<ScenarioPathType, Scenario> tmpScenarioList = new HashMap<ScenarioPathType, Scenario>();
+		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
 
 		ScenarioPathType scenarioPathType = new ScenarioPathType();
 
@@ -228,7 +228,7 @@ public abstract class CpcBase implements Runnable {
 		
 		// *** root sonrasina instanceid eklendi. *//*
 
-		tmpScenarioList.put(scenarioPathType /*CpcUtils.getRootScenarioPath(instanceId)*/, myScenario);
+		tmpScenarioList.put(scenarioPathType.getFullPath(), myScenario);
 
 		myLogger.info("");
 		myLogger.info(" 7 - Senaryolar, lineerleştirilme işlemine tabi tutulacak.");
@@ -245,20 +245,20 @@ public abstract class CpcBase implements Runnable {
 
 		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
-		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 		
 		String instanceId = getInstanceId(tlosProcessData, false);
 
-		HashMap<ScenarioPathType, Scenario> tmpScenarioList = performLinearization(instanceId, tlosProcessData);
+		HashMap<String, Scenario> tmpScenarioList = performLinearization(instanceId, tlosProcessData);
 
-		Iterator<ScenarioPathType> keyIterator = tmpScenarioList.keySet().iterator();
+		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
 
 		myLogger.info("");
 		myLogger.info(" 8 - TlosProcessData içindeki senaryolardaki işlerin listesi çıkarılacak.");
 
 		while (keyIterator.hasNext()) {
 
-			ScenarioPathType scenarioId = keyIterator.next();
+			String scenarioId = keyIterator.next();
 
 			myLogger.info("");
 			myLogger.info("  > Senaryo ismi : " + scenarioId);
@@ -285,24 +285,24 @@ public abstract class CpcBase implements Runnable {
 			
 			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(scenarioId);
+				spcInfoType.setSpcId(new ScenarioPathType(scenarioId));
 			} else {
-				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList));
+				Spc spc = new Spc(new ScenarioPathType(scenarioId), getSpaceWideRegistry(), transformJobList(jobList));
 
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(scenarioId);
+				spcInfoType.setSpcId(new ScenarioPathType(scenarioId));
 
 				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 					if (!spc.initScenarioInfo()) {
 						myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
-						Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+						Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 
 						System.exit(-1);
 					}
 				}
 			}
 
-			table.put(new ScenarioPathType(scenarioId), spcInfoType);
+			table.put(scenarioId, spcInfoType);
 
 			myLogger.info("  > Senaryo yuklendi !");
 

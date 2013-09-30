@@ -52,7 +52,7 @@ public class CpcTester extends CpcBase {
 
 				initParameters();
 
-				HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+				HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 				
 				if (table == null || table.size() == 0) {
 					logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
@@ -61,9 +61,9 @@ public class CpcTester extends CpcBase {
 					logger.info("");
 					logger.info(" 10 - Butun senaryolar calismaya hazir, islem baslasin !");
 
-					for (ScenarioPathType spcId : table.keySet()) {
+					for (String spcId : table.keySet()) {
 
-						logger.info("   > Senaryo " + spcId.getFullPath() + " calistiriliyor !");
+						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
 
 						SpcInfoType mySpcInfoType = table.get(spcId);
 						Spc spc = mySpcInfoType.getSpcReferance();
@@ -80,7 +80,7 @@ public class CpcTester extends CpcBase {
 							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
 							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
 
-							logger.info("     > Senaryo " + spcId.getFullPath() + " aktive edildi !");
+							logger.info("     > Senaryo " + spcId + " aktive edildi !");
 							
 							spc.getExecuterThread().start();
 
@@ -114,21 +114,21 @@ public class CpcTester extends CpcBase {
 
 		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
-		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 		
 		// Using userId as instanceId for test routine
 		String userId = getInstanceId(tlosProcessData, false);
 		
-		HashMap<ScenarioPathType, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
+		HashMap<String, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
 
-		Iterator<ScenarioPathType> keyIterator = tmpScenarioList.keySet().iterator();
+		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
 
 		logger.info("");
 		logger.info(" 8 - TlosProcessData icindeki Senaryolardaki islerin listesi cikarilacak.");
 
 		while (keyIterator.hasNext()) {
 
-			ScenarioPathType scenarioId = keyIterator.next();
+			String scenarioId = keyIterator.next();
 
 			logger.info("");
 			logger.info("  > Senaryo ismi : " + scenarioId);
@@ -146,23 +146,23 @@ public class CpcTester extends CpcBase {
 			}
 
 			SpcInfoType spcInfoType = null;
-
+			ScenarioPathType scenarioPathType = new ScenarioPathType(scenarioId);
 			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(scenarioId);
+				spcInfoType.setSpcId(scenarioPathType);
 			} else {
-				Spc spc = new Spc(scenarioId, getSpaceWideRegistry(), transformJobList(jobList), false, true);
+				Spc spc = new Spc(scenarioPathType, getSpaceWideRegistry(), transformJobList(jobList), false, true);
 				
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(scenarioId);
+				spcInfoType.setSpcId(scenarioPathType);
 				
 				if (!spc.initScenarioInfo()) {
-					logger.warn(scenarioId.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+					logger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 					continue;
 				}
 			}
 
-			table.put(new ScenarioPathType(scenarioId), spcInfoType);
+			table.put(scenarioId, spcInfoType);
 
 			logger.info("  > Senaryo yuklendi !");
 
@@ -185,11 +185,11 @@ public class CpcTester extends CpcBase {
 	public SpcLookupTable getSpcLookupTable(String userId) {
 		
 		SpcLookupTable tmpLookupTable = new SpcLookupTable();
-		HashMap<ScenarioPathType, SpcInfoType> table = spcLookupTable.getTable();
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		HashMap<ScenarioPathType, SpcInfoType> tmpMap = new HashMap<ScenarioPathType, SpcInfoType>();
+		HashMap<String, SpcInfoType> tmpMap = new HashMap<String, SpcInfoType>();
 
-		for (ScenarioPathType key : table.keySet()) {
+		for (String key : table.keySet()) {
 			if (userId.equals(table.get(key).getUserId())) {
 				tmpMap.put(key, table.get(key));
 			}

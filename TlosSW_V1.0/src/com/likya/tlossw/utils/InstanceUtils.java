@@ -7,7 +7,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.model.path.ScenarioPathType;
 
 public class InstanceUtils {
 	
@@ -16,9 +15,9 @@ public class InstanceUtils {
 		for (String instanceId : instanceLookupTable.keySet()) {
 			InstanceInfoType instanceInfoType = instanceLookupTable.get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 				Spc spc = mySpcInfoType.getSpcReferance();
 //				if(spc == null) System.out.println("InstanceUtils---------------NULL------------------------------>" + spcId);
@@ -40,9 +39,9 @@ public class InstanceUtils {
 		for (String instanceId : instanceLookupTable.keySet()) {
 			InstanceInfoType instanceInfoType = instanceLookupTable.get(instanceId);
 
-			HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-			for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+			for (String spcId : spcLookupTable.keySet()) {
 				SpcInfoType mySpcInfoType = spcLookupTable.get(spcId);
 				Spc spc = mySpcInfoType.getSpcReferance();
 				

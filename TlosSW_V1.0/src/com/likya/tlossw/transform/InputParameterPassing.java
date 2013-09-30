@@ -42,7 +42,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.ApplyXPath;
@@ -74,9 +73,9 @@ public class InputParameterPassing {
 		String[] result;
 		InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceIdd);
 
-		HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-		for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+		for (String spcId : spcLookupTable.keySet()) {
 
 			Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 			try {

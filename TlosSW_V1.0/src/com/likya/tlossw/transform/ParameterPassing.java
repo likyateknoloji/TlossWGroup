@@ -31,7 +31,6 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.ApplyXPath;
 
@@ -50,9 +49,9 @@ public class ParameterPassing {
 
 		InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceIdd);
 
-		HashMap<ScenarioPathType, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
-		for (ScenarioPathType spcId : spcLookupTable.keySet()) {
+		for (String spcId : spcLookupTable.keySet()) {
 
 			Spc spc = spcLookupTable.get(spcId).getSpcReferance();
 			try {
