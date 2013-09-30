@@ -68,6 +68,7 @@ public interface LocalManagerMBean {
 	
 	public void startOver(boolean backupReports);
 	
+	public void simulateGunDonumu();
 	// public void redeploy(String str);
 
 }

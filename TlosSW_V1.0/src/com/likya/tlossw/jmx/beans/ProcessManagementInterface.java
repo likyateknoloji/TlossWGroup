@@ -32,6 +32,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentOperations;
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
@@ -710,6 +711,16 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		
 		startOver(backupReports);
 
+	}
+	
+	public void simulateGunDonumu() {
+
+		TlosSpaceWide.getSpaceWideRegistry().setCurrentState(AppState.SUSPENDED);
+		
+		logger.warn(" > Application state changed to SUSPENDED !");
+
+		TlosSpaceWide.getSpaceWideRegistry().getDayKeeperReference().setForced(true);
+		
 	}
 	
 	public void startOver(boolean backupReports) {

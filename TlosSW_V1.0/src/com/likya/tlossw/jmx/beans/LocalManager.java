@@ -40,6 +40,10 @@ public class LocalManager implements LocalManagerMBean {
 		new ProcessManagementInterface().startOver(backupReports);
 	}
 	
+	public void simulateGunDonumu() {
+		new ProcessManagementInterface().simulateGunDonumu();
+	}
+	
 	/*
 	public void redeploy(String str) {
 		
