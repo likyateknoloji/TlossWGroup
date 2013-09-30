@@ -23,10 +23,10 @@ public abstract class TreeBaseBean extends TlosSWBaseBean implements Serializabl
 		String doc1Id = getPassedParameter().get("doc1Id");
 		String doc2Id = getPassedParameter().get("doc2Id");
 		
-		if(doc1Id.equalsIgnoreCase(currentDocId)) {
+		if(doc1Id != null && doc1Id.equalsIgnoreCase(currentDocId)) {
 			scope = CommonConstantDefinitions.FIRST_COLUMN_STR;
 			columnId = DocMetaDataHolder.FIRST_COLUMN;
-		} else if(doc2Id.equalsIgnoreCase(currentDocId)) {
+		} else if(doc2Id != null && doc2Id.equalsIgnoreCase(currentDocId)) {
 			scope = CommonConstantDefinitions.SECOND_COLUMN_STR;
 			columnId = DocMetaDataHolder.SECOND_COLUMN;
 		} else {
