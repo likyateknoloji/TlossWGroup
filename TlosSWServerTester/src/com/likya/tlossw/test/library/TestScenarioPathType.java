@@ -5,7 +5,8 @@ import com.likya.tlossw.model.path.ScenarioPathType;
 public class TestScenarioPathType {
 	
 	public static void main(String[] args) {
-		testGetters();
+		// testGetters();
+		testSetters();
 	}
 	
 	public static void testGetters() {
@@ -45,6 +46,17 @@ public class TestScenarioPathType {
 	}
 	
 	public static void testSetters() {
+		
+		String testStr = "root.212.22.2.2.2.3";
+		
+		ScenarioPathType scenarioPathType = new ScenarioPathType(testStr);
+		
+		long start = System.currentTimeMillis();
+		scenarioPathType.add("3333");
+		long stop = System.currentTimeMillis();
+		System.out.println("Full Path : " + scenarioPathType.getFullPath());
+		System.out.println("Süre : " + (stop - start) + "ms");
+		
 	}
 
 }
