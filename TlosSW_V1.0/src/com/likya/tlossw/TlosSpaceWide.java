@@ -471,7 +471,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 	}
 
 	public static void turnToPreviousState() {
-		getSpaceWideRegistry().turnPreviousState();
+		getSpaceWideRegistry().turnToPreviousState();
 		logger.error("   > Application state : " + AppState.getString(getSpaceWideRegistry().getCurrentState()));
 	}
 	
