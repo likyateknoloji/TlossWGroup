@@ -1,19 +1,17 @@
 package com.likya.tlossw.core.cpc;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
-import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
-import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.cpc.helper.ConcurrencyAnalyzer;
+import com.likya.tlossw.core.cpc.helper.Consolidator;
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.InstanceInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
@@ -127,6 +125,8 @@ public class Cpc extends CpcBase {
 						break;
 					}
 				}
+				
+				TlosSpaceWide.changeApplicationState(AppState.INT_RUNNING);
 				// Cpc.dumpSpcLookupTables(getSpaceWideRegistry());
 				synchronized (this.getExecuterThread()) {
 					this.getExecuterThread().wait();
@@ -140,6 +140,8 @@ public class Cpc extends CpcBase {
 			}
 		}
 
+		TlosSpaceWide.changeApplicationState(AppState.INT_STOPPING);
+		
 		terminateAllJobs(Cpc.FORCED);
 
 		logger.info("Exited Cpc notified !");
@@ -182,7 +184,34 @@ public class Cpc extends CpcBase {
 
 	private void loadOnLiveSystem(TlosProcessData tlosProcessData) throws TlosException {
 
-		checkAndCleanSpcLookUpTables();
+		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
+
+		if(getSpaceWideRegistry().getInstanceLookupTable().size() < -1 || getSpaceWideRegistry().getInstanceLookupTable().size() > 1) {
+			// Ne yapmalı ??
+			return;
+		}
+		
+		InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(0);
+		HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
+		
+		Consolidator.compareAndConsolidateTwoTables(instanceInfoType.getInstanceId(), spcLookupTableNew.getTable(), spcLookupTableOld);
+
+
+		logger.info("");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+
+		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId() + " olarak belirlendi.");
+
+		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
+		instanceInfoType.setSpcLookupTable(spcLookupTableNew);
+
+		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+		logger.info("   > OK iliskilendirildi.");
+	}
+	
+	public void loadOnLiveSystemOld(TlosProcessData tlosProcessData) throws TlosException {
+
+		ConcurrencyAnalyzer.checkAndCleanSpcLookUpTables(getSpaceWideRegistry().getInstanceLookupTable(), logger);
 
 		logger.info("   > Evet, " + getSpaceWideRegistry().getInstanceLookupTable().size() + ". eleman olacak !");
 
@@ -190,8 +219,8 @@ public class Cpc extends CpcBase {
 
 		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
 			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
-			checkConcurrency(spcLookupTableNew.getTable(), spcLookupTable);
+			HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
+			ConcurrencyAnalyzer.checkConcurrency(instanceId, spcLookupTableNew.getTable(), spcLookupTableOld);
 		}
 
 		logger.info("");
@@ -279,119 +308,4 @@ public class Cpc extends CpcBase {
 	// this.isRegular = isRegular;
 	// }
 
-	private void checkAndCleanSpcLookUpTables() {
-
-		boolean checkValue = true;
-
-		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-
-			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
-
-			for (String spcId : spcLookupTable.keySet()) {
-				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
-
-				if (!spc.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
-					checkValue = false;
-					logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcId + " isimli isler bitirilmemis.");
-					break;
-				}
-			}
-
-			if (checkValue) {
-				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan isler tamamen bitirilmis, tablodan temizleniyor ...");
-				spcLookupTable.clear();
-				getSpaceWideRegistry().getInstanceLookupTable().remove(instanceId);
-				checkValue = true;
-				logger.info("     > Temizlendi.");
-			} else {
-				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan bazi isler bitirilmemis.");
-			}
-		}
-
-		return;
-	}
-
-	private void checkConcurrency(HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableMaster) throws TlosException {
-
-		for (String spcId : spcLookupTableNew.keySet()) {
-
-			String keyStr = containsScenario(spcId, spcLookupTableMaster);
-
-			if (keyStr != null) {
-
-				SpcInfoType spcInfoTypeMaster = spcLookupTableMaster.get(keyStr);
-				SpcInfoType spcInfoTypeNew = spcLookupTableNew.get(spcId);
-
-				if (!spcInfoTypeNew.getSpcReferance().getConcurrencyManagement().getConcurrent()) {
-					// if (!spcInfoTypeNew.getSpcReferance().isConcurrent()) {
-					if ((spcInfoTypeNew.getSpcReferance().getDependencyList() != null) && spcInfoTypeNew.getSpcReferance().getDependencyList().getItemArray().length > 0) {
-						// ** Biraz parsing laz�m :( *//*
-						Item mydependencyItem = Item.Factory.newInstance();
-						mydependencyItem.setDependencyID("VD1");
-						mydependencyItem.setComment("Bu sanal bir bagimlilik tanimidir. Bagli oldugu senaryo  ise budur : " + spcInfoTypeMaster.getSpcReferance().getSpcId());
-
-						JsDependencyRule myDependencyRule = JsDependencyRule.Factory.newInstance();
-						myDependencyRule.setStateName(StateName.FINISHED);
-						mydependencyItem.setJsDependencyRule(myDependencyRule);
-
-						mydependencyItem.setJsName(spcInfoTypeMaster.getSpcReferance().getBaseScenarioInfos().getJsName());
-						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId().getFullPath());
-						mydependencyItem.setJsType(JsType.SCENARIO);
-
-						DependencyList myDependencyList = DependencyList.Factory.newInstance();
-						myDependencyList.addNewItem();
-						myDependencyList.setItemArray(myDependencyList.sizeOfItemArray() - 1, mydependencyItem);
-
-						String dependecyExpression = spcInfoTypeNew.getSpcReferance().getDependencyList().getDependencyExpression();
-						dependecyExpression = mydependencyItem.getDependencyID() + " and ( " + dependecyExpression + " )";
-
-						myDependencyList.setDependencyExpression(dependecyExpression);
-						spcInfoTypeNew.getSpcReferance().setDependencyList(myDependencyList);
-
-					} else {
-						Item mydependencyItem = Item.Factory.newInstance();
-						mydependencyItem.setDependencyID("VD1");
-						mydependencyItem.setComment("Bu sanal bir bagimlilik tanimidir. Bagli oldugu senaryo  ise budur : " + spcInfoTypeMaster.getSpcReferance().getSpcId());
-
-						JsDependencyRule myDependencyRule = JsDependencyRule.Factory.newInstance();
-						myDependencyRule.setStateName(StateName.FINISHED);
-						mydependencyItem.setJsDependencyRule(myDependencyRule);
-
-						mydependencyItem.setJsName(spcInfoTypeMaster.getSpcReferance().getBaseScenarioInfos().getJsName());
-						mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId().getFullPath());
-						mydependencyItem.setJsType(JsType.SCENARIO);
-
-						String dependecyExpression = mydependencyItem.getDependencyID();
-
-						DependencyList myDependencyList = DependencyList.Factory.newInstance();
-						myDependencyList.addNewItem();
-						myDependencyList.setItemArray(myDependencyList.sizeOfItemArray() - 1, mydependencyItem);
-
-						myDependencyList.setDependencyExpression(dependecyExpression);
-
-						spcInfoTypeNew.getSpcReferance().setDependencyList(myDependencyList);
-					}
-				}
-			}
-		}
-
-	}
-
-	private String containsScenario(String scenarioId, HashMap<String, SpcInfoType> spcLookupTableMaster) {
-
-		Iterator<String> keyIterator = spcLookupTableMaster.keySet().iterator();
-
-		ScenarioPathType tmpPath = new ScenarioPathType(scenarioId);
-		
-		while (keyIterator.hasNext()) {
-			String masterScenarioId = keyIterator.next();
-			ScenarioPathType masterPath = new ScenarioPathType(masterScenarioId);
-			if (tmpPath.getAbsolutePath().equals(masterPath.getAbsolutePath())) {
-				return masterScenarioId;
-			}
-		}
-
-		return null;
-	}
 }
