@@ -17,6 +17,7 @@ public class JobAllInfo implements InfoType {
 	
 	private JobProperties jobProperties;
 	private ScenarioPathType spcId;
+	private boolean isFirstJobInfo;
 
 	public JobProperties getJobProperties() {
 		return jobProperties;
@@ -32,6 +33,14 @@ public class JobAllInfo implements InfoType {
 
 	public void setSpcId(ScenarioPathType spcId) {
 		this.spcId = spcId;
+	}
+
+	public boolean isFirstJobInfo() {
+		return isFirstJobInfo;
+	}
+
+	public void setFirstJobInfo(boolean isFirstJobInfo) {
+		this.isFirstJobInfo = isFirstJobInfo;
 	}
 
 }
