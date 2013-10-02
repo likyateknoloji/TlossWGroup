@@ -66,7 +66,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private ResourceAgentList resourceAgentList;
 
-	private Boolean firstLoop = true;
+	//	private Boolean firstLoop = true;
 
 	private String selectedAgentId;
 
@@ -126,7 +126,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
 			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
-			if(nextPeriodTime != null) {
+			if (nextPeriodTime != null) {
 				// yeni zamana kuruldu
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
 			} else {
@@ -221,6 +221,21 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 				// System.out.println("Job.sendEndInfo : getGlobalRegistry().getInfoBusManager() == null !");
 				System.out.println("Agent da calisiyorum, ClientLibs de sendEndInfo icindeyim !!");
 			}
+		}
+	}
+
+	public synchronized void sendFirstJobInfo(ScenarioPathType spcId, JobProperties jobProperties) {
+
+		JobAllInfo jobAllInfo = new JobAllInfo();
+		jobAllInfo.setJobProperties(jobProperties);
+		jobAllInfo.setSpcId(spcId);
+		jobAllInfo.setFirstJobInfo(true);
+
+		if (getGlobalRegistry().getInfoBus() != null) {
+			getGlobalRegistry().getInfoBus().addInfo(jobAllInfo);
+		} else {
+			// System.out.println("Job.sendEndInfo : getGlobalRegistry().getInfoBusManager() == null !");
+			System.out.println("sendFirstJobInfo yapamadım,  getGlobalRegistry().getInfoBus() == null !!");
 		}
 	}
 
@@ -435,13 +450,13 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		return selectedAgentId;
 	}
 
-	public Boolean getFirstLoop() {
-		return firstLoop;
-	}
-
-	public void setFirstLoop(Boolean firstLoop) {
-		this.firstLoop = firstLoop;
-	}
+	//	public Boolean getFirstLoop() {
+	//		return firstLoop;
+	//	}
+	//
+	//	public void setFirstLoop(Boolean firstLoop) {
+	//		this.firstLoop = firstLoop;
+	//	}
 
 	public String getJobKey() {
 		return jobKey;
