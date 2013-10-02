@@ -2,6 +2,7 @@ package com.likya.tlossw;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.exceptions.TlosRecoverException;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -176,6 +177,8 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 	private void startTlosSpaceWide() {
 
+		changeApplicationState(AppState.INT_STARTING);
+		
 		/** Initialize startup conditions **/
 		initApplication();
 
@@ -257,6 +260,8 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				logger.info("   CPC STATE : GUNDONUMUNU BEKLIYORUM ...");
 				logger.info("");
 
+				changeApplicationState(AppState.INT_RUNNING);
+				
 				getSpaceWideRegistry().setWaitConfirmOfGUI(false);
 
 			} else {
@@ -273,6 +278,8 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				 * 2. DURUM : Bir sonraki gün dönümüne uyması istenebilir.
 				 */
 				getSpaceWideRegistry().setWaitConfirmOfGUI(true);
+				
+				changeApplicationState(AppState.INT_SUSPENDED);
 
 			}
 
@@ -298,6 +305,9 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				 * beklemeye geçer ve gün dönümü saaati gelince çalışır
 				 */
 				getSpaceWideRegistry().setWaitConfirmOfGUI(true);
+				
+				changeApplicationState(AppState.INT_SUSPENDED);
+
 
 			} else if (getSpaceWideRegistry().isSolsticePassed()) {
 
@@ -327,9 +337,12 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				logger.info("");
 
 				getSpaceWideRegistry().setWaitConfirmOfGUI(false);
+				
+				changeApplicationState(AppState.INT_RUNNING);
 
 			} else {
-
+				changeApplicationState(AppState.INT_NOT_STARTED);
+				
 				logger.fatal("Baslatma Yoneticisi icin beklenmeyen bir durum olustu... !! Kod: 0001");
 
 				System.exit(-1);
@@ -457,4 +470,13 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		println("TlosSpaceWide terminated successfully !");
 	}
 
+	public static void turnToPreviousState() {
+		getSpaceWideRegistry().turnPreviousState();
+		logger.error("   > Application state : " + AppState.getString(getSpaceWideRegistry().getCurrentState()));
+	}
+	
+	public static void changeApplicationState(int newState) {
+		getSpaceWideRegistry().setCurrentState(newState);
+		logger.error("   > Application state : " + AppState.getString(newState));
+	}
 }
