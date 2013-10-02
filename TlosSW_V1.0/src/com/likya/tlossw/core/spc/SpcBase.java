@@ -587,7 +587,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 	
 	protected void insertLastStateInfo(JobRuntimeProperties jobRuntimeProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
-		if(!LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
+		if(jobRuntimeProperties.getPreviousLiveStateInfo() == null || !LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobRuntimeProperties.getJobProperties(), StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 		}
 	}
