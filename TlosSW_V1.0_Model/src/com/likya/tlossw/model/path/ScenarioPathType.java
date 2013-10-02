@@ -46,13 +46,13 @@ public class ScenarioPathType extends BasePathType {
 			}
 		}
 	}
-
+ 
 	public void setInstanceId(String instanceId) {
 		if(hasDots(instanceId, "instanceId")) {
 			return;
 		}
 		if (getPathArray().size() > 1) {
-			getPathArray().add(1, instanceId);
+			getPathArray().set(1, instanceId);
 		} else {
 			getPathArray().add(instanceId);
 		}
