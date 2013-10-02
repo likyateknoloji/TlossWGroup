@@ -33,7 +33,9 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	private transient static SpaceWideRegistry spaceWideRegistry;
 	
-	private int currentState = AppState.NOT_STARTED;
+	private int currentState = AppState.INT_NOT_STARTED;
+	
+	private int previousState = -1;
 	
 	public static boolean isDebug = true;
 
@@ -385,7 +387,21 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	}
 
 	public void setCurrentState(int currentState) {
+		previousState = this.currentState;
 		this.currentState = currentState;
+	}
+
+	public void turnToPreviousState() {
+		if(previousState > 0) {
+			currentState = previousState;
+			previousState = -1;
+		}
+		
+	}
+
+	
+	public int getPreivousState() {
+		return previousState;
 	}
 
 }
