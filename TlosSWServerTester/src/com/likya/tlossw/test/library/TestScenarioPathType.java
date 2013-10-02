@@ -56,7 +56,13 @@ public class TestScenarioPathType {
 		long stop = System.currentTimeMillis();
 		System.out.println("Full Path : " + scenarioPathType.getFullPath());
 		System.out.println("Süre : " + (stop - start) + "ms");
-		
+
+		start = System.currentTimeMillis();
+		scenarioPathType.setInstanceId("444");
+		stop = System.currentTimeMillis();
+		System.out.println("Full Path : " + scenarioPathType.getFullPath());
+		System.out.println("Instance Id : " + scenarioPathType.getInstanceId());
+		System.out.println("Süre : " + (stop - start) + "ms");
 	}
 
 }
