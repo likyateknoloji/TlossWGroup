@@ -191,7 +191,7 @@ public class Cpc extends CpcBase {
 			return;
 		}
 		
-		InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(0);
+		InstanceInfoType instanceInfoType = (InstanceInfoType) getSpaceWideRegistry().getInstanceLookupTable().values().toArray()[0];
 		HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
 		
 		Consolidator.compareAndConsolidateTwoTables(instanceInfoType.getInstanceId(), spcLookupTableNew.getTable(), spcLookupTableOld);
@@ -205,6 +205,7 @@ public class Cpc extends CpcBase {
 		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
 		instanceInfoType.setSpcLookupTable(spcLookupTableNew);
 
+		getSpaceWideRegistry().getInstanceLookupTable().clear();
 		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
 		logger.info("   > OK iliskilendirildi.");
 	}
