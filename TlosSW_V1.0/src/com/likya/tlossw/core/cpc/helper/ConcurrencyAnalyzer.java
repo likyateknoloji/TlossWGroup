@@ -84,7 +84,7 @@ public class ConcurrencyAnalyzer {
 		
 		Object retValue = spcLookupTableOld.get(masterPathType.getFullPath());
 		
-		return ( retValue == null ? null : retValue.toString());
+		return (retValue == null ? null : masterPathType.getFullPath());
 		
 	}
 	
