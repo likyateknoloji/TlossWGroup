@@ -715,9 +715,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 	
 	public void simulateGunDonumu() {
 
-		TlosSpaceWide.getSpaceWideRegistry().setCurrentState(AppState.SUSPENDED);
-		
-		logger.warn(" > Application state changed to SUSPENDED !");
+		TlosSpaceWide.changeApplicationState(AppState.INT_SUSPENDED);
 
 		TlosSpaceWide.getSpaceWideRegistry().getDayKeeperReference().setForced(true);
 		
