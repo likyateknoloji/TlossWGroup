@@ -43,7 +43,6 @@ import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
-import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.TypeUtils;
 import com.likya.tlossw.utils.XmlUtils;
@@ -88,7 +87,7 @@ public class Spc extends SpcBase {
 		getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin ana thread baslatiliyor. Toplam is Sayisi : " + getJobQueue().size());
 
 		/**
-		 * InfoBus null ise kritik bir hata vardır, muhtemelen yazılımda bug vardır. 
+		 * InfoBus null ise kritik bir hata vardır, muhtemelen yazılımda bug vardır.
 		 * Koşulsuz olarak uygulama kapanmalıdır.
 		 * 
 		 * @author serkan taş 19.09.2012
@@ -109,7 +108,7 @@ public class Spc extends SpcBase {
 		// PerformanceManager performanceManager = TlosSpaceWide.getSpaceWideRegistry().getPerformanceManagerReference();
 
 		/**
-		 * Senaryo içinde bulunan tüm işler bitene yahut, bir nedenle senaryo durdurulana kadar 
+		 * Senaryo içinde bulunan tüm işler bitene yahut, bir nedenle senaryo durdurulana kadar
 		 * aşağıdaki döngü belli aralıklarla çalışacaktır.
 		 * 
 		 * @author serkan taş
@@ -139,7 +138,18 @@ public class Spc extends SpcBase {
 
 		while (executionPermission) { // Senaryonun caslistirilmasi icin gerek sart !
 
+			// Gelen deger saniye tipine çevriliyor.
+			long chekInterval = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000;
+			
 			try {
+				// Senaryolarin bagimliligi icin burada bir kontrol koyduk ama su anda xml lerde kullanilmadigi icin etkisiz. Herzaman true donecek.
+				// Senaryo PENDING statusune alindi ise herhangi bir isi baslatmaya calismamali. Normalde RUNNING de buraya geliyoruz.
+				// TODO Performans Yoneticisi nin de fikrini almak lazim. Fakat bu asamada kaynak belli olmadigi icin sadece genel performans kontrolu yapilabilir.
+				// Bunu sonraya birakiyoruz.
+				if (!isSpcPermittedToExecute() /* || !isScenarioDependencyResolved() */) {
+					Thread.sleep(chekInterval);
+					continue;
+				}
 
 				passOnJobQueueForExecution(spcMonitor);
 
@@ -174,9 +184,9 @@ public class Spc extends SpcBase {
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
 				/**
 				 * @author serkan
-				 * 13.09.2013
-				 * Ek : İşlerin içinde en az bir tane tekrarlı iş var ise, 
-				 * süreç sonlanMAmalı
+				 *         13.09.2013
+				 *         Ek : İşlerin içinde en az bir tane tekrarlı iş var ise,
+				 *         süreç sonlanMAmalı
 				 */
 				if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
 					getLiveStateInfo().setStateName(StateName.FINISHED);
@@ -184,8 +194,7 @@ public class Spc extends SpcBase {
 					break; // beklemeye gerek yok
 				}
 
-				// Gelen deger saniye tipine çevriliyor.
-				Thread.sleep(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000);
+				Thread.sleep(chekInterval);
 
 				// myLogger.info("     > "+ this.getBaseScenarioInfos().getJsName() + " icin islerin bitmesini bekliyoruz ...");
 			} catch (Exception e) {
@@ -260,19 +269,6 @@ public class Spc extends SpcBase {
 			getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin süreç durduruldu.");
 		}
 
-		// **
-		// * Su anda calisan senaryo yöneticisinin yönettigi senaryoya ait tüm
-		// * isler bitince, asagidaki deger düzenlenmeli.
-		// *
-		/**
-		 * Bu yorumda ve aşağda yapılan iş nedir ???
-		 * 
-		 * @author serkan taş 20.09.2012
-		 * Disable ettim 25.07.2013
-		 * 
-		 */
-		// getSpcLookupTable().get(getSpcId()).setJobListStatus(true);
-
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcId(), getJobQueue().size()));
 			getMyLogger().info("     > SPC ID : " + this.getSpcId() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
@@ -287,27 +283,30 @@ public class Spc extends SpcBase {
 		// Senaryodaki herbir isi ele alalim.
 		Iterator<SortType> jobQueueIndexIterator = getJobQueueIndex().iterator();
 
-		// Senaryolarin bagimliligi icin burada bir kontrol koyduk ama su anda xml lerde kullanilmadigi icin etkisiz. Herzaman true donecek.
-		// Senaryo PENDING statusune alindi ise herhangi bir isi baslatmaya calismamali. Normalde RUNNING de buraya geliyoruz.
-		// TODO Performans Yoneticisi nin de fikrini almak lazim. Fakat bu asamada kaynak belli olmadigi icin sadece genel performans kontrolu yapilabilir.
-		// Bunu sonraya birakiyoruz.
+		while (executionPermission && jobQueueIndexIterator.hasNext()) {
 
-		while (executionPermission && !getLiveStateInfo().getStateName().equals(StateName.PENDING) /*&& isScenarioDependencyResolved()*/ && jobQueueIndexIterator.hasNext()) {
+			if (!isSpcPermittedToExecute()) {
+				// İş listesi üzerinde dolaşırken senaryo beklemeye alınırsa ya da
+				// uygulama state'i RUNNING dışında bir değer alırsa yapılan işlem
+				// ansızın yarıda kesilip, sorumluluk üst döngüye bırakılır
+				// serkan
+				return;
+			}
 
 			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
 			SortType sortType = jobQueueIndexIterator.next();
 
 			Job scheduledJob = getJobQueue().get(sortType.getJobId());
-			
-			if(scheduledJob == null) {
+
+			if (scheduledJob == null) {
 				getGlobalLogger().error("  > HATA : Indexde bulunan " + sortType.getJobId() + " li iş Kuyrukta bulunaMAdı !!");
 				getGlobalLogger().error("		İş kontrolden geçememiş olabilir. Lütfen log dosyalarını kontrol ediniz. ");
 				getGlobalLogger().error("  > UYARI : Bir sonraki işe geçiyor.");
 				continue;
 			}
-			
+
 			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
-			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();			
+			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 
 			DependencyList dependentJobList = jobProperties.getDependencyList();
 
@@ -320,62 +319,59 @@ public class Spc extends SpcBase {
 				/*
 				 * StateName FAILED sadece sistemsel basarisizlik durumlarinda kullanilir. Diger durumlarda asagidaki sekilde kullanilir. HS 24.09.2012
 				 */
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+				insertLastStateInfo(jobRuntimeProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 				scheduledJob.sendStatusChangeInfo();
 				continue;
 			}
 
 			// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
-			if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
-				/**
-				 * Burada yapılan işin ne olduğunu anlamadım...
-				 * 
-				 * @author serkan taş 21.09.2012
-				 */
-				scheduledJob.setFirstLoop(false);
-				continue;
-			}
+			// if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
+			// /**
+			// * Burada yapılan işin ne olduğunu anlamadım...
+			// *
+			// * @author serkan taş 21.09.2012
+			// */
+			// scheduledJob.setFirstLoop(false);
+			// continue;
+			// }
 
 			try {
 
 				// job in PENDING olmasi halinde yapilacaklarin başladığı yer.
 
-				if (jobLiveStateInfo.getSubstateName().equals(SubstateName.IDLED)) {
+				if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED)) {
 					/*
 					 * InfoQueue ya ilk uc state i koyamadigim icin burada bir kerede guncelleme yapiyorum. Eger infoQueue kullanabilirsek bunu kaldiracagiz ama is gorur bu hali.
+					 * serkan : kaldırdım :)
 					 */
-					/**
-					 * Buralarda kesinlikle veri tabanı erişimi olMAmalı. Zira bu kısımın işi yönetmesini riske eder.
-					 * Asenkron loglama maksatlı kesinlikle infoBus'a kayıt atıp hayatına devam etmeli
-					 * Serkan Taş
-					 * TODO
-					 */
-					if (scheduledJob.getFirstLoop()) {
-						DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(getSpcId().getFullPath()));
-					}
+					// if (scheduledJob.getFirstLoop()) {
+						scheduledJob.sendFirstJobInfo(getSpcId(), jobProperties);
+					//}
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
 
 					if (jobStartType.equals(JobTypeDef.TIME_BASED.toString())) {
 
-                        boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
+						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
 
 						// isin planlanan calisma zamani gecti mi?
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
 							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 						} else { // Zamani bekliyor ...
-							if (scheduledJob.getFirstLoop()) { /* status u ekle */
-								LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
+							//if (scheduledJob.getFirstLoop()) { /* status u ekle */
+								insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME);
+								//LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
 								scheduledJob.sendStatusChangeInfo();
-							}
+							//}
 						}
 
 					} else if (jobStartType.equals(JobTypeDef.USER_BASED.toString())) {
 
-						if (scheduledJob.getFirstLoop()) { /* status u ekle */
-							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYUSER);
+						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
+							insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYUSER);
+							// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYUSER);
 							scheduledJob.sendStatusChangeInfo();
-						}
+						//}
 
 						// Ekrandan kullanici tercihi alinacak. Kullanici tercihi alininca StatusName WAITING yapilacak !!
 						/*
@@ -384,10 +380,11 @@ public class Spc extends SpcBase {
 
 					} else if (jobStartType.equals(JobTypeDef.EVENT_BASED.toString())) {
 
-						if (scheduledJob.getFirstLoop()) { /* status u ekle */
-							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYEVENT);
+						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
+							insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYEVENT);
+							// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYEVENT);
 							scheduledJob.sendStatusChangeInfo();
-						}
+						// }
 
 						boolean eventOccured = true; // TODO buraya olay kontrolu eklenecek.
 						if (eventOccured) {
@@ -402,7 +399,8 @@ public class Spc extends SpcBase {
 						 * 
 						 * @author serkan taş 21.09.2012
 						 */
-						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+						insertLastStateInfo(jobRuntimeProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+						// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 						scheduledJob.sendStatusChangeInfo();
 					}
 
@@ -418,19 +416,21 @@ public class Spc extends SpcBase {
 					 * @author serkan taş 21.09.2012
 					 */
 					getGlobalLogger().error("  > HATA : Bir isin baslama kosulu bilgisi IDLED ve READY disinda birsey bos olamaz !! Kontrol ediniz. " + jobProperties.getBaseJobInfos().getJsName());
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+					insertLastStateInfo(jobRuntimeProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+					// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 					scheduledJob.sendStatusChangeInfo();
 					continue;
 				}
 
 			} catch (TlosException t) {
 				getGlobalLogger().error(t.getMessage());
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+				insertLastStateInfo(jobRuntimeProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 				scheduledJob.sendStatusChangeInfo();
 				t.printStackTrace();
 			}
 			// job in PENDING olmasi halinde yapilacaklarin sonlandigi yer.
-			scheduledJob.setFirstLoop(false);
+			// scheduledJob.setFirstLoop(false);
 
 			try {
 				if (spcMonitor.getMyExecuter().getState().equals(Thread.State.NEW) && !spcMonitor.getMyExecuter().isAlive()) {
@@ -442,12 +442,12 @@ public class Spc extends SpcBase {
 
 		}
 	}
-	
+
 	private void handleTransferRequestsOnDss(Job scheduledJob, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		// job in son state ini al.
-		LiveStateInfo jobLiveStateInfo = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
+//		LiveStateInfo jobLiveStateInfo = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
 		if (dependentJobList != null) {
 
@@ -462,10 +462,11 @@ public class Spc extends SpcBase {
 			} else {
 				// Bu durumda job bagimliliklarindan beklenenler var demektir.
 				// Son status WAITING degilse eklenmeli
-				if (!LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.WAITING)) {
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
+				// if (!LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.WAITING)) {
+				//	LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
+					insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.PENDING, SubstateName.READY, StatusName.WAITING);
 					scheduledJob.sendStatusChangeInfo();
-				}
+				//}
 			}
 
 		} else { // Herhangi bir bagimliligi yok !!
@@ -493,17 +494,18 @@ public class Spc extends SpcBase {
 		getMyLogger().info("");
 
 		/* RUNNING state i STAGE_IN subs ekle */
-		LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_STAGE_IN, StatusName.INT_TIME_IN);
+		// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_STAGE_IN, StatusName.INT_TIME_IN);
+		insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.RUNNING, SubstateName.STAGE_IN, StatusName.TIME_IN);
 		scheduledJob.sendStatusChangeInfo();
 
 		// is, dosya tasimasi gerektiriyorsa burada yapilacak !!
 
 		/* RUNNING state i ON_RESOURCE subs ekle */
 		/*
-		 * Job in verildigi yerden bu isi yapmak daha dogru geldi. 
-		 * O yuzden kaldirdim ama simdilik dursun. 
-		 * XmlBeansTransformer.insertNewLiveStateInfo(scheduledJob.getJobRuntimeProperties().getJobProperties(), 
-		 * 		StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN); 
+		 * Job in verildigi yerden bu isi yapmak daha dogru geldi.
+		 * O yuzden kaldirdim ama simdilik dursun.
+		 * XmlBeansTransformer.insertNewLiveStateInfo(scheduledJob.getJobRuntimeProperties().getJobProperties(),
+		 * StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 		 * scheduledJob.sendStatusChangeInfo();
 		 */
 
@@ -526,17 +528,18 @@ public class Spc extends SpcBase {
 	private synchronized boolean transferJobToAgent(Job scheduledJob) {
 
 		/**
-		 * Biri bir diğerini içeiren iki nesen de aynı alanlar olması konusunda 
+		 * Biri bir diğerini içeiren iki nesen de aynı alanlar olması konusunda
 		 * bir problem olablir mi ?
+		 * 
 		 * @author serkan taş
-		 * 24.07.2013
-		 * TODO
+		 *         24.07.2013
+		 *         TODO
 		 */
 		// agenta gonderilecek islerde gondermeden once JobRuntimeProperties icinde olup jobproperties icinde olmayan kisimlar jobproperties icine aliniyor
 		JobProperties jobProperties = getJobPropertiesWithSpecialParameters(scheduledJob.getJobRuntimeProperties());
 
 		String jsId = jobProperties.getID();
-		
+
 		String rxMessageKey = getTransferedJobKey(jobProperties.getAgentId(), jsId, jobProperties.getLSIDateTime());
 		RxMessage rxMessage = XmlUtils.generateRxMessage(jobProperties, rxMessageKey);
 
@@ -557,7 +560,8 @@ public class Spc extends SpcBase {
 		 * Neden ?
 		 */
 
-		LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_STAGE_IN, StatusName.INT_TIME_IN);
+		// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_STAGE_IN, StatusName.INT_TIME_IN);
+		insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.RUNNING, SubstateName.STAGE_IN, StatusName.TIME_IN);
 		scheduledJob.sendStatusChangeInfo();
 
 		// is, dosya tasimasi gerektiriyorsa burada yapilacak !!
@@ -625,9 +629,9 @@ public class Spc extends SpcBase {
 			executeJob(scheduledJob);
 		} else {
 			scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().addNewJsRealTime().addNewStartTime().setTime(Calendar.getInstance());
-			
+
 			boolean transferSuccess = transferJobToAgent(scheduledJob);
-			
+
 			long transferTime = System.currentTimeMillis();
 
 			if (transferSuccess) {
@@ -696,15 +700,16 @@ public class Spc extends SpcBase {
 
 	/**
 	 * Henüz hiç bir yerde kullanılmıyor
+	 * 
 	 * @author Serkan Taş
 	 * @return
 	 * @throws TlosFatalException
 	 */
 	/*
-	private synchronized boolean isScenarioDependencyResolved() throws TlosFatalException {
-		return DependencyResolver.isScenarioDependencyResolved(getMyLogger(), getDependencyList(), getSpcId(), getBaseScenarioInfos().getJsName(),  getInstanceId(), this.getLiveStateInfo(), getSpcLookupTable(), getSpaceWideRegistry().getInstanceLookupTable());
-	}
-	*/
+	 * private synchronized boolean isScenarioDependencyResolved() throws TlosFatalException {
+	 * return DependencyResolver.isScenarioDependencyResolved(getMyLogger(), getDependencyList(), getSpcId(), getBaseScenarioInfos().getJsName(), getInstanceId(), this.getLiveStateInfo(), getSpcLookupTable(), getSpaceWideRegistry().getInstanceLookupTable());
+	 * }
+	 */
 	public boolean isRecovered() {
 		return isRecovered;
 	}
@@ -767,10 +772,10 @@ public class Spc extends SpcBase {
 			SortType sortType = jobQueueIndexIterator.next();
 
 			Job scheduledJob = getJobQueue().get(sortType.getJobId());
-			JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
-			JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.IDLED, null);
+			// JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
+			// JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
+			insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.PENDING, SubstateName.IDLED, null);
+			// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.IDLED, null);
 			scheduledJob.sendStatusChangeInfo();
 		}
 	}
