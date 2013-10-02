@@ -63,7 +63,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 	private int processedRecordCount = 0;
 
 	private final boolean debug;
-	
+
 	boolean isEmailEnabled = false;
 
 	public InfoBusManager() throws TlosRecoverException {
@@ -72,7 +72,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
 
 		isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
-		
+
 		mailServer = spaceWideRegistry.getMailServer();
 
 		if (TlosSpaceWide.isRecoverable() && FileUtils.checkTempFile(PersistenceUtils.persistInfoQueueFile, EngineeConstants.tempDir)) {
@@ -134,8 +134,17 @@ public class InfoBusManager implements InfoBus, Runnable {
 						JobAllInfo jobAllInfo = (JobAllInfo) infoType;
 						JobProperties jobProperties = jobAllInfo.getJobProperties();
 
-						DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId().getFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
-
+						if (jobAllInfo.isFirstJobInfo()) {
+							/**
+							 * Burasını bu şekilde yaptım ama hakan hoca ile konuşmak lazım.
+							 * serkan
+							 * TODO 
+							 */
+							DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(jobAllInfo.getSpcId().getFullPath()));
+						} else {
+							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId().getFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+						}
+						
 						if (debug) {
 							logger.info("  > ");
 							logger.info("  > DB guncellemesi. " + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName() + " icin baslama bitis zamani ve butun state ler.");
@@ -288,7 +297,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 	private void addMail(InfoType infoType) {
 		if (isEmailEnabled) {
-			mailServer.sendMail((TlosMail)infoType);
+			mailServer.sendMail((TlosMail) infoType);
 		}
 	}
 }
