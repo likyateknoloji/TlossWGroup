@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalS
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
 import com.likya.tlossw.core.cpc.CpcTester;
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.TlosFatalException;
@@ -423,6 +424,8 @@ public class TlosSpaceWideBase {
 			logger.info("Cpc is working, can not accept notify command !!!!!!");
 			return;
 		}
+		
+		TlosSpaceWide.changeApplicationState(AppState.INT_SUSPENDED);
 
 		if (!getSpaceWideRegistry().isUserSelectedRecover()) {
 
@@ -433,6 +436,7 @@ public class TlosSpaceWideBase {
 
 			if (numOfScenarios == 0 && (jobList == null || jobList.getJobPropertiesArray().length == 0)) {
 				logger.info("Bugünün is listesi herhangi bir job veya senaryo içermiyor.Liste bos !!!");
+				TlosSpaceWide.turnToPreviousState();
 				return;
 			} else {
 				logger.info("   > is listesi KDS nden sorgulandi ve islenmeye hazir !");
@@ -475,7 +479,7 @@ public class TlosSpaceWideBase {
 				}
 			} else {
 				logger.fatal("Expected Cpc state : " + State.WAITING + " Current Cpc State " + getSpaceWideRegistry().getCpcReference().getExecuterThread().getState());
-				errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
+				// errprintln(getSpaceWideRegistry().getApplicationResources().getString(ResourceMapper.TERMINATE_APPLICATION));
 				// System.exit(-1);
 			}
 		}
