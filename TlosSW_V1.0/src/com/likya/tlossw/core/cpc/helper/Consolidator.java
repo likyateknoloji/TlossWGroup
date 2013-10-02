@@ -57,7 +57,7 @@ public class Consolidator {
 	}
 
 	private static void checkAndPerformStabilityConditionsOfJobsInScenario(SpcInfoType spcInfoTypeNew, SpcInfoType spcInfoTypeOld) {
-
+ 
 		HashMap<String, Job> jobQueueNew = spcInfoTypeNew.getSpcReferance().getJobQueue();
 		HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
 
@@ -71,7 +71,7 @@ public class Consolidator {
 
 				JobProperties jobPropertiesOld = jobOld.getJobRuntimeProperties().getJobProperties();
 
-				String jobIdOld = jobOld.getJobKey();
+				String jobIdOld = jobPropertiesOld.getID();
 				
 				String jobBaseType = jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType().toString();
 				
