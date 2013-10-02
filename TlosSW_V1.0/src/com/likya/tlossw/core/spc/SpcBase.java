@@ -25,7 +25,9 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
@@ -36,6 +38,7 @@ import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
+import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public abstract class SpcBase implements Runnable, Serializable {
@@ -577,6 +580,16 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public ScenarioPathType getSpcId() {
 		return spcId;
+	}
+	
+	protected boolean isSpcPermittedToExecute() {
+		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
+	}
+	
+	protected void insertLastStateInfo(JobRuntimeProperties jobRuntimeProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
+		if(!LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobRuntimeProperties.getJobProperties(), StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
+		}
 	}
 
 }
