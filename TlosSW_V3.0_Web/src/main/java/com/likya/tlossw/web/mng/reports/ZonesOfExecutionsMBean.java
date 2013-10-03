@@ -20,6 +20,7 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
 import org.primefaces.event.DashboardReorderEvent;
@@ -272,10 +273,11 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 
 	public String numberToDayTimeFormat(BigDecimal number) {
 
-		MutableDateTime epoch = new MutableDateTime();
+		DateTimeZone zoneUTC = DateTimeZone.UTC;
+		MutableDateTime epoch = new MutableDateTime(zoneUTC);
 		epoch.setDate(0); // Set to Epoch time
 
-		DateTime dt = new DateTime(totalDurationBD.longValue() * 1000);
+		DateTime dt = new DateTime(totalDurationBD.longValue() * 1000, zoneUTC);
 
 		String timepart = dt.toString("HH:mm:ss.SSS");
 		Days days = Days.daysBetween(epoch, dt);
@@ -395,13 +397,14 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 		String zones[][] = { { resolveMessage("tlos.report.gauge.problem"), resolveMessage("tlos.report.gauge.problemExp") }, { resolveMessage("tlos.report.gauge.blue"), isFinished ? resolveMessage("tlos.report.gauge.finished.blueExplanation") : resolveMessage("tlos.report.gauge.running.blueExplanation") }, { resolveMessage("tlos.report.gauge.yellow1"), isFinished ? resolveMessage("tlos.report.gauge.finished.yellow1Explanation") : resolveMessage("tlos.report.gauge.running.yellow1Explanation") }, { resolveMessage("tlos.report.gauge.green1"), isFinished ? resolveMessage("tlos.report.gauge.finished.green1Explanation") : resolveMessage("tlos.report.gauge.running.green1Explanation") },
 				{ resolveMessage("tlos.report.gauge.green2"), isFinished ? resolveMessage("tlos.report.gauge.finished.green2Explanation") : resolveMessage("tlos.report.gauge.running.green2Explanation") }, { resolveMessage("tlos.report.gauge.yellow2"), isFinished ? resolveMessage("tlos.report.gauge.finished.yellow2Explanation") : resolveMessage("tlos.report.gauge.running.yellow2Explanation") }, { resolveMessage("tlos.report.gauge.red"), isFinished ? resolveMessage("tlos.report.gauge.finished.redExplanation") : resolveMessage("tlos.report.gauge.running.redExplanation") } };
 
-		int sonuc = 0;
+		int sonuc = intervals.size();
 		for (int i = 0; i < intervals.size(); i++)
 			if (totalDurationNormalized.compareTo((Double) intervals.get(i)) < 0) {
 				sonuc = i;
 				break;
 			}
-		return totalDurationNormalized.compareTo((Double) intervals.get(intervals.size() - 2)) > 0 ? zones[intervals.size() - 1] : zones[sonuc];
+		//totalDurationNormalized.compareTo((Double) intervals.get(intervals.size() - 2)) > 0 ? zones[intervals.size() - 1] : zones[sonuc];
+		return zones[sonuc];
 	}
 
 	public BigDecimal getTotalDurationBD() {
