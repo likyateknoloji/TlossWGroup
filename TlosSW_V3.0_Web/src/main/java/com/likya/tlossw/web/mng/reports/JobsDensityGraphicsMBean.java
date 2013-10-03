@@ -60,6 +60,12 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		String parameter_value = (String) facesContext.getExternalContext().getRequestParameterMap().get("id");
 
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+		}
+		fillStepForDensity();
+		fillTimeProperties();
+		fillStateProperties();
 		System.out.println(parameter_value);
 		stacked = false;
 		createDenseModel();
@@ -194,42 +200,6 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 		createDenseModel();
 	}
 
-	/*
-	private void createDenseModelOld() {
-		denseModel = new CartesianChartModel();
-
-		ChartSeries dense = new ChartSeries();
-		dense.setLabel("Number of Jobs");
-
-		try {
-			densityJobCountList = getDbOperations().getDensityReport(
-					TransformUtils.toXSString("RUNNING"),
-					TransformUtils.toXSString("ON-RESOURCE"),
-					TransformUtils.toXSString("TIME-IN"),
-					"xs:dateTime(\"2013-05-15T16:26:25+03:00\")",
-					"xs:dateTime(\"2013-05-15T16:49:27+03:00\")",
-					"xs:dayTimeDuration('PT10S')");
-		} catch (XMLDBException e) {
-			e.printStackTrace();
-		}
-		Integer counter = new Integer(0);
-		int maxval = 0;
-		setSizeOfReport(densityJobCountList.getDataArray(0).getCount());
-		for (Integer i = 0; i < densityJobCountList.sizeOfDataArray(); i++) {
-
-			String formattedTime = new SimpleDateFormat("HH:mm:ss")
-					.format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
-			dense.set(formattedTime, densityJobCountList.getDataArray(i).getCount().intValue());
-			counter = counter + (densityJobCountList.getDataArray(i).getCount().intValue() > 0 ? 1 : 0);
-			maxval = (densityJobCountList.getDataArray(i).getCount().intValue()) > maxval ? densityJobCountList.getDataArray(i).getCount().intValue() : maxval;
-		}
-		Double max = Math.ceil((double) maxval / counter.longValue())* counter.longValue();
-		setMaxValue(max.longValue());
-
-		denseModel.addSeries(dense);
-
-	}
-	*/
 	public CartesianChartModel getDenseModel() {
 		return denseModel;
 	}
