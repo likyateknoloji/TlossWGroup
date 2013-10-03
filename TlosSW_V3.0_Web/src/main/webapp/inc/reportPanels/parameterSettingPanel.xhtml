@@ -17,13 +17,17 @@
 			<h:outputText value="#{msgs['tlos.report.param.jobId']}" />
 			<p:inputText value="#{backingBean.reportParameters.jobId}" />
 
-			<h:outputText value="#{msgs['tlos.report.param.runId']}" />
-			<p:inputText value="#{backingBean.reportParameters.runId}" type="integer" />
-
 			<h:outputText value="#{msgs['tlos.report.param.refRunIdBoolean']}" />
-			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.refRunIdBoolean}" />
-
-			<h:outputText value="#{msgs['tlos.report.param.maxNumberOfElement']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.refRunIdBoolean}" >
+				<p:ajax event="change" update="runIdPanelId" />
+			</p:selectBooleanCheckbox>
+			
+			<h:panelGrid id="runIdPanelId"  >
+			  <h:outputText value="#{msgs['tlos.report.param.runId']}"  rendered="#{!backingBean.reportParameters.refRunIdBoolean}"/>
+			  <p:inputText value="#{backingBean.reportParameters.runId}" type="integer"  rendered="#{!backingBean.reportParameters.refRunIdBoolean}"/>
+			</h:panelGrid>
+			
+			<h:outputText value="#{msgs['tlos.report.param.maxNumberOfElement']}"/>
 			<p:inputText value="#{backingBean.reportParameters.maxNumberOfElement}" type="integer" />
 		</p:panelGrid>
 
@@ -66,36 +70,36 @@
 				<p:ajax partialSubmit="true"></p:ajax>
 			</p:selectOneMenu>
 
-			<h:outputText value="#{msgs['tlos.report.param.enterTimeInterval']}" />
-			<p:selectBooleanCheckbox value="#{backingBean.enterTimeInterval}">
+			<h:outputText value="#{msgs['tlos.report.param.automaticTimeInterval']}" />
+			<p:selectBooleanCheckbox value="#{backingBean.reportParameters.automaticTimeInterval}">
 				<p:ajax update="filterAndTimePanel"></p:ajax>
 			</p:selectBooleanCheckbox>
 
-			<h:outputText value="#{msgs['tlos.report.param.startDate']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:calendar value="#{backingBean.reportParameters.startDate}" id="startDate" showOn="focus" navigator="true"
-				rendered="#{backingBean.enterTimeInterval}">
+			<h:outputText value="#{msgs['tlos.report.param.startDate']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:calendar value="#{backingBean.startDate}" id="startDate" showOn="focus" navigator="true"
+				rendered="#{!backingBean.reportParameters.automaticTimeInterval}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</p:calendar>
 
-			<h:outputText value="#{msgs['tlos.report.param.startTime']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:inputMask value="#{backingBean.reportParameters.startTime}" mask="99:99:99" rendered="#{backingBean.enterTimeInterval}"/>
+			<h:outputText value="#{msgs['tlos.report.param.startTime']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:inputMask value="#{backingBean.startTime}" mask="99:99:99" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
 
-			<h:outputText value="#{msgs['tlos.report.param.endDate']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:calendar value="#{backingBean.reportParameters.endDate}" id="endDate" showOn="focus" navigator="true"
-				rendered="#{backingBean.enterTimeInterval}">
+			<h:outputText value="#{msgs['tlos.report.param.endDate']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:calendar value="#{backingBean.endDate}" id="endDate" showOn="focus" navigator="true"
+				rendered="#{!backingBean.reportParameters.automaticTimeInterval}">
 				<f:convertDateTime pattern="dd.MM.yyyy" />
 			</p:calendar>
 
-			<h:outputText value="#{msgs['tlos.report.param.endTime']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:inputMask value="#{backingBean.reportParameters.endTime}" mask="99:99:99" rendered="#{backingBean.enterTimeInterval}"/>
+			<h:outputText value="#{msgs['tlos.report.param.endTime']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:inputMask value="#{backingBean.endTime}" mask="99:99:99" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
 
-			<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTZone}" filter="true" filterMatchMode="startsWith" rendered="#{backingBean.enterTimeInterval}">
+			<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTZone}" filter="true" filterMatchMode="startsWith" rendered="#{!backingBean.reportParameters.automaticTimeInterval}">
 				<f:selectItems value="#{backingBean.TZList}" />
 			</p:selectOneMenu>
 
-			<h:outputText value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" rendered="#{backingBean.enterTimeInterval}"/>
-			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTypeOfTime}" filter="true" filterMatchMode="startsWith" rendered="#{backingBean.enterTimeInterval}">
+			<h:outputText value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" rendered="#{!backingBean.reportParameters.automaticTimeInterval}"/>
+			<p:selectOneMenu value="#{backingBean.reportParameters.selectedTypeOfTime}" filter="true" filterMatchMode="startsWith" rendered="#{!backingBean.reportParameters.automaticTimeInterval}">
 				<f:selectItems value="#{backingBean.typeOfTimeList}" />
 			</p:selectOneMenu>
 
