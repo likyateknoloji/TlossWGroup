@@ -94,30 +94,30 @@ public class DefinitionUtils {
 		return myDate;
 	}
 	
-	public static Calendar intervalCalendar(String dateStr, String format, String timeZone) {
-		
-		DateFormat formatter = new SimpleDateFormat(format);
-		java.util.Date date = null;
-		try {
-			date = formatter.parse(dateStr);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	    Calendar c = new GregorianCalendar();
-
-       c.clear();                   // clears all fields in the calendar
-	   c.setTimeZone(TimeZone.getTimeZone("UTC"));
-       c.set(Calendar.YEAR, 1970);
-       c.set(Calendar.MONTH, 0);    // recall that Java months are zero based
-       c.set(Calendar.DATE, 1);
-       c.set(Calendar.HOUR, 0);
-       c.set(Calendar.MINUTE, 0);
-       c.set(Calendar.SECOND, 10);
-
-		return c;
-	}
+//	public static Calendar intervalCalendar(String dateStr, String format, String timeZone) {
+//		
+//		DateFormat formatter = new SimpleDateFormat(format);
+//		java.util.Date date = null;
+//		try {
+//			date = formatter.parse(dateStr);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	    Calendar c = new GregorianCalendar();
+//
+//       c.clear();                   // clears all fields in the calendar
+//	   c.setTimeZone(TimeZone.getTimeZone("UTC"));
+//       c.set(Calendar.YEAR, 1970);
+//       c.set(Calendar.MONTH, 0);    // recall that Java months are zero based
+//       c.set(Calendar.DATE, 1);
+//       c.set(Calendar.HOUR, 0);
+//       c.set(Calendar.MINUTE, 0);
+//       c.set(Calendar.SECOND, 10);
+//
+//		return c;
+//	}
 	
 	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
 		//String timeStr = zeroCheck(date.get(Calendar.HOUR_OF_DAY) + "") + ":" + zeroCheck(date.get(Calendar.MINUTE) + "") + ":" + zeroCheck(date.get(Calendar.SECOND) + "");
@@ -193,6 +193,29 @@ public class DefinitionUtils {
 		return dateCalendar;
 	}
 
+	public static Calendar dateTimeToXmlDateTime(String date, String time, String selectedTZone) {
+
+		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
+
+		DateTimeParser[] timeParsers = { DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
+
+		DateTimeFormatter timef = new DateTimeFormatterBuilder().append(null, timeParsers).toFormatter();
+
+		
+		LocalTime jobLocalTime = timef.parseLocalTime(time);
+		
+		DateTimeParser[] dateParsers = { DateTimeFormat.forPattern("yyyyy-mm-dd").getParser(), DateTimeFormat.forPattern("yyyyy/mm/dd").getParser(), DateTimeFormat.forPattern("yyyy-MM-dd").getParser(), DateTimeFormat.forPattern("yyyy/MM/dd").getParser() };
+
+		DateTimeFormatter datef = new DateTimeFormatterBuilder().append(null, dateParsers).toFormatter();
+
+		
+		LocalDate jobLocalDate = datef.parseLocalDate(date);
+		
+		DateTime dtx = jobLocalDate.toDateTime(jobLocalTime, zonex);
+
+		return dtx.toCalendar(Locale.US);
+	}
+	
 	public static Calendar dateToXmlTime(String time, String selectedTZone) {
 
 		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
