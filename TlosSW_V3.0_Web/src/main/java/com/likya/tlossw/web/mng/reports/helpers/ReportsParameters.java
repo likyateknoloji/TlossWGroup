@@ -3,7 +3,6 @@ package com.likya.tlossw.web.mng.reports.helpers;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -31,8 +30,13 @@ public class ReportsParameters implements Serializable {
 	private ReportParameters reportParams;
 
 	String reportParametersXML = null;
-
+	private Calendar startDateCalendar;
+	private Calendar endDateCalendar;
+	private Calendar stepForDensityCalendar;
+	private LiveStateInfo liveStateInfo;
+	
 	/* user inputs */
+	private String includedJobs = FilterByResult.RESULTED.toString();
 	private Boolean includeNonResultedJobs = true;
 	private String jobId = "0";
 	private Boolean justFirstLevel = false;
@@ -45,49 +49,78 @@ public class ReportsParameters implements Serializable {
 	private String order = OrderType.DESCENDING.toString();
 	private BigInteger maxNumOfListedJobs = new BigInteger("11");
 	private Short statSampleNumber = 3;
-	private LocalStats statParameters = null;
-	private String includedJobs = FilterByResult.RESULTED.toString();
 	private Short maxNumberOfIntervals = (short) 100;
-	private LiveStateInfo liveStateInfo;
-	private String stepForDensity;
-
-	private Calendar startDateCalendar;
-	private Calendar endDateCalendar;
-	private Date startDate;
-	private String startTime;
-	private Date endDate;
-	private String endTime;
-
-	private String selectedTZone = "Europe/Istanbul";
+	private Boolean automaticTimeInterval = true;
 	private String selectedTypeOfTime;
+	private String selectedTZone = "Europe/Istanbul";
+	
+	private LocalStats statParameters = null;
+	private String zuluTZone = "UTC";
 
+
+
+	
 	/* computed */
 
 	public ReportsParameters() {
 		// TODO Auto-generated constructor stub
 		reportParams = ReportParameters.Factory.newInstance();
 
-		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul"));
-		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), "Europe/Istanbul"));
+		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), selectedTZone));
+		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), selectedTZone));
+		setStepForDensityCalendar(com.likya.tlossw.web.utils.DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), new String("00:00:30"), zuluTZone));
+		
+		//String timeInputFormat = new String("HH:mm:ss.SSSZZ");
 
-		Calendar stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.intervalCalendar(new String("1970-01-01T00:00:30"), new String("yyyy-MM-dd'T'HH:mm:ss"), "GMT-0:00");
+		//stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.calendarToStringTimeFormat(stepForDensityCalendar, "UTC", timeInputFormat);
 
+		selectedTypeOfTime = new String("Actual");
+		
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
 		liveStateInfo.setStateName(StateName.RUNNING);
 		liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
 		liveStateInfo.setStatusName(StatusName.TIME_IN);
+		
 		reportParams.setLiveStateInfo(liveStateInfo);
 
 		reportParams.setStartDateTime(startDateCalendar);
 		reportParams.setEndDateTime(endDateCalendar);
-		reportParams.setStepForDensity(stepForDensity);
+		reportParams.setStepForDensity(stepForDensityCalendar);
 
 		fillReportParameters();
 	}
 
 	private void fillReportParameters() {
 
+
+		//setStepForDensityCalendar(DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), stepForDensity, zuluTZone));
+		
+		//String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+
+		//stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.calendarToStringTimeFormat(stepForDensityCalendar, "UTC", timeInputFormat);
+
+		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
+
+		selectedTypeOfTime = new String("Actual");
+		//reportParams.getLiveStateInfo().getStateName()
+		if(reportParams.getLiveStateInfo()!=null) {
+			//if(reportParams.getLiveStateInfo().getStateName() != null) 
+			liveStateInfo.setStateName(StateName.RUNNING);
+			liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
+			liveStateInfo.setStatusName(StatusName.TIME_IN);	
+		} else {
+			liveStateInfo.setStateName(StateName.RUNNING);
+			liveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
+			liveStateInfo.setStatusName(StatusName.TIME_IN);			
+		}
+
+		reportParams.setLiveStateInfo(liveStateInfo);
+
+		reportParams.setStartDateTime(startDateCalendar);
+		reportParams.setEndDateTime(endDateCalendar);
+		reportParams.setStepForDensity(stepForDensityCalendar);
+		
 		reportParams.setIncludedJobs(FilterByResult.Enum.forString(includedJobs));
 		reportParams.setIncludeNonResultedJobs(includeNonResultedJobs);
 		reportParams.setJobId(jobId);
@@ -262,14 +295,6 @@ public class ReportsParameters implements Serializable {
 		this.liveStateInfo = liveStateInfo;
 	}
 
-	public String getStepForDensity() {
-		return stepForDensity;
-	}
-
-	public void setStepForDensity(String stepForDensity) {
-		this.stepForDensity = stepForDensity;
-	}
-
 	public ReportParameters getReportParams() {
 		return reportParams;
 	}
@@ -278,36 +303,30 @@ public class ReportsParameters implements Serializable {
 		this.reportParams = reportParams;
 	}
 
-	public Date getStartDate() {
-		return startDate;
+
+
+	public Calendar getStartDateCalendar() {
+		return startDateCalendar;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartDateCalendar(Calendar startDateCalendar) {
+		this.startDateCalendar = startDateCalendar;
 	}
 
-	public String getStartTime() {
-		return startTime;
+	public Calendar getEndDateCalendar() {
+		return endDateCalendar;
 	}
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
+	public void setEndDateCalendar(Calendar endDateCalendar) {
+		this.endDateCalendar = endDateCalendar;
+	}
+	
+	public Calendar getStepForDensityCalendar() {
+		return stepForDensityCalendar;
 	}
 
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+	public void setStepForDensityCalendar(Calendar calendar) {
+		this.stepForDensityCalendar = calendar;
 	}
 
 	public String getSelectedTZone() {
@@ -326,20 +345,11 @@ public class ReportsParameters implements Serializable {
 		this.selectedTypeOfTime = selectedTypeOfTime;
 	}
 
-	public Calendar getStartDateCalendar() {
-		return startDateCalendar;
+	public Boolean getAutomaticTimeInterval() {
+		return automaticTimeInterval;
 	}
 
-	public void setStartDateCalendar(Calendar startDateCalendar) {
-		this.startDateCalendar = startDateCalendar;
+	public void setAutomaticTimeInterval(Boolean automaticTimeInterval) {
+		this.automaticTimeInterval = automaticTimeInterval;
 	}
-
-	public Calendar getEndDateCalendar() {
-		return endDateCalendar;
-	}
-
-	public void setEndDateCalendar(Calendar endDateCalendar) {
-		this.endDateCalendar = endDateCalendar;
-	}
-
 }
