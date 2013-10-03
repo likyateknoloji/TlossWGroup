@@ -146,8 +146,9 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
   let $startDateTime  := xs:dateTime($reportParameters/rep:startDateTime/text())
   let $endDateTime := xs:dateTime($reportParameters/rep:endDateTime/text())
   let $step := hs:get-dayTimeDuration-from-dateTimes( adjust-dateTime-to-timezone( xs:dateTime($reportParameters/rep:stepForDensity ), xs:dayTimeDuration('-PT0H')))
-
-  let $maxNumberOfInterval := 100
+  let $includeNonResultedJobs := $reportParameters/@includeNonResultedJobs
+  let $maxNumberOfInterval := $reportParameters/@maxNumberOfIntervals
+  
   let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
   let $endDateTimex := xs:dateTime(if($hepsi/@overallStop  eq '') then current-dateTime() else $hepsi/@overallStop)+xs:dayTimeDuration('PT10S')
@@ -156,7 +157,7 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
     let $startDateTime := xs:dateTime("2013-05-05T15:52:00+03:00")
     let $endDateTime   := xs:dateTime("2013-05-05T16:54:00+03:00")
   :)
-  let $sonuc :=
+  let $sonucx :=
    if($endDateTimex > $startDateTimex) then
     let $diff := $endDateTimex - $startDateTimex
     let $numberOfIntervalCalc := xs:integer($diff div $step)
@@ -188,7 +189,7 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
    else ()
 
-   return $sonuc
+   return $sonucx
 };
 
 (:
