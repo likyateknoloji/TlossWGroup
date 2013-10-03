@@ -16,6 +16,7 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -79,7 +80,7 @@ public class TestSpc extends TestSuit {
 
 			startAgentManager();
 
-			Spc mySpc = prepareSpc(instanceId, spcId, transformTable);
+			Spc mySpc = prepareSpc(instanceId, spcId.getFullPath(), transformTable);
 
 			Thread myRunner = new Thread(mySpc);
 
@@ -112,7 +113,7 @@ public class TestSpc extends TestSuit {
 
 	private Spc prepareSpc(String instanceId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
 
-		Spc spc = new Spc(spcId, getSpaceWideRegistry(), transformTable);
+		Spc spc = new Spc(new ScenarioPathType(spcId), getSpaceWideRegistry(), transformTable);
 		spc.setInstanceId(instanceId);
 
 		SpcInfoType spcInfoType = new SpcInfoType();
@@ -120,12 +121,15 @@ public class TestSpc extends TestSuit {
 
 		HashMap<String, SpcInfoType> spcLookupTable = new HashMap<String, SpcInfoType>();
 		spcLookupTable.put(spcId, spcInfoType);
+		
+		SpcLookupTable spctbl = new SpcLookupTable();
+		spctbl.setTable(spcLookupTable);
 
 		HashMap<String, InstanceInfoType> myInstanceLookupTable = new HashMap<String, InstanceInfoType>();
 
 		InstanceInfoType instanceInfoType = new InstanceInfoType();
 		instanceInfoType.setInstanceId(instanceId);
-		instanceInfoType.setSpcLookupTable(spcLookupTable);
+		instanceInfoType.setSpcLookupTable(spctbl);
 
 		myInstanceLookupTable.put(instanceId, instanceInfoType);
 

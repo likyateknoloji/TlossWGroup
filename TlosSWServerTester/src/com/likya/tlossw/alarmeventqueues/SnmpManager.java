@@ -53,7 +53,7 @@ public class SnmpManager implements Runnable {
 	// private SmsServer smsServer;
 	// private HistoryServer historyServer;
 
-	private SpaceWideRegistry spaceWideRegistry;
+	public SpaceWideRegistry spaceWideRegistry;
 
 	public SnmpManager(SpaceWideRegistry spaceWideRegistry) {
 		this.spaceWideRegistry = spaceWideRegistry;

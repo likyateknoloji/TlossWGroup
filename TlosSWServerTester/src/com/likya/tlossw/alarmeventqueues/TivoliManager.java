@@ -53,7 +53,7 @@ public class TivoliManager implements Runnable {
 	// private SmsServer smsServer;
 	// private HistoryServer historyServer;
 
-	private SpaceWideRegistry spaceWideRegistry;
+	public SpaceWideRegistry spaceWideRegistry;
 
 	public TivoliManager(SpaceWideRegistry spaceWideRegistry) {
 		this.spaceWideRegistry = spaceWideRegistry;

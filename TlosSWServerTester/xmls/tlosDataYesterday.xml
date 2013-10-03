@@ -1,0 +1,173 @@
+<dat:TlosProcessData xmlns:adp="http://www.likyateknoloji.com/XML_adapter_types"
+	xmlns:com="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types"
+	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
+	xmlns:dat="http://www.likyateknoloji.com/XML_data_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
+	xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_data_types ../xsds/tlosSWData_v_1_0.xsd">
+	<dat:baseScenarioInfos>
+		<com:jsName>Serbest isler</com:jsName>
+		<com:comment>Serbest isler burada yer alir</com:comment>
+		<dat:jsIsActive>YES</dat:jsIsActive>
+		<com:userId>4</com:userId>
+	</dat:baseScenarioInfos>
+	<!--dependencyList -->
+	<dat:jobList>
+		<dat:jobProperties agentId="0" ID="382">
+			<jsdl:JobDescription />
+			<dat:baseJobInfos>
+				<com:jsName>Batch1</com:jsName>
+				<com:comment>batch job</com:comment>
+				<dat:jobInfos>
+					<com:jobBaseType>NON_PERIODIC</com:jobBaseType>
+					<com:jobTypeDef>TIME BASED</com:jobTypeDef>
+					<com:jobTypeDetails>
+						<com:jobCommandType>BATCH PROCESS</com:jobCommandType>
+						<com:jobCommand>job1.bat</com:jobCommand>
+						<com:jobPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\jobs\</com:jobPath>
+					</com:jobTypeDetails>
+				</dat:jobInfos>
+				<dat:calendarId>1</dat:calendarId>
+				<dat:jobLogFile>job1.log</dat:jobLogFile>
+				<dat:jobLogPath>C:\Likya\calismalar\Tlos\Tlos_Ent_Test\logs\</dat:jobLogPath>
+				<dat:oSystem>Windows</dat:oSystem>
+				<dat:jobPriority>1</dat:jobPriority>
+				<dat:jsIsActive>YES</dat:jsIsActive>
+				<com:userId>1</com:userId>
+			</dat:baseJobInfos>
+			<dat:cascadingConditions>
+				<dat:runEvenIfFailed>NO</dat:runEvenIfFailed>
+				<dat:jobSafeToRestart>NO</dat:jobSafeToRestart>
+				<dat:jobAutoRetry>NO</dat:jobAutoRetry>
+			</dat:cascadingConditions>
+			<dat:stateInfos>
+				<state-types:LiveStateInfos>
+					<state-types:LiveStateInfo LSIDateTime="2013-07-05T18:41:59.192+0300">
+						<state-types:StateName>PENDING</state-types:StateName>
+						<state-types:SubstateName>CREATED</state-types:SubstateName>
+					</state-types:LiveStateInfo>
+				</state-types:LiveStateInfos>
+			</dat:stateInfos>
+			<dat:advancedJobInfos>
+				<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			</dat:advancedJobInfos>
+			<dat:concurrencyManagement>
+				<com:concurrent>false</com:concurrent>
+			</dat:concurrencyManagement>
+			<dat:timeManagement>
+				<dat:jsPlannedTime>
+					<dat:startTime>
+						<com:time>08:30:00.000+03:00</com:time>
+					</dat:startTime>
+				</dat:jsPlannedTime>
+				<com:timeZone>Europe/Istanbul</com:timeZone>
+				<com:typeOfTime>Actual</com:typeOfTime>
+				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
+				<dat:jsTimeOut>
+					<com:value_integer>3</com:value_integer>
+					<com:unit>HOURS</com:unit>
+				</dat:jsTimeOut>
+				<dat:expectedTime>
+					<com:value_integer>1</com:value_integer>
+					<com:unit>MINUTES</com:unit>
+				</dat:expectedTime>
+				<dat:tolerancePercentage>1</dat:tolerancePercentage>
+				<dat:minPercentage>11</dat:minPercentage>
+			</dat:timeManagement>
+		</dat:jobProperties>
+	</dat:jobList>
+	<dat:timeManagement />
+	<dat:advancedScenarioInfos>
+		<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+	</dat:advancedScenarioInfos>
+	<dat:concurrencyManagement>
+		<com:concurrent>true</com:concurrent>
+	</dat:concurrencyManagement>
+	<dat:scenario ID="2">
+		<dat:baseScenarioInfos>
+			<com:jsName>sffsdf</com:jsName>
+			<com:comment>fsfs</com:comment>
+			<dat:calendarId>0</dat:calendarId>
+			<dat:jsIsActive>NO</dat:jsIsActive>
+			<com:userId>1</com:userId>
+		</dat:baseScenarioInfos>
+		<dat:jobList />
+		<dat:timeManagement />
+		<dat:advancedScenarioInfos>
+			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+		</dat:advancedScenarioInfos>
+		<dat:concurrencyManagement>
+			<com:concurrent>false</com:concurrent>
+		</dat:concurrencyManagement>
+	</dat:scenario>
+	<dat:scenario ID="3">
+		<dat:baseScenarioInfos>
+			<com:jsName>senaryo2</com:jsName>
+			<com:comment>senaryo2</com:comment>
+			<dat:jsIsActive>YES</dat:jsIsActive>
+			<com:userId>1</com:userId>
+		</dat:baseScenarioInfos>
+		<dat:jobList />
+		<dat:timeManagement />
+		<dat:advancedScenarioInfos>
+			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+		</dat:advancedScenarioInfos>
+		<dat:concurrencyManagement>
+			<com:concurrent>false</com:concurrent>
+		</dat:concurrencyManagement>
+	</dat:scenario>
+	<dat:scenario ID="4">
+		<dat:baseScenarioInfos>
+			<com:jsName>Senaryo_3</com:jsName>
+			<com:comment>Senaryo_3</com:comment>
+			<dat:jsIsActive>YES</dat:jsIsActive>
+			<com:userId>1</com:userId>
+		</dat:baseScenarioInfos>
+		<dat:jobList />
+		<dat:timeManagement />
+		<dat:advancedScenarioInfos>
+			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+		</dat:advancedScenarioInfos>
+		<dat:concurrencyManagement>
+			<com:concurrent>false</com:concurrent>
+		</dat:concurrencyManagement>
+	</dat:scenario>
+	<dat:scenario ID="5">
+		<dat:baseScenarioInfos>
+			<com:jsName>s4</com:jsName>
+			<com:comment>s4</com:comment>
+			<dat:jsIsActive>YES</dat:jsIsActive>
+			<com:userId>1</com:userId>
+		</dat:baseScenarioInfos>
+		<dat:jobList />
+		<dat:timeManagement />
+		<dat:advancedScenarioInfos>
+			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+		</dat:advancedScenarioInfos>
+		<dat:concurrencyManagement>
+			<com:concurrent>false</com:concurrent>
+		</dat:concurrencyManagement>
+	</dat:scenario>
+	<dat:scenario ID="6">
+		<dat:baseScenarioInfos>
+			<com:jsName>s5</com:jsName>
+			<com:comment>s6</com:comment>
+			<dat:jsIsActive>YES</dat:jsIsActive>
+			<com:userId>1</com:userId>
+		</dat:baseScenarioInfos>
+		<dat:jobList />
+		<dat:timeManagement />
+		<dat:advancedScenarioInfos>
+			<com:agentChoiceMethod>SimpleMetascheduler</com:agentChoiceMethod>
+			<com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
+		</dat:advancedScenarioInfos>
+		<dat:concurrencyManagement>
+			<com:concurrent>false</com:concurrent>
+		</dat:concurrencyManagement>
+	</dat:scenario>
+</dat:TlosProcessData>

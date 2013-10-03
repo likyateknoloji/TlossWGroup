@@ -29,6 +29,7 @@ import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.test.GenericTestSuit;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -88,10 +89,18 @@ public class CpcBaseTester extends GenericTestSuit {
 
 		return serverConfig;
 	}
-
+	
 	public TlosProcessData getTlosProcessData() throws XmlException, IOException {
+		return getTlosProcessData(null);
+	}
 
-		String fileName = getFile("tlosData.xml");
+	public TlosProcessData getTlosProcessData(String fileName) throws XmlException, IOException {
+
+		if(fileName == null || fileName == "") {
+			fileName = getFile("tlosData.xml");
+		} else {
+			fileName = getFile(fileName);
+		}
 
 		File tlosDataFile = new File(fileName);
 
@@ -299,7 +308,7 @@ public class CpcBaseTester extends GenericTestSuit {
 				continue;
 			}
 			
-			Spc spc = new Spc(scenarioId, spaceWideRegistry, transformJobList(jobList));
+			Spc spc = new Spc(new ScenarioPathType(scenarioId), spaceWideRegistry, transformJobList(jobList));
 
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 

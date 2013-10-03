@@ -53,7 +53,7 @@ public class JsdlListenerManager implements Runnable {
 	// private SmsServer smsServer;
 	// private HistoryServer historyServer;
 
-	private SpaceWideRegistry spaceWideRegistry;
+	public SpaceWideRegistry spaceWideRegistry;
 
 	public JsdlListenerManager(SpaceWideRegistry spaceWideRegistry) {
 		this.spaceWideRegistry = spaceWideRegistry;

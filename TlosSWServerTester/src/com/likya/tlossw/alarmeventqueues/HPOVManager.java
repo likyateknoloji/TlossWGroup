@@ -54,7 +54,7 @@ public class HPOVManager implements Runnable {
 	// private SmsServer smsServer;
 	// private HistoryServer historyServer;
 
-	private SpaceWideRegistry spaceWideRegistry;
+	public SpaceWideRegistry spaceWideRegistry;
 
 	public HPOVManager(SpaceWideRegistry spaceWideRegistry) {
 		this.spaceWideRegistry = spaceWideRegistry;

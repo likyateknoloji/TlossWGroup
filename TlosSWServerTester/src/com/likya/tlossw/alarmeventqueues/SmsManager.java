@@ -53,7 +53,7 @@ public class SmsManager implements Runnable {
 	// private SmsServer smsServer;
 	// private HistoryServer historyServer;
 
-	private SpaceWideRegistry spaceWideRegistry;
+	public SpaceWideRegistry spaceWideRegistry;
 
 	public SmsManager(SpaceWideRegistry spaceWideRegistry) {
 		this.spaceWideRegistry = spaceWideRegistry;
