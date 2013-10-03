@@ -1,5 +1,6 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_report_types"
+    xmlns:com="http://www.likyateknoloji.com/XML_common_types"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rep="http://www.likyateknoloji.com/XML_report_types"
 	targetNamespace="http://www.likyateknoloji.com/XML_report_types"
 	xmlns:state-types="http://www.likyateknoloji.com/state-types"
@@ -7,7 +8,9 @@
 
 	<xs:import namespace="http://www.likyateknoloji.com/state-types"
 		schemaLocation="tlosSWState_v_1_0.xsd" />
-
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+		
 	<xs:element name="reportAll">
 		<xs:complexType>
 			<xs:sequence>
@@ -202,6 +205,8 @@
 				<xs:element name="includedJobs" default="ALL" type="filterByResult" />
 				<xs:element name="startDateTime" minOccurs="0" type="dateTimeType" />
 				<xs:element name="endDateTime" minOccurs="0" type="dateTimeType" />
+				<xs:element ref="com:timeZone" minOccurs="0" />
+				<xs:element ref="com:typeOfTime" minOccurs="0" />
 				<xs:element name="stepForDensity" minOccurs="0" type="dateTimeType" />
 				<xs:element ref="state-types:LiveStateInfo" minOccurs="0"/>
 			</xs:sequence>
@@ -231,6 +236,8 @@
 				type="xs:short" />
 			<xs:attribute name="maxNumberOfIntervals" default="100"
 				use="optional" type="xs:short" />
+			<xs:attribute name="automaticTimeInterval" default="true" use="optional"
+				type="xs:boolean" />
 		</xs:complexType>
 	</xs:element>
 
