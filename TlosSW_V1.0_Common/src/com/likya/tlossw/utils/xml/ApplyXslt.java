@@ -4,36 +4,18 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPathFactoryConfigurationException;
-
-import net.sf.saxon.om.NamespaceConstant;
 
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.jdom2.input.SAXBuilder;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 
