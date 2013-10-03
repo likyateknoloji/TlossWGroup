@@ -21,30 +21,31 @@
 				<p:panel id="density" header="Overall Job Execution Density">
 					<p:barChart id="category"
 						value="#{jobsDensityGraphicsMBean.denseModel}"
-						seriesColors="F73C84, 13253e, b22924, 009ec5, dc143c, ffc613, ff0097, 40e0d1, 00ff00" animate="true" zoom="true"
-						legendPosition="e" minY="0.0" xaxisAngle="20" maxY="#{jobsDensityGraphicsMBean.maxValue}"
-						yaxisLabel="Number of Jobs Running" xaxisLabel="Time" stacked="#{jobsDensityGraphicsMBean.stacked}"
-						style="width:1200px;height:600px;margin-top:20px; font-size:1em" >
-						
-						<p:ajax event="itemSelect" listener="#{jobsDensityGraphicsMBean.itemSelect}" update="growl" /> 
+						seriesColors="F73C84, 13253e, b22924, 009ec5, dc143c, ffc613, ff0097, 40e0d1, 00ff00"
+						animate="true" zoom="true" legendPosition="e" minY="0.0"
+						xaxisAngle="20" maxY="#{jobsDensityGraphicsMBean.maxValue}"
+						yaxisLabel="Number of Jobs Running" xaxisLabel="Time"
+						stacked="#{jobsDensityGraphicsMBean.stacked}"
+						style="width:1200px;height:600px;margin-top:20px; font-size:1em">
+
+						<p:ajax event="itemSelect"
+							listener="#{jobsDensityGraphicsMBean.itemSelect}" update="growl" />
 					</p:barChart>
-					<p:commandButton id="densityStackedButton" value="#{msgs['tlos.button.chartStacked']}" update="density" ajax="true"
+					<p:commandButton id="densityStackedButton"
+						value="#{msgs['tlos.button.chartStacked']}" update="density"
+						ajax="true"
 						actionListener="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
-						
-                    <h:outputLabel id="stepForDensity" value="#{msgs['tlos.button.chartDensityStep']}" />  
-                    <p:inputText id="stepForDensityInput"   
-                       value="#{jobsDensityGraphicsMBean.stepForDensity}" label="#{msgs['tlos.button.chartDensityStep']}">  
-                    </p:inputText> 
-					<p:commandButton id="densityStepButton" value="#{msgs['tlos.button.chartRefresh']}" update="density" ajax="true"
+
+					<p:commandButton id="densityStepButton"
+						value="#{msgs['tlos.button.chartRefresh']}" update="density"
+						ajax="true"
 						actionListener="#{jobsDensityGraphicsMBean.changeDensityStep}" />
+					<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+						<ui:param name="backingBean" value="#{jobsDensityGraphicsMBean}" />
+					</ui:include>
 				</p:panel>
 
-				<br />
 
-				<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
-					<ui:param name="backingBean" value="#{jobsDensityGraphicsMBean}" />
-				</ui:include>
-		
 			</p:fieldset>
 
 		</h:form>
