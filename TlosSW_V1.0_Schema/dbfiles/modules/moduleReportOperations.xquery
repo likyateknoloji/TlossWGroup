@@ -152,24 +152,24 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
                          if($justFirstLevel)
                          then (: $rootScenarioFirstLevelJobs :)
                            for $runx in $runElements//dat:TlosProcessData/dat:jobList/dat:jobProperties
-                           where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                           where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
 		                   order by $runx/@id descending
                            return $runx
                          else (: $rootScenarioAllJobs :)
                            for $runx in $runElements//dat:TlosProcessData//dat:jobProperties
-                           where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                           where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
                            order by $runx/@id descending
                            return $runx
                         else
                          if($justFirstLevel)
                          then (: $otherScenarioFirstLevelJobs :)
                           for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]/dat:jobList/dat:jobProperties
-                          where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                          where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
                           order by $runx/@id descending
                           return $runx
                          else (: $otherScenarioAllJobs :)
                           for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]//dat:jobProperties
-                          where $runx[(@ID = $jobId or $jobId = 0) and (boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs) )]
+                          where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
                           order by $runx/@id descending
                           return $runx
                   
@@ -243,12 +243,28 @@ let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
 :)
 let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
 let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
-let $orderBy := $reportParameters/@orderBy
+let $orderBy := $reportParameters/@orderBy 
 let $isCumulative := xs:boolean($reportParameters/@isCumulative)
 let $order := $reportParameters/@order
 
+let $jobInstances := <jobList>{
+                     for $job in $n/dat:jobProperties[boolean(@agentId)]
+                     group by $ID := $job/@ID
+                     order by $ID
+                     return <jobInstances name="{$ID}">
+                            {  $job }
+                            </jobInstances>
+                     }</jobList>   
+
+         
+ let $jobs := for $job in $jobInstances/jobInstances
+              let $tr := (for $cc in $job/dat:jobProperties
+                          order by $cc/@agentId descending
+                          return $cc)[1]
+              return $tr
+
   let $resultArrayAsc := <rep:jobArray> {
-     for $job in $n/dat:jobProperties[boolean(@agentId) and boolean(@LSIDateTime) ] (: boolean(@LSIDateTime) :)
+     for $job in <a>{$jobs}</a>/dat:jobProperties
     (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
     
      let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
@@ -262,7 +278,7 @@ let $order := $reportParameters/@order
      let $startDateTime := xs:string( dateTime($startdate, $starttime) )
      let $stopDateTime := if( hs:nACheck($stopdate) or hs:nACheck($stoptime)) 
                                then xs:string( fn:adjust-dateTime-to-timezone( current-dateTime(), timezone-from-dateTime($startDateTime)) )
-            				   else xs:string(dateTime($stopdate, $stoptime))
+                			   else xs:string(dateTime($stopdate, $stoptime))
                                          
      let $datetimeDTD :=  hs:total-seconds-from-duration( xs:dateTime($stopDateTime) - xs:dateTime($startDateTime))
 
@@ -276,10 +292,10 @@ let $order := $reportParameters/@order
                        else if( compare($orderBy, xs:string("STARTTIME")) = 0 )
                        then dateTime($startdate, $starttime)
                        else dateTime($stopdate, $stoptime)
-                       
-     where $isJobFinished or $includeNonResultedJobs
+     let $includeJob := $isJobFinished or $includeNonResultedJobs
+     where $includeJob
      order by $orderByTD             
-    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}" isFinished="{$isJobFinished}"> { $diffInTime }</rep:job>
+    return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}" isFinished="{$includeJob}"> { $diffInTime }</rep:job>
     }
     </rep:jobArray>
     
@@ -309,7 +325,7 @@ let $order := $reportParameters/@order
                                              
 
   
-  return     
+  let $result :=     
       if(not(exists($n))) 
       then <rep:jobArray totalDurationInSec = "0" overallStart="N/A" overallStop="N/A" isFinished="true" numberOfJobs="0" maxNumOfListedJobs="0" numberOfScenarios="0">  </rep:jobArray> 
       else 
@@ -319,6 +335,8 @@ let $order := $reportParameters/@order
               if(compare($order, xs:string("descending")) eq 0) 
               then <rep:jobArray totalDurationInSec = "{$totalDurationInSec}" overallStart="{$minStartDateTime}" overallStop="{$maxStopDateTime}" isFinished="{$isFinished}" numberOfJobs="{$numberOfJobs}" maxNumOfListedJobs="{$maxNumOfListedJobs}" numberOfScenarios="{$numberOfScenarios}"> { reverse($resultArrayAsc/rep:job)[position()<=$maxNumOfListedJobs] } </rep:jobArray> 
               else <rep:jobArray>-1</rep:jobArray>   
+      
+ return $result
       
 };
 
@@ -472,8 +490,15 @@ let $refRunIdBolean := true()  (: Eger true secilirse bu runId yi referans kabul
 
 return hs:jobStateListbyRunId($documentUrl, $kacEleman, $runId, $jobId, $refRunIdBolean)
 :)
-declare function hs:jobStateListbyRunId($documentUrl as xs:string, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as node()*
+declare function hs:jobStateListbyRunId($documentUrl as xs:string, $reportParameters as element(rep:reportParameters)) as node()*
  {
+ (: $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean :)
+ 
+    let $numberOfElement := $reportParameters/@maxNumberOfElement
+    let $runId := $reportParameters/@runId
+    let $jobId := $reportParameters/@jobId
+    let $refRunIdBolean := $reportParameters/@refRunIdBoolean
+  
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     let $runIdFound := if ($runId != 0 ) 
