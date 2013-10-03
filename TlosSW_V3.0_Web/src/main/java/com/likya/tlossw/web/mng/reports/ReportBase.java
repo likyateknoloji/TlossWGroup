@@ -2,6 +2,7 @@ package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.faces.model.SelectItem;
@@ -22,7 +23,7 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1626638877653601841L;
 
-	private ReportsParameters reportParameters = null;
+	private ReportsParameters reportsParameters = null;
 
 	private Collection<SelectItem> orderList;
 	private Collection<SelectItem> orderByList;
@@ -35,33 +36,59 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	private String activeReportPanel = ConstantDefinitions.JOB_DURATION_REPORT;
 
-	private boolean enterTimeInterval = false;
-
 	private String stateDepthType = ConstantDefinitions.STATUS;
 	private String stateName;
 	private String substateName;
 	private String statusName;
 
-	private String stepForDensity;
+	private Date startDate;
+	private String startTime;
+	private Date endDate;
+	private String endTime;
 
+	private String stepForDensity=new String("00:00:30");
+	
 	private HashMap<String, String> statusToSubstate;
 	private HashMap<String, String> substateToState;
 
 	public void fillTimeProperties() {
 
-		ReportParameters reportParams = reportParameters.getReportParams();
+		ReportParameters reportParams = reportsParameters.getReportParams();
 
-		if (isEnterTimeInterval()) {
-			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(reportParameters.getStartDate(), reportParameters.getStartTime(), reportParameters.getSelectedTZone()));
-			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(reportParameters.getEndDate(), reportParameters.getEndTime(), reportParameters.getSelectedTZone()));
+		if (startDate != null && startTime != null) {
+			reportsParameters.setStartDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getSelectedTZone()));
 		} else {
-			reportParams.setStartDateTime(reportParameters.getStartDateCalendar());
-			reportParams.setEndDateTime(reportParameters.getEndDateCalendar());
+			//TODO yapilacak
+			startTime = reportsParameters.getStartDateCalendar().getTime().toString();
+		}
+		if (endDate != null && endTime != null) {
+			reportsParameters.setEndDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getSelectedTZone()));
+		}
+
+		if (!reportsParameters.getAutomaticTimeInterval()) {
+			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getSelectedTZone()));
+			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getSelectedTZone()));
+		} else {
+			reportParams.setStartDateTime(reportsParameters.getStartDateCalendar());
+			reportParams.setEndDateTime(reportsParameters.getEndDateCalendar());
 		}
 	}
 
 	public void fillStepForDensity() {
-		reportParameters.getReportParams().setStepForDensity(DefinitionUtils.dateToXmlTime(stepForDensity, reportParameters.getSelectedTZone()));
+
+		if (reportsParameters != null) {
+			
+			String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+			//reportsParameters.setStepForDensityCalendar( DefinitionUtils.calendarToStringTimeFormat(stepForDensity, "UTC", timeInputFormat) );
+			String currentStep = DefinitionUtils.calendarToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat);
+			if (!getStepForDensity().equals(currentStep)) {
+
+				reportsParameters.setStepForDensityCalendar(DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), stepForDensity, "UTC"));
+			} else {
+				setStepForDensity(DefinitionUtils.calendarToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat));
+			}
+
+		}
 	}
 
 	public void fillStateProperties() {
@@ -90,15 +117,15 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
 		}
 
-		reportParameters.getReportParams().setLiveStateInfo(liveStateInfo);
+		reportsParameters.getReportParams().setLiveStateInfo(liveStateInfo);
 	}
 
 	public ReportsParameters getReportParameters() {
-		return reportParameters;
+		return reportsParameters;
 	}
 
 	public void setReportParameters(ReportsParameters reportParameters) {
-		this.reportParameters = reportParameters;
+		this.reportsParameters = reportParameters;
 	}
 
 	public Collection<SelectItem> getOrderList() {
@@ -140,14 +167,6 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public void setIncludedJobsTypeList(Collection<SelectItem> includedJobsTypeList) {
 		this.includedJobsTypeList = includedJobsTypeList;
-	}
-
-	public boolean isEnterTimeInterval() {
-		return enterTimeInterval;
-	}
-
-	public void setEnterTimeInterval(boolean enterTimeInterval) {
-		this.enterTimeInterval = enterTimeInterval;
 	}
 
 	public String getStateDepthType() {
@@ -259,6 +278,38 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 		this.typeOfTimeList = typeOfTimeList;
 	}
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getStepForDensity() {
 		return stepForDensity;
 	}
@@ -266,5 +317,5 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 	public void setStepForDensity(String stepForDensity) {
 		this.stepForDensity = stepForDensity;
 	}
-
+	
 }
