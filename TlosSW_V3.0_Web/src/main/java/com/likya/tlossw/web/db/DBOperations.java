@@ -1585,11 +1585,11 @@ public class DBOperations implements Serializable {
 		return stat;
 	}
 
-	public Report getDashboardReport(int derinlik) throws XMLDBException {
+	public Report getDashboardReport(String reportParametersXML) throws XMLDBException {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = reportFunctionConstructor("hs:jobStateListbyRunId", derinlik + "", "0", "0", "true()");
+		String xQueryStr = reportFunctionConstructor("hs:jobStateListbyRunId", reportParametersXML);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
