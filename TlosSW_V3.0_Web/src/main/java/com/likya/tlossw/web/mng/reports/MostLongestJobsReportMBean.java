@@ -55,9 +55,11 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 
 		System.out.println(parameter_value);
 		
-		setReportParameters(new ReportsParameters());
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+		}
 		
-		curDurationModel = createCurCategoryModel(getReportParameters().getReportParametersXML() );
+		curDurationModel = createCurCategoryModel( getReportParameters().getReportParametersXML() );
 		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
@@ -113,9 +115,11 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 		jobs.setLabel("Jobs");
 
 		BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
-		  
+		
+		int i=0;
 		if(jobsArray!=null) {
 		  for (Job job : jobsArray.getJobArray()) {
+			i++;
 			BigDecimal figure = null;
 			try {
 			   figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
@@ -125,7 +129,7 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 				figure = new BigDecimal(0);
 	            System.out.println(e.getMessage());				
 			}
-			jobs.set(job.getJname(), figure);
+			jobs.set( i + "-" + job.getId() + " " + job.getJname(), figure);
 		  }
 		}
 		setSizeOfReport(jobs.getData().size());
