@@ -80,7 +80,7 @@ public class Consolidator {
 						if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 							// iş bittikten sonra aşağıdaki adımları yapacaz
 							if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
-								// iş bitince güncelleme yapacak şekilde ayarla ama nasıl ????
+								// iş bitince yenisini devreye al, güncelleme yok !//güncelleme yapacak şekilde ayarla ama nasıl ????
 							} 
 							jobQueueNew.put(jobIdOld, jobQueueOld.get(jobIdOld));
 						} else {
@@ -94,7 +94,7 @@ public class Consolidator {
 							// Eğer aynı anda çalışma izni yok ise,
 							// Eskisinin bitmesini bekleyip sonra çalışacak ama nasıl ????
 							
-							// 1. yol : İki iş arasına sanal bağımlılık tanımlama ... daha çnce yapıldı
+							// 1. yol : İki iş arasına sanal bağımlılık tanımlama ... daha önce yapıldı
 							// 2. yol : Eski işe işini bitirdikten sonra yeni sürümünü de devreye aldırma.... ama nasıl ?
 							// yeni kuyruğa taşıyoruz
 							jobQueueNew.put(jobIdOld, jobQueueOld.get(jobIdOld));
