@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +37,17 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	private String activeReportPanel = ConstantDefinitions.JOB_DURATION_REPORT;
 
+    public static final String[] ARITHMETICA = new String[] {"zonesReport"};
+    public static final String[] HISTORYA = new String[] {"stateReport","densityReport","durationReport","distributionReport"};
+    public static final String[] SETA = new String[] {"stateReport","densityReport","zonesReport","durationReport","distributionReport"};
+    public static final String[] SORTINGA = new String[] {"durationReport"};
+    public static final String[] STATERELATEDA1 = new String[] {"densityReport","durationReport","distributionReport"};
+    public static final String[] STATERELATEDA2 = new String[] {"stateReport","densityReport","zonesReport","durationReport","distributionReport"};
+    public static final String[] STATISTICSA = new String[] {"zonesReport"};
+    public static final String[] TIMERELATEDA1 = new String[] {"stateReport","densityReport","zonesReport","durationReport","distributionReport"};
+    public static final String[] TIMERELATEDA2 = new String[] {"densityReport"};
+    
+   
 	private String stateDepthType = ConstantDefinitions.STATUS;
 	private String stateName;
 	private String substateName;
@@ -56,18 +68,18 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 		ReportParameters reportParams = reportsParameters.getReportParams();
 
 		if (startDate != null && startTime != null) {
-			reportsParameters.setStartDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getSelectedTZone()));
+			reportsParameters.setStartDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getTimeZone()));
 		} else {
 			//TODO yapilacak
 			startTime = reportsParameters.getStartDateCalendar().getTime().toString();
 		}
 		if (endDate != null && endTime != null) {
-			reportsParameters.setEndDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getSelectedTZone()));
+			reportsParameters.setEndDateCalendar(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getTimeZone()));
 		}
 
 		if (!reportsParameters.getAutomaticTimeInterval()) {
-			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getSelectedTZone()));
-			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getSelectedTZone()));
+			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getTimeZone()));
+			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getTimeZone()));
 		} else {
 			reportParams.setStartDateTime(reportsParameters.getStartDateCalendar());
 			reportParams.setEndDateTime(reportsParameters.getEndDateCalendar());
@@ -316,6 +328,47 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public void setStepForDensity(String stepForDensity) {
 		this.stepForDensity = stepForDensity;
+	}
+
+	public boolean isParameterVisible(String[] seta) {
+		
+		return Arrays.asList(seta).contains(activeReportPanel);
+	}
+
+	public static String[] getArithmetica() {
+		return ARITHMETICA;
+	}
+
+	public static String[] getHistorya() {
+		return HISTORYA;
+	}
+
+	public static String[] getSeta() {
+		return SETA;
+	}
+
+	public static String[] getSortinga() {
+		return SORTINGA;
+	}
+
+	public static String[] getStateRelateda1() {
+		return STATERELATEDA1;
+	}
+
+	public static String[] getStateRelateda2() {
+		return STATERELATEDA2;
+	}
+
+	public static String[] getStatisticsa() {
+		return STATISTICSA;
+	}
+
+	public static String[] getTimeRelateda1() {
+		return TIMERELATEDA1;
+	}
+
+	public static String[] getTimeRelateda2() {
+		return TIMERELATEDA2;
 	}
 	
 }
