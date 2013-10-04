@@ -140,7 +140,7 @@ public class Spc extends SpcBase {
 
 			// Gelen deger saniye tipine çevriliyor.
 			long chekInterval = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000;
-			
+
 			try {
 				// Senaryolarin bagimliligi icin burada bir kontrol koyduk ama su anda xml lerde kullanilmadigi icin etkisiz. Herzaman true donecek.
 				// Senaryo PENDING statusune alindi ise herhangi bir isi baslatmaya calismamali. Normalde RUNNING de buraya geliyoruz.
@@ -181,6 +181,21 @@ public class Spc extends SpcBase {
 					t.printStackTrace();
 				}
 
+				if (hasNewVersionOfJob()) {
+					
+					Iterator<SortType> sortTypeIterator = getJobQueueIndex().iterator();
+					while (sortTypeIterator.hasNext()) {
+						SortType sortType = sortTypeIterator.next();
+						String jobId = sortType.getJobId();
+						Job scheduledJob = getJobQueue().get(jobId);
+						if(scheduledJob.isSafeToRemove()) {
+							getJobQueue().remove(jobId);
+						}
+					}
+					// Re-index
+					reIndexJobQueue();
+					continue;
+				}
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
 				/**
 				 * @author serkan
@@ -277,6 +292,38 @@ public class Spc extends SpcBase {
 		}
 
 	}
+	
+	private boolean hasNewVersionOfJob() {
+		
+		boolean retValue = false;
+		
+		synchronized (this) {
+
+			/**
+			 * Yeni sürümü yüklenecek iş var mı ?
+			 * Burada kontrol etmemiz gerekecek.
+			 * 
+			 */
+			Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+			while (jobsIterator.hasNext()) {
+				Job scheduledJob = jobsIterator.next();
+				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+				if (LiveStateInfoUtils.equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS) && scheduledJob.hasActiveFollower()) {
+					Job newJob = scheduledJob.getFollowerJob();
+					newJob.setHasActiveFollower(false);
+					newJob.setFollowerJob(null);
+					retValue = true;
+					scheduledJob.setSafeToRemove(true);
+					String jobId = newJob.getJobRuntimeProperties().getJobProperties().getID();
+					getJobQueue().put(jobId, newJob);
+					SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
+					getJobQueueIndex().add(sortType);
+				}
+			}
+		}
+		
+		return retValue;
+	}
 
 	private void passOnJobQueueForExecution(SpcMonitor spcMonitor) throws TlosFatalException {
 
@@ -345,8 +392,8 @@ public class Spc extends SpcBase {
 					 * serkan : kaldırdım :)
 					 */
 					// if (scheduledJob.getFirstLoop()) {
-						scheduledJob.sendFirstJobInfo(getSpcId(), jobProperties);
-					//}
+					scheduledJob.sendFirstJobInfo(getSpcId(), jobProperties);
+					// }
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
 
@@ -358,20 +405,20 @@ public class Spc extends SpcBase {
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
 							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
 						} else { // Zamani bekliyor ...
-							//if (scheduledJob.getFirstLoop()) { /* status u ekle */
-								insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME);
-								//LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
-								scheduledJob.sendStatusChangeInfo();
-							//}
+							// if (scheduledJob.getFirstLoop()) { /* status u ekle */
+							insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME);
+							// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
+							scheduledJob.sendStatusChangeInfo();
+							// }
 						}
 
 					} else if (jobStartType.equals(JobTypeDef.USER_BASED.toString())) {
 
 						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
-							insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYUSER);
-							// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYUSER);
-							scheduledJob.sendStatusChangeInfo();
-						//}
+						insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYUSER);
+						// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYUSER);
+						scheduledJob.sendStatusChangeInfo();
+						// }
 
 						// Ekrandan kullanici tercihi alinacak. Kullanici tercihi alininca StatusName WAITING yapilacak !!
 						/*
@@ -381,9 +428,9 @@ public class Spc extends SpcBase {
 					} else if (jobStartType.equals(JobTypeDef.EVENT_BASED.toString())) {
 
 						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
-							insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYEVENT);
-							// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYEVENT);
-							scheduledJob.sendStatusChangeInfo();
+						insertLastStateInfo(jobRuntimeProperties, StateName.PENDING, SubstateName.IDLED, StatusName.BYEVENT);
+						// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYEVENT);
+						scheduledJob.sendStatusChangeInfo();
 						// }
 
 						boolean eventOccured = true; // TODO buraya olay kontrolu eklenecek.
@@ -447,7 +494,7 @@ public class Spc extends SpcBase {
 
 		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 		// job in son state ini al.
-//		LiveStateInfo jobLiveStateInfo = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
+		// LiveStateInfo jobLiveStateInfo = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
 		if (dependentJobList != null) {
 
@@ -463,10 +510,10 @@ public class Spc extends SpcBase {
 				// Bu durumda job bagimliliklarindan beklenenler var demektir.
 				// Son status WAITING degilse eklenmeli
 				// if (!LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.WAITING)) {
-				//	LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
-					insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.PENDING, SubstateName.READY, StatusName.WAITING);
-					scheduledJob.sendStatusChangeInfo();
-				//}
+				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
+				insertLastStateInfo(scheduledJob.getJobRuntimeProperties(), StateName.PENDING, SubstateName.READY, StatusName.WAITING);
+				scheduledJob.sendStatusChangeInfo();
+				// }
 			}
 
 		} else { // Herhangi bir bagimliligi yok !!
