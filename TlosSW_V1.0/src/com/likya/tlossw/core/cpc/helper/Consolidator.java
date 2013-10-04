@@ -12,6 +12,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -35,25 +36,34 @@ public class Consolidator {
 				 */
 				continue;
 			} else {
-				spcLookupTableIntersection.add(spcIdNew);				
+				spcLookupTableIntersection.add(spcIdOld);				
 				checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), (SpcInfoType) spcLookupTableOld.get(spcIdOld)) ;
 			}
 		}
+		
+		String newInstanceId = new ScenarioPathType(spcLookupTableNew.keySet().toArray()[0].toString()).getInstanceId();
 		
 		/**
 		 * Yenilistede olmayıp sadece eski listede olup da tamamlanmamış senaryo
 		 * var ise bunlar yeni listeye olduğu gibi taşınıyor.
 		 * Öyle mi olmalı ????
+		 * @author serkan taş
 		 */
 		for (String spcIdOld : spcLookupTableOld.keySet()) {
 			if(!spcLookupTableIntersection.contains(spcIdOld)) {
 				if(!isScenaroCompletedWithSuccess(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
-					spcLookupTableNew.put(spcIdOld, spcLookupTableOld.get(spcIdOld));
+					/**
+					 * taşınan işlerin instaneId leri de güncelleniyor.
+					 * tasarım kararı netleşirse, eski id de native planid olarak
+					 * saklanacak
+					 * @author serkan taş
+					 */
+					ScenarioPathType scenarioPathType = new ScenarioPathType(spcIdOld);
+					scenarioPathType.setInstanceId(newInstanceId);
+					spcLookupTableNew.put(scenarioPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 				}
 			}
 		}
-		
-		
 	}
 
 	private static void checkAndPerformStabilityConditionsOfJobsInScenario(SpcInfoType spcInfoTypeNew, SpcInfoType spcInfoTypeOld) {
@@ -107,6 +117,7 @@ public class Consolidator {
 					if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 						if (JobBaseType.PERIODIC.equals(jobBaseType)) {
 							// set old job to terminate after execution
+							jobQueueNew.get(jobIdOld).setStopRepeatativity(true);
 						}
 						// yeni kuyruğa taşıyoruz
 						jobQueueNew.put(jobIdOld, jobQueueOld.get(jobIdOld));
