@@ -3,7 +3,6 @@ package com.likya.tlossw.test.cpc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -236,7 +235,7 @@ public class CpcBaseTester extends GenericTestSuit {
 		String instanceId = tlosProcessData.getInstanceId();
 
 		if (instanceId == null) {
-			instanceId = "" + Calendar.getInstance().getTimeInMillis();
+			instanceId = Long.toHexString(System.currentTimeMillis()).toUpperCase();
 		}
 		myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmistir.");
 		String localRoot = rootPath + "." + instanceId;
