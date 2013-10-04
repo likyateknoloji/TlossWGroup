@@ -51,8 +51,8 @@ public class ReportsParameters implements Serializable {
 	private Short statSampleNumber = 3;
 	private Short maxNumberOfIntervals = (short) 100;
 	private Boolean automaticTimeInterval = true;
-	private String selectedTypeOfTime;
-	private String selectedTZone = "Europe/Istanbul";
+	private String typeOfTime;
+	private String timeZone = "Europe/Istanbul";
 	
 	private LocalStats statParameters = null;
 	private String zuluTZone = "UTC";
@@ -66,15 +66,15 @@ public class ReportsParameters implements Serializable {
 		// TODO Auto-generated constructor stub
 		reportParams = ReportParameters.Factory.newInstance();
 
-		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), selectedTZone));
-		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), selectedTZone));
+		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
+		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
 		setStepForDensityCalendar(com.likya.tlossw.web.utils.DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), new String("00:00:30"), zuluTZone));
 		
 		//String timeInputFormat = new String("HH:mm:ss.SSSZZ");
 
 		//stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.calendarToStringTimeFormat(stepForDensityCalendar, "UTC", timeInputFormat);
 
-		selectedTypeOfTime = new String("Actual");
+		typeOfTime = new String("Actual");
 		
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -102,7 +102,7 @@ public class ReportsParameters implements Serializable {
 
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
-		selectedTypeOfTime = new String("Actual");
+		typeOfTime = new String("Actual");
 		//reportParams.getLiveStateInfo().getStateName()
 		if(reportParams.getLiveStateInfo()!=null) {
 			//if(reportParams.getLiveStateInfo().getStateName() != null) 
@@ -329,20 +329,20 @@ public class ReportsParameters implements Serializable {
 		this.stepForDensityCalendar = calendar;
 	}
 
-	public String getSelectedTZone() {
-		return selectedTZone;
+	public String getTimeZone() {
+		return timeZone;
 	}
 
-	public void setSelectedTZone(String selectedTZone) {
-		this.selectedTZone = selectedTZone;
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
 	}
 
-	public String getSelectedTypeOfTime() {
-		return selectedTypeOfTime;
+	public String getTypeOfTime() {
+		return typeOfTime;
 	}
 
-	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
-		this.selectedTypeOfTime = selectedTypeOfTime;
+	public void setTypeOfTime(String typeOfTime) {
+		this.typeOfTime = typeOfTime;
 	}
 
 	public Boolean getAutomaticTimeInterval() {
