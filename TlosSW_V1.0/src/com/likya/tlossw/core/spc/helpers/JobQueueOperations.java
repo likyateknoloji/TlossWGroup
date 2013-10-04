@@ -39,13 +39,14 @@ public class JobQueueOperations {
 			Iterator<Job> jobsIterator = jobQueue.values().iterator();
 			while (jobsIterator.hasNext()) {
 				Job scheduledJob = jobsIterator.next();
-				
+
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-				if(JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+
+				if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
 					return false;
 				}
-				//SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
-				//SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
+				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
+				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
 				try {
 					if (jobProperties.getStateInfos() != null) {
 						if (!jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
@@ -70,6 +71,8 @@ public class JobQueueOperations {
 		String queueDumpDebug = "";
 		int allJobCounter = 0, finishedJobCounter = 0, runningJobCounter = 0;
 
+		SpaceWideRegistry.getGlobalLogger().info(" JOB QUEUE for scenario : " + spcId.getFullPath() + " >> ");
+
 		Iterator<Job> jobsIterator = jobQueue.values().iterator();
 		// jobsIterator.next().getJobRuntimeProperties().getJobProperties().getJsName();
 		while (jobsIterator.hasNext()) {
@@ -79,15 +82,15 @@ public class JobQueueOperations {
 			// ";
 			allJobCounter++;
 			String currentStatus = scheduledJob.getJobInfo();
-			if(scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName()!=null) {
-			 if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.RUNNING)) {
-				queueDumpInfo += '\n';
-				queueDumpDebug += '\n';
-				runningJobCounter++;
-			 }
-			 if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
-				finishedJobCounter++;
-			 }
+			if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName() != null) {
+				if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.RUNNING)) {
+					queueDumpInfo += '\n';
+					queueDumpDebug += '\n';
+					runningJobCounter++;
+				}
+				if (scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
+					finishedJobCounter++;
+				}
 			}
 			queueDumpInfo += "[" + currentStatus + "]";
 			// queueDumpDebug += "[" + currentStatus + ":" +
@@ -107,7 +110,7 @@ public class JobQueueOperations {
 			SpaceWideRegistry.getGlobalLogger().info(queueDumpDebug);
 			// Logger.getLogger(SpcBase.class).info("     > "+ this.getJsName()
 			// + " senaryosunda guncel is Sayisi : " + getJobQueue().size());
-			if(SpaceWideRegistry.isDebug) {
+			if (SpaceWideRegistry.isDebug) {
 				SpaceWideRegistry.getGlobalLogger().info("     > " + spcId.getFullPath() + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
 			}
 		}
@@ -127,7 +130,7 @@ public class JobQueueOperations {
 	public static boolean persistJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		String fileName = scenarioPathType.getFullPath();
-		
+
 		FileOutputStream fos = null;
 		FileOutputStream fosIdx = null;
 		ObjectOutputStream out = null;
@@ -161,7 +164,7 @@ public class JobQueueOperations {
 	public static boolean recoverJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		String fileName = scenarioPathType.getFullPath();
-		
+
 		FileInputStream fis = null;
 		FileInputStream fisIdx = null;
 		ObjectInputStream in = null;
