@@ -86,7 +86,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private ArrayList<SortType> jobQueueIndex;
 	private HashMap<String, Job> jobQueue;
-	
+
 	private static String logLabel;
 
 	transient private Logger globalLogger = SpaceWideRegistry.getGlobalLogger();
@@ -97,7 +97,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	protected boolean executionPermission = true;
 
 	protected boolean isForced = false;
-	
+
 	protected boolean isTester = false;
 
 	public SpcBase(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
@@ -123,40 +123,40 @@ public abstract class SpcBase implements Runnable, Serializable {
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			jobRuntimeProperties.setTreePath(getSpcId());
-			
+
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
-			
+
 			Job myJob = null;
 
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 
-//			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-//				// PERIYODIK bir is ise;
-//				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
-//					globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
-//					globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-//					globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
-//
-//				} else { // TODO PARAMETRE ekleme
-//					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
-//					myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
-//					// myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
-//					// jobRuntimeProperties);
-//				}
-//			} else {
-				// myLogger.info("     << Peryodik olmayan "+jobRuntimeProperties.getJobProperties().getJsName()+" isi calistirilmaya hazir ! >>");
-				myLogger.info("     > Peryodik olmayan " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " isi calistirilmaya hazir !");
-				myJob = getMyJob(jobRuntimeProperties);
-//			}
-			
+			// if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+			// // PERIYODIK bir is ise;
+			// if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
+			// globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
+			// globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
+			// globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
+			//
+			// } else { // TODO PARAMETRE ekleme
+			// myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
+			// myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
+			// // myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
+			// // jobRuntimeProperties);
+			// }
+			// } else {
+			// myLogger.info("     << Peryodik olmayan "+jobRuntimeProperties.getJobProperties().getJsName()+" isi calistirilmaya hazir ! >>");
+			myLogger.info("     > Peryodik olmayan " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " isi calistirilmaya hazir !");
+			myJob = getMyJob(jobRuntimeProperties);
+			// }
+
 			if (myJob != null && jobId != null) {
 				// isi jobQueue ya ID si ile birlikte koyalim.
-				
+
 				jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 				// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
 				// yok. Koyulacak.
-				
+
 				getJobQueue().put(jobId, myJob);
 			}
 		}
@@ -164,6 +164,28 @@ public abstract class SpcBase implements Runnable, Serializable {
 		Collections.sort(jobQueueIndex);
 		myLogger.info(" >");
 		return true;
+	}
+
+	protected void reIndexJobQueue() {
+
+		synchronized (jobQueue) {
+
+			synchronized (jobQueueIndex) {
+
+				jobQueueIndex = new ArrayList<SortType>();
+
+				Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+				while (jobsIterator.hasNext()) {
+					Job scheduledJob = jobsIterator.next();
+					JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+
+					jobQueueIndex.add(new SortType(jobProperties.getID(), jobProperties.getBaseJobInfos().getJobPriority().intValue()));
+				}
+
+				Collections.sort(jobQueueIndex);
+
+			}
+		}
 	}
 
 	public void setExecutionPermission(boolean executionPermission, boolean isForced) {
@@ -186,7 +208,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			jobRuntimeProperties.setTreePath(getSpcId());
 
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
-			
+
 			jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 
 			Job myJob = null;
@@ -212,7 +234,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			}
 
 			String jobIdStr = jobRuntimeProperties.getJobProperties().getID();
-			
+
 			if (myJob != null && jobIdStr != null) {
 				// isi jobQueue ya id si ile birlikte koyalim.
 				getJobQueue().put(jobId, myJob);
@@ -226,7 +248,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		return true;
 	}
-	
+
 	public int getNumOfJobs() {
 		return getJobQueue().size();
 	}
@@ -285,10 +307,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		return counter;
 	}
-	
+
 	/*
-	 * state yapisinda time-out statusu running statusunun substate i oldugu icin 
-	 * hem state i running olanlari hem de substate i timeout olanlari toplarsak 
+	 * state yapisinda time-out statusu running statusunun substate i oldugu icin
+	 * hem state i running olanlari hem de substate i timeout olanlari toplarsak
 	 * timeout olanlari iki kere saymis olacagiz. bunun icin o kismi kaldirdim
 	 */
 	public int getNumOfActiveJobs() {
@@ -297,7 +319,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		return numOfWorkingJobs;
 	}
-	
+
 	public int getNumOfJobsByAgent(int agentId) {
 
 		int counter = 0;
@@ -319,7 +341,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		return counter;
 	}
-	
+
 	public LiveStateInfo getLastStateOfJob(LiveStateInfos liveStateInfos) {
 
 		/*
@@ -544,13 +566,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 
 	public SpcLookupTable getSpcLookupTable() {
-		
-		if(isTester) {
-			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);			
+
+		if (isTester) {
+			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
 		}
-		
+
 		return getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable();
-		
+
 	}
 
 	public HashMap<String, Job> getJobQueue() {
@@ -564,16 +586,16 @@ public abstract class SpcBase implements Runnable, Serializable {
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
 	}
-	
+
 	// Bir senaryonun icindeki senaryoları veriyor
 	public HashMap<String, SpcInfoType> getSetOfScenarios() {
 		HashMap<String, SpcInfoType> map = new HashMap<String, SpcInfoType>();
 		Set<String> set = this.getSpcLookupTable().getTable().keySet();
 
-        for(String i : set)
-          if(i.indexOf(spcId + ".") != -1) {
-             map.put(i, this.getSpcLookupTable().getTable().get(i));
-          }
+		for (String i : set)
+			if (i.indexOf(spcId + ".") != -1) {
+				map.put(i, this.getSpcLookupTable().getTable().get(i));
+			}
 
 		return map;
 	}
@@ -581,13 +603,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 	public ScenarioPathType getSpcId() {
 		return spcId;
 	}
-	
+
 	protected boolean isSpcPermittedToExecute() {
 		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
 	}
-	
+
 	protected void insertLastStateInfo(JobRuntimeProperties jobRuntimeProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
-		if(jobRuntimeProperties.getPreviousLiveStateInfo() == null || !LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
+		if (jobRuntimeProperties.getPreviousLiveStateInfo() == null || !LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobRuntimeProperties.getJobProperties(), StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 		}
 	}
