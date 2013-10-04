@@ -77,6 +77,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private JsRealTime jobRealTime;
 
 	private GenericInfoSender genericInfoSender;
+	
+	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
+	private Job followerJob;
+	private boolean hasActiveFollower = false;
+	private boolean stopRepeatativity = false;
+	private boolean safeToRemove = false;
 
 	public Job(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		this.globalRegistry = globalRegistry;
@@ -107,7 +113,16 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		performLogAnalyze();
 
+		afterFollowActions();
+		
 		periodicRepeatativity();
+	}
+	
+	private void afterFollowActions() {
+		if(followerJob != null) {
+			hasActiveFollower = true;
+			stopRepeatativity = true;
+		}
 	}
 
 	private void performLogAnalyze() {
@@ -122,7 +137,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private void periodicRepeatativity() {
 
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-		if (jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+		if (!stopRepeatativity && jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
 			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
 			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
@@ -150,7 +165,8 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	public String getJobInfo() {
 		LiveStateInfo liveStateInfo = jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
-		String jobInfoStrt = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName();
+		String jobInfoStrt = "Job[id:" + jobRuntimeProperties.getJobProperties().getID();
+		jobInfoStrt += ",name:" + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + "]";
 		jobInfoStrt += ": [State:" + (liveStateInfo.getStateName() == null ? "NA" : liveStateInfo.getStateName().toString()) + "]";
 		jobInfoStrt += "[SubState:" + (liveStateInfo.getSubstateName() == null ? "NA" : liveStateInfo.getSubstateName().toString()) + "]";
 		jobInfoStrt += "[Statu:" + (liveStateInfo.getStatusName() == null ? "NA" : liveStateInfo.getStatusName().toString()) + "]";
@@ -590,6 +606,38 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	public void setRequestedStream(StreamSource requestedStream) {
 		this.requestedStream = requestedStream;
+	}
+
+	public Job getFollowerJob() {
+		return followerJob;
+	}
+
+	public void setFollowerJob(Job followerJob) {
+		this.followerJob = followerJob;
+	}
+
+	public boolean isStopRepeatativity() {
+		return stopRepeatativity;
+	}
+
+	public void setStopRepeatativity(boolean stopRepeatativity) {
+		this.stopRepeatativity = stopRepeatativity;
+	}
+
+	public boolean hasActiveFollower() {
+		return hasActiveFollower;
+	}
+
+	public void setHasActiveFollower(boolean hasActiveFollower) {
+		this.hasActiveFollower = hasActiveFollower;
+	}
+
+	public boolean isSafeToRemove() {
+		return safeToRemove;
+	}
+
+	public void setSafeToRemove(boolean safeToRemove) {
+		this.safeToRemove = safeToRemove;
 	}
 
 }
