@@ -22,7 +22,7 @@
 						listener="#{currentStatesOfJobsMBean.handleReorder}"
 						update="messages" />
 
-					<p:panel id="running"
+					<p:panel id="running" rendered="#{currentStatesOfJobsMBean.pieRunningCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Running']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieRunningCount}"
@@ -30,7 +30,7 @@
 
 					</p:panel>
 
-					<p:panel id="failed"
+					<p:panel id="failed" rendered="#{currentStatesOfJobsMBean.pieFailedCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Failed']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieFailedCount}"
@@ -38,7 +38,7 @@
 
 					</p:panel>
 
-					<p:panel id="ready"
+					<p:panel id="ready" rendered="#{currentStatesOfJobsMBean.pieReadyCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Ready']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieReadyCount}"
@@ -46,7 +46,7 @@
 
 					</p:panel>
 
-					<p:panel id="waiting"
+					<p:panel id="waiting" rendered="#{currentStatesOfJobsMBean.pieWaitingCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Waiting']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieWaitingCount}"
@@ -54,7 +54,7 @@
 
 					</p:panel>
 
-					<p:panel id="success"
+					<p:panel id="success" rendered="#{currentStatesOfJobsMBean.pieSuccessCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Success']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieSuccessCount}"
@@ -62,7 +62,7 @@
 
 					</p:panel>
 
-					<p:panel id="look4resource"
+					<p:panel id="look4resource" rendered="#{currentStatesOfJobsMBean.pieLook4RCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Look4Resource']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieLook4RCount}"
@@ -70,35 +70,35 @@
 
 					</p:panel>
 
-					<p:panel id="userChooseResource"
+					<p:panel id="userChooseResource" rendered="#{currentStatesOfJobsMBean.pieUserChooseResourceCount > 0}"
 						header="#{msgs['tlos.reports.chartState.UserChooseResource']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieUserChooseResourceCount}"
-							style="font-weight:bold;color: #F65FE2; font-size: 8em; display: block; position: relative; right: -40px;" />
+							style="font-weight:bold;color: #F6C660; font-size: 8em; display: block; position: relative; right: -40px;" />
 
 					</p:panel>
 					
-					<p:panel id="userWaiting"
+					<p:panel id="userWaiting" rendered="#{currentStatesOfJobsMBean.pieUserWaitingCount > 0}"
 						header="#{msgs['tlos.reports.chartState.UserWaiting']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieUserWaitingCount}"
-							style="font-weight:bold;color: #F65FE2; font-size: 8em; display: block; position: relative; right: -40px;" />
+							style="font-weight:bold;color: #60E5F6; font-size: 8em; display: block; position: relative; right: -40px;" />
 
 					</p:panel>
 					
-					<p:panel id="cancelled"
+					<p:panel id="cancelled" rendered="#{currentStatesOfJobsMBean.pieCancelledCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Cancelled']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieCancelledCount}"
-							style="font-weight:bold;color: #F65FE2; font-size: 8em; display: block; position: relative; right: -40px;" />
+							style="font-weight:bold;color: #F6EA60; font-size: 8em; display: block; position: relative; right: -40px;" />
 
 					</p:panel>
 					
-					<p:panel id="timeout"
+					<p:panel id="timeout" rendered="#{currentStatesOfJobsMBean.pieTimeoutCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Timeout']}"
 						style="width:200px;height:200px">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieTimeoutCount}"
-							style="font-weight:bold;color: #F65FE2; font-size: 8em; display: block; position: relative; right: -40px;" />
+							style="font-weight:bold;color: #BE81F7; font-size: 8em; display: block; position: relative; right: -40px;" />
 
 					</p:panel>
 					
