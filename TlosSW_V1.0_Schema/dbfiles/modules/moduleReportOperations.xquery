@@ -137,7 +137,7 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
                        else $runId 
 
     let $posUpper := max(for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-	                 where $runx[@id = $runIdFound] or not($refRunIdBoolean)
+                     where $runx[@id = $runIdFound] or not($refRunIdBoolean)
 	                 return $pos)
 
     let $posLower := if ($posUpper - $maxNumberOfElement > 0) then $posUpper - $maxNumberOfElement else 0
@@ -147,31 +147,51 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
 		  order by $runx/@id descending
                   return $runx
 
-   let $requestedJobs := 
-                        if($scenarioId = 0) then
-                         if($justFirstLevel)
-                         then (: $rootScenarioFirstLevelJobs :)
-                           for $runx in $runElements//dat:TlosProcessData/dat:jobList/dat:jobProperties
-                           where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
-		                   order by $runx/@id descending
-                           return $runx
-                         else (: $rootScenarioAllJobs :)
-                           for $runx in $runElements//dat:TlosProcessData//dat:jobProperties
-                           where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
-                           order by $runx/@id descending
-                           return $runx
-                        else
-                         if($justFirstLevel)
-                         then (: $otherScenarioFirstLevelJobs :)
-                          for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]/dat:jobList/dat:jobProperties
-                          where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
-                          order by $runx/@id descending
-                          return $runx
-                         else (: $otherScenarioAllJobs :)
-                          for $runx in $runElements//dat:TlosProcessData//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]//dat:jobProperties
-                          where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
-                          order by $runx/@id descending
-                          return $runx
+
+   let $requestedJobs := for $x in $runElements/dat:TlosProcessData
+                         let $chosen :=
+                          if($scenarioId = 0) then
+                            if($justFirstLevel)
+                            then (: $rootScenarioFirstLevelJobs :)
+                             for $runx in $x/dat:jobList/dat:jobProperties
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                             order by $runx/@id descending
+                             return $runx
+                            else (: $rootScenarioAllJobs :)
+                             for $runx in $x//dat:jobProperties
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                             order by $runx/@id descending
+                             return $runx
+                          else
+                            if($justFirstLevel)
+                            then (: $otherScenarioFirstLevelJobs :)
+                              for $runx in $x//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]/dat:jobList/dat:jobProperties
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                              order by $runx/@id descending
+                              return $runx
+                            else (: $otherScenarioAllJobs :)
+                              for $runx in $x//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]//dat:jobProperties
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                              order by $runx/@id descending
+                              return $runx
+                              
+                         let $jobInstances := <jobList>{
+                             for $job in $chosen[boolean(@agentId)]
+                             group by $ID := $job/@ID
+                             order by $ID
+                             return <jobInstances name="{$ID}">
+                                   {  $job }
+                                  </jobInstances>
+                             }</jobList>   
+
+         
+                         let  $propertiesList := for $job in $jobInstances/jobInstances
+                                                 let $tr := (for $cc in $job/dat:jobProperties
+                                                             order by $cc/@agentId descending
+                                                             return $cc)[1]
+                                                 return $tr
+              
+                         return $propertiesList
                   
     return <all> { $requestedJobs } </all>
 };
@@ -247,24 +267,8 @@ let $orderBy := $reportParameters/@orderBy
 let $isCumulative := xs:boolean($reportParameters/@isCumulative)
 let $order := $reportParameters/@order
 
-let $jobInstances := <jobList>{
-                     for $job in $n/dat:jobProperties[boolean(@agentId)]
-                     group by $ID := $job/@ID
-                     order by $ID
-                     return <jobInstances name="{$ID}">
-                            {  $job }
-                            </jobInstances>
-                     }</jobList>   
-
-         
- let $jobs := for $job in $jobInstances/jobInstances
-              let $tr := (for $cc in $job/dat:jobProperties
-                          order by $cc/@agentId descending
-                          return $cc)[1]
-              return $tr
-
   let $resultArrayAsc := <rep:jobArray> {
-     for $job in <a>{$jobs}</a>/dat:jobProperties
+     for $job in $n/dat:jobProperties
     (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
     
      let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
@@ -494,93 +498,69 @@ declare function hs:jobStateListbyRunId($documentUrl as xs:string, $reportParame
  {
  (: $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean :)
  
-    let $numberOfElement := $reportParameters/@maxNumberOfElement
-    let $runId := $reportParameters/@runId
+    let $jobList := hs:getJobsReport($documentUrl, $reportParameters)
     let $jobId := $reportParameters/@jobId
-    let $refRunIdBolean := $reportParameters/@refRunIdBoolean
   
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
-	
-    let $runIdFound := if ($runId != 0 ) 
-	                   then $runId 
-	                   else sq:getId($documentUrl, "runId")
-
-    let $posUpper := max(for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-	                 where $runx[@id = $runIdFound] or not($refRunIdBolean)
-	                 return $pos)
-
-    let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
 
     let $nextId := sq:getNextId($documentUrl, "reportId")
+
     let $createBlankReport := hs:insertStateReportLock($documentUrl, $jobId, $nextId)
 
-	let $arasonuc := for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-					 where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
-					 order by $runx/@id descending
-	                 return hs:jobStateReport($documentUrl, $runx/dat:TlosProcessData, $jobId, $nextId)
+	let $arasonuc := hs:jobStateReport($documentUrl, $jobList, $jobId, $nextId)
+
     let $sonuc := if(exists($arasonuc)) 
-	              then hs:searchStateReportById($documentUrl, sq:getId($documentUrl, "reportId"))
+                  then hs:searchStateReportById($documentUrl, sq:getId($documentUrl, "reportId"))
 	              else ()
 	return $sonuc
 };
 
-declare function hs:jobStateReport($documentUrl as xs:string, $n as element(dat:TlosProcessData), $jobId as xs:int, $nextId as xs:int) as node()*
+declare function hs:jobStateReport($documentUrl as xs:string, $n as node(), $jobId as xs:int, $nextId as xs:int) as node()*
 {
    (: Son state leri belirleme kismi :)
-   let $propertiesList := $n//dat:jobProperties[(@ID = $jobId or $jobId = 0)]
-   let $stateList :=
-         for $donbaba in fn:distinct-values($propertiesList/@ID)
-         let $jobsInGroup := $propertiesList[@ID = $donbaba]
-         return
-             let $kacdefa := count($jobsInGroup)
-             let $list := if ($kacdefa = 1) then $jobsInGroup[@agentId="0"]/dat:stateInfos/state-types:LiveStateInfos
-                          else $jobsInGroup[@agentId!="0"][1]/dat:stateInfos/state-types:LiveStateInfos
-         return hs:jobStateReportFromLiveStateInfo($documentUrl, $list, $jobId, $nextId)
+   
+    let $result :=
+     for $job in $n/dat:jobProperties
+     
+     let $stateLast := $job/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo[1]
+             
+     return hs:jobStateReportFromLiveStateInfo($documentUrl, $stateLast, $jobId, $nextId)
 
-    let $sonuc2 := for $runx at $pos in $stateList/state-types:LiveStateInfo
-                   order by $runx/@LSIDateTime descending
-	               return $runx
-	return $sonuc2
+    return $n
  };
 
-declare function hs:jobStateReportFromLiveStateInfo($documentUrl as xs:string, $stateList as element(state-types:LiveStateInfos), $jobId as xs:int, $nextId as xs:int) as node()*
+declare function hs:jobStateReportFromLiveStateInfo($documentUrl as xs:string, $stateLast as element(state-types:LiveStateInfo), $jobId as xs:int, $nextId as xs:int) as node()*
 {
     let $reportsDocumentUrl := met:getMetaData($documentUrl, "reports")
-	
+    
    let $docrep := doc($reportsDocumentUrl)
 
-	let $sonuc2 := (for $runx at $pos in $stateList/state-types:LiveStateInfo
-                   order by $runx/@LSIDateTime descending
-	               return $runx)[1]
-
     (: raporu guncelleme kismi :)
-(:    let $ee := data($sonuc2/state-types:StateName)
-    let $test := concat(xs:string("rep:reportAll/rep:stateReport/rep:report/rep:"),$ee):)
 
-	let $valStateName := $sonuc2/state-types:StateName
-	let $valSubstateName := $sonuc2/state-types:SubstateName
-	let $valStatusName := $sonuc2/state-types:StatusName
+	let $valStateName := $stateLast/state-types:StateName
+	let $valSubstateName := $stateLast/state-types:SubstateName
+	let $valStatusName := $stateLast/state-types:StatusName
 
     let $relPath := $docrep/rep:reportAll/rep:stateReport/rep:report[@id=$nextId]
 
-    let $sorgu := if ( empty($sonuc2/state-types:StatusName) ) 
+    let $sorgu := if ( empty($stateLast/state-types:StatusName) ) 
 	           then 
-			     if ( empty($sonuc2/state-types:SubstateName) ) 
-	             then util:eval(concat("<rep:", $valStateName, ">", $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]  + 1, "</rep:",$valStateName,">"))
-			     else util:eval(concat("<rep:", $valSubstateName, ">", $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]/rep:*[local-name() eq $sonuc2/state-types:SubstateName]  + 1 , "</rep:",$valSubstateName,">"))
-			   else util:eval(concat("<rep:", $valStatusName, ">", $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]/rep:*[local-name() eq $sonuc2/state-types:SubstateName]/rep:*[local-name() eq $sonuc2/state-types:StatusName] + 1 , "</rep:",$valStatusName,">"))
+			     if ( empty($stateLast/state-types:SubstateName) ) 
+	             then util:eval(concat("<rep:", $valStateName, ">", $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]  + 1, "</rep:",$valStateName,">"))
+			     else util:eval(concat("<rep:", $valSubstateName, ">", $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]/rep:*[local-name() eq $stateLast/state-types:SubstateName]  + 1 , "</rep:",$valSubstateName,">"))
+			   else util:eval(concat("<rep:", $valStatusName, ">", $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]/rep:*[local-name() eq $stateLast/state-types:SubstateName]/rep:*[local-name() eq $stateLast/state-types:StatusName] + 1 , "</rep:",$valStatusName,">"))
 
-    let $df := if ( empty($sonuc2/state-types:StatusName) ) 
+    let $df := if ( empty($stateLast/state-types:StatusName) ) 
 	           then 
-			     if ( empty($sonuc2/state-types:SubstateName) ) 
-	             then update replace $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName] 
-				                with $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]  + 1
-			     else update replace $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]/rep:*[local-name() eq $sonuc2/state-types:SubstateName] 
+			     if ( empty($stateLast/state-types:SubstateName) ) 
+	             then update replace $relPath/rep:*[local-name() eq $stateLast/state-types:StateName] 
+				                with $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]  + 1
+			     else update replace $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]/rep:*[local-name() eq $stateLast/state-types:SubstateName] 
 				                with $sorgu
-			   else update replace $relPath/rep:*[local-name() eq $sonuc2/state-types:StateName]/rep:*[local-name() eq $sonuc2/state-types:SubstateName]/rep:*[local-name() eq $sonuc2/state-types:StatusName]
+			   else update replace $relPath/rep:*[local-name() eq $stateLast/state-types:StateName]/rep:*[local-name() eq $stateLast/state-types:SubstateName]/rep:*[local-name() eq $stateLast/state-types:StatusName]
 			                    with $sorgu
 
-   return <ss>{$sonuc2}</ss>
+   return $stateLast
 };
 
 declare function hs:insertStateReportLock($documentUrl as xs:string, $jsId as xs:int, $nextId as xs:int) as xs:boolean
