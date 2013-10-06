@@ -1598,7 +1598,7 @@ public class DBOperations implements Serializable {
 			report = ((ReportDocument) currentObject).getReport();
 		}
 
-		System.err.println(" dashboardReport : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+		System.err.println(" current States of Jobs Report > hs:jobStateListbyRunId , time : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		return report;
 	}
 
