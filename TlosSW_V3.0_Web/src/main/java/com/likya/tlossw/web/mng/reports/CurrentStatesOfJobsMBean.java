@@ -75,7 +75,11 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		column2.addWidget("waiting");
 		column1.addWidget("success");
 		column2.addWidget("look4resource");
-
+		column1.addWidget("userChooseResource");
+		column2.addWidget("userWaiting");
+		column1.addWidget("cancelled");
+		column2.addWidget("timeout");
+		
 		model.addColumn(column1);
 		model.addColumn(column2);
 		model.addColumn(column3);
@@ -111,7 +115,6 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 			setReportParameters(new ReportsParameters());
 		}
 		
-		derinlik = 1;
 		pieColorList = "";
 
 		pieRunningCount = 0;
@@ -221,6 +224,11 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUR"),
 						reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", F6C660";
+				else
+					pieColorList = pieColorList + "F6C660";
+				i++;
 			}
 
 			if ((reportBaseList.getPENDING().getREADY().getUSERWAITING() != null)
@@ -228,6 +236,11 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUW"),
 						reportBaseList.getPENDING().getREADY().getUSERWAITING().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ",60E5F6";
+				else
+					pieColorList = pieColorList + "60E5F6";
+				i++;
 			}
 			if ((reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS() != null)
 					&& (success > 0)) {
@@ -256,12 +269,22 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Cancelled"),
 						reportBaseList.getCANCELLED().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", F6EA60";
+				else
+					pieColorList = pieColorList + "F6EA60";
+				i++;
 			}
 			if ((reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT() != null)
 					&& (timeout != 0)) {
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.TimeOut"),
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", BE81F7";
+				else
+					pieColorList = pieColorList + "BE81F7";
+				i++;
 			}
 		}
 	}
