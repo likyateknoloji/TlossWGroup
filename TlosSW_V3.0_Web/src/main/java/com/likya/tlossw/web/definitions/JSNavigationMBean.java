@@ -503,13 +503,13 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		getScenarioDefinitionMBean().copyScenario(fromTree);
 	}
 
-	private String calculateCopiedJobName(String toTree, String jobPathInScenario) {
+	private String calculateCopiedJobName( String jobPathInScenario) {
 
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
-
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		int scope = jsBuffer.getToScope();
+		String docId = jsBuffer.getToDocId();
 		
-		ArrayList<JobProperties> jobList = getDbOperations().getJobExistenceList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobPathInScenario + "/dat:jobList", "CopyOf" + jsBuffer.getJsName());
+		ArrayList<JobProperties> jobList = getDbOperations().getJobExistenceList( docId, getWebAppUser().getId(), scope, jobPathInScenario + "/dat:jobList", "CopyOf" + jsBuffer.getJsName());
 		String copyOfJobName = "CopyOf" + jsBuffer.getJsName();
 
 		if (jobList == null || jobList.size() == 0) {
@@ -569,16 +569,19 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void pasteJSAction(String toTree) {
-		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 
+		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
+		jsBuffer.setToDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(toTree)) );
+		jsBuffer.setToScope( getSessionMediator().getScope(Integer.valueOf(toTree)) );
+		
 		String jsPathInScenario = getScenarioDefinitionMBean().getScenarioPath();
 
 		if (jsBuffer.isJob()) {
 
-			boolean uniqueName = jobCheckUpForCopy(toTree, jsPathInScenario, jsBuffer.getJsName());
+			boolean uniqueName = jobCheckUpForCopy( jsBuffer.getToDocId(), jsBuffer.getToScope(), jsPathInScenario, jsBuffer.getJsName());
 
 			if (!uniqueName) {
-				jsBuffer.setNewJSName(calculateCopiedJobName(toTree, jsPathInScenario));
+				jsBuffer.setNewJSName(calculateCopiedJobName(jsPathInScenario));
 			}
 
 		} else {
@@ -610,11 +613,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		return true;
 	}
 
-	public boolean jobCheckUpForCopy( String toTree, String jobPathInScenario, String jobName) {
-
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
-		
-		String jobCheckResult = getDbOperations().getJobExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobPathInScenario + "/dat:jobList", jobName);
+	public boolean jobCheckUpForCopy( String docId, Integer scope, String jobPathInScenario, String jobName) {
+	
+		String jobCheckResult = getDbOperations().getJobExistence( docId, getWebAppUser().getId(), scope, jobPathInScenario + "/dat:jobList", jobName);
 
 		if (jobCheckResult != null) {
 			if (jobCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
