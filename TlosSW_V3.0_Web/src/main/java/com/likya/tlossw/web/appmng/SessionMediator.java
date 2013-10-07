@@ -237,6 +237,14 @@ public class SessionMediator implements Serializable {
 		webSpaceWideRegistery.getDocMetaDataInfo().getDocumentScopes().put(documentId, scope);
 	}
 
+	public int getColumnScope(Integer column) {
+		return getDocumentScope(getCurrentDoc(column));
+	}
+	
+	public String getColumnScopeText(Integer column) {
+		return getScopeText(getDocumentScope(getCurrentDoc(column)));
+	}
+	
 	public String getScopeText(Integer scopeId) {
 
 		String result = scopeId == 1 ? CommonConstantDefinitions.EXIST_GLOBALDATA : CommonConstantDefinitions.EXIST_MYDATA;
