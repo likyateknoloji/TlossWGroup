@@ -264,7 +264,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			setJsNameConfirmDialog(false);
 		}
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().insertScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getScenarioXML(), scenarioPath)) {
 
@@ -463,7 +463,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	private boolean scenarioCheckUp() {
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, scenarioName);
 
