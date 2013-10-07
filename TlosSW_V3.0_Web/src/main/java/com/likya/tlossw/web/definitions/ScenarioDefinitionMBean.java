@@ -609,7 +609,8 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public void copyScenario(String fromTree) {
 		JSBuffer jsBuffer = new JSBuffer();
 		jsBuffer.setJob(false);
-		jsBuffer.setFromTree(fromTree);
+		jsBuffer.setFromDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(fromTree)) );
+		jsBuffer.setFromScope( getSessionMediator().getScope(Integer.valueOf(fromTree)) );
 		jsBuffer.setJsId(scenario.getID());
 		jsBuffer.setJsName(scenario.getBaseScenarioInfos().getJsName());
 	
@@ -618,14 +619,15 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void pasteJS(String toTree) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
-		jsBuffer.setToTree(toTree);
+		jsBuffer.setToDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(toTree)) );
+		jsBuffer.setToScope( getSessionMediator().getScope(Integer.valueOf(toTree)) );
 
-		if (jsBuffer.getFromTree().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
-				&& toTree.equals(CommonConstantDefinitions.EXIST_GLOBALDATA)) {
+		if (jsBuffer.getToDocId().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
+				&& getSessionMediator().getScopeText(jsBuffer.getToScope()).equals(CommonConstantDefinitions.EXIST_GLOBALDATA)) {
 			scenarioPath = "/dat:TlosProcessData";
 		}
 
-		if (getDbOperations().copyJSToJS(jsBuffer.getFromTree(), jsBuffer.getToTree(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName())) {
+		if (getDbOperations().copyJSToJS(jsBuffer.getFromDocId(), jsBuffer.getToDocId(), jsBuffer.getFromScope(), jsBuffer.getToScope(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName())) {
 			addMessage("jsDeployment", FacesMessage.SEVERITY_INFO, "tlos.success.js.deployment", null);
 		} else {
 			addMessage("jsDeployment", FacesMessage.SEVERITY_ERROR, "tlos.error.js.deployment", null);
