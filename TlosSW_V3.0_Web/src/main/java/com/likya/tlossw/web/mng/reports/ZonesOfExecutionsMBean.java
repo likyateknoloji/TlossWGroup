@@ -223,7 +223,7 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 		String overallStop = "N/A";
 		isFinished = false;
 
-		if (jobsArray.sizeOfJobArray() > 0) {
+		if (jobsArray!=null && jobsArray.sizeOfJobArray() > 0) {
 			totalDuration = jobsArray.getTotalDurationInSec().doubleValue();
 			totalDurationBD = jobsArray.getTotalDurationInSec();
 			totalDurationNormalized = totalDuration;
