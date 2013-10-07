@@ -168,12 +168,12 @@ public class TEJmxMpClientBase {
 		
 		if (System.getProperty("javax.net.ssl.keyStorePassword") == null) {
 			// System.setProperty("javax.net.ssl.keyStorePassword", "likya1!+");
-			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
+			logger.error("javax.net.ssl.keyStorePassword is null, use -Djavax.net.ssl.keyStorePassword as VM argument !");
 		}
 		
 		if (System.getProperty("javax.net.ssl.keyStore") == null) {
 			//System.setProperty("javax.net.ssl.keyStore", "/Users/serkan/programlar/dev/workspace/TlosSW_V3.0_Web/likyaKeystore");
-			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
+			logger.error("javax.net.ssl.keyStore is null, use -Djavax.net.ssl.keyStore as VM argument !");
 		}
 		
 		env.put("jmx.remote.profiles", "TLS");
