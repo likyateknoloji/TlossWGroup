@@ -513,7 +513,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			setJsNameConfirmDialog(false);
 		}
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().insertJob(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			// senaryoya yeni dugumu ekliyor
@@ -624,14 +624,17 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	private boolean getJobId() {
-		int jobId = getDbOperations().getNextId(CommonConstantDefinitions.JOB_ID);
+		if(jobProperties.getID() == "0") {
+		  
+		  int jobId = getDbOperations().getNextId(CommonConstantDefinitions.JOB_ID);
 
-		if (jobId < 0) {
+		  if (jobId < 0) {
 			addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.error.job.getId", null);
 			return false;
-		}
+		  }
 
-		jobProperties.setID(jobId + "");
+		  jobProperties.setID(jobId + "");
+		}
 		return true;
 	}
 
@@ -696,7 +699,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean jobCheckUp() {
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		String jobCheckResult = getDbOperations().getJobExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
