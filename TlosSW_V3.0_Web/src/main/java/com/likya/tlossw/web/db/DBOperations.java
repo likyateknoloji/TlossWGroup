@@ -1118,6 +1118,20 @@ public class DBOperations implements Serializable {
 		return result;
 	}
 
+	public JobProperties getJobCopyFromId(String documentId, int userId, Integer scope, String jobId) {
+
+		String xQueryStr = scenarioFunctionConstructor("hs:getJobCopyFromId", toXSString(documentId), toXSString(userId), toXSInteger2Boolean(scope), jobId);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		JobProperties jobProperties = null;
+		for (Object currentObject : objectList) {
+			jobProperties = ((JobPropertiesDocument) currentObject).getJobProperties();
+		}
+
+		return jobProperties;
+	}
+
 	public JobProperties getJobFromId(String documentId, int userId, Integer scope, String jobId) {
 
 		String xQueryStr = scenarioFunctionConstructor("hs:getJobFromId", toXSString(documentId), toXSString(userId), toXSInteger2Boolean(scope), jobId);
@@ -1131,7 +1145,7 @@ public class DBOperations implements Serializable {
 
 		return jobProperties;
 	}
-
+	
 	public ArrayList<SWAgent> getAgents() {
 
 		ArrayList<SWAgent> agentList = new ArrayList<SWAgent>();
