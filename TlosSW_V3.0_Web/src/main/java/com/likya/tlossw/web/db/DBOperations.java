@@ -2147,9 +2147,9 @@ public class DBOperations implements Serializable {
 		return null;
 	}
 
-	public boolean copyJSToJS(String fromTree, String toTree, int userId, boolean isJob, String jsId, String jsPath, String newJSName) {
+	public boolean copyJSToJS(String fromDocId, String toDocId, Integer fromScope, Integer toScope, int userId, boolean isJob, String jsId, String jsPath, String newJSName) {
 
-		String xQueryStr = scenarioFunctionConstructor("hs:copyJStoJS", toXSString(fromTree), toXSString(toTree), toXSString(userId), isJob + "()", jsId, jsPath, toXSString(newJSName));
+		String xQueryStr = scenarioFunctionConstructor("hs:copyJStoJS", toXSString(fromDocId), toXSString(toDocId), toXSInteger2Boolean(fromScope), toXSInteger2Boolean(toScope), toXSString(userId), isJob + "()", jsId, jsPath, toXSString(newJSName));
 
 		try {
 			@SuppressWarnings("unused")
