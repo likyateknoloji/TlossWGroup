@@ -78,15 +78,14 @@
 				action="#{jsNavigationMBean.switchToTestPage}"
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
-				action="#{jsNavigationMBean.copyScenarioAction(sessionMediator.getScope(1))}"
+				action="#{jsNavigationMBean.copyScenarioAction(column)}"
 				icon="ui-icon-copy" />
 			<p:menuitem value="#{msgs['tlos.button.paste']}"
-				rendered="#{sessionMediator.getScopeText(sessionMediator.getScope(1)) eq 'Global Space'}"
-				actionListener="#{jsNavigationMBean.pasteJSAction(sessionMediator.getScope(1))}"
-				action="#{jSTree.reconstructJSTree(sessionMediator.getScope(1))}"
+				actionListener="#{jsNavigationMBean.pasteJSAction(column)}"
+				action="#{jSTree.reconstructJSTree(column)}"
 				icon="ui-icon-paste" update="tree" />
 			<p:menuitem value="#{msgs['tlos.button.deployHere']}"
-				rendered="#{sessionMediator.getScopeText(sessionMediator.getScope(1)) eq 'Global Space'}"
+				rendered="#{sessionMediator.getColumnScopeText(column) eq 'Global Space'}"
 				onclick="jsDeploymentDialog.show()"
 				icon="ui-icon-paste" update="tree :jobDefinitionForm" />
 		</p:contextMenu>
@@ -99,7 +98,7 @@
 				action="#{jsNavigationMBean.switchToTestPage}" 
 				icon="ui-icon-plus" />
 			<p:menuitem value="#{msgs['tlos.button.copy']}"
-				action="#{jsNavigationMBean.copyJobAction(sessionMediator.getScope(1))}"
+				action="#{jsNavigationMBean.copyJobAction(2)}"
 				icon="ui-icon-copy" />
 		</p:contextMenu>
 
