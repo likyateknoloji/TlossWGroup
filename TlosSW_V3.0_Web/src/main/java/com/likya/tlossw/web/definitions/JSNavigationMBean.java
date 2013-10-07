@@ -128,7 +128,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		String jsId = wsNode.getId();
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
@@ -327,8 +327,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void handleDropAction(ActionEvent ae) {
-		jobProperties = getDbOperations().getJobFromId(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA), draggedTemplateName.getId());
-		jobProperties.setID("0");
+		jobProperties = getDbOperations().getJobCopyFromId(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA), draggedTemplateName.getId());
+		//jobProperties.setID("0");
 
 		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
