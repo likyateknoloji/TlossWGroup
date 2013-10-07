@@ -15,27 +15,26 @@ import java.net.ConnectException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
 
 public class StopTlos extends LocalJmx {
 
 	public static void main(String[] args) {
+		new StopTlos().doIt(args);
+	}
 
+	public void doIt(String[] args) {
 		try {
 
-			String ipAddr = getIpAddress();
-			
-			Object[] paramList = { ipAddr.toString() };
+			parseArguments("StopTlos", args);
+
+			Object[] paramList = { getIpAddress() };
 			String[] signature = { "java.lang.String" };
 
 			// Create a JMXMP connector client and
 			// connect it to the JMXMP connector server
 			//
-			setUpTls();
-			System.out.println("\nCreate a JMXMP connector client and " + "connect it to the JMXMP connector server");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5555);
-			JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
+		
+			JMXConnector jmxc = getJMXConnector();
 
 			// Get an MBeanServerConnection
 			//
@@ -61,7 +60,8 @@ public class StopTlos extends LocalJmx {
 			jmxc.close();
 			System.out.println("\nBye! Bye!");
 		} catch (ConnectException cex) {
-			System.out.println("Can not connect to JMX Provider ! Terminated.");
+			cex.printStackTrace();
+			System.err.println("Can not connect to server, check it !");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

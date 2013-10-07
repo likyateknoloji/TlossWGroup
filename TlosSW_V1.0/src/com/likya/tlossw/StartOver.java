@@ -15,24 +15,25 @@ import java.net.ConnectException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
 
 public class StartOver extends LocalJmx {
 	
 	public static void main(String[] args) {
+		new StartOver().doIt(args);
+	}
+	
+	public void doIt(String[] args) {
 
 		try {
+			
+			parseArguments("StartOver", args);
 			
 			boolean backupReports = false;
 
 			Object[] paramList = { backupReports };
 			String[] signature = { "boolean" };
 
-			setUpTls();
-			System.out.println("\nCreate a JMXMP connector client and " + "connect it to the JMXMP connector server");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5555);
-			JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
+			JMXConnector jmxc = getJMXConnector();
 
 			System.out.println("\nGet an MBeanServerConnection");
 			MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();

@@ -15,14 +15,19 @@ import java.net.ConnectException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
 
 public class SimulateGunDonumu extends LocalJmx {
 
+	
 	public static void main(String[] args) {
+		new SimulateGunDonumu().doIt(args);
+	}
+	
+	public void doIt(String[] args) {
 
 		try {
+			
+			parseArguments("SimulateGunDonumu", args);
 
 			Object[] paramList = { };
 			String[] signature = { };
@@ -30,10 +35,7 @@ public class SimulateGunDonumu extends LocalJmx {
 			// Create a JMXMP connector client and
 			// connect it to the JMXMP connector server
 			//
-			setUpTls();
-			System.out.println("\nCreate a JMXMP connector client and " + "connect it to the JMXMP connector server");
-			JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5555);
-			JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
+			JMXConnector jmxc = getJMXConnector();
 
 			// Get an MBeanServerConnection
 			//
