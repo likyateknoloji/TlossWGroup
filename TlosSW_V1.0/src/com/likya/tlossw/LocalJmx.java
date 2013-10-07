@@ -90,7 +90,7 @@ public abstract class LocalJmx {
 			try {
 				ipAddressArg = arg.substring(1);
 			} catch (Throwable t) {
-				t.printStackTrace();
+				System.err.println(t.getLocalizedMessage());
 			}
 
 			// use this type of check for "wordy" arguments
@@ -106,7 +106,7 @@ public abstract class LocalJmx {
 			try {
 				portNumberArg = Integer.parseInt(arg.substring(1));
 			} catch (Throwable t) {
-				t.printStackTrace();
+				System.err.println(t.getLocalizedMessage());
 			}
 
 			if (portNumberArg == 0 || !validatePortNumber(portNumberArg)) {
