@@ -6,8 +6,10 @@ public class JSBuffer {
 	private String jsId;
 	private String jsName;
 	private String newJSName;
-	private String fromTree;
-	private String toTree;
+	private String fromDocId;
+	private String toDocId;
+	private Integer fromScope;
+    private Integer toScope; 
 
 	public boolean isJob() {
 		return isJob;
@@ -25,22 +27,6 @@ public class JSBuffer {
 		this.jsId = jsId;
 	}
 
-	public String getFromTree() {
-		return fromTree;
-	}
-
-	public void setFromTree(String fromTree) {
-		this.fromTree = fromTree;
-	}
-
-	public String getToTree() {
-		return toTree;
-	}
-
-	public void setToTree(String toTree) {
-		this.toTree = toTree;
-	}
-
 	public String getNewJSName() {
 		return newJSName;
 	}
@@ -55,6 +41,38 @@ public class JSBuffer {
 
 	public void setJsName(String jsName) {
 		this.jsName = jsName;
+	}
+
+	public String getFromDocId() {
+		return fromDocId;
+	}
+
+	public void setFromDocId(String fromDocId) {
+		this.fromDocId = fromDocId;
+	}
+
+	public String getToDocId() {
+		return toDocId;
+	}
+
+	public void setToDocId(String toDocId) {
+		this.toDocId = toDocId;
+	}
+
+	public Integer getFromScope() {
+		return fromScope;
+	}
+
+	public void setFromScope(Integer fromScope) {
+		this.fromScope = fromScope;
+	}
+
+	public Integer getToScope() {
+		return toScope;
+	}
+
+	public void setToScope(Integer toScope) {
+		this.toScope = toScope;
 	}
 
 
