@@ -351,6 +351,45 @@ declare function hs:getJobFromId($documentUrl as xs:string,  $docId as xs:string
         return $job
 };
 
+declare function hs:getJobCopyFromId($documentUrl as xs:string,  $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $id as xs:integer) as element(dat:jobProperties)?
+{	
+    let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
+	
+	let $doc := doc($dataDocumentUrl)
+	let $selectedJS := for $job in $doc//dat:jobProperties
+                       where $job/@ID = $id
+                       return $job
+		
+	let $baseJobInfos := $selectedJS/dat:baseJobInfos
+	
+    let $nextId := sq:getNextId($documentUrl, "jobId") 
+
+    let $copyJob := 
+      element dat:jobProperties { 
+        attribute agentId {$selectedJS/@agentId }, 
+        attribute ID { $nextId },
+        $selectedJS/jsdl:JobDescription,
+        element dat:baseJobInfos {
+		  $baseJobInfos/com:jsName,
+          $baseJobInfos/com:comment,
+          $baseJobInfos/dat:jobInfos, 
+          $baseJobInfos/dat:calendarId,
+		  $baseJobInfos/dat:periodInfo,
+          $baseJobInfos/dat:jobLogFile, 
+		  $baseJobInfos/dat:jobLogPath, 
+          $baseJobInfos/dat:oSystem, 
+          $baseJobInfos/dat:jobPriority, 
+          $baseJobInfos/dat:jsIsActive, 
+          $baseJobInfos/com:userId
+      },
+      $selectedJS/dat:cascadingConditions,
+      $selectedJS/dat:stateInfos,
+      $selectedJS/dat:advancedJobInfos,
+      $selectedJS/dat:concurrencyManagement,
+      $selectedJS/dat:timeManagement
+    }
+	return $copyJob
+};
 
 declare function hs:getJobExistence($documentUrl as xs:string,  $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $jobPath as node()*, $jobName as xs:string) as xs:integer
 {    
