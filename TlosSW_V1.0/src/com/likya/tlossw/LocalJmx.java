@@ -31,7 +31,8 @@ public abstract class LocalJmx {
 	
 		setUpTls();
 		System.out.println("\nCreate a JMXMP connector client and " + "connect it to the JMXMP connector server");
-		JMXServiceURL url = new JMXServiceURL("jmxmp", null, 5555);
+		JMXServiceURL url = new JMXServiceURL("jmxmp", getIpAddress(), getPortNumber());
+		System.out.println("Using url for connection >> " + url.toString());
 		JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
 		
 		return jmxc;
