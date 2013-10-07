@@ -60,7 +60,7 @@ import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 public class DBUtils extends DBBase {
 	
 	private static final String dbUserId = TransformUtils.toXSString("0");
-	private static final String dbDocId = TransformUtils.toXSString("sjData");
+	private static final String dbDocId = TransformUtils.toXSString("scenarios");
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
