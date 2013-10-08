@@ -289,7 +289,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		// Ekrandan secilenin job veya senaryo olmasına göre
 		if (currentPanelMBeanRef instanceof ScenarioDefinitionMBean) { // kok senaryo ise serbest jobların oldugu senaryo olarak ele alıyoruz.
-			String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+			String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 			
 			Scenario scenario = getDbOperations().getScenarioFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getScenario().getID());
 			if (getScenario().getID().equals(EngineeConstants.LONELY_JOBS)) { // kok senaryo ise
