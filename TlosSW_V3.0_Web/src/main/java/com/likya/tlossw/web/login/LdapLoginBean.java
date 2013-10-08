@@ -42,14 +42,6 @@ public class LdapLoginBean extends LoginBase implements Serializable {
 	@ManagedProperty(value = "#{sessionMediator}")
 	public SessionMediator sessionMediator;
 
-	public SessionMediator getSessionMediator() {
-		return sessionMediator;
-	}
-
-	public void setSessionMediator(SessionMediator sessionMediator) {
-		this.sessionMediator = sessionMediator;
-	}
-
 	@ManagedProperty(value = "#{jmxConnectionHolder.jmxConnector}")
 	public JMXConnector jmxConnector;
 
