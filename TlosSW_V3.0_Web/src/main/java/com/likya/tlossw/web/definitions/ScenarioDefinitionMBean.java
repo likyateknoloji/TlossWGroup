@@ -296,7 +296,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			setJsNameConfirmDialog(false);
 		}
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().updateScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, getScenarioXML())) {
 			jsTree.initJSTree();
@@ -426,7 +426,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	private boolean scenarioCheckUpForUpdate() {
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), treePath, scenarioName);
 
@@ -577,7 +577,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	public boolean deleteScenario() {
 		boolean result = true;
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().deleteScenario( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPath, getScenarioXML())) {
 			removeScenarioSubtree(scenarioPathInScenario);
