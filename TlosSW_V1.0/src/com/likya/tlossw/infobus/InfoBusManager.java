@@ -220,7 +220,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 	}
 
 	public synchronized void deleteInfo(int deletedElementId) {
-		infoQueue.remove(deletedElementId);
+		if(infoQueue.size() > 0) infoQueue.remove(deletedElementId);
 		/*
 		 * if(!valueSet) try { wait(); } catch(InterruptedException e) {
 		 * System.out.println("InterruptedException caught"); }
