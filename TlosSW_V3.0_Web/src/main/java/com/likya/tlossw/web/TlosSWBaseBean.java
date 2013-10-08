@@ -78,11 +78,11 @@ public abstract class TlosSWBaseBean {
 		BeanUtils.addFailMessage(messages, fieldName, errorMessage, miscText);
 	}
 
-	public SessionMediator getSessionMediator() {
+	public final SessionMediator getSessionMediator() {
 		return sessionMediator;
 	}
 
-	public void setSessionMediator(SessionMediator sessionMediator) {
+	public final void setSessionMediator(SessionMediator sessionMediator) {
 		this.sessionMediator = sessionMediator;
 	}
 
