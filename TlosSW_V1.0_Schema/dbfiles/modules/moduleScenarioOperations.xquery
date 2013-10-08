@@ -280,25 +280,21 @@ declare function hs:updateScenarioLock($documentUrl as xs:string,  $docId as xs:
 
 (:---- Screen copy-paste operations ----------------:)
 
-declare function hs:copyJStoJS($documentUrl as xs:string, $docId as xs:string, $fromTree as xs:string, $toTree as xs:string, $userId as xs:string, $isJob as xs:boolean, $jsId as xs:integer, $pathOfJS, $newJSName as xs:string) as element()*
-{    
-	let $selectedJS := if($isJob) 
-	                   then hs:getJobFromId($documentUrl, $docId, $userId, $fromTree, $jsId )
-	                   else hs:getScenarioFromId($documentUrl, $docId, $userId, $fromTree, $jsId )
-	
-    let $baseJobInfos := $selectedJS/dat:baseJobInfos
-    
-    let $nextId := if($isJob) 
-                   then sq:getNextId($documentUrl, "jobId") 
-                   else sq:getNextId($documentUrl, "scenarioId")
+declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobProperties), $newJobName as xs:string, $isNewJobIdRequired as xs:boolean) as element(dat:jobProperties)
+{
 
-    let $newJob := 
+    let $baseJobInfos := $job/dat:baseJobInfos
+	let $jobId := if ( $isNewJobIdRequired ) 
+	              then sq:getNextId($documentUrl, "jobId") 
+				  else $job/@ID
+	
+    let $copiedJob := 
       element dat:jobProperties { 
-        attribute agentId {$selectedJS/@agentId }, 
-        attribute ID { $nextId },
-        $selectedJS/jsdl:JobDescription,
+        attribute agentId {$job/@agentId }, 
+        attribute ID { $jobId },
+        $job/jsdl:JobDescription,
         element dat:baseJobInfos { 
-        element com:jsName { $newJSName },
+        element com:jsName { $newJobName },
           $baseJobInfos/com:comment,
           $baseJobInfos/dat:jobInfos, 
           $baseJobInfos/dat:calendarId,
@@ -310,17 +306,29 @@ declare function hs:copyJStoJS($documentUrl as xs:string, $docId as xs:string, $
           $baseJobInfos/dat:jsIsActive, 
           $baseJobInfos/com:userId
       },
-      $selectedJS/dat:cascadingConditions,
-      $selectedJS/dat:stateInfos,
-      $selectedJS/dat:advancedJobInfos,
-      $selectedJS/dat:concurrencyManagement,
-      $selectedJS/dat:timeManagement
+      $job/dat:cascadingConditions,
+      $job/dat:stateInfos,
+      $job/dat:advancedJobInfos,
+      $job/dat:concurrencyManagement,
+      $job/dat:timeManagement
     }
 	
+	return $copiedJob
+};
+
+
+declare function hs:copyJStoJS($documentUrl as xs:string, $fromDocId as xs:string, $toDocId as xs:string, $fromScope as xs:boolean, $toScope as xs:boolean, $userId as xs:string, $isJob as xs:boolean, $jsId as xs:integer, $pathOfJS, $newJSName as xs:string) as element()*
+{    
+	let $selectedJS := if($isJob) 
+	                   then hs:getJobFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
+	                   else hs:getScenarioFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
+    
+    let $newJob := hs:copyJob( $documentUrl, $selectedJS, $newJSName, true())
+	
     let $truePath := if($isJob) then 
-              hs:insertJobLock($documentUrl, $docId, $userId, $toTree, $newJob, $pathOfJS/dat:jobList)
+              hs:insertJobLock($documentUrl, $toDocId, $userId, $toScope, $newJob, $pathOfJS/dat:jobList)
            else
-              hs:insertScenarioLock($documentUrl, $docId, $userId, $toTree, $selectedJS, $pathOfJS )
+              hs:insertScenarioLock($documentUrl, $toDocId, $userId, $toScope, $selectedJS, $pathOfJS )
 	return $selectedJS
 		
 };
