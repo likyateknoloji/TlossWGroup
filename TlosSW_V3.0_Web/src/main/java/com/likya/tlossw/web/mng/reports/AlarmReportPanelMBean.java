@@ -42,7 +42,7 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 		
 		logger.info("begin : init");
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
@@ -113,7 +113,7 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 		setAlarmName(null);
 		setAlarmReportJob(null);
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		try {
 			setAlarmUserList(WebAlarmUtils.fillAlarmUserList(getDbOperations().getUsers()));
