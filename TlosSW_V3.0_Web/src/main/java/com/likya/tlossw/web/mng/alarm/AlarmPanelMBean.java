@@ -126,7 +126,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		try {
 			
-			String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+			String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 			// ilk 20 iş ekranda görünecek
 			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 20)));
 
