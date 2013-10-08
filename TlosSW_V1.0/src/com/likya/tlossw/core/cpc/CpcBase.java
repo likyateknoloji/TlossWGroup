@@ -73,7 +73,7 @@ public abstract class CpcBase implements Runnable {
 
 				spcreferance.setExecutionPermission(false, isForced);
 
-				while (spcreferance.getExecuterThread().isAlive()) {
+				while ((spcreferance.getExecuterThread() != null) && spcreferance.getExecuterThread().isAlive()) {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
