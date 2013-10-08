@@ -33,7 +33,6 @@ import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
-import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.menu.JobTemplatesTree;
 import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
@@ -47,9 +46,6 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jsTree;
-
-	@ManagedProperty(value = "#{sessionMediator}")
-	private SessionMediator sessionMediator;
 	
 	@ManagedProperty(value = "#{jobTemplatesTree}")
 	private JobTemplatesTree jobTemplatesTree;
@@ -759,14 +755,6 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void setJobTemplatesTree(JobTemplatesTree jobTemplatesTree) {
 		this.jobTemplatesTree = jobTemplatesTree;
-	}
-
-	public SessionMediator getSessionMediator() {
-		return sessionMediator;
-	}
-
-	public void setSessionMediator(SessionMediator sessionMediator) {
-		this.sessionMediator = sessionMediator;
 	}
 
 }
