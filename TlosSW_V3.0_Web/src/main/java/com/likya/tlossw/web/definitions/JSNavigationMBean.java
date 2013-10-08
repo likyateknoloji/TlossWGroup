@@ -585,7 +585,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			}
 
 		} else {
-			boolean uniqueName = scenarioCheckUpForCopy(toTree, jsPathInScenario, jsBuffer.getJsName());
+			boolean uniqueName = scenarioCheckUpForCopy( jsBuffer.getToDocId(), jsBuffer.getToScope(), jsPathInScenario, jsBuffer.getJsName());
 
 			if (!uniqueName) {
 				jsBuffer.setNewJSName("CopyOf" + jsBuffer.getJsName());
@@ -599,11 +599,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		getScenarioDefinitionMBean().pasteJS(toTree);
 	}
 
-	public boolean scenarioCheckUpForCopy(String scopeId, String scenarioPathInScenario, String scenarioName) {
+	public boolean scenarioCheckUpForCopy( String docId, Integer scope, String scenarioPathInScenario, String scenarioName) {
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
-		
-		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), scenarioPathInScenario, scenarioName);
+		String scenarioCheckResult = getDbOperations().getScenarioExistence( docId, getWebAppUser().getId(), scope, scenarioPathInScenario, scenarioName);
 
 		if (scenarioCheckResult != null) {
 			if (scenarioCheckResult.equalsIgnoreCase(ConstantDefinitions.DUPLICATE_NAME_AND_PATH)) {
