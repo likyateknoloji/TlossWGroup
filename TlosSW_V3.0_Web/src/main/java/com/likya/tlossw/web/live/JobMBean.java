@@ -143,7 +143,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
 		
-		String docId = getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[DocMetaDataHolder.FIRST_COLUMN];
+		String docId = getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[DocMetaDataHolder.SECOND_COLUMN];
 		
 		jobBaseReportList = getDbOperations().getJobResultList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), 3, transformToLocalTime);
 	}
@@ -157,7 +157,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 				
 		job = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId());
 
