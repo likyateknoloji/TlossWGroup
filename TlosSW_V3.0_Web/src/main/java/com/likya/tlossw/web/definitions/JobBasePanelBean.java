@@ -537,7 +537,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 			setJsNameConfirmDialog(false);
 		}
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().updateJob( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario))) {
 			addMessage("jobUpdate", FacesMessage.SEVERITY_INFO, "tlos.success.job.update", null);
@@ -662,7 +662,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean jobCheckUpForUpdate() {
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		String jobCheckResult = getDbOperations().getJobExistence(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), jobProperties.getBaseJobInfos().getJsName());
 
@@ -747,7 +747,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean checkDependencyValidation() {
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		JobProperties draggedJobProperties = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), draggedWsNode.getId());
 
@@ -1053,7 +1053,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	public boolean deleteJob() {
 		boolean result = true;
 		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		if (getDbOperations().deleteJob( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), DefinitionUtils.getTreePath(jobPathInScenario), getJobPropertiesXML())) {
 			jSTree.removeJobNode(jobPathInScenario, jobProperties.getID());
