@@ -200,7 +200,7 @@ public abstract class CpcBase implements Runnable {
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
 			planId = userId;
 		} else {
-			planId = tlosProcessData.getInstanceId();
+			planId = tlosProcessData.getPlanId();
 			if (planId == null) {
 				planId = "" + Calendar.getInstance().getTimeInMillis();
 			}
