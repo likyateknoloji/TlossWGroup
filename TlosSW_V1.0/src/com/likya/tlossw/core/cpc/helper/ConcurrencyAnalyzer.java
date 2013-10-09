@@ -10,19 +10,19 @@ import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.exceptions.TlosException;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 
 public class ConcurrencyAnalyzer {
 
-	public static void checkConcurrency(String instanceIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) throws TlosException {
+	public static void checkConcurrency(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) throws TlosException {
 
 		for (String spcId : spcLookupTableNew.keySet()) {
 
-			String keyStr = containsScenario(spcId, instanceIdOld, spcLookupTableOld);
+			String keyStr = containsScenario(spcId, planIdOld, spcLookupTableOld);
 
 			if (keyStr != null) {
 
@@ -76,11 +76,11 @@ public class ConcurrencyAnalyzer {
 
 	}
 	
-	public static String containsScenario(String newScenarioId, String instanceIdOld, HashMap<String, SpcInfoType> spcLookupTableOld) {
+	public static String containsScenario(String newScenarioId, String planIdOld, HashMap<String, SpcInfoType> spcLookupTableOld) {
 
-		ScenarioPathType masterPathType = new ScenarioPathType(newScenarioId);
+		TlosSWPathType masterPathType = new TlosSWPathType(newScenarioId);
 		
-		masterPathType.setInstanceId(instanceIdOld);
+		masterPathType.setPlanId(planIdOld);
 		
 		Object retValue = spcLookupTableOld.get(masterPathType.getFullPath());
 		
@@ -92,11 +92,11 @@ public class ConcurrencyAnalyzer {
 
 		Iterator<String> keyIterator = spcLookupTableMaster.keySet().iterator();
 
-		ScenarioPathType tmpPath = new ScenarioPathType(scenarioId);
+		TlosSWPathType tmpPath = new TlosSWPathType(scenarioId);
 		
 		while (keyIterator.hasNext()) {
 			String masterScenarioId = keyIterator.next();
-			ScenarioPathType masterPath = new ScenarioPathType(masterScenarioId);
+			TlosSWPathType masterPath = new TlosSWPathType(masterScenarioId);
 			if (tmpPath.getAbsolutePath().equals(masterPath.getAbsolutePath())) {
 				return masterScenarioId;
 			}
@@ -120,13 +120,13 @@ public class ConcurrencyAnalyzer {
 		
 	}
 	
-	public static void checkAndCleanSpcLookUpTables(HashMap<String, InstanceInfoType> instanceLookupTable, Logger logger) {
+	public static void checkAndCleanSpcLookUpTables(HashMap<String, PlanInfoType> instanceLookupTable, Logger logger) {
 
 		boolean checkValue = true;
 
-		for (String instanceId : instanceLookupTable.keySet()) {
+		for (String planId : instanceLookupTable.keySet()) {
 
-			InstanceInfoType instanceInfoType = instanceLookupTable.get(instanceId);
+			PlanInfoType instanceInfoType = instanceLookupTable.get(planId);
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 			checkValue = isSpcLookUpTableClean(spcLookupTable, logger);
@@ -134,7 +134,7 @@ public class ConcurrencyAnalyzer {
 			if (checkValue) {
 				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan isler tamamen bitirilmis, tablodan temizleniyor ...");
 				spcLookupTable.clear();
-				instanceLookupTable.remove(instanceId);
+				instanceLookupTable.remove(planId);
 				logger.info("     > Temizlendi.");
 			} else {
 				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan bazi isler bitirilmemis.");
