@@ -496,7 +496,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setNewJSName(jsBuffer.getJsName());
 
-		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA);
+		getScenarioDefinitionMBean().pasteJS(CommonConstantDefinitions.EXIST_GLOBALDATA, CommonConstantDefinitions.PASTE_4DEPLOY);
 	}
 
 	public void copyScenarioAction(String fromTree) {
@@ -596,7 +596,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			jsBuffer.setNewJSName(jsBuffer.getJsName());
 		}
 
-		getScenarioDefinitionMBean().pasteJS(toTree);
+		getScenarioDefinitionMBean().pasteJS(toTree, CommonConstantDefinitions.PASTE_4COPY);
 	}
 
 	public boolean scenarioCheckUpForCopy( String docId, Integer scope, String scenarioPathInScenario, String scenarioName) {
