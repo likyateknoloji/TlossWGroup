@@ -2497,7 +2497,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.sqNsUrl + xQueryModuleUrl + "/moduleSequenceOperations.xquery\";" + 
 				"sq:getReportId(" + spaceWideRegistry.getXmlsUrl() + CommonConstantDefinitions.SEQUENCE_DATA + ")";
 
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ResourceSet result = service.query(xQueryStr);
 		ResourceIterator i1 = result.getIterator();
