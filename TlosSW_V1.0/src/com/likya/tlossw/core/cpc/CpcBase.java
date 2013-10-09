@@ -152,7 +152,7 @@ public abstract class CpcBase implements Runnable {
 		System.out.println("sizo of spcLookupTable for instanceId : " + planId + " is " + table.size());
 
 		for (String spcKey : table.keySet()) {
-			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId());
+			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId().getFullPath());
 		}
 
 		System.out.println("***************************************************************************************");
@@ -178,8 +178,8 @@ public abstract class CpcBase implements Runnable {
 			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
 
 			for (String spcKey : spcLookupTable.keySet()) {
-				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
-				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
+				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId().getFullPath());
+				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId().getFullPath());
 			}
 		}
 
@@ -200,7 +200,7 @@ public abstract class CpcBase implements Runnable {
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
 			planId = userId;
 		} else {
-			planId = tlosProcessData.getPlanId();
+			planId = tlosProcessData.getInstanceId();
 			if (planId == null) {
 				planId = "" + Calendar.getInstance().getTimeInMillis();
 			}
