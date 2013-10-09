@@ -66,7 +66,7 @@ public class CpcUtils {
 		
 	}
 	
-	public static SpcInfoType getSpcInfo(Spc spc, String userId, String instanceId, Scenario tmpScenario) {
+	public static SpcInfoType getSpcInfo(Spc spc, String userId, String planId, Scenario tmpScenario) {
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -83,7 +83,7 @@ public class CpcUtils {
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spc.setUserId(userId);
 
-		tmpScenario.getConcurrencyManagement().setInstanceId(instanceId);
+		tmpScenario.getConcurrencyManagement().setInstanceId(planId);
 
 		spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		spc.setDependencyList(tmpScenario.getDependencyList());
@@ -102,7 +102,7 @@ public class CpcUtils {
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
 		spcInfoType.setUserId(userId);
 
-		spc.setInstanceId(instanceId);
+		spc.setPlanId(planId);
 
 		Scenario scenario = CpcUtils.getScenario(spc);
 

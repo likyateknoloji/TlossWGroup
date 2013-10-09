@@ -26,7 +26,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -37,7 +37,7 @@ import com.likya.tlossw.utils.xml.ApplyXPath;
 public class ParameterPassing {
 
 	public void findInputValues(String xpath) throws TlosFatalException {
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
 			findInputValue(instanceId, xpath);
 		}
@@ -47,7 +47,7 @@ public class ParameterPassing {
 
 	private String[] findInputValue(String instanceIdd, String xpath) throws TlosFatalException {
 
-		InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceIdd);
+		PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceIdd);
 
 		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 

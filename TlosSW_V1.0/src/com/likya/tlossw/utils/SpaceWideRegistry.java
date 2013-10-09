@@ -18,7 +18,7 @@ import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
 import com.likya.tlossw.core.cpc.CpcTester;
 import com.likya.tlossw.core.cpc.model.AppState;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.infobus.servers.MailServer;
@@ -100,7 +100,7 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	
 	private transient PerformanceManager performanceManagerReference;
 	
-	private HashMap<String, InstanceInfoType> instanceLookupTable = new HashMap<String, InstanceInfoType>();
+	private HashMap<String, PlanInfoType> planLookupTable = new HashMap<String, PlanInfoType>();
 	
 	private transient Server httpServer;
 	
@@ -261,13 +261,13 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 		this.agentManagerReference = agentManagerReference;
 	}
 
-	public HashMap<String, InstanceInfoType> getInstanceLookupTable() {
-		return instanceLookupTable;
+	public HashMap<String, PlanInfoType> getPlanLookupTable() {
+		return planLookupTable;
 	}
 
-	public void setInstanceLookupTable(
-			HashMap<String, InstanceInfoType> instanceLookupTable) {
-		this.instanceLookupTable = instanceLookupTable;
+	public void setPlanLookupTable(
+			HashMap<String, PlanInfoType> planLookupTable) {
+		this.planLookupTable = planLookupTable;
 	}
 
 	public void setHttpServer(Server httpServer) {

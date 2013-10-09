@@ -45,7 +45,7 @@ import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalS
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
@@ -64,8 +64,8 @@ public class DBUtils extends DBBase {
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
-		for (String instanceId : spaceWideRegistry.getInstanceLookupTable().keySet()) {
-			InstanceInfoType instanceInfoType = spaceWideRegistry.getInstanceLookupTable().get(instanceId);
+		for (String instanceId : spaceWideRegistry.getPlanLookupTable().keySet()) {
+			PlanInfoType instanceInfoType = spaceWideRegistry.getPlanLookupTable().get(instanceId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 

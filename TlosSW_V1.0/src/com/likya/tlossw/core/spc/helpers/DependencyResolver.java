@@ -16,7 +16,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -29,7 +29,7 @@ import com.likya.tlossw.utils.CpcUtils;
 
 public class DependencyResolver {
 	
-	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String instanceId, HashMap<String, Job> jobQueue, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
+	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String planId, HashMap<String, Job> jobQueue, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
 	
 		String ownerJsName = ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName();
 		
@@ -64,15 +64,15 @@ public class DependencyResolver {
 				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
 				// Global bir bagimlilik
-				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(instanceId) + "." + item.getJsPath());
+				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(planId) + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
-					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), instanceId, ownerJob.getJobRuntimeProperties().getTreePath().getFullPath(), spcLookupTable);
+					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getTreePath().getFullPath(), spcLookupTable);
 				}
 
 				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				if (job == null) {
-					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), instanceId, spcInfoType.getSpcReferance().getSpcId().getFullPath());
+					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), planId, spcInfoType.getSpcReferance().getSpcId().getFullPath());
 				}
 
 				jobRuntimeProperties = job.getJobRuntimeProperties();
@@ -128,7 +128,7 @@ public class DependencyResolver {
 		return result.intValue() == 0 ? false : true;
 	}
 	
-	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String instanceId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, InstanceInfoType> instanceLookUpTable) throws TlosFatalException {
+	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String instanceId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> instanceLookUpTable) throws TlosFatalException {
 		
 		if (dependencyList == null || dependencyList.getItemArray().length == 0) {
 			// There is no dependency defined so it is allowed to execute

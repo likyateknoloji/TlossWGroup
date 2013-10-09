@@ -40,7 +40,7 @@ import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -59,11 +59,11 @@ public class Spc extends SpcBase {
 
 	private boolean isRecovered = false;
 
-	public Spc(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
+	public Spc(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
 		this(spcId, spaceWideRegistry, taskList, false, false);
 	}
 
-	public Spc(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
+	public Spc(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
 
 		super(spcId, spaceWideRegistry, taskList, isTester);
 
@@ -196,6 +196,10 @@ public class Spc extends SpcBase {
 					reIndexJobQueue();
 					continue;
 				}
+				
+				// Burada her senaryo kendi başının çaresine bakacak
+				// Consolidator.checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), spcInfoTypeOld);
+				
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
 				/**
 				 * @author serkan
@@ -526,7 +530,7 @@ public class Spc extends SpcBase {
 	}
 
 	private synchronized boolean isJobDependencyResolved(Job ownerJob, String dependencyExpression, Item[] dependencyArray) throws UnresolvedDependencyException {
-		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getInstanceId(), getJobQueue(), getSpcLookupTable());
+		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getPlanId(), getJobQueue(), getSpcLookupTable());
 	}
 
 	private synchronized void executeJob(Job scheduledJob) {
@@ -660,7 +664,7 @@ public class Spc extends SpcBase {
 
 		// parametre gecisi burada yapilir !!
 
-		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getInstanceId());
+		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getPlanId());
 
 		// 1.tip verilen xpath ile aktarim.
 		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
@@ -762,7 +766,7 @@ public class Spc extends SpcBase {
 	}
 
 	public String getTransferedJobKey(int agentId, String jobId, String lsiDateTime) {
-		String transferedJobKey = getInstanceId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
+		String transferedJobKey = getPlanId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
 
 		return transferedJobKey;
 	}

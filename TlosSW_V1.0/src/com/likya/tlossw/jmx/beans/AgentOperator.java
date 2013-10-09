@@ -12,7 +12,7 @@ import java.util.HashMap;
 import com.likya.tlos.model.xmlbeans.agent.TxMessageDocument.TxMessage;
 import com.likya.tlos.model.xmlbeans.agent.TxMessageTypeEnumerationDocument.TxMessageTypeEnumeration;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.AgentDbUtils;
@@ -20,7 +20,7 @@ import com.likya.tlossw.jmx.JMXServer;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.TxMessageIdBean;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.XmlUtils;
 
 public class AgentOperator implements AgentOperatorMBean {
@@ -73,7 +73,7 @@ public class AgentOperator implements AgentOperatorMBean {
 
 		if (isAgentAvailable) {
 			
-			HashMap<String, InstanceInfoType> instanceLookupTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable();
+			HashMap<String, PlanInfoType> planLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
 
 			if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB_STATE)) {
 
@@ -81,14 +81,14 @@ public class AgentOperator implements AgentOperatorMBean {
 				String spcId = txMessageIdBean.getSpcId();
 				String jobId = txMessageIdBean.getJobKey();
 
-				Job job = instanceLookupTable.get(instanceId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
+				Job job = planLookupTable.get(instanceId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
 				job.addStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 				// job.changeStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 			} else if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB)) {
-				Spc spc = instanceLookupTable.get(txMessageIdBean.getInstanceId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
+				Spc spc = planLookupTable.get(txMessageIdBean.getInstanceId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
 				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
 				
-				job.sendEndInfo(new ScenarioPathType(txMessageIdBean.getSpcId()), txMessage.getTxMessageBodyType().getJobProperties());
+				job.sendEndInfo(new TlosSWPathType(txMessageIdBean.getSpcId()), txMessage.getTxMessageBodyType().getJobProperties());
 				if (txMessage.getTxMessageBodyType().getJobProperties().getAgentId() != 0) { // Baska
 																								// ne
 																								// olabilir

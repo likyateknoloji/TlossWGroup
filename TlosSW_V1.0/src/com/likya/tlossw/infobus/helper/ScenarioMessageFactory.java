@@ -2,11 +2,11 @@ package com.likya.tlossw.infobus.helper;
 
 import java.util.Calendar;
 
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 
 public class ScenarioMessageFactory {
 	
-	public static ScenarioStart generateScenarioStart(ScenarioPathType spcId, int queueSize) {
+	public static ScenarioStart generateScenarioStart(TlosSWPathType spcId, int queueSize) {
 		
 		ScenarioStart scenarioStart = new ScenarioStart();
 		scenarioStart.setScenarioId(spcId);
@@ -16,7 +16,7 @@ public class ScenarioMessageFactory {
 		return scenarioStart;
 	}
 	
-	public static ScenarioEnd generateScenarioEnd(ScenarioPathType spcId, int queueSize) {
+	public static ScenarioEnd generateScenarioEnd(TlosSWPathType spcId, int queueSize) {
 		
 		ScenarioEnd scenarioEnd = new ScenarioEnd();
 		scenarioEnd.setScenarioId(spcId);

@@ -21,7 +21,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class JobQueueOperations {
@@ -64,7 +64,7 @@ public class JobQueueOperations {
 		return true;
 	}
 
-	public static void dumpJobQueue(ScenarioPathType spcId, HashMap<String, Job> jobQueue) {
+	public static void dumpJobQueue(TlosSWPathType spcId, HashMap<String, Job> jobQueue) {
 
 		@SuppressWarnings("unused")
 		String queueDumpInfo = " JOB QUEUE >> ";
@@ -127,7 +127,7 @@ public class JobQueueOperations {
 	 *            : Spc'ye ait iş listesi
 	 * @return
 	 */
-	public static boolean persistJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean persistJobQueue(TlosSWPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		String fileName = scenarioPathType.getFullPath();
 
@@ -161,7 +161,7 @@ public class JobQueueOperations {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean recoverJobQueue(ScenarioPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean recoverJobQueue(TlosSWPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
 		String fileName = scenarioPathType.getFullPath();
 

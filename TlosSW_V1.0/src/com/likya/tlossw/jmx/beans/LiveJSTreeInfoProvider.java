@@ -18,7 +18,7 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
 import com.likya.tlossw.core.spc.helpers.SortType;
@@ -32,7 +32,7 @@ import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
-import com.likya.tlossw.model.tree.InstanceNode;
+import com.likya.tlossw.model.tree.PlanNode;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
@@ -95,7 +95,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId()).getTable();
 			instanceId = new String("" + jmxUser.getId());
 		} else {
-			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId).getSpcLookupTable().getTable();
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceId).getSpcLookupTable().getTable();
 		}
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
@@ -154,11 +154,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
-			InstanceNode instanceNode = new InstanceNode("" + jmxUser.getId());
+			PlanNode instanceNode = new PlanNode("" + jmxUser.getId());
 			gunlukIslerNode.getInstanceNodes().put(jmxUser.getId() + "", instanceNode);
 		} else {
-			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-				InstanceNode instanceNode = new InstanceNode(instanceId);
+			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+				PlanNode instanceNode = new PlanNode(instanceId);
 				gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
 			}
 		}
@@ -183,7 +183,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			}
 		} else {
 
-			HashMap<String, InstanceInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable();
+			HashMap<String, PlanInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
 			Iterator<String> instanceKeyIterator = instanceLookUpTable.keySet().iterator();
 
 			while (instanceKeyIterator.hasNext()) {
@@ -258,7 +258,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
 		} else {
-			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable());
+			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 		
 		if (spcInfoType.getSpcReferance() == null) {
@@ -371,21 +371,21 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		
 		if (gunlukIslerNodeClient != null) {
 			
-			HashMap<String, InstanceNode> serverInstanceNodes = gunlukIslerNodeServer.getInstanceNodes();
+			HashMap<String, PlanNode> serverInstanceNodes = gunlukIslerNodeServer.getInstanceNodes();
 			
-			HashMap<String, InstanceNode> clientInstanceNodes = gunlukIslerNodeClient.getInstanceNodes();
+			HashMap<String, PlanNode> clientInstanceNodes = gunlukIslerNodeClient.getInstanceNodes();
 			
 			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
 
-				InstanceNode clientInstanceNode = clientInstanceNodes.get(instanceId);
+				PlanNode clientInstanceNode = clientInstanceNodes.get(instanceId);
 
-				InstanceNode serverInstanceNode = serverInstanceNodes.get(instanceId);
+				PlanNode serverInstanceNode = serverInstanceNodes.get(instanceId);
 
-				// Okudugumuz instance'in altındaki senaryolari alip yeni TD'ye ekliyoruz
+				// Okudugumuz plan'in altındaki senaryolari alip yeni TD'ye ekliyoruz
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientInstanceNode.getInstanceId());
+				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientInstanceNode.getPlanId());
 
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, selectedNodeId).getSpcInfoTypeClientList();

@@ -35,7 +35,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -47,10 +47,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private LiveStateInfo liveStateInfo;
 
-	private ScenarioPathType spcId;
+	private TlosSWPathType spcId;
 	private String jsName;
 	private String comment;
-	private String instanceId;
+	private String planId;
 	private boolean concurrent;
 	// private DependencyList dependencyList;
 	// private ScenarioStatusList scenarioStatusList;
@@ -100,7 +100,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	protected boolean isTester = false;
 
-	public SpcBase(ScenarioPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
+	public SpcBase(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
 		this.isTester = isTester;
 		this.spcId = spcId;
@@ -513,14 +513,6 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.localParameters = localParameters;
 	}
 
-	public String getInstanceId() {
-		return instanceId;
-	}
-
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
-
 	public Logger getGlobalLogger() {
 		return globalLogger;
 	}
@@ -571,7 +563,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
 		}
 
-		return getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable();
+		return getSpaceWideRegistry().getPlanLookupTable().get(getPlanId()).getSpcLookupTable();
 
 	}
 
@@ -600,7 +592,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return map;
 	}
 
-	public ScenarioPathType getSpcId() {
+	public TlosSWPathType getSpcId() {
 		return spcId;
 	}
 
@@ -612,6 +604,14 @@ public abstract class SpcBase implements Runnable, Serializable {
 		if (jobRuntimeProperties.getPreviousLiveStateInfo() == null || !LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobRuntimeProperties.getJobProperties(), StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED);
 		}
+	}
+
+	public String getPlanId() {
+		return planId;
+	}
+
+	public void setPlanId(String planId) {
+		this.planId = planId;
 	}
 
 }

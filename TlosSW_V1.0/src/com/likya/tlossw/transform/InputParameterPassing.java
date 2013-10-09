@@ -33,7 +33,7 @@ import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -61,7 +61,7 @@ public class InputParameterPassing {
 
 	// private void findInputValues(String xpath) throws TlosFatalException {
 	//
-	// for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+	// for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 	//
 	// findInputValue(instanceId, xpath);
 	// }
@@ -71,7 +71,7 @@ public class InputParameterPassing {
 
 	private String[] findInputValue(String instanceIdd, String xpath) throws TlosFatalException {
 		String[] result;
-		InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceIdd);
+		PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceIdd);
 
 		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
@@ -180,14 +180,14 @@ public class InputParameterPassing {
 			} else { // Global bir bağımlılık
 
 				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
-				// SpcInfoType spcInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+				// SpcInfoType spcInfoType = getSpaceWideRegistry().getPlanLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getInstanceLookupTable().get(getInstanceId()).getSpcLookupTable());
+					Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getPlanLookupTable().get(getInstanceId()).getSpcLookupTable());
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				}
 

@@ -4,16 +4,16 @@ import java.util.HashMap;
 
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 
 public class InstanceUtils {
 	
-	public static boolean checkRecovery(HashMap<String, InstanceInfoType> instanceLookupTable) {
+	public static boolean checkRecovery(HashMap<String, PlanInfoType> instanceLookupTable) {
 		
 		for (String instanceId : instanceLookupTable.keySet()) {
-			InstanceInfoType instanceInfoType = instanceLookupTable.get(instanceId);
+			PlanInfoType instanceInfoType = instanceLookupTable.get(instanceId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
@@ -33,11 +33,11 @@ public class InstanceUtils {
 		
 	}
 	
-	public static boolean runningInstanceExists(HashMap<String, InstanceInfoType> instanceLookupTable) {
+	public static boolean runningInstanceExists(HashMap<String, PlanInfoType> instanceLookupTable) {
 		boolean exist = false;
 		
 		for (String instanceId : instanceLookupTable.keySet()) {
-			InstanceInfoType instanceInfoType = instanceLookupTable.get(instanceId);
+			PlanInfoType instanceInfoType = instanceLookupTable.get(instanceId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
