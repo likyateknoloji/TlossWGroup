@@ -48,26 +48,12 @@ public class JSTree extends TreeBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSTree() {
 
-		/*
-		 * 
-		 * String scopeId2 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID2);
-		 * if (scopeId2 != null) {
-		 * getSessionMediator().setScopeId2(Boolean.valueOf(scopeId2));
-		 * }
-		 * 
-		 * getSessionMediator().setDocumentId2( CommonConstantDefinitions.EXIST_SJDATA );
-		 * getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId2(), getSessionMediator().getScopeId2() );
-		 * 
-		 * 
-		 * long startTime = System.currentTimeMillis();
-		 * 
-		 * TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId2(), getWebAppUser().getId(),
-		 * getDocumentScope(getSessionMediator().getDocumentId2()));
-		 */
 
 		long startTime = System.currentTimeMillis();
 
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA);
+		setPassedParameters();
+		
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_SJDATA, getDocumentScope(CommonConstantDefinitions.EXIST_SJDATA));
 
 		constructJSTree(tlosProcessData);
 
