@@ -19,7 +19,7 @@ public class CpcUtils {
 		
 		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
 
-		tlosProcessData.getConcurrencyManagement().setInstanceId(instanceId);
+		tlosProcessData.getConcurrencyManagement().setPlanId(instanceId);
 
 		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
 		scenario.setDependencyList(tlosProcessData.getDependencyList());
@@ -83,7 +83,7 @@ public class CpcUtils {
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spc.setUserId(userId);
 
-		tmpScenario.getConcurrencyManagement().setInstanceId(planId);
+		tmpScenario.getConcurrencyManagement().setPlanId(planId);
 
 		spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		spc.setDependencyList(tmpScenario.getDependencyList());
