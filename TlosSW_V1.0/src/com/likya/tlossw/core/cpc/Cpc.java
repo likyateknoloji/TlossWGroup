@@ -12,13 +12,13 @@ import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.helper.ConcurrencyAnalyzer;
 import com.likya.tlossw.core.cpc.helper.Consolidator;
 import com.likya.tlossw.core.cpc.model.AppState;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.model.SpcLookupTable;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -60,15 +60,15 @@ public class Cpc extends CpcBase {
 
 				// Her bir instance icin senaryolari aktive et !
 
-				for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+				for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
-					InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
+					PlanInfoType planInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
-					HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+					HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 					if (spcLookupTable == null) {
 						logger.warn("   >>> UYARI : Senaryo isleme agaci SPC bos !!");
-						logger.debug(" DEBUG : spcLookupTable is null, check getSpaceWideRegistry().getInstanceLookupTable().get(" + instanceId + ")! ");
+						logger.debug(" DEBUG : spcLookupTable is null, check getSpaceWideRegistry().getPlanLookupTable().get(" + planId + ")! ");
 						break;
 					}
 
@@ -161,18 +161,18 @@ public class Cpc extends CpcBase {
 
 		SpcLookupTable spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
 		/*
-		 * scpLookUpTable olusturuldu. Olusan bu tablo InstanceID ile
+		 * scpLookUpTable olusturuldu. Olusan bu tablo PlanID ile
 		 * iliskilendirilecek.
 		 */
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, InstanceID = " + tlosProcessData.getInstanceId() + " ile ilişkilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile ilişkilendirilecek.");
 
-		InstanceInfoType instanceInfoType = new InstanceInfoType();
-		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
-		instanceInfoType.setSpcLookupTable(spcLookUpTable);
+		PlanInfoType planInfoType = new PlanInfoType();
+		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setSpcLookupTable(spcLookUpTable);
 
-		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
 
 		logger.info("   > OK ilişkilendirildi.");
 
@@ -186,54 +186,54 @@ public class Cpc extends CpcBase {
 
 		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
 
-		if(getSpaceWideRegistry().getInstanceLookupTable().size() < -1 || getSpaceWideRegistry().getInstanceLookupTable().size() > 1) {
+		if(getSpaceWideRegistry().getPlanLookupTable().size() < -1 || getSpaceWideRegistry().getPlanLookupTable().size() > 1) {
 			// Ne yapmalı ??
 			return;
 		}
 		
-		InstanceInfoType instanceInfoType = (InstanceInfoType) getSpaceWideRegistry().getInstanceLookupTable().values().toArray()[0];
-		HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
+		PlanInfoType planInfoType = (PlanInfoType) getSpaceWideRegistry().getPlanLookupTable().values().toArray()[0];
+		HashMap<String, SpcInfoType> spcLookupTableOld = planInfoType.getSpcLookupTable().getTable();
 		
-		Consolidator.compareAndConsolidateTwoTables(instanceInfoType.getInstanceId(), spcLookupTableNew.getTable(), spcLookupTableOld);
+		Consolidator.compareAndConsolidateTwoTables(planInfoType.getPlanId(), spcLookupTableNew.getTable(), spcLookupTableOld);
 
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile iliskilendirilecek.");
 
-		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId() + " olarak belirlendi.");
+		logger.info("   > Plan ID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " olarak belirlendi.");
 
-		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
-		instanceInfoType.setSpcLookupTable(spcLookupTableNew);
+		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setSpcLookupTable(spcLookupTableNew);
 
-		getSpaceWideRegistry().getInstanceLookupTable().clear();
-		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+		getSpaceWideRegistry().getPlanLookupTable().clear();
+		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
 		logger.info("   > OK iliskilendirildi.");
 	}
 	
 	public void loadOnLiveSystemOld(TlosProcessData tlosProcessData) throws TlosException {
 
-		ConcurrencyAnalyzer.checkAndCleanSpcLookUpTables(getSpaceWideRegistry().getInstanceLookupTable(), logger);
+		ConcurrencyAnalyzer.checkAndCleanSpcLookUpTables(getSpaceWideRegistry().getPlanLookupTable(), logger);
 
-		logger.info("   > Evet, " + getSpaceWideRegistry().getInstanceLookupTable().size() + ". eleman olacak !");
+		logger.info("   > Evet, " + getSpaceWideRegistry().getPlanLookupTable().size() + ". eleman olacak !");
 
 		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
 
-		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
+		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+			PlanInfoType instanceInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
 			HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
-			ConcurrencyAnalyzer.checkConcurrency(instanceId, spcLookupTableNew.getTable(), spcLookupTableOld);
+			ConcurrencyAnalyzer.checkConcurrency(planId, spcLookupTableNew.getTable(), spcLookupTableOld);
 		}
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, InstanceID = " + tlosProcessData.getInstanceId() + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile iliskilendirilecek.");
 
-		InstanceInfoType instanceInfoType = new InstanceInfoType();
-		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId() + " olarak belirlendi.");
+		PlanInfoType planInfoType = new PlanInfoType();
+		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " olarak belirlendi.");
 
-		instanceInfoType.setInstanceId(tlosProcessData.getInstanceId());
-		instanceInfoType.setSpcLookupTable(spcLookupTableNew);
+		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setSpcLookupTable(spcLookupTableNew);
 
-		getSpaceWideRegistry().getInstanceLookupTable().put(instanceInfoType.getInstanceId(), instanceInfoType);
+		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
 		logger.info("   > OK iliskilendirildi.");
 	}
 
@@ -243,7 +243,7 @@ public class Cpc extends CpcBase {
 
 		initParameters();
 
-		if (getSpaceWideRegistry().getInstanceLookupTable().size() == 0) {
+		if (getSpaceWideRegistry().getPlanLookupTable().size() == 0) {
 			freshDataLoad(tlosProcessData);
 		} else {
 			loadOnLiveSystem(tlosProcessData);
@@ -254,15 +254,15 @@ public class Cpc extends CpcBase {
 
 	private void handleRecoverdExecution() throws TlosFatalException {
 
-		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
-			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
+			PlanInfoType planInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 
-				Spc spc = new Spc(new ScenarioPathType(spcId), getSpaceWideRegistry(), null, isUserSelectedRecover, false);
+				Spc spc = new Spc(new TlosSWPathType(spcId), getSpaceWideRegistry(), null, isUserSelectedRecover, false);
 				LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
 				myLiveStateInfo.setStateName(StateName.PENDING);
@@ -276,7 +276,7 @@ public class Cpc extends CpcBase {
 
 				SpcInfoType spcInfoType = spcLookupTable.get(spcId);
 
-				spcInfoType.getScenario().getConcurrencyManagement().setInstanceId(instanceInfoType.getInstanceId());
+				spcInfoType.getScenario().getConcurrencyManagement().setInstanceId(planInfoType.getPlanId());
 
 				spc.setBaseScenarioInfos(spcInfoType.getScenario().getBaseScenarioInfos());
 				spc.setDependencyList(spcInfoType.getScenario().getDependencyList());
@@ -290,7 +290,7 @@ public class Cpc extends CpcBase {
 				spc.setJsName(spcInfoType.getJsName());
 				spc.setConcurrent(spcInfoType.isConcurrent());
 				spc.setComment(spcInfoType.getComment());
-				spc.setInstanceId(instanceId);
+				spc.setPlanId(planId);
 				spc.setUserId(spcInfoType.getUserId());
 
 				spcInfoType.setSpcReferance(spc);
