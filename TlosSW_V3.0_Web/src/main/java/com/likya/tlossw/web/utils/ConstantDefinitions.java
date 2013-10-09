@@ -13,7 +13,7 @@ public class ConstantDefinitions {
 	public static final String TREE_KAYNAK = "kaynak";
 	public static final String TREE_TLOSAGENT = "tlosagent";
 	public static final String TREE_MONITORAGENT = "monitoragent";
-	public static final String TREE_INSTANCE = "instance";
+	public static final String TREE_INSTANCE = "plan";
 	public static final String TREE_SCENARIO = "scenario";
 	public static final String TREE_JOBGROUP = "jobGroup";
 	public static final String TREE_JOB = "job";
