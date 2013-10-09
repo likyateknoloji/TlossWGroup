@@ -278,8 +278,8 @@ public class Spc extends SpcBase {
 
 			getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 
-			getMyLogger().info(" >>" + "Spc_" + getSpcId() + ">> " + endLog);
-			getMyLogger().info(" >>" + "Spc_" + getSpcId() + ">> " + duration);
+			getMyLogger().info(" >>" + "Spc_" + getSpcId().getFullPath() + ">> " + endLog);
+			getMyLogger().info(" >>" + "Spc_" + getSpcId().getFullPath() + ">> " + duration);
 
 			// TODO job icin boyle ama senaryo icin nasil olacak? hs
 			// sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties().getJobProperties());
@@ -290,7 +290,7 @@ public class Spc extends SpcBase {
 
 		if (getSpaceWideRegistry().getInfoBus() != null) {
 			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcId(), getJobQueue().size()));
-			getMyLogger().info("     > SPC ID : " + this.getSpcId() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
+			getMyLogger().info("     > SPC ID : " + this.getSpcId().getFullPath() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
 		} else {
 			getGlobalLogger().error("getSpaceWideRegistry().getInfoBusManager() == null !");
 		}
@@ -733,19 +733,19 @@ public class Spc extends SpcBase {
 
 	public void pause() {
 		if (isPausable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Beklemeye alıyor...");
+			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Beklemeye alıyor...");
 			getLiveStateInfo().setStateName(StateName.PENDING);
 			getLiveStateInfo().setSubstateName(SubstateName.PAUSED);
-			getMyLogger().info("Spc " + getSpcId() + " Beklemede !");
+			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Beklemede !");
 		}
 	}
 
 	public void resume() {
 		if (isResumable()) {
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çıkartıyor...");
+			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Bekleme durumundan çıkartıyor...");
 			getLiveStateInfo().setStateName(StateName.RUNNING);
 			getLiveStateInfo().setSubstateName(null);
-			getMyLogger().info("Spc " + getSpcId() + " Bekleme durumundan çıkartıldı !");
+			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Bekleme durumundan çıkartıldı !");
 		}
 	}
 
