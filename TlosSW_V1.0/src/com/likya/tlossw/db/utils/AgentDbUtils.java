@@ -6,7 +6,6 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class AgentDbUtils extends DBBase {
 
