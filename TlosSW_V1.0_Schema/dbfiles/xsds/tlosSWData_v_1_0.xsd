@@ -84,7 +84,7 @@
 	<xs:element name="concurrencyManagement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:instanceId" minOccurs="0"/>
+				<xs:element ref="lt:planId" minOccurs="0"/>
 				<xs:element ref="lt:concurrent" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -113,6 +113,8 @@
 			<xs:sequence>
 				<xs:element ref="baseScenarioInfos"/>
 				<xs:element ref="DependencyList" minOccurs="0"/>
+				<xs:element ref="stateInfos" minOccurs="0"/>
+				<xs:element ref="state-types:jsState" minOccurs="0"/>
 				<xs:element ref="jobList"/>
 				<xs:element ref="state-types:ScenarioStatusList" minOccurs="0"/>
 				<xs:element ref="alarmPreference" minOccurs="0"/>
@@ -214,6 +216,11 @@
 				<xs:element ref="logAnalysis" minOccurs="0"/>
 				<xs:element ref="lt:localParameters" minOccurs="0"/>
 			</xs:sequence>
+			<xs:attribute name="planId" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
 			<xs:attribute name="ID" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
@@ -456,7 +463,7 @@
 				<xs:element ref="lt:localParameters" minOccurs="0"/>
 				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="instanceId" use="optional">
+			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
