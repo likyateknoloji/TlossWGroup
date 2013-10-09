@@ -45,7 +45,10 @@ public class WsNode implements Serializable {
 	}
 
 	public String getLabelText() {
-		return labelText;
+		if(labelText == null || labelText.equals("")) {
+			labelText = name;
+		}
+		return labelText + "[" + id + "]";
 	}
 
 	public void setLabelText(String labelText) {
