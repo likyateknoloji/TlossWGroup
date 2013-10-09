@@ -14,9 +14,9 @@ public class GunlukIslerNode implements Serializable {
 
 	private static final long serialVersionUID = 2439147908698379883L;
 
-	private HashMap<String, InstanceNode> instanceNodes = new HashMap<String, InstanceNode>();
+	private HashMap<String, PlanNode> instanceNodes = new HashMap<String, PlanNode>();
 
-	public HashMap<String, InstanceNode> getInstanceNodes() {
+	public HashMap<String, PlanNode> getInstanceNodes() {
 		return instanceNodes;
 	}
 

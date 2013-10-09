@@ -2,7 +2,7 @@ package com.likya.tlossw.model.path;
 
 import com.likya.tlossw.exceptions.TlosException;
 
-public class JobPathType extends ScenarioPathType {
+public class JobPathType extends TlosSWPathType {
 
 	private String id;
 	
@@ -21,18 +21,7 @@ public class JobPathType extends ScenarioPathType {
 		parsePathString(pathId);
 		
 	}
-	
-	public String getParentId() {
-		return super.getId();
-	}
 
-	public void setParentId(String Id) {
-		super.setId(id);
-	}
-
-	public String getId() {
-		return id;
-	}
 
 	public void setId(String id) {
 		this.id = id;

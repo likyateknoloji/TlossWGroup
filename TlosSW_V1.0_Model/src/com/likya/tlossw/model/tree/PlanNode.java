@@ -10,21 +10,21 @@ package com.likya.tlossw.model.tree;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class InstanceNode implements Serializable {
+public class PlanNode implements Serializable {
 
 	private static final long serialVersionUID = 1502653134173511164L;
 
-	private String instanceId;
+	private String planId;
 	
-	public InstanceNode(String instanceId) {
+	public PlanNode(String planId) {
 		super();
-		this.instanceId = instanceId;
+		this.planId = planId;
 	}
 
 	HashMap<String, ScenarioNode> scenarioNodeMap = new HashMap<String, ScenarioNode>();
 
-	public String getInstanceId() {
-		return instanceId;
+	public String getPlanId() {
+		return planId;
 	}
 
 	public HashMap<String, ScenarioNode> getScenarioNodeMap() {

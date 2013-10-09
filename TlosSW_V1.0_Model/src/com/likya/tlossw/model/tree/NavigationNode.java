@@ -10,7 +10,7 @@ public class NavigationNode implements Serializable {
 	private boolean isScenario = false;
 	private boolean isJob = false;
 
-	private InstanceNode instanceNode;
+	private PlanNode instanceNode;
 	private ScenarioNode scenarioNode;
 	private JobNode jobNode;
 
@@ -30,11 +30,11 @@ public class NavigationNode implements Serializable {
 		this.isScenario = isScenario;
 	}
 
-	public InstanceNode getInstanceNode() {
+	public PlanNode getInstanceNode() {
 		return instanceNode;
 	}
 
-	public void setInstanceNode(InstanceNode instanceNode) {
+	public void setInstanceNode(PlanNode instanceNode) {
 		this.instanceNode = instanceNode;
 	}
 

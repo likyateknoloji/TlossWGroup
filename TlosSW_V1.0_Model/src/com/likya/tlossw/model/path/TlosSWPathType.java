@@ -5,28 +5,28 @@ import java.util.Arrays;
 
 import com.likya.tlossw.exceptions.TlosException;
 
-public class ScenarioPathType extends BasePathType {
+public class TlosSWPathType extends BasePathType {
 
 	/**
 	 * Path Type Components
-	 * root.instance.x.y.z.c.id
+	 * root.plan.x.y.z.c.id
 	 * 1 : root : root
-	 * 2 : instance : instance
-	 * 3 : root.instance.x.y.z.c.id : full path
+	 * 2 : plan : plan
+	 * 3 : root.plan.x.y.z.c.id : full path
 	 * 4 : x.y.z.c.id : absolute path
 	 * 5 : id : id
 	 */
 
-	public ScenarioPathType() {
+	public TlosSWPathType() {
 		super();
 	}
 
-	public ScenarioPathType(String pathId) {
+	public TlosSWPathType(String pathId) {
 		super();
 		parsePathString(pathId);
 	}
 
-	public ScenarioPathType(ScenarioPathType scenarioPathType) {
+	public TlosSWPathType(TlosSWPathType scenarioPathType) {
 		super();
 		setPathArray(new ArrayList<String>(scenarioPathType.getPathArray()));
 	}
@@ -40,25 +40,25 @@ public class ScenarioPathType extends BasePathType {
 			getPathArray().addAll(Arrays.asList(pathArray));
 		} else {
 			try {
-				throw new TlosException("Invalid path string format : [root.instanceid...] >> " + pathText);
+				throw new TlosException("Invalid path string format : [root.planId...] >> " + pathText);
 			} catch (TlosException e) {
 				e.printStackTrace();
 			}
 		}
 	}
  
-	public void setInstanceId(String instanceId) {
-		if(hasDots(instanceId, "instanceId")) {
+	public void setPlanId(String planId) {
+		if(hasDots(planId, "planId")) {
 			return;
 		}
 		if (getPathArray().size() > 1) {
-			getPathArray().set(1, instanceId);
+			getPathArray().set(1, planId);
 		} else {
-			getPathArray().add(instanceId);
+			getPathArray().add(planId);
 		}
 	}
 
-	public String getInstanceId() {
+	public String getPlanId() {
 		if (getPathArray().size() > 1) {
 			return getPathArray().get(1);
 		} else {
@@ -80,21 +80,21 @@ public class ScenarioPathType extends BasePathType {
 		
 	}
 
-	public String getId() {
+	public JSPathId getId() {
 		if(getPathArray().size() > 2) {
-			return getPathArray().get(getPathArray().size() - 1);
+			return new JSPathId(getPathArray().get(getPathArray().size() - 1));
 		} 
 		return null;
 	}
 
-	public void setId(String idText) {
-		if(hasDots(idText, "Id")) {
+	public void setId(JSPathId idText) {
+		if(hasDots(idText.toString(), "Id")) {
 			return;
 		}
 		if(getPathArray().size() > 2) {
-			getPathArray().set(2, idText);
+			getPathArray().set(2, idText.toString());
 		} else {
-			getPathArray().add(idText);
+			getPathArray().add(idText.toString());
 		}
 	}
 
