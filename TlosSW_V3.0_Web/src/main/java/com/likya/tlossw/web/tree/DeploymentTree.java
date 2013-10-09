@@ -49,27 +49,9 @@ public class DeploymentTree extends TreeBaseBean implements Serializable {
 		
 		long startTime = System.currentTimeMillis();
 		
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA);
-
-		/*
-		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1);
-		if (scopeId1 != null) {
-			getSessionMediator().setScopeId1(Boolean.valueOf(scopeId1));
-		} 
-		else { // default olarak global data ile calisilir
-			getSessionMediator().setScopeId1(Boolean.valueOf(true));
-		}
-
-		getSessionMediator().setDocumentId1( CommonConstantDefinitions.EXIST_DEPLOYMENTDATA );
-		getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId1(), getSessionMediator().getScopeId1() );
+		setPassedParameters();
 		
-
-		long startTime = System.currentTimeMillis();
-
-		TlosProcessData tlosProcessData = getDbOperations().getTlosDataXml( getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
-		System.out.println("Tree has been loaded !!");
-
-		 */
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA));
 		
 		System.out.println("Job Tree olusturuluyor ..");
 
