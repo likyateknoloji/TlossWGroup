@@ -200,7 +200,7 @@ public abstract class CpcBase implements Runnable {
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
 			planId = userId;
 		} else {
-			planId = tlosProcessData.getInstanceId();
+			planId = tlosProcessData.getPlanId();
 			if (planId == null) {
 				planId = "" + Calendar.getInstance().getTimeInMillis();
 			}
@@ -284,12 +284,12 @@ public abstract class CpcBase implements Runnable {
 			String userId = null; // Henüz ayarlanmadı !
 
 			if (/* !scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) && */jobList.getJobPropertiesArray().length == 0) {
-				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 			} else {
 				Spc spc = new Spc(new TlosSWPathType(scenarioId), getSpaceWideRegistry(), transformJobList(jobList));
 
-				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 
 				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
