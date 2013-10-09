@@ -11,6 +11,9 @@ public class CommonConstantDefinitions {
 	public static final String FIRST_COLUMN_STR = "firstColumn";
 	public static final String SECOND_COLUMN_STR = "secondColumn";
 	
+	public static final String PASTE_4COPY = "4copy";
+	public static final String PASTE_4DEPLOY = "4deploy";
+	
 	public static final String VIEW_SCOPE = "viewScope";
 	
 	public static final String EXIST_MYDATA = "My Space";
