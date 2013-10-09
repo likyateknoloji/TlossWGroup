@@ -24,8 +24,8 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
-import com.likya.tlossw.model.tree.InstanceNode;
 import com.likya.tlossw.model.tree.JobNode;
+import com.likya.tlossw.model.tree.PlanNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -116,7 +116,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public void addInstance(String instanceId) {
 		DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
-		DefaultTreeNode instanceNode = new DefaultTreeNode(ConstantDefinitions.TREE_INSTANCE, new InstanceNode(instanceId), calisanIsler);
+		DefaultTreeNode instanceNode = new DefaultTreeNode(ConstantDefinitions.TREE_INSTANCE, new PlanNode(instanceId), calisanIsler);
 		instanceNode.getChildren().add(dummyNode);
 		instanceNode.setExpanded(false);
 	}
@@ -193,8 +193,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 				if (tmpInstanceFolder.isExpanded()) {
 
-					String instanceId = ((InstanceNode) tmpInstanceFolder.getData()).getInstanceId();
-					InstanceNode instanceNode = new InstanceNode(instanceId);
+					String instanceId = ((PlanNode) tmpInstanceFolder.getData()).getPlanId();
+					PlanNode instanceNode = new PlanNode(instanceId);
 
 					// instance icindeki senaryo sayisina bakiyoruz
 					int numberOfScenariosInInstance = tmpInstanceFolder.getChildCount();
@@ -272,21 +272,21 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			Iterator<TreeNode> gunlukIslerIterator = calisanIsler.getChildren().iterator();
 
 			while (gunlukIslerIterator.hasNext()) {
-				DefaultTreeNode instanceTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
+				DefaultTreeNode planTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
 
-				String instanceId = ((InstanceNode) instanceTreeNode.getData()).getInstanceId();
+				String instanceId = ((PlanNode) planTreeNode.getData()).getPlanId();
 				if (serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
-					constructLiveTree(instanceTreeNode, serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap());
-					instanceTreeNode.setExpanded(true);
+					constructLiveTree(planTreeNode, serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap());
+					planTreeNode.setExpanded(true);
 				}
 			}
 		}
 		return calisanIsler;
 	}
 
-	private void constructLiveTree(TreeNode instanceNode, HashMap<String, ScenarioNode> serverScenarioNodes) {
+	private void constructLiveTree(TreeNode planNode, HashMap<String, ScenarioNode> serverScenarioNodes) {
 
-		instanceNode.getChildren().clear();
+		planNode.getChildren().clear();
 
 		Iterator<String> keyIterator = serverScenarioNodes.keySet().iterator();
 
@@ -310,10 +310,10 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				scenarioNode.setId(spcInfoTypeClient.getSpcId());
 			}
 
-			scenarioNode.setInstanceId(((InstanceNode) instanceNode.getData()).getInstanceId());
+			scenarioNode.setInstanceId(((PlanNode) planNode.getData()).getPlanId());
 			scenarioNode.setSpcInfoTypeClient(spcInfoTypeClient);
 
-			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, instanceNode);
+			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, planNode);
 			scenarioNodeTree.getChildren().add(dummyNode);
 			scenarioNodeTree.setExpanded(false);
 
