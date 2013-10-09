@@ -9,7 +9,7 @@ import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessDat
 import com.likya.tlossw.core.cpc.helper.Consolidator;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.test.cpc.CpcBaseTester;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument.ServerConfig;
@@ -37,12 +37,12 @@ public class GunDonumuTester extends CpcBaseTester {
 		HashMap<String, SpcInfoType> spcLookUpTableYesterday = prepareSpcLookupTable(spaceWideRegistry, "root");
 		System.out.println("Size of Spc LookUp Table Yesterday : " + spcLookUpTableYesterday.size());
 		
-		String oldInstance = new ScenarioPathType(spcLookUpTableYesterday.keySet().toArray()[0].toString()).getInstanceId();
+		String oldInstance = new TlosSWPathType(spcLookUpTableYesterday.keySet().toArray()[0].toString()).getPlanId();
 		
 		Consolidator.compareAndConsolidateTwoTables(oldInstance, spcLookUpTableToday, spcLookUpTableYesterday);
 		
 		for(String spcId : spcLookUpTableToday.keySet()) {
-			JobQueueOperations.dumpJobQueue(new ScenarioPathType(spcId), spcLookUpTableToday.get(spcId).getSpcReferance().getJobQueue());
+			JobQueueOperations.dumpJobQueue(new TlosSWPathType(spcId), spcLookUpTableToday.get(spcId).getSpcReferance().getJobQueue());
 		}
 	}
 	

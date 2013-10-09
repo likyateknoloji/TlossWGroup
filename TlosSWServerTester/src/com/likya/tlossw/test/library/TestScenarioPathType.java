@@ -1,6 +1,6 @@
 package com.likya.tlossw.test.library;
 
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 
 public class TestScenarioPathType {
 	
@@ -16,12 +16,12 @@ public class TestScenarioPathType {
 		// System.out.println(testStr.split("\\.").length);
 
 		long start = System.currentTimeMillis();
-		ScenarioPathType scenarioPathType = new ScenarioPathType(testStr);
+		TlosSWPathType scenarioPathType = new TlosSWPathType(testStr);
 		long stop = System.currentTimeMillis();
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		String retStr = scenarioPathType.getInstanceId();
+		String retStr = scenarioPathType.getPlanId();
 		stop = System.currentTimeMillis();
 		System.out.println("instance id : " + retStr);
 		System.out.println("Süre : " + (stop - start) + "ms");
@@ -33,7 +33,7 @@ public class TestScenarioPathType {
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		retStr = scenarioPathType.getId();
+		retStr = scenarioPathType.getId().toString();
 		stop = System.currentTimeMillis();
 		System.out.println("id : " + retStr);
 		System.out.println("Süre : " + (stop - start) + "ms");
@@ -49,7 +49,7 @@ public class TestScenarioPathType {
 		
 		String testStr = "root.212.22.2.2.2.3";
 		
-		ScenarioPathType scenarioPathType = new ScenarioPathType(testStr);
+		TlosSWPathType scenarioPathType = new TlosSWPathType(testStr);
 		
 		long start = System.currentTimeMillis();
 		scenarioPathType.add("3333");
@@ -58,10 +58,10 @@ public class TestScenarioPathType {
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		scenarioPathType.setInstanceId("444");
+		scenarioPathType.setPlanId("444");
 		stop = System.currentTimeMillis();
 		System.out.println("Full Path : " + scenarioPathType.getFullPath());
-		System.out.println("Instance Id : " + scenarioPathType.getInstanceId());
+		System.out.println("Instance Id : " + scenarioPathType.getPlanId());
 		System.out.println("Süre : " + (stop - start) + "ms");
 	}
 

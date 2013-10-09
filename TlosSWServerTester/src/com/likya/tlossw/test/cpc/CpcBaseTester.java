@@ -28,7 +28,7 @@ import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.engine.EngineeConstants;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.test.GenericTestSuit;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -307,7 +307,7 @@ public class CpcBaseTester extends GenericTestSuit {
 				continue;
 			}
 			
-			Spc spc = new Spc(new ScenarioPathType(scenarioId), spaceWideRegistry, transformJobList(jobList));
+			Spc spc = new Spc(new TlosSWPathType(scenarioId), spaceWideRegistry, transformJobList(jobList));
 
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -324,7 +324,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 			spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 			spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
-			spc.setInstanceId(instanceId);
+			spc.setPlanId(instanceId);
 			spc.setUserId(null);
 
 			tmpScenario.getConcurrencyManagement().setInstanceId(spaceWideRegistry.getTlosProcessData().getInstanceId());

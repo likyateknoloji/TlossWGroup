@@ -11,13 +11,13 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.model.SpcLookupTable;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 
@@ -39,7 +39,7 @@ public class TestSpc extends TestSuit {
 		String fileName1 = "src/demo1.xml";
 		String fileName2 = "src/demo2.xml";
 
-		ScenarioPathType spcId = new ScenarioPathType("TestSpc_" + System.currentTimeMillis());
+		TlosSWPathType spcId = new TlosSWPathType("TestSpc_" + System.currentTimeMillis());
 		String instanceId = "TestInstance_" + +System.currentTimeMillis();
 
 		JobProperties jobProperties1 = getJobPropertiesFromFile(fileName1);
@@ -113,8 +113,8 @@ public class TestSpc extends TestSuit {
 
 	private Spc prepareSpc(String instanceId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
 
-		Spc spc = new Spc(new ScenarioPathType(spcId), getSpaceWideRegistry(), transformTable);
-		spc.setInstanceId(instanceId);
+		Spc spc = new Spc(new TlosSWPathType(spcId), getSpaceWideRegistry(), transformTable);
+		spc.setPlanId(instanceId);
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 		spcInfoType.setSpcReferance(spc);
@@ -125,15 +125,15 @@ public class TestSpc extends TestSuit {
 		SpcLookupTable spctbl = new SpcLookupTable();
 		spctbl.setTable(spcLookupTable);
 
-		HashMap<String, InstanceInfoType> myInstanceLookupTable = new HashMap<String, InstanceInfoType>();
+		HashMap<String, PlanInfoType> myInstanceLookupTable = new HashMap<String, PlanInfoType>();
 
-		InstanceInfoType instanceInfoType = new InstanceInfoType();
-		instanceInfoType.setInstanceId(instanceId);
+		PlanInfoType instanceInfoType = new PlanInfoType();
+		instanceInfoType.setPlanId(instanceId);
 		instanceInfoType.setSpcLookupTable(spctbl);
 
 		myInstanceLookupTable.put(instanceId, instanceInfoType);
 
-		getSpaceWideRegistry().setInstanceLookupTable(myInstanceLookupTable);
+		getSpaceWideRegistry().setPlanLookupTable(myInstanceLookupTable);
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -151,13 +151,13 @@ public class TestSpc extends TestSuit {
 		// spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 		// spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 		// spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
-		// spc.setInstanceId(instanceId);
+		// spc.setPlanId(instanceId);
 		// // spc.setDependencyList(tmpScenario.getDependencyList());
 		// // spc.setScenarioStatusList(tmpScenario.getScenarioStatusList());
 		// spc.setUserName(null);
 		// // spc.setUserName(tmpScenario.getID());
 		//
-		// tmpScenario.getConcurrencyManagement().setInstanceId(getSpaceWideRegistry().getTlosProcessData().getInstanceId());
+		// tmpScenario.getConcurrencyManagement().setPlanId(getSpaceWideRegistry().getTlosProcessData().getInstanceId());
 		//
 		// spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		// spc.setDependencyList(tmpScenario.getDependencyList());

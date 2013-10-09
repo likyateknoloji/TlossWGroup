@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.core.spc.jobs.FileListenerExecuter;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.test.TestSuit;
 import com.likya.tlossw.utils.ParsingUtils;
 
@@ -27,7 +27,7 @@ public class TestFileListenerExecuter extends TestSuit {
 		jobRuntimeProperties.setJobProperties(jobProperties);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new ScenarioPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
 
 		FileListenerExecuter fileListenerExecuter = new FileListenerExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
 
