@@ -280,6 +280,95 @@ declare function hs:updateScenarioLock($documentUrl as xs:string,  $docId as xs:
 
 (:---- Screen copy-paste operations ----------------:)
 
+declare function hs:copy-jobs-and-scenarios($documentUrl as xs:string, $n as node()*, $nodeName as xs:string, $filteringCondition as node()*, $isNewIdsRequired as xs:boolean) as node()*
+{
+       typeswitch($n)
+       
+        case $a as element(dat:jobList)
+			 return element dat:jobList
+			 {
+			   for $job in $a/dat:jobProperties
+                
+                (:let $x := for $state in $job/dat:stateInfos/state-types:LiveStateInfos 
+                          where $state/state-types:LiveStateInfo/state-types:SubstateName
+                          order by $state/@LSIDateTime
+                          return $state
+                let $y := $x[position() eq 1]
+                return $y:)
+			   return hs:copyJob( $documentUrl, $job, data($job/dat:baseJobInfos/com:jsName), $isNewIdsRequired)
+			 }
+             
+        case $es as element(dat:scenario) 
+	       return 
+              let $copiedScenario := 
+                if (count($es//dat:jobProperties)>0) 
+                then 
+                  let $jobList := hs:copy-jobs-and-scenarios($documentUrl, $es/dat:jobList, xs:string("dd"),(), $isNewIdsRequired)
+                  let $baseScenarioInfos := $es/dat:baseScenarioInfos
+                  let $scenarioId := if ( $isNewIdsRequired ) 
+                                     then sq:getNextId($documentUrl, "scenarioId") 
+				                     else $es/@ID
+	             
+                  let $cpScenario := 
+                     element dat:scenario { 
+                       attribute ID { $scenarioId },
+                       element dat:baseScenarioInfos { 
+                         element com:jsName { data($es/dat:baseScenarioInfos/com:jsName) },
+                         $baseScenarioInfos/com:comment,
+                         $baseScenarioInfos/dat:jobInfos, 
+                         $baseScenarioInfos/dat:calendarId,
+                         $baseScenarioInfos/dat:jsIsActive,
+                         $baseScenarioInfos/com:userId
+                       },
+                     $jobList,
+                     $es/dat:timeManagement,
+                     $es/dat:advancedScenarioInfos,
+                     $es/dat:concurrencyManagement,
+                     $es/com:localParameters,
+                     for $scenario in $es/dat:scenario 
+                     return hs:copy-jobs-and-scenarios($documentUrl, $scenario, xs:string("dd"),(), $isNewIdsRequired)
+                     }
+                  return $cpScenario
+			    else 
+                  ()
+               return $copiedScenario
+                           
+		case $d as element(dat:TlosProcessData) 
+		   return 
+              element dat:TlosProcessData
+		        { for $cd in $d/* return hs:copy-jobs-and-scenarios($documentUrl, $cd, xs:string("dd"), (), $isNewIdsRequired) }
+             
+	     default return $n 
+};
+
+declare function hs:copyScenario($documentUrl as xs:string, $scenario as element(dat:scenario), $newScenarioName as xs:string, $isNewScenarioIdRequired as xs:boolean) as element(dat:scenario)
+{
+
+    let $baseScenarioInfos := $scenario/dat:baseScenarioInfos
+	let $scenarioId := if ( $isNewScenarioIdRequired ) 
+	                   then sq:getNextId($documentUrl, "scenarioId") 
+				       else $scenario/@ID
+	
+    let $copiedScenario := 
+      element dat:scenario { 
+        attribute ID { $scenarioId },
+        element dat:baseScenarioInfos { 
+          element com:jsName { $newScenarioName },
+          $baseScenarioInfos/com:comment,
+          $baseScenarioInfos/dat:jobInfos, 
+          $baseScenarioInfos/dat:calendarId,
+          $baseScenarioInfos/dat:jsIsActive,
+          $baseScenarioInfos/com:userId
+      },
+	  $scenario/dat:jobList,
+      $scenario/dat:advancedScenarioInfos,
+      $scenario/dat:concurrencyManagement,
+      $scenario/dat:timeManagement
+    }
+	
+	return $copiedScenario
+};
+
 declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobProperties), $newJobName as xs:string, $isNewJobIdRequired as xs:boolean) as element(dat:jobProperties)
 {
 
@@ -294,7 +383,7 @@ declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobPr
         attribute ID { $jobId },
         $job/jsdl:JobDescription,
         element dat:baseJobInfos { 
-        element com:jsName { $newJobName },
+          element com:jsName { $newJobName },
           $baseJobInfos/com:comment,
           $baseJobInfos/dat:jobInfos, 
           $baseJobInfos/dat:calendarId,
@@ -326,7 +415,7 @@ declare function hs:copyJStoJS($documentUrl as xs:string, $fromDocId as xs:strin
 						  return $newJob
 	                   else 
 					      let $thisScenario := hs:getScenarioFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
-                          let $newScenario := $thisScenario
+                          let $newScenario := hs:copy-jobs-and-scenarios( $documentUrl, $thisScenario, $newJSName, (), true() )
                           return $newScenario
 	
     let $truePath := if($isJob) then 
