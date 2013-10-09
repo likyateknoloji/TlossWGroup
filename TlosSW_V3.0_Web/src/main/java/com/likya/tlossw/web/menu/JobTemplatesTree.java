@@ -18,7 +18,6 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -51,22 +50,9 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 		
 		long startTime = System.currentTimeMillis();
 		
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA);
-		/*
-		String scopeId1 = getPassedParameter().get(CommonConstantDefinitions.FIRST_COLUMN_STR);
-		if (scopeId1 != null) {
-			getSessionMediator().getWebSpaceWideRegistery().ScopeId1(Boolean.valueOf(scopeId1));
-		} 
-		else { // default olarak global data ile calisilir
-			getSessionMediator().setScopeId1(Boolean.valueOf(true));
-		}
-
-		getSessionMediator().setDocumentId1( CommonConstantDefinitions.EXIST_TEMPLATEDATA );
-		getSessionMediator().setDocumentScope( getSessionMediator().getDocumentId1(), getSessionMediator().getScopeId1() );
+		setPassedParameters();
 		
-		long startTime = System.currentTimeMillis();
-		TlosProcessData tlosProcessData = dbOperations.getTlosDataXml( getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()) );
-		*/
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA));
 		
 		ComboListUtils.logTimeInfo("JobTemplatesTree.initJSTree.dbOperations.getTlosTemplateDataXml() Süre : " , startTime);
 
@@ -99,8 +85,10 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 
 	public void reconstructJSTree() {
 
-		//TlosProcessData tlosProcessData = dbOperations.getTlosDataXml(getSessionMediator().getDocumentId1(), getWebAppUser().getId(), getDocumentScope(getSessionMediator().getDocumentId1()));
-		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA);
+		setPassedParameters();
+		
+		TlosProcessData tlosProcessData = getTlosProcessData(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA));
+		
 		constructJSTree(tlosProcessData);
 	}
 
