@@ -19,7 +19,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentManager;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
@@ -29,7 +29,8 @@ import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.engine.EngineeConstants;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.JSPathId;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -54,8 +55,8 @@ public abstract class CpcBase implements Runnable {
 
 	protected void terminateAllJobs(boolean isForced) {
 
-		for (String instanceId : getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
-			InstanceInfoType instanceInfoType = getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
+		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+			PlanInfoType instanceInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
 			HashMap<String, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable().getTable();
 
@@ -88,7 +89,7 @@ public abstract class CpcBase implements Runnable {
 
 	}
 
-	protected void linearizeScenarios(ScenarioPathType path, Scenario[] scenarios, HashMap<String, Scenario> scenarioList) {
+	protected void linearizeScenarios(TlosSWPathType path, Scenario[] scenarios, HashMap<String, Scenario> scenarioList) {
 
 		ArrayIterator scenaryoListIterator = new ArrayIterator(scenarios);
 
@@ -96,7 +97,7 @@ public abstract class CpcBase implements Runnable {
 
 			Scenario scenario = (Scenario) (scenaryoListIterator.next());
 
-			ScenarioPathType scenarioId = new ScenarioPathType(path);
+			TlosSWPathType scenarioId = new TlosSWPathType(path);
 			scenarioId.add(scenario.getID().toString());
 
 			myLogger.info("   > " + scenarioId.getFullPath() + " senaryosu yani scenario ID = " + scenario.getID().toString() + " işleniyor.");
@@ -143,14 +144,13 @@ public abstract class CpcBase implements Runnable {
 		return transformTable;
 	}
 
-	public static void dumpSpcLookupTable(String instanceId, SpcLookupTable spcLookupTable) {
+	public static void dumpSpcLookupTable(String planId, SpcLookupTable spcLookupTable) {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
 		System.out.println("**************************Dumping SpcLookupTable ***************************************");
-		System.out.println("sizo of spcLookupTable for instanceId : " + instanceId + " is " + table.size());
+		System.out.println("sizo of spcLookupTable for instanceId : " + planId + " is " + table.size());
 
-		
 		for (String spcKey : table.keySet()) {
 			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId());
 		}
@@ -164,18 +164,18 @@ public abstract class CpcBase implements Runnable {
 		System.out.println("**************************Dumping SpcLookupTables ***************************************");
 		Logger.getLogger(CpcBase.class).info("  >>> **************************Dumping SpcLookupTables ***************************************");
 
-		for (String instanceId : spaceWideRegistry.getInstanceLookupTable().keySet()) {
+		for (String planId : spaceWideRegistry.getPlanLookupTable().keySet()) {
 
-			InstanceInfoType instanceInfoType = spaceWideRegistry.getInstanceLookupTable().get(instanceId);
+			PlanInfoType instanceInfoType = spaceWideRegistry.getPlanLookupTable().get(planId);
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 			if (spcLookupTable == null) {
-				System.out.println("Current instance have no scenarios ! InstanceId : " + instanceId);
-				Logger.getLogger(CpcBase.class).warn("  >>> WARNING : Current instance have no scenarios ! InstanceId : " + instanceId);
+				System.out.println("Current instance have no scenarios ! InstanceId : " + planId);
+				Logger.getLogger(CpcBase.class).warn("  >>> WARNING : Current instance have no scenarios ! InstanceId : " + planId);
 				return;
 			}
-			System.out.println("size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
-			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + instanceId + " is " + spcLookupTable.size());
+			System.out.println("size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
+			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
 
 			for (String spcKey : spcLookupTable.keySet()) {
 				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId());
@@ -187,58 +187,58 @@ public abstract class CpcBase implements Runnable {
 		Logger.getLogger(CpcBase.class).info("***************************************************************************************");
 
 	}
-	
-	protected String getInstanceId(TlosProcessData tlosProcessData, boolean isTest) {
-		
-		String instanceId = null;
-		
-		if(isTest) {
+
+	protected String getPlanId(TlosProcessData tlosProcessData, boolean isTest) {
+
+		String planId = null;
+
+		if (isTest) {
 			String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
 			if (userId == null || userId.equals("")) {
 				userId = "" + Calendar.getInstance().getTimeInMillis();
 			}
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
-			instanceId = userId;
+			planId = userId;
 		} else {
-			instanceId = tlosProcessData.getInstanceId();
-			if (instanceId == null) {
-				instanceId = "" + Calendar.getInstance().getTimeInMillis();
+			planId = tlosProcessData.getInstanceId();
+			if (planId == null) {
+				planId = "" + Calendar.getInstance().getTimeInMillis();
 			}
-			myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmiştir.");
+			myLogger.info("   > InstanceID = " + planId + " olarak belirlenmiştir.");
 		}
-		
-		return instanceId;
+
+		return planId;
 	}
 
-	protected HashMap<String, Scenario> performLinearization(String instanceId, TlosProcessData tlosProcessData) {
+	protected HashMap<String, Scenario> performLinearization(String planId, TlosProcessData tlosProcessData) {
 
 		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
 
-		ScenarioPathType scenarioPathType = new ScenarioPathType();
+		TlosSWPathType scenarioPathType = new TlosSWPathType();
 
-		scenarioPathType.setInstanceId(instanceId);
-		scenarioPathType.setId(EngineeConstants.LONELY_JOBS);
+		scenarioPathType.setPlanId(planId);
+		scenarioPathType.setId(new JSPathId(EngineeConstants.LONELY_JOBS));
 
 		myLogger.info("   > iş ağacının işlenmekte olan dalı " + scenarioPathType.getFullPath() + " olarak belirlenmiştir.");
 
 		// Bu joblari, serbest olarak ekliyoruz listeye
 
-		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, instanceId);
+		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, planId);
 		myScenario.setID(EngineeConstants.LONELY_JOBS);
-		
+
 		// *** root sonrasina instanceid eklendi. *//*
 
 		tmpScenarioList.put(scenarioPathType.getFullPath(), myScenario);
 
 		myLogger.info("");
 		myLogger.info(" 7 - Senaryolar, lineerleştirilme işlemine tabi tutulacak.");
-		
+
 		linearizeScenarios(scenarioPathType, tlosProcessData.getScenarioArray(), tmpScenarioList);
-		
+
 		myLogger.info("   > Lineerleştirilme işlemi OK.");
-		
+
 		return tmpScenarioList;
-		
+
 	}
 
 	protected SpcLookupTable prepareSpcLookupTable(TlosProcessData tlosProcessData) throws TlosException {
@@ -246,10 +246,10 @@ public abstract class CpcBase implements Runnable {
 		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
-		
-		String instanceId = getInstanceId(tlosProcessData, false);
 
-		HashMap<String, Scenario> tmpScenarioList = performLinearization(instanceId, tlosProcessData);
+		String planId = getPlanId(tlosProcessData, false);
+
+		HashMap<String, Scenario> tmpScenarioList = performLinearization(planId, tlosProcessData);
 
 		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
 
@@ -282,15 +282,15 @@ public abstract class CpcBase implements Runnable {
 
 			SpcInfoType spcInfoType = null;
 			String userId = null; // Henüz ayarlanmadı !
-			
-			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
+
+			if (/* !scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) && */jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(new ScenarioPathType(scenarioId));
+				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 			} else {
-				Spc spc = new Spc(new ScenarioPathType(scenarioId), getSpaceWideRegistry(), transformJobList(jobList));
+				Spc spc = new Spc(new TlosSWPathType(scenarioId), getSpaceWideRegistry(), transformJobList(jobList));
 
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
-				spcInfoType.setSpcId(new ScenarioPathType(scenarioId));
+				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 
 				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 					if (!spc.initScenarioInfo()) {
