@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
@@ -36,9 +37,27 @@ public abstract class TlosSWBaseBean {
 		return errorMessage;
 	}
 
+	protected void setPassedParameters() {
+
+		String doc1Id = getPassedParameter().get("doc1Id");
+		int firstColumn = Integer.parseInt(getPassedParameter().get("firstColumn"));
+		String doc2Id = getPassedParameter().get("doc2Id");
+		int secondColumn = Integer.parseInt(getPassedParameter().get("secondColumn"));
+		
+		if(!doc1Id.isEmpty()) {
+			sessionMediator.setDocumentScope( doc1Id, firstColumn);
+			sessionMediator.setCurrentDoc( DocMetaDataHolder.FIRST_COLUMN, doc1Id);
+		}
+		if(!doc2Id.isEmpty()) {
+			sessionMediator.setDocumentScope( doc2Id, secondColumn);
+			sessionMediator.setCurrentDoc( DocMetaDataHolder.SECOND_COLUMN, doc2Id);
+		}
+
+	}
 
 	public String getDocId(Integer columnId) {
 		
+		//setPassedParameters();
 		String docId = getSessionMediator().getWebSpaceWideRegistery().getDocMetaDataInfo().getCurrentDocs()[columnId-1];	
 		
 		return docId;
