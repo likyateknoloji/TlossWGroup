@@ -166,10 +166,10 @@ public class Cpc extends CpcBase {
 		 */
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile ilişkilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, PlanID = " + tlosProcessData.getPlanId() + " ile ilişkilendirilecek.");
 
 		PlanInfoType planInfoType = new PlanInfoType();
-		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setPlanId(tlosProcessData.getPlanId());
 		planInfoType.setSpcLookupTable(spcLookUpTable);
 
 		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
@@ -198,11 +198,11 @@ public class Cpc extends CpcBase {
 
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getPlanId() + " ile iliskilendirilecek.");
 
-		logger.info("   > Plan ID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " olarak belirlendi.");
+		logger.info("   > Plan ID = " + tlosProcessData.getPlanId() + " olarak belirlendi.");
 
-		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setPlanId(tlosProcessData.getPlanId());
 		planInfoType.setSpcLookupTable(spcLookupTableNew);
 
 		getSpaceWideRegistry().getPlanLookupTable().clear();
@@ -225,12 +225,12 @@ public class Cpc extends CpcBase {
 		}
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getPlanId() + " ile iliskilendirilecek.");
 
 		PlanInfoType planInfoType = new PlanInfoType();
-		logger.info("   > Instance ID = " + tlosProcessData.getInstanceId()/*getPlanId()*/ + " olarak belirlendi.");
+		logger.info("   > Instance ID = " + tlosProcessData.getPlanId() + " olarak belirlendi.");
 
-		planInfoType.setPlanId(tlosProcessData.getInstanceId()/*getPlanId()*/);
+		planInfoType.setPlanId(tlosProcessData.getPlanId());
 		planInfoType.setSpcLookupTable(spcLookupTableNew);
 
 		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
@@ -276,7 +276,7 @@ public class Cpc extends CpcBase {
 
 				SpcInfoType spcInfoType = spcLookupTable.get(spcId);
 
-				spcInfoType.getScenario().getConcurrencyManagement().setInstanceId(planInfoType.getPlanId());
+				spcInfoType.getScenario().getConcurrencyManagement().setPlanId(planInfoType.getPlanId());
 
 				spc.setBaseScenarioInfos(spcInfoType.getScenario().getBaseScenarioInfos());
 				spc.setDependencyList(spcInfoType.getScenario().getDependencyList());
