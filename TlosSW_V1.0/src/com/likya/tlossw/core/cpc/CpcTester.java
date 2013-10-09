@@ -148,7 +148,7 @@ public class CpcTester extends CpcBase {
 			SpcInfoType spcInfoType = null;
 			TlosSWPathType scenarioPathType = new TlosSWPathType(scenarioId);
 			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
-				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
+				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioPathType);
 			} else {
 				Spc spc = new Spc(scenarioPathType, getSpaceWideRegistry(), transformJobList(jobList), false, true);
