@@ -613,7 +613,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		getSessionMediator().setJsBuffer(jsBuffer);
 	}
 
-	public void pasteJS(String toTree) {
+	public void pasteJS(String toTree, String purpose) {
 		JSBuffer jsBuffer = getSessionMediator().getJsBuffer();
 		jsBuffer.setToDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(toTree)) );
 		jsBuffer.setToScope( getSessionMediator().getScope(Integer.valueOf(toTree)) );
@@ -624,9 +624,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		}
 
 		if (getDbOperations().copyJSToJS(jsBuffer.getFromDocId(), jsBuffer.getToDocId(), jsBuffer.getFromScope(), jsBuffer.getToScope(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName())) {
-			addMessage("jsDeployment", FacesMessage.SEVERITY_INFO, "tlos.success.js.deployment", null);
+			addMessage( purpose, FacesMessage.SEVERITY_INFO, "tlos.success.js."+purpose, null);
 		} else {
-			addMessage("jsDeployment", FacesMessage.SEVERITY_ERROR, "tlos.error.js.deployment", null);
+			addMessage( purpose, FacesMessage.SEVERITY_ERROR, "tlos.error.js."+purpose, null);
 		}
 	}
 
