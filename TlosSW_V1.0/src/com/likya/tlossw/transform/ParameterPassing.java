@@ -146,7 +146,7 @@ public class ParameterPassing {
 						parameterList[i] = ParameterDocument.Factory.parse(inputs[i]).getParameter();
 						String sorgu = "/" + parameterList[i].getPreValue().getStringValue();
 
-						inputPar = findInputValue(SpaceWideRegistry.getInstance().getTlosProcessData().getInstanceId(), sorgu);
+						inputPar = findInputValue(SpaceWideRegistry.getInstance().getTlosProcessData().getPlanId(), sorgu);
 
 						System.out.println("Gecen parametre = " + inputPar[0].toString());
 
