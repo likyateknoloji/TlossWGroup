@@ -266,4 +266,8 @@ public class SessionMediator implements Serializable {
 		String result = head == null ? "Quick Links" : head;
 		return result;
 	}
+	
+	public void setCurrentDoc(int columnId, String currentDocId) {
+	    webSpaceWideRegistery.getDocMetaDataInfo().getCurrentDocs()[columnId-1] = currentDocId;
+	}
 }
