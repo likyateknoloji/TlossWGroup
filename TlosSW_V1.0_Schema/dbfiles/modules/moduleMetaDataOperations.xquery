@@ -15,7 +15,7 @@ declare namespace  dat="http://www.likyateknoloji.com/XML_data_types";
    kullanilan : /db/TLOSSW/xmls/tlosSWData10id5.xml
 :)
 
-declare function met:findDocPath($documentUrl as xs:string, $docId as xs:string, $fullPath as xs:boolean) as xs:string {
+declare function met:findDocPath($documentUrl as xs:string, $docId as xs:string, $isFullPath as xs:boolean) as xs:string {
   let $seperator := "/"
   let $basePath := xs:string("xmls")
   let $metaDataFile := xs:string("metaData.xml")
@@ -29,7 +29,7 @@ declare function met:findDocPath($documentUrl as xs:string, $docId as xs:string,
   let $result := if(exists($collectionPath)) 
                   then
                     let $path := concat( $documentUrl, $seperator, $collectionPath, $seperator )
-                    let $res := if( $fullPath ) 
+                    let $res := if( $isFullPath ) 
                                    then concat( $path , $fileName )
                                    else $path
                     return $res
