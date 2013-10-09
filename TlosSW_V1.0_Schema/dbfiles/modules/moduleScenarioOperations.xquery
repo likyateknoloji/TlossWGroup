@@ -319,17 +319,21 @@ declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobPr
 
 declare function hs:copyJStoJS($documentUrl as xs:string, $fromDocId as xs:string, $toDocId as xs:string, $fromScope as xs:boolean, $toScope as xs:boolean, $userId as xs:string, $isJob as xs:boolean, $jsId as xs:integer, $pathOfJS, $newJSName as xs:string) as element()*
 {    
-	let $selectedJS := if($isJob) 
-	                   then hs:getJobFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
-	                   else hs:getScenarioFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
-    
-    let $newJob := hs:copyJob( $documentUrl, $selectedJS, $newJSName, true())
+	let $copiedJS := if($isJob) 
+	                   then 
+					      let $thisJob := hs:getJobFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
+						  let $newJob := hs:copyJob( $documentUrl, $thisJob, $newJSName, true())
+						  return $newJob
+	                   else 
+					      let $thisScenario := hs:getScenarioFromId($documentUrl, $fromDocId, $userId, $fromScope, $jsId )
+                          let $newScenario := $thisScenario
+                          return $newScenario
 	
     let $truePath := if($isJob) then 
-              hs:insertJobLock($documentUrl, $toDocId, $userId, $toScope, $newJob, $pathOfJS/dat:jobList)
+              hs:insertJobLock($documentUrl, $toDocId, $userId, $toScope, $copiedJS, $pathOfJS/dat:jobList)
            else
-              hs:insertScenarioLock($documentUrl, $toDocId, $userId, $toScope, $selectedJS, $pathOfJS )
-	return $selectedJS
+              hs:insertScenarioLock($documentUrl, $toDocId, $userId, $toScope, $copiedJS, $pathOfJS )
+	return $copiedJS
 		
 };
 
