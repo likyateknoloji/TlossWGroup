@@ -9,7 +9,7 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
-import com.likya.tlossw.core.cpc.model.InstanceInfoType;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.SWErrorOperations;
@@ -158,12 +158,12 @@ public class AgentManager implements Runnable {
 
 		int totNumberOfRunningJobs = 0;
 
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().keySet()) {
+		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
 			int numOfWorkingJobs = 0;
 
-			InstanceInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getInstanceLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
