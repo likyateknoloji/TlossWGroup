@@ -14,7 +14,7 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.model.SpcLookupTable;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -117,7 +117,7 @@ public class CpcTester extends CpcBase {
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 		
 		// Using userId as instanceId for test routine
-		String userId = getInstanceId(tlosProcessData, false);
+		String userId = getPlanId(tlosProcessData, false);
 		
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
 
@@ -146,7 +146,7 @@ public class CpcTester extends CpcBase {
 			}
 
 			SpcInfoType spcInfoType = null;
-			ScenarioPathType scenarioPathType = new ScenarioPathType(scenarioId);
+			TlosSWPathType scenarioPathType = new TlosSWPathType(scenarioId);
 			if (/*!scenarioId.equals(CpcUtils.getRootScenarioPath(userId)) &&*/ jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getInstanceId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioPathType);
