@@ -430,7 +430,7 @@
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="comment" type="xs:string"/>
-	<xs:element name="instanceId" type="xs:string"/>
+	<xs:element name="planId" type="xs:string"/>
 	<xs:element name="concurrent" type="xs:boolean"/>
 	<xs:element name="normalization" type="xs:boolean"/>
 	<xs:element name="value_boolean">
