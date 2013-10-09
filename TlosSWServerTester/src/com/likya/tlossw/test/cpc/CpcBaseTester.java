@@ -232,7 +232,7 @@ public class CpcBaseTester extends GenericTestSuit {
 
 		TlosProcessData tlosProcessData = spaceWideRegistry.getTlosProcessData();
 
-		String instanceId = tlosProcessData.getInstanceId();
+		String instanceId = tlosProcessData.getPlanId();
 
 		if (instanceId == null) {
 			instanceId = Long.toHexString(System.currentTimeMillis()).toUpperCase();
@@ -262,7 +262,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			myScenario.setJobList(lonelyJobList);
 
 			// myScenario.getConcurrencyManagement().setInstanceId(instanceId.toString());
-			tlosProcessData.getConcurrencyManagement().setInstanceId(instanceId);
+			tlosProcessData.getConcurrencyManagement().setPlanId(instanceId);
 
 			myScenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
 			myScenario.setDependencyList(tlosProcessData.getDependencyList());
@@ -327,7 +327,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			spc.setPlanId(instanceId);
 			spc.setUserId(null);
 
-			tmpScenario.getConcurrencyManagement().setInstanceId(spaceWideRegistry.getTlosProcessData().getInstanceId());
+			tmpScenario.getConcurrencyManagement().setPlanId(spaceWideRegistry.getTlosProcessData().getPlanId());
 
 			spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 			spc.setDependencyList(tmpScenario.getDependencyList());
