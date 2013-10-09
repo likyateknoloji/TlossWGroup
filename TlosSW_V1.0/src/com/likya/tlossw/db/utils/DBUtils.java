@@ -138,8 +138,6 @@ public class DBUtils extends DBBase {
 		 * uygulama sonlandırılıyor.
 		 */
 
-		tlosProcessData.validate();
-
 		JobList jobList = tlosProcessData.getJobList();
 		if (jobList != null && jobList.getJobPropertiesArray().length != 0) {
 			ArrayIterator jobPropertiesListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
