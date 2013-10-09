@@ -216,7 +216,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
+				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getPlanId()))) {
 					globalLogger.warn("Periodik job root disinda kullanilamaz ! Base : " + BasePathType.getRootPath());
 					globalLogger.warn("JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 					globalLogger.warn("TreePath : " + jobRuntimeProperties.getTreePath());
