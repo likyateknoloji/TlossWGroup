@@ -36,7 +36,9 @@
 
 			<p:layoutUnit id="centerWest" position="west" resizable="true"
 				size="300" minSize="200" maxSize="400">
-				<ui:include src="/inc/definitionPanels/jobDeploymentTree.xhtml" />
+				<ui:include src="/inc/definitionPanels/jsTree.xhtml" >
+					<ui:param name="column" value="1" />
+				</ui:include>
 			</p:layoutUnit>
 
 			<p:layoutUnit position="center" id="centerLayout">
@@ -54,7 +56,9 @@
 	</ui:define>
 
 	<ui:define name="west">
-		<ui:include src="/inc/definitionPanels/jsTree.xhtml" />
+		<ui:include src="/inc/definitionPanels/jobDeploymentTree.xhtml" >
+			<ui:param name="column" value="2" />
+		</ui:include>
 	</ui:define>
 
 </ui:composition>
