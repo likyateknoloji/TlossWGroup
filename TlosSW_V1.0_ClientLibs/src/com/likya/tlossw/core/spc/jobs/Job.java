@@ -35,7 +35,7 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.model.infobus.JobAllInfo;
 import com.likya.tlossw.model.infobus.JobInfo;
 import com.likya.tlossw.model.infobus.JobStart;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -221,7 +221,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendEndInfo(ScenarioPathType spcId, JobProperties jobProperties) {
+	public synchronized void sendEndInfo(TlosSWPathType spcId, JobProperties jobProperties) {
 
 		if (genericInfoSender != null) {
 			genericInfoSender.sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties());
@@ -240,7 +240,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendFirstJobInfo(ScenarioPathType spcId, JobProperties jobProperties) {
+	public synchronized void sendFirstJobInfo(TlosSWPathType spcId, JobProperties jobProperties) {
 
 		JobAllInfo jobAllInfo = new JobAllInfo();
 		jobAllInfo.setJobProperties(jobProperties);
@@ -377,7 +377,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
 		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
-		sendEndInfo(new ScenarioPathType(Thread.currentThread().getName()), jobRuntimeProperties.getJobProperties());
+		sendEndInfo(new TlosSWPathType(Thread.currentThread().getName()), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
 		getJobRuntimeProperties().setPlannedExecutionDate(startTime);
@@ -414,7 +414,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 		// getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
-		sendEndInfo(new ScenarioPathType(Thread.currentThread().getName()), getJobRuntimeProperties().getJobProperties());
+		sendEndInfo(new TlosSWPathType(Thread.currentThread().getName()), getJobRuntimeProperties().getJobProperties());
 
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + endLog);
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + duration);
