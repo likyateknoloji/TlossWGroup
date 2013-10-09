@@ -47,14 +47,14 @@
 			
 			<p:treeNode id="scenarioNode" type="scenario"
 				expandedIcon="ui-icon-carat-1-w" collapsedIcon="ui-icon-carat-2-e-w">
-				<h:outputText value="#{node.name}" id="scenarioName"
+				<h:outputText value="#{node.labelText}" id="scenarioName"
 					style="font-weight: bold;font-size: 115%;" />
 			</p:treeNode>
 
 			<p:treeNode id="jobNode" type="job" icon="#{node.leafIcon}">
 			  <h:panelGroup style="position:relative; top:-3px">
 			     <p:commandLink style="display: inline-block; position:relative; left:-1px;top:3px" styleClass="ui-icon #{liveMBean.scenarioMBean.getJobIconsElementInt(node.jobType)}" />
-				 <h:outputText styleClass="#{userPreferencesBean.getJobStateColorCss(node.jobInfoTypeClient.liveStateInfo)}" value=" #{node.name}" id="jobName" />
+				 <h:outputText styleClass="#{userPreferencesBean.getJobStateColorCss(node.jobInfoTypeClient.liveStateInfo)}" value=" #{node.labelText}" id="jobName" />
 			  </h:panelGroup>
 			</p:treeNode>
 
