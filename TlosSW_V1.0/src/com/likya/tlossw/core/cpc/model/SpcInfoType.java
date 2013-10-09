@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.model.path.ScenarioPathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 
 public class SpcInfoType implements Serializable {
 
@@ -19,7 +19,7 @@ public class SpcInfoType implements Serializable {
 
 	private String jsId;
 	private String jsName;
-	private ScenarioPathType spcId;
+	private TlosSWPathType spcId;
 	private boolean concurrent;
 	private String comment;
 
@@ -104,11 +104,11 @@ public class SpcInfoType implements Serializable {
 		this.jsId = jsId;
 	}
 
-	public ScenarioPathType getSpcId() {
+	public TlosSWPathType getSpcId() {
 		return spcId;
 	}
 
-	public void setSpcId(ScenarioPathType spcId) {
+	public void setSpcId(TlosSWPathType spcId) {
 		this.spcId = spcId;
 	}
 
