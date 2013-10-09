@@ -36,7 +36,7 @@ public class StaticMenuBean implements Serializable {
 		globalLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.GLOBAL;
 		myLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.VIEW_SCOPE + "=" + MetaDataType.LOCAL;
 
-		deploymentUrl = DEPLOYMENT_BASE_URL +  "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_DEPLOYMENTDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
+		deploymentUrl = DEPLOYMENT_BASE_URL +  "doc1Id=" + CommonConstantDefinitions.EXIST_DEPLOYMENTDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
 	
 	}
 
