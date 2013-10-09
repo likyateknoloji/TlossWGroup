@@ -1,6 +1,5 @@
 package com.likya.tlossw.core.cpc.helper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -12,7 +11,6 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.model.path.ScenarioPathType;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -20,53 +18,42 @@ public class Consolidator {
 
 	private static Logger logger = Logger.getLogger(Consolidator.class);
 
-	public static void compareAndConsolidateTwoTables(String instanceIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+	public static void compareAndConsolidateTwoTables(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 		
-		ArrayList<String> spcLookupTableIntersection = new ArrayList<String>();
-
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
 
-			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, instanceIdOld, spcLookupTableOld);
+			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, planIdOld, spcLookupTableOld);
 
-			if (spcIdOld == null) {
-				/**
-				 * Bugün gelen bir senaryo gönül rahatlığı ile bir sonrakine geçebiliriz.
-				 * Ancak bütün iş bittiğinde eski listede olupta yeni listede olmayan senaryoları da
-				 * gözden geçirip temizlik yapmak gerekecek !!!!!!!
-				 */
-				continue;
-			} else {
-				spcLookupTableIntersection.add(spcIdOld);				
-				checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), (SpcInfoType) spcLookupTableOld.get(spcIdOld)) ;
+			// Dünün listesinde de var ise 
+			if (spcIdOld != null) {
+				
+				SpcInfoType spcInfoTypeOld = spcLookupTableOld.get(spcIdOld);
+				
+				if(isScenaroCompletedWithSuccess(spcInfoTypeOld.getSpcReferance())/* Completed */) {
+					// Eskisini sil, yenisi listede var...
+				} else /* Running */ {
+					if(spcInfoTypeOld.getSpcReferance().isConcurrent()) {
+						// Yenisinin instance id sini bir arttır ve öylece listeye ekle, 
+						// eskisini yeni listeye taşı, eski listeden sil.
+						// Örnek : scenarioId = 3245:13
+						// Yeni scenarioId = 3245:14
+						spcLookupTableNew.put(spcIdOld, spcInfoTypeOld);
+					} else {
+						// Bitince kendini VT'den yenilesin değerini set et. sonra yeni listeye ekle
+					}
+				} 
+				spcLookupTableOld.remove(spcIdOld);
 			}
 		}
 		
-		String newInstanceId = new ScenarioPathType(spcLookupTableNew.keySet().toArray()[0].toString()).getInstanceId();
-		
-		/**
-		 * Yenilistede olmayıp sadece eski listede olup da tamamlanmamış senaryo
-		 * var ise bunlar yeni listeye olduğu gibi taşınıyor.
-		 * Öyle mi olmalı ????
-		 * @author serkan taş
-		 */
-		for (String spcIdOld : spcLookupTableOld.keySet()) {
-			if(!spcLookupTableIntersection.contains(spcIdOld)) {
-				if(!isScenaroCompletedWithSuccess(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
-					/**
-					 * taşınan işlerin instaneId leri de güncelleniyor.
-					 * tasarım kararı netleşirse, eski id de native planid olarak
-					 * saklanacak
-					 * @author serkan taş
-					 */
-					ScenarioPathType scenarioPathType = new ScenarioPathType(spcIdOld);
-					scenarioPathType.setInstanceId(newInstanceId);
-					spcLookupTableNew.put(scenarioPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
-				}
-			}
+		if(!spcLookupTableOld.isEmpty()) {
+			// Neden acaba, kimsenin kalmaması lazım ?
+			spcLookupTableOld.clear();
 		}
+		
 	}
 
-	private static void checkAndPerformStabilityConditionsOfJobsInScenario(SpcInfoType spcInfoTypeNew, SpcInfoType spcInfoTypeOld) {
+	public static void checkAndPerformStabilityConditionsOfJobsInScenario(SpcInfoType spcInfoTypeNew, SpcInfoType spcInfoTypeOld) {
  
 		HashMap<String, Job> jobQueueNew = spcInfoTypeNew.getSpcReferance().getJobQueue();
 		HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
