@@ -94,7 +94,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = scenarioFunctionConstructor("hs:updateLiveJobLock", dbDocId, dbUserId, "true()", jobPropetiesXML, jobPath);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -116,7 +116,7 @@ public class DBUtils extends DBBase {
 
 		String xQueryStr = scenarioFunctionConstructor("hs:updateFirstLiveJobLock", dbDocId, dbUserId, "true()", jobPropetiesXML, jobPath + "/dat:jobProperties[@ID='" + jobProperties.getID() + "']");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -216,7 +216,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = dailyFunctionConstructor("hs:doPlanAndSelectJobsAndScenarios", "" + scenarioId, "" + planId);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -234,7 +234,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = stateFunctionConstructor("lk:getTlosGlobalStates");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -252,7 +252,7 @@ public class DBUtils extends DBBase {
 
 		String xQueryStr = managementFunctionConstructor("hs:getTlosConfig");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -271,7 +271,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = parameterFunctionConstructor("lk:parameterList", "1", "10");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -290,7 +290,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = scenarioFunctionConstructor("hs:insertFreeJobLock", jobPropertiesXML, runId);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -307,7 +307,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = agentFunctionConstructor("lk:getAgents");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -326,7 +326,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = scenarioFunctionConstructor("hs:insertLiveJobLock", dbDocId, dbUserId, "true()", jobPropertiesXML, jobPath);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -344,17 +344,17 @@ public class DBUtils extends DBBase {
 
 		String liveStateInfoXML = liveStateInfo.xmlText(xmlOptions);
 
-		String xQueryStr = scenarioFunctionConstructor("hs:insertJobStateLock", dbDocId, dbUserId, "true()", liveStateInfoXML, jobPath);
+		/*String xQueryStr =*/ scenarioFunctionConstructor("hs:insertJobStateLock", dbDocId, dbUserId, "true()", liveStateInfoXML, jobPath);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
-		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
-		SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + liveStateInfo + " X " + jobPath);
+		// SpaceWideRegistry.getGlobalLogger().debug(" >> STATE >> " + xQueryStr);
 
-		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+//		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 		
-		for(Object currentObject : objectList) {
-			SpaceWideRegistry.getGlobalLogger().debug(" >> Query Result >> " + currentObject);
-		}
+//		for(Object currentObject : objectList) {
+//			SpaceWideRegistry.getGlobalLogger().debug(" >> Query Result >> " + currentObject);
+//		}
 
 		return liveStateInfo;
 	}
@@ -365,7 +365,7 @@ public class DBUtils extends DBBase {
 
 		String xQueryStr = userFunctionConstructor("hs:getSubscribers", "" + userId, TransformUtils.toXSString(role));
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -382,7 +382,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = ftpFunctionConstructor("fc:searchFTPConnectionById", "" + ftpConnectionId);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -399,7 +399,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = dbConnFunctionConstructor("db:getDbConnection", "" + dbPropertiesId);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -416,7 +416,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = dbConnFunctionConstructor("db:getDbCP", "" + dbCPID);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -452,7 +452,7 @@ public class DBUtils extends DBBase {
 		
 		String xQueryStr = xslConnFunctionConstructor("hs:tlosJobTransformXsl");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 

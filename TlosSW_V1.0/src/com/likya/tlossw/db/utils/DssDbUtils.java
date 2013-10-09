@@ -56,7 +56,7 @@ public class DssDbUtils extends DBBase {
 		
 		String xQueryStr = dssFunctionConstructor("dss:SWFindResourcesForAJob", jobPropFuncPassXML, " fn:current-dateTime() ");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -128,7 +128,7 @@ public class DssDbUtils extends DBBase {
 
 		String xQueryStr = alarmFunctionConstructor("lk:SWFindAlarms", "xs:string(" + jobId + ")", "" + userID, "" + agentId, liveStateInfoXML);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -162,7 +162,7 @@ public class DssDbUtils extends DBBase {
 		String xQueryStr = CommonConstantDefinitions.xQueryNsHeader + CommonConstantDefinitions.lkNsUrl + spaceWideRegistry.getxQueryModuleUrl() + "/moduleAlarmOperations.xquery\";" + 
 				standartNameSpaceDeclaritions + CommonConstantDefinitions.decNsSt + funcDef;
 
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		Collection collection = spaceWideRegistry.getEXistColllection();
 		XPathQueryService service = null;

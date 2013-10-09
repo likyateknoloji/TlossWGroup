@@ -17,7 +17,7 @@ public class AgentDbUtils extends DBBase {
 		
 		String xQueryStr = agentFunctionConstructor("lk:checkAgent", swAgentXML);
 				
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -101,7 +101,7 @@ public class AgentDbUtils extends DBBase {
 
 		String xQueryStr = agentFunctionConstructor("lk:updateAgentToAvailableLock", "" + agentId);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -242,7 +242,7 @@ public class AgentDbUtils extends DBBase {
 
 		String xQueryStr = agentFunctionConstructor("lk:updateJmxValueLock", "" + agentId, dbJmxValue, "\"" + islem + "\"");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -292,7 +292,7 @@ public class AgentDbUtils extends DBBase {
 
 		String xQueryStr = agentFunctionConstructor("lk:updateUserStopRequestValueLock", "" + agentId, "" + userStopRequestValue);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -352,7 +352,7 @@ public class AgentDbUtils extends DBBase {
 		
 		String xQueryStr = agentFunctionConstructor("lk:getResorces");
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -418,7 +418,7 @@ public class AgentDbUtils extends DBBase {
 		
 		String xQueryStr = agentFunctionConstructor("lk:updateNrpeValueLock", resourceXML, dbNrpeValue);
 		
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 		
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 

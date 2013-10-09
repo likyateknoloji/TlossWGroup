@@ -64,7 +64,7 @@ public class NrpeDbUtils extends DBBase {
 		
 		String xQueryStr = nrpeFunctionConstructor("lk:insertNrpe", nrpeCallXML);
 				
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
@@ -104,7 +104,7 @@ public class NrpeDbUtils extends DBBase {
 		
 		String xQueryStr = nrpeFunctionConstructor("lk:deleteExpiredNrpeMessagesLock", "xs:string(\"" + currentTimeZone + "\")", "" + expireHour);
 				
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 

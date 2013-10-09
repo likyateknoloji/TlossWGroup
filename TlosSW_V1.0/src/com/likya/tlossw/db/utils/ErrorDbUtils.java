@@ -24,7 +24,7 @@ public class ErrorDbUtils extends DBBase {
 		
 		String xQueryStr = localFunctionConstructor("moduleErrorOperations.xquery", "lk:insertError", CommonConstantDefinitions.lkNsUrl, errorXML);
 				
-		SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
