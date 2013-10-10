@@ -550,11 +550,11 @@ declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scen
 
 };
 
-declare function hs:insertInstanceId($documentUrl as xs:string, $instanceId as xs:string){
-	(: update insert attribute instanceId {data($instanceId)} into  doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN[@id=data($instanceId)]/dat:TlosProcessData :)
+declare function hs:insertInstanceId($documentUrl as xs:string, $planId as xs:string){
+	(: update insert attribute planId {data($planId)} into  doc("//db/TLOSSW/xmls/tlosSWDailyScenarios10.xml")/TlosProcessDataAll/RUN[@id=data($planId)]/dat:TlosProcessData :)
 	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
-	return update insert attribute instanceId {data($instanceId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($instanceId)]/dat:TlosProcessData
+	return update insert attribute planId {data($planId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($planId)]/dat:TlosProcessData
 };
 
 declare function hs:insertSolsticeId($documentUrl as xs:string, $solsticeId as xs:string,$runId as xs:string){
