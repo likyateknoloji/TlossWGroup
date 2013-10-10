@@ -39,16 +39,23 @@ public abstract class TlosSWBaseBean {
 
 	protected void setPassedParameters() {
 
-		String doc1Id = getPassedParameter().get("doc1Id");
-		int firstColumn = Integer.parseInt(getPassedParameter().get("firstColumn"));
-		String doc2Id = getPassedParameter().get("doc2Id");
-		int secondColumn = Integer.parseInt(getPassedParameter().get("secondColumn"));
+		int firstColumn = 0;
+		int secondColumn = 0;
 		
-		if(!doc1Id.isEmpty()) {
+		String doc1Id = getPassedParameter().get("doc1Id");
+		String doc2Id = getPassedParameter().get("doc2Id");
+		
+		if( doc1Id != null && getPassedParameter().get("firstColumn") != null ) {
+			
+			firstColumn = Integer.parseInt(getPassedParameter().get("firstColumn"));
+			
 			sessionMediator.setDocumentScope( doc1Id, firstColumn);
 			sessionMediator.setCurrentDoc( DocMetaDataHolder.FIRST_COLUMN, doc1Id);
 		}
-		if(!doc2Id.isEmpty()) {
+		if( doc2Id != null && getPassedParameter().get("secondColumn") != null ) {
+			
+			secondColumn = Integer.parseInt(getPassedParameter().get("secondColumn"));
+			
 			sessionMediator.setDocumentScope( doc2Id, secondColumn);
 			sessionMediator.setCurrentDoc( DocMetaDataHolder.SECOND_COLUMN, doc2Id);
 		}
