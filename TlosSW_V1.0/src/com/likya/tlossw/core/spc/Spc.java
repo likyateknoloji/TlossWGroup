@@ -375,22 +375,15 @@ public class Spc extends SpcBase {
 				continue;
 			}
 
-			// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
-			// if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
-			// /**
-			// * Burada yapılan işin ne olduğunu anlamadım...
-			// *
-			// * @author serkan taş 21.09.2012
-			// */
-			// scheduledJob.setFirstLoop(false);
-			// continue;
-			// }
-
 			try {
 
-				// job in PENDING olmasi halinde yapilacaklarin başladığı yer.
-
-				if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED)) {
+				
+				if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
+					// Already executed
+					continue;
+				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED)) {
+					// job in PENDING olmasi halinde yapilacaklarin başladığı yer.
+					// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
 					/*
 					 * InfoQueue ya ilk uc state i koyamadigim icin burada bir kerede guncelleme yapiyorum. Eger infoQueue kullanabilirsek bunu kaldiracagiz ama is gorur bu hali.
 					 * serkan : kaldırdım :)
