@@ -5,6 +5,7 @@ import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.core.agents.*;
+import com.likya.tlossw.core.cpc.model.AppState;
 
 /**
  * @author vista
@@ -16,7 +17,7 @@ public class PerformanceManager extends PerformanceManagerBase {
 
 		super(spaceWideRegistry);
 
-		SpaceWideRegistry.getGlobalLogger().info("PerformanceManager baþlatýlýyor !");
+		SpaceWideRegistry.getGlobalLogger().info("PerformanceManager baï¿½latï¿½lï¿½yor !");
 
 	}
 
@@ -25,7 +26,7 @@ public class PerformanceManager extends PerformanceManagerBase {
 	/*
 	 * private void setUpForTest() {
 	 * 
-	 * schedulerLogger.info("Test için kuyruk yenileniyor !");
+	 * schedulerLogger.info("Test iï¿½in kuyruk yenileniyor !");
 	 * 
 	 * Calendar calendar = Calendar.getInstance();
 	 * Iterator<Job> jobsIterator = jobQueue.values().iterator();
@@ -44,8 +45,8 @@ public class PerformanceManager extends PerformanceManagerBase {
 	 * long freeMemory = Runtime.getRuntime().freeMemory();
 	 * long memoryInUse = totalMemory - freeMemory;
 	 * 
-	 * schedulerLogger.info("Kullanýlan memory = " + memoryInUse);
-	 * schedulerLogger.info("Yeniden baþlýyor !");
+	 * schedulerLogger.info("Kullanï¿½lan memory = " + memoryInUse);
+	 * schedulerLogger.info("Yeniden baï¿½lï¿½yor !");
 	 * return;
 	 * }
 	 */
@@ -58,7 +59,7 @@ public class PerformanceManager extends PerformanceManagerBase {
 		Thread.currentThread().setName("PerformanceManager_" + Thread.currentThread().getId());
 
 		// EnterpriseRegistery.getEnterpriseLogger().debug("run : Starting main thread...");
-		// EnterpriseRegistery.getEnterpriseLogger().info("Toplam Ýþ Sayýsý : " + getJobQueue().size());
+		// EnterpriseRegistery.getEnterpriseLogger().info("Toplam ï¿½ï¿½ Sayï¿½sï¿½ : " + getJobQueue().size());
 
 		SWAgent server = agentManagerRef.getServer();
 
@@ -66,7 +67,7 @@ public class PerformanceManager extends PerformanceManagerBase {
 		// int numberOfRunningJobsByThisAgent = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().numberOfRunningJobs(agentId);
 		while (executionPermission) {
 
-			if (checkThresholdOverflow(server.getIsPermitted(), server.getId())) {
+			if (getSpaceWideRegistry().getCurrentState() != AppState.INT_RUNNING || checkThresholdOverflow(server.getIsPermitted(), server.getId())) {
 				server.setIsPermitted(false);
 			} else {
 				server.setIsPermitted(true);
@@ -82,14 +83,14 @@ public class PerformanceManager extends PerformanceManagerBase {
 	}
 
 	/**
-	 * Aþaðýdaki deðerler agent bazýnda tutulmalý, agent'in veri modeline eklenmeli, zira
-	 * bir agent'ýn sýnýrlarýný aþtýðýný kendinin belirlemesi gerekir, fazla istek olduðunda ise reject etmesi
+	 * Aï¿½aï¿½ï¿½daki deï¿½erler agent bazï¿½nda tutulmalï¿½, agent'in veri modeline eklenmeli, zira
+	 * bir agent'ï¿½n sï¿½nï¿½rlarï¿½nï¿½ aï¿½tï¿½ï¿½ï¿½nï¿½ kendinin belirlemesi gerekir, fazla istek olduï¿½unda ise reject etmesi
 	 * gerekir.
 	 * 
-	 * Bu bilgi agentManeger den alýnmalý !!!!!!!!!
+	 * Bu bilgi agentManeger den alï¿½nmalï¿½ !!!!!!!!!
 	 * 
 	 * TODO 
-	 * @author serkan taþ
+	 * @author serkan taï¿½
 	 *         01.10.2012
 	 */
 	
