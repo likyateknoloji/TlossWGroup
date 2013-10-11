@@ -1,6 +1,7 @@
 package com.likya.tlossw.utils;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.state.JsStateDocument.JsState;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.ReturnCodeDocument.ReturnCode;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -208,4 +209,9 @@ public class LiveStateInfoUtils {
 		}
 
 	}
+
+	public static boolean equalStates(LiveStateInfo liveStateInfo, JsState jsState) {
+		return (jsState.getStateName() == null || liveStateInfo.getStateName().equals(jsState.getStateName())) && (jsState.getSubstateName() == null || liveStateInfo.getSubstateName().equals(jsState.getSubstateName())) && (jsState.getStatusName() == null || liveStateInfo.getStatusName().equals(jsState.getStatusName()));
+	}
+
 }
