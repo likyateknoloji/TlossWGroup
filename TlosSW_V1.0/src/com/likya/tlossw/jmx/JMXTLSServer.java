@@ -208,6 +208,11 @@ public class JMXTLSServer {
 
 	public static boolean authorizeWeb(JmxUser jmxUser) {
 		
+		if(jmxUser == null) {
+			logger.error("jmxUser is null !");
+			return false;
+		}
+		
 		String clientAuthanticationId = TlosSpaceWide.getSpaceWideRegistry().getJmxUser().getJmxClientAuthanticationId();
 		String jmxClientAuthanticationKey = TlosSpaceWide.getSpaceWideRegistry().getJmxUser().getJmxClientAuthanticationKey();
 		
