@@ -150,6 +150,7 @@
 				<xs:element ref="periodInfo" minOccurs="0"/>
 				<xs:element ref="jobLogFile"/>
 				<xs:element ref="jobLogPath"/>
+				<xs:element ref="jobDeploymentPath" minOccurs="0"/>
 				<xs:element ref="oSystem"/>
 				<xs:element ref="jobPriority"/>
 				<xs:element ref="jsIsActive"/>
@@ -245,6 +246,13 @@
 				<xs:enumeration value="2"/>
 				<xs:enumeration value="3"/>
 				<xs:enumeration value="4"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="jobDeploymentPath">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<!-- <xs:pattern value="[abcdefgABCDEFG]:[\\/]([a-zA-Z/\\\.0-9_ \-])*"/> -->
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
