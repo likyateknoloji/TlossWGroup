@@ -10,7 +10,10 @@ import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
+import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -279,10 +282,17 @@ public static void compareAndConsolidateTwoTables1(String instanceIdOld, HashMap
 
 	public static boolean isScenarioEnsuresTheConditions(Spc spcReferance) {
 		
-//		if (!LiveStateInfoUtils.equalStates(spcReferance.getLiveStateInfo(), spcReferance.getScenario().getJsState())) {
-//			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcId() + " isimli senaryo bitirilmemis.");
-//			return false;
-//		}
+		LiveStateInfo liveStateInfo = null;
+		
+		if(spcReferance.getScenario().getJsState() == null) {
+			// Set to default value
+			liveStateInfo = LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS);
+		}
+		
+		if (!LiveStateInfoUtils.equalStates(spcReferance.getLiveStateInfo(), liveStateInfo)) {
+			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcId() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
+			return false;
+		}
 
 		return true;
 	}
