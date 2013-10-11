@@ -618,8 +618,8 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		jsBuffer.setToDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(toTree)) );
 		jsBuffer.setToScope( getSessionMediator().getScope(Integer.valueOf(toTree)) );
 
-		if (jsBuffer.getToDocId().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
-				&& getSessionMediator().getScopeText(jsBuffer.getToScope()).equals(CommonConstantDefinitions.EXIST_GLOBALDATA)) {
+		if (jsBuffer.getFromDocId().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
+				&& getSessionMediator().getScopeText(jsBuffer.getFromScope()).equals(CommonConstantDefinitions.EXIST_MYDATA)) {
 			scenarioPath = "/dat:TlosProcessData";
 		}
 
