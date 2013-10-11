@@ -20,7 +20,6 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
-import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
