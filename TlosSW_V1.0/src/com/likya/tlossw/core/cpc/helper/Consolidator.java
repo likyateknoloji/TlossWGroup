@@ -39,7 +39,9 @@ public class Consolidator {
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcIdOld);
 			tlosSWPathType.setPlanId(planIdNew);
 			
-			if (spcLookupTableNew.containsKey(spcIdOld)) { // Bugünün listesinde de var ise
+			String tempSpcIdOld = tlosSWPathType.getFullPath();
+			
+			if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
 				
 				if(!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
 				
@@ -49,11 +51,11 @@ public class Consolidator {
 						// Örnek : scenarioId = 3245:13
 						// Yeni scenarioId = 3245:14
 						tlosSWPathType.getId().incrementRuId();
-						spcLookupTableNew.put(tlosSWPathType.getAbsolutePath(), spcLookupTableOld.get(spcIdOld));
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 					} else {
 						// Bitince kendini VT'den yenilesin değerini set et. 
 						// sonra yeni listeye ekle
-						spcLookupTableNew.put(tlosSWPathType.getAbsolutePath(), spcLookupTableOld.get(spcIdOld));
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 					}
 				
 				}
@@ -61,7 +63,7 @@ public class Consolidator {
 			} else {
 				
 				if(!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
-					spcLookupTableNew.put(tlosSWPathType.getAbsolutePath(), spcLookupTableOld.get(spcIdOld));
+					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 				}
 			
 			}
@@ -282,9 +284,9 @@ public static void compareAndConsolidateTwoTables1(String instanceIdOld, HashMap
 
 	public static boolean isScenarioEnsuresTheConditions(Spc spcReferance) {
 		
-		LiveStateInfo liveStateInfo = null;
+		LiveStateInfo liveStateInfo = null; 
 		
-		if(spcReferance.getScenario().getJsState() == null) {
+		if(spcReferance.getScenario() == null || spcReferance.getScenario().getJsState() == null) {
 			// Set to default value
 			liveStateInfo = LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS);
 		}
