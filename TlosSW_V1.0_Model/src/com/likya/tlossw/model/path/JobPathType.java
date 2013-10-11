@@ -4,8 +4,6 @@ import com.likya.tlossw.exceptions.TlosException;
 
 public class JobPathType extends TlosSWPathType {
 
-	private String id;
-	
 	public JobPathType() {
 		super();
 	}
@@ -20,11 +18,6 @@ public class JobPathType extends TlosSWPathType {
 		
 		parsePathString(pathId);
 		
-	}
-
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 }
