@@ -11,7 +11,7 @@
 
 		<p:contextMenu for="deploymentTree" nodeType="job">
 			<p:menuitem value="#{msgs['tlos.button.deploy']}"
-				action="#{jsNavigationMBean.deployJobAction('deploymentdata')}"
+				action="#{jsNavigationMBean.deployJobAction(1)}"
 				icon="ui-icon-deploy" update=":jsTreeForm:tree"/>
 		</p:contextMenu>
 
