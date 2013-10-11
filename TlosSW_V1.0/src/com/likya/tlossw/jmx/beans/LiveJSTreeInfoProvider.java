@@ -84,7 +84,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		return false;
 	}
 
-	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String instanceId, String treePath) {
+	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String planId, String treePath) {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = null;
 
@@ -93,9 +93,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		if (isTester(jmxUser)) {
 			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId()).getTable();
-			instanceId = new String("" + jmxUser.getId());
+			planId = new String("" + jmxUser.getId());
 		} else {
-			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceId).getSpcLookupTable().getTable();
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable().getTable();
 		}
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
@@ -115,7 +115,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
 			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId().getFullPath());
 
-			if (spcId.equals("root." + instanceId + "." + EngineeConstants.LONELY_JOBS)) {
+			if (spcId.equals("root." + planId + "." + EngineeConstants.LONELY_JOBS)) {
 				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
 				spcInfoTypeClient.setJsId(EngineeConstants.LONELY_JOBS);
 				spcInfoTypeClient.setRootFolder(true);
@@ -155,11 +155,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
 			PlanNode instanceNode = new PlanNode("" + jmxUser.getId());
-			gunlukIslerNode.getInstanceNodes().put(jmxUser.getId() + "", instanceNode);
+			gunlukIslerNode.getPlanNodes().put(jmxUser.getId() + "", instanceNode);
 		} else {
 			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 				PlanNode instanceNode = new PlanNode(instanceId);
-				gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
+				gunlukIslerNode.getPlanNodes().put(instanceId, instanceNode);
 			}
 		}
 
@@ -371,15 +371,23 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		
 		if (gunlukIslerNodeClient != null) {
 			
-			HashMap<String, PlanNode> serverInstanceNodes = gunlukIslerNodeServer.getInstanceNodes();
+			HashMap<String, PlanNode> serverInstanceNodes = gunlukIslerNodeServer.getPlanNodes();
 			
-			HashMap<String, PlanNode> clientInstanceNodes = gunlukIslerNodeClient.getInstanceNodes();
+			HashMap<String, PlanNode> clientInstanceNodes = gunlukIslerNodeClient.getPlanNodes();
 			
-			for (String instanceId : gunlukIslerNodeClient.getInstanceNodes().keySet()) {
+			for (String planId : gunlukIslerNodeClient.getPlanNodes().keySet()) {
 
-				PlanNode clientInstanceNode = clientInstanceNodes.get(instanceId);
+				PlanNode clientInstanceNode = clientInstanceNodes.get(planId);
 
-				PlanNode serverInstanceNode = serverInstanceNodes.get(instanceId);
+				PlanNode serverInstanceNode = serverInstanceNodes.get(planId);
+				
+				if(serverInstanceNode == null) {
+					// Bu durumda client'dan gelen plan id server tarafta bulunamadı demek.
+					// Bu ancak ve ancak server tarafta restart sonrası ya da GD sonrası
+					// oluşabilecek bir durum. Böyler bir durumda direk client'a boş
+					// bir nesne dönmesi gerekir.
+					continue;
+				}
 
 				// Okudugumuz plan'in altındaki senaryolari alip yeni TD'ye ekliyoruz
 
@@ -388,7 +396,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientInstanceNode.getPlanId());
 
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
-				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, instanceId, selectedNodeId).getSpcInfoTypeClientList();
+				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, planId, selectedNodeId).getSpcInfoTypeClientList();
 
 				// Her bir scenarioNodu da instance'in scenarioNodeMap'ine atiyor
 				for (String spcId : spcInfoTypeClientList.keySet()) {
