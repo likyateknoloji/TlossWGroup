@@ -152,9 +152,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				tlosSpaceWideNode = TEJmxMpClient.getLiveTreeInfo(getWebAppUser(), tlosSpaceWideInputNode);
 				if (tlosSpaceWideNode == null) {
 					System.out.println("Çalışma ağacı bilgileri Sunucudan alınamdı! Sunucu kapalı olabilir veya bağlantıda problem var.");
+					return;
 				}
 				if (liveTreeCache == null) {
 					System.out.println("liveTreeCache == null");
+					return;
 				}
 				liveTreeCache.put(((Object) tlosSpaceWideNode).hashCode(), tlosSpaceWideNode);
 				// log.debug("LiveNavigationTree2 : renderLiveTree  EngineData :" + Utils.getCurrentTimeWithMilliseconds());
@@ -193,8 +195,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 				if (tmpInstanceFolder.isExpanded()) {
 
-					String instanceId = ((PlanNode) tmpInstanceFolder.getData()).getPlanId();
-					PlanNode instanceNode = new PlanNode(instanceId);
+					String planId = ((PlanNode) tmpInstanceFolder.getData()).getPlanId();
+					PlanNode instanceNode = new PlanNode(planId);
 
 					// instance icindeki senaryo sayisina bakiyoruz
 					int numberOfScenariosInInstance = tmpInstanceFolder.getChildCount();
@@ -211,7 +213,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 							instanceNode.getScenarioNodeMap().put(expendedNode.getSpcInfoTypeClient().getSpcId(), expendedNode);
 						}
 					}
-					gunlukIslerNode.getInstanceNodes().put(instanceId, instanceNode);
+					gunlukIslerNode.getPlanNodes().put(planId, instanceNode);
 				}
 
 			}
@@ -263,7 +265,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		// 1. asama instance lar eklenecek
 		calisanIsler.getChildren().clear();
-		constructInstanceNodes(serverGunlukIslerNode.getInstanceNodes().keySet());
+		constructInstanceNodes(serverGunlukIslerNode.getPlanNodes().keySet());
 
 		if (calisanIsler.getChildren().size() == 0) {
 			calisanIsler.getChildren().add(dummyNode);
@@ -275,8 +277,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				DefaultTreeNode planTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
 
 				String instanceId = ((PlanNode) planTreeNode.getData()).getPlanId();
-				if (serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
-					constructLiveTree(planTreeNode, serverGunlukIslerNode.getInstanceNodes().get(instanceId).getScenarioNodeMap());
+				if (serverGunlukIslerNode.getPlanNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
+					constructLiveTree(planTreeNode, serverGunlukIslerNode.getPlanNodes().get(instanceId).getScenarioNodeMap());
 					planTreeNode.setExpanded(true);
 				}
 			}
