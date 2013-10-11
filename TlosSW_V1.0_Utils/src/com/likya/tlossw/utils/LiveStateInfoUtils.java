@@ -52,6 +52,10 @@ public class LiveStateInfoUtils {
 	public static boolean equalStates(JobProperties jobProperties, StateName.Enum stateNameEnum) {
 		return equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), stateNameEnum);
 	}
+
+	public static boolean equalStates(JobProperties jobProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum) {
+		return equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), stateNameEnum, substateNameEnum);
+	}
 	
 	public static boolean equalStates(LiveStateInfo liveStateInfo, StateName.Enum stateNameEnum) {
 		return liveStateInfo.getStateName().equals(stateNameEnum);
@@ -63,6 +67,10 @@ public class LiveStateInfoUtils {
 
 	public static boolean equalStates(LiveStateInfo liveStateInfo, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
 		return liveStateInfo.getStateName().equals(stateNameEnum) && liveStateInfo.getSubstateName().equals(substateNameEnum) && liveStateInfo.getStatusName().equals(statusNameEnum);
+	}
+
+	public static boolean equalStates(LiveStateInfo liveStateInfoSrc, LiveStateInfo liveStateInfoTrg) {
+		return liveStateInfoSrc.getStateName().equals(liveStateInfoTrg.getStateName()) && liveStateInfoSrc.getSubstateName().equals(liveStateInfoTrg.getSubstateName()) && liveStateInfoSrc.getStatusName().equals(liveStateInfoTrg.getStatusName());
 	}
 	
 	public static LiveStateInfo cloneLiveStateInfo(LiveStateInfo liveStateInfo) {
