@@ -181,14 +181,16 @@ public class LiveStateInfoUtils {
 
 	}
 
-	public static void insertNewLiveStateInfo(JobProperties jobProperties, int enumStateName, int enumSubstateName, int enumStatusName) {
+	public static LiveStateInfo insertNewLiveStateInfo(JobProperties jobProperties, int enumStateName, int enumSubstateName, int enumStatusName) {
 
 		synchronized (jobProperties) {
 
 			LiveStateInfo liveStateInfo = generateLiveStateInfo(enumStateName, enumSubstateName, enumStatusName);
 
-			jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
+			LiveStateInfo returnInfo = jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
 			jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
+			
+			return returnInfo;
 
 		}
 
