@@ -519,12 +519,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
 		/* FINISHED state i yoksa ekle */
-		if (!(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED) && jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(SubstateName.COMPLETED))) {
-			jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
+		if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED)) {
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 		}
-
-		LiveStateInfo liveStateInfo = LiveStateInfoUtils.generateLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-		jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
 
 		globalLogger.error(err.getMessage());
 
