@@ -78,8 +78,8 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 		userList = WebInputUtils.fillUserList(dbUserList);
 
 		roleList = WebInputUtils.fillRoleList();
-
-		ArrayList<WebServiceDefinition> webServiceList = getDbOperations().getWebServiceListForActiveUser(1);
+		
+		ArrayList<WebServiceDefinition> webServiceList = getDbOperations().getWebServiceListForActiveUser(getWebAppUser().getId());
 		webServiceDefinitionList = WebInputUtils.fillWebServiceDefinitionList(webServiceList);
 
 		if (iCheck != null && iCheck.equals("insert"))
