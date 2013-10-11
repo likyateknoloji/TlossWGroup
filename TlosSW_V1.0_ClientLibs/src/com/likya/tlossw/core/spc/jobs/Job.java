@@ -520,7 +520,8 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		/* FINISHED state i yoksa ekle */
 		if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED)) {
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+			LiveStateInfo liveStateInfo = LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+			liveStateInfo.addNewReturnCode().setDesc(err.getMessage());
 		}
 
 		globalLogger.error(err.getMessage());
@@ -529,6 +530,11 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		myLogger.error(" >>" + logLabel + ">> " + err.getMessage());
 		err.printStackTrace();
 
+	}
+	
+	public void handleLogException(Exception err, Logger myLogger) {
+		globalLogger.error(err.getMessage());
+		err.printStackTrace();
 	}
 
 	public boolean processJobResult(boolean retryFlag, Logger myLogger) {

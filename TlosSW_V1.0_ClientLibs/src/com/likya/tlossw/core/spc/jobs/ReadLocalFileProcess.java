@@ -66,7 +66,7 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 					getOutputFile().write((String) myParamList.get(0).getParamRef() + System.getProperty("line.separator"));
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 			} catch (Exception e) {

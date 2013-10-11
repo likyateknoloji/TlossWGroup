@@ -90,7 +90,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya yazma islemi tamamlandi." + System.getProperty("line.separator"));
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 			} catch (Exception e) {

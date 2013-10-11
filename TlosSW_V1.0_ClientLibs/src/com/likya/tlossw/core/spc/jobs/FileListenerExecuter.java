@@ -73,7 +73,7 @@ public class FileListenerExecuter extends FileJob {
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya dinleme isi baslatildi !" + System.getProperty("line.separator"));
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 				//TODO log dosyasinin ismine zaman damgasi verildigi icin bu ismi dailyScenarios.xml'de guncellemek gerekiyor
@@ -123,7 +123,7 @@ public class FileListenerExecuter extends FileJob {
 							try {
 								outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "\"" + directory + File.separator + fileName + "\" zaten mevcut" + System.getProperty("line.separator"));
 							} catch (IOException e) {
-								handleException(e, myLogger);
+								handleLogException(e, myLogger);
 							}
 
 							//dosya zaten varsa sadece loga yazdiriyor dosyanin create edilmesi eventini yine bekliyor
@@ -136,7 +136,7 @@ public class FileListenerExecuter extends FileJob {
 				try {
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya dinleme aktiflestirildi !" + System.getProperty("line.separator"));
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 				boolean executionPermission = true;
@@ -186,7 +186,7 @@ public class FileListenerExecuter extends FileJob {
 					outputFile.close();
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);

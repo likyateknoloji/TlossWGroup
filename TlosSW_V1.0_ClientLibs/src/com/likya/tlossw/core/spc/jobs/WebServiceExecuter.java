@@ -94,7 +94,7 @@ public class WebServiceExecuter extends Job {
 				try {
 					setOutputFile(new BufferedWriter(new FileWriter(logFile)));
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 				// TODO log dosyasinin ismine zaman damgasi verildigi icin bu ismi dailyScenarios.xml'de guncellemek gerekiyor
@@ -113,7 +113,7 @@ public class WebServiceExecuter extends Job {
 					outputFile.write((String) myParamList.get(0).getParamRef() + System.getProperty("line.separator"));
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 			} catch (Exception err) {
@@ -163,7 +163,7 @@ public class WebServiceExecuter extends Job {
 			try {
 				outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "Unsupported binding type : " + webService.getBindingList().getBindingArray(0).getBindingName() + System.getProperty("line.separator"));
 			} catch (IOException e) {
-				handleException(e, myLogger);
+				handleLogException(e, myLogger);
 			}
 
 			return "";

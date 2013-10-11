@@ -73,7 +73,7 @@ public class ProcessNode extends Job {
 				try {
 					setOutputFile(new BufferedWriter(new FileWriter(logFile)));
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 				// TODO log dosyasinin ismine zaman damgasi verildigi icin bu ismi dailyScenarios.xml'de guncellemek gerekiyor
@@ -92,7 +92,7 @@ public class ProcessNode extends Job {
 					outputFile.write((String) myParamList.get(0).getParamRef());
 
 				} catch (IOException e) {
-					handleException(e, myLogger);
+					handleLogException(e, myLogger);
 				}
 
 			} catch (Exception err) {
