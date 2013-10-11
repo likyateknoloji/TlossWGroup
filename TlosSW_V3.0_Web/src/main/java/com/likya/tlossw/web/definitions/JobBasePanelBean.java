@@ -42,6 +42,7 @@ import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.model.DocMetaDataHolder;
+import com.likya.tlossw.model.MetaDataType;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.tree.WsNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -597,11 +598,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 				return;
 			}
 	
-			result = getDbOperations().insertJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+			result = getDbOperations().insertJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), MetaDataType.LOCAL, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
 		} else {
 			setJsOverrideAndDeployDialog(false);
 
-			result = getDbOperations().updateJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
+			result = getDbOperations().updateJob(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), MetaDataType.LOCAL, getJobPropertiesXML(), DefinitionUtils.getTreePath(jobPathInScenario));
 		}
 
 		if (result) {
@@ -613,7 +614,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean jobIdCheckUp() {
 
-		JobProperties job = getDbOperations().getJobFromId(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA), jobProperties.getID());
+		JobProperties job = getDbOperations().getJobFromId(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA, getWebAppUser().getId(), MetaDataType.LOCAL, jobProperties.getID());
 
 		if (job != null) {
 			setJsOverrideAndDeployDialog(true);
