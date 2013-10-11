@@ -25,22 +25,23 @@ public class TEJmxMpClientBase {
 	public static boolean isEnvRead = false;
 	public static String jmxIpEnv = null;
 	public static Integer jmxPortEnv = null;
-	
+
 	/*
-	String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider", "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator", "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
-	String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-	*/
-	
+	 * String MBeanArray[] = { "LocalManager", "LiveJSTreeInfoProvider", "ProcessInfoProvider",
+	 * "ProcessManagementInterface", "RemoteFileOperator", "RemoteDBOperator", "AgentOperator",
+	 * "WebServiceOperator", "ValidationExecuter", "WorkSpaceOperator" };
+	 * String MBeanTypeArray[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+	 */
+
 	protected static final int LJSTIP = 1;
-	protected static final int PIP = 2; 
-	protected static final int PMI = 3; 
+	protected static final int PIP = 2;
+	protected static final int PMI = 3;
 	protected static final int RFO = 4;
 	protected static final int RDBO = 5;
-	
+
 	protected static final int WEBSO = 7;
 	protected static final int VE = 8;
 	protected static final int WSO = 9;
-	
 
 	public static JMXConnector getJMXConnection() {
 
@@ -74,32 +75,38 @@ public class TEJmxMpClientBase {
 				try {
 
 					jmxConnector = JMXConnectorFactory.connect(url, getEnv());
-					// jmxConnector = JMXConnectorFactory.connect(url);
-					jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
-					logger.info(">> JMXMP Connection successfully established to " + url);
 
-					break;
+					if (jmxConnector != null) {
+						// jmxConnector = JMXConnectorFactory.connect(url);
+						jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
+						logger.info(">> JMXMP Connection successfully established to " + url);
+						break;
+					}
 
 				} catch (UnknownHostException uhe) {
 					System.err.println("UnknownHostException ! url : " + url + " message : " + uhe.getLocalizedMessage());
 				} catch (ConnectException ce) {
-					System.err.println("ConnectException to ! url : "  + url + " message : " +  ce.getLocalizedMessage());
+					System.err.println("ConnectException to ! url : " + url + " message : " + ce.getLocalizedMessage());
 				} catch (SocketException se) {
-					System.err.println("SocketException with ! url : "  + url + " message : " +  se.getLocalizedMessage());
+					System.err.println("SocketException with ! url : " + url + " message : " + se.getLocalizedMessage());
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}
 
-				if (attemptCount < 3) {
-					logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
-					Thread.sleep(2000);
-					logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
-				} else {
-					return null;
-				}
+				logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
+				Thread.sleep(2000);
+				logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
+
+				//				if (attemptCount < 3) {
+				//					logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
+				//					Thread.sleep(2000);
+				//					logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
+				//				} else {
+				//					return null;
+				//				}
 			}
 
-			logger.debug("Connected to JMXMP server on host " + host + " through port " + port);
+			logger.info("Connected to JMXMP server on host " + host + " through port " + port);
 
 		} catch (Exception e) {
 			System.out.println("HeartBeat icin baglanti kurulamadi !! >> " + e.getLocalizedMessage());
@@ -123,20 +130,20 @@ public class TEJmxMpClientBase {
 	}
 
 	protected static void disconnect(JMXConnector jmxConnector) {
-//		try {
-//			// Close MBeanServer connection
-//			//
-//			long startTime = System.currentTimeMillis();
-//			Logger.getLogger(TEJmxMpClientBase.class).debug("Close the connection to the server...");
-//			System.err.println(" TEJmxMpDBClient.disconnect :1 " + dateDiffWithNow(startTime) + "ms");
-//			jmxConnector.close();
-//			System.err.println(" TEJmxMpDBClient.disconnect :2 " + dateDiffWithNow(startTime) + "ms");
-//			//selfInstance = null;
-//			Logger.getLogger(TEJmxMpClientBase.class).debug("Closed !");
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			// Close MBeanServer connection
+		//			//
+		//			long startTime = System.currentTimeMillis();
+		//			Logger.getLogger(TEJmxMpClientBase.class).debug("Close the connection to the server...");
+		//			System.err.println(" TEJmxMpDBClient.disconnect :1 " + dateDiffWithNow(startTime) + "ms");
+		//			jmxConnector.close();
+		//			System.err.println(" TEJmxMpDBClient.disconnect :2 " + dateDiffWithNow(startTime) + "ms");
+		//			//selfInstance = null;
+		//			Logger.getLogger(TEJmxMpClientBase.class).debug("Closed !");
+		//
+		//		} catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
 	}
 
 	protected static void disconnectJmx(JMXConnector jmxConnector) {
@@ -165,17 +172,17 @@ public class TEJmxMpClientBase {
 			//System.setProperty("javax.net.ssl.trustStore", "/Users/serkan/programlar/dev/workspace/TlosSW_V3.0_Web/likyaKeystore");
 			logger.error("javax.net.ssl.trustStore is null, use -Djavax.net.ssl.trustStore as VM argument !");
 		}
-		
+
 		if (System.getProperty("javax.net.ssl.keyStorePassword") == null) {
 			// System.setProperty("javax.net.ssl.keyStorePassword", "likya1!+");
 			logger.error("javax.net.ssl.keyStorePassword is null, use -Djavax.net.ssl.keyStorePassword as VM argument !");
 		}
-		
+
 		if (System.getProperty("javax.net.ssl.keyStore") == null) {
 			//System.setProperty("javax.net.ssl.keyStore", "/Users/serkan/programlar/dev/workspace/TlosSW_V3.0_Web/likyaKeystore");
 			logger.error("javax.net.ssl.keyStore is null, use -Djavax.net.ssl.keyStore as VM argument !");
 		}
-		
+
 		env.put("jmx.remote.profiles", "TLS");
 
 		return env;
