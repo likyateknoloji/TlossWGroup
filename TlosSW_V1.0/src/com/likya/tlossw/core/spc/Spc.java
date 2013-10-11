@@ -210,6 +210,7 @@ public class Spc extends SpcBase {
 				if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
 					getLiveStateInfo().setStateName(StateName.FINISHED);
 					getLiveStateInfo().setSubstateName(SubstateName.COMPLETED);
+					getLiveStateInfo().setStatusName(StatusName.SUCCESS);
 					break; // beklemeye gerek yok
 				}
 
