@@ -194,20 +194,27 @@ public class Cpc extends CpcBase {
 		PlanInfoType planInfoType = (PlanInfoType) getSpaceWideRegistry().getPlanLookupTable().values().toArray()[0];
 		HashMap<String, SpcInfoType> spcLookupTableOld = planInfoType.getSpcLookupTable().getTable();
 		
-		Consolidator.compareAndConsolidateTwoTables(planInfoType.getPlanId(), spcLookupTableNew.getTable(), spcLookupTableOld);
+		planInfoType.setSpcLookupTable(null);
+		
+		String oldPlanId = planInfoType.getPlanId();
+		String newPlanId = tlosProcessData.getPlanId();
+		
+		Consolidator.compareAndConsolidateTwoTables(oldPlanId, spcLookupTableNew.getTable(), spcLookupTableOld);
 
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getPlanId() + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + newPlanId + " ile iliskilendirilecek.");
 
-		logger.info("   > Plan ID = " + tlosProcessData.getPlanId() + " olarak belirlendi.");
+		logger.info("   > Plan ID = " + newPlanId + " olarak belirlendi.");
 
-		planInfoType.setPlanId(tlosProcessData.getPlanId());
+		planInfoType.setPlanId(newPlanId);
 		planInfoType.setSpcLookupTable(spcLookupTableNew);
 
 		getSpaceWideRegistry().getPlanLookupTable().clear();
 		getSpaceWideRegistry().getPlanLookupTable().put(planInfoType.getPlanId(), planInfoType);
 		logger.info("   > OK iliskilendirildi.");
+		
+		TlosSpaceWide.changeApplicationState(AppState.INT_RUNNING);
 	}
 	
 	public void loadOnLiveSystemOld(TlosProcessData tlosProcessData) throws TlosException {
