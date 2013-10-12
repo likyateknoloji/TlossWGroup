@@ -362,7 +362,9 @@ declare function hs:getJobStartDate($job as element(dat:jobProperties) ) as xs:s
                        then 
                            $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
                        else 
-                           xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime)))
+                           if(exists($job/@LSIDateTime)) 
+                           then xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime))) 
+                           else xs:string(xs:date(hs:stringToDateTime($job/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo[1]/@LSIDateTime))) 
                            
     return $date
     
@@ -375,7 +377,9 @@ declare function hs:getJobStartTime($job as element(dat:jobProperties) ) as xs:s
                        then 
                            $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time
                        else 
-                           xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime)))
+                           if(exists($job/@LSIDateTime)) 
+                           then xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime))) 
+                           else xs:string(xs:time(hs:stringToDateTime($job/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo[1]/@LSIDateTime))) 
                            
     return $date
     
