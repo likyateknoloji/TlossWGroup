@@ -82,7 +82,7 @@ public class AgentOperator implements AgentOperatorMBean {
 				String jobId = txMessageIdBean.getJobKey();
 
 				Job job = planLookupTable.get(instanceId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
-				job.addStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
+				job.insertNewLiveStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 				// job.changeStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 			} else if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB)) {
 				Spc spc = planLookupTable.get(txMessageIdBean.getInstanceId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
