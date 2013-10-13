@@ -16,10 +16,10 @@ import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDo
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceType;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.spc.helpers.LiveStateInfoUtils;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
+import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -49,8 +49,7 @@ public class DssVisionaire extends DssBase {
 			job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
 			
 			/* TRANSFERING state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
-			job.sendStatusChangeInfo();
+			job.insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
 			/*
 			 * Bu noktada ise kaynak ayrildi, artik gercek olarak
 			 * var. O yuzden DailyScenarios a yeni bir is olarak
@@ -78,8 +77,7 @@ public class DssVisionaire extends DssBase {
 
 		if (!(LiveStateInfoUtils.equalStates(liveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.LOOKFOR_RESOURCE))) {
 			/* LOOKFOR-RESOURCE state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_LOOKFOR_RESOURCE);
-			job.sendStatusChangeInfo();
+			job.insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_LOOKFOR_RESOURCE);
 		}
 
 		AgentChoiceMethod agentChoiceMethod = jobProperties.getAdvancedJobInfos().getAgentChoiceMethod();
@@ -136,8 +134,7 @@ public class DssVisionaire extends DssBase {
 			LiveStateInfo liveStateInfo = job.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
 			if (!LiveStateInfoUtils.equalStates(liveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.USER_CHOOSE_RESOURCE)) {
-				LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_USER_CHOOSE_RESOURCE);
-				job.sendStatusChangeInfo();
+				job.insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_USER_CHOOSE_RESOURCE);
 				// myLogger.info("     > Kaynak atamasi uygun olan " + numberOfAvailableResources + " kaynak icinden kullanici secsin (UserInteractionPreference).");
 			}
 
@@ -163,7 +160,7 @@ public class DssVisionaire extends DssBase {
 			
 		} else {
 			
-			String logStr = "     > Kaynak listesi taram sonucunda uygun kaynak bulunamad� !";
+			String logStr = "     > Kaynak listesi taram sonucunda uygun kaynak bulunamadı !";
 			myDssResult = new DssResult(-1, logStr, myDssResult.getResourceAgentList(), myResource);
 
 		}
@@ -218,7 +215,7 @@ public class DssVisionaire extends DssBase {
 		
 		} else {
 			
-			String logStr = "     > Kaynak listesi tarama sonucunda uygun kaynak bulunamad� !";
+			String logStr = "     > Kaynak listesi tarama sonucunda uygun kaynak bulunamadı !";
 			myDssResult = new DssResult(-1, logStr, myDssResult.getResourceAgentList(), myResource);
 
 		}
@@ -255,7 +252,7 @@ public class DssVisionaire extends DssBase {
 
 		if (numberOfResources == 0) {
 
-			String logStr = "     > JOB " + jobId + " icin kaynak listesi bo� oldu�undan !! KAYNAK ATANAMADI !!";
+			String logStr = "     > JOB " + jobId + " icin kaynak listesi boş olduğundan !! KAYNAK ATANAMADI !!";
 			myLogger.info(logStr);
 
 			return new DssResult(-1, logStr);
@@ -271,13 +268,13 @@ public class DssVisionaire extends DssBase {
 
 		if (availableResources.sizeOfResourceArray() == 0) {
 
-			String logStr = "JOB:" + jobProperties.getID() + "---> Kaynaklar aras�nda uygun kaynak bulunamad���ndan !! KAYNAK YINE ATANAMADI !!";
+			String logStr = "JOB:" + jobProperties.getID() + "---> Kaynaklar arasında uygun kaynak bulunamadığından !! KAYNAK YINE ATANAMADI !!";
 
 			return new DssResult(-1, logStr);
 
 		}
 
-		return new DssResult(0, "Ba�ar�l� kaynak atamas� !", availableResources);
+		return new DssResult(0, "Başarılı kaynak ataması !", availableResources);
 
 	}
 
