@@ -41,11 +41,16 @@ public class Consolidator {
 			
 			String tempSpcIdOld = tlosSWPathType.getFullPath();
 			
-			if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
+			Spc referanceOld = spcLookupTableOld.get(spcIdOld).getSpcReferance();
+			
+			if(referanceOld == null) {
+				// Empty scenario
+				spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
+			} else if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
 				
-				if(!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
+				if(!isScenarioEnsuresTheConditions(referanceOld)) {
 				
-					if(spcLookupTableOld.get(spcIdOld).getSpcReferance().isConcurrent()) {
+					if(referanceOld.isConcurrent()) {
 						// Yenisinin instance id sini bir arttır ve öylece listeye ekle, 
 						// eskisini yeni listeye taşı, eski listeden sil.
 						// Örnek : scenarioId = 3245:13
@@ -62,7 +67,7 @@ public class Consolidator {
 				
 			} else {
 				
-				if(!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
+				if(!isScenarioEnsuresTheConditions(referanceOld)) {
 					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 				}
 			
