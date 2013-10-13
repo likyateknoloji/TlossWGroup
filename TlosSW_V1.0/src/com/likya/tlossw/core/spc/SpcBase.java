@@ -604,14 +604,14 @@ public abstract class SpcBase implements Runnable, Serializable {
 		JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 		LiveStateInfo previousLiveStateInfo = jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
-		System.out.println("Son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
+		// System.out.println("Son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
 		
 		if(previousLiveStateInfo == null || !LiveStateInfoUtils.equalStates(previousLiveStateInfo, stateNameEnum, substateNameEnum, statusNameEnum)) {
 			scheduledJob.insertNewLiveStateInfo(stateNameEnum.intValue(), substateNameEnum.intValue(), statusNameEnum.intValue());
-			System.out.println("Değiştikten sonraki son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
+			// System.out.println("Değiştikten sonraki son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
 		}
 		
-		System.out.println("Önceki durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(1).toString());
+		// System.out.println("Önceki durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(1).toString());
 	}
 
 	public String getPlanId() {
