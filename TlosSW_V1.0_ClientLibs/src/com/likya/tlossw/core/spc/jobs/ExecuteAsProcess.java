@@ -56,8 +56,6 @@ public class ExecuteAsProcess extends ExecuteOSComponent {
 				handleException(err, myLogger);
 			}
 
-			sendStatusChangeInfo();
-
 			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
