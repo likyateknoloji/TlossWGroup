@@ -16,7 +16,6 @@ import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
 import com.likya.tlos.model.xmlbeans.data.ModeType;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class LogAnalyser {
 	
@@ -89,7 +88,7 @@ public class LogAnalyser {
 				liveStateInfo = logAction.getElse().getForcedResult().getLiveStateInfo();
 			}
 			
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, liveStateInfo);
+			job.insertNewLiveStateInfo(liveStateInfo);
 		}
 
 	}
