@@ -9,7 +9,6 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpProperties;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
@@ -31,8 +30,6 @@ public class JobRuntimeProperties implements Serializable {
 	
 	private FtpProperties ftpProperties;
 	
-	private LiveStateInfo previousLiveStateInfo;
-
 	int processReturnCode;
 
 	public Calendar plannedExecutionDate = null;
@@ -179,14 +176,6 @@ public class JobRuntimeProperties implements Serializable {
 
 	public void setRealExecutionDate(Date realExecutionDate) {
 		this.realExecutionDate = realExecutionDate;
-	}
-
-	public LiveStateInfo getPreviousLiveStateInfo() {
-		return previousLiveStateInfo;
-	}
-
-	public void setPreviousLiveStateInfo(LiveStateInfo previousLiveStateInfo) {
-		this.previousLiveStateInfo = previousLiveStateInfo;
 	}
 
 	public Calendar getPlannedExecutionDate() {
