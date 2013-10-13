@@ -25,7 +25,6 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
@@ -46,7 +45,6 @@ import com.likya.tlossw.model.TlosJmxReturnValue;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.InstanceUtils;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -117,9 +115,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			if (myJob.getJobRuntimeProperties().isStopable()) {
 				myJob.stopMyDogBarking();
 
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.STOPPED.intValue(), 0));
-
+				myJob.insertNewLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.STOPPED.intValue(), StatusName.BYUSER.intValue());
+				
 				Thread executerThread = myJob.getMyExecuter();
 				if (executerThread != null) {
 					myJob.getMyExecuter().interrupt();
@@ -159,10 +156,11 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				// taranirken o joba geldiginde status bilgisi atanmadigi icin
 				// hata vermesi ---> artik LOOKFOR_RESOURCE statusu ile calisiyor 15.10.2012
 				/* Hakan : TRANSFERING e cevirdim. */
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue()));
 				//myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, XmlBeansTransformer.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.TRANSFERING.intValue()));
 
+				// Kütüphaneye ekledim
+				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue());
+				
 				logger.info("[retryExecution] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
@@ -191,9 +189,8 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			Job myJob = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 			if (myJob.getJobRuntimeProperties().isSuccessable()) {
 				// TODO Daha sonra kontrol etmek gerekebilir
-
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.COMPLETED.intValue(), StatusName.SUCCESS.intValue()));
+				// Kütüphaneye ekledim
+				myJob.insertNewLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.COMPLETED.intValue(), StatusName.SUCCESS.intValue());
 
 				logger.info("[setSuccess] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
@@ -222,11 +219,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 			Job myJob = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 			if (myJob.getJobRuntimeProperties().isSkippable()) {
-				// TODO Daha sonra kontrol etmek gerekebilir
-
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.SKIPPED.intValue(), -1));
-
+				myJob.insertNewLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.SKIPPED.intValue(), StatusName.INT_BYUSER);
 				logger.info("[skipJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
@@ -254,10 +247,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 			Job myJob = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 			if (myJob.getJobRuntimeProperties().isPausable()) {
-
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.PAUSED.intValue(), -1));
-
+				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.PAUSED.intValue(), StatusName.INT_BYUSER);
 				logger.info("[pauseJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
@@ -292,9 +282,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				// PENDING/READY/WAITING yaptim. WAITING i yapmamin sebebi onu
 				// set etmedigimde spc de joblar taranirken o joba geldiginde
 				// status bilgisi atanmadigi icin hata vermesi
-				myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.WAITING.intValue()));
-
+				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.WAITING.intValue());
 				logger.info("[resumeJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
@@ -372,12 +360,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			Job myJob = spcInfoType.getSpcReferance().getJobQueue().get(jobId);
 			
 			if (myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().equals(StatusName.USER_WAITING)) {
-				LiveStateInfo liveStateInfoTra = LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue());
-				
-				//myJob.getJobRuntimeProperties().setPreviousLiveStateInfo( preLiveStateInfo );
-				//myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
-				myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfoTra);
-
+				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue());
 				logger.info("[startUserBasedJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
@@ -460,15 +443,11 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 					//ise ekrandan secilen agent ataniyor
 					myJob.setSelectedAgentId(agentId);
 					
-					myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-					myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.WAITING.intValue()));
-					
+					myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.WAITING.intValue());
 					return true;
 				//kullanilabilir degilse o is icin tekrar kaynak aramasi yapilmasi icin lookForResource statusune cekiliyor
 				} else {
-					myJob.getJobRuntimeProperties().setPreviousLiveStateInfo(LiveStateInfoUtils.cloneLiveStateInfo(myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0)));
-					myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue()));
-					
+					myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue());
 					return false;
 				}
 			}
