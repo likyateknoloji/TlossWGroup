@@ -143,10 +143,10 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
 			if (nextPeriodTime != null) {
 				// yeni zamana kuruldu
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+				insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_IDLED);
 			} else {
 				// yeni zamana kurulmadı, artık çalışmayacak
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED);
 			}
 		}
 
@@ -162,6 +162,33 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.myExecuter = myExecuter;
 	}
 
+	public void insertNewLiveStateInfo(StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum, int returnCode, String returnDecription) {
+		
+		LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), stateNameEnum, substateNameEnum, statusNameEnum, returnCode, returnDecription);
+		sendStatusChangeInfo();
+		return;
+	}
+
+	
+	public LiveStateInfo insertNewLiveStateInfo(int enumStateName, int enumSubstateName, int enumStatusName) {
+		
+		LiveStateInfo liveStateInfo = LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), enumStateName, enumSubstateName, enumStatusName);
+		sendStatusChangeInfo();
+		return liveStateInfo;
+	}
+
+	public LiveStateInfo insertNewLiveStateInfo(int enumStateName, int enumSubstateName) {
+		LiveStateInfo liveStateInfo = insertNewLiveStateInfo(enumStateName, enumSubstateName, 0);
+		sendStatusChangeInfo();
+		return liveStateInfo;
+	}
+	
+	public synchronized void insertNewLiveStateInfo(LiveStateInfo liveStateInfo) {
+		LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), liveStateInfo);
+		sendStatusChangeInfo();
+		return;
+	}
+	
 	public String getJobInfo() {
 		LiveStateInfo liveStateInfo = jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
@@ -308,25 +335,6 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			jobLiveStateInfo.setStatusName(liveStateInfo.getStatusName());
 		}
 
-		sendStatusChangeInfo(liveStateInfo);
-	}
-
-	public synchronized void addStateInfo(LiveStateInfo liveStateInfo) {
-
-		/*
-		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos(). insertNewLiveStateInfo(0);
-		 * jobRuntimeProperties.getJobProperties().getLiveStateInfos ().getLiveStateInfoArray
-		 * (0).setLSIDateTime(DateUtils.getW3CDateTime()); jobRuntimeProperties.getJobProperties
-		 * ().getLiveStateInfos().getLiveStateInfoArray
-		 * (0).setStateName(liveStateInfo.getStateName()); jobRuntimeProperties.getJobProperties
-		 * ().getLiveStateInfos().getLiveStateInfoArray
-		 * (0).setSubstateName(liveStateInfo.getSubstateName()); jobRuntimeProperties
-		 * .getJobProperties().getLiveStateInfos().getLiveStateInfoArray
-		 * (0).setStatusName(liveStateInfo.getStatusName());
-		 */
-		// TODO daha iyi bir yol lazim !!synchronized {
-		jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
-		jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
 		sendStatusChangeInfo(liveStateInfo);
 	}
 
@@ -520,7 +528,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		/* FINISHED state i yoksa ekle */
 		if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED)) {
-			LiveStateInfo liveStateInfo = LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+			LiveStateInfo liveStateInfo = insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			liveStateInfo.addNewReturnCode().setDesc(err.getMessage());
 		}
 
@@ -574,9 +582,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 				myLogger.info(" >> " + "ExecuteInShell : Job Failed ! Restarting " + getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				return true;
 
