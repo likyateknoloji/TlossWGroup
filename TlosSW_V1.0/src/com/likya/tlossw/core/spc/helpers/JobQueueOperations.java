@@ -16,12 +16,12 @@ import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.model.path.TlosSWPathType;
+import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class JobQueueOperations {
@@ -203,26 +203,13 @@ public class JobQueueOperations {
 		Iterator<Job> jobsIterator = jobQueue.values().iterator();
 		while (jobsIterator.hasNext()) {
 			Job scheduledJob = jobsIterator.next();
+			JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 			scheduledJob.setGlobalRegistry(SpaceWideRegistry.getInstance());
-			LiveStateInfo myLiveStateInfo = scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
-
-			if (!(myLiveStateInfo.getStateName().equals(StateName.FINISHED) && myLiveStateInfo.getSubstateName().equals(SubstateName.COMPLETED) && !myLiveStateInfo.getStatusName().equals(StatusName.FAILED))) {
-				myLiveStateInfo.setStateName(StateName.RUNNING);
-				myLiveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
-				myLiveStateInfo.setStatusName(StatusName.TIME_IN);
-				scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, myLiveStateInfo);
-				scheduledJob.sendStatusChangeInfo();
+			
+			if(!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED)) {
+				scheduledJob.insertNewLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.COMPLETED.intValue(), StatusName.FAILED.intValue());
 			}
-			// if(scheduledJob.getJobQueue() == null) {
-			// /**
-			// * jobQueue transient oldu�unudun, serialize etmiyor
-			// * Recover ederken, bu alan null geliyor. Bu nedenle null ise
-			// yeninde okumak gerekiyor.
-			// */
-			// scheduledJob.setJobQueue(jobQueue);
-			// }
-			//
-			// jobQueue.get(scheduledJob.getJobProperties().getKey()).getJobProperties().setStatus(JobProperties.READY);
+			
 		}
 
 		return;
