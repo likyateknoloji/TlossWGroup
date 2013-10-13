@@ -777,10 +777,8 @@ public class Spc extends SpcBase {
 
 				if (!TypeUtils.resolveState(jobProperties).equals(StateName.FINISHED)) {
 					/* FAILED state i ekle */
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FAILED, null, null, 555, "Agent a ulasilamiyor.");
-					scheduledJob.sendStatusChangeInfo();
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.IDLED, null, 111, "Is yeniden kurgulandi.");
-					scheduledJob.sendStatusChangeInfo();
+					scheduledJob.insertNewLiveStateInfo(StateName.FAILED, null, null, 555, "Agent a ulasilamiyor.");
+					scheduledJob.insertNewLiveStateInfo(StateName.PENDING, SubstateName.IDLED, null, 111, "Is yeniden kurgulandi.");
 				}
 
 			}
