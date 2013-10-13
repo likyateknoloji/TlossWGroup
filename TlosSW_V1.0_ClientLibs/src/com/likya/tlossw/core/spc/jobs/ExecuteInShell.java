@@ -8,7 +8,6 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class ExecuteInShell extends ExecuteOSComponent {
 
@@ -41,7 +40,7 @@ public class ExecuteInShell extends ExecuteOSComponent {
 				String jobPath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath();
 				String jobCommand = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand();
 				
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				sendStatusChangeInfo();
 
