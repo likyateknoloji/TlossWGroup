@@ -292,7 +292,7 @@ public static void compareAndConsolidateTwoTables1(String instanceIdOld, HashMap
 		}
 		
 		if (!LiveStateInfoUtils.equalStates(spcReferance.getLiveStateInfo(), liveStateInfo)) {
-			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcId() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
+			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcId().getFullPath() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
 			return false;
 		}
 
