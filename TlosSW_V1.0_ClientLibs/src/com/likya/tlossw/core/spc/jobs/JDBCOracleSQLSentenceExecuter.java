@@ -89,8 +89,6 @@ public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				handleException(err, myLogger);
 			}
 
-			sendStatusChangeInfo();
-
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
 				retryFlag = false;
 				continue;

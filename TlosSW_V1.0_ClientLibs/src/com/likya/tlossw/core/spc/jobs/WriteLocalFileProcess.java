@@ -16,7 +16,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -43,8 +42,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 
 			startWathcDogTimer();
 
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-			sendStatusChangeInfo();
+			insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 			try {
 
@@ -83,8 +81,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 
 				boolean result = FileUtils.writeFile(targetFile, fileContent);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
 
 				try {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya yazma islemi tamamlandi." + System.getProperty("line.separator"));
@@ -108,8 +105,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {

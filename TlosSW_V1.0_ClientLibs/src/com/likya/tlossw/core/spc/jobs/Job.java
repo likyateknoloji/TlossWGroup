@@ -169,6 +169,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		return;
 	}
 
+	public LiveStateInfo insertNewLiveStateInfo(int enumStateName, int enumSubstateName, int enumStatusName, String retCodeDesc) {
+		LiveStateInfo liveStateInfo = LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), enumStateName, enumSubstateName, enumStatusName);
+		liveStateInfo.addNewReturnCode().setDesc(retCodeDesc);
+		sendStatusChangeInfo();
+		return liveStateInfo;
+	}
 	
 	public LiveStateInfo insertNewLiveStateInfo(int enumStateName, int enumSubstateName, int enumStatusName) {
 		
@@ -294,7 +300,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendStatusChangeInfo() {
+	private synchronized void sendStatusChangeInfo() {
 		sendStatusChangeInfo("");
 	}
 
@@ -528,8 +534,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		/* FINISHED state i yoksa ekle */
 		if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED)) {
-			LiveStateInfo liveStateInfo = insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-			liveStateInfo.addNewReturnCode().setDesc(err.getMessage());
+			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, err.getMessage());
 		}
 
 		globalLogger.error(err.getMessage());

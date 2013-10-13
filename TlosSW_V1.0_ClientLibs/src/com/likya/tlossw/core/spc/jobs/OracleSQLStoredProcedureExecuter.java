@@ -10,7 +10,6 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 
@@ -77,20 +76,13 @@ public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 					osqlClientName = "echo execute " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedureName + "|" + osqlClientName + " " + userName + "/" + password + "@" + dbPath;
 				}
 				
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				startShellProcess(osqlClientNamePath, osqlClientName, null, this.getClass().getName(), myLogger);
-
-				// startShellProcess() metodu icinde isin basarili ya da basarisiz olma durumuna gore zaten state bilgisi giriliyor
-				// asagidaki kisimdan dolayi basarisiz biten is bile en sonunda basarili gibi gorunuyor
-				// onun icin kaldirdim
-				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
 				handleException(err, myLogger);
 			}
-
-			sendStatusChangeInfo();
 
 			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;

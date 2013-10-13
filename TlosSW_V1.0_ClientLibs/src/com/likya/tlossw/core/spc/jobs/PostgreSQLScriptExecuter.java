@@ -13,7 +13,6 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 
 public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
@@ -64,23 +63,16 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 
 				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -f " + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				Map<String, String> envVars = new HashMap<String, String>();
 				envVars.put("PGPASSWORD", password);
 
 				startShellProcess(psqlClientNamePath, psqlClientName, envVars, this.getClass().getName(), myLogger);
 
-				// startShellProcess() metodu icinde isin basarili ya da basarisiz olma durumuna gore zaten state bilgisi giriliyor
-				// asagidaki kisimdan dolayi basarisiz biten is bile en sonunda basarili gibi gorunuyor
-				// onun icin kaldirdim
-				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-
 			} catch (Exception err) {
 				handleException(err, myLogger);
 			}
-
-			sendStatusChangeInfo();
 
 			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;

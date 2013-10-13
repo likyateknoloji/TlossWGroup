@@ -47,7 +47,6 @@ import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.cxf.CXFUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -87,9 +86,7 @@ public class WebServiceExecuter extends Job {
 
 				String logFile = ParsingUtils.getConcatenatedPathAndFileName(logFilePath, logFileName);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				try {
 					setOutputFile(new BufferedWriter(new FileWriter(logFile)));
@@ -105,8 +102,7 @@ public class WebServiceExecuter extends Job {
 				ParamList thisParam = new ParamList(WS_RESULT, "STRING", "VARIABLE", callOperation());
 				myParamList.add(thisParam);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 				try {
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Result:" + System.getProperty("line.separator"));
@@ -131,8 +127,7 @@ public class WebServiceExecuter extends Job {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
@@ -222,9 +217,7 @@ public class WebServiceExecuter extends Job {
 
 						continue;
 					} else {
-						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-
-						sendStatusChangeInfo();
+						insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 						throw new Throwable("Unsupported binding type: " + extensorObject.getClass().getCanonicalName());
 					}
@@ -341,8 +334,7 @@ public class WebServiceExecuter extends Job {
 						ioe.printStackTrace();
 					}
 
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-					sendStatusChangeInfo();
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 				}
 			}
 		}

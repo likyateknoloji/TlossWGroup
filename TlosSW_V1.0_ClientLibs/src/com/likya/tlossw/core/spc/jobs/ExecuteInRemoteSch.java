@@ -53,8 +53,6 @@ public class ExecuteInRemoteSch extends ExecuteSchComponent {
 				handleException(err, myLogger);
 			}
 
-			sendStatusChangeInfo();
-
 			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
