@@ -766,8 +766,8 @@ public class DateUtils {
 		LocalDate t = new LocalDate(calendar.getTime(), zone);
 		DateTime dt = t.toDateTime(jobLocalTime, zone);
 
-		boolean isStandardOffset = zone.isStandardOffset(dt.getMillis());
-		boolean isDaylightOfset = !isStandardOffset;
+//		boolean isStandardOffset = zone.isStandardOffset(dt.getMillis());
+//		boolean isDaylightOfset = !isStandardOffset;
 		
 		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 		String dateStr = dt.toString(outputFormat);
@@ -777,7 +777,7 @@ public class DateUtils {
 	
 	public static Calendar dateToXmlTime(String time, String selectedTZone) {
 		
-		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
+//		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
 
 		DateTimeParser[] parsers = { DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
 
@@ -794,38 +794,38 @@ public class DateUtils {
 	
 	public static String getW3CDateTime(Calendar calendar, String selectedTZone, TypeOfTime.Enum myType) {
 
-		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi? 
+//		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi? 
 		//TimeZone serverTZ = TimeZone.getTimeZone(serverTimeZone);
 		
 		String selectedTimeZone = new String(selectedTZone);
-		TimeZone timeZone = TimeZone.getTimeZone(selectedTimeZone);
+//		TimeZone timeZone = TimeZone.getTimeZone(selectedTimeZone);
 		
-		boolean isDstExistWhenJobIsDefined = calendar.getTimeZone().useDaylightTime(); 
-		boolean isDstExistWhenJobIsPlannedToRun = timeZone.inDaylightTime(calendar.getTime());
+//		boolean isDstExistWhenJobIsDefined = calendar.getTimeZone().useDaylightTime(); 
+//		boolean isDstExistWhenJobIsPlannedToRun = timeZone.inDaylightTime(calendar.getTime());
 		
-		DateTimeZone zonex = DateTimeZone.forID(serverTimeZone);
+//		DateTimeZone zonex = DateTimeZone.forID(serverTimeZone);
 		DateTimeZone zone = DateTimeZone.forID(selectedTimeZone);
 		
 		//int timeOffSet2 = zone.getOffset(calendar.getTimeInMillis())/3600000;
 		int timeOffSet = calendar.getTimeZone().getRawOffset()/3600000; // İşin tanımlandığı andaki Offset i, ornek +02:00
 		//LocalTime localTime = new LocalTime(calendar.getTimeInMillis(), zonex.UTC);
-		LocalTime jobLocalTime = null;
+//		LocalTime jobLocalTime = null;
 		LocalDateTime localDateTime = null;
 		// Seçilen zaman tipine göre işin çalışma zamanını belirleyelim
 		switch (myType.intValue()) {
 			case TypeOfTime.INT_ACTUAL:
-				jobLocalTime = new LocalTime(calendar.getTime(), zone);
+//				jobLocalTime = new LocalTime(calendar.getTime(), zone);
 				localDateTime = new LocalDateTime(calendar.getTime(), zone);
 				break;
 
 			case TypeOfTime.INT_RECURRING:
-				jobLocalTime = new LocalTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
+//				jobLocalTime = new LocalTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
 				localDateTime = new LocalDateTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
 				break;
 
 			case TypeOfTime.INT_BROADCAST: // Burası nasıl olacak tam karar vermedim.
-				jobLocalTime = new LocalTime(calendar.getTime(), zone);
-				localDateTime = new LocalDateTime(calendar.getTime(), zonex.UTC);
+//				jobLocalTime = new LocalTime(calendar.getTime(), zone);
+				localDateTime = new LocalDateTime(calendar.getTime(), DateTimeZone.UTC);
 				break;
 					
 			default:
