@@ -600,9 +600,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
 	}
 
-	protected void insertLastStateInfo(JobRuntimeProperties jobRuntimeProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
+	protected void insertLastStateInfo(Job scheduledJob, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
+		JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 		if (jobRuntimeProperties.getPreviousLiveStateInfo() == null || !LiveStateInfoUtils.equalStates(jobRuntimeProperties.getPreviousLiveStateInfo(), stateNameEnum, substateNameEnum, statusNameEnum)) {
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobRuntimeProperties.getJobProperties(), stateNameEnum, substateNameEnum, statusNameEnum);
+			scheduledJob.sendStatusChangeInfo();
 		}
 	}
 
