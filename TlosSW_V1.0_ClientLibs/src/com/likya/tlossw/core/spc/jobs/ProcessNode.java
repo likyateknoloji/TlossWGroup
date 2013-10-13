@@ -68,8 +68,6 @@ public class ProcessNode extends Job {
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
-				sendStatusChangeInfo();
-
 				try {
 					setOutputFile(new BufferedWriter(new FileWriter(logFile)));
 				} catch (IOException e) {
@@ -85,7 +83,6 @@ public class ProcessNode extends Job {
 				myParamList.add(thisParam);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-				sendStatusChangeInfo();
 
 				try {
 					// outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Result:" + System.getProperty("line.separator"));
@@ -111,7 +108,6 @@ public class ProcessNode extends Job {
 				}
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
 			}
 
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
@@ -245,7 +241,6 @@ public class ProcessNode extends Job {
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-								sendStatusChangeInfo();
 								e.printStackTrace();
 							}
 						} else if (processNode.getFilter() != null && processNode.getFilter().getType().toString().equalsIgnoreCase("xpath")) {
@@ -255,11 +250,9 @@ public class ProcessNode extends Job {
 							// inputs = ApplyXPath.queryXmlWithXPath(fileContent, xpath);
 							System.out.println("Filtreleme i�in XPATH yerine XSLT kullan�n !!");
 							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-							sendStatusChangeInfo();
 						} else if (processNode.getTransform() != null && processNode.getTransform().getWith().toString().equalsIgnoreCase("xpath")) {
 							System.out.println("Transformasyon i�in XPATH kullanm�yoruz. XSLT kullan�n !!");
 							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-							sendStatusChangeInfo();
 						}
 					} else if (processNode.getProcess().getSource() != null && processNode.getProcess().getSource().toString().equalsIgnoreCase("text")) {
 						// TODO Text doc process
@@ -277,7 +270,6 @@ public class ProcessNode extends Job {
 					} else {
 						System.out.println("XML ve TEXT Doc dışında doküman işleyemiyoruz henüz.");
 						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-						sendStatusChangeInfo();
 					}
 				}
 			}

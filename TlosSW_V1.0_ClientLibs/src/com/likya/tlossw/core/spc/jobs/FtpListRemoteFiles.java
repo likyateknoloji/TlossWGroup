@@ -13,7 +13,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FtpUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class FtpListRemoteFiles extends FtpExecutor {
@@ -40,13 +39,11 @@ public class FtpListRemoteFiles extends FtpExecutor {
 
 			startWathcDogTimer();
 
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-			sendStatusChangeInfo();
+			insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 			try {
 				if (!checkLogin(myLogger)) {
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-					sendStatusChangeInfo();
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 					getOutputFile().close();
 
@@ -59,7 +56,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 
 				fileList.toString();
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception e) {
 
@@ -77,7 +74,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 			}
 

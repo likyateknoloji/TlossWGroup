@@ -16,7 +16,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
@@ -71,12 +70,8 @@ public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				System.out.println("");
 				
 				statement.close();
-
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-
-				sendStatusChangeInfo();
-
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
+				
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
 

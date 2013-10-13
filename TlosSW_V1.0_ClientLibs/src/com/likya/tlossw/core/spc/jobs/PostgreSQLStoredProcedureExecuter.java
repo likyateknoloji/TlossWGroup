@@ -66,8 +66,6 @@ public class PostgreSQLStoredProcedureExecuter extends SQLScriptExecuter {
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
-				sendStatusChangeInfo();
-
 				Map<String, String> env = new HashMap<String, String>();
 				env.put("PGPASSWORD", password);
 

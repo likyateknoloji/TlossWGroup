@@ -14,7 +14,6 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.FtpUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -41,15 +40,13 @@ public class FtpGetFile extends FtpExecutor {
 
 			startWathcDogTimer();
 
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-			sendStatusChangeInfo();
+			insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 			try {
 				boolean result = false;
 
 				if (!checkLogin(myLogger)) {
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-					sendStatusChangeInfo();
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 					getOutputFile().close();
 
@@ -81,8 +78,7 @@ public class FtpGetFile extends FtpExecutor {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Read islemi icin processedFilesOperationType degeri Copy, Move ya da Delete olmalidir" + System.getProperty("line.separator"));
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
 
 				//kopyalama islemi yapamadiginda yerel dizinde istenilen isimdeki dosyayi bos olarak olusturdugu icin hata olursa silecek
 				if (!result) {
@@ -104,8 +100,7 @@ public class FtpGetFile extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {

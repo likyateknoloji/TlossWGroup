@@ -75,8 +75,6 @@ public class OracleSQLScriptExecuter extends SQLScriptExecuter {
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
-				sendStatusChangeInfo();
-
 				startShellProcess(osqlClientNamePath, osqlClientName, null, this.getClass().getName(), myLogger);
 
 				// startShellProcess() metodu icinde isin basarili ya da basarisiz olma durumuna gore zaten state bilgisi giriliyor

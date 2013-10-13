@@ -14,7 +14,6 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.FtpUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -41,15 +40,13 @@ public class FtpPutFile extends FtpExecutor {
 
 			startWathcDogTimer();
 
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-			sendStatusChangeInfo();
+			insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 			try {
 				boolean result = false;
 
 				if (!checkLogin(myLogger)) {
-					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-					sendStatusChangeInfo();
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 					getOutputFile().close();
 
@@ -81,8 +78,7 @@ public class FtpPutFile extends FtpExecutor {
 					result = false;
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
 				
 			} catch (Exception e) {
 
@@ -100,8 +96,7 @@ public class FtpPutFile extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {

@@ -16,7 +16,6 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 
 public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
@@ -48,8 +47,7 @@ public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 
 				startWathcDogTimer();
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
 				initDbConnection(dbProperties, dbConnectionProfile);
 
@@ -75,12 +73,10 @@ public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				
 				statement.close();
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 				try {
 					if(getStatement() != null) {

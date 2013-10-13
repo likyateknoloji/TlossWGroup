@@ -44,7 +44,6 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 			startWathcDogTimer();
 
 			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
-			sendStatusChangeInfo();
 
 			try {
 
@@ -59,7 +58,6 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 				myParamList.add(thisParam);
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
-				sendStatusChangeInfo();
 
 				try {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Dosya icerigi : " + System.getProperty("line.separator"));
@@ -85,7 +83,6 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 				}
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
-				sendStatusChangeInfo();
 			}
 
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
