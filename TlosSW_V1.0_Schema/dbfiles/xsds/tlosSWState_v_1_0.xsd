@@ -1,6 +1,8 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/state-types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/state-types" elementFormDefault="qualified">
+<xs:schema xmlns="http://www.likyateknoloji.com/state-types" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.likyateknoloji.com/state-types" elementFormDefault="qualified">
     <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
+    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
+    
     <xs:element name="StateName">
         <xs:simpleType>
             <xs:restriction base="xs:string">
@@ -166,6 +168,7 @@
                 <xs:element ref="state-types:SubstateName" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="state-types:StatusName" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="state-types:ReturnCode" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="lt:userId" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
             <xs:attribute name="LSIDateTime" use="required">
                 <xs:simpleType>
