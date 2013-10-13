@@ -70,7 +70,7 @@ public class LiveStateInfoUtils {
 	}
 
 	public static boolean equalStates(LiveStateInfo liveStateInfo, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
-		return liveStateInfo.getStateName().equals(stateNameEnum) && liveStateInfo.getSubstateName().equals(substateNameEnum) && liveStateInfo.getStatusName().equals(statusNameEnum);
+		return (liveStateInfo.getStateName() == null || liveStateInfo.getStateName().equals(stateNameEnum)) && (liveStateInfo.getSubstateName() == null || liveStateInfo.getSubstateName().equals(substateNameEnum)) && (liveStateInfo.getStatusName() == null || liveStateInfo.getStatusName().equals(statusNameEnum));
 	}
 
 	public static boolean equalStates(LiveStateInfo liveStateInfoSrc, LiveStateInfo liveStateInfoTrg) {
