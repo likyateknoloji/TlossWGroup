@@ -15,7 +15,6 @@ import com.likya.tlossw.core.spc.helpers.StateUtils;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ValidPlatforms;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 
@@ -149,7 +148,7 @@ public abstract class ExecuteOSComponent extends Job {
 				}
 			}
 
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue());
+			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue());
 
 		} catch (InterruptedException e) {
 
