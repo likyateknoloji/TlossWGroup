@@ -12,14 +12,14 @@ import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceType;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceAgentListDocument.ResourceAgentList;
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Resource;
+import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceType;
 import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.spc.helpers.LiveStateInfoUtils;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -49,7 +49,7 @@ public class DssVisionaire extends DssBase {
 			job.getJobRuntimeProperties().getJobProperties().setLSIDateTime(DateUtils.getServerW3CDateTime());
 			
 			/* TRANSFERING state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
+			LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_TRANSFERING);
 			job.sendStatusChangeInfo();
 			/*
 			 * Bu noktada ise kaynak ayrildi, artik gercek olarak
@@ -78,7 +78,7 @@ public class DssVisionaire extends DssBase {
 
 		if (!(LiveStateInfoUtils.equalStates(liveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.LOOKFOR_RESOURCE))) {
 			/* LOOKFOR-RESOURCE state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_LOOKFOR_RESOURCE);
+			LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_LOOKFOR_RESOURCE);
 			job.sendStatusChangeInfo();
 		}
 
@@ -136,7 +136,7 @@ public class DssVisionaire extends DssBase {
 			LiveStateInfo liveStateInfo = job.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
 			if (!LiveStateInfoUtils.equalStates(liveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.USER_CHOOSE_RESOURCE)) {
-				LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties().getJobProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_USER_CHOOSE_RESOURCE);
+				LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties(), StateName.INT_PENDING, SubstateName.INT_READY, StatusName.INT_USER_CHOOSE_RESOURCE);
 				job.sendStatusChangeInfo();
 				// myLogger.info("     > Kaynak atamasi uygun olan " + numberOfAvailableResources + " kaynak icinden kullanici secsin (UserInteractionPreference).");
 			}
