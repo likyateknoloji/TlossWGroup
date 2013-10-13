@@ -56,6 +56,10 @@ public class LiveStateInfoUtils {
 	public static boolean equalStates(JobProperties jobProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum) {
 		return equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), stateNameEnum, substateNameEnum);
 	}
+
+	public static boolean equalStates(JobProperties jobProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum) {
+		return equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), stateNameEnum, substateNameEnum, statusNameEnum);
+	}
 	
 	public static boolean equalStates(LiveStateInfo liveStateInfo, StateName.Enum stateNameEnum) {
 		return liveStateInfo.getStateName().equals(stateNameEnum);
