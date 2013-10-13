@@ -10,11 +10,12 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlosswagent.TlosSWAgent;
 import com.likya.tlosswagent.utils.AgentStatusChangeInfoSender;
 import com.likya.tlosswagent.utils.SWAgentRegistry;
@@ -135,28 +136,13 @@ public class TaskQueueOperations {
 			if (object instanceof Job) {
 				Job scheduledJob = (Job) object;
 				scheduledJob.setGlobalRegistry(TlosSWAgent.getSwAgentRegistry());
-				LiveStateInfo myLiveStateInfo = scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
-
-				if (!(myLiveStateInfo.getStateName().equals(StateName.FINISHED) && myLiveStateInfo.getSubstateName().equals(SubstateName.COMPLETED) && !myLiveStateInfo.getStatusName().equals(StatusName.FAILED))) {
-					myLiveStateInfo.setStateName(StateName.RUNNING);
-					myLiveStateInfo.setSubstateName(SubstateName.ON_RESOURCE);
-					myLiveStateInfo.setStatusName(StatusName.TIME_IN);
-					// scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0,myLiveStateInfo);
+				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+				
+				if(!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED)) {
 					scheduledJob.setGenericInfoSender(new AgentStatusChangeInfoSender());
-					scheduledJob.sendStatusChangeInfo();
-					// TODO OutputQueueOperations.addLiveStateInfo metodunu
-					// uygulamaya calistim ama test etmek lazim..
+					scheduledJob.insertNewLiveStateInfo(StateName.RUNNING.intValue(), SubstateName.ON_RESOURCE.intValue(), StatusName.TIME_IN.intValue());
 				}
-				// if(scheduledJob.getJobQueue() == null) {
-				// /**
-				// * jobQueue transient olduðunudun, serialize etmiyor
-				// * Recover ederken, bu alan null geliyor. Bu nedenle null ise
-				// yeninde okumak gerekiyor.
-				// */
-				// scheduledJob.setJobQueue(jobQueue);
-				// }
-				//
-				// jobQueue.get(scheduledJob.getJobProperties().getKey()).getJobProperties().setStatus(JobProperties.READY);
+				
 			}
 		}
 
