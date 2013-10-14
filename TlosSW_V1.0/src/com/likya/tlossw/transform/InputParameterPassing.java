@@ -42,7 +42,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.xml.ApplyXPath;
 
@@ -179,7 +178,7 @@ public class InputParameterPassing {
 
 			} else { // Global bir bağımlılık
 
-				SpcInfoType spcInfoType = spcLookupTable.getTable().get(CpcUtils.getInstancePath(getInstanceId()) + "." + item.getJsPath());
+				SpcInfoType spcInfoType = spcLookupTable.getTable().get(BasePathType.getRootPath() + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getPlanLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
