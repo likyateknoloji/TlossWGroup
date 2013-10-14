@@ -232,13 +232,13 @@ public class CpcBaseTester extends GenericTestSuit {
 
 		TlosProcessData tlosProcessData = spaceWideRegistry.getTlosProcessData();
 
-		String instanceId = tlosProcessData.getPlanId();
+		String planId = tlosProcessData.getPlanId();
 
-		if (instanceId == null) {
-			instanceId = Long.toHexString(System.currentTimeMillis()).toUpperCase();
+		if (planId == null) {
+			planId = Long.toHexString(System.currentTimeMillis()).toUpperCase();
 		}
-		myLogger.info("   > InstanceID = " + instanceId + " olarak belirlenmistir.");
-		String localRoot = rootPath + "." + instanceId;
+		myLogger.info("   > InstanceID = " + planId + " olarak belirlenmistir.");
+		String localRoot = rootPath + "." + planId;
 		myLogger.info("   > is agacinin islenmekte olan dali " + localRoot + " olarak belirlenmistir.");
 
 		// Bir senaryoya ait olmayan is listesi
@@ -262,7 +262,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			myScenario.setJobList(lonelyJobList);
 
 			// myScenario.getConcurrencyManagement().setInstanceId(instanceId.toString());
-			tlosProcessData.getConcurrencyManagement().setPlanId(instanceId);
+			tlosProcessData.getConcurrencyManagement().setPlanId(planId);
 
 			myScenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
 			myScenario.setDependencyList(tlosProcessData.getDependencyList());
@@ -307,7 +307,9 @@ public class CpcBaseTester extends GenericTestSuit {
 				continue;
 			}
 			
-			Spc spc = new Spc(new TlosSWPathType(scenarioId), spaceWideRegistry, transformJobList(jobList));
+			TlosSWPathType tlosSWPathType = new TlosSWPathType(scenarioId);
+			
+			Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), spaceWideRegistry, transformJobList(jobList));
 
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -324,7 +326,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 			spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 			spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
-			spc.setPlanId(instanceId);
+			spc.setCurrentPlanId(planId);
 			spc.setUserId(null);
 
 			tmpScenario.getConcurrencyManagement().setPlanId(spaceWideRegistry.getTlosProcessData().getPlanId());
@@ -361,7 +363,7 @@ public class CpcBaseTester extends GenericTestSuit {
 
 			scpLookupTable.put(scenarioId, spcInfoType);
 
-			if (!spaceWideRegistry.getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+			if (!spaceWideRegistry.getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 				if (!spc.initScenarioInfo()) {
 					myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");
 					myLogger.warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da is listesi bos geldi !");

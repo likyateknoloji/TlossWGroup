@@ -27,7 +27,7 @@ public class TestWebServiceExecuter extends TestSuit {
 		jobRuntimeProperties.setJobProperties(jobProperties);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 
 		WebServiceExecuter webServiceExecuter = new WebServiceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
 		

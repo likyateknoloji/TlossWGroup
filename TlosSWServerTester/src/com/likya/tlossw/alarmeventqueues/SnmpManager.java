@@ -105,12 +105,12 @@ public class SnmpManager implements Runnable {
 							 * bitis zamanlarinin
 							 */
 
-							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcId().getFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcAbsolutePath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
 							// DBUtils.updateJob(jobProperties,
 							// ParsingUtils.getJobXPath(jobAllInfo.getSpcId()));
 							logger.info("  > ");
 							logger.info("  > DB guncellemesi. " + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName() + " icin baslama bitis zamani ve butun state ler.");
-							logger.info("  > " + jobAllInfo.getSpcId() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
+							logger.info("  > " + jobAllInfo.getSpcAbsolutePath() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
 							logger.info("  > " + jobProperties.getTimeManagement().getJsRealTime());
 							logger.info("  > " + jobProperties.getBaseJobInfos().getJsName() + " " + jobProperties.getStateInfos().getLiveStateInfos());
 						}

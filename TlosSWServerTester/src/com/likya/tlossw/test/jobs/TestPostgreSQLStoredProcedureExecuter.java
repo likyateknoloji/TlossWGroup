@@ -48,7 +48,7 @@ public class TestPostgreSQLStoredProcedureExecuter extends TestSuit {
 		jobRuntimeProperties.setDbConnectionProfile(dbConnectionProfile);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 
 		
 		PostgreSQLStoredProcedureExecuter postgreSQLStoredProcedureExecuter = new PostgreSQLStoredProcedureExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);

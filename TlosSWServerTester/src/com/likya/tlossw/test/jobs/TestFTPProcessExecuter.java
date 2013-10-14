@@ -42,7 +42,7 @@ public class TestFTPProcessExecuter extends TestSuit {
 		jobRuntimeProperties.setFtpProperties(ftpProperties);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 
 		Job ftpExecutor = null;
 		

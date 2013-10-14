@@ -42,7 +42,7 @@ public class GunDonumuTester extends CpcBaseTester {
 		Consolidator.compareAndConsolidateTwoTables(oldInstance, spcLookUpTableToday, spcLookUpTableYesterday);
 		
 		for(String spcId : spcLookUpTableToday.keySet()) {
-			JobQueueOperations.dumpJobQueue(new TlosSWPathType(spcId), spcLookUpTableToday.get(spcId).getSpcReferance().getJobQueue());
+			JobQueueOperations.dumpJobQueue(new TlosSWPathType(spcId).getAbsolutePath(), spcLookUpTableToday.get(spcId).getSpcReferance().getJobQueue());
 		}
 	}
 	

@@ -48,7 +48,7 @@ public class TestOracleSQLScriptExecuter extends TestSuit {
 		jobRuntimeProperties.setDbConnectionProfile(dbConnectionProfile);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 
 		
 		OracleSQLScriptExecuter oracleSQLScriptExecuter = new OracleSQLScriptExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);

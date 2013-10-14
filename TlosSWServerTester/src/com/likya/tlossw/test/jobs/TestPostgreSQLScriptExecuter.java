@@ -53,7 +53,7 @@ public class TestPostgreSQLScriptExecuter extends TestSuit {
 		jobRuntimeProperties.setDbConnectionProfile(dbConnectionProfile);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 
 		
 		PostgreSQLScriptExecuter postgreSQLScriptExecuter = new PostgreSQLScriptExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);

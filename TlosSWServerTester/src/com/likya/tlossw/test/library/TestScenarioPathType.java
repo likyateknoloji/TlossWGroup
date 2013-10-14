@@ -1,5 +1,6 @@
 package com.likya.tlossw.test.library;
 
+import com.likya.tlossw.model.path.JSPathId;
 import com.likya.tlossw.model.path.TlosSWPathType;
 
 public class TestScenarioPathType {
@@ -23,7 +24,7 @@ public class TestScenarioPathType {
 		start = System.currentTimeMillis();
 		String retStr = scenarioPathType.getPlanId();
 		stop = System.currentTimeMillis();
-		System.out.println("instance id : " + retStr);
+		System.out.println("plan id : " + retStr);
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
@@ -61,7 +62,24 @@ public class TestScenarioPathType {
 		scenarioPathType.setPlanId("444");
 		stop = System.currentTimeMillis();
 		System.out.println("Full Path : " + scenarioPathType.getFullPath());
-		System.out.println("Instance Id : " + scenarioPathType.getPlanId());
+		System.out.println("Plan Id : " + scenarioPathType.getPlanId());
+		System.out.println("Süre : " + (stop - start) + "ms");
+
+		start = System.currentTimeMillis();
+		scenarioPathType.setPlanId("444");
+		stop = System.currentTimeMillis();
+		System.out.println("Full Path : " + scenarioPathType.getFullPath());
+		System.out.println("Id : " + scenarioPathType.getId());
+		System.out.println("Base Id : " + scenarioPathType.getId().getBaseId());
+		JSPathId jsPathId = scenarioPathType.getId();
+		jsPathId.incrementRuId();
+		System.out.println("RuId Id : " + jsPathId.getRuid());
+		
+		scenarioPathType.setId(jsPathId);
+		System.out.println("RuId Id : " + scenarioPathType.getId().getRuid());
+		System.out.println("Süre : " + (stop - start) + "ms");
+
+		System.out.println("Incremented RuId Id : " + scenarioPathType.incrementRuId());
 		System.out.println("Süre : " + (stop - start) + "ms");
 	}
 

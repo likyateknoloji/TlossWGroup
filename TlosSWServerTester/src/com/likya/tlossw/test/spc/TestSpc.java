@@ -48,13 +48,13 @@ public class TestSpc extends TestSuit {
 		JobRuntimeProperties jobRuntimeProperties1 = new JobRuntimeProperties();
 		JobRuntimeProperties jobRuntimeProperties2 = new JobRuntimeProperties();
 
-		jobRuntimeProperties1.setTreePath(spcId);
+		jobRuntimeProperties1.setTreePath(spcId.getAbsolutePath());
 		jobRuntimeProperties1.setJobProperties(jobProperties1);
-		jobRuntimeProperties1.setTreePath(spcId);
+		jobRuntimeProperties1.setTreePath(spcId.getAbsolutePath());
 
-		jobRuntimeProperties2.setTreePath(spcId);
+		jobRuntimeProperties2.setTreePath(spcId.getAbsolutePath());
 		jobRuntimeProperties2.setJobProperties(jobProperties2);
-		jobRuntimeProperties2.setTreePath(spcId);
+		jobRuntimeProperties2.setTreePath(spcId.getAbsolutePath());
 
 		ArrayList<JobRuntimeProperties> transformTable = new ArrayList<JobRuntimeProperties>();
 
@@ -111,10 +111,12 @@ public class TestSpc extends TestSuit {
 		}
 	}
 
-	private Spc prepareSpc(String instanceId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
+	private Spc prepareSpc(String planId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
 
-		Spc spc = new Spc(new TlosSWPathType(spcId), getSpaceWideRegistry(), transformTable);
-		spc.setPlanId(instanceId);
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
+		
+		Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformTable);
+		spc.setCurrentPlanId(planId);
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 		spcInfoType.setSpcReferance(spc);
@@ -128,10 +130,10 @@ public class TestSpc extends TestSuit {
 		HashMap<String, PlanInfoType> myInstanceLookupTable = new HashMap<String, PlanInfoType>();
 
 		PlanInfoType instanceInfoType = new PlanInfoType();
-		instanceInfoType.setPlanId(instanceId);
+		instanceInfoType.setPlanId(planId);
 		instanceInfoType.setSpcLookupTable(spctbl);
 
-		myInstanceLookupTable.put(instanceId, instanceInfoType);
+		myInstanceLookupTable.put(planId, instanceInfoType);
 
 		getSpaceWideRegistry().setPlanLookupTable(myInstanceLookupTable);
 

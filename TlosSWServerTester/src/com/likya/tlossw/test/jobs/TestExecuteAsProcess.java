@@ -29,7 +29,7 @@ public class TestExecuteAsProcess extends TestSuit {
 		jobRuntimeProperties.setJobProperties(jobProperties);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId));
+		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
 		
 		ExecuteAsProcess executeAsProcess = new ExecuteAsProcess(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
 
