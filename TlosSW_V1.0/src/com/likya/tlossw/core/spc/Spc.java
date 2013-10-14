@@ -524,7 +524,7 @@ public class Spc extends SpcBase {
 	}
 
 	private synchronized boolean isJobDependencyResolved(Job ownerJob, String dependencyExpression, Item[] dependencyArray) throws UnresolvedDependencyException {
-		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getPlanId(), getJobQueue(), getSpcLookupTable());
+		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getSpcId().getPlanId(), getJobQueue(), getSpcLookupTable());
 	}
 
 	private synchronized void executeJob(Job scheduledJob) {
@@ -658,7 +658,7 @@ public class Spc extends SpcBase {
 
 		// parametre gecisi burada yapilir !!
 
-		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getPlanId());
+		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getSpcId().getPlanId());
 
 		// 1.tip verilen xpath ile aktarim.
 		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
@@ -760,7 +760,7 @@ public class Spc extends SpcBase {
 	}
 
 	public String getTransferedJobKey(int agentId, String jobId, String lsiDateTime) {
-		String transferedJobKey = getPlanId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
+		String transferedJobKey = getSpcId().getPlanId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
 
 		return transferedJobKey;
 	}
