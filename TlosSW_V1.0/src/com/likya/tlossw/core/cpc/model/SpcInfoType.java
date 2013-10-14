@@ -17,7 +17,6 @@ public class SpcInfoType implements Serializable {
 
 	private static final long serialVersionUID = -8377199944163625988L;
 
-	private String jsId;
 	private String jsName;
 	private TlosSWPathType spcId;
 	private boolean concurrent;
@@ -95,15 +94,7 @@ public class SpcInfoType implements Serializable {
 	public void setScenario(Scenario scenario) {
 		this.scenario = scenario;
 	}
-
-	public String getJsId() {
-		return jsId;
-	}
-
-	public void setJsId(String jsId) {
-		this.jsId = jsId;
-	}
-
+	
 	public TlosSWPathType getSpcId() {
 		return spcId;
 	}
