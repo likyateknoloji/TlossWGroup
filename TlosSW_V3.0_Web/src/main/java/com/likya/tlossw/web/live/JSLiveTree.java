@@ -302,12 +302,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 			ScenarioNode scenarioNode = new ScenarioNode();
 
-			scenarioNode.setId(spcInfoTypeClient.getJsId());
+			scenarioNode.setId(spcInfoTypeClient.getSpcId());
 			scenarioNode.setName(spcInfoTypeClient.getJsName());
 
-			if (spcInfoTypeClient.isRootFolder()) {
-				scenarioNode.setId(resolveMessage("tlos.live.tree.free"));
-			}
 			if (spcInfoTypeClient.getJsName() == null) {
 				scenarioNode.setId(spcInfoTypeClient.getSpcId());
 			}
@@ -343,7 +340,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient(tmpScenarioNode.getSpcInfoTypeClient());
 
 			tmpScenarioNode.setName(spcInfoTypeClient.getJsName());
-			tmpScenarioNode.setId(spcInfoTypeClient.getJsId());
+			tmpScenarioNode.setId(spcInfoTypeClient.getSpcId());
 
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, tmpScenarioNode, scenarioNode);
 			scenarioNodeTree.getChildren().add(dummyNode);
