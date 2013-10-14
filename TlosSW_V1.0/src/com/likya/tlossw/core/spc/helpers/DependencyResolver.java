@@ -58,7 +58,7 @@ public class DependencyResolver {
 			if (item.getJsPath() == null || item.getJsPath() == "") { 
 				// Lokal bir bagimlilik
 				if (jobQueue.get(item.getJsId()) == null) {
-					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath().getFullPath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
+					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 				}
 				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
@@ -66,12 +66,12 @@ public class DependencyResolver {
 				SpcInfoType spcInfoType = spcLookupTable.getTable().get(BasePathType.getRootPath() + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
-					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getTreePath().getFullPath(), spcLookupTable);
+					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getTreePath(), spcLookupTable);
 				}
 
 				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				if (job == null) {
-					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), planId, spcInfoType.getSpcReferance().getSpcId().getFullPath());
+					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), planId, spcInfoType.getSpcReferance().getSpcAbsolutePath());
 				}
 
 				jobRuntimeProperties = job.getJobRuntimeProperties();
