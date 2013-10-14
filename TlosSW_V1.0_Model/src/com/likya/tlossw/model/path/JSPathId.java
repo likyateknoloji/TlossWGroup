@@ -12,7 +12,7 @@ public class JSPathId {
 
 	public JSPathId(String jsPathId) {
 		
-		String pathArray[] = jsPathId.split("\\.");
+		String pathArray[] = jsPathId.split("\\:");
 		
 		if (pathArray.length == 1) {
 			String bidStr = pathArray[0];
