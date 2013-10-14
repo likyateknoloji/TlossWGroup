@@ -86,13 +86,20 @@ public class TlosSWPathType extends BasePathType {
 		} 
 		return null;
 	}
+	
+	public int incrementRuId() {
+		JSPathId jsPathId = getId();
+		jsPathId.incrementRuId();
+		setId(jsPathId);
+		return getId().getRuid();
+	}
 
 	public void setId(JSPathId idText) {
 		if(hasDots(idText.toString(), "Id")) {
 			return;
 		}
 		if(getPathArray().size() > 2) {
-			getPathArray().set(2, idText.toString());
+			getPathArray().set(getPathArray().size() - 1, idText.toString());
 		} else {
 			getPathArray().add(idText.toString());
 		}
