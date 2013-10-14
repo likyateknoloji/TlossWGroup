@@ -57,7 +57,7 @@ public class DssVisionaire extends DssBase {
 			 */
 			myLogger.info("     > ID : " + jobProperties.getID() + ":" +  jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 
-			DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath().getFullPath()));
+			DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getTreePath()));
 			
 			myLogger.info("     > DB ye insert edildi !");
 			return dssResult;
