@@ -297,7 +297,6 @@ public class Cpc extends CpcBase {
 				spc.setJsName(spcInfoType.getJsName());
 				spc.setConcurrent(spcInfoType.isConcurrent());
 				spc.setComment(spcInfoType.getComment());
-				spc.setPlanId(planId);
 				spc.setUserId(spcInfoType.getUserId());
 
 				spcInfoType.setSpcReferance(spc);
