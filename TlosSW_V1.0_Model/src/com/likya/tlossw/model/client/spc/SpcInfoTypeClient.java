@@ -25,8 +25,6 @@ public class SpcInfoTypeClient implements Serializable {
 	private boolean resumable;
 	private boolean startable;
 	
-	private boolean rootFolder = false;
-	
 	public SpcInfoTypeClient() {
 		super();
 	}
@@ -58,7 +56,6 @@ public class SpcInfoTypeClient implements Serializable {
 		pausable = cloneSpcInfoTypeClient.getPausable();
 		resumable = cloneSpcInfoTypeClient.getResumable();
 		startable = cloneSpcInfoTypeClient.getStartable();
-		rootFolder = cloneSpcInfoTypeClient.isRootFolder();
 	}
 
 	public String getSpcId() {
@@ -133,12 +130,4 @@ public class SpcInfoTypeClient implements Serializable {
 		this.jsName = jsName;
 	}
 	
-	public boolean isRootFolder() {
-		return rootFolder;
-	}
-
-	public void setRootFolder(boolean rootFolder) {
-		this.rootFolder = rootFolder;
-	}
-
 }
