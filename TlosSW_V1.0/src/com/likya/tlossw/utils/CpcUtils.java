@@ -96,13 +96,10 @@ public class CpcUtils {
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 
-		spcInfoType.setJsId(tmpScenario.getID());
 		spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
 		spcInfoType.setUserId(userId);
-
-		spc.setPlanId(planId);
 
 		Scenario scenario = CpcUtils.getScenario(spc);
 
@@ -116,7 +113,6 @@ public class CpcUtils {
 		
 		SpcInfoType spcInfoType = new SpcInfoType();
 		
-		spcInfoType.setJsId(tmpScenario.getID());
 		spcInfoType.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(tmpScenario.getBaseScenarioInfos().getComment());
