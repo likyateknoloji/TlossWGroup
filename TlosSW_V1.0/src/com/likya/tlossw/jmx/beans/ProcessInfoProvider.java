@@ -142,7 +142,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
-		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getPlanId());
+		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getSpcId().getPlanId());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
@@ -424,7 +424,6 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
-				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
 			}
 			spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
 			spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
@@ -437,36 +436,6 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		return spcInfoTypeClient;
 	}
-
-	// public InfoTypeClient getInfoTypeClient(JmxUser jmxUser, String instanceId, String treePath) {
-	//
-	// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-	// return null;
-	// }
-	//
-	// InfoTypeClient infoTypeClient = new InfoTypeClient();
-	//
-	// infoTypeClient.setJobInfoTypeClient(retrieveJobListDetails(jmxUser, treePath, false));
-	// infoTypeClient.setSpcLookUpTableTypeClient(retrieveSpcLookupTable(jmxUser, instanceId, treePath));
-	//
-	// return infoTypeClient;
-	// }
-
-	// public ScenarioNode getLiveTreeInfo(JmxUser jmxUser, ScenarioNode scenarioNode) {
-	//
-	// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
-	// return null;
-	// }
-	//
-	// ScenarioNode tree = new ScenarioNode();
-	// // tree.setRoot(true);
-	// //
-	// // // getLiveTreeInfo(scenarioNode.getScenarioNodeList(),
-	// // // tree.getScenarioNodeList());
-	// // getLiveTreeInfo(scenarioNode.getScenarioNodeMap(), tree.getScenarioNodeMap());
-	//
-	// return tree;
-	// }
 
 	public Object retrieveGlobalStates(JmxAgentUser jmxAgentUser) {
 		if (!JMXTLSServer.authorizeWeb(jmxAgentUser)) {
