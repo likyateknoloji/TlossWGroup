@@ -35,7 +35,6 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.model.infobus.JobAllInfo;
 import com.likya.tlossw.model.infobus.JobInfo;
 import com.likya.tlossw.model.infobus.JobStart;
-import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -237,7 +236,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 			JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-			String jobPath = ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
+			String jobPath = ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
 			jobStart.setTreePath(jobPath);
 			// jobStart.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
 			jobStart.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
@@ -254,7 +253,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendEndInfo(TlosSWPathType spcId, JobProperties jobProperties) {
+	public synchronized void sendEndInfo(String spcAbsolutePath, JobProperties jobProperties) {
 
 		if (genericInfoSender != null) {
 			genericInfoSender.sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties());
@@ -262,7 +261,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 			JobAllInfo jobAllInfo = new JobAllInfo();
 			jobAllInfo.setJobProperties(jobProperties);
-			jobAllInfo.setSpcId(spcId);
+			jobAllInfo.setSpcAbsolutePath(spcAbsolutePath);
 
 			if (getGlobalRegistry().getInfoBus() != null) {
 				getGlobalRegistry().getInfoBus().addInfo(jobAllInfo);
@@ -273,11 +272,11 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendFirstJobInfo(TlosSWPathType spcId, JobProperties jobProperties) {
+	public synchronized void sendFirstJobInfo(String spcAbsolutePath, JobProperties jobProperties) {
 
 		JobAllInfo jobAllInfo = new JobAllInfo();
 		jobAllInfo.setJobProperties(jobProperties);
-		jobAllInfo.setSpcId(spcId);
+		jobAllInfo.setSpcAbsolutePath(spcAbsolutePath);
 		jobAllInfo.setFirstJobInfo(true);
 
 		if (getGlobalRegistry().getInfoBus() != null) {
@@ -307,8 +306,10 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private synchronized void sendServerStatusChangeInfo() {
 
 		JobInfo jobInfo = new JobInfo();
+		
+		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath().getFullPath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime()));
+		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
 		//jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
 		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 		jobInfo.setJobID(getJobRuntimeProperties().getJobProperties().getID());
@@ -322,7 +323,6 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		if (getGlobalRegistry().getInfoBus() != null) {
 			getGlobalRegistry().getInfoBus().addInfo(jobInfo);
-			// GlobalRegistery.getSpaceWideLogger().info("infoBusManager bilgilendirildi !");
 		} else {
 			System.out.println("getGlobalRegistry().getInfoBusManager() is null !!!");
 		}
@@ -347,13 +347,13 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	public synchronized void sendStatusChangeInfo(LiveStateInfo liveStateInfo) {
 
 		JobInfo jobInfo = new JobInfo();
+		
+		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath().getFullPath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime());
-		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath().getFullPath(), getJobRuntimeProperties().getJobProperties().getID(), getJobRuntimeProperties().getJobProperties().getAgentId() + "", getJobRuntimeProperties().getJobProperties().getLSIDateTime()));
-		// jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
-		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+		ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
+		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
+		jobInfo.setJobName(jobProperties.getBaseJobInfos().getJsName());
 		jobInfo.setLiveLiveStateInfo(liveStateInfo);
-		// jobInfo.getLiveLiveStateInfo().setLSIDateTime(DateUtils.getW3CDateTime());
 		Date infoTime = Calendar.getInstance().getTime();
 		jobInfo.setInfoDate(infoTime);
 		// TODO addInfo da bir problem olabilir. arastir? hakan
@@ -391,7 +391,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
 		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
-		sendEndInfo(new TlosSWPathType(Thread.currentThread().getName()), jobRuntimeProperties.getJobProperties());
+		sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
 		getJobRuntimeProperties().setPlannedExecutionDate(startTime);
@@ -415,8 +415,8 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		long timeDiff = endTime.getTime().getTime() - startTime.getTime().getTime();
 
-		String endLog = getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + ":Bitis zamani : " + DateUtils.getDate(endTime.getTime());
-		String duration = getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName() + ": islem suresi : " + DateUtils.getFormattedElapsedTime((int) timeDiff / 1000);
+		String endLog = jobProperties.getBaseJobInfos().getJsName() + ":Bitis zamani : " + DateUtils.getDate(endTime.getTime());
+		String duration =  jobProperties.getBaseJobInfos().getJsName() + ": islem suresi : " + DateUtils.getFormattedElapsedTime((int) timeDiff / 1000);
 		getJobRuntimeProperties().setCompletionDate(endTime);
 		getJobRuntimeProperties().setWorkDuration(DateUtils.getUnFormattedElapsedTime((int) timeDiff / 1000));
 
@@ -425,10 +425,10 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		stopTimeTemp.setDate(endTime);
 		jobRealTime.setStopTime(stopTimeTemp);
 
-		getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
+		jobProperties.getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 		// getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
-		sendEndInfo(new TlosSWPathType(Thread.currentThread().getName()), getJobRuntimeProperties().getJobProperties());
+		sendEndInfo(Thread.currentThread().getName(), jobProperties);
 
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + endLog);
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + duration);
@@ -436,7 +436,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		myLogger.info(" >>" + logLabel + ">> " + duration);
 
 		if (watchDogTimer != null) {
-			myLogger.debug(" >>" + logLabel + ">> " + "Terminating Watchdog for " + getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
+			myLogger.debug(" >>" + logLabel + ">> " + "Terminating Watchdog for " + jobProperties.getBaseJobInfos().getJsName());
 			stopMyDogBarking();
 		}
 
