@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.infobus.helper : ScenarioStart.java
- * @author Serkan Ta�
+ * @author Serkan Taş
  * Tarih : Nov 28, 2008 4:13:46 PM
  */
 
@@ -10,7 +10,6 @@ package com.likya.tlossw.infobus.helper;
 import java.util.Date;
 
 import com.likya.tlossw.model.infobus.InfoType;
-import com.likya.tlossw.model.path.TlosSWPathType;
 
 /**
  * Senaryonun baslatilmasi sirasinda belirlenmis olmasi gereken; 
@@ -23,7 +22,7 @@ public class ScenarioStart implements InfoType {
 
 	private static final long serialVersionUID = -1137085811031817643L;
 	
-	private TlosSWPathType scenarioId;
+	private String scenarioId;
 	private Date startDate;
 	private int jobCount;
 
@@ -43,11 +42,11 @@ public class ScenarioStart implements InfoType {
 		this.jobCount = jobCount;
 	}
 
-	public TlosSWPathType getScenarioId() {
+	public String getScenarioId() {
 		return scenarioId;
 	}
 
-	public void setScenarioId(TlosSWPathType scenarioId) {
+	public void setScenarioId(String scenarioId) {
 		this.scenarioId = scenarioId;
 	}
 
