@@ -27,7 +27,7 @@ public class Consolidator {
 	
 	public static void compareAndConsolidateTwoTables(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 	
-		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bıugünün kuyruğu : " + spcLookupTableNew.size());
+		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bugünün kuyruğu : " + spcLookupTableNew.size());
 		
 		String newSpcIdSample =  spcLookupTableNew.keySet().toArray()[0].toString();
 		String planIdNew = new TlosSWPathType(newSpcIdSample).getPlanId();
@@ -38,37 +38,53 @@ public class Consolidator {
 			
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcIdOld);
 			tlosSWPathType.setPlanId(planIdNew);
-			
+
+			SpcInfoType spcInfoTypeOld = spcLookupTableOld.get(spcIdOld);
+			// System.out.println("Before : " + spcInfoTypeOld.getSpcId());
+			// System.out.println("After : " + spcInfoTypeOld.getSpcId());
+			Spc spcReferanceOld = spcInfoTypeOld.getSpcReferance();
+			spcInfoTypeOld.setSpcId(tlosSWPathType);
 			String tempSpcIdOld = tlosSWPathType.getFullPath();
 			
-			Spc referanceOld = spcLookupTableOld.get(spcIdOld).getSpcReferance();
-			
-			if(referanceOld == null) {
-				// Empty scenario
-				spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
-			} else if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
+			if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
 				
-				if(!isScenarioEnsuresTheConditions(referanceOld)) {
+				if(spcReferanceOld == null) {
+					// Empty scenario
+					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+				} else if(!isScenarioEnsuresTheConditions(spcReferanceOld)) {
 				
-					if(referanceOld.isConcurrent()) {
+					if(spcReferanceOld.isConcurrent()) {
+						// Yenisini listeden çıkarıp kopyasını al
+						SpcInfoType tmpSpcInfoType = spcLookupTableNew.remove(tlosSWPathType.getFullPath());
+						// eskisini yeni listeye taşı
+						spcReferanceOld.setCurrentPlanId(planIdNew);
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 						// Yenisinin instance id sini bir arttır ve öylece listeye ekle, 
-						// eskisini yeni listeye taşı, eski listeden sil.
 						// Örnek : scenarioId = 3245:13
 						// Yeni scenarioId = 3245:14
-						tlosSWPathType.getId().incrementRuId();
-						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
+						
+						TlosSWPathType tmpTlosSWPathType = new TlosSWPathType(tlosSWPathType);
+						while(spcLookupTableNew.containsKey(tmpTlosSWPathType.getFullPath())) {
+							tmpTlosSWPathType.incrementRuId();
+						}
+						tmpSpcInfoType.setSpcId(tmpTlosSWPathType);
+						spcLookupTableNew.put(tmpTlosSWPathType.getFullPath(), tmpSpcInfoType);
+						
 					} else {
 						// Bitince kendini VT'den yenilesin değerini set et. 
-						// sonra yeni listeye ekle
-						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
+						spcReferanceOld.setCurrentPlanId(planIdNew);
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);						
 					}
-				
+
 				}
+				
+				// System.out.println("Referance : " + spcLookupTableNew.get(tempSpcIdOld).getSpcReferance() + "   Yeni  durum : " + spcLookupTableNew.get(tempSpcIdOld).getSpcId().getPlanId());
 				
 			} else {
 				
-				if(!isScenarioEnsuresTheConditions(referanceOld)) {
-					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
+				if((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
+					spcReferanceOld.setCurrentPlanId(planIdNew);
+					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 				}
 			
 			}
@@ -297,7 +313,7 @@ public static void compareAndConsolidateTwoTables1(String instanceIdOld, HashMap
 		}
 		
 		if (!LiveStateInfoUtils.equalStates(spcReferance.getLiveStateInfo(), liveStateInfo)) {
-			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcId().getFullPath() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
+			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcAbsolutePath() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
 			return false;
 		}
 
