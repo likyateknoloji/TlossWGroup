@@ -126,12 +126,12 @@ public class CpcUtils {
 		return spcInfoType;
 	}
 	
-	public static String getRootScenarioPath(String instanceId) {
-		return getInstancePath(instanceId) + "." + EngineeConstants.LONELY_JOBS;
+	public static String getRootScenarioPath(String planId) {
+		return getInstancePath(planId) + "." + EngineeConstants.LONELY_JOBS;
 	}
 	
-	public static String getInstancePath(String instanceId) {
-		return BasePathType.getRootPath() + "." + instanceId;
+	public static String getInstancePath(String planId) {
+		return BasePathType.getRootPath() + "." + planId;
 	}
 
 }
