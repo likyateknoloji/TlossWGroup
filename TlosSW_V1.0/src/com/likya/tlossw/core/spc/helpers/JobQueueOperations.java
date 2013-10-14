@@ -20,7 +20,6 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.jobs.Job;
-import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -64,14 +63,14 @@ public class JobQueueOperations {
 		return true;
 	}
 
-	public static void dumpJobQueue(TlosSWPathType spcId, HashMap<String, Job> jobQueue) {
+	public static void dumpJobQueue(String spcAbsolutePath, HashMap<String, Job> jobQueue) {
 
 		@SuppressWarnings("unused")
 		String queueDumpInfo = " JOB QUEUE >> ";
 		String queueDumpDebug = "";
 		int allJobCounter = 0, finishedJobCounter = 0, runningJobCounter = 0;
 
-		SpaceWideRegistry.getGlobalLogger().info(" JOB QUEUE for scenario : " + spcId.getFullPath() + " >> ");
+		SpaceWideRegistry.getGlobalLogger().info(" JOB QUEUE for scenario : " + spcAbsolutePath + " >> ");
 
 		Iterator<Job> jobsIterator = jobQueue.values().iterator();
 		// jobsIterator.next().getJobRuntimeProperties().getJobProperties().getJsName();
@@ -111,7 +110,7 @@ public class JobQueueOperations {
 			// Logger.getLogger(SpcBase.class).info("     > "+ this.getJsName()
 			// + " senaryosunda guncel is Sayisi : " + getJobQueue().size());
 			if (SpaceWideRegistry.isDebug) {
-				SpaceWideRegistry.getGlobalLogger().info("     > " + spcId.getFullPath() + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
+				SpaceWideRegistry.getGlobalLogger().info("     > " + spcAbsolutePath + " icin guncel is Sayisi (Fin : Run : All): (" + finishedJobCounter + " : " + runningJobCounter + " : " + allJobCounter + ")");
 			}
 		}
 
@@ -127,9 +126,9 @@ public class JobQueueOperations {
 	 *            : Spc'ye ait iş listesi
 	 * @return
 	 */
-	public static boolean persistJobQueue(TlosSWPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean persistJobQueue(String spcAbsolutePath, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
-		String fileName = scenarioPathType.getFullPath();
+		String fileName = spcAbsolutePath;
 
 		FileOutputStream fos = null;
 		FileOutputStream fosIdx = null;
@@ -161,9 +160,9 @@ public class JobQueueOperations {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean recoverJobQueue(TlosSWPathType scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
+	public static boolean recoverJobQueue(String scenarioPathType, HashMap<String, Job> jobQueue, ArrayList<SortType> jobQueueIndex) {
 
-		String fileName = scenarioPathType.getFullPath();
+		String fileName = scenarioPathType;
 
 		FileInputStream fis = null;
 		FileInputStream fisIdx = null;
