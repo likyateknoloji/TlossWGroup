@@ -142,12 +142,12 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
-		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getSpcId().getPlanId());
+		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getCurrentPlanId());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath().getFullPath());
+		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
 		jobInfoTypeClient.setJobPath(baseJobInfos.getJobInfos().getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(baseJobInfos.getJobLogPath());
 		jobInfoTypeClient.setJobLogName(baseJobInfos.getJobLogFile());
@@ -368,7 +368,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			String scenarioId = keyIterator.next();
 			SpcInfoType spcInfoType = spcLookUpTable.get(scenarioId);
 
-			if ((scenariodIdList != null) && scenariodIdList.indexOf(spcInfoType.getSpcReferance().getSpcId()) > 0) {
+			if ((scenariodIdList != null) && scenariodIdList.indexOf(spcInfoType.getSpcReferance().getSpcAbsolutePath()) > 0) {
 
 				ArrayList<JobStatusSummary> jobList = new ArrayList<JobStatusSummary>();
 
@@ -802,7 +802,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath().getFullPath());
+			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
