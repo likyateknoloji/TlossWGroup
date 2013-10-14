@@ -88,7 +88,7 @@ public class AgentOperator implements AgentOperatorMBean {
 				Spc spc = planLookupTable.get(txMessageIdBean.getInstanceId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
 				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
 				
-				job.sendEndInfo(new TlosSWPathType(txMessageIdBean.getSpcId()), txMessage.getTxMessageBodyType().getJobProperties());
+				job.sendEndInfo(new TlosSWPathType(txMessageIdBean.getSpcId()).getAbsolutePath(), txMessage.getTxMessageBodyType().getJobProperties());
 				if (txMessage.getTxMessageBodyType().getJobProperties().getAgentId() != 0) { // Baska
 																								// ne
 																								// olabilir
