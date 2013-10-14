@@ -35,14 +35,14 @@ public class ConcurrencyAnalyzer {
 					// ** Biraz parsing laz�m :( *//*
 					Item mydependencyItem = Item.Factory.newInstance();
 					mydependencyItem.setDependencyID("VD1");
-					mydependencyItem.setComment("Bu sanal bir bagimlilik tanimidir. Bagli oldugu senaryo  ise budur : " + spcInfoTypeMaster.getSpcReferance().getSpcId());
+					mydependencyItem.setComment("Bu sanal bir bagimlilik tanimidir. Bagli oldugu senaryo  ise budur : " + spcInfoTypeMaster.getSpcReferance().getSpcAbsolutePath());
 
 					JsDependencyRule myDependencyRule = JsDependencyRule.Factory.newInstance();
 					myDependencyRule.setStateName(StateName.FINISHED);
 					mydependencyItem.setJsDependencyRule(myDependencyRule);
 
 					mydependencyItem.setJsName(spcInfoTypeMaster.getSpcReferance().getBaseScenarioInfos().getJsName());
-					mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcId().getFullPath());
+					mydependencyItem.setJsPath(spcInfoTypeMaster.getSpcReferance().getSpcAbsolutePath());
 					mydependencyItem.setJsType(JsType.SCENARIO);
 					
 					DependencyList myDependencyList = DependencyList.Factory.newInstance();
