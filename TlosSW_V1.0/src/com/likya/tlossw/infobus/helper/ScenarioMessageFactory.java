@@ -2,24 +2,22 @@ package com.likya.tlossw.infobus.helper;
 
 import java.util.Calendar;
 
-import com.likya.tlossw.model.path.TlosSWPathType;
-
 public class ScenarioMessageFactory {
 	
-	public static ScenarioStart generateScenarioStart(TlosSWPathType spcId, int queueSize) {
+	public static ScenarioStart generateScenarioStart(String spcAbsolutePath, int queueSize) {
 		
 		ScenarioStart scenarioStart = new ScenarioStart();
-		scenarioStart.setScenarioId(spcId);
+		scenarioStart.setScenarioId(spcAbsolutePath);
 		scenarioStart.setStartDate(Calendar.getInstance().getTime());
 		scenarioStart.setJobCount(queueSize);
 		
 		return scenarioStart;
 	}
 	
-	public static ScenarioEnd generateScenarioEnd(TlosSWPathType spcId, int queueSize) {
+	public static ScenarioEnd generateScenarioEnd(String spcAbsolutePath, int queueSize) {
 		
 		ScenarioEnd scenarioEnd = new ScenarioEnd();
-		scenarioEnd.setScenarioId(spcId);
+		scenarioEnd.setScenarioId(spcAbsolutePath);
 		scenarioEnd.setEndDate(Calendar.getInstance().getTime());
 		scenarioEnd.setJobCount(queueSize);
 		
