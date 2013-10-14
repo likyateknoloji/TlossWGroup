@@ -40,7 +40,6 @@ import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -59,20 +58,20 @@ public class Spc extends SpcBase {
 
 	private boolean isRecovered = false;
 
-	public Spc(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
-		this(spcId, spaceWideRegistry, taskList, false, false);
+	public Spc(String nativePlanId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList) throws TlosFatalException {
+		this(nativePlanId, spcAbsolutePath, spaceWideRegistry, taskList, false, false);
 	}
 
-	public Spc(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
+	public Spc(String nativePlanId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isRecoverAction, boolean isTester) throws TlosFatalException {
 
-		super(spcId, spaceWideRegistry, taskList, isTester);
+		super(nativePlanId, spcAbsolutePath, spaceWideRegistry, taskList, isTester);
 
 		if (isRecoverAction) {
-			getGlobalLogger().info("   > " + spcId + " recover islemi yapildi. ");
-			if (!JobQueueOperations.recoverJobQueue(spcId, getJobQueue(), getJobQueueIndex())) {
+			getGlobalLogger().info("   > " + spcAbsolutePath + " recover islemi yapildi. ");
+			if (!JobQueueOperations.recoverJobQueue(spcAbsolutePath, getJobQueue(), getJobQueueIndex())) {
 				// TODO Recover edemezse ne yapilacagi konusunda bir karar vermek gerekir.
-				getGlobalLogger().error(" ONEMLI : " + spcId + " recover edilemedi. Hata Kodu : 98087 ");
-				getGlobalLogger().info(" ONEMLI : " + spcId + " recover edilemedi. Hata Kodu : 98087 ");
+				getGlobalLogger().error(" ONEMLI : " + spcAbsolutePath + " recover edilemedi. Hata Kodu : 98087 ");
+				getGlobalLogger().info(" ONEMLI : " + spcAbsolutePath + " recover edilemedi. Hata Kodu : 98087 ");
 				System.exit(-1);
 			}
 			isRecovered = true;
@@ -82,7 +81,7 @@ public class Spc extends SpcBase {
 
 	public void run() {
 
-		Thread.currentThread().setName("Spc_" + getSpcId());
+		Thread.currentThread().setName(getFullSpcPath());
 
 		getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin ana thread baslatiliyor. Toplam is Sayisi : " + getJobQueue().size());
 
@@ -93,7 +92,7 @@ public class Spc extends SpcBase {
 		 * @author serkan taş 19.09.2012
 		 */
 		if (getSpaceWideRegistry().getInfoBus() != null) {
-			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcId(), getJobQueue().size()));
+			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioStart(getSpcAbsolutePath(), getJobQueue().size()));
 			if (SpaceWideRegistry.isDebug) {
 				getMyLogger().info("     > " + this.getBaseScenarioInfos().getJsName() + " icin islerin baslatildigi bilgisi InfoBusManager a iletildi.");
 			}
@@ -157,8 +156,8 @@ public class Spc extends SpcBase {
 				// isler icin yapilacaklari kapsiyor.
 
 				// Persistent icin talep varsa, bunu yerine getirmek icin operasyonu diske bir dosyaya kaydet.
-				if (getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() && !JobQueueOperations.persistJobQueue(getSpcId(), getJobQueue(), getJobQueueIndex())) {
-					getMyLogger().error("Jobqueue persist error : scenario id : " + getSpcId());
+				if (getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() && !JobQueueOperations.persistJobQueue(getSpcAbsolutePath(), getJobQueue(), getJobQueueIndex())) {
+					getMyLogger().error("Jobqueue persist error : scenario id : " + getSpcAbsolutePath());
 					getMyLogger().error("Continue the execution with persistency feature disabled !");
 				}
 
@@ -174,7 +173,7 @@ public class Spc extends SpcBase {
 					 *         20.09.2012
 					 */
 					if (SpaceWideRegistry.isDebug) {
-						JobQueueOperations.dumpJobQueue(getSpcId(), getJobQueue());
+						JobQueueOperations.dumpJobQueue(getSpcAbsolutePath(), getJobQueue());
 					}
 
 				} catch (Throwable t) {
@@ -279,8 +278,8 @@ public class Spc extends SpcBase {
 
 			getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 
-			getMyLogger().info(" >>" + "Spc_" + getSpcId().getFullPath() + ">> " + endLog);
-			getMyLogger().info(" >>" + "Spc_" + getSpcId().getFullPath() + ">> " + duration);
+			getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + endLog);
+			getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + duration);
 
 			// TODO job icin boyle ama senaryo icin nasil olacak? hs
 			// sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties().getJobProperties());
@@ -290,8 +289,8 @@ public class Spc extends SpcBase {
 		}
 
 		if (getSpaceWideRegistry().getInfoBus() != null) {
-			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcId(), getJobQueue().size()));
-			getMyLogger().info("     > SPC ID : " + this.getSpcId().getFullPath() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
+			getSpaceWideRegistry().getInfoBus().addInfo(ScenarioMessageFactory.generateScenarioEnd(getSpcAbsolutePath(), getJobQueue().size()));
+			getMyLogger().info("     > SPC ID : " + this.getSpcAbsolutePath() + ":" + this.getBaseScenarioInfos().getJsName() + " icin islerin bittigi konusunda InfoBusManager bilgilendirildi.");
 		} else {
 			getGlobalLogger().error("getSpaceWideRegistry().getInfoBusManager() == null !");
 		}
@@ -390,7 +389,7 @@ public class Spc extends SpcBase {
 					 * serkan : kaldırdım :)
 					 */
 					// if (scheduledJob.getFirstLoop()) {
-					scheduledJob.sendFirstJobInfo(getSpcId(), jobProperties);
+					scheduledJob.sendFirstJobInfo(getSpcAbsolutePath(), jobProperties);
 					// }
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
@@ -524,7 +523,7 @@ public class Spc extends SpcBase {
 	}
 
 	private synchronized boolean isJobDependencyResolved(Job ownerJob, String dependencyExpression, Item[] dependencyArray) throws UnresolvedDependencyException {
-		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getSpcId().getPlanId(), getJobQueue(), getSpcLookupTable());
+		return DependencyResolver.isJobDependencyResolved(getMyLogger(), ownerJob, dependencyExpression, dependencyArray, getCurrentPlanId(), getJobQueue(), getSpcLookupTable());
 	}
 
 	private synchronized void executeJob(Job scheduledJob) {
@@ -555,7 +554,7 @@ public class Spc extends SpcBase {
 		 */
 
 		Thread starterThread = new Thread(scheduledJob);
-		starterThread.setName(this.getSpcId().getFullPath());
+		starterThread.setName(getSpcAbsolutePath());
 		scheduledJob.setMyExecuter(starterThread);
 
 		getMyLogger().info("     > ID : " + jobProperties.getID() + ":" + jobProperties.getBaseJobInfos().getJsName() + " isi icin <Server> da bir thread acildi !");
@@ -658,14 +657,14 @@ public class Spc extends SpcBase {
 
 		// parametre gecisi burada yapilir !!
 
-		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getSpcId().getPlanId());
+		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getCurrentPlanId());
 
 		// 1.tip verilen xpath ile aktarim.
 		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// 2.tip fiziksel bagimlilik ile aktarim
 		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
 
-		scheduledJob.sendEndInfo(getSpcId(), scheduledJob.getJobRuntimeProperties().getJobProperties());
+		scheduledJob.sendEndInfo(getSpcAbsolutePath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// //////////////////\\\\\\\\\\\\\\\\\
 
 		/* Secilen kaynak server ise server da degilse agent a aktararak calistir. */
@@ -727,19 +726,19 @@ public class Spc extends SpcBase {
 
 	public void pause() {
 		if (isPausable()) {
-			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Beklemeye alıyor...");
+			getMyLogger().info("Spc " + getSpcAbsolutePath() + " Beklemeye alıyor...");
 			getLiveStateInfo().setStateName(StateName.PENDING);
 			getLiveStateInfo().setSubstateName(SubstateName.PAUSED);
-			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Beklemede !");
+			getMyLogger().info("Spc " + getSpcAbsolutePath() + " Beklemede !");
 		}
 	}
 
 	public void resume() {
 		if (isResumable()) {
-			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Bekleme durumundan çıkartıyor...");
+			getMyLogger().info("Spc " + getSpcAbsolutePath() + " Bekleme durumundan çıkartıyor...");
 			getLiveStateInfo().setStateName(StateName.RUNNING);
 			getLiveStateInfo().setSubstateName(null);
-			getMyLogger().info("Spc " + getSpcId().getFullPath() + " Bekleme durumundan çıkartıldı !");
+			getMyLogger().info("Spc " + getSpcAbsolutePath() + " Bekleme durumundan çıkartıldı !");
 		}
 	}
 
@@ -760,7 +759,7 @@ public class Spc extends SpcBase {
 	}
 
 	public String getTransferedJobKey(int agentId, String jobId, String lsiDateTime) {
-		String transferedJobKey = getSpcId().getPlanId() + "|" + getSpcId() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
+		String transferedJobKey = getCurrentPlanId() + "|" + getSpcAbsolutePath() + "|" + jobId + "|" + agentId + "|" + lsiDateTime;
 
 		return transferedJobKey;
 	}

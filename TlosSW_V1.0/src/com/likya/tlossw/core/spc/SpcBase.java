@@ -28,6 +28,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.AppState;
+import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.ExecuteInShell;
@@ -35,7 +36,6 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
-import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -47,13 +47,12 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	private LiveStateInfo liveStateInfo;
 
-	private TlosSWPathType spcId;
+	private String spcAbsolutePath;
 	private String jsName;
 	private String comment;
-	private String planId;
+	private String currentPlanId;
+	private String nativePlanId;
 	private boolean concurrent;
-	// private DependencyList dependencyList;
-	// private ScenarioStatusList scenarioStatusList;
 	private String userId;
 
 	private BaseScenarioInfos baseScenarioInfos;
@@ -100,18 +99,24 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	protected boolean isTester = false;
 
-	public SpcBase(TlosSWPathType spcId, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
+	public SpcBase(String nativePlanId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
+		this.nativePlanId = nativePlanId;
+		this.currentPlanId = nativePlanId;
 		this.isTester = isTester;
-		this.spcId = spcId;
+		this.spcAbsolutePath = spcAbsolutePath;
 		this.taskList = taskList;
 		this.spaceWideRegistry = spaceWideRegistry;
 
 		jobQueue = new HashMap<String, Job>();
 		jobQueueIndex = new ArrayList<SortType>();
 
-		logLabel = "Spc_" + this.getSpcId();
+		logLabel = getFullSpcPath();
 
+	}
+	
+	protected String getFullSpcPath() {
+		return "Spc_" + BasePathType.getRootPath() + "." + getNativePlanId();
 	}
 
 	public boolean initScenarioInfo() { // Senaryolarin ilk baslatilmalari icin
@@ -122,7 +127,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		scenario = null;
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
-			jobRuntimeProperties.setTreePath(getSpcId());
+			jobRuntimeProperties.setTreePath(getSpcAbsolutePath());
 
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
@@ -131,32 +136,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 
-			// if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-			// // PERIYODIK bir is ise;
-			// if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getInstanceId()))) {
-			// globalLogger.warn("     > Periodik job root disinda kullanilamaz ! Base : " + CpcBase.getRootPath());
-			// globalLogger.warn("     > JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-			// globalLogger.warn("     > TreePath : " + jobRuntimeProperties.getTreePath());
-			//
-			// } else { // TODO PARAMETRE ekleme
-			// myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
-			// myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
-			// // myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
-			// // jobRuntimeProperties);
-			// }
-			// } else {
-			// myLogger.info("     << Peryodik olmayan "+jobRuntimeProperties.getJobProperties().getJsName()+" isi calistirilmaya hazir ! >>");
-			myLogger.info("     > Peryodik olmayan " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName() + " isi calistirilmaya hazir !");
 			myJob = getMyJob(jobRuntimeProperties);
-			// }
 
 			if (myJob != null && jobId != null) {
-				// isi jobQueue ya ID si ile birlikte koyalim.
-
 				jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
-				// Su anda oncelikli isi daha once calistirma ile ilgili bir kontrol
-				// yok. Koyulacak.
-
 				getJobQueue().put(jobId, myJob);
 			}
 		}
@@ -205,7 +188,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 			jobRuntimeProperties.setJobProperties(jobProperties);
 
-			jobRuntimeProperties.setTreePath(getSpcId());
+			jobRuntimeProperties.setTreePath(getSpcAbsolutePath());
 
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
@@ -343,27 +326,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 	}
 
 	public LiveStateInfo getLastStateOfJob(LiveStateInfos liveStateInfos) {
-
-		/*
-		 * TODO Burada tarihe gore siralama yapmaya gerek var mi?
-		 * Varsa asagidakine benzer birsey yapmamiz lazim.
-		 * tarih cevriminde bir problem var, onu cozmemiz lazim tabii once
-		 * 
-		 * int boyut = liveStateInfos.sizeOfLiveStateInfoArray();
-		 * Date refDate = DateUtils.getDateTime( liveStateInfos.getLiveStateInfoArray(0).getLSIDateTime());
-		 * LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
-		 * 
-		 * for (int i=0; i<boyut; i++) {
-		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
-		 * System.out.println(liveStateInfos.getLiveStateInfoArray(i));
-		 * //com.likya.tlossw.utils.date.DateUtils
-		 * String dateTimeInString = liveStateInfos.getLiveStateInfoArray(i).getLSIDateTime();
-		 * if(DateUtils.getDateTime(dateTimeInString).after(refDate)) {
-		 * refDate = DateUtils.getDateTime(dateTimeInString);
-		 * lastStateInfo = liveStateInfos.getLiveStateInfoArray(i);
-		 * }
-		 * }
-		 */
+		
 		LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
 
 		return lastStateInfo;
@@ -563,7 +526,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
 		}
 
-		return getSpaceWideRegistry().getPlanLookupTable().get(getPlanId()).getSpcLookupTable();
+		PlanInfoType planInfoType = getSpaceWideRegistry().getPlanLookupTable().get(getCurrentPlanId());
+
+		if (planInfoType == null) {
+			System.out.println("my pointer : " + this + " pland id : " + getCurrentPlanId());
+		}
+
+		return planInfoType.getSpcLookupTable();
 
 	}
 
@@ -585,15 +554,15 @@ public abstract class SpcBase implements Runnable, Serializable {
 		Set<String> set = this.getSpcLookupTable().getTable().keySet();
 
 		for (String i : set)
-			if (i.indexOf(spcId + ".") != -1) {
+			if (i.indexOf(spcAbsolutePath + ".") != -1) {
 				map.put(i, this.getSpcLookupTable().getTable().get(i));
 			}
 
 		return map;
 	}
 
-	public TlosSWPathType getSpcId() {
-		return spcId;
+	public String getSpcAbsolutePath() {
+		return spcAbsolutePath;
 	}
 
 	protected boolean isSpcPermittedToExecute() {
@@ -605,21 +574,25 @@ public abstract class SpcBase implements Runnable, Serializable {
 		LiveStateInfo previousLiveStateInfo = jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
 		// System.out.println("Son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
-		
-		if(previousLiveStateInfo == null || !LiveStateInfoUtils.equalStates(previousLiveStateInfo, stateNameEnum, substateNameEnum, statusNameEnum)) {
+
+		if (previousLiveStateInfo == null || !LiveStateInfoUtils.equalStates(previousLiveStateInfo, stateNameEnum, substateNameEnum, statusNameEnum)) {
 			scheduledJob.insertNewLiveStateInfo(stateNameEnum.intValue(), substateNameEnum.intValue(), statusNameEnum.intValue());
 			// System.out.println("Değiştikten sonraki son durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).toString());
 		}
-		
+
 		// System.out.println("Önceki durum : " + jobRuntimeProperties.getJobProperties().getID() + " : " + jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(1).toString());
 	}
 
-	public String getPlanId() {
-		return planId;
+	public String getCurrentPlanId() {
+		return currentPlanId;
 	}
 
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setCurrentPlanId(String currentPlanId) {
+		this.currentPlanId = currentPlanId;
+	}
+
+	public String getNativePlanId() {
+		return nativePlanId;
 	}
 
 }
