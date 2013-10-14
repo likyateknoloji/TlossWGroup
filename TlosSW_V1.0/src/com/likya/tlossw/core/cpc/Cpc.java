@@ -128,6 +128,7 @@ public class Cpc extends CpcBase {
 				
 				TlosSpaceWide.changeApplicationState(AppState.INT_RUNNING);
 				// Cpc.dumpSpcLookupTables(getSpaceWideRegistry());
+				logger.info("   > CPC nin durumu : getExecuterThread().wait() : " + getSpaceWideRegistry().getCpcReference().getExecuterThread().getState());
 				synchronized (this.getExecuterThread()) {
 					this.getExecuterThread().wait();
 				}
@@ -268,8 +269,8 @@ public class Cpc extends CpcBase {
 			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
-
-				Spc spc = new Spc(new TlosSWPathType(spcId), getSpaceWideRegistry(), null, isUserSelectedRecover, false);
+				TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
+				Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), null, isUserSelectedRecover, false);
 				LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
 				myLiveStateInfo.setStateName(StateName.PENDING);

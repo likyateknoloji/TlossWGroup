@@ -152,7 +152,7 @@ public abstract class CpcBase implements Runnable {
 		System.out.println("sizo of spcLookupTable for instanceId : " + planId + " is " + table.size());
 
 		for (String spcKey : table.keySet()) {
-			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcId().getFullPath());
+			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcAbsolutePath());
 		}
 
 		System.out.println("***************************************************************************************");
@@ -178,8 +178,8 @@ public abstract class CpcBase implements Runnable {
 			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
 
 			for (String spcKey : spcLookupTable.keySet()) {
-				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId().getFullPath());
-				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcId().getFullPath());
+				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcAbsolutePath());
+				Logger.getLogger(CpcBase.class).debug("  >>> Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcAbsolutePath());
 			}
 		}
 
@@ -279,18 +279,20 @@ public abstract class CpcBase implements Runnable {
 			}
 
 			SpcInfoType spcInfoType = null;
-			String userId = null; // Henüz ayarlanmadı !
+			// TODO Henüz ayarlanmadı !
+			String userId = null; 
 
-			if (/* !scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId)) && */jobList.getJobPropertiesArray().length == 0) {
+			if (jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 			} else {
-				Spc spc = new Spc(new TlosSWPathType(scenarioId), getSpaceWideRegistry(), transformJobList(jobList));
+				TlosSWPathType tlosSWPathType = new TlosSWPathType(scenarioId);
+				Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformJobList(jobList));
 
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 
-				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcId(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 					if (!spc.initScenarioInfo()) {
 						myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 						Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
@@ -391,14 +393,13 @@ public abstract class CpcBase implements Runnable {
 
 	protected void initParameters() throws GlobalParameterLoadException {
 
-		// if (getSpaceWideRegistry().getParameters() == null) {
-
 		ArrayList<Parameter> myPramList = prepareParameterList();
 
-		getSpaceWideRegistry().setParameters(myPramList);
-		// }
+		if(myPramList.size() > 0) {
+			getSpaceWideRegistry().setParameters(myPramList);
+			arrangeParameters(getSpaceWideRegistry().getParameters());
+		}
 
-		arrangeParameters(getSpaceWideRegistry().getParameters());
 	}
 
 	public Thread getExecuterThread() {
