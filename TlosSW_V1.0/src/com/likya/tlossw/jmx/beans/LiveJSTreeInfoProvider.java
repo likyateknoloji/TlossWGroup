@@ -28,12 +28,11 @@ import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
-import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
-import com.likya.tlossw.model.tree.PlanNode;
 import com.likya.tlossw.model.tree.JobNode;
+import com.likya.tlossw.model.tree.PlanNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -115,14 +114,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			SpcInfoTypeClient spcInfoTypeClient = new SpcInfoTypeClient();
 			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId().getFullPath());
 
-			if (spcId.equals("root." + planId + "." + EngineeConstants.LONELY_JOBS)) {
-				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
-				spcInfoTypeClient.setJsId(EngineeConstants.LONELY_JOBS);
-				spcInfoTypeClient.setRootFolder(true);
-			} else {
-				spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
-				spcInfoTypeClient.setJsId(spcInfoType.getJsId());
-			}
+			spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
 			
 			if (spcInfoType.getSpcReferance() != null) {
 				// No spc defined for this scenario, it is NOT a BUG !
@@ -224,7 +216,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			} else {
 				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
-				tmpScenarioNode.setId(tmpScenario.getJsId());
+				tmpScenarioNode.setId(spcId);
 				tmpScenarioNode.setName(tmpScenario.getJsName());
 				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
