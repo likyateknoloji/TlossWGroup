@@ -199,7 +199,7 @@ public class InputParameterPassing {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-					getMyLogger().error("     > 	Yukaridaki is  " + spcInfoType.getSpcReferance().getSpcId() + " adli senaryoda bulunamadi !");
+					getMyLogger().error("     > 	Yukaridaki is  " + spcInfoType.getSpcReferance().getSpcAbsolutePath() + " adli senaryoda bulunamadi !");
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
