@@ -221,8 +221,6 @@ public abstract class CpcBase implements Runnable {
 
 		myLogger.info("   > iş ağacının işlenmekte olan dalı " + scenarioPathType.getFullPath() + " olarak belirlenmiştir.");
 
-		// Bu joblari, serbest olarak ekliyoruz listeye
-
 		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, planId);
 		myScenario.setID(EngineeConstants.LONELY_JOBS);
 
