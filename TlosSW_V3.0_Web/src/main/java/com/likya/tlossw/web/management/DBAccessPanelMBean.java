@@ -74,7 +74,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 
-				dbConnectionProfile = getDbOperations().searchDBAccessByID(selectedDBAccessID);
+				dbConnectionProfile = getDbOperations().searchDBAccessByDefID(selectedDBAccessID);
 
 				if (dbConnectionProfile != null) {
 					setDbConnectionName(dbConnectionProfile.getDbDefinitionId() + "");
