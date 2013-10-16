@@ -832,6 +832,20 @@ public class DBOperations implements Serializable {
 		return dbConnectionProfile;
 	}
 
+	public DbConnectionProfile searchDBAccessByDefID(String id) {
+		String xQueryStr = dbFunctionConstructor("db:getDbCPfromDefId", id);
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		DbConnectionProfile dbConnectionProfile = null;
+
+		for (Object currentObject : objectList) {
+			dbConnectionProfile = ((DbConnectionProfileDocument) currentObject).getDbConnectionProfile();
+		}
+
+		return dbConnectionProfile;
+	}
+	
 	public ArrayList<SLA> searchSla(String slaXML) {
 
 		ArrayList<SLA> slaList = new ArrayList<SLA>();
