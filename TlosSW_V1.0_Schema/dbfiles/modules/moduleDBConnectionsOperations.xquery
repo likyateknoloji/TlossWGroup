@@ -33,6 +33,16 @@ declare function db:getDbCP($documentUrl as xs:string, $id as xs:integer) as ele
 
 };
 
+declare function db:getDbCPfromDefId($documentUrl as xs:string, $id as xs:integer) as element(dbc:dbConnectionProfile)?
+{
+    let $dbProfilesDocumentUrl := met:getMetaData($documentUrl, "dbConnectionProfiles")
+ 
+	for $dbConnection in doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles/dbc:dbConnectionProfile
+    where $dbConnection/dbc:dbDefinitionId = $id
+    return  $dbConnection
+
+};
+
 declare function db:getDbConnectionByType($documentUrl as xs:string, $connectionName as xs:string) as element(dbc:dbProperties)?
 {
     let $dbConnectionsDocumentUrl := met:getMetaData($documentUrl, "dbConnections")
