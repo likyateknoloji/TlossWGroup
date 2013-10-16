@@ -137,7 +137,7 @@
 								rendered="#{security.DBAccessEdit}" immediate="false"
 								value="#{msgs['tlos.ask.update.button']}" action="dbAccessPanel.xhtml">
 								<f:param name="selectedDBAccessID"
-									value="#{item.dbConnectionProfile.ID}" />
+									value="#{item.dbConnectionProfile.dbDefinitionId}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
