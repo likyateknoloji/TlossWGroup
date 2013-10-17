@@ -515,7 +515,7 @@ declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $
 	
     let $isNewPlan := if( $pId eq 0 ) then true() else false()
     let $planId    := xs:integer( if($isNewPlan) then sq:getNextId($documentUrl, "planId") else $pId )
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
+    let $retDailyPlan := if( $pId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
 	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan, $isNewPlan)
 
 	let $runId := sq:getId($documentUrl, "runId")
@@ -524,7 +524,7 @@ declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $
     let $insertPlanId := hs:insertPlanId($documentUrl, string($runId), string($planId))
     let $insertSolsticeId := hs:insertSolsticeId($documentUrl, string($runId), string($solsticeId))
 	
-	for $dailyRun in doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN
+    for $dailyRun in doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN
 	where $dailyRun/@id = $runId
 	return $dailyRun/dat:TlosProcessData
 };
@@ -533,8 +533,9 @@ declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scen
 {	
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
-    let $retDailyPlan := if( $planId eq 0 ) then hs:createPlanCalendars($documentUrl) else $planId
-    let $isNewPlan := if( $planId eq 0 ) then true() else false()
+    let $isNewPlan := if( $pId eq 0 ) then true() else false()
+    let $planId    := xs:integer( if($isNewPlan) then sq:getNextId($documentUrl, "planId") else $pId )
+    let $retDailyPlan := if( $pId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
 	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan, $isNewPlan)
 
 	let $runId := sq:getId($documentUrl, "runId")
