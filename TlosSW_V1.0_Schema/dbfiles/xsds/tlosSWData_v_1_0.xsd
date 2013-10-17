@@ -129,6 +129,11 @@
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="LSIDateTime" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jobInfos">
@@ -482,6 +487,11 @@
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="ID" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="LSIDateTime" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
