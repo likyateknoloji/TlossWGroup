@@ -452,7 +452,7 @@ return
 
 (: Jobs and Scenarios Selection Phase :)
 (: declare function hs:today-jobs-and-scenarios($n as node()) as node()* :)
-declare function hs:select-jobs-and-scenarios($n as node(), $plan as node()*) as node()*
+declare function hs:select-jobs-and-scenarios($n as node(), $scenarioId as xs:integer, $plan as node()*) as node()*
 {
 	   typeswitch($n)
 	    case $a as element(dat:jobList)
@@ -463,34 +463,46 @@ declare function hs:select-jobs-and-scenarios($n as node(), $plan as node()*) as
 			   where data($calendar/calID)=data($ca/dat:baseJobInfos/dat:calendarId) and not($ca/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED')
 			         and data($ca/dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")
 			         (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :)
-			   return hs:select-jobs-and-scenarios($ca, $plan)
+			   return hs:select-jobs-and-scenarios($ca, $scenarioId, $plan)
 			 }
 	    case $es as element(dat:scenario) 
 	       return if (count($es//dat:jobProperties)>0) then element dat:scenario
-	         { attribute ID {$es/@*}, for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $plan) } 
+	         { attribute ID {$es/@*}, for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $scenarioId, $plan) } 
 			 else ()
 		case $d as element(dat:TlosProcessData) 
 		   return element dat:TlosProcessData
-		     { for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $plan) }
+		     { for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $scenarioId, $plan) }
 	     default return $n 
 };
 		
-declare function hs:SelectedJobsAndScenarios($n as node(), $plan as node()*) as node()*
+declare function hs:SelectedJobsAndScenarios($n as node(), $scenarioId as xs:integer, $plan as node()*) as node()*
 {
-		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n/dat:TlosProcessData, $plan), $plan)
+		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n, $scenarioId, $plan), $scenarioId, $plan)
 };
 
-declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $plan as node()*, $isNewPlan as xs:boolean )
+declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*, $isNewPlan as xs:boolean )
 {
     let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
-    
+    let $dataDocument := doc($dataDocumentUrl)
+    let $targetScenarioWithinTPD := element dat:TlosProcessData { attribute planId {$planId},
+                                                                  attribute solsticeId {1000},
+                                                                  $dataDocument/dat:TlosProcessData/dat:baseScenarioInfos,
+	                                                              <dat:jobList/>,
+																  $dataDocument/dat:TlosProcessData/dat:timeManagement,
+																  $dataDocument/dat:TlosProcessData/dat:advancedScenarioInfos,
+																  $dataDocument/dat:TlosProcessData/dat:concurrencyManagement,
+	                                                              $dataDocument/dat:TlosProcessData//dat:scenario[@ID=$scenarioId] 
+																}
+    let $targetScenario := if($scenarioId eq 0) then doc($dataDocumentUrl)/dat:TlosProcessData else $targetScenarioWithinTPD
+
+	
     for $calList in doc($scenariosDocumentUrl)/TlosProcessDataAll
 	return update insert
            let $runId := sq:getNextId($documentUrl, "runId")
 		   return element RUN 
 		   { attribute id {$runId},  
-	          hs:SelectedJobsAndScenarios(doc($dataDocumentUrl), $plan)
+	          hs:SelectedJobsAndScenarios($targetScenario, $scenarioId, $plan)
 	       }
     into $calList
 };
@@ -514,9 +526,14 @@ declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
     let $isNewPlan := if( $pId eq 0 ) then true() else false()
-    let $planId    := xs:integer( if($isNewPlan) then sq:getNextId($documentUrl, "planId") else $pId )
-    let $retDailyPlan := if( $pId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan, $isNewPlan)
+
+    let $retDailyPlan := if( $isNewPlan ) 
+	                     then hs:createPlanCalendars($documentUrl) 
+						 else hs:getPlan($documentUrl, sq:getId($documentUrl, "planId") )
+	
+	let $planId    := xs:integer( if($isNewPlan) then sq:getId($documentUrl, "planId") else $pId )
+	
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $scenarioId, $planId, $retDailyPlan, $isNewPlan)
 
 	let $runId := sq:getId($documentUrl, "runId")
 	let $solsticeId := sq:getId($documentUrl, "solsticeId")
@@ -536,7 +553,7 @@ declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scen
     let $isNewPlan := if( $pId eq 0 ) then true() else false()
     let $planId    := xs:integer( if($isNewPlan) then sq:getNextId($documentUrl, "planId") else $pId )
     let $retDailyPlan := if( $pId eq 0 ) then hs:createPlanCalendars($documentUrl) else hs:getPlan($documentUrl, $planId )
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $retDailyPlan, $isNewPlan)
+	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $scenarioId, $planId, $retDailyPlan, $isNewPlan)
 
 	let $runId := sq:getId($documentUrl, "runId")
 	let $solsticeId := sq:getId($documentUrl, "solsticeId")
