@@ -142,7 +142,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
-		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getCurrentPlanId());
+		jobInfoTypeClient.setPlanId(spcInfoType.getSpcReferance().getCurrentPlanId());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
