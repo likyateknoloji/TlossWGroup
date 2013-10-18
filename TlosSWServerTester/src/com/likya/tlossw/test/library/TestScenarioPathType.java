@@ -7,7 +7,19 @@ public class TestScenarioPathType {
 	
 	public static void main(String[] args) {
 		// testGetters();
-		testSetters();
+		// testSetters();
+		testIdSequence();
+	}
+	
+	public static void testIdSequence() {
+		
+		TlosSWPathType tlosSWPathType = new TlosSWPathType();
+		tlosSWPathType.setId(new JSPathId("0"));
+		tlosSWPathType.setPlanId("1234");
+		String spcFullPath = tlosSWPathType.getFullPath();
+		
+		System.out.println(spcFullPath);
+		
 	}
 	
 	public static void testGetters() {
