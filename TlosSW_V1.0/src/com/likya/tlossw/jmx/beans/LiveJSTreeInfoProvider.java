@@ -237,7 +237,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		return newScenarioNode;
 	}
 
-	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String groupId, Boolean transformToLocalTime) {
+	public ArrayList<JobInfoTypeClient> retrieveJobListDetails(JmxUser jmxUser, String spcFullPath, Boolean transformToLocalTime) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
@@ -248,9 +248,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		SpcInfoType spcInfoType = null;
 
 		if (isTester(jmxUser)) {
-			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(spcFullPath);
 		} else {
-			spcInfoType = PlanMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = PlanMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 		
 		if (spcInfoType.getSpcReferance() == null) {
