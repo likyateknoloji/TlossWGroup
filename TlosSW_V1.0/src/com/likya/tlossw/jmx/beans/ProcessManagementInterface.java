@@ -34,7 +34,7 @@ import com.likya.tlossw.core.agents.AgentOperations;
 import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
+import com.likya.tlossw.core.spc.helpers.PlanMapHelper;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.AgentDbUtils;
@@ -53,7 +53,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 	private static Logger logger = SpaceWideRegistry.getGlobalLogger();
 
 	private boolean checkScenarioForAcceptingCommands(String scenarioId) {
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		return (spcInfoType.getSpcReferance().isManagable());
 	}
 
@@ -83,7 +83,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.ENGINE_INSTANCE_ABSENT), null);
 		}
 		
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(CpcUtils.getRootScenarioPath(maxInstanceId), TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(CpcUtils.getRootScenarioPath(maxInstanceId), TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().get(jobProperties.getID()) != null) {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.SCENARIO_DUPLICATEJOBNAME), null);
 		}
@@ -107,7 +107,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 		logger.info("[stopJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -143,7 +143,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[retryExecution] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -182,7 +182,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[setSuccess] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -213,7 +213,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[skipJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -241,7 +241,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[pauseJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -269,7 +269,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[resumeJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -305,7 +305,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[startJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		HashMap<String, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
 		if (jobQueue.containsKey(jobId)) {
@@ -353,7 +353,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 
 		logger.info("[startUserBasedJob] command received for job : " + jobId);
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -377,7 +377,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		String jobId = jobPath.substring(jobPath.lastIndexOf(".") + 1);
 		String jobAbsolutePath = jobPath.substring(0, jobPath.lastIndexOf("."));
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -430,7 +430,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		
 		logger.info("[assignAgentForJob] command received for job : " + jobId + " to agent : " + agentId);
 		
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(jobAbsolutePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null && spcInfoType.getSpcReferance().getJobQueue().containsKey(jobId)) {
 
@@ -530,7 +530,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null) {
 			Spc spc = spcInfoType.getSpcReferance();
@@ -557,7 +557,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null) {
 			Spc spc = spcInfoType.getSpcReferance();
@@ -571,7 +571,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null) {
 			Spc spc = spcInfoType.getSpcReferance();
@@ -597,7 +597,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			return;
 		}
 
-		SpcInfoType spcInfoType = InstanceMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		SpcInfoType spcInfoType = PlanMapHelper.findSpc(scenarioId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 
 		if (spcInfoType != null) {
 			Spc spc = spcInfoType.getSpcReferance();

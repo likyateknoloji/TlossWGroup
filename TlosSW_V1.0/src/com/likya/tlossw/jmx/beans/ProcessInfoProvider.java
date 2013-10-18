@@ -40,7 +40,7 @@ import com.likya.tlossw.core.agents.AgentOperations;
 import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
+import com.likya.tlossw.core.spc.helpers.PlanMapHelper;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -118,7 +118,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
 		} else {
-			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = PlanMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 
 		JobRuntimeProperties jobRuntimeProperties = null;
@@ -410,7 +410,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(treePath);
 		} else {
-			spcInfoType = InstanceMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = PlanMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 
 		TlosSWPathType scenarioId = spcInfoType.getSpcId();

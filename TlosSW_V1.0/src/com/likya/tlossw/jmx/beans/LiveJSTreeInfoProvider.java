@@ -20,7 +20,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
-import com.likya.tlossw.core.spc.helpers.InstanceMapHelper;
+import com.likya.tlossw.core.spc.helpers.PlanMapHelper;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -250,7 +250,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
 		} else {
-			spcInfoType = InstanceMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = PlanMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 		
 		if (spcInfoType.getSpcReferance() == null) {
