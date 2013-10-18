@@ -1,7 +1,7 @@
 /*
  * TlosFaz_V2.0
  * com.likya.tlos.core.spc.helpers : InstanceMapHelper.java
- * @author Serkan Ta�
+ * @author Serkan Taş
  * Tarih : 13.Nis.2010 11:34:26
  */
 
