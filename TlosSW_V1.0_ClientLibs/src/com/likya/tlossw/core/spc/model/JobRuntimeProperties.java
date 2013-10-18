@@ -19,7 +19,13 @@ public class JobRuntimeProperties implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Use absoluteJobPath instead
+	 */
+	@Deprecated 
 	private String treePath;
+	
+	private String absoluteJobPath;
 	
 	private JobProperties jobProperties;
 	
@@ -217,12 +223,28 @@ public class JobRuntimeProperties implements Serializable {
 		return dbConnectionProfile;
 	}
 
+	/**
+	 * Use getAbsoluteJobPath instead
+	 */
+	@Deprecated 
 	public String getTreePath() {
 		return treePath;
 	}
 
+	/**
+	 * Use setAbsoluteJobPath instead
+	 */
+	@Deprecated 
 	public void setTreePath(String treePath) {
 		this.treePath = treePath;
+	}
+
+	public String getAbsoluteJobPath() {
+		return absoluteJobPath;
+	}
+
+	public void setAbsoluteJobPath(String absoluteJobPath) {
+		this.absoluteJobPath = absoluteJobPath;
 	}
 
 }
