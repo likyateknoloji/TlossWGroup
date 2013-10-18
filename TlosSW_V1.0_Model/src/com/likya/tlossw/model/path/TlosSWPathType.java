@@ -31,6 +31,12 @@ public class TlosSWPathType extends BasePathType {
 		setPathArray(new ArrayList<String>(scenarioPathType.getPathArray()));
 	}
 
+	public TlosSWPathType(String planId, JSPathId jsPathId) {
+		super();
+		setPlanId(planId);
+		setId(jsPathId);
+	}
+	
 	protected void parsePathString(String pathText) {
 
 		String pathArray[] = pathText.split("\\.");
