@@ -164,7 +164,7 @@ public class DependencyResolver {
 					throw new TlosFatalException();
 				} else {
 
-					SpcInfoType spcInfoType = InstanceMapHelper.findSpc(item.getJsPath(), instanceLookUpTable);
+					SpcInfoType spcInfoType = PlanMapHelper.findSpc(item.getJsPath(), instanceLookUpTable);
 
 					if (spcInfoType == null) {
 						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + instanceId + "." + item.getJsPath());
