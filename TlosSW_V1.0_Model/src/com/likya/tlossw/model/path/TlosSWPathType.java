@@ -98,11 +98,14 @@ public class TlosSWPathType extends BasePathType {
 		if(hasDots(idText.toString(), "Id")) {
 			return;
 		}
-		if(getPathArray().size() > 2) {
-			getPathArray().set(getPathArray().size() - 1, idText.toString());
-		} else {
+		if(getPathArray().size() == 1) {
+			getPathArray().add(null); // For plan Id
 			getPathArray().add(idText.toString());
-		}
+		} else if(getPathArray().size() == 2) {
+			getPathArray().add(idText.toString());
+		} else if(getPathArray().size() > 2) {
+			getPathArray().set(getPathArray().size() - 1, idText.toString());
+		} 
 	}
 
 	public String getFullPath() {
