@@ -105,7 +105,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		return webSpaceWideRegistery;
 	}
 
-	public JobInfoTypeClient retrieveJobDetails(JmxUser jmxUser, String groupId, String jobId, Boolean transformToLocalTime) {
+	public JobInfoTypeClient retrieveJobDetails(JmxUser jmxUser, String spcFullPath, String jobId, Boolean transformToLocalTime) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
@@ -116,9 +116,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		SpcInfoType spcInfoType = null;
 
 		if (isTester(jmxUser)) {
-			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(groupId);
+			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(spcFullPath);
 		} else {
-			spcInfoType = PlanMapHelper.findSpc(groupId, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = PlanMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 		}
 
 		JobRuntimeProperties jobRuntimeProperties = null;
