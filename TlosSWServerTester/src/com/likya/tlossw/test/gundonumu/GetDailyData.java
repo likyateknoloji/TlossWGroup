@@ -73,8 +73,8 @@ public class GetDailyData {
 		
 		try {
 			
-			int planId = 0;
-			int scenarioId = 0;
+			int planId = 1291; // 0; //1176;
+			int scenarioId = 101; // 0; //110;
 
 			tlosProcessData = DBUtils.getTlosDailyData(scenarioId, planId);
 
