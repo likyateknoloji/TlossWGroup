@@ -17,8 +17,8 @@ public class InstanceMapHelper {
 
 	public static SpcInfoType findSpc(String spcId, HashMap<String, PlanInfoType> instanceLookUpTable) {
 		
-		for (String instanceId : instanceLookUpTable.keySet()) {
-			PlanInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
+		for (String planId : instanceLookUpTable.keySet()) {
+			PlanInfoType instanceInfoType = instanceLookUpTable.get(planId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
@@ -31,11 +31,11 @@ public class InstanceMapHelper {
 		return null;
 	}
 	
-	public static SpcInfoType findSpc(String instanceId, String spcId, HashMap<String, PlanInfoType> instanceLookUpTable) {
+	public static SpcInfoType findSpc(String planId, String spcId, HashMap<String, PlanInfoType> instanceLookUpTable) {
 		
-		if (instanceId != null && instanceLookUpTable.get(instanceId) != null) {
+		if (planId != null && instanceLookUpTable.get(planId) != null) {
 			
-			PlanInfoType instanceInfoType = instanceLookUpTable.get(instanceId);
+			PlanInfoType instanceInfoType = instanceLookUpTable.get(planId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 			
