@@ -90,7 +90,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	transient private Logger globalLogger = SpaceWideRegistry.getGlobalLogger();
 	transient private Logger myLogger = Logger.getLogger(SpcBase.class);
-
+	
 	transient private Thread executerThread;
 
 	protected boolean executionPermission = true;
@@ -127,8 +127,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 		scenario = null;
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
+			
+			// TODO bu kısım yerine absolute path propertisi olsa daha iyi olurdu.
 			jobRuntimeProperties.setTreePath(getSpcAbsolutePath());
-
+			
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
 			Job myJob = null;
