@@ -15,15 +15,15 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 
 public class PlanMapHelper {
 
-	public static SpcInfoType findSpc(String spcId, HashMap<String, PlanInfoType> planLookUpTable) {
+	public static SpcInfoType findSpc(String spcFullPath, HashMap<String, PlanInfoType> planLookUpTable) {
 		
 		for (String planId : planLookUpTable.keySet()) {
 			PlanInfoType planInfoType = planLookUpTable.get(planId);
 
 			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 			
-			if(spcLookupTable.containsKey(spcId)) {
-				return spcLookupTable.get(spcId);
+			if(spcLookupTable.containsKey(spcFullPath)) {
+				return spcLookupTable.get(spcFullPath);
 			}
 			
 		}
