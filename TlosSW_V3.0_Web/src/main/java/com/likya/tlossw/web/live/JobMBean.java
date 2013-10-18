@@ -69,15 +69,15 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
 
-	public void fillJobLivePanel(String groupId, String jobId) {
-		setJobInfo(groupId, jobId);
+	public void fillJobLivePanel(String spcFullPath, String jobId) {
+		setJobInfo(spcFullPath, jobId);
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
 
-	public void setJobInfo(String groupId, String jobId) {
+	public void setJobInfo(String spcFullPath, String jobId) {
 		jobInTyCl = new JobInfoTypeClient();
-		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), groupId, jobId, transformToLocalTime);
+		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), spcFullPath, jobId, transformToLocalTime);
 
 		// TODO Eger XML ise uygulanmali.
 		//jobInTyCl.getOutParameterType() hakans
