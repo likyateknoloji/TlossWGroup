@@ -635,9 +635,11 @@ declare function hs:jobResultListbyRunId($documentUrl as xs:string, $docId as xs
     let $posLower := if ($posUpper - $numberOfElement > 0) then $posUpper - $numberOfElement else 0
 
 	let $sonuc := for $runx at $pos in doc($dataDocumentUrl)/TlosProcessDataAll/RUN
-					 where $pos > $posLower and $pos <=$posUpper and $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
+					 where $pos > $posLower and $pos <=$posUpper
 					 order by $runx/@id descending
-	                 return  $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0) and @agentId!="0"]
+	                 return 
+                         for $job in $runx//dat:jobProperties[(@ID = $jobId or $jobId = 0)  and @agentId!="0"]
+                         return $job
 	return $sonuc
 };
 
