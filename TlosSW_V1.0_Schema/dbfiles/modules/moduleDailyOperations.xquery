@@ -495,7 +495,8 @@ declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $sc
 	                                                              $scenario/dat:jobList,
 																  $scenario/dat:timeManagement,
 																  $scenario/dat:advancedScenarioInfos,
-																  $scenario/dat:concurrencyManagement
+																  $scenario/dat:concurrencyManagement,
+																  $scenario/dat:scenario/*
 																}
     let $targetScenario := if($scenarioId eq 0) then doc($dataDocumentUrl)/dat:TlosProcessData else $targetScenarioWithinTPD
 
