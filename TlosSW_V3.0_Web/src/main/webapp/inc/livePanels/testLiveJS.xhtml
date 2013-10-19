@@ -11,7 +11,10 @@
 		value="Tlos SW Workload Automation Software v1.0 - Job Monitoring Page - LIVE ! " />
 
 	<ui:define name="west">
-		<ui:include src="/inc/livePanels/jsLiveTree.xhtml" />
+		<ui:include src="/inc/livePanels/jsLiveTree.xhtml" >
+			<ui:param name="column" value="1" />
+		</ui:include>
+		
 	</ui:define>
 	
 	<ui:define name="center">
