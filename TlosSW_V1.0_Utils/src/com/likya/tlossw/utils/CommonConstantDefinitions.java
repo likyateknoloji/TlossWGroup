@@ -102,6 +102,7 @@ public class CommonConstantDefinitions {
 	public static final String EXIST_DEPLOYMENTDATA = "deploymentData";
 	public static final String EXIST_TEMPLATEDATA = "jobTemplates";
 	public static final String EXIST_SJDATA = "sjData";
+	public static final String EXIST_LIVE_SCENARIOS = "scenarios";
 	
 	/**
 	 * Validasyon testlerinde kullanılan tanımlamalar.
