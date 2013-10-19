@@ -169,10 +169,14 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		TreeNode treeNode = event.getTreeNode();
 
+		JSBuffer jsBuffer = new JSBuffer();
+		
 		if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_SCENARIO)) {
 			selectedType = new String(ConstantDefinitions.TREE_SCENARIO);
+			jsBuffer.setJob(false);
 		} else if ((treeNode.getType() != null) && treeNode.getType().equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 			selectedType = new String(ConstantDefinitions.TREE_JOB);
+			jsBuffer.setJob(true);
 		} else {
 			selectedType = new String(ConstantDefinitions.TREE_UNKNOWN);
 		}
@@ -190,6 +194,9 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
 		
+		jsBuffer.setFromDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(DocMetaDataHolder.FIRST_COLUMN)) );
+		jsBuffer.setFromScope( getSessionMediator().getScope(Integer.valueOf(DocMetaDataHolder.FIRST_COLUMN)) );
+		
 		if (selectedType.equalsIgnoreCase(ConstantDefinitions.TREE_JOB)) {
 
 			int jobType = ((WsJobNode) wsNode).getJobType();
@@ -199,6 +206,10 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 			if (Integer.parseInt(jsId) > 0) {
 				jobProperties = getDbOperations().getJobFromId(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
+				if(jobProperties != null) { 
+				  jsBuffer.setJsId(jobProperties.getID());
+				  jsBuffer.setJsName(jobProperties.getBaseJobInfos().getJsName());
+				}
 			} else {
 				isInsert = true;
 			}
@@ -210,12 +221,16 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 			scenario = getDbOperations().getScenarioFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jsId);
 
 			if (scenario != null) {
+				jsBuffer.setJsId(scenario.getID());
+				jsBuffer.setJsName(scenario.getBaseScenarioInfos().getJsName());
+				
 				switchToScenarioPanel();
 				((JSDefPanelInterface) currentPanelMBeanRef).init();
 				getScenarioDefinitionMBean().setScenario(scenario);
 				getScenarioDefinitionMBean().initializeScenarioPanel(false);
 			}
 		}
+		getSessionMediator().setJsBuffer(jsBuffer);
 
 	}
 
@@ -553,7 +568,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 	public void deployJSAction() {
 
-		pasteJSAction(CommonConstantDefinitions.EXIST_GLOBALDATA);
+		pasteJSAction( "" + DocMetaDataHolder.SECOND_COLUMN );
 
 		getScenarioDefinitionMBean().getJsTree().reconstructJSTree(CommonConstantDefinitions.EXIST_GLOBALDATA);
 	}
