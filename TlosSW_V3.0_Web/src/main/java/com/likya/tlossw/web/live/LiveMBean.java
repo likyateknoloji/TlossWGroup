@@ -11,7 +11,7 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.event.NodeSelectEvent;
 
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
-import com.likya.tlossw.model.path.JSPathId;
+import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
@@ -58,7 +58,7 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 		} else if (event.getTreeNode().getType().equals(ConstantDefinitions.TREE_JOB)) {
 			JobNode jobNode = (JobNode) event.getTreeNode().getData();
 			String jobId = jobNode.getId();
-			TlosSWPathType tlosSWPathType = new TlosSWPathType(jobNode.getJobInfoTypeClient().getPlanId(), new JSPathId(jobNode.getPath()));
+			TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." +  jobNode.getJobInfoTypeClient().getPlanId() + "." + jobNode.getPath());
 			getJobMBean().fillJobLivePanel(tlosSWPathType.getFullPath(), jobId);
 
 			liveJSTable = JOB_PAGE;
