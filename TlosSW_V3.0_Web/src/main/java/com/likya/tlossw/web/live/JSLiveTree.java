@@ -68,6 +68,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 	@PostConstruct
 	public void initJSLiveTree() {
 
+		setPassedParameters();
+		
 		if (getPassedParameter().get(CommonConstantDefinitions.FIRST_COLUMN_STR) != null) {
 			//getSessionMediator().getScopeText( getPassedParameter().get(CommonConstantDefinitions.EXIST_SCOPEID1) )
 			getSessionMediator().getWebAppUser().setViewRoleId(CommonConstantDefinitions.EXIST_GLOBALDATA); // MetaDataType.GLOBAL
