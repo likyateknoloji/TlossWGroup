@@ -144,8 +144,9 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		// son 3 rundaki calisma listesini istiyor
 
 		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		int numberOfRun = 3;
 		
-		jobBaseReportList = getDbOperations().getJobResultList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), 3, transformToLocalTime);
+		jobBaseReportList = getDbOperations().getJobResultList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), numberOfRun, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
