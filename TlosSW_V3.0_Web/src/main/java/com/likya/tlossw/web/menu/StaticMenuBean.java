@@ -33,8 +33,8 @@ public class StaticMenuBean implements Serializable {
 		globalDefsUrl = DEF_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_TEMPLATEDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
 		myDefsUrl = DEF_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_TEMPLATEDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.LOCAL;
 		
-		globalLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL;
-		myLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL;
+		globalLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_LIVE_SCENARIOS + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL;
+		myLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_LIVE_SCENARIOS + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL;
 
 		deploymentUrl = DEPLOYMENT_BASE_URL +  "doc1Id=" + CommonConstantDefinitions.EXIST_DEPLOYMENTDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
 	
