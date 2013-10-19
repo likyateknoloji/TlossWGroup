@@ -467,11 +467,11 @@ declare function hs:select-jobs-and-scenarios($n as node(), $scenarioId as xs:in
 			 }
 	    case $es as element(dat:scenario) 
 	       return if (count($es//dat:jobProperties)>0) then element dat:scenario
-	         { attribute ID {$es/@*}, for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $scenarioId, $plan) } 
+	         { $es/@*, for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $scenarioId, $plan) } 
 			 else ()
 		case $d as element(dat:TlosProcessData) 
 		   return element dat:TlosProcessData
-		     { for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $scenarioId, $plan) }
+		     { $d/@*, for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $scenarioId, $plan) }
 	     default return $n 
 };
 		
@@ -485,14 +485,17 @@ declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $sc
     let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
     let $dataDocument := doc($dataDocumentUrl)
-    let $targetScenarioWithinTPD := element dat:TlosProcessData { attribute planId {$planId},
-                                                                  attribute solsticeId {1000},
-                                                                  $dataDocument/dat:TlosProcessData/dat:baseScenarioInfos,
-	                                                              <dat:jobList/>,
-																  $dataDocument/dat:TlosProcessData/dat:timeManagement,
-																  $dataDocument/dat:TlosProcessData/dat:advancedScenarioInfos,
-																  $dataDocument/dat:TlosProcessData/dat:concurrencyManagement,
-	                                                              $dataDocument/dat:TlosProcessData//dat:scenario[@ID=$scenarioId] 
+	let $scenario := $dataDocument/dat:TlosProcessData//dat:scenario[@ID=$scenarioId] 
+	
+    let $targetScenarioWithinTPD := element dat:TlosProcessData { 
+	                                                              attribute ID {$scenarioId},
+	                                                              attribute planId {$planId},
+                                                                  attribute solsticeId {xs:string(1000)},
+                                                                  $scenario/dat:baseScenarioInfos,
+	                                                              $scenario/dat:jobList,
+																  $scenario/dat:timeManagement,
+																  $scenario/dat:advancedScenarioInfos,
+																  $scenario/dat:concurrencyManagement
 																}
     let $targetScenario := if($scenarioId eq 0) then doc($dataDocumentUrl)/dat:TlosProcessData else $targetScenarioWithinTPD
 
