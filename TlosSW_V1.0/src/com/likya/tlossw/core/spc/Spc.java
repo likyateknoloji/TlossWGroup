@@ -24,6 +24,7 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
 import com.likya.tlossw.core.agents.AgentManager;
+import com.likya.tlossw.core.cpc.helper.Consolidator;
 import com.likya.tlossw.core.dss.DssVisionaire;
 import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
@@ -41,6 +42,7 @@ import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.transform.InputParameterPassing;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.TypeUtils;
@@ -81,7 +83,7 @@ public class Spc extends SpcBase {
 
 	public void run() {
 
-		Thread.currentThread().setName(getFullSpcPath());
+		Thread.currentThread().setName(getCommonName());
 
 		getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin ana thread baslatiliyor. Toplam is Sayisi : " + getJobQueue().size());
 
@@ -181,13 +183,13 @@ public class Spc extends SpcBase {
 				}
 
 				if (hasNewVersionOfJob()) {
-					
+
 					Iterator<SortType> sortTypeIterator = getJobQueueIndex().iterator();
 					while (sortTypeIterator.hasNext()) {
 						SortType sortType = sortTypeIterator.next();
 						String jobId = sortType.getJobId();
 						Job scheduledJob = getJobQueue().get(jobId);
-						if(scheduledJob.isSafeToRemove()) {
+						if (scheduledJob.isSafeToRemove()) {
 							getJobQueue().remove(jobId);
 						}
 					}
@@ -195,10 +197,7 @@ public class Spc extends SpcBase {
 					reIndexJobQueue();
 					continue;
 				}
-				
-				// Burada her senaryo kendi başının çaresine bakacak
-				// Consolidator.checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), spcInfoTypeOld);
-				
+
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
 				/**
 				 * @author serkan
@@ -210,6 +209,7 @@ public class Spc extends SpcBase {
 					getLiveStateInfo().setStateName(StateName.FINISHED);
 					getLiveStateInfo().setSubstateName(SubstateName.COMPLETED);
 					getLiveStateInfo().setStatusName(StatusName.SUCCESS);
+
 					break; // beklemeye gerek yok
 				}
 
@@ -295,12 +295,37 @@ public class Spc extends SpcBase {
 			getGlobalLogger().error("getSpaceWideRegistry().getInfoBusManager() == null !");
 		}
 
+		if (isUpdateMySelfAfterMe()) {
+			setUpdateMySelfAfterMe(false);
+			// Burada her senaryo kendi başının çaresine bakacak
+			handleGDIssues();
+		}
+
 	}
-	
+
+	private void handleGDIssues() {
+
+		boolean checkValue = Consolidator.isScenarioEnsuresTheConditions(this);
+
+		if (checkValue) {
+
+			String planId = getCurrentPlanId();
+			
+			try {
+				CpcUtils.updateSpcLookupTable(planId, getSpcFullPath(), getMyLogger());
+				CpcUtils.startSpc(getSpcFullPath(), getMyLogger());
+			} catch (TlosFatalException e) {
+				e.printStackTrace();
+			} catch (TlosException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private boolean hasNewVersionOfJob() {
-		
+
 		boolean retValue = false;
-		
+
 		synchronized (this) {
 
 			/**
@@ -325,7 +350,7 @@ public class Spc extends SpcBase {
 				}
 			}
 		}
-		
+
 		return retValue;
 	}
 
@@ -377,7 +402,6 @@ public class Spc extends SpcBase {
 
 			try {
 
-				
 				if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
 					// Already executed
 					continue;
@@ -509,7 +533,7 @@ public class Spc extends SpcBase {
 				// if (!LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.WAITING)) {
 				// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
 				insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.READY, StatusName.WAITING);
-				//( scheduledJob.sendStatusChangeInfo();
+				// ( scheduledJob.sendStatusChangeInfo();
 				// }
 			}
 
