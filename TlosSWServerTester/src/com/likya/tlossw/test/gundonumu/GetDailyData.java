@@ -6,10 +6,12 @@ import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.modules.XPathQueryService;
 
+import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.validation.XMLValidations;
@@ -32,7 +34,11 @@ public class GetDailyData {
 		String xQueryModuleUrl = ParsingUtils.getXQueryModuleUrl(spaceWideRegistry.getDbUri());
 		spaceWideRegistry.setxQueryModuleUrl(xQueryModuleUrl);
 
-		new GetDailyData().loadDailyPlan();
+		TlosProcessData tlosProcessData = new GetDailyData().loadDailyPlan();
+		
+		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
+		System.out.println(scenario.toString());
+		
 	}
 
 	public void initCollection() throws Exception {
@@ -59,7 +65,7 @@ public class GetDailyData {
 	}
 	
 
-	public void loadDailyPlan() {
+	public TlosProcessData loadDailyPlan() {
 		
 		try {
 			initCollection();
@@ -84,12 +90,14 @@ public class GetDailyData {
 
 		} catch (TlosFatalException e) {
 			e.printStackTrace();
-			return;
+			return null;
 		}
 		
 		System.out.println(tlosProcessData);
 
 		logger.info("   > İş listesi KDS nden sorgulandı ! ...");
+		
+		return tlosProcessData;
 	}
 
 }
