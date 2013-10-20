@@ -2,7 +2,6 @@ package com.likya.tlossw.core.cpc;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -11,19 +10,15 @@ import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
-import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
-import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
-import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.model.PlanInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
-import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.GlobalParameterLoadException;
 import com.likya.tlossw.exceptions.TlosException;
@@ -32,9 +27,7 @@ import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.path.JSPathId;
 import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
-import com.likya.tlossw.utils.validation.XMLValidations;
 
 public abstract class CpcBase implements Runnable {
 
@@ -111,39 +104,6 @@ public abstract class CpcBase implements Runnable {
 		}
 	}
 
-	protected boolean validateJobList(JobList jobList) {
-
-		XMLValidations.validateWithCode(jobList, myLogger);
-
-		return true;
-	}
-
-	protected ArrayList<JobRuntimeProperties> transformJobList(JobList jobList) {
-
-		myLogger.debug("start:transformJobList");
-
-		ArrayList<JobRuntimeProperties> transformTable = new ArrayList<JobRuntimeProperties>();
-
-		ArrayIterator jobListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
-
-		while (jobListIterator.hasNext()) {
-
-			JobProperties jobProperties = (JobProperties) (jobListIterator.next());
-			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
-
-			/* IDLED state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
-			jobRuntimeProperties.setJobProperties(jobProperties);
-			// TODO infoBusInfo Manager i bilgilendir.
-
-			transformTable.add(jobRuntimeProperties);
-		}
-
-		myLogger.debug("end:transformJobList");
-
-		return transformTable;
-	}
-
 	public static void dumpSpcLookupTable(String planId, SpcLookupTable spcLookupTable) {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
@@ -188,28 +148,6 @@ public abstract class CpcBase implements Runnable {
 
 	}
 
-	protected String getPlanId(TlosProcessData tlosProcessData, boolean isTest) {
-
-		String planId = null;
-
-		if (isTest) {
-			String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
-			if (userId == null || userId.equals("")) {
-				userId = "" + Calendar.getInstance().getTimeInMillis();
-			}
-			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
-			planId = userId;
-		} else {
-			planId = tlosProcessData.getPlanId();
-			if (planId == null) {
-				planId = "" + Calendar.getInstance().getTimeInMillis();
-			}
-			myLogger.info("   > InstanceID = " + planId + " olarak belirlenmiştir.");
-		}
-
-		return planId;
-	}
-
 	protected HashMap<String, Scenario> performLinearization(String planId, TlosProcessData tlosProcessData) {
 
 		HashMap<String, Scenario> tmpScenarioList = new HashMap<String, Scenario>();
@@ -239,13 +177,51 @@ public abstract class CpcBase implements Runnable {
 
 	}
 
-	protected SpcLookupTable prepareSpcLookupTable(TlosProcessData tlosProcessData) throws TlosException {
+	protected SpcLookupTable prepareSpcLookupTable(TlosProcessData tlosProcessData, Logger myLogger) throws TlosException {
 
 		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		String planId = getPlanId(tlosProcessData, false);
+		String planId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
+
+		HashMap<String, Scenario> tmpScenarioList = performLinearization(planId, tlosProcessData);
+
+		Iterator<String> keyIterator = tmpScenarioList.keySet().iterator();
+
+		myLogger.info("");
+		myLogger.info(" 8 - TlosProcessData içindeki senaryolardaki işlerin listesi çıkarılacak.");
+
+		while (keyIterator.hasNext()) {
+
+			String scenarioFullPath = keyIterator.next();
+			
+			Scenario myScenario = tmpScenarioList.get(scenarioFullPath);
+
+			SpcInfoType spcInfoType = CpcUtils.prepareScenario(planId, new TlosSWPathType(scenarioFullPath), myScenario, myLogger);
+			if(spcInfoType == null) {
+				continue;
+			}
+
+			table.put(scenarioFullPath, spcInfoType);
+
+			myLogger.info("  > Senaryo yuklendi !");
+
+		}
+
+		myLogger.info("");
+		myLogger.info(" > Senaryolarin ve islerin SPC (spcLookUpTable) senaryo agacina yuklenme islemi bitti !");
+
+		return spcLookupTable;
+	}
+
+	protected SpcLookupTable prepareSpcLookupTableOrj(TlosProcessData tlosProcessData, Logger myLogger) throws TlosException {
+
+		SpcLookupTable spcLookupTable = new SpcLookupTable();
+
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
+
+		String planId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
 
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(planId, tlosProcessData);
 
@@ -263,7 +239,7 @@ public abstract class CpcBase implements Runnable {
 
 			JobList jobList = tmpScenarioList.get(scenarioId).getJobList();
 
-			if (!validateJobList(jobList)) {
+			if (!CpcUtils.validateJobList(jobList, myLogger)) {
 				// TODO WAITING e nasil alacagiz?
 				myLogger.info("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
 				myLogger.error("Cpc Scenario jobs validation failed, process state changed to WAITING !");
@@ -280,14 +256,14 @@ public abstract class CpcBase implements Runnable {
 
 			SpcInfoType spcInfoType = null;
 			// TODO Henüz ayarlanmadı !
-			String userId = null; 
+			String userId = null;
 
 			if (jobList.getJobPropertiesArray().length == 0) {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 			} else {
 				TlosSWPathType tlosSWPathType = new TlosSWPathType(scenarioId);
-				Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformJobList(jobList));
+				Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), CpcUtils.transformJobList(jobList, myLogger));
 
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
@@ -395,7 +371,7 @@ public abstract class CpcBase implements Runnable {
 
 		ArrayList<Parameter> myPramList = prepareParameterList();
 
-		if(myPramList.size() > 0) {
+		if (myPramList.size() > 0) {
 			getSpaceWideRegistry().setParameters(myPramList);
 			arrangeParameters(getSpaceWideRegistry().getParameters());
 		}
