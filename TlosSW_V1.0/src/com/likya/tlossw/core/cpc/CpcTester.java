@@ -37,7 +37,7 @@ public class CpcTester extends CpcBase {
 	}
 
 	public synchronized void addTestData(TlosProcessData tlosProcessData) throws TlosException {
-		spcLookupTable = prepareTestTable(tlosProcessData);
+		spcLookupTable = prepareTestTable(tlosProcessData, logger);
 	}
 
 	public void run() {
@@ -110,14 +110,14 @@ public class CpcTester extends CpcBase {
 
 	}
 
-	protected SpcLookupTable prepareTestTable(TlosProcessData tlosProcessData) throws TlosException {
+	protected SpcLookupTable prepareTestTable(TlosProcessData tlosProcessData, Logger myLogger) throws TlosException {
 
 		SpcLookupTable spcLookupTable = new SpcLookupTable();
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 		
 		// Using userId as instanceId for test routine
-		String userId = getPlanId(tlosProcessData, false);
+		String userId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
 		
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
 
@@ -135,7 +135,7 @@ public class CpcTester extends CpcBase {
 
 			JobList jobList = tmpScenarioList.get(scenarioId).getJobList();
 
-			if (!validateJobList(jobList)) {
+			if (!CpcUtils.validateJobList(jobList, logger)) {
 				continue;
 			}
 
@@ -151,7 +151,7 @@ public class CpcTester extends CpcBase {
 				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioPathType);
 			} else {
-				Spc spc = new Spc(scenarioPathType.getPlanId(), scenarioPathType.getAbsolutePath(), getSpaceWideRegistry(), transformJobList(jobList), false, true);
+				Spc spc = new Spc(scenarioPathType.getPlanId(), scenarioPathType.getAbsolutePath(), getSpaceWideRegistry(), CpcUtils.transformJobList(jobList, logger), false, true);
 				
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, userId, tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(scenarioPathType);
