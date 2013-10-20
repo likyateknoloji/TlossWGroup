@@ -19,6 +19,7 @@ import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.TlosSWPathType;
+import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -86,25 +87,7 @@ public class Cpc extends CpcBase {
 						}
 
 						logger.info("   > Senaryo " + spcId + " calistiriliyor !");
-						/**
-						 * Bu thread daha once calistirildi mi? Degilse thread i
-						 * baslatabiliriz !!
-						 **/
-						if (mySpcInfoType.isVirgin() && !spc.getExecuterThread().isAlive()) {
-
-							mySpcInfoType.setVirgin(false); /* Artik baslattik */
-							/** Statuleri set edelim **/
-							spc.getLiveStateInfo().setStateName(StateName.RUNNING);
-							spc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
-
-							logger.info("     > Senaryo " + spcId + " aktive edildi !");
-
-							/** Senaryonun thread lerle calistirildigi yer !! **/
-							spc.getExecuterThread().start();
-
-							logger.info("     > OK");
-
-						}
+						CpcUtils.startSpc(mySpcInfoType, logger);
 					}
 				}
 
@@ -160,7 +143,7 @@ public class Cpc extends CpcBase {
 		 * 
 		 **/
 
-		SpcLookupTable spcLookUpTable = prepareSpcLookupTable(tlosProcessData);
+		SpcLookupTable spcLookUpTable = prepareSpcLookupTable(tlosProcessData, logger);
 		/*
 		 * scpLookUpTable olusturuldu. Olusan bu tablo PlanID ile
 		 * iliskilendirilecek.
@@ -185,7 +168,7 @@ public class Cpc extends CpcBase {
 
 	private void loadOnLiveSystem(TlosProcessData tlosProcessData) throws TlosException {
 
-		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
+		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData, logger);
 
 		if(getSpaceWideRegistry().getPlanLookupTable().size() < -1 || getSpaceWideRegistry().getPlanLookupTable().size() > 1) {
 			// Ne yapmalı ??
@@ -224,7 +207,7 @@ public class Cpc extends CpcBase {
 
 		logger.info("   > Evet, " + getSpaceWideRegistry().getPlanLookupTable().size() + ". eleman olacak !");
 
-		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData);
+		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData, logger);
 
 		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 			PlanInfoType instanceInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
