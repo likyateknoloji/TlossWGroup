@@ -73,6 +73,7 @@ public class Consolidator {
 					} else {
 						// Bitince kendini VT'den yenilesin değerini set et. 
 						spcReferanceOld.setCurrentPlanId(planIdNew);
+						spcReferanceOld.setUpdateMySelfAfterMe(true);
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);						
 					}
 
