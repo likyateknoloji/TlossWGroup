@@ -1,25 +1,42 @@
 package com.likya.tlossw.utils;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+
+import org.apache.commons.collections.iterators.ArrayIterator;
+import org.apache.log4j.Logger;
+
+import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.TlosSpaceWide;
+import com.likya.tlossw.core.cpc.CpcBase;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
+import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
+import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.db.utils.DBUtils;
+import com.likya.tlossw.exceptions.TlosException;
+import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.engine.EngineeConstants;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
+import com.likya.tlossw.utils.validation.XMLValidations;
 
 public class CpcUtils {
-	
-	public static Scenario getScenario(TlosProcessData tlosProcessData, String instanceId) {
+
+	public static Scenario getScenario(TlosProcessData tlosProcessData) {
 		
 		Scenario scenario = Scenario.Factory.newInstance();
 		scenario.setJobList(tlosProcessData.getJobList());
 		
 		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
-
-		tlosProcessData.getConcurrencyManagement().setPlanId(instanceId);
 
 		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
 		scenario.setDependencyList(tlosProcessData.getDependencyList());
@@ -32,6 +49,37 @@ public class CpcUtils {
 		
 		return scenario;
 	}
+	
+	public static Scenario getScenario(TlosProcessData tlosProcessData, String planId) {
+		
+		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
+		
+		scenario.getConcurrencyManagement().setPlanId(planId);
+		
+		return scenario;
+	}
+
+	
+//	public static Scenario getScenarioOrj(TlosProcessData tlosProcessData, String planId) {
+//		
+//		Scenario scenario = Scenario.Factory.newInstance();
+//		scenario.setJobList(tlosProcessData.getJobList());
+//		
+//		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
+//
+//		tlosProcessData.getConcurrencyManagement().setPlanId(planId);
+//
+//		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
+//		scenario.setDependencyList(tlosProcessData.getDependencyList());
+//		scenario.setScenarioStatusList(tlosProcessData.getScenarioStatusList());
+//		scenario.setAlarmPreference(tlosProcessData.getAlarmPreference());
+//		scenario.setTimeManagement(tlosProcessData.getTimeManagement());
+//		scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
+//		scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
+//		scenario.setLocalParameters(tlosProcessData.getLocalParameters());
+//		
+//		return scenario;
+//	}
 
 	public static Scenario getScenario(Spc spc) {
 
@@ -124,6 +172,175 @@ public class CpcUtils {
 		spcInfoType.setSpcReferance(null);
 
 		return spcInfoType;
+	}
+	
+	public static ArrayList<JobRuntimeProperties> transformJobList(JobList jobList, Logger myLogger) {
+
+		myLogger.debug("start:transformJobList");
+
+		ArrayList<JobRuntimeProperties> transformTable = new ArrayList<JobRuntimeProperties>();
+
+		ArrayIterator jobListIterator = new ArrayIterator(jobList.getJobPropertiesArray());
+
+		while (jobListIterator.hasNext()) {
+
+			JobProperties jobProperties = (JobProperties) (jobListIterator.next());
+			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
+
+			/* IDLED state i ekle */
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+			jobRuntimeProperties.setJobProperties(jobProperties);
+			// TODO infoBusInfo Manager i bilgilendir.
+
+			transformTable.add(jobRuntimeProperties);
+		}
+
+		myLogger.debug("end:transformJobList");
+
+		return transformTable;
+	}
+	public static boolean validateJobList(JobList jobList, Logger myLogger) {
+
+		XMLValidations.validateWithCode(jobList, myLogger);
+
+		return true;
+	}
+	
+	public static SpcInfoType prepareScenario(String planId, TlosSWPathType tlosSWPathType, Scenario myScenario, Logger myLogger) throws TlosFatalException {
+
+		myLogger.info("");
+		myLogger.info("  > Senaryo ismi : " + tlosSWPathType.getFullPath());
+
+		JobList jobList = myScenario.getJobList();
+
+		if (!validateJobList(jobList, myLogger)) {
+			// TODO WAITING e nasil alacagiz?
+			myLogger.info("     > is listesi validasyonunda problem oldugundan WAITING e alinarak problemin giderilmesi beklenmektedir.");
+			myLogger.error("Cpc Scenario jobs validation failed, process state changed to WAITING !");
+
+			return null; // 08.07.2013 Serkan
+			// throw new TlosException("Cpc Job List validation failed, process state changed to WAITING !");
+		}
+
+		if (jobList.getJobPropertiesArray().length == 0 && myScenario.getScenarioArray().length == 0) {
+			myLogger.error(tlosSWPathType.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi bos geldi !");
+			myLogger.error(tlosSWPathType.getFullPath() + " isimli senaryo için spc başlatılmıyor !");
+			return null;
+		}
+
+		SpcInfoType spcInfoType = null;
+		// TODO Henüz ayarlanmadı !
+		String userId = null;
+
+		if (jobList.getJobPropertiesArray().length == 0) {
+			spcInfoType = CpcUtils.getSpcInfo(userId, planId, myScenario);
+			spcInfoType.setSpcId(tlosSWPathType);
+		} else {
+			Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), TlosSpaceWide.getSpaceWideRegistry(), transformJobList(jobList, myLogger));
+
+			spcInfoType = CpcUtils.getSpcInfo(spc, userId, planId, myScenario);
+			spcInfoType.setSpcId(tlosSWPathType);
+
+			if (!TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+				if (!spc.initScenarioInfo()) {
+					myLogger.warn(tlosSWPathType.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+					Logger.getLogger(CpcBase.class).warn(" WARNING : " + tlosSWPathType.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
+
+					System.exit(-1);
+				}
+			}
+		}
+		
+		return spcInfoType;
+
+	}
+	
+	public static String getPlanId(TlosProcessData tlosProcessData, boolean isTest, Logger myLogger) {
+
+		String planId = null;
+
+		if (isTest) {
+			String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
+			if (userId == null || userId.equals("")) {
+				userId = "" + Calendar.getInstance().getTimeInMillis();
+			}
+			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
+			planId = userId;
+		} else {
+			planId = tlosProcessData.getPlanId();
+			if (planId == null) {
+				planId = "" + Calendar.getInstance().getTimeInMillis();
+			}
+			myLogger.info("   > InstanceID = " + planId + " olarak belirlenmiştir.");
+		}
+
+		return planId;
+	}
+	
+	public static SpcLookupTable updateSpcLookupTable(String planId, TlosSWPathType tlosSWPathType, Logger myLogger) throws TlosException {
+
+		
+		TlosProcessData tlosProcessData = null;
+		
+		SpcLookupTable spcLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable();
+
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
+
+		try {
+			
+			tlosProcessData = DBUtils.getTlosDailyData(new Long(tlosSWPathType.getId().getBaseId()).intValue(), Integer.parseInt(planId));
+			
+			Scenario myScenario = CpcUtils.getScenario(tlosProcessData);
+			SpcInfoType spcInfoType = CpcUtils.prepareScenario(planId, tlosSWPathType, myScenario, myLogger);
+			
+			synchronized (spcLookupTable) {
+				table.put(tlosSWPathType.getFullPath(), spcInfoType);
+			}
+			
+			myLogger.info("  > Senaryo yuklendi !");
+			
+		} catch (TlosFatalException e) {
+			e.printStackTrace();
+		}
+
+
+		return spcLookupTable;
+	}
+	
+	public static void startSpc(TlosSWPathType tlosSWPathType, Logger myLogger) {
+		
+		SpcLookupTable spcLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(tlosSWPathType.getPlanId()).getSpcLookupTable();
+
+		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
+		
+		SpcInfoType spcInfoType = table.get(tlosSWPathType.getFullPath());
+		
+		startSpc(spcInfoType, myLogger);
+		
+	}
+	
+	public static void startSpc(SpcInfoType spcInfoType, Logger myLogger) {
+		/**
+		 * Bu thread daha once calistirildi mi? Degilse thread i
+		 * baslatabiliriz !!
+		 **/
+		Spc mySpc = spcInfoType.getSpcReferance();
+		
+		if (spcInfoType.isVirgin() && !mySpc.getExecuterThread().isAlive()) {
+
+			spcInfoType.setVirgin(false); /* Artik baslattik */
+			/** Statuleri set edelim **/
+			mySpc.getLiveStateInfo().setStateName(StateName.RUNNING);
+			mySpc.getLiveStateInfo().setSubstateName(SubstateName.STAGE_IN);
+
+			myLogger.info("     > Senaryo " + mySpc.getSpcFullPath() + " aktive edildi !");
+
+			/** Senaryonun thread lerle calistirildigi yer !! **/
+			mySpc.getExecuterThread().start();
+
+			myLogger.info("     > OK");
+
+		}
 	}
 	
 	public static String getRootScenarioPath(String planId) {
