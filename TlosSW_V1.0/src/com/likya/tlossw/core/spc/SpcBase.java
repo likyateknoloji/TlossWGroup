@@ -36,6 +36,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.ExtractMajorJobTypesOnServer;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -98,6 +99,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 	protected boolean isForced = false;
 
 	protected boolean isTester = false;
+	
+	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
+	
+	boolean updateMySelfAfterMe = false;
 
 	public SpcBase(String nativePlanId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
@@ -111,11 +116,18 @@ public abstract class SpcBase implements Runnable, Serializable {
 		jobQueue = new HashMap<String, Job>();
 		jobQueueIndex = new ArrayList<SortType>();
 
-		logLabel = getFullSpcPath();
+		logLabel = getCommonName();
 
 	}
 	
-	protected String getFullSpcPath() {
+	public TlosSWPathType getSpcFullPath() {
+		
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getCurrentPlanId() + "." + getSpcAbsolutePath());
+		
+		return tlosSWPathType;
+	}
+	
+	protected String getCommonName() {
 		return "Spc_" + BasePathType.getRootPath() + "." + getNativePlanId();
 	}
 
@@ -128,8 +140,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			
-			// TODO bu kısım yerine absolute path propertisi olsa daha iyi olurdu.
-			jobRuntimeProperties.setTreePath(getSpcAbsolutePath());
+			jobRuntimeProperties.setAbsoluteJobPath(getSpcAbsolutePath());
 			
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
@@ -190,7 +201,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 			jobRuntimeProperties.setJobProperties(jobProperties);
 
-			jobRuntimeProperties.setTreePath(getSpcAbsolutePath());
+			jobRuntimeProperties.setAbsoluteJobPath(getSpcAbsolutePath());
 
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
@@ -201,10 +212,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
 			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-				if (!jobRuntimeProperties.getTreePath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getPlanId()))) {
+				if (!jobRuntimeProperties.getAbsoluteJobPath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getPlanId()))) {
 					globalLogger.warn("Periodik job root disinda kullanilamaz ! Base : " + BasePathType.getRootPath());
 					globalLogger.warn("JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-					globalLogger.warn("TreePath : " + jobRuntimeProperties.getTreePath());
+					globalLogger.warn("TreePath : " + jobRuntimeProperties.getAbsoluteJobPath());
 
 				} else { // TODO PARAMETRE ekleme
 					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
@@ -595,6 +606,14 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public String getNativePlanId() {
 		return nativePlanId;
+	}
+
+	public boolean isUpdateMySelfAfterMe() {
+		return updateMySelfAfterMe;
+	}
+
+	public void setUpdateMySelfAfterMe(boolean updateMySelfAfterMe) {
+		this.updateMySelfAfterMe = updateMySelfAfterMe;
 	}
 
 }
