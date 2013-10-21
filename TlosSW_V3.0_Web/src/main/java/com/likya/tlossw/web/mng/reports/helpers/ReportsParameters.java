@@ -37,7 +37,7 @@ public class ReportsParameters implements Serializable {
 	
 	/* user inputs */
 	private String includedJobs = FilterByResult.RESULTED.toString();
-	private Boolean includeNonResultedJobs = true;
+	private Boolean includePendingJobs = true;
 	private String jobId = "0";
 	private Boolean justFirstLevel = false;
 	private BigInteger maxNumberOfElement = BigInteger.valueOf(1);;
@@ -122,7 +122,7 @@ public class ReportsParameters implements Serializable {
 		reportParams.setStepForDensity(stepForDensityCalendar);
 		
 		reportParams.setIncludedJobs(FilterByResult.Enum.forString(includedJobs));
-		reportParams.setIncludeNonResultedJobs(includeNonResultedJobs);
+		reportParams.setIncludePendingJobs(includePendingJobs);
 		reportParams.setJobId(jobId);
 		reportParams.setJustFirstLevel(justFirstLevel);
 		reportParams.setMaxNumberOfElement(maxNumberOfElement);
@@ -163,12 +163,12 @@ public class ReportsParameters implements Serializable {
 		this.reportParametersXML = reportParametersXML;
 	}
 
-	public Boolean getIncludeNonResultedJobs() {
-		return includeNonResultedJobs;
+	public Boolean getIncludePendingJobs() {
+		return includePendingJobs;
 	}
 
-	public void setIncludeNonResultedJobs(Boolean includeNonResultedJobs) {
-		this.includeNonResultedJobs = includeNonResultedJobs;
+	public void setIncludePendingJobs(Boolean includePendingJobs) {
+		this.includePendingJobs = includePendingJobs;
 	}
 
 	public String getJobId() {
