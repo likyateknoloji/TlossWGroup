@@ -51,9 +51,10 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
   let $runId := $reportParameters/@runId
   let $statSampleNumber := $reportParameters/@statSampleNumber
   
-  let $runIdx := if( $runId = 0 ) then sq:getId($documentUrl, "runId") (: son run :)
-    					 else $runId
-
+  let $runIdx := if ($runId = 0) then sq:getId($documentUrl, "runId")
+                       else if ($runId < 0) then sq:getId($documentUrl, "runId") + $runId
+                       else $runId 
+					   
   let $jobId := $reportParameters/@jobId
   let $isJob := if( compare($jobId, '0') eq 0 ) then false() else true()
   
@@ -223,7 +224,7 @@ let $isCumulative := xs:boolean($reportParameters/@isCumulative)
 let $order := $reportParameters/@order
 
   let $resultArrayAsc := <rep:jobArray> {
-     for $job in $n/dat:jobProperties[boolean(@agentId) and boolean(@LSIDateTime) ] (: boolean(@LSIDateTime) :)
+     for $job in $n/dat:jobProperties[boolean(@agentId)] (: boolean(@LSIDateTime) :)
     (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
     
      let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
