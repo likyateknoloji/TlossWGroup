@@ -127,7 +127,7 @@ public class DependencyResolver {
 		return result.intValue() == 0 ? false : true;
 	}
 	
-	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String instanceId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> instanceLookUpTable) throws TlosFatalException {
+	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String planId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> instanceLookUpTable) throws TlosFatalException {
 		
 		if (dependencyList == null || dependencyList.getItemArray().length == 0) {
 			// There is no dependency defined so it is allowed to execute
@@ -167,11 +167,11 @@ public class DependencyResolver {
 					SpcInfoType spcInfoType = PlanMapHelper.findSpc(item.getJsPath(), instanceLookUpTable);
 
 					if (spcInfoType == null) {
-						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + instanceId + "." + item.getJsPath());
+						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + planId + "." + item.getJsPath());
 						logger.error("Ana senaryo adı : " + spcId);
 						logger.error("Ana senaryo yolu : " + jsName);
 						logger.error("Uygulama sona eriyor !");
-						Cpc.dumpSpcLookupTable(instanceId, spcLookUpTable);
+						Cpc.dumpSpcLookupTable(planId, spcLookUpTable);
 						throw new TlosFatalException();
 					}
 
