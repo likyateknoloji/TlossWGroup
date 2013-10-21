@@ -61,7 +61,7 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
   let $localStats :=
     let $arasonuc := <arasonuc> {
                       for $i in (1 to $statSampleNumber)
-					   let $reportParametersNew := <rep:reportParameters includeNonResultedJobs="{xs:boolean($reportParameters/@includeNonResultedJobs)}" 
+					   let $reportParametersNew := <rep:reportParameters includePendingJobs="{xs:boolean($reportParameters/@includePendingJobs)}" 
 					                                                     jobId="{$reportParameters/@jobId}" 
 																		 justFirstLevel="{$reportParameters/@justFirstLevel}" 
 																		 maxNumberOfElement="{$reportParameters/@maxNumberOfElement}" 
@@ -127,7 +127,7 @@ let $runId := $reportParameters/@runId
 let $scenarioId := $reportParameters/@scenarioId
 let $jobId := $reportParameters/@jobId
 let $refRunIdBoolean := xs:boolean($reportParameters/@refRunIdBoolean)
-let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
 let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
 
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
@@ -154,29 +154,29 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
                             if($justFirstLevel)
                             then (: $rootScenarioFirstLevelJobs :)
                              for $runx in $x/dat:jobList/dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
                              order by $runx/@id descending
                              return $runx
                             else (: $rootScenarioAllJobs :)
                              for $runx in $x//dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
                              order by $runx/@id descending
                              return $runx
                           else
                             if($justFirstLevel)
                             then (: $otherScenarioFirstLevelJobs :)
-                              for $runx in $x//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]/dat:jobList/dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                              for $runx in $x//dat:scenario[@ID = $scenarioId]/dat:jobList/dat:jobProperties
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
                               order by $runx/@id descending
                               return $runx
                             else (: $otherScenarioAllJobs :)
-                              for $runx in $x//dat:scenario[(@ID = $scenarioId or $scenarioId = 0)]//dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includeNonResultedJobs))]
+                              for $runx in $x//dat:scenario[@ID = $scenarioId]//dat:jobProperties
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
                               order by $runx/@id descending
                               return $runx
                               
                          let $jobInstances := <jobList>{
-                             for $job in $chosen[boolean(@agentId)]
+                             for $job in $chosen
                              group by $ID := $job/@ID
                              order by $ID
                              return <jobInstances name="{$ID}">
@@ -186,10 +186,15 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
 
          
                          let  $propertiesList := for $job in $jobInstances/jobInstances
-                                                 let $tr := (for $cc in $job/dat:jobProperties
-                                                             order by $cc/@agentId descending
-                                                             return $cc)[1]
-                                                 return $tr
+						                         let $count := count($job/dat:jobProperties)
+
+                                                 let $orderedJobList := for $cc in $job/dat:jobProperties
+                                                                        order by $cc/@agentId ascending
+                                                                        return $cc
+												 let $selectedJobList := if(count = 1) 
+												                         then $orderedJobList[1] 
+																         else $orderedJobList[position()!=1]
+                                                 return $selectedJobList
               
                          return $propertiesList
                   
@@ -212,7 +217,7 @@ let $justFirstLevel := $reportParameters/@justFirstLevel
 let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
 :)
 let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
-let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
 let $orderBy := $reportParameters/@orderBy
 let $isCumulative := xs:boolean($reportParameters/@isCumulative)
 let $order := $reportParameters/@order
@@ -238,11 +243,11 @@ let $order := $reportParameters/@order
 
      let $ordertime := if( hs:nACheck($starttime) or hs:nACheck($stoptime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
             
-     let $diffInTime := if( hs:nACheck($stopdate) and not($includeNonResultedJobs) )
+     let $diffInTime := if( hs:nACheck($stopdate) and not($includePendingJobs) )
                         then xs:dayTimeDuration('-PT1S')
 					    else $datetimeDTD
                         
-     where $isJobFinished or $includeNonResultedJobs
+     where $isJobFinished or $includePendingJobs
      order by $ordertime             
     return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}"> { $diffInTime }</rep:job>
     }
@@ -262,7 +267,7 @@ let $justFirstLevel := $reportParameters/@justFirstLevel
 let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
 :)
 let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
-let $includeNonResultedJobs := xs:boolean($reportParameters/@includeNonResultedJobs)
+let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
 let $orderBy := $reportParameters/@orderBy 
 let $isCumulative := xs:boolean($reportParameters/@isCumulative)
 let $order := $reportParameters/@order
@@ -288,7 +293,7 @@ let $order := $reportParameters/@order
 
      let $ordertime := if( hs:nACheck($starttime) or hs:nACheck($stoptime) ) then xs:dateTime("1970-01-01T00:00:00-00:00") else $datetimeDTD
             
-     let $diffInTime := if( hs:nACheck($stopdate) and not($includeNonResultedJobs) )
+     let $diffInTime := if( hs:nACheck($stopdate) and not($includePendingJobs) )
                         then xs:dayTimeDuration('-PT1S')
 					    else $datetimeDTD
      let $orderByTD := if( compare($orderBy, xs:string("DURATION")) = 0 ) 
@@ -296,7 +301,7 @@ let $order := $reportParameters/@order
                        else if( compare($orderBy, xs:string("STARTTIME")) = 0 )
                        then dateTime($startdate, $starttime)
                        else dateTime($stopdate, $stoptime)
-     let $includeJob := $isJobFinished or $includeNonResultedJobs
+     let $includeJob := $isJobFinished or $includePendingJobs
      where $includeJob
      order by $orderByTD             
     return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}" isFinished="{$includeJob}"> { $diffInTime }</rep:job>
@@ -312,14 +317,14 @@ let $order := $reportParameters/@order
    
   let $durationList := 
     for $dur in $resultArrayAsc/rep:job
-    where not(hs:nACheck($dur/@stopTime)) or $includeNonResultedJobs (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
+    where not(hs:nACheck($dur/@stopTime)) or $includePendingJobs (: ya sonlanmis is olacak yada pending state de olsa bile listeye dahil et denecek :)
     return
       $dur
 
 
   let $isUnfinishedCount := 
     count( for $dur in $resultArrayAsc/rep:job
-           where ( not(hs:nACheck($dur/@stopTime)) or $includeNonResultedJobs) and not(xs:boolean($dur/@isFinished)) (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
+           where ( not(hs:nACheck($dur/@stopTime)) or $includePendingJobs) and not(xs:boolean($dur/@isFinished)) (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
            return $dur )
   
   let $isFinished := if( $isUnfinishedCount>0 ) then false() else true()
