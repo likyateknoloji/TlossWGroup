@@ -109,7 +109,7 @@ public abstract class CpcBase implements Runnable {
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
 		System.out.println("**************************Dumping SpcLookupTable ***************************************");
-		System.out.println("sizo of spcLookupTable for instanceId : " + planId + " is " + table.size());
+		System.out.println("sizo of spcLookupTable for planId : " + planId + " is " + table.size());
 
 		for (String spcKey : table.keySet()) {
 			System.out.println("Spc ID : " + table.get(spcKey).getSpcReferance().getSpcAbsolutePath());
@@ -130,12 +130,12 @@ public abstract class CpcBase implements Runnable {
 			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
 
 			if (spcLookupTable == null) {
-				System.out.println("Current instance have no scenarios ! InstanceId : " + planId);
-				Logger.getLogger(CpcBase.class).warn("  >>> WARNING : Current instance have no scenarios ! InstanceId : " + planId);
+				System.out.println("Current plan have no scenarios ! planId : " + planId);
+				Logger.getLogger(CpcBase.class).warn("  >>> WARNING : Current plan have no scenarios ! InstanceId : " + planId);
 				return;
 			}
-			System.out.println("size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
-			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for instanceId : " + planId + " is " + spcLookupTable.size());
+			System.out.println("size of spcLookupTable for planId : " + planId + " is " + spcLookupTable.size());
+			Logger.getLogger(CpcBase.class).debug("  >>> size of spcLookupTable for planId : " + planId + " is " + spcLookupTable.size());
 
 			for (String spcKey : spcLookupTable.keySet()) {
 				System.out.println("Spc ID : " + spcLookupTable.get(spcKey).getSpcReferance().getSpcAbsolutePath());
@@ -162,7 +162,7 @@ public abstract class CpcBase implements Runnable {
 		Scenario myScenario = CpcUtils.getScenario(tlosProcessData, planId);
 		myScenario.setID(EngineeConstants.LONELY_JOBS);
 
-		// *** root sonrasina instanceid eklendi. *//*
+		// *** root sonrasina planid eklendi. *//*
 
 		tmpScenarioList.put(scenarioPathType.getFullPath(), myScenario);
 
