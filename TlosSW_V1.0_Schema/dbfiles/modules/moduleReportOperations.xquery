@@ -191,7 +191,7 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
                                                  let $orderedJobList := for $cc in $job/dat:jobProperties
                                                                         order by $cc/@agentId ascending
                                                                         return $cc
-												 let $selectedJobList := if(count = 1) 
+												 let $selectedJobList := if($count = 1) 
 												                         then $orderedJobList[1] 
 																         else $orderedJobList[position()!=1]
                                                  return $selectedJobList
