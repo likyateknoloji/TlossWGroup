@@ -116,7 +116,7 @@ public class CpcTester extends CpcBase {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 		
-		// Using userId as instanceId for test routine
+		// Using userId as planId for test routine
 		String userId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
 		
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(userId, tlosProcessData);
