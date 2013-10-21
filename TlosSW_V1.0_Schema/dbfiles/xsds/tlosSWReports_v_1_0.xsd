@@ -210,7 +210,7 @@
 				<xs:element name="stepForDensity" minOccurs="0" type="dateTimeType" />
 				<xs:element ref="state-types:LiveStateInfo" minOccurs="0"/>
 			</xs:sequence>
-			<xs:attribute name="includeNonResultedJobs" default="false" use="optional"
+			<xs:attribute name="includePendingJobs" default="false" use="optional"
 				type="xs:boolean" />
 			<xs:attribute name="jobId" default="0" use="optional"
 				type="xs:string" />
@@ -222,6 +222,14 @@
 				type="xs:boolean" />
 			<xs:attribute name="runId" default="0" use="optional"
 				type="xs:integer" />
+			<xs:attribute name="userId" default="-1" use="optional"
+				type="xs:integer" />
+			<xs:attribute name="isGlobal" default="true" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="countInstancesAsOne" default="false" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="docId" default="" use="optional"
+				type="xs:string" />
 			<xs:attribute name="scenarioId" default="0" use="optional"
 				type="xs:string" />
 			<xs:attribute name="orderBy" default="DURATION" use="optional"
