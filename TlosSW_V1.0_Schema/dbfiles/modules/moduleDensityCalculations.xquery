@@ -146,7 +146,7 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
   let $startDateTime  := xs:dateTime($reportParameters/rep:startDateTime/text())
   let $endDateTime := xs:dateTime($reportParameters/rep:endDateTime/text())
   let $step := hs:get-dayTimeDuration-from-dateTimes( adjust-dateTime-to-timezone( xs:dateTime($reportParameters/rep:stepForDensity ), xs:dayTimeDuration('-PT0H')))
-  let $includeNonResultedJobs := $reportParameters/@includeNonResultedJobs
+  let $includePendingJobs := $reportParameters/@includePendingJobs
   let $maxNumberOfInterval := $reportParameters/@maxNumberOfIntervals
   
   let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
