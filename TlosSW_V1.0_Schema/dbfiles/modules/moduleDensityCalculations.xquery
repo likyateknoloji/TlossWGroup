@@ -84,7 +84,7 @@ declare function density:focusedRecords($documentUrl as xs:string, $startDateTim
                                             </state-types:LiveStateInfo>
                                     } </rep:group>
 									
-              where  $jobProperties/@LSIDateTime!=""                    
+              (: where  $jobProperties/@LSIDateTime!="" :)
               return  $fish
               
   return <focused>{ $sonuc } </focused>
@@ -94,9 +94,7 @@ declare function density:SSSInterval($documentUrl as xs:string, $startDateTime a
 {
   let $focused := density:focusedRecords($documentUrl, $startDateTime, $endDateTime, $reportParameters)
   let $tektek :=
-     let $sonuc := for $liveStateInfo in $focused/rep:group
-                   return $liveStateInfo
- 
+     let $sonuc := $focused/rep:group
      return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}"> { $sonuc } </rep:data>
   return $tektek
 
@@ -128,7 +126,7 @@ let $tektek :=
                            and $rightState and $rightSubstate and $rightStatus
                     return <a>{ $liveStateInfo, <finish>{ $finishedValue } </finish> }</a>
                            
-              return if(exists($lsi)) then <rep:group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/@LSIDateTime}" LSIDateTimeEnd="{$lsi/@LSIDateTimeEnd}" isFinished="{data($lsi/finish)}"/>
+              return if(exists($lsi)) then <rep:group agentId="{$liveStateInfos/@agentId}" ID="{$liveStateInfos/@ID}" LSIDateTime="{$lsi/state-types:LiveStateInfo/@LSIDateTime}" LSIDateTimeEnd="{$lsi/state-types:LiveStateInfo/@LSIDateTimeEnd}" isFinished="{data($lsi/finish)}"/>
                      else ()
  
   return <rep:data sDTime="{$startDateTime}" eDTime="{$endDateTime}" count="{count($sonuc)}"> { $sonuc } </rep:data>
