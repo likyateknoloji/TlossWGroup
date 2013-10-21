@@ -605,7 +605,7 @@ declare function hs:deleteJob($documentUrl as xs:string, $docId as xs:string, $u
 (:---------------------------------------- Job Result Doc Operations ------------tlosSWDailyScenarios10.xml--:)
 
 (: READ :)
-
+(:
 declare function hs:jobResultListByDates($documentUrl as xs:string, $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $jobId as xs:int, $date1 as xs:date, $date2 as xs:date, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
     let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
@@ -619,7 +619,7 @@ declare function hs:jobResultListByDates($documentUrl as xs:string, $docId as xs
                                     return   $runx
                 return  $sonuc
 };
-
+:)
 declare function hs:jobResultListbyRunId($documentUrl as xs:string, $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean) as element(dat:jobProperties)*
 {
     let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
