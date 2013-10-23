@@ -68,6 +68,7 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 		fillStateProperties();
 		System.out.println(parameter_value);
 		stacked = false;
+		
 		createDenseModel();
 
 		logger.info("end : init");
@@ -116,6 +117,8 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
     
 	private void createDenseModel() {
 
+		getReportParameters().fillReportParameters();
+		
 		denseModel = new CartesianChartModel();
 	
 		//ReportParameters reportParameters = ReportParameters.Factory.newInstance();
