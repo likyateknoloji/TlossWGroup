@@ -77,15 +77,15 @@ public class AgentOperator implements AgentOperatorMBean {
 
 			if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB_STATE)) {
 
-				String instanceId = txMessageIdBean.getInstanceId();
+				String planId = txMessageIdBean.getPlanId();
 				String spcId = txMessageIdBean.getSpcId();
 				String jobId = txMessageIdBean.getJobKey();
 
-				Job job = planLookupTable.get(instanceId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
+				Job job = planLookupTable.get(planId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
 				job.insertNewLiveStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 				// job.changeStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 			} else if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB)) {
-				Spc spc = planLookupTable.get(txMessageIdBean.getInstanceId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
+				Spc spc = planLookupTable.get(txMessageIdBean.getPlanId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
 				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
 				
 				job.sendEndInfo(new TlosSWPathType(txMessageIdBean.getSpcId()).getAbsolutePath(), txMessage.getTxMessageBodyType().getJobProperties());
