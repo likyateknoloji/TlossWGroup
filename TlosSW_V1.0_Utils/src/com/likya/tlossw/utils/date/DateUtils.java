@@ -17,7 +17,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 
 public class DateUtils {
@@ -792,7 +792,7 @@ public class DateUtils {
 		return tx.toCalendar(Locale.US);
 	}
 	
-	public static String getW3CDateTime(Calendar calendar, String selectedTZone, TypeOfTime.Enum myType) {
+	public static String getW3CDateTime(Calendar calendar, String selectedTZone, TypeOfTimeType.Enum myType) {
 
 //		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi? 
 		//TimeZone serverTZ = TimeZone.getTimeZone(serverTimeZone);
@@ -813,17 +813,17 @@ public class DateUtils {
 		LocalDateTime localDateTime = null;
 		// Seçilen zaman tipine göre işin çalışma zamanını belirleyelim
 		switch (myType.intValue()) {
-			case TypeOfTime.INT_ACTUAL:
+			case TypeOfTimeType.INT_ACTUAL:
 //				jobLocalTime = new LocalTime(calendar.getTime(), zone);
 				localDateTime = new LocalDateTime(calendar.getTime(), zone);
 				break;
 
-			case TypeOfTime.INT_RECURRING:
+			case TypeOfTimeType.INT_RECURRING:
 //				jobLocalTime = new LocalTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
 				localDateTime = new LocalDateTime(calendar.getTime(), DateTimeZone.forOffsetHours(timeOffSet));
 				break;
 
-			case TypeOfTime.INT_BROADCAST: // Burası nasıl olacak tam karar vermedim.
+			case TypeOfTimeType.INT_BROADCAST: // Burası nasıl olacak tam karar vermedim.
 //				jobLocalTime = new LocalTime(calendar.getTime(), zone);
 				localDateTime = new LocalDateTime(calendar.getTime(), DateTimeZone.UTC);
 				break;
