@@ -104,7 +104,6 @@
 			<xs:restriction base="xs:string">
 				<xs:enumeration value="CREATED" />
 				<xs:enumeration value="DEACTIVATED" />
-				<xs:enumeration value="DEPLOYMENT" />
 				<xs:enumeration value="VALIDATED" />
 				<xs:enumeration value="IDLED" />
 				<xs:enumeration value="READY" />
