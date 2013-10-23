@@ -29,7 +29,7 @@ public class TestExecuteInRemoteShell extends TestSuit {
 		jobRuntimeProperties.setJobProperties(jobProperties);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
+		jobRuntimeProperties.setNativeFullJobPath(new TlosSWPathType(spcId));
 
 		
 		ExecuteInRemoteSch executeInRemoteShell = new ExecuteInRemoteSch(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);

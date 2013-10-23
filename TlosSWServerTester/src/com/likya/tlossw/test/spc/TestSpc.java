@@ -48,13 +48,11 @@ public class TestSpc extends TestSuit {
 		JobRuntimeProperties jobRuntimeProperties1 = new JobRuntimeProperties();
 		JobRuntimeProperties jobRuntimeProperties2 = new JobRuntimeProperties();
 
-		jobRuntimeProperties1.setTreePath(spcId.getAbsolutePath());
+		jobRuntimeProperties1.setNativeFullJobPath(spcId);
 		jobRuntimeProperties1.setJobProperties(jobProperties1);
-		jobRuntimeProperties1.setTreePath(spcId.getAbsolutePath());
 
-		jobRuntimeProperties2.setTreePath(spcId.getAbsolutePath());
+		jobRuntimeProperties2.setNativeFullJobPath(spcId);
 		jobRuntimeProperties2.setJobProperties(jobProperties2);
-		jobRuntimeProperties2.setTreePath(spcId.getAbsolutePath());
 
 		ArrayList<JobRuntimeProperties> transformTable = new ArrayList<JobRuntimeProperties>();
 

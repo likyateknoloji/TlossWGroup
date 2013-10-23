@@ -50,7 +50,7 @@ public class TestOracleSQLSentenceExecuter extends TestSuit {
 		jobRuntimeProperties.setDbConnectionProfile(dbConnectionProfile);
 
 		String spcId = "testSpc-01";
-		jobRuntimeProperties.setTreePath(new TlosSWPathType(spcId).getAbsolutePath());
+		jobRuntimeProperties.setNativeFullJobPath(new TlosSWPathType(spcId));
 
 		
 		JDBCOracleSQLSentenceExecuter oracleSQLSentenceExecuter = new JDBCOracleSQLSentenceExecuter(getSpaceWideRegistry(), globalLogger, jobRuntimeProperties);
