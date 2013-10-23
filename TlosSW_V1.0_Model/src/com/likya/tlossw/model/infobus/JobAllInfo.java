@@ -15,7 +15,7 @@ public class JobAllInfo implements InfoType {
 	private static final long serialVersionUID = -4207776239698697355L;
 
 	private JobProperties jobProperties;
-	private String spcAbsolutePath;
+	private String spcNativeFullPath;
 	private boolean isFirstJobInfo;
 
 	public JobProperties getJobProperties() {
@@ -34,12 +34,13 @@ public class JobAllInfo implements InfoType {
 		this.isFirstJobInfo = isFirstJobInfo;
 	}
 
-	public String getSpcAbsolutePath() {
-		return spcAbsolutePath;
+	public String getSpcNativeFullPath() {
+		return spcNativeFullPath;
 	}
 
-	public void setSpcAbsolutePath(String spcAbsolutePath) {
-		this.spcAbsolutePath = spcAbsolutePath;
+	public void setSpcNativeFullPath(String spcNativeFullPath) {
+		this.spcNativeFullPath = spcNativeFullPath;
 	}
+
 
 }
