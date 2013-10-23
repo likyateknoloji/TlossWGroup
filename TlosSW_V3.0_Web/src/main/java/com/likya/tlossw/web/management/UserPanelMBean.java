@@ -15,7 +15,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.common.EmailListDocument.EmailList;
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.common.TelListDocument.TelList;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -181,7 +181,7 @@ public class UserPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
-		person.setRole(Role.Enum.forString(role));
+		person.setRole(RoleType.Enum.forString(role));
 	}
 
 	public String getUserPassword2() {
