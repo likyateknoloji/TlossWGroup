@@ -16,85 +16,91 @@
 		header="#{msgs['tlos.report.param.header']}">
 		<p:tabView id="tabView">
 
-			<p:tab id="arithmetic" title="Arithmetic" rendered="#{backingBean.isParameterVisible(backingBean.getArithmetica())}">
+			<p:tab id="arithmetic" title="Arithmetic"
+				rendered="#{backingBean.isParameterVisible(backingBean.getArithmetica())}">
 				<p:panelGrid columns="4" id="parametersPanel">
 					<h:outputText value="#{msgs['tlos.report.param.isCumulative']}" />
 					<p:selectBooleanCheckbox
 						value="#{backingBean.reportParameters.isCumulative}" />
-						
+
 				</p:panelGrid>
 			</p:tab>
 
-			<p:tab id="history" title="History" rendered="#{backingBean.isParameterVisible(backingBean.getHistorya())}">
+			<p:tab id="history" title="History"
+				rendered="#{backingBean.isParameterVisible(backingBean.getHistorya())}">
 
-				<p:panelGrid columns="2">
-					<h:outputText value="#{msgs['tlos.report.param.numberOfRuns']}"/>
+				<p:panelGrid columns="2"  id="historyPanel">
+					<h:outputText value="#{msgs['tlos.report.param.numberOfRuns']}" />
 					<p:inputText value="#{backingBean.reportParameters.numberOfRuns}"
-							type="integer" />
-									
-					<h:panelGrid id="runIdPanelId" columns="2">
-						<h:outputText value="#{msgs['tlos.report.param.runId']}" />
-						<p:inputText value="#{backingBean.reportParameters.runId}"
-							type="integer" />
-					</h:panelGrid>
-				</p:panelGrid>
+						type="integer" />
 
-			</p:tab>
-
-			<p:tab id="set" title="Set" rendered="#{backingBean.isParameterVisible(backingBean.getSeta())}">
-
-				<p:panelGrid id="setPanel" columns="4">
-				
-					<h:outputText value="#{msgs['tlos.report.param.jobId']}"/>
-					<p:inputText value="#{backingBean.reportParameters.jobId}"
-							type="integer" />
-							
-					<h:outputText value="#{msgs['tlos.report.param.scenarioId']}"/>
-					<p:inputText value="#{backingBean.reportParameters.scenarioId}"
-							type="integer" />
-							
-					<h:outputText value="#{msgs['tlos.report.param.runId']}"/>
+					<h:outputText value="#{msgs['tlos.report.param.runId']}" />
 					<p:inputText value="#{backingBean.reportParameters.runId}"
 							type="integer" />
-							
+				</p:panelGrid>
+
+			</p:tab>
+
+			<p:tab id="set" title="Set"
+				rendered="#{backingBean.isParameterVisible(backingBean.getSeta())}">
+
+				<p:panelGrid id="setPanel" columns="4">
+
+					<h:outputText value="#{msgs['tlos.report.param.jobId']}" />
+					<p:inputText value="#{backingBean.reportParameters.jobId}"
+						type="integer" />
+
+					<h:outputText value="#{msgs['tlos.report.param.scenarioId']}" />
+					<p:inputText value="#{backingBean.reportParameters.scenarioId}"
+						type="integer" />
+
+					<h:outputText value="#{msgs['tlos.report.param.runId']}" />
+					<p:inputText value="#{backingBean.reportParameters.runId}"
+						type="integer" />
+
 					<h:outputText value="#{msgs['tlos.report.param.justFirstLevel']}" />
 					<p:selectBooleanCheckbox
 						value="#{backingBean.reportParameters.justFirstLevel}" />
-						
-					<h:outputText value="#{msgs['tlos.report.param.maxNumOfListedJobs']}"/>
-					<p:inputText value="#{backingBean.reportParameters.maxNumOfListedJobs}"
-							type="integer" />
-							
+
+					<h:outputText
+						value="#{msgs['tlos.report.param.maxNumOfListedJobs']}" />
+					<p:inputText
+						value="#{backingBean.reportParameters.maxNumOfListedJobs}"
+						type="integer" />
+
 				</p:panelGrid>
 
 			</p:tab>
 
-			<p:tab id="sorting" title="Sorting" rendered="#{backingBean.isParameterVisible(backingBean.getSortinga())}">
+			<p:tab id="sorting" title="Sorting"
+				rendered="#{backingBean.isParameterVisible(backingBean.getSortinga())}">
 
 				<h:panelGrid id="jsSortingPanel" columns="1">
 
 					<h:panelGrid columns="2">
 
-					<h:outputText value="#{msgs['tlos.report.param.order']}" />
-					<p:selectOneMenu value="#{backingBean.reportParameters.orderStr}"
-						style="width: 100pt">
-						<f:selectItems value="#{backingBean.orderList}" />
-					</p:selectOneMenu>
+						<h:outputText value="#{msgs['tlos.report.param.order']}" />
+						<p:selectOneMenu value="#{backingBean.reportParameters.orderStr}"
+							style="width: 100pt">
+							<f:selectItems value="#{backingBean.orderList}" />
+						</p:selectOneMenu>
 
-					<h:outputText value="#{msgs['tlos.report.param.orderBy']}" />
-					<p:selectOneMenu value="#{backingBean.reportParameters.orderByStr}"
-						style="width: 100pt">
-						<f:selectItems value="#{backingBean.orderByList}" />
-					</p:selectOneMenu>
+						<h:outputText value="#{msgs['tlos.report.param.orderBy']}" />
+						<p:selectOneMenu
+							value="#{backingBean.reportParameters.orderByStr}"
+							style="width: 100pt">
+							<f:selectItems value="#{backingBean.orderByList}" />
+						</p:selectOneMenu>
 					</h:panelGrid>
 
 				</h:panelGrid>
 
 			</p:tab>
 
-			<p:tab id="stateRelated" title="State Related" rendered="#{backingBean.isParameterVisible(backingBean.getStateRelateda1()) or backingBean.isParameterVisible(backingBean.getStateRelateda2())}">
+			<p:tab id="stateRelated" title="State Related"
+				rendered="#{backingBean.isParameterVisible(backingBean.getStateRelateda1()) or backingBean.isParameterVisible(backingBean.getStateRelateda2())}">
 
-				<p:panelGrid columns="2"
+				<p:panelGrid columns="2"  id="jobResultPanel"
 					rendered="#{backingBean.isParameterVisible(backingBean.getStateRelateda2())}">
 					<h:outputText value="#{msgs['tlos.report.param.includedJobs']}" />
 					<p:selectOneMenu
@@ -103,7 +109,7 @@
 						<f:selectItems value="#{backingBean.includedJobsTypeList}" />
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
-					
+
 					<h:outputText
 						value="#{msgs['tlos.report.param.includePendingJobs']}" />
 					<p:selectBooleanCheckbox
@@ -130,7 +136,8 @@
 					<p:panelGrid columns="2">
 						<h:outputText value="#{msgs['tlos.popup.dependency.state']}"
 							rendered="#{backingBean.stateDepthType eq 'State'}" />
-						<p:selectOneMenu value="#{backingBean.reportParameters.stateNameStr}"
+						<p:selectOneMenu
+							value="#{backingBean.reportParameters.stateNameStr}"
 							rendered="#{backingBean.stateDepthType eq 'State'}">
 							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 								itemValue="" />
@@ -139,7 +146,8 @@
 
 						<h:outputText value="#{msgs['tlos.popup.dependency.substate']}"
 							rendered="#{backingBean.stateDepthType eq 'SubState'}" />
-						<p:selectOneMenu value="#{backingBean.reportParameters.substateNameStr}"
+						<p:selectOneMenu
+							value="#{backingBean.reportParameters.substateNameStr}"
 							rendered="#{backingBean.stateDepthType eq 'SubState'}">
 							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 								itemValue="" />
@@ -148,7 +156,8 @@
 
 						<h:outputText value="#{msgs['tlos.popup.dependency.status']}"
 							rendered="#{backingBean.stateDepthType eq 'Status'}" />
-						<p:selectOneMenu value="#{backingBean.reportParameters.statusNameStr}"
+						<p:selectOneMenu
+							value="#{backingBean.reportParameters.statusNameStr}"
 							rendered="#{backingBean.stateDepthType eq 'Status'}">
 							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 								itemValue="" />
@@ -158,10 +167,11 @@
 
 				</h:panelGrid>
 			</p:tab>
-			
-			<p:tab id="statistics" title="Statistics" rendered="#{backingBean.isParameterVisible(backingBean.getStatisticsa())}">
 
-				<p:panelGrid columns="2">
+			<p:tab id="statistics" title="Statistics"
+				rendered="#{backingBean.isParameterVisible(backingBean.getStatisticsa())}">
+
+				<p:panelGrid columns="2"  id="statPanel">
 					<h:outputText value="#{msgs['tlos.report.param.statSampleNumber']}" />
 					<p:inputText
 						value="#{backingBean.reportParameters.statSampleNumber}"
@@ -169,20 +179,19 @@
 				</p:panelGrid>
 			</p:tab>
 
-			<p:tab id="timeRelated" title="time Related" rendered="#{backingBean.isParameterVisible(backingBean.getTimeRelateda1()) or backingBean.isParameterVisible(backingBean.getTimeRelateda2())}">
+			<p:tab id="timeRelated" title="time Related"
+				rendered="#{backingBean.isParameterVisible(backingBean.getTimeRelateda1()) or backingBean.isParameterVisible(backingBean.getTimeRelateda2())}">
 				<p:panelGrid columns="4" id="filterAndTimePanel"
 					rendered="#{backingBean.isParameterVisible(backingBean.getTimeRelateda1())}">
-					
+
 					<h:outputText
 						value="#{msgs['tlos.report.param.automaticTimeInterval']}" />
 					<p:selectBooleanCheckbox
 						value="#{backingBean.reportParameters.automaticTimeInterval}">
 						<p:ajax update="filterAndTimePanel"></p:ajax>
 					</p:selectBooleanCheckbox>
-					<h:outputText
-						value="" />
-					<h:outputText
-						value="" />
+					<h:outputText value="" />
+					<h:outputText value="" />
 					<h:outputText value="#{msgs['tlos.report.param.startDate']}"
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}" />
 					<p:calendar value="#{backingBean.startDate}" id="startDate"
@@ -208,7 +217,7 @@
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}" />
 					<p:inputMask value="#{backingBean.endTime}" mask="99:99:99"
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}" />
-						
+
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}"
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}" />
@@ -217,7 +226,7 @@
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}">
 						<f:selectItems value="#{backingBean.typeOfTimeList}" />
 					</p:selectOneMenu>
-					
+
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.timezone']}"
 						rendered="#{!backingBean.reportParameters.automaticTimeInterval}" />
 					<p:selectOneMenu value="#{backingBean.reportParameters.timeZone}"
@@ -226,12 +235,12 @@
 						<f:selectItems value="#{backingBean.TZList}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
-				
-				<p:panelGrid columns="2"
+
+				<p:panelGrid columns="2"  id="intervalNumPanel"
 					rendered="#{backingBean.isParameterVisible(backingBean.getTimeRelateda2())}">
 					<h:outputText value="#{msgs['tlos.report.param.stepForDensity']}" />
 					<p:inputMask value="#{backingBean.stepForDensity}" mask="99:99:99" />
-					
+
 					<h:outputText
 						value="#{msgs['tlos.report.param.maxNumberOfIntervals']}" />
 					<p:inputText
@@ -240,15 +249,37 @@
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
 				</p:panelGrid>
-				
+
 			</p:tab>
 
+			<p:tab id="user" title="#{msgs['tlos.report.param.userGroup']}"
+				rendered="#{backingBean.isParameterVisible(backingBean.getUsera())}">
 
+				<h:panelGrid id="jsUserPanel" columns="1">
+
+					<h:panelGrid columns="2">
+
+						<h:outputText value="#{msgs['tlos.report.param.userId']}" />
+						<p:inputText value="#{backingBean.reportParameters.userId}"
+							type="integer">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputText>
+
+						<h:outputText value="#{msgs['tlos.report.param.role']}" />
+						<p:selectOneMenu value="#{backingBean.reportParameters.roleStr}"
+							style="width: 100pt">
+							<f:selectItems value="#{backingBean.roleTypeList}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+				</h:panelGrid>
+
+			</p:tab>
 		</p:tabView>
-						<p:commandButton style="float:right;"
-					value="#{msgs['tlos.button.ok']}"
-					actionListener="#{backingBean.refreshReport}"
-					oncomplete="parametersDialog.hide();" update=":dashboardReports" />
+		<p:commandButton style="float:right;"
+			value="#{msgs['tlos.button.ok']}"
+			actionListener="#{backingBean.refreshReport}"
+			oncomplete="parametersDialog.hide();" update=":dashboardReports" />
 	</p:dialog>
 
 </ui:composition>
