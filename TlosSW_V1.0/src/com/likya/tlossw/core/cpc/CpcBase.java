@@ -49,9 +49,9 @@ public abstract class CpcBase implements Runnable {
 	protected void terminateAllJobs(boolean isForced) {
 
 		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
-			PlanInfoType instanceInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
+			PlanInfoType planInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
-			HashMap<String, SpcInfoType> spcMap = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcMap = planInfoType.getSpcLookupTable().getTable();
 
 			Iterator<String> keyIterator = spcMap.keySet().iterator();
 
@@ -126,8 +126,8 @@ public abstract class CpcBase implements Runnable {
 
 		for (String planId : spaceWideRegistry.getPlanLookupTable().keySet()) {
 
-			PlanInfoType instanceInfoType = spaceWideRegistry.getPlanLookupTable().get(planId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = spaceWideRegistry.getPlanLookupTable().get(planId);
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			if (spcLookupTable == null) {
 				System.out.println("Current plan have no scenarios ! planId : " + planId);
