@@ -236,7 +236,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 			JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-			String jobPath = ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
+			String jobPath = ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
 			jobStart.setTreePath(jobPath);
 			// jobStart.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
 			jobStart.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
@@ -253,7 +253,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendEndInfo(String spcAbsolutePath, JobProperties jobProperties) {
+	public synchronized void sendEndInfo(String spcNativeFullPath, JobProperties jobProperties) {
 
 		if (genericInfoSender != null) {
 			genericInfoSender.sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties());
@@ -261,7 +261,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 			JobAllInfo jobAllInfo = new JobAllInfo();
 			jobAllInfo.setJobProperties(jobProperties);
-			jobAllInfo.setSpcAbsolutePath(spcAbsolutePath);
+			jobAllInfo.setSpcNativeFullPath(spcNativeFullPath);
 
 			if (getGlobalRegistry().getInfoBus() != null) {
 				getGlobalRegistry().getInfoBus().addInfo(jobAllInfo);
@@ -272,11 +272,11 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 	}
 
-	public synchronized void sendFirstJobInfo(String spcAbsolutePath, JobProperties jobProperties) {
+	public synchronized void sendFirstJobInfo(String spcNativeFullPath, JobProperties jobProperties) {
 
 		JobAllInfo jobAllInfo = new JobAllInfo();
 		jobAllInfo.setJobProperties(jobProperties);
-		jobAllInfo.setSpcAbsolutePath(spcAbsolutePath);
+		jobAllInfo.setSpcNativeFullPath(spcNativeFullPath);
 		jobAllInfo.setFirstJobInfo(true);
 
 		if (getGlobalRegistry().getInfoBus() != null) {
@@ -309,7 +309,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
+		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
 		//jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
 		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 		jobInfo.setJobID(getJobRuntimeProperties().getJobProperties().getID());
@@ -350,8 +350,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime());
-		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getTreePath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
+		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
 		jobInfo.setJobName(jobProperties.getBaseJobInfos().getJsName());
 		jobInfo.setLiveLiveStateInfo(liveStateInfo);
 		Date infoTime = Calendar.getInstance().getTime();
@@ -391,7 +390,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
 		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
-		sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
+		sendEndInfo(jobRuntimeProperties.getNativeFullJobPath().getFullPath(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
 		getJobRuntimeProperties().setPlannedExecutionDate(startTime);
@@ -428,7 +427,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		jobProperties.getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 		// getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
-		sendEndInfo(Thread.currentThread().getName(), jobProperties);
+		sendEndInfo(jobRuntimeProperties.getNativeFullJobPath().getFullPath(), jobProperties);
 
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + endLog);
 		// GlobalRegistery.getSpaceWideLogger().info(logLabel + duration);
@@ -560,6 +559,8 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		if (jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
 
+			sendStatusChangeInfo();
+			
 			String logStr = "islem bitirildi : " + jobKey + " => ";
 			logStr += StateName.FINISHED.toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().toString();
 			myLogger.info(" >>>>" + logStr + "<<<<");
