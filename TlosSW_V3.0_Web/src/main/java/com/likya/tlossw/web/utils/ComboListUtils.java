@@ -238,4 +238,14 @@ public class ComboListUtils {
 
 		return includedJobsTypeList;
 	}
+	
+	public static Collection<SelectItem> constructRoleTypeList() {
+
+		long startTime = System.currentTimeMillis();
+		Collection<SelectItem> roleTypeList = WebInputUtils.fillRoleTypeList();
+		logTimeInfo("constructRoleTypeList fill things Süre : ", startTime);
+		startTime = System.currentTimeMillis();
+
+		return roleTypeList;
+	}
 }
