@@ -10,8 +10,8 @@ import javax.faces.model.SelectItem;
 
 import com.likya.tlos.model.xmlbeans.report.ReportParametersDocument.ReportParameters;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfosType;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
-import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
@@ -46,12 +46,10 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
     public static final String[] STATISTICSA = new String[] {"zonesReport"};
     public static final String[] TIMERELATEDA1 = new String[] {"stateReport","densityReport","zonesReport","durationReport","distributionReport"};
     public static final String[] TIMERELATEDA2 = new String[] {"densityReport"};
+    public static final String[] USERA = new String[] {"stateReport","densityReport","zonesReport","durationReport","distributionReport"};
     
    
 	private String stateDepthType = ConstantDefinitions.STATUS;
-	private String stateName;
-	private String substateName;
-	private String statusName;
 
 	private Date startDate;
 	private String startTime;
@@ -78,11 +76,11 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 		}
 
 		if (!reportsParameters.getAutomaticTimeInterval()) {
-			reportParams.setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getTimeZone()));
-			reportParams.setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getTimeZone()));
+			reportParams.getTimeRelatedA1().setStartDateTime(DefinitionUtils.dateTimeToXmlDateTime(startDate, startTime, reportsParameters.getTimeZone()));
+			reportParams.getTimeRelatedA1().setEndDateTime(DefinitionUtils.dateTimeToXmlDateTime(endDate, endTime, reportsParameters.getTimeZone()));
 		} else {
-			reportParams.setStartDateTime(reportsParameters.getStartDateCalendar());
-			reportParams.setEndDateTime(reportsParameters.getEndDateCalendar());
+			reportParams.getTimeRelatedA1().setStartDateTime(reportsParameters.getStartDateCalendar());
+			reportParams.getTimeRelatedA1().setEndDateTime(reportsParameters.getEndDateCalendar());
 		}
 	}
 
@@ -105,13 +103,21 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public void fillStateProperties() {
 
+		String substateName, stateName="";
+		
+		ReportParameters reportParams = reportsParameters.getReportParams();
+		
+		LiveStateInfosType stateRelatedA1 = LiveStateInfosType.Factory.newInstance();
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
-
+		
+		//TODO Simdilik tek eleman var, ama ileride birden fazla state ilede calisabiliriz.
+		LiveStateInfo liveStateInfoElement = reportParams.getStateRelatedA1().getLiveStateInfoArray(0);
+		
 		if (stateDepthType.equals(ConstantDefinitions.STATUS)) {
 
-			liveStateInfo.setStatusName(StatusName.Enum.forString(statusName));
+			liveStateInfo.setStatusName(liveStateInfoElement.getStatusName());
 
-			substateName = getStatusToSubstate().get(statusName);
+			substateName = getStatusToSubstate().get(liveStateInfoElement.getStatusName().toString());
 			liveStateInfo.setSubstateName(SubstateName.Enum.forString(substateName));
 
 			stateName = getSubstateToState().get(substateName);
@@ -119,17 +125,19 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 		}
 
 		if (stateDepthType.equals(ConstantDefinitions.SUBSTATE)) {
-			liveStateInfo.setSubstateName(SubstateName.Enum.forString(substateName));
+			liveStateInfo.setSubstateName(liveStateInfoElement.getSubstateName());
 
-			stateName = getSubstateToState().get(substateName);
+			stateName = getSubstateToState().get(liveStateInfoElement.getSubstateName().toString());
 			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
 		}
 
 		if (stateDepthType.equals(ConstantDefinitions.STATE)) {
-			liveStateInfo.setStateName(StateName.Enum.forString(stateName));
+			liveStateInfo.setStateName(liveStateInfoElement.getStateName());
 		}
 
-		reportsParameters.getReportParams().setLiveStateInfo(liveStateInfo);
+		stateRelatedA1.addNewLiveStateInfo().set(liveStateInfo);
+		
+		reportsParameters.getReportParams().setStateRelatedA1(stateRelatedA1);
 	}
 
 	public ReportsParameters getReportParameters() {
@@ -187,30 +195,6 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public void setStateDepthType(String stateDepthType) {
 		this.stateDepthType = stateDepthType;
-	}
-
-	public String getStateName() {
-		return stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public String getSubstateName() {
-		return substateName;
-	}
-
-	public void setSubstateName(String substateName) {
-		this.substateName = substateName;
-	}
-
-	public String getStatusName() {
-		return statusName;
-	}
-
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
 	}
 
 	public HashMap<String, String> getStatusToSubstate() {
