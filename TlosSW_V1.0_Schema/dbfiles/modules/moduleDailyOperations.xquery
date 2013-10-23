@@ -461,6 +461,7 @@ declare function hs:select-jobs-and-scenarios($n as node(), $scenarioId as xs:in
 			   attribute ID {$p/@ID},
 			   attribute planId {$planId},
 			   attribute scenarioId {$scenarioId},
+			   attribute agentId {$p/@agentId},
 			   $p/* 
 			 }
 	    case $a as element(dat:jobList)
