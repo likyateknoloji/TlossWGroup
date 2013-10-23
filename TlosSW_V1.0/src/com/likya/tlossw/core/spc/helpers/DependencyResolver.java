@@ -58,7 +58,7 @@ public class DependencyResolver {
 			if (item.getJsPath() == null || item.getJsPath() == "") { 
 				// Lokal bir bagimlilik
 				if (jobQueue.get(item.getJsId()) == null) {
-					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getTreePath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
+					SWErrorOperations.logErrorForItemJsId(logger, ownerJsName, item.getJsName(), ownerJob.getJobRuntimeProperties().getAbsoluteJobPath(), ownerJob.getJobRuntimeProperties().getJobProperties().getID());
 				}
 				jobRuntimeProperties = jobQueue.get(item.getJsId()).getJobRuntimeProperties();
 			} else { 
@@ -66,7 +66,7 @@ public class DependencyResolver {
 				SpcInfoType spcInfoType = spcLookupTable.getTable().get(BasePathType.getRootPath() + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
-					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getTreePath(), spcLookupTable);
+					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getAbsoluteJobPath(), spcLookupTable);
 				}
 
 				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
@@ -127,7 +127,7 @@ public class DependencyResolver {
 		return result.intValue() == 0 ? false : true;
 	}
 	
-	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String planId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> instanceLookUpTable) throws TlosFatalException {
+	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String planId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> planLookUpTable) throws TlosFatalException {
 		
 		if (dependencyList == null || dependencyList.getItemArray().length == 0) {
 			// There is no dependency defined so it is allowed to execute
@@ -164,7 +164,7 @@ public class DependencyResolver {
 					throw new TlosFatalException();
 				} else {
 
-					SpcInfoType spcInfoType = PlanMapHelper.findSpc(item.getJsPath(), instanceLookUpTable);
+					SpcInfoType spcInfoType = PlanMapHelper.findSpc(item.getJsPath(), planLookUpTable);
 
 					if (spcInfoType == null) {
 						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + planId + "." + item.getJsPath());
