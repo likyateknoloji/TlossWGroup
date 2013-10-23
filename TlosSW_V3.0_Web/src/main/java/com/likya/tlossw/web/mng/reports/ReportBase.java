@@ -34,7 +34,8 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 	private Collection<SelectItem> statusNameList;
 	private Collection<SelectItem> tZList;
 	private Collection<SelectItem> typeOfTimeList;
-
+	private Collection<SelectItem> roleTypeList;
+	
 	private String activeReportPanel = ConstantDefinitions.JOB_DURATION_REPORT;
 
     public static final String[] ARITHMETICA = new String[] {"zonesReport"};
@@ -166,10 +167,21 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 		return orderByList;
 	}
 
+	public void setRoleTypeList(Collection<SelectItem> roleTypeList) {
+		this.roleTypeList = roleTypeList;
+	}
+
+	public Collection<SelectItem> getRoleTypeList() {
+		if (roleTypeList == null) {
+			roleTypeList = ComboListUtils.constructRoleTypeList();
+		}
+		return roleTypeList;
+	}
+
 	public void setOrderByList(Collection<SelectItem> orderByList) {
 		this.orderByList = orderByList;
 	}
-
+	
 	public String getActiveReportPanel() {
 		return activeReportPanel;
 	}
@@ -353,6 +365,26 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 
 	public static String[] getTimeRelateda2() {
 		return TIMERELATEDA2;
+	}
+
+	public static String[] getStaterelateda1() {
+		return STATERELATEDA1;
+	}
+
+	public static String[] getStaterelateda2() {
+		return STATERELATEDA2;
+	}
+
+	public static String[] getTimerelateda1() {
+		return TIMERELATEDA1;
+	}
+
+	public static String[] getTimerelateda2() {
+		return TIMERELATEDA2;
+	}
+
+	public static String[] getUsera() {
+		return USERA;
 	}
 	
 }
