@@ -64,10 +64,10 @@ public class DBUtils extends DBBase {
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
-		for (String instanceId : spaceWideRegistry.getPlanLookupTable().keySet()) {
-			PlanInfoType instanceInfoType = spaceWideRegistry.getPlanLookupTable().get(instanceId);
+		for (String planId : spaceWideRegistry.getPlanLookupTable().keySet()) {
+			PlanInfoType planInfoType = spaceWideRegistry.getPlanLookupTable().get(planId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				HashMap<String, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId);
