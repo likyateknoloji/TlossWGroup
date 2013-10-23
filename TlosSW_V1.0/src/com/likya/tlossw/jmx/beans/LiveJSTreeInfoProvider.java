@@ -176,12 +176,12 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			}
 		} else {
 
-			HashMap<String, PlanInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-			Iterator<String> instanceKeyIterator = instanceLookUpTable.keySet().iterator();
+			HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
+			Iterator<String> planKeyIterator = planLookUpTable.keySet().iterator();
 
-			while (instanceKeyIterator.hasNext()) {
-				String tmpInstanceId = instanceKeyIterator.next();
-				spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, tmpInstanceId, treePath);
+			while (planKeyIterator.hasNext()) {
+				String tmpPlanId = planKeyIterator.next();
+				spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, tmpPlanId, treePath);
 				if (spcLookUpTableTypeClient.getSpcInfoTypeClientList().size() > 0) {
 					return spcLookUpTableTypeClient;
 				}
@@ -359,8 +359,8 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		GunlukIslerNode gunlukIslerNodeClient = tlosSWReqNode.getGunlukIslerNode();
 		
 		/**
-		 *  ekranda instance dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
-		 *  yoksa icinde instance gelmedigi icin girmiyor
+		 *  ekranda plan dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
+		 *  yoksa icinde plan gelmedigi icin girmiyor
 		 */
 		
 		if (gunlukIslerNodeClient != null) {
@@ -389,10 +389,10 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientPlanNode.getPlanId());
 
-				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
+				// plan altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, planId, selectedNodeId).getSpcInfoTypeClientList();
 
-				// Her bir scenarioNodu da instance'in scenarioNodeMap'ine atiyor
+				// Her bir scenarioNodu da plan scenarioNodeMap'ine atiyor
 				for (String spcId : spcInfoTypeClientList.keySet()) {
 					SpcInfoTypeClient spcInfoTypeClient = spcInfoTypeClientList.get(spcId);
 
