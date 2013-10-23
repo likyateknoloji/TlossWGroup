@@ -59,7 +59,7 @@ public class DevelopmentLifeCycleTabBean extends BaseTabBean {
 			int stateIntValue = StateName.Enum.forString(stateName).intValue();
 			int substateIntValue = SubstateName.Enum.forString(subStateName).intValue();
 
-			if (substateIntValue == SubstateName.INT_DEPLOYMENT) {
+			if (substateIntValue == SubstateName.INT_CREATED) {
 				int statusIntValue = StatusName.INT_REQUEST;
 
 				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, stateIntValue, substateIntValue, statusIntValue);
