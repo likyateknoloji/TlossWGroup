@@ -127,6 +127,13 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return tlosSWPathType;
 	}
 	
+	public TlosSWPathType getSpcNativeFullPath() {
+		
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getNativePlanId() + "." + getSpcAbsolutePath());
+		
+		return tlosSWPathType;
+	}
+	
 	protected String getCommonName() {
 		return "Spc_" + BasePathType.getRootPath() + "." + getNativePlanId();
 	}
@@ -140,7 +147,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		while (taskListIterator.hasNext()) { // Senaryodaki herbir is icin
 			JobRuntimeProperties jobRuntimeProperties = taskListIterator.next();
 			
-			jobRuntimeProperties.setAbsoluteJobPath(getSpcAbsolutePath());
+			jobRuntimeProperties.setNativeFullJobPath(getSpcNativeFullPath());
 			
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
@@ -152,6 +159,11 @@ public abstract class SpcBase implements Runnable, Serializable {
 			myJob = getMyJob(jobRuntimeProperties);
 
 			if (myJob != null && jobId != null) {
+				
+				if(jobRuntimeProperties.getJobProperties().getPlanId() == null || "".equals(jobRuntimeProperties.getJobProperties().getPlanId())) {
+					jobRuntimeProperties.getJobProperties().setPlanId(nativePlanId);
+				}
+				
 				jobQueueIndex.add(new SortType(jobId, jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue()));
 				getJobQueue().put(jobId, myJob);
 			}
@@ -201,7 +213,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 			jobRuntimeProperties.setJobProperties(jobProperties);
 
-			jobRuntimeProperties.setAbsoluteJobPath(getSpcAbsolutePath());
+			jobRuntimeProperties.setNativeFullJobPath(getSpcNativeFullPath());
 
 			String jobId = jobRuntimeProperties.getJobProperties().getID();
 
