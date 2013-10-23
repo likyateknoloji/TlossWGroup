@@ -59,7 +59,7 @@ public class Cpc extends CpcBase {
 					handleDailyExecution();
 				}
 
-				// Her bir instance icin senaryolari aktive et !
+				// Her bir plan icin senaryolari aktive et !
 
 				for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
@@ -210,8 +210,8 @@ public class Cpc extends CpcBase {
 		SpcLookupTable spcLookupTableNew = prepareSpcLookupTable(tlosProcessData, logger);
 
 		for (String planId : getSpaceWideRegistry().getPlanLookupTable().keySet()) {
-			PlanInfoType instanceInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
-			HashMap<String, SpcInfoType> spcLookupTableOld = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = getSpaceWideRegistry().getPlanLookupTable().get(planId);
+			HashMap<String, SpcInfoType> spcLookupTableOld = planInfoType.getSpcLookupTable().getTable();
 			ConcurrencyAnalyzer.checkConcurrency(planId, spcLookupTableNew.getTable(), spcLookupTableOld);
 		}
 
