@@ -10,7 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.WebSpaceWideRegistery;
 import com.likya.tlossw.model.auth.WebAppUser;
@@ -62,11 +62,11 @@ public class LoginBean extends LoginBase implements Serializable {
 		if (LOGIN_FAILURE.equals(validated)) {
 			addMessage("loginForm", FacesMessage.SEVERITY_ERROR, "tlos.login.invalidLogin", null);
 		} else if (webSpaceWideRegistery != null) {
-			if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != Role.ADMIN) {
+			if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() != RoleType.ADMIN) {
 
 				addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.authorization", null);
 				returnValue = LOGIN_FAILURE;
-			} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() == Role.ADMIN) {
+			} else if (webSpaceWideRegistery.getWaitConfirmOfGUI() && loggedUser.getRole() == RoleType.ADMIN) {
 				addMessage("loginForm", "loadingMessage", "tlos.info.engine.start.waitMode", null);
 				returnValue = LOGIN_ENGINE_DIRECTOR;
 			} else if (!webSpaceWideRegistery.getWaitConfirmOfGUI() && LOGIN_SUCCESS.equals(validated)) {
@@ -188,7 +188,7 @@ public class LoginBean extends LoginBase implements Serializable {
 		person.setId(webAppUser.getId());
 		person.setName(webAppUser.getName());
 		person.setSurname(webAppUser.getSurname());
-		person.setRole(Role.Enum.forString(webAppUser.getRole().getRoleId()));
+		person.setRole(RoleType.Enum.forString(webAppUser.getRole().getRoleId()));
 		person.setUserPassword(webAppUser.getPassword());
 		person.setUserName(webAppUser.getUsername());
 		person.setTransformToLocalTime(webAppUser.isTransformToLocalTime());
