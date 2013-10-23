@@ -413,7 +413,7 @@ public class Spc extends SpcBase {
 					 * serkan : kaldırdım :)
 					 */
 					// if (scheduledJob.getFirstLoop()) {
-					scheduledJob.sendFirstJobInfo(getSpcAbsolutePath(), jobProperties);
+					scheduledJob.sendFirstJobInfo(getSpcNativeFullPath().getFullPath(), jobProperties);
 					// }
 
 					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
@@ -688,7 +688,7 @@ public class Spc extends SpcBase {
 		// 2.tip fiziksel bagimlilik ile aktarim
 		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
 
-		scheduledJob.sendEndInfo(getSpcAbsolutePath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
+		scheduledJob.sendEndInfo(getSpcNativeFullPath().getFullPath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// //////////////////\\\\\\\\\\\\\\\\\
 
 		/* Secilen kaynak server ise server da degilse agent a aktararak calistir. */
