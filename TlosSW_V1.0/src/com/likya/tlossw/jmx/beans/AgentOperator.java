@@ -20,7 +20,6 @@ import com.likya.tlossw.jmx.JMXServer;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.TxMessageIdBean;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
-import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.XmlUtils;
 
 public class AgentOperator implements AgentOperatorMBean {
@@ -88,7 +87,7 @@ public class AgentOperator implements AgentOperatorMBean {
 				Spc spc = planLookupTable.get(txMessageIdBean.getPlanId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
 				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
 				
-				job.sendEndInfo(new TlosSWPathType(txMessageIdBean.getSpcId()).getAbsolutePath(), txMessage.getTxMessageBodyType().getJobProperties());
+				job.sendEndInfo(txMessageIdBean.getSpcId(), txMessage.getTxMessageBodyType().getJobProperties());
 				if (txMessage.getTxMessageBodyType().getJobProperties().getAgentId() != 0) { // Baska
 																								// ne
 																								// olabilir
