@@ -77,13 +77,13 @@ public interface ProcessInfoProviderMBean {
 
 	public ArrayList<String> retrieveViewFiles(JmxUser jmxUser);
 
-	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String instanceId, ArrayList<String> scenariodIdList);
+	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String planId, ArrayList<String> scenariodIdList);
 
 	public boolean retrieveWaitConfirmOfGUI(JmxUser jmxUser);
 
-	public ArrayList<String> retrieveInstanceIds(JmxUser jmxUser);
+	public ArrayList<String> retrievePlanIds(JmxUser jmxUser);
 
-	public String retrieveMaxInstanceId(JmxUser jmxUser);
+	public String retrieveMaxPlanId(JmxUser jmxUser);
 
 	public SpcInfoTypeClient retrieveSpcInfo(JmxUser jmxUser, String treePath);
 
