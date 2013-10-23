@@ -102,6 +102,37 @@
 
 					</p:panel>
 					
+					<p:panel id="development" rendered="#{currentStatesOfJobsMBean.pieDevelopmentCount > 0}"
+						header="#{msgs['tlos.reports.chartState.Development']}"
+						style="width:200px;height:200px">
+						<h:outputText value="#{currentStatesOfJobsMBean.pieDevelopmentCount}"
+							style="font-weight:bold;color: #BE81F7; font-size: 8em; display: block; position: relative; right: -40px;" />
+
+					</p:panel>
+					
+					<p:panel id="test" rendered="#{currentStatesOfJobsMBean.pieTestCount > 0}"
+						header="#{msgs['tlos.reports.chartState.Test']}"
+						style="width:200px;height:200px">
+						<h:outputText value="#{currentStatesOfJobsMBean.pieTestCount}"
+							style="font-weight:bold;color: #BE81F7; font-size: 8em; display: block; position: relative; right: -40px;" />
+
+					</p:panel>
+					
+					<p:panel id="request" rendered="#{currentStatesOfJobsMBean.pieRequestCount > 0}"
+						header="#{msgs['tlos.reports.chartState.Request']}"
+						style="width:200px;height:200px">
+						<h:outputText value="#{currentStatesOfJobsMBean.pieRequestCount}"
+							style="font-weight:bold;color: #BE81F7; font-size: 8em; display: block; position: relative; right: -40px;" />
+
+					</p:panel>
+					
+					<p:panel id="deployed" rendered="#{currentStatesOfJobsMBean.pieDeployedCount > 0}"
+						header="#{msgs['tlos.reports.chartState.Deployed']}"
+						style="width:200px;height:200px">
+						<h:outputText value="#{currentStatesOfJobsMBean.pieDeployedCount}"
+							style="font-weight:bold;color: #BE81F7; font-size: 8em; display: block; position: relative; right: -40px;" />
+
+					</p:panel>
 					<p:panel id="statePanel"
 						header="#{msgs['tlos.reports.pie1.header']}">
 						<p:pieChart id="dashboardC"
