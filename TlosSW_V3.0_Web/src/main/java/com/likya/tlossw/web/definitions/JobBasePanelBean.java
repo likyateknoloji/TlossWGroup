@@ -35,7 +35,7 @@ import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfosType;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.Status;
@@ -439,7 +439,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 
 		if (isJsInsertButton()) {
-			LiveStateInfos liveStateInfos = LiveStateInfos.Factory.newInstance();
+			LiveStateInfosType liveStateInfos = LiveStateInfosType.Factory.newInstance();
 			jobProperties.getStateInfos().setLiveStateInfos(liveStateInfos);
 
 			// ilk live state bilgisini burada ekliyor
