@@ -718,4 +718,20 @@ public class WebInputUtils {
 
 		return includedJobsTypeList;
 	}
+	
+	public static Collection<SelectItem> fillRoleTypeList() {
+		String type = null;
+
+		Collection<SelectItem> roleTypeList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < RoleType.Enum.table.lastInt(); i++) {
+			SelectItem item = new SelectItem();
+			type = RoleType.Enum.table.forInt(i + 1).toString();
+			item.setValue(type);
+			item.setLabel(type);
+			roleTypeList.add(item);
+		}
+
+		return roleTypeList;
+	}
 }
