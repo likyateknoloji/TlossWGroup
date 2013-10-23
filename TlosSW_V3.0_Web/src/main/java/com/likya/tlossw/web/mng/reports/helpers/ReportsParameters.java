@@ -39,10 +39,10 @@ public class ReportsParameters implements Serializable {
 
 	private DBOperations dbOperations;
 
-	private ReportParameters reportParams;
+	private ReportParameters reportParams = null;
 
 	private String reportParametersXML = null;
-	
+
 	ArithmeticA arithmeticA = null;
 	HistoryA historyA = null;
 	SetA setA = null;
@@ -53,15 +53,15 @@ public class ReportsParameters implements Serializable {
 	TimeRelatedA1 timeRelatedA1 = null;
 	TimeRelatedA2 timeRelatedA2 = null;
 	UserA userA = null;
-			
+
 	/**** INPUTS *********/
-	
+
 	/* ARITHMETICA */
 	private Boolean isCumulative = false;
-	
+
 	/* HISTORYA */
 	private short numberOfRuns = 1;
-	
+
 	/* SETA */
 	private String jobId = "0";
 	private String scenarioId = "0";
@@ -71,37 +71,35 @@ public class ReportsParameters implements Serializable {
 	private String docId = "";
 	private Boolean isGlobal = true;
 	private Boolean countInstancesAsOne = false;
-	
+
 	/* SORTINGA */
 	private OrderByType.Enum orderBy = OrderByType.DURATION;
 	private OrderType.Enum order = OrderType.DESCENDING;
-	
+
 	/* STATERELATEDA1 */
 	private LiveStateInfosType liveStateInfos;
 
 	/* STATERELATEDA2 */
 	private FilterByResult.Enum includedJobs = FilterByResult.RESULTED;
 	private Boolean includePendingJobs = true;
-	
+
 	/* STATISTICSA */
 	private short statSampleNumber = 3;
-	
+
 	/* TIMERELATEDA1 */
 	private Calendar startDateCalendar;
 	private Calendar endDateCalendar;
 	private TypeOfTimeType typeOfTime;
 	private String timeZone = "Europe/Istanbul";
 	private Boolean automaticTimeInterval = true;
-	
+
 	/* TIMERELATEDA2 */
 	private Calendar stepForDensityCalendar;
 	private Short maxNumberOfIntervals = (short) 100;
-	
+
 	/* USERA */
 	private BigInteger userId = new BigInteger("-1");
 	private RoleType.Enum role = RoleType.NORMALUSER;
-	
-
 
 	private LocalStats statParameters = null;
 	private String zuluTZone = "UTC";
@@ -109,102 +107,81 @@ public class ReportsParameters implements Serializable {
 	private StateName.Enum stateName;
 	private SubstateName.Enum substateName;
 	private StatusName.Enum statusName;
-	
+
 	private String stateNameStr;
 	private String substateNameStr;
 	private String statusNameStr;
-	
+
 	private String includedJobsStr;
 	private String orderStr;
 	private String orderByStr;
-	
+
+	private String roleStr;
+
 	/******* computed ********/
 
 	public ReportsParameters() {
 
-		reportParams = ReportParameters.Factory.newInstance();
+		if (reportParams == null) {
+			reportParams = ReportParameters.Factory.newInstance();
+			init();
+		}
+	}
+
+	public void init() {
 
 		stateNameStr = StateName.RUNNING.toString();
 		substateNameStr = SubstateName.ON_RESOURCE.toString();
 		statusNameStr = StatusName.TIME_IN.toString();
-		
+
 		includedJobsStr = FilterByResult.RESULTED.toString();
-		
+
 		orderByStr = OrderByType.DURATION.toString();
-		orderStr   = OrderType.DESCENDING.toString();
-		
-		stateName = StateName.RUNNING;
-		substateName = SubstateName.ON_RESOURCE;
-		statusName = StatusName.TIME_IN;
-		
-		includedJobs = FilterByResult.RESULTED;
-		
-		orderBy = OrderByType.DURATION;
-		order   = OrderType.DESCENDING;
-		
+		orderStr = OrderType.DESCENDING.toString();
+
+		roleStr = RoleType.NORMALUSER.toString();
+
 		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
 		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
 		setStepForDensityCalendar(com.likya.tlossw.web.utils.DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), new String("00:00:30"), zuluTZone));
-	
 
-		setArithmeticA(isCumulative);
-		
-		setHistoryA(numberOfRuns);
-		
-		setSetA(jobId, scenarioId, runId, justFirstLevel, maxNumOfListedJobs, docId, isGlobal, countInstancesAsOne);
-
-		setSortingA(orderBy, order);
-		
-		setStateRelatedA1( stateName, substateName, statusName);
-		
-		setStateRelatedA2(includedJobs, includePendingJobs);
-	
-		setStatisticsA(statSampleNumber);
-		
-		setTimeRelatedA1(startDateCalendar, endDateCalendar, TypeOfTimeType.ACTUAL, timeZone, automaticTimeInterval);
-		
-		setTimeRelatedA2(stepForDensityCalendar, maxNumberOfIntervals);		
-
-		setUserA(userId, role);
-
-		
-		
 		fillReportParameters();
+
 	}
 
 	private void setArithmeticA(boolean isCumulative) {
-		if(arithmeticA == null) {
+		if (arithmeticA == null) {
 			arithmeticA = reportParams.addNewArithmeticA();
 		}
-		
+
 		arithmeticA.setIsCumulative(isCumulative);
 	}
-	
+
 	private ArithmeticA getArithmeticA() {
 		ArithmeticA arithmeticA = reportParams.getArithmeticA();
-		
+
 		return arithmeticA;
 	}
-	
+
 	private void setHistoryA(short numberOfRuns) {
-		if(historyA == null) {
+		if (historyA == null) {
 			historyA = reportParams.addNewHistoryA();
 		}
-		
+
 		historyA.setNumberOfRuns(numberOfRuns);
 	}
-	
+
 	private HistoryA getHistoryA() {
 		HistoryA historyA = reportParams.getHistoryA();
-		
+
 		return historyA;
 	}
-	
+
 	private void setSetA(String jobId, String scenarioId, BigInteger runId, Boolean justFirstLevel, BigInteger maxNumOfListedJobs, String docId, Boolean isGlobal, Boolean countInstancesAsOne) {
-		if(setA == null) {
-           setA = reportParams.addNewSetA();
+		if (setA == null) {
+			setA = reportParams.addNewSetA();
 		}
-		
+
 		setA.setJobId(jobId);
 		setA.setScenarioId(scenarioId);
 		setA.setRunId(runId);
@@ -214,172 +191,171 @@ public class ReportsParameters implements Serializable {
 		setA.setIsGlobal(isGlobal);
 		setA.setCountInstancesAsOne(countInstancesAsOne);
 	}
-	
+
 	private SetA getSetA() {
 		SetA setA = reportParams.getSetA();
-		
+
 		return setA;
 	}
 
 	private void setSortingA(OrderByType.Enum orderBy, OrderType.Enum order) {
-		if(sortingA == null) {
+		if (sortingA == null) {
 			sortingA = reportParams.addNewSortingA();
 		}
-		
+
 		sortingA.setOrderBy(orderBy);
 		sortingA.setOrder(order);
 	}
-	
+
 	private SortingA getSortingA() {
 		SortingA sortingA = reportParams.getSortingA();
-		
+
 		return sortingA;
 	}
-	
+
 	private void setStateRelatedA1(StateName.Enum stateName, SubstateName.Enum substateName, StatusName.Enum statusName) {
-		if(stateRelatedA1 == null) {
+		if (stateRelatedA1 == null) {
 			stateRelatedA1 = reportParams.addNewStateRelatedA1();
 		}
 
 		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
-		
+
 		liveStateInfo.setStateName(stateName);
 		liveStateInfo.setSubstateName(substateName);
 		liveStateInfo.setStatusName(statusName);
-		
-		//TODO birden fazla state olabilir yaptim ama kontrolsuz coklama oldu. O yuzden simdilik tek elemanl olsun.
-		if(stateRelatedA1.sizeOfLiveStateInfoArray() == 0 ) {
+
+		// TODO birden fazla state olabilir yaptim ama kontrolsuz coklama oldu. O yuzden simdilik tek elemanl olsun.
+		if (stateRelatedA1.sizeOfLiveStateInfoArray() == 0) {
 			stateRelatedA1.addNewLiveStateInfo().set(liveStateInfo);
 		}
-		
+
 	}
-	
+
 	private LiveStateInfosType getStateRelatedA1() {
 		LiveStateInfosType stateRelatedA1 = reportParams.getStateRelatedA1();
-		
+
 		return stateRelatedA1;
 	}
 
 	private void setStateRelatedA2(FilterByResult.Enum includedJobs, Boolean includePendingJobs) {
-		if(stateRelatedA2 == null) {
+		if (stateRelatedA2 == null) {
 			stateRelatedA2 = reportParams.addNewStateRelatedA2();
 		}
-		
+
 		stateRelatedA2.setIncludedJobs(includedJobs);
 		stateRelatedA2.setIncludePendingJobs(includePendingJobs);
 	}
-	
+
 	private StateRelatedA2 getStateRelatedA2() {
 		StateRelatedA2 stateRelatedA2 = reportParams.getStateRelatedA2();
-		
+
 		return stateRelatedA2;
 	}
-	
+
 	private void setStatisticsA(short statSampleNumber) {
-		if(statisticsA == null) {
+		if (statisticsA == null) {
 			statisticsA = reportParams.addNewStatisticsA();
 		}
-		
+
 		statisticsA.setStatSampleNumber(statSampleNumber);
 	}
-	
+
 	private StatisticsA getStatisticsA() {
 		StatisticsA statisticsA = reportParams.getStatisticsA();
-		
+
 		return statisticsA;
 	}
-	
+
 	private void setTimeRelatedA1(Calendar startDateCalendar, Calendar endDateCalendar, TypeOfTimeType.Enum typeOfTime, String timeZone, Boolean automaticTimeInterval) {
-		if(timeRelatedA1 == null) {
+		if (timeRelatedA1 == null) {
 			timeRelatedA1 = reportParams.addNewTimeRelatedA1();
 		}
-		
+
 		timeRelatedA1.setStartDateTime(startDateCalendar);
 		timeRelatedA1.setEndDateTime(endDateCalendar);
 		timeRelatedA1.setTypeOfTime(typeOfTime);
 		timeRelatedA1.setTimeZone(timeZone);
 		timeRelatedA1.setAutomaticTimeInterval(automaticTimeInterval);
 	}
-	
+
 	private TimeRelatedA1 getTimeRelatedA1() {
 		TimeRelatedA1 timeRelatedA1 = reportParams.getTimeRelatedA1();
-		
+
 		return timeRelatedA1;
 	}
 
 	private void setTimeRelatedA2(Calendar stepForDensityCalendar, Short maxNumberOfIntervals) {
-		if(timeRelatedA2 == null) {
+		if (timeRelatedA2 == null) {
 			timeRelatedA2 = reportParams.addNewTimeRelatedA2();
 		}
-		
+
 		timeRelatedA2.setStepForDensity(stepForDensityCalendar);
 		timeRelatedA2.setMaxNumberOfIntervals(maxNumberOfIntervals);
 	}
-	
+
 	private TimeRelatedA2 getTimeRelatedA2() {
 		TimeRelatedA2 timeRelatedA2 = reportParams.getTimeRelatedA2();
-		
+
 		return timeRelatedA2;
 	}
 
 	private void setUserA(BigInteger userId, RoleType.Enum role) {
-		if(userA == null) {
+		if (userA == null) {
 			userA = reportParams.addNewUserA();
 		}
-		
+
 		userA.setUserId(userId);
 		userA.setRole(role);
 	}
-	
+
 	private UserA getUserA() {
 		UserA userA = reportParams.getUserA();
-		
+
 		return userA;
 	}
-	
-	private void fillReportParameters() {
 
+	public void fillReportParameters() {
 
-		//setStepForDensityCalendar(DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), stepForDensity, zuluTZone));
-		
-		//String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+		// setStepForDensityCalendar(DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), stepForDensity, zuluTZone));
 
-		//stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.calendarToStringTimeFormat(stepForDensityCalendar, "UTC", timeInputFormat);
+		// String timeInputFormat = new String("HH:mm:ss.SSSZZ");
+
+		// stepForDensity = com.likya.tlossw.web.utils.DefinitionUtils.calendarToStringTimeFormat(stepForDensityCalendar, "UTC", timeInputFormat);
 
 		stateName = StateName.Enum.forString(stateNameStr);
 		substateName = SubstateName.Enum.forString(substateNameStr);
 		statusName = StatusName.Enum.forString(statusNameStr);
-		
+
 		includedJobs = FilterByResult.Enum.forString(includedJobsStr);
-				
+
 		orderBy = OrderByType.Enum.forString(orderByStr);
-		order   = OrderType.Enum.forString(orderStr);
-		
-//		setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
-//		setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
-//		setStepForDensityCalendar(com.likya.tlossw.web.utils.DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), new String("00:00:30"), zuluTZone));
-	
+		order = OrderType.Enum.forString(orderStr);
+
+		role = RoleType.Enum.forString(roleStr);
+
+		// setStartDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 22:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
+		// setEndDateCalendar(com.likya.tlossw.web.utils.DefinitionUtils.stringToCalendar(new String("2013/09/19 23:00:01"), new String("yyyy/MM/dd HH:mm:ss"), timeZone));
+		// setStepForDensityCalendar(com.likya.tlossw.web.utils.DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), new String("00:00:30"), zuluTZone));
 
 		setArithmeticA(isCumulative);
-		
+
 		setHistoryA(numberOfRuns);
-		
+
 		setSetA(jobId, scenarioId, runId, justFirstLevel, maxNumOfListedJobs, docId, isGlobal, countInstancesAsOne);
 
 		setSortingA(orderBy, order);
-		
-		setStateRelatedA1( stateName, substateName, statusName);
-		
+
+		setStateRelatedA1(stateName, substateName, statusName);
+
 		setStateRelatedA2(includedJobs, includePendingJobs);
-	
+
 		setStatisticsA(statSampleNumber);
-		
+
 		setTimeRelatedA1(startDateCalendar, endDateCalendar, TypeOfTimeType.ACTUAL, timeZone, automaticTimeInterval);
-		
-		setTimeRelatedA2(stepForDensityCalendar, maxNumberOfIntervals);		
+
+		setTimeRelatedA2(stepForDensityCalendar, maxNumberOfIntervals);
 
 		setUserA(userId, role);
-		
 
 	}
 
@@ -394,8 +370,6 @@ public class ReportsParameters implements Serializable {
 	}
 
 	public String getReportParametersXML() {
-
-		fillReportParameters();
 
 		QName qName = ReportParameters.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
@@ -516,7 +490,7 @@ public class ReportsParameters implements Serializable {
 	public void setEndDateCalendar(Calendar endDateCalendar) {
 		this.endDateCalendar = endDateCalendar;
 	}
-	
+
 	public Calendar getStepForDensityCalendar() {
 		return stepForDensityCalendar;
 	}
@@ -699,6 +673,14 @@ public class ReportsParameters implements Serializable {
 
 	public void setOrderStr(String orderStr) {
 		this.orderStr = orderStr;
+	}
+
+	public String getRoleStr() {
+		return roleStr;
+	}
+
+	public void setRoleStr(String roleStr) {
+		this.roleStr = roleStr;
 	}
 
 }
