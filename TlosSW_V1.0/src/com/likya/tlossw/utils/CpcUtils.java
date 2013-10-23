@@ -157,7 +157,7 @@ public class CpcUtils {
 		return spcInfoType;
 	}
 	
-	public static SpcInfoType getSpcInfo(String userId, String instanceId, Scenario tmpScenario) {
+	public static SpcInfoType getSpcInfo(String userId, String planId, Scenario tmpScenario) {
 		
 		SpcInfoType spcInfoType = new SpcInfoType();
 		
