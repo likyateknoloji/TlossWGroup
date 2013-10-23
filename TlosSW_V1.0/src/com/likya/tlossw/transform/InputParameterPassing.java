@@ -140,7 +140,7 @@ public class InputParameterPassing {
 				if (depJob == null) {
 					getMyLogger().error("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
+					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getAbsoluteJobPath());
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					throw new UnresolvedDependencyException("     > Yerel bagimlilik tanimi yapilan is bulunamadi : " + item.getJsName());
 				}
@@ -173,7 +173,7 @@ public class InputParameterPassing {
 				if (spcInfoType == null) {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getPlanId() + "." + item.getJsPath());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
-					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
+					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getAbsoluteJobPath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 					Cpc.dumpSpcLookupTable(getPlanId(), getSpaceWideRegistry().getPlanLookupTable().get(getPlanId()).getSpcLookupTable());
