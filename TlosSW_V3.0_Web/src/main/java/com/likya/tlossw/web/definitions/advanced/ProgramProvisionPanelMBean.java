@@ -183,9 +183,9 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 		fillProvisionProperties();
 
 		if (getDbOperations().updateProvision(getLicenseXML())) {
-			addMessage("insertProgramProvision", FacesMessage.SEVERITY_INFO, "tlos.success.dbAccessDef.update", null);
+			addMessage("insertProgramProvision", FacesMessage.SEVERITY_INFO, "tlos.success.provision.update", null);
 		} else {
-			addMessage("insertProgramProvision", FacesMessage.SEVERITY_ERROR, "tlos.error.dbConnection.update", null);
+			addMessage("insertProgramProvision", FacesMessage.SEVERITY_ERROR, "tlos.error.provision.update", null);
 		}
 	}
 
