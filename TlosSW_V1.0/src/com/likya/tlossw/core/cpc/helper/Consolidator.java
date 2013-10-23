@@ -124,13 +124,13 @@ public class Consolidator {
 		
 	}
 	
-public static void compareAndConsolidateTwoTables1(String instanceIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 		
 		ArrayList<String> spcLookupTableIntersection = new ArrayList<String>();
 
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
 
-			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, instanceIdOld, spcLookupTableOld);
+			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, planIdOld, spcLookupTableOld);
 
 			if (spcIdOld == null) {
 				/**
