@@ -44,7 +44,7 @@ import com.likya.tlossw.model.MessagesCodeMapping;
 import com.likya.tlossw.model.TlosJmxReturnValue;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.InstanceUtils;
+import com.likya.tlossw.utils.PlanUtils;
 import com.likya.tlossw.utils.PersistenceUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -58,7 +58,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 	}
 
 	/**
-	 * TODO instanceId'yi db'den almak daha mantikli olabilir, job'i engine ve
+	 * TODO planId'yi db'den almak daha mantikli olabilir, job'i engine ve
 	 * db'ye arka arkaya ekliyoruz onada bakiver
 	 */
 
@@ -78,7 +78,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		}
 
 		ProcessInfoProvider processInfoProvider = new ProcessInfoProvider();
-		String maxInstanceId = processInfoProvider.retrieveMaxInstanceId(jmxUser);
+		String maxInstanceId = processInfoProvider.retrieveMaxPlanId(jmxUser);
 		if (maxInstanceId == null) {
 			return new TlosJmxReturnValue(MessagesCodeMapping.fetchTlosGuiMessage(MessagesCodeMapping.ENGINE_INSTANCE_ABSENT), null);
 		}
@@ -643,7 +643,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			TlosSpaceWide.getSpaceWideRegistry().getSpaceWideReference().startDayKeeper();
 			TlosSpaceWide.getSpaceWideRegistry().getSpaceWideReference().startCpc();
 
-			while (!InstanceUtils.checkRecovery(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable())) {
+			while (!PlanUtils.checkRecovery(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable())) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
