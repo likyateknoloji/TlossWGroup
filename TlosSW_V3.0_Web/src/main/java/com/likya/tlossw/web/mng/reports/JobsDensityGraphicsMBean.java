@@ -117,11 +117,7 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 	private void createDenseModel() {
 
 		denseModel = new CartesianChartModel();
-
-		if (getReportParameters() == null) {
-			setReportParameters(new ReportsParameters());
-		}
-		
+	
 		//ReportParameters reportParameters = ReportParameters.Factory.newInstance();
 		
 		HashMap<String, StatsByAgent> agentMap = new HashMap<String, StatsByAgent>();
