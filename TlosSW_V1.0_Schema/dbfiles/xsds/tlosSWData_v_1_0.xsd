@@ -129,6 +129,11 @@
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="planId" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
 			<xs:attribute name="LSIDateTime" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
