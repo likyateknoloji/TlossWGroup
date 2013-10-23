@@ -30,6 +30,7 @@ import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcLookUpTableTypeClient;
 import com.likya.tlossw.model.jmx.JmxUser;
 import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.JobNode;
 import com.likya.tlossw.model.tree.PlanNode;
@@ -139,19 +140,19 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		return spcLookUpTableTypeClient;
 	}
 
-	public TlosSpaceWideNode createInstanceNodeObject(JmxUser jmxUser) {
+	public TlosSpaceWideNode createPlanNodeObject(JmxUser jmxUser) {
 
 		TlosSpaceWideNode tlosSpaceWideNodeObject = new TlosSpaceWideNode();
 
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
-			PlanNode instanceNode = new PlanNode("" + jmxUser.getId());
-			gunlukIslerNode.getPlanNodes().put(jmxUser.getId() + "", instanceNode);
+			PlanNode planNode = new PlanNode("" + jmxUser.getId());
+			gunlukIslerNode.getPlanNodes().put(jmxUser.getId() + "", planNode);
 		} else {
-			for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
-				PlanNode instanceNode = new PlanNode(instanceId);
-				gunlukIslerNode.getPlanNodes().put(instanceId, instanceNode);
+			for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+				PlanNode planNode = new PlanNode(planId);
+				gunlukIslerNode.getPlanNodes().put(planId, planNode);
 			}
 		}
 
@@ -216,7 +217,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			} else {
 				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
-				tmpScenarioNode.setId(spcId);
+				tmpScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
 				tmpScenarioNode.setName(tmpScenario.getJsName());
 				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
@@ -271,7 +272,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setPlanId(spcInfoType.getSpcReferance().getCurrentPlanId());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
@@ -351,7 +352,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			return null;
 		}
 
-		TlosSpaceWideNode tlosSWRespNode = createInstanceNodeObject(jmxUser);
+		TlosSpaceWideNode tlosSWRespNode = createPlanNodeObject(jmxUser);
 		
 		GunlukIslerNode gunlukIslerNodeServer = tlosSWRespNode.getGunlukIslerNode();
 
@@ -364,17 +365,17 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		
 		if (gunlukIslerNodeClient != null) {
 			
-			HashMap<String, PlanNode> serverInstanceNodes = gunlukIslerNodeServer.getPlanNodes();
+			HashMap<String, PlanNode> serverPlanNodes = gunlukIslerNodeServer.getPlanNodes();
 			
-			HashMap<String, PlanNode> clientInstanceNodes = gunlukIslerNodeClient.getPlanNodes();
+			HashMap<String, PlanNode> clientPlanNodes = gunlukIslerNodeClient.getPlanNodes();
 			
 			for (String planId : gunlukIslerNodeClient.getPlanNodes().keySet()) {
 
-				PlanNode clientInstanceNode = clientInstanceNodes.get(planId);
+				PlanNode clientPlanNode = clientPlanNodes.get(planId);
 
-				PlanNode serverInstanceNode = serverInstanceNodes.get(planId);
+				PlanNode serverPlanNode = serverPlanNodes.get(planId);
 				
-				if(serverInstanceNode == null) {
+				if(serverPlanNode == null) {
 					// Bu durumda client'dan gelen plan id server tarafta bulunamadı demek.
 					// Bu ancak ve ancak server tarafta restart sonrası ya da GD sonrası
 					// oluşabilecek bir durum. Böyler bir durumda direk client'a boş
@@ -386,7 +387,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientInstanceNode.getPlanId());
+				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientPlanNode.getPlanId());
 
 				// instance altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
 				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, planId, selectedNodeId).getSpcInfoTypeClientList();
@@ -396,20 +397,22 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 					SpcInfoTypeClient spcInfoTypeClient = spcInfoTypeClientList.get(spcId);
 
 					ScenarioNode serverNode = new ScenarioNode();
+					serverNode.setId(new TlosSWPathType(spcId).getId().toString());
 					serverNode.setSpcInfoTypeClient(spcInfoTypeClient);
-					serverInstanceNode.getScenarioNodeMap().put(spcId, serverNode);
+					serverPlanNode.getScenarioNodeMap().put(spcId, serverNode);
 				}
 
-				// Simdi ise, instance'in altindaki senaryolarin detaylarini alacaz.
-				// InstanceNode instanceNode = clientInstanceNodes.get(instanceId);
+				// Simdi ise, plan'ın altindaki senaryolarin detaylarini alacaz.
+				// PlanNode planNode = clientPlanNodes.get(planId);
 
-				for (String spcId : clientInstanceNode.getScenarioNodeMap().keySet()) {
-					ScenarioNode myScenarioNode = clientInstanceNode.getScenarioNodeMap().get(spcId);
+				for (String spcId : clientPlanNode.getScenarioNodeMap().keySet()) {
+					ScenarioNode myScenarioNode = clientPlanNode.getScenarioNodeMap().get(spcId);
 
 					ScenarioNode newScenarioNode = null;
 
 					newScenarioNode = getDetails(jmxUser, myScenarioNode);
-					serverInstanceNode.getScenarioNodeMap().put(spcId, newScenarioNode);
+					newScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
+					serverPlanNode.getScenarioNodeMap().put(spcId, newScenarioNode);
 				}
 
 			}
