@@ -12,7 +12,7 @@ import javax.naming.directory.DirContext;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.web.appmng.SessionMediator;
@@ -126,7 +126,7 @@ public class LdapLoginBean extends LoginBase implements Serializable {
 		person.setId(appUser.getId());
 		person.setName(appUser.getName());
 		person.setSurname(appUser.getSurname());
-		person.setRole(Role.Enum.forString(appUser.getRole().getRoleId()));
+		person.setRole(RoleType.Enum.forString(appUser.getRole().getRoleId()));
 		person.setUserPassword(appUser.getPassword());
 		person.setUserName(appUser.getUsername());
 		person.setTransformToLocalTime(appUser.isTransformToLocalTime());
