@@ -8,7 +8,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.xmlbeans.XmlCursor;
 
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.ExpectedTimeDocument.ExpectedTime;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
@@ -140,7 +140,7 @@ public class TimeManagementTabBean {
 		}
 
 		timeManagement.setTimeZone(selectedTZone);
-		timeManagement.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+		timeManagement.setTypeOfTime(TypeOfTimeType.Enum.forString(selectedTypeOfTime));
 
 		System.out.println("nedir" + timeManagement.toString());
 	}
