@@ -19,7 +19,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
 
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -81,7 +81,7 @@ public class UserSearchPanelMBean extends TlosSWBaseBean implements Serializable
 
 	public void searchUserAction(ActionEvent e) {
 		if (!role.equals("")) {
-			person.setRole(Role.Enum.forString(role));
+			person.setRole(RoleType.Enum.forString(role));
 		} else {
 			person.setRole(null);
 		}
