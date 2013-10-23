@@ -53,7 +53,7 @@ public class SpcMonitor implements Runnable {
 					StatusNameDocument.StatusName.Enum statusName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName();
 
 					if (SpaceWideRegistry.isDebug) {
-						String logString = " [Spc Name : " + jobRuntimeProperties.getTreePath() + "]";
+						String logString = " [Spc Name : " + jobRuntimeProperties.getNativeFullJobPath().getFullPath() + "]";
 						logString += " [Job Name : " + jobProperties.getID() + "]";
 						logString += " [Tarih : " + DateUtils.getServerW3CDateTime() + "]";
 						logString += " [State Name : " + (stateName == null ? "" : stateName) + "]";
