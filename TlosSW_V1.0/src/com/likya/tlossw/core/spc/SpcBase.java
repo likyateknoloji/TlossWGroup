@@ -22,7 +22,7 @@ import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
-import com.likya.tlos.model.xmlbeans.state.LiveStateInfosDocument.LiveStateInfos;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfosType;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -338,7 +338,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return counter;
 	}
 
-	public LiveStateInfo getLastStateOfJob(LiveStateInfos liveStateInfos) {
+	public LiveStateInfo getLastStateOfJob(LiveStateInfosType liveStateInfos) {
 		
 		LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
 
