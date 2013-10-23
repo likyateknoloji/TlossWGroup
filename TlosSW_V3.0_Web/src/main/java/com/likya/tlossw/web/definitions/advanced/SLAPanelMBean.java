@@ -19,7 +19,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
@@ -330,7 +330,7 @@ public class SLAPanelMBean extends TlosSWBaseBean implements Serializable {
 		sla.getRInterval().setStopTime(DefinitionUtils.dateToXmlTime(rIntervalStopTime, selectedTZone));
 
 		sla.setTimeZone(selectedTZone);
-		sla.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+		sla.setTypeOfTime(TypeOfTimeType.Enum.forString(selectedTypeOfTime));
 
 		// makine listesindekileri sla tanimindaki resourcePool kismina set
 		// ediyor
