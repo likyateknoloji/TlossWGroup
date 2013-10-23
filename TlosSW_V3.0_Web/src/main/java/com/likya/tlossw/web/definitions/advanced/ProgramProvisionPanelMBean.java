@@ -16,7 +16,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlOptions;
 
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.programprovision.EndDateDocument;
 import com.likya.tlos.model.xmlbeans.programprovision.LicenseDocument.License;
 import com.likya.tlos.model.xmlbeans.programprovision.NameDocument;
@@ -132,7 +132,7 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 		selectedTypeOfTime = new String("Actual");
 
 		license.setTimeZone(selectedTZone);
-		license.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+		license.setTypeOfTime(TypeOfTimeType.Enum.forString(selectedTypeOfTime));
 	}
 
 	private void fillPanelFromProvision() {
