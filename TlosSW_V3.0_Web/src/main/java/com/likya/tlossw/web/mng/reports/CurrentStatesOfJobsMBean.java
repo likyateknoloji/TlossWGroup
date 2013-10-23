@@ -86,11 +86,14 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 
 		column3.addWidget("statePanel");
 
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+			
+		}
+		
 		createPieModel();
 
 		logger.info("end : init");
-		
-		setReportParameters(new ReportsParameters());
 
 		setActiveReportPanel(ConstantDefinitions.JOB_STATE_REPORT);
 	}
@@ -110,10 +113,8 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	}
 
 	private void createPieModel() {
-
-		if (getReportParameters() == null) {
-			setReportParameters(new ReportsParameters());
-		}
+	
+		getReportParameters().fillReportParameters();
 		
 		pieColorList = "";
 
