@@ -12,6 +12,7 @@ import com.likya.tlos.model.xmlbeans.ftpadapter.FtpPropertiesDocument.FtpPropert
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.RunTimeUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 
@@ -19,7 +20,7 @@ public class JobRuntimeProperties implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String absoluteJobPath;
+	private TlosSWPathType nativeFullJobPath;
 	
 	private JobProperties jobProperties;
 	
@@ -217,28 +218,16 @@ public class JobRuntimeProperties implements Serializable {
 		return dbConnectionProfile;
 	}
 
-	/**
-	 *  @deprecated use {@link getAbsoluteJobPath()} instead.
-	 */
-	@Deprecated 
-	public String getTreePath() {
-		return getAbsoluteJobPath();
+	public TlosSWPathType getNativeFullJobPath() {
+		return nativeFullJobPath;
 	}
 
-	/**
-	 *  @deprecated use {@link setAbsoluteJobPath()} instead.
-	 */
-	@Deprecated 
-	public void setTreePath(String treePath) {
-		this.setAbsoluteJobPath(treePath);
+	public void setNativeFullJobPath(TlosSWPathType nativeFullJobPath) {
+		this.nativeFullJobPath = nativeFullJobPath;
 	}
-
+	
 	public String getAbsoluteJobPath() {
-		return absoluteJobPath;
-	}
-
-	public void setAbsoluteJobPath(String absoluteJobPath) {
-		this.absoluteJobPath = absoluteJobPath;
+		return getNativeFullJobPath().getAbsolutePath();
 	}
 
 }
