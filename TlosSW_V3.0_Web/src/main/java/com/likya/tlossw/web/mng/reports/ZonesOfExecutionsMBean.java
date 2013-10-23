@@ -102,6 +102,10 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 		model.addColumn(column1);
 		model.addColumn(column2);
 
+		if (getReportParameters() == null) {
+			setReportParameters(new ReportsParameters());
+		}
+		
 		createMeterGaugeModel();
 
 		logger.info("end : init");
