@@ -3,7 +3,7 @@ package com.likya.tlossw.core.spc.helpers;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
@@ -37,7 +37,7 @@ public class TimeZoneCalculator {
 		boolean timeHasCome = false;
 
 		// Hangi tip zaman için işlem yapılacak?
-		TypeOfTime.Enum myType = timeManagement.getTypeOfTime();
+		TypeOfTimeType.Enum myType = timeManagement.getTypeOfTime();
 
 		String serverDateTimeStr = DateUtils.getServerW3CDateTime(); // Server da simdiki zaman
 		String jobDateTimeStr = DateUtils.getW3CDateTime(startTime, jobTimeZone, myType); // Job da belirtilen zaman
@@ -55,12 +55,12 @@ public class TimeZoneCalculator {
 		Calendar jobDateTimeAtAgent = DateUtils.dateToXmlTime(agentDateTimeStr, serverTimeZone); // Job da belirtilen zaman, agent TZ offset, Server daki zaman dilimine cevriliyor
 
 		switch (myType.intValue()) {
-		case TypeOfTime.INT_ACTUAL:
-		case TypeOfTime.INT_RECURRING:
+		case TypeOfTimeType.INT_ACTUAL:
+		case TypeOfTimeType.INT_RECURRING:
 			timeHasCome = jobDateTimeAtServer.before(serverDateTime);
 			break;
 
-		case TypeOfTime.INT_BROADCAST:
+		case TypeOfTimeType.INT_BROADCAST:
 			timeHasCome = jobDateTimeAtAgent.before(serverDateTime);
 			break;
 
