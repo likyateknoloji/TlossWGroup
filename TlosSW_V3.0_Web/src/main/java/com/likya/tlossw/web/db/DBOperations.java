@@ -1617,7 +1617,7 @@ public class DBOperations implements Serializable {
 
 		long startTime = System.currentTimeMillis();
 
-		String xQueryStr = reportFunctionConstructor("hs:jobStateListbyRunId", reportParametersXML);
+		String xQueryStr = reportFunctionConstructor("hs:jobStateListbyRunId", "0", reportParametersXML);
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
