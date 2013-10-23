@@ -54,8 +54,9 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 
 		System.out.println(parameter_value);
 
-		setReportParameters(new ReportsParameters());
-		
+		if (getReportParameters() == null) {
+		   setReportParameters(new ReportsParameters());
+		}
 		createOhlcModel(getReportParameters().getReportParametersXML());
 
 		logger.info("end : init");
