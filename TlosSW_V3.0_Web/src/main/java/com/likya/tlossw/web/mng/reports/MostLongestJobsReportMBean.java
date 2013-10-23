@@ -59,7 +59,7 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 			setReportParameters(new ReportsParameters());
 		}
 		
-		curDurationModel = createCurCategoryModel( getReportParameters().getReportParametersXML() );
+		curDurationModel = createCurCategoryModel();
 		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
@@ -76,12 +76,12 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 	
 	public void refreshCurDurationChart() {
 
-		createCurCategoryModel(getReportParameters().getReportParametersXML() );
+		createCurCategoryModel();
 	}
 
 	public void refreshPrevDurationChart() {
 		
-		createCurCategoryModel(getReportParameters().getReportParametersXML() );
+		createCurCategoryModel();
 	}
 /**
  * 	get related Jobs with getJobsReport(
@@ -100,14 +100,16 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
  * @return 
  */
 
-	private CartesianChartModel createCurCategoryModel(String reportParametersXML) {
+	private CartesianChartModel createCurCategoryModel() {
 
+		getReportParameters().fillReportParameters();
+		
 		CartesianChartModel curDurationModel = new CartesianChartModel();
 
 //		String includeNonResultedRuns = "true()";
 		
 		try {
-			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
+			jobsArray = getDbOperations().getOverallReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -135,9 +137,11 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 		setSizeOfReport(jobs.getData().size());
 		System.out.println(jobs.getData().size() + " adet data var");
 		if (getSizeOfReport()>0) {
-			addMessage("Job Duration Statistics", FacesMessage.SEVERITY_INFO, "tlos.success.dbAccessDef.update", null);
+			addSuccessMessage("Job Duration Statistics", "tlos.success.report.done", null);
+			//addMessage("Job Duration Statistics", FacesMessage.SEVERITY_INFO, "tlos.success.report.done", null);
 		} else {
-			addMessage("Job Duration Statistics", FacesMessage.SEVERITY_ERROR, "tlos.error.dbConnection.update", null);
+			addFailMessage("Job Duration Statistics", "tlos.error.report.done", null);;
+			//addMessage("Job Duration Statistics", FacesMessage.SEVERITY_ERROR, "tlos.error.report.done", null);
 		}
 		
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -148,7 +152,7 @@ public class MostLongestJobsReportMBean extends ReportBase implements Serializab
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		curDurationModel = createCurCategoryModel(getReportParameters().getReportParametersXML() );
+		curDurationModel = createCurCategoryModel();
 	}
 
 	public CartesianChartModel getPrevDurationModel() {
