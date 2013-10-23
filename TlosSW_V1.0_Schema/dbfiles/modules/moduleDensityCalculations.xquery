@@ -138,14 +138,54 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
 {
   (: Otomatik zaman penceresi hesabi icin :)
       
-  let $stateName := $reportParameters/state-types:LiveStateInfo/state-types:StateName/text()
-  let $substateName := $reportParameters/state-types:LiveStateInfo/state-types:SubstateName/text()
-  let $statusName := $reportParameters/state-types:LiveStateInfo/state-types:StatusName/text()
-  let $startDateTime  := xs:dateTime($reportParameters/rep:startDateTime/text())
-  let $endDateTime := xs:dateTime($reportParameters/rep:endDateTime/text())
-  let $step := hs:get-dayTimeDuration-from-dateTimes( adjust-dateTime-to-timezone( xs:dateTime($reportParameters/rep:stepForDensity ), xs:dayTimeDuration('-PT0H')))
-  let $includePendingJobs := $reportParameters/@includePendingJobs
-  let $maxNumberOfInterval := $reportParameters/@maxNumberOfIntervals
+  let $arithmeticA  := $reportParameters/rep:arithmeticA
+  let $isCumulative := $arithmeticA/@isCumulative
+
+  let $historyA  := $reportParameters/rep:historyA
+  let $numberOfRuns := $historyA/@numberOfRuns
+
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+  let $scenarioId := $setA/@scenarioId
+  let $runId := $setA/@runId
+  let $justFirstLevel := $setA/@justFirstLevel
+  let $maxNumOfListedJobs := $setA/@maxNumOfListedJobs
+  let $docId := $setA/@docId
+  let $isGlobal := $setA/@isGlobal
+  let $countInstancesAsOne := $setA/@countInstancesAsOne
+
+  let $sortingA  := $reportParameters/rep:sortingA
+  let $orderBy := $sortingA/@orderBy
+  let $order := $sortingA/@order
+
+  let $stateRelatedA1 := $reportParameters/rep:stateRelatedA1
+  let $liveStateInfo  := $stateRelatedA1/state-types:LiveStateInfo[1] (: //TODO Simdilik bir taneye bakacagiz, birden fazla olma durumunu dusunecegiz. :)
+  let $stateName      := $liveStateInfo/state-types:StateName/text()
+  let $substateName   := $liveStateInfo/state-types:SubstateName/text()
+  let $statusName     := $liveStateInfo/state-types:StatusName/text()
+
+  let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
+  let $includedJobs  := $stateRelatedA2/@includedJobs
+  let $includePendingJobs  := $stateRelatedA2/@includePendingJobs
+
+  let $statisticsA := $reportParameters/rep:statisticsA
+  let $statSampleNumber  := $statisticsA/@statSampleNumber
+
+  let $timeRelatedA1 := $reportParameters/rep:timeRelatedA1
+  let $startDateTime := xs:dateTime($timeRelatedA1/@startDateTime)
+  let $endDateTime   := xs:dateTime($timeRelatedA1/@endDateTime)
+  let $typeOfTime    := $timeRelatedA1/@typeOfTime
+  let $timeZone      := $timeRelatedA1/@timeZone
+  let $automaticTimeInterval := $timeRelatedA1/@automaticTimeInterval
+
+  let $timeRelatedA2 := $reportParameters/rep:timeRelatedA2
+  let $step := hs:get-dayTimeDuration-from-dateTimes( adjust-dateTime-to-timezone( xs:dateTime($timeRelatedA2/@stepForDensity ), xs:dayTimeDuration('-PT0H')))
+  let $maxNumberOfInterval := $timeRelatedA2/@maxNumberOfIntervals
+
+  let $userA := $reportParameters/rep:userA
+  let $userId := $userA/@userId
+  let $role := $userA/@role
+
   
   let $hepsi := hs:getJobArray( hs:getJobsReport($documentUrl, $reportParameters), $reportParameters)
   let $startDateTimex := xs:dateTime(if($hepsi/@overallStart eq '') then current-dateTime() else $hepsi/@overallStart)-xs:dayTimeDuration('PT10S')
