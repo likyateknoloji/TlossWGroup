@@ -120,21 +120,21 @@ public class ConcurrencyAnalyzer {
 		
 	}
 	
-	public static void checkAndCleanSpcLookUpTables(HashMap<String, PlanInfoType> instanceLookupTable, Logger logger) {
+	public static void checkAndCleanSpcLookUpTables(HashMap<String, PlanInfoType> planLookupTable, Logger logger) {
 
 		boolean checkValue = true;
 
-		for (String planId : instanceLookupTable.keySet()) {
+		for (String planId : planLookupTable.keySet()) {
 
-			PlanInfoType instanceInfoType = instanceLookupTable.get(planId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = planLookupTable.get(planId);
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			checkValue = isSpcLookUpTableClean(spcLookupTable, logger);
 
 			if (checkValue) {
 				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan isler tamamen bitirilmis, tablodan temizleniyor ...");
 				spcLookupTable.clear();
-				instanceLookupTable.remove(planId);
+				planLookupTable.remove(planId);
 				logger.info("     > Temizlendi.");
 			} else {
 				logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan bazi isler bitirilmemis.");
