@@ -37,6 +37,7 @@
 			<xs:attribute name="id" use="required" type="xs:integer" />
 			<xs:attribute name="jsId" use="required" type="xs:integer" />
 			<xs:attribute name="scope" use="required" type="xs:string" />
+			<xs:attribute name="planId" use="required" type="xs:string" />
 			<xs:attribute name="LSIDateTime" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:dateTime" />
@@ -56,7 +57,21 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="CREATED" type="xs:integer" />
+	<xs:element name="CREATED">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DEVELOPMENT" />
+				<xs:element ref="TEST" />
+				<xs:element ref="REQUEST" />
+				<xs:element ref="DEPLOYED" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DEVELOPMENT" type="xs:integer" />
+	<xs:element name="TEST" type="xs:integer" />
+	<xs:element name="REQUEST" type="xs:integer" />
+	<xs:element name="DEPLOYED" type="xs:integer" />
+
 	<xs:element name="DEACTIVATED" type="xs:integer" />
 	<xs:element name="VALIDATED" type="xs:integer" />
 	<xs:element name="IDLED">
@@ -85,7 +100,9 @@
 	<xs:element name="LOOKFOR-RESOURCE" type="xs:integer" />
 	<xs:element name="WAITING" type="xs:integer" />
 	<xs:element name="TRANSFERING" type="xs:integer" />
+	
 	<xs:element name="PAUSED" type="xs:integer" />
+	
 	<xs:element name="RUNNING">
 		<xs:complexType>
 			<xs:sequence>
@@ -111,7 +128,9 @@
 	<xs:element name="TIME-OUT" type="xs:integer" />
 	<xs:element name="HELD" type="xs:integer" />
 	<xs:element name="STAGE-OUT" type="xs:integer" />
+	
 	<xs:element name="CANCELLED" type="xs:integer" />
+	
 	<xs:element name="FINISHED">
 		<xs:complexType>
 			<xs:sequence>
@@ -132,9 +151,11 @@
 	</xs:element>
 	<xs:element name="SUCCESS" type="xs:integer" />
 	<xs:element name="WARNING" type="xs:integer" />
+    <xs:element name="FAILED" type="xs:integer" />
+    
 	<xs:element name="SKIPPED" type="xs:integer" />
 	<xs:element name="STOPPED" type="xs:integer" />
-	<xs:element name="FAILED" type="xs:integer" />
+	
 	<xs:element name="jobArray">
 		<xs:complexType>
 			<xs:sequence>
