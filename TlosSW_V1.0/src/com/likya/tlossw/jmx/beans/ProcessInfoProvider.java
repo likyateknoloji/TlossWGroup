@@ -67,7 +67,7 @@ import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.InstanceUtils;
+import com.likya.tlossw.utils.PlanUtils;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.transform.TransformUtils;
@@ -147,7 +147,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
 		jobInfoTypeClient.setJobCommandType(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 		jobInfoTypeClient.setJobPath(baseJobInfos.getJobInfos().getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(baseJobInfos.getJobLogPath());
 		jobInfoTypeClient.setJobLogName(baseJobInfos.getJobLogFile());
@@ -248,57 +248,57 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		return jobInfoTypeClient;
 	}
 
-	private ArrayList<String> retrieveInstanceIds() {
+	private ArrayList<String> retrievePlanIds() {
 
-		HashMap<String, PlanInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-		Iterator<String> keyIterator = instanceLookUpTable.keySet().iterator();
+		HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
+		Iterator<String> keyIterator = planLookUpTable.keySet().iterator();
 
-		ArrayList<String> instanceIds = new ArrayList<String>();
+		ArrayList<String> planIds = new ArrayList<String>();
 
 		while (keyIterator.hasNext()) {
-			String instanceId = keyIterator.next();
-			instanceIds.add(instanceId);
+			String planId = keyIterator.next();
+			planIds.add(planId);
 		}
 
-		return instanceIds;
+		return planIds;
 	}
 
-	public ArrayList<String> retrieveInstanceIds(JmxUser jmxUser) {
+	public ArrayList<String> retrievePlanIds(JmxUser jmxUser) {
 
 		// if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 		// return null;
 		// }
 
-		return retrieveInstanceIds();
+		return retrievePlanIds();
 
 	}
 
-	private String retrieveMaxInstanceId() {
+	private String retrieveMaxPlanId() {
 
-		HashMap<String, PlanInfoType> instanceLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-		Iterator<String> keyIterator = instanceLookUpTable.keySet().iterator();
+		HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
+		Iterator<String> keyIterator = planLookUpTable.keySet().iterator();
 		String maxId = null;
-		int maxInstanceId = -1;
+		int maxPlanId = -1;
 
 		while (keyIterator.hasNext()) {
-			String instanceId = keyIterator.next();
-			int tmpMaxInstanceId = Integer.parseInt(instanceId);
-			if (tmpMaxInstanceId > maxInstanceId) {
-				maxInstanceId = tmpMaxInstanceId;
-				maxId = tmpMaxInstanceId + "";
+			String planId = keyIterator.next();
+			int tmpMaxPlanId = Integer.parseInt(planId);
+			if (tmpMaxPlanId > maxPlanId) {
+				maxPlanId = tmpMaxPlanId;
+				maxId = tmpMaxPlanId + "";
 			}
 		}
 
 		return maxId;
 	}
 
-	public String retrieveMaxInstanceId(JmxUser jmxUser) {
+	public String retrieveMaxPlanId(JmxUser jmxUser) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
 
-		return retrieveMaxInstanceId();
+		return retrieveMaxPlanId();
 
 	}
 
@@ -350,7 +350,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		return appenderList;
 	}
 
-	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String instanceId, ArrayList<String> scenariodIdList) {
+	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String planId, ArrayList<String> scenariodIdList) {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
@@ -358,7 +358,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		TreeInfoType treeInfoType = new TreeInfoType();
 		HashMap<String, ScenarioStatus> scenarioList = new HashMap<String, ScenarioStatus>();
 
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceId).getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable().getTable();
 		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
@@ -419,8 +419,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		spcInfoTypeClient.setSpcId(scenarioId.getFullPath());
 
 		if (spcInfoType.getSpcReferance() != null) {
-			String instanceId = spcInfoType.getSpcReferance().getConcurrencyManagement().getPlanId();
-			if (scenarioId.equals(CpcUtils.getRootScenarioPath(instanceId))) {
+			String planId = spcInfoType.getSpcReferance().getConcurrencyManagement().getPlanId();
+			if (scenarioId.equals(CpcUtils.getRootScenarioPath(planId))) {
 				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
@@ -451,10 +451,10 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	public Object runningJobs() {
 		String jobList = "<jobList>";
 
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
-			PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
@@ -769,11 +769,11 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		ArrayList<Job> jobList = new ArrayList<Job>();
 
-		// butun instance'lara bakip, calisan tum senaryolari tariyor
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		// butun plan'lara bakip, calisan tum senaryolari tariyor
+		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
-			PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceId);
-			HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
+			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
@@ -802,7 +802,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
+			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
@@ -890,7 +890,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	@Override
 	public boolean runningInstanceExists(JmxUser jmxUser) {
-		return InstanceUtils.runningInstanceExists(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		return PlanUtils.runningPlanExists(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
 	}
 
 	@Override
