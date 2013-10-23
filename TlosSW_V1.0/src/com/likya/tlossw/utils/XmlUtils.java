@@ -187,7 +187,7 @@ public class XmlUtils {
 
 		temp = txMessageId.split(delimiter);
 
-		txMessageIdBean.setInstanceId(temp[0]);
+		txMessageIdBean.setPlanId(temp[0]);
 		txMessageIdBean.setSpcId(temp[1]);
 		txMessageIdBean.setJobKey(temp[2]);
 		txMessageIdBean.setAgentId(Integer.parseInt(temp[3]));
