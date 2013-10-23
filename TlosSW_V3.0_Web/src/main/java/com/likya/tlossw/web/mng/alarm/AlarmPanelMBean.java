@@ -39,8 +39,8 @@ import com.likya.tlos.model.xmlbeans.alarm.SystemManagementDocument.SystemManage
 import com.likya.tlos.model.xmlbeans.alarm.SystemsDocument.Systems;
 import com.likya.tlos.model.xmlbeans.alarm.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.alarm.WarnByDocument.WarnBy;
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.sla.BirimAttribute.Birim;
 import com.likya.tlos.model.xmlbeans.sla.ConditionAttribute.Condition;
 import com.likya.tlos.model.xmlbeans.sla.CpuDocument.Cpu;
@@ -395,7 +395,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		getAlarm().setStartDate(DefinitionUtils.dateToXmlDate(getStartDate()));
 		getAlarm().setEndDate(DefinitionUtils.dateToXmlDate(getEndDate()));
 		getAlarm().setTimeZone(getSelectedTZone());
-		getAlarm().setTypeOfTime(TypeOfTime.Enum.forString(getSelectedTypeOfTime()));
+		getAlarm().setTypeOfTime(TypeOfTimeType.Enum.forString(getSelectedTypeOfTime()));
 		getAlarm().setLevel(new BigInteger(getAlarmLevel()));
 
 		Subscriber subscriber = Subscriber.Factory.newInstance();
@@ -409,7 +409,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			while (rolesItem.hasNext()) {
 				SelectItem selectItem = rolesItem.next();
 				if (selectItem.getValue().toString().equals(getAlarmRole())) {
-					subscriber.setRole(Role.Enum.forString(selectItem.getLabel().toString()));
+					subscriber.setRole(RoleType.Enum.forString(selectItem.getLabel().toString()));
 				}
 			}
 		}
