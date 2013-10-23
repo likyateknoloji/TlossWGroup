@@ -18,7 +18,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.likya.tlos.model.xmlbeans.common.ActiveDocument.Active;
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.common.UserIdDocument.UserId;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.webservice.AllowedRolesDocument.AllowedRoles;
@@ -224,7 +224,7 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 				String selectedRole = selectedRoleList[i];
 
 				if (!selectedRole.equals("")) {
-					Role role = allowedRoles.addNewRole();
+					RoleType role = allowedRoles.addNewRole();
 					role.setStringValue(selectedRole);
 				}
 			}
