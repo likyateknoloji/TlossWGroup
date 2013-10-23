@@ -47,7 +47,7 @@ public class ConstantDefinitions {
 	public static final String DEPLOY_NOW = "4";
 
 	/**
-	 * Raporlama ekrabları sabitleri
+	 * Raporlama ekranları sabitleri
 	 */
 	public static final String ZONES_REPORT = "zonesReport";
 	public static final String JOB_DENSITY_REPORT = "densityReport";
