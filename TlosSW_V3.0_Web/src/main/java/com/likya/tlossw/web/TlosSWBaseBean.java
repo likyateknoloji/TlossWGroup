@@ -89,14 +89,14 @@ public abstract class TlosSWBaseBean {
 		return parameterMap;
 	}
 
-	public void addMessage(String fieldName, FacesMessage.Severity severity, String errorMessage, String miscText) {
+	public void addMessage(String fieldName, FacesMessage.Severity severity, String message, String miscText) {
 		ResourceBundle messages = sessionMediator.getMessageBundle();
-		BeanUtils.addMessage(messages, fieldName, severity, errorMessage, miscText);
+		BeanUtils.addMessage(messages, fieldName, severity, message, miscText);
 	}
 
-	public void addSuccessMessage(String fieldName, String errorMessage, String miscText) {
+	public void addSuccessMessage(String fieldName, String successMessage, String miscText) {
 		ResourceBundle messages = sessionMediator.getMessageBundle();
-		BeanUtils.addSuccessMessage(messages, fieldName, errorMessage, miscText);
+		BeanUtils.addSuccessMessage(messages, fieldName, successMessage, miscText);
 	}
 
 	public void addFailMessage(String fieldName, String errorMessage, String miscText) {
