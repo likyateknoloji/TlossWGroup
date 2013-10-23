@@ -17,8 +17,8 @@ import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument;
 import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
 import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
@@ -94,9 +94,9 @@ public class WebInputUtils {
 
 		Collection<SelectItem> typeOfTimeList = new ArrayList<SelectItem>();
 
-		for (int i = 0; i < TypeOfTime.Enum.table.lastInt(); i++) {
+		for (int i = 0; i < TypeOfTimeType.Enum.table.lastInt(); i++) {
 			SelectItem item = new SelectItem();
-			tot = TypeOfTime.Enum.table.forInt(i + 1).toString();
+			tot = TypeOfTimeType.Enum.table.forInt(i + 1).toString();
 			item.setValue(tot);
 			item.setLabel(tot);
 			typeOfTimeList.add(item);
@@ -630,9 +630,9 @@ public class WebInputUtils {
 		Collection<SelectItem> roleList = new ArrayList<SelectItem>();
 		SelectItem item = new SelectItem();
 
-		for (int i = 0; i < Role.Enum.table.lastInt(); i++) {
+		for (int i = 0; i < RoleType.Enum.table.lastInt(); i++) {
 			item = new SelectItem();
-			roleValue = Role.Enum.forInt(i + 1).toString();
+			roleValue = RoleType.Enum.forInt(i + 1).toString();
 			item.setValue(roleValue);
 			item.setLabel(roleValue);
 			roleList.add(item);
