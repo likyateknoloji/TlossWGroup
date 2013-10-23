@@ -110,7 +110,7 @@ public class MailServer implements Runnable {
 					
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.info("E-posta g�nderiminde hata oldu : " + e.getLocalizedMessage() + "=> e-posta iptal edildi !");
+					logger.info("E-posta gönderiminde hata oldu : " + e.getLocalizedMessage() + "=> e-posta iptal edildi !");
 				}
 				
 				mailQueue.remove(0);
