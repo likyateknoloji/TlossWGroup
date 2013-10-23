@@ -57,7 +57,7 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		if (getReportParameters() == null) {
 		   setReportParameters(new ReportsParameters());
 		}
-		createOhlcModel(getReportParameters().getReportParametersXML());
+		createOhlcModel();
 
 		logger.info("end : init");
 
@@ -80,19 +80,21 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		}
 	
 	public void refreshOhlcChart() {
-		createOhlcModel(getReportParameters().getReportParametersXML());
+		createOhlcModel();
 	}
 
 	public long getMilliSec(long param) {
 		return param - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(param));
 	}
 	
-	private void createOhlcModel(String reportParametersXML) {
+	private void createOhlcModel() {
+		
+		getReportParameters().fillReportParameters();
 		
         ohlcModel = new OhlcChartModel();  
 
 		try {
-			jobsArray = getDbOperations().getOverallReport(reportParametersXML);
+			jobsArray = getDbOperations().getOverallReport(getReportParameters().getReportParametersXML());
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -134,7 +136,7 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		createOhlcModel(getReportParameters().getReportParametersXML());
+		createOhlcModel();
 	}
 
 	public DBOperations getDbOperations() {
