@@ -49,30 +49,20 @@ public class InputParameterPassing {
 
 	transient private Logger myLogger;
 	transient private SpaceWideRegistry spaceWideRegistry;
-	private String instanceId;
+	private String planId;
 
-	public InputParameterPassing(SpaceWideRegistry spaceWideRegistry, String instanceId) {
+	public InputParameterPassing(SpaceWideRegistry spaceWideRegistry, String planId) {
 
 		myLogger = Logger.getLogger(InputParameterPassing.class);
 		this.spaceWideRegistry = spaceWideRegistry;
-		this.instanceId = instanceId;
+		this.planId = planId;
 	}
 
-	// private void findInputValues(String xpath) throws TlosFatalException {
-	//
-	// for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
-	//
-	// findInputValue(instanceId, xpath);
-	// }
-	//
-	// return;
-	// }
-
-	private String[] findInputValue(String instanceIdd, String xpath) throws TlosFatalException {
+	private String[] findInputValue(String planId, String xpath) throws TlosFatalException {
 		String[] result;
-		PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceIdd);
+		PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
-		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 		for (String spcId : spcLookupTable.keySet()) {
 
@@ -163,7 +153,7 @@ public class InputParameterPassing {
 					getMyLogger().error("     > Genel bagimlilik tanimi yapilan :");
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Bagli is : " + item.getJsName() + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-					getMyLogger().error("     >    Dizin : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     >    Dizin : " + BasePathType.getRootPath() + "." + getPlanId() + "." + item.getJsPath());
 					getMyLogger().error("     > 	Yukaridaki is  yerel senaryoda bulunamadi !");
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
@@ -181,13 +171,13 @@ public class InputParameterPassing {
 				SpcInfoType spcInfoType = spcLookupTable.getTable().get(BasePathType.getRootPath() + "." + item.getJsPath());
 				// SpcInfoType spcInfoType = getSpaceWideRegistry().getPlanLookupTable().get(getInstanceId()).getSpcLookupTable().get(Cpc.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
 				if (spcInfoType == null) {
-					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					getMyLogger().error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getPlanId() + "." + item.getJsPath());
 					getMyLogger().error("     > Ana is adi : " + ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getTreePath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					Cpc.dumpSpcLookupTable(getInstanceId(), getSpaceWideRegistry().getPlanLookupTable().get(getInstanceId()).getSpcLookupTable());
-					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getInstanceId() + "." + item.getJsPath());
+					Cpc.dumpSpcLookupTable(getPlanId(), getSpaceWideRegistry().getPlanLookupTable().get(getPlanId()).getSpcLookupTable());
+					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getPlanId() + "." + item.getJsPath());
 				}
 
 				Job depJob /* jobb */= spcInfoType.getSpcReferance().getJobQueue().get(jobId);
@@ -366,8 +356,8 @@ public class InputParameterPassing {
 		return spaceWideRegistry;
 	}
 
-	public String getInstanceId() {
-		return instanceId;
+	public String getPlanId() {
+		return planId;
 	}
 
 }
