@@ -140,15 +140,20 @@ public class InfoBusManager implements InfoBus, Runnable {
 							 * serkan
 							 * TODO 
 							 */
-							DBUtils.updateFirstJob(jobProperties, ParsingUtils.getJobXPath(jobAllInfo.getSpcAbsolutePath()));
+							
+							String jobXPath = ParsingUtils.getJobXPath(jobAllInfo.getSpcNativeFullPath());
+							
+							DBUtils.updateFirstJob(jobProperties, jobXPath);
 						} else {
-							DBUtils.updateJob(jobProperties, ParsingUtils.getJobXFullPath(jobAllInfo.getSpcAbsolutePath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime()));
+							String jobXPath = ParsingUtils.getJobXFullPath(jobAllInfo.getSpcNativeFullPath(), jobProperties.getID(), "" + jobProperties.getAgentId(), jobProperties.getLSIDateTime());
+									
+							DBUtils.updateJob(jobProperties, jobXPath);
 						}
 						
 						if (debug) {
 							logger.info("  > ");
 							logger.info("  > DB guncellemesi. " + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName() + " icin baslama bitis zamani ve butun state ler.");
-							logger.info("  > " + jobAllInfo.getSpcAbsolutePath() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
+							logger.info("  > " + jobAllInfo.getSpcNativeFullPath() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
 							logger.info("  > " + jobProperties.getTimeManagement().getJsRealTime());
 							logger.info("  > " + jobProperties.getBaseJobInfos().getJsName() + " " + jobProperties.getStateInfos().getLiveStateInfos());
 						}
