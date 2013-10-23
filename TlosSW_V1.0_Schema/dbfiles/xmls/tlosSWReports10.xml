@@ -3,9 +3,14 @@
 	xsi:schemaLocation="http://www.likyateknoloji.com/XML_report_types ../xsds/tlosSWReports_v_1_0.xsd">
 	<rep:stateReport>
 		<rep:report xmlns="http://www.likyateknoloji.com/XML_report_types"
-			id="9" jsId="0" scope="job" LSIDateTime="2012-05-09T19:19:49.765+03:00">
+			id="9" jsId="0" planId="0" scope="job" LSIDateTime="2012-05-09T19:19:49.765+03:00">
 			<rep:PENDING>
-				<rep:CREATED>0</rep:CREATED>
+				<rep:CREATED>
+					<rep:DEVELOPMENT>0</rep:DEVELOPMENT>
+					<rep:TEST>0</rep:TEST>
+                    <rep:REQUEST>0</rep:REQUEST>
+					<rep:DEPLOYED>0</rep:DEPLOYED>
+				</rep:CREATED>
 				<rep:DEACTIVATED>0</rep:DEACTIVATED>
 				<rep:VALIDATED>0</rep:VALIDATED>
 				<rep:IDLED>
