@@ -204,24 +204,24 @@ declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters a
                             if($justFirstLevel)
                             then (: $rootScenarioFirstLevelJobs :)
                              for $runx in $x/dat:jobList/dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
                              order by $runx/@id descending
                              return $runx
                             else (: $rootScenarioAllJobs :)
                              for $runx in $x//dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
                              order by $runx/@id descending
                              return $runx
                           else
                             if($justFirstLevel)
                             then (: $otherScenarioFirstLevelJobs :)
                               for $runx in $x//dat:scenario[@ID = $scenarioId]/dat:jobList/dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
                               order by $runx/@id descending
                               return $runx
                             else (: $otherScenarioAllJobs :)
                               for $runx in $x//dat:scenario[@ID = $scenarioId]//dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( boolean(@agentId) and ( not(@agentId='0') or $includePendingJobs))]
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
                               order by $runx/@id descending
                               return $runx
                               
@@ -568,12 +568,14 @@ let $refRunIdBolean := true()  (: Eger true secilirse bu runId yi referans kabul
 
 return hs:jobStateListbyRunId($documentUrl, $kacEleman, $runId, $jobId, $refRunIdBolean)
 :)
-declare function hs:jobStateListbyRunId($documentUrl as xs:string, $reportParameters as element(rep:reportParameters)) as node()*
+declare function hs:jobStateListbyRunId($documentUrl as xs:string, $planIdInput as xs:integer, $reportParameters as element(rep:reportParameters)) as node()*
  {
  (: $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean :)
  
     let $jobList := hs:getJobsReport($documentUrl, $reportParameters)
-    
+    let $planId := if($planIdInput = 0 ) 
+                   then sq:getId($documentUrl, "planId") 
+                   else $planIdInput
 	let $setA  := $reportParameters/rep:setA
     let $jobId := $setA/@jobId
   
@@ -581,7 +583,7 @@ declare function hs:jobStateListbyRunId($documentUrl as xs:string, $reportParame
 
     let $nextId := sq:getNextId($documentUrl, "reportId")
 
-    let $createBlankReport := hs:insertStateReportLock($documentUrl, $jobId, $nextId)
+    let $createBlankReport := hs:insertStateReportLock($documentUrl, $jobId, $planId, $nextId)
 
 	let $arasonuc := hs:jobStateReport($documentUrl, $jobList, $jobId, $nextId)
 
@@ -598,8 +600,9 @@ declare function hs:jobStateReport($documentUrl as xs:string, $n as node(), $job
     let $result :=
      for $job in $n/dat:jobProperties
      
-     let $stateLast := $job/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo[1]
-             
+     let $stateLast := (for $lsi in $job/dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo
+	                    order by hs:stringToDateTime($lsi/@LSIDateTime) descending
+						return $lsi)[1]
      return hs:jobStateReportFromLiveStateInfo($documentUrl, $stateLast, $jobId, $nextId)
 
     return $n
@@ -639,18 +642,18 @@ declare function hs:jobStateReportFromLiveStateInfo($documentUrl as xs:string, $
    return $stateLast
 };
 
-declare function hs:insertStateReportLock($documentUrl as xs:string, $jsId as xs:int, $nextId as xs:int) as xs:boolean
+declare function hs:insertStateReportLock($documentUrl as xs:string, $jsId as xs:int, $planId as xs:integer, $nextId as xs:int) as xs:boolean
 {
    let $reportsDocumentUrl := met:getMetaData($documentUrl, "reports")
 	
    let $docrep := doc($reportsDocumentUrl)
    let $relPath := $docrep/rep:reportAll/rep:stateReport
    
-   let $sonuc := util:exclusive-lock($relPath, hs:insertBlankStateReport($documentUrl, $jsId, $nextId))    
+   let $sonuc := util:exclusive-lock($relPath, hs:insertBlankStateReport($documentUrl, $jsId, $planId, $nextId))    
    return true()
 };
 
-declare function hs:insertBlankStateReport($documentUrl as xs:string, $jsId as xs:int, $nextId as xs:int) as node()*
+declare function hs:insertBlankStateReport($documentUrl as xs:string, $jsId as xs:int, $planId as xs:integer, $nextId as xs:int) as node()*
 {
    let $reportsDocumentUrl := met:getMetaData($documentUrl, "reports")
    
@@ -660,9 +663,14 @@ declare function hs:insertBlankStateReport($documentUrl as xs:string, $jsId as x
 (:    let $nextId := sq:getNextId("reportId")	:)
     let $scope := xs:string("job")
 	return update insert 
-		<rep:report xmlns="http://www.likyateknoloji.com/XML_report_types" id="{$nextId}" jsId="{$jsId}" scope="{$scope}" LSIDateTime="{current-dateTime()}">
+		<rep:report xmlns="http://www.likyateknoloji.com/XML_report_types" id="{$nextId}" jsId="{$jsId}" scope="{$scope}" planId="{$planId}" LSIDateTime="{current-dateTime()}">
 			<rep:PENDING>
-				<rep:CREATED>0</rep:CREATED>
+				<rep:CREATED>
+					<rep:DEVELOPMENT>0</rep:DEVELOPMENT>
+					<rep:TEST>0</rep:TEST>
+                    <rep:REQUEST>0</rep:REQUEST>
+					<rep:DEPLOYED>0</rep:DEPLOYED>
+				</rep:CREATED>
 				<rep:DEACTIVATED>0</rep:DEACTIVATED>
 				<rep:VALIDATED>0</rep:VALIDATED>
 				<rep:IDLED>
