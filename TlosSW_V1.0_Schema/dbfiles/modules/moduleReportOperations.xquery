@@ -48,33 +48,72 @@ return hs:getJobArray($run, "ascending", 15, false())
 
 declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()*
 {
-  let $runId := $reportParameters/@runId
-  let $statSampleNumber := $reportParameters/@statSampleNumber
+  let $arithmeticA  := $reportParameters/rep:arithmeticA
+  let $isCumulative := $arithmeticA/@isCumulative
+
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+  let $scenarioId := $setA/@scenarioId
+  let $runId := $setA/@runId
+  let $justFirstLevel := xs:boolean($setA/@justFirstLevel)
+  let $maxNumOfListedJobs := $setA/@maxNumOfListedJobs
+  let $docId := $setA/@docId
+  let $isGlobal := xs:boolean($setA/@isGlobal)
+  let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
+
+  let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
+  let $includedJobs  := $stateRelatedA2/@includedJobs
+  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
+
+  let $statisticsA := $reportParameters/rep:statisticsA
+  let $statSampleNumber  := $statisticsA/@statSampleNumber
+
+  let $timeRelatedA1 := $reportParameters/rep:timeRelatedA1
+  let $startDateTime := xs:dateTime($timeRelatedA1/@startDateTime)
+  let $endDateTime   := xs:dateTime($timeRelatedA1/@endDateTime)
+  let $typeOfTime    := $timeRelatedA1/@typeOfTime
+  let $timeZone      := $timeRelatedA1/@timeZone
+  let $automaticTimeInterval := $timeRelatedA1/@automaticTimeInterval
+
+  let $userA := $reportParameters/rep:userA
+  let $userId := $userA/@userId
+  let $role := $userA/@role
   
-  let $runIdx := if ($runId = 0) then sq:getId($documentUrl, "runId")
-                       else if ($runId < 0) then sq:getId($documentUrl, "runId") + $runId
-                       else $runId 
+  let $runIdx := if ($runId = 0) 
+                 then sq:getId($documentUrl, "runId")
+                 else if ($runId < 0) 
+				      then sq:getId($documentUrl, "runId") + $runId
+                      else $runId 
 					   
-  let $jobId := $reportParameters/@jobId
-  let $isJob := if( compare($jobId, '0') eq 0 ) then false() else true()
+  let $isJob := if( compare($jobId, '0') eq 0 ) 
+                then false() 
+				else true()
   
   (: Burada son run i bilerek dikkate almiyoruz, ondan onceki 3 run in ortalamasi yeterli :)
   let $localStats :=
     let $arasonuc := <arasonuc> {
                       for $i in (1 to $statSampleNumber)
-					   let $reportParametersNew := <rep:reportParameters includePendingJobs="{xs:boolean($reportParameters/@includePendingJobs)}" 
-					                                                     jobId="{$reportParameters/@jobId}" 
-																		 justFirstLevel="{$reportParameters/@justFirstLevel}" 
-																		 maxNumberOfElement="{$reportParameters/@maxNumberOfElement}" 
-																		 refRunIdBoolean="{$reportParameters/@refRunIdBoolean}" 
-																		 runId="{$runIdx - $i}" 
-																		 scenarioId="{$reportParameters/@scenarioId}"
-																		 orderBy="{$reportParameters/@orderBy}"
-																		 isCumulative="{xs:boolean($reportParameters/@isCumulative)}" 
-																		 order="{$reportParameters/@order}"
-																		 maxNumOfListedJobs="{$reportParameters/@maxNumOfListedJobs}"
-																		 statSampleNumber="{$reportParameters/@statSampleNumber}"
-																		 />
+					   let $reportParametersNew := element rep:reportParameters {
+					                                                     $reportParameters/rep:arithmeticA,
+																		 $reportParameters/rep:historyA,
+																		 element rep:setA { 
+	                                                                        attribute jobId {$setA/@jobId},
+	                                                                        attribute scenarioId {$setA/@scenarioId},
+                                                                            attribute runId {$runIdx - $i},
+	                                                                        attribute justFirstLevel {xs:boolean($setA/@justFirstLevel)},
+	                                                                        attribute maxNumOfListedJobs {$setA/@maxNumOfListedJobs},
+                                                                            attribute docId {$setA/@docId},
+																			attribute isGlobal {xs:boolean($setA/@isGlobal)},
+																			attribute countInstancesAsOne {xs:boolean($setA/@countInstancesAsOne)}																 
+																		 },
+																		 $reportParameters/rep:sortingA,
+																		 $reportParameters/rep:stateRelatedA1,
+																		 $reportParameters/rep:stateRelatedA2,
+																		 $reportParameters/rep:statisticsA,
+																		 $reportParameters/rep:timeRelatedA1,
+																		 $reportParameters/rep:timeRelatedA2,
+																		 $reportParameters/rep:userA
+																		 }
 				  
                        let $getPerStats := hs:getJobsReport($documentUrl, $reportParametersNew)   (: $numberOfElement,$runIdx - $i ,$jobId, $refRunIdBolean, $includeNonResultedRuns) :)
                        let $getPerStatsExists := if(exists($getPerStats)) then $getPerStats else ()
@@ -122,14 +161,24 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
 
 declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters as element(rep:reportParameters) ) as node()*
 {
-(: let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs :)
-let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
-let $runId := $reportParameters/@runId
-let $scenarioId := $reportParameters/@scenarioId
-let $jobId := $reportParameters/@jobId
-let $refRunIdBoolean := xs:boolean($reportParameters/@refRunIdBoolean)
-let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
-let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
+
+  let $historyA  := $reportParameters/rep:historyA
+  let $numberOfRuns := $historyA/@numberOfRuns
+
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+  let $scenarioId := $setA/@scenarioId
+  let $runId := $setA/@runId
+  let $justFirstLevel := xs:boolean($setA/@justFirstLevel)
+  let $maxNumOfListedJobs := $setA/@maxNumOfListedJobs
+  let $docId := $setA/@docId
+  let $isGlobal := xs:boolean($setA/@isGlobal)
+  let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
+
+  let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
+  let $includedJobs  := $stateRelatedA2/@includedJobs
+  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
+
 
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 
@@ -138,10 +187,10 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
                        else $runId 
 
     let $posUpper := max(for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
-                     where $runx[@id = $runIdFound] or not($refRunIdBoolean)
+                     where $runx[@id = $runIdFound]   (: or not($refRunIdBoolean) :)
 	                 return $pos)
 
-    let $posLower := if ($posUpper - $maxNumberOfElement > 0) then $posUpper - $maxNumberOfElement else 0
+    let $posLower := if ($posUpper - $numberOfRuns > 0) then $posUpper - $numberOfRuns else 0
 
     let $runElements := for $runx at $pos in doc($dailyScenariosDocumentUrl)/TlosProcessDataAll/RUN
 		  where $pos > $posLower and $pos <=$posUpper
@@ -209,19 +258,26 @@ let $justFirstLevel := xs:boolean($reportParameters/@justFirstLevel)
 
 declare function hs:getJobArrayTest($n as node()*, $reportParameters as element(rep:reportParameters)) as node()
 {
-(:
-let $runId := $reportParameters/@runId
-let $scenarioId := $reportParameters/@scenarioId
-let $jobId := $reportParameters/@jobId
-let $refRunIdBoolean := $reportParameters/@refRunIdBoolean
-let $justFirstLevel := $reportParameters/@justFirstLevel
-let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
-:)
-let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
-let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
-let $orderBy := $reportParameters/@orderBy
-let $isCumulative := xs:boolean($reportParameters/@isCumulative)
-let $order := $reportParameters/@order
+  let $arithmeticA  := $reportParameters/rep:arithmeticA
+  let $isCumulative := xs:boolean($arithmeticA/@isCumulative)
+
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+  let $scenarioId := $setA/@scenarioId
+  let $runId := $setA/@runId
+  let $justFirstLevel := xs:boolean($setA/@justFirstLevel)
+  let $maxNumOfListedJobs := $setA/@maxNumOfListedJobs
+  let $docId := $setA/@docId
+  let $isGlobal := xs:boolean($setA/@isGlobal)
+  let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
+
+  let $sortingA  := $reportParameters/rep:sortingA
+  let $orderBy := $sortingA/@orderBy
+  let $order := $sortingA/@order
+
+  let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
+  let $includedJobs  := $stateRelatedA2/@includedJobs
+  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
 
   let $resultArrayAsc := <rep:jobArray> {
      for $job in $n/dat:jobProperties[boolean(@agentId)] (: boolean(@LSIDateTime) :)
@@ -258,20 +314,26 @@ let $order := $reportParameters/@order
 
 declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:reportParameters)) as node()
 {
-(:
-let $runId := $reportParameters/@runId
-let $runId := $reportParameters/@runId
-let $scenarioId := $reportParameters/@scenarioId
-let $jobId := $reportParameters/@jobId
-let $refRunIdBoolean := $reportParameters/@refRunIdBoolean
-let $justFirstLevel := $reportParameters/@justFirstLevel
-let $maxNumberOfElement := $reportParameters/@maxNumberOfElement
-:)
-let $maxNumOfListedJobs := $reportParameters/@maxNumOfListedJobs
-let $includePendingJobs := xs:boolean($reportParameters/@includePendingJobs)
-let $orderBy := $reportParameters/@orderBy 
-let $isCumulative := xs:boolean($reportParameters/@isCumulative)
-let $order := $reportParameters/@order
+  let $arithmeticA  := $reportParameters/rep:arithmeticA
+  let $isCumulative := xs:boolean($arithmeticA/@isCumulative)
+
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+  let $scenarioId := $setA/@scenarioId
+  let $runId := $setA/@runId
+  let $justFirstLevel := xs:boolean($setA/@justFirstLevel)
+  let $maxNumOfListedJobs := $setA/@maxNumOfListedJobs
+  let $docId := $setA/@docId
+  let $isGlobal := xs:boolean($setA/@isGlobal)
+  let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
+
+  let $sortingA  := $reportParameters/rep:sortingA
+  let $orderBy := $sortingA/@orderBy
+  let $order := $sortingA/@order
+
+  let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
+  let $includedJobs  := $stateRelatedA2/@includedJobs
+  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
 
   let $resultArrayAsc := <rep:jobArray> {
      for $job in $n/dat:jobProperties
@@ -353,7 +415,9 @@ let $order := $reportParameters/@order
 
 declare function hs:getOverallReport($documentUrl as xs:string, $reportParameters as element(rep:reportParameters)) as node()*
 {
-  let $jobId := $reportParameters/@jobId
+  let $setA  := $reportParameters/rep:setA
+  let $jobId := $setA/@jobId
+
   let $isJob := if( $jobId eq '0' ) then false() else true()
 	
   let $jobsReport := hs:getJobsReport($documentUrl, $reportParameters)
@@ -509,7 +573,9 @@ declare function hs:jobStateListbyRunId($documentUrl as xs:string, $reportParame
  (: $numberOfElement as xs:int, $runId as xs:int, $jobId as xs:int, $refRunIdBolean as xs:boolean :)
  
     let $jobList := hs:getJobsReport($documentUrl, $reportParameters)
-    let $jobId := $reportParameters/@jobId
+    
+	let $setA  := $reportParameters/rep:setA
+    let $jobId := $setA/@jobId
   
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 
