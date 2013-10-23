@@ -130,6 +130,8 @@ public class ZonesOfExecutionsMBean extends ReportBase implements Serializable {
 			setReportParameters(new ReportsParameters());
 		}
 
+		getReportParameters().fillReportParameters();
+		
 		LocalStats localStats = null;
 		try {
 			localStats = getDbOperations().getStatsReport(getReportParameters().getReportParametersXML());
