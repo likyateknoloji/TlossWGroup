@@ -33,7 +33,7 @@ import com.likya.tlos.model.xmlbeans.calendar.ValidToDocument.ValidTo;
 import com.likya.tlos.model.xmlbeans.calendar.WhichOnesDocument.WhichOnes;
 import com.likya.tlos.model.xmlbeans.common.DayDefDocument.DayDef;
 import com.likya.tlos.model.xmlbeans.common.DaySpecialDocument.DaySpecial;
-import com.likya.tlos.model.xmlbeans.common.TypeOfTimeDocument.TypeOfTime;
+import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
@@ -400,7 +400,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		Calendar calendarNow = Calendar.getInstance();
 		calendar.setCreationDateTime(calendarNow);
 		calendar.setTimeZone(selectedTZone);
-		calendar.setTypeOfTime(TypeOfTime.Enum.forString(selectedTypeOfTime));
+		calendar.setTypeOfTime(TypeOfTimeType.Enum.forString(selectedTypeOfTime));
 
 		if (selectedWhichOnesList.length > 0) {
 			WhichOnes whichOnes = WhichOnes.Factory.newInstance();
