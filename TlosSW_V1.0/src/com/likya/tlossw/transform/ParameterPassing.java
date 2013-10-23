@@ -37,19 +37,19 @@ import com.likya.tlossw.utils.xml.ApplyXPath;
 public class ParameterPassing {
 
 	public void findInputValues(String xpath) throws TlosFatalException {
-		for (String instanceId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
 
-			findInputValue(instanceId, xpath);
+			findInputValue(planId, xpath);
 		}
 
 		return;
 	}
 
-	private String[] findInputValue(String instanceIdd, String xpath) throws TlosFatalException {
+	private String[] findInputValue(String planId, String xpath) throws TlosFatalException {
 
-		PlanInfoType instanceInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(instanceIdd);
+		PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
 
-		HashMap<String, SpcInfoType> spcLookupTable = instanceInfoType.getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
 
 		for (String spcId : spcLookupTable.keySet()) {
 
