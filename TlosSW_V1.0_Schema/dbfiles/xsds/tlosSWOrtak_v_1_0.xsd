@@ -1,104 +1,121 @@
 <!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_common_types" 
-           xmlns:com="http://www.likyateknoloji.com/XML_common_types"
-           xmlns:db="http://www.likyateknoloji.com/XML_db_job_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
-           xmlns:par="http://www.likyateknoloji.com/XML_parameters_types" xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types"
-           xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types" xmlns:pn="http://www.likyateknoloji.com/XML_process_node"
-           targetNamespace="http://www.likyateknoloji.com/XML_common_types" elementFormDefault="qualified">
-	<xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types" schemaLocation="tlosSWParameters_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_ftp_adapter_types" schemaLocation="tlosSWSJFTPAdapters_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_file_adapter_types" schemaLocation="tlosSWSJFileAdapter_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_listener_types" schemaLocation="tlosSWSJFileListener_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_web_service_types" schemaLocation="tlosSWSJWebService_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_db_job_types" schemaLocation="tlosSWSJDBJob_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_process_node" schemaLocation="tlosSWSJProcessNode_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types" schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd"/>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_common_types"
+	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
+	xmlns:par="http://www.likyateknoloji.com/XML_parameters_types"
+	xmlns:lstn="http://www.likyateknoloji.com/XML_listener_types"
+	xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types"
+	xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
+	xmlns:rs="http://www.likyateknoloji.com/XML_executeRShell_types"
+	xmlns:pn="http://www.likyateknoloji.com/XML_process_node"
+	targetNamespace="http://www.likyateknoloji.com/XML_common_types"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_parameters_types"
+		schemaLocation="tlosSWParameters_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_ftp_adapter_types"
+		schemaLocation="tlosSWSJFTPAdapters_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_file_adapter_types"
+		schemaLocation="tlosSWSJFileAdapter_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_listener_types"
+		schemaLocation="tlosSWSJFileListener_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_web_service_types"
+		schemaLocation="tlosSWSJWebService_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_db_job_types"
+		schemaLocation="tlosSWSJDBJob_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_process_node"
+		schemaLocation="tlosSWSJProcessNode_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types"
+		schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd" />
 	<xs:element name="date">
 		<xs:simpleType>
-			<xs:restriction base="xs:date"/>
+			<xs:restriction base="xs:date" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="time">
 		<xs:simpleType>
-			<xs:restriction base="xs:time"/>
+			<xs:restriction base="xs:time" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="creationDateTime">
 		<xs:simpleType>
-			<xs:restriction base="xs:dateTime"/>
+			<xs:restriction base="xs:dateTime" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:complexType name="datetimeType">
 		<xs:sequence>
-			<xs:element ref="date" minOccurs="0"/>
-			<xs:element ref="time"/>
+			<xs:element ref="date" minOccurs="0" />
+			<xs:element ref="time" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="typeOfTime">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="Actual"/>
-				<xs:enumeration value="Broadcast"/>
-				<xs:enumeration value="Relative"/>
-				<xs:enumeration value="Recurring"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="timeZone">
-		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
-		</xs:simpleType>
-	</xs:element>
+
+	<xs:simpleType name="typeOfTimeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Actual" />
+			<xs:enumeration value="Broadcast" />
+			<xs:enumeration value="Relative" />
+			<xs:enumeration value="Recurring" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="typeOfTime" type="typeOfTimeType" />
+
+	<xs:simpleType name="timeZoneType">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+
+	<xs:element name="timeZone" type="timeZoneType" />
+
 	<xs:element name="unit">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="HOURS"/>
-				<xs:enumeration value="MINUTES"/>
-				<xs:enumeration value="SECONDS"/>
+				<xs:enumeration value="HOURS" />
+				<xs:enumeration value="MINUTES" />
+				<xs:enumeration value="SECONDS" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="path">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*"/>
+				<xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="filename">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+				<xs:pattern
+					value="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="dayDef">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="PERPETUAL"/>
-				<xs:enumeration value="TIMELY"/>
-				<xs:enumeration value="DAILY"/>
-				<xs:enumeration value="WEEKLY"/>
-				<xs:enumeration value="MONTHLY"/>
-				<xs:enumeration value="QUARTERLY"/>
-				<xs:enumeration value="YEARLY"/>
+				<xs:enumeration value="PERPETUAL" />
+				<xs:enumeration value="TIMELY" />
+				<xs:enumeration value="DAILY" />
+				<xs:enumeration value="WEEKLY" />
+				<xs:enumeration value="MONTHLY" />
+				<xs:enumeration value="QUARTERLY" />
+				<xs:enumeration value="YEARLY" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="specialParameters">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="inParam" minOccurs="0"/>
-				<xs:element ref="outParam" minOccurs="0"/>
-				<xs:element ref="envVariables" minOccurs="0"/>
+				<xs:element ref="inParam" minOccurs="0" />
+				<xs:element ref="outParam" minOccurs="0" />
+				<xs:element ref="envVariables" minOccurs="0" />
 				<xs:choice minOccurs="0">
-					<xs:element ref="ftp:ftpAdapterProperties"/>
-					<xs:element ref="file:fileAdapterProperties"/>
-					<xs:element ref="lstn:fileListener"/>
-					<xs:element ref="ws:webServiceDefinition"/>
-					<xs:element ref="db:dbJobDefinition"/>
-					<xs:element ref="pn:processNodes"/>
-					<xs:element ref="rs:executeRShellParams"/>
+					<xs:element ref="ftp:ftpAdapterProperties" />
+					<xs:element ref="file:fileAdapterProperties" />
+					<xs:element ref="lstn:fileListener" />
+					<xs:element ref="ws:webServiceDefinition" />
+					<xs:element ref="db:dbJobDefinition" />
+					<xs:element ref="pn:processNodes" />
+					<xs:element ref="rs:executeRShellParams" />
 				</xs:choice>
 			</xs:sequence>
 		</xs:complexType>
@@ -107,19 +124,19 @@
 	<xs:element name="envVariables">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element maxOccurs="unbounded" ref="entry"/>
+				<xs:element maxOccurs="unbounded" ref="entry" />
 			</xs:sequence>
 		</xs:complexType>
 		<xs:unique name="UniqueEntryKey">
-			<xs:selector xpath="com:entry"/>
-			<xs:field xpath="@key"/>
+			<xs:selector xpath="com:entry" />
+			<xs:field xpath="@key" />
 		</xs:unique>
 	</xs:element>
 	<xs:element name="entry">
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="xs:normalizedString">
-					<xs:attribute name="key" use="required" type="xs:NCName"/>
+					<xs:attribute name="key" use="required" type="xs:NCName" />
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
@@ -128,44 +145,44 @@
 	<xs:element name="localParameters">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="inParam" minOccurs="0"/>
-				<xs:element ref="outParam" minOccurs="0"/>
+				<xs:element ref="inParam" minOccurs="0" />
+				<xs:element ref="outParam" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="inParam">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="outParam">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jobCommand">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobBaseType" default="NON_PERIODIC">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="NON_PERIODIC"/>
-				<xs:enumeration value="PERIODIC"/>
+				<xs:enumeration value="NON_PERIODIC" />
+				<xs:enumeration value="PERIODIC" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobTypeDef" default="TIME BASED">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="TIME BASED"/>
-				<xs:enumeration value="EVENT BASED"/>
-				<xs:enumeration value="USER BASED"/>
+				<xs:enumeration value="TIME BASED" />
+				<xs:enumeration value="EVENT BASED" />
+				<xs:enumeration value="USER BASED" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -179,56 +196,57 @@
 	<xs:element name="jobTypeDetails">
 		<xs:complexType>
 			<xs:sequence minOccurs="0">
-				<xs:element ref="eventTypeDef" minOccurs="0"/>
-				<xs:element ref="jobCommandType" minOccurs="0"/>
-				<xs:element ref="jobCommand" minOccurs="0"/>
-				<xs:element ref="jobPath" minOccurs="0"/>
-				<xs:element ref="specialParameters" minOccurs="0"/>
+				<xs:element ref="eventTypeDef" minOccurs="0" />
+				<xs:element ref="jobCommandType" minOccurs="0" />
+				<xs:element ref="jobCommand" minOccurs="0" />
+				<xs:element ref="jobPath" minOccurs="0" />
+				<xs:element ref="specialParameters" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="eventTypeDef">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="FILE"/>
-				<xs:enumeration value="SYSTEM"/>
-				<xs:enumeration value="NETWORK"/>
+				<xs:enumeration value="FILE" />
+				<xs:enumeration value="SYSTEM" />
+				<xs:enumeration value="NETWORK" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobCommandType">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="SHELL SCRIPT"/>
-				<xs:enumeration value="REMOTE SHELL"/>
-				<xs:enumeration value="ETL TOOL JOBS"/>
-				<xs:enumeration value="SAP"/>
-				<xs:enumeration value="SAS"/>
-				<xs:enumeration value="SYSTEM COMMAND"/>
-				<xs:enumeration value="FTP"/>
-				<xs:enumeration value="FILE PROCESS"/>
-				<xs:enumeration value="FILE LISTENER"/>
-				<xs:enumeration value="BATCH PROCESS"/>
-				<xs:enumeration value="PROCESS NODE"/>
-				<xs:enumeration value="DB JOBS"/>
-				<xs:enumeration value="WEB SERVICE"/>
+				<xs:enumeration value="SHELL SCRIPT" />
+				<xs:enumeration value="REMOTE SHELL" />
+				<xs:enumeration value="ETL TOOL JOBS" />
+				<xs:enumeration value="SAP" />
+				<xs:enumeration value="SAS" />
+				<xs:enumeration value="SYSTEM COMMAND" />
+				<xs:enumeration value="FTP" />
+				<xs:enumeration value="FILE PROCESS" />
+				<xs:enumeration value="FILE LISTENER" />
+				<xs:enumeration value="BATCH PROCESS" />
+				<xs:enumeration value="PROCESS NODE" />
+				<xs:enumeration value="DB JOBS" />
+				<xs:enumeration value="WEB SERVICE" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="daySpecial">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="ALL"/>
-				<xs:enumeration value="FIRST"/>
-				<xs:enumeration value="LAST"/>
-				<xs:enumeration value="ODD"/>
-				<xs:enumeration value="EVEN"/>
+				<xs:enumeration value="ALL" />
+				<xs:enumeration value="FIRST" />
+				<xs:enumeration value="LAST" />
+				<xs:enumeration value="ODD" />
+				<xs:enumeration value="EVEN" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:simpleType name="ST_Email">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[A-Za-z0-9_]+([-+.'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*"/>
+			<xs:pattern
+				value="[A-Za-z0-9_]+([-+.'][A-Za-z0-9_]+)*@[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="Email">
@@ -237,7 +255,7 @@
 				<xs:extension base="ST_Email">
 					<xs:attribute name="id" use="required">
 						<xs:simpleType>
-							<xs:restriction base="xs:byte"/>
+							<xs:restriction base="xs:byte" />
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:extension>
@@ -247,23 +265,23 @@
 	<xs:element name="EmailList">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="email" type="ST_Email" maxOccurs="unbounded"/>
+				<xs:element name="email" type="ST_Email" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jsName">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jsId">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jsPath">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 			<!-- xs:restriction base="xs:string"> <xs:pattern value="[\\/]([a-zA-Z/\\\.0-9_])*" 
 				/> </xs:restriction -->
 		</xs:simpleType>
@@ -271,17 +289,17 @@
 	<xs:element name="jsType">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="JOB"/>
-				<xs:enumeration value="SCENARIO"/>
+				<xs:enumeration value="JOB" />
+				<xs:enumeration value="SCENARIO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:simpleType name="choiceType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="UserInteractionPreference"/>
-			<xs:enumeration value="UserMandatoryPreference"/>
-			<xs:enumeration value="SimpleMetascheduler"/>
-			<xs:enumeration value="AdvancedMetascheduler"/>
+			<xs:enumeration value="UserInteractionPreference" />
+			<xs:enumeration value="UserMandatoryPreference" />
+			<xs:enumeration value="SimpleMetascheduler" />
+			<xs:enumeration value="AdvancedMetascheduler" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="agentChoiceMethod">
@@ -290,7 +308,7 @@
 				<xs:extension base="choiceType">
 					<xs:attribute name="agentId" use="optional">
 						<xs:simpleType>
-							<xs:restriction base="xs:string"/>
+							<xs:restriction base="xs:string" />
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:extension>
@@ -300,21 +318,21 @@
 	<xs:element name="schedulingAlgorithm">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="FirstComeFirstServed"/>
-				<xs:enumeration value="FCFSwithRoundRobin"/>
-				<xs:enumeration value="FCFSwithBackFilling"/>
-				<xs:enumeration value="SLABased"/>
-				<xs:enumeration value="ShortestJobFirst"/>
-				<xs:enumeration value="PriorityBased"/>
-				<xs:enumeration value="UserDefined1"/>
-				<xs:enumeration value="UserDefined2"/>
-				<xs:enumeration value="UserDefined3"/>
+				<xs:enumeration value="FirstComeFirstServed" />
+				<xs:enumeration value="FCFSwithRoundRobin" />
+				<xs:enumeration value="FCFSwithBackFilling" />
+				<xs:enumeration value="SLABased" />
+				<xs:enumeration value="ShortestJobFirst" />
+				<xs:enumeration value="PriorityBased" />
+				<xs:enumeration value="UserDefined1" />
+				<xs:enumeration value="UserDefined2" />
+				<xs:enumeration value="UserDefined3" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:simpleType name="ST_telephone">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[1-9][0-9]{9}"/>
+			<xs:pattern value="[1-9][0-9]{9}" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="telephone">
@@ -323,7 +341,7 @@
 				<xs:extension base="ST_telephone">
 					<xs:attribute name="id" use="required">
 						<xs:simpleType>
-							<xs:restriction base="xs:byte"/>
+							<xs:restriction base="xs:byte" />
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:extension>
@@ -333,128 +351,129 @@
 	<xs:element name="TelList">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="tel" type="ST_telephone" maxOccurs="unbounded"/>
+				<xs:element name="tel" type="ST_telephone" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="version">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="name">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="([a-zA-Z ])+"/>
+				<xs:pattern value="([a-zA-Z ])+" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="surname">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="([a-zA-Z ])+"/>
+				<xs:pattern value="([a-zA-Z ])+" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:simpleType name="portType">
 		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="0"/>
-			<xs:maxInclusive value="65535"/>
+			<xs:minInclusive value="0" />
+			<xs:maxInclusive value="65535" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:element name="smtpServerPassword">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:minLength value="5"/>
-				<xs:maxLength value="8"/>
+				<xs:minLength value="5" />
+				<xs:maxLength value="8" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="smtpServerAddress">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="ipAddress">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"/>
+				<xs:pattern value="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="userName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="([0-9a-zA-Z])+"/>
+				<xs:pattern value="([0-9a-zA-Z])+" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="userId">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="address">
 		<xs:simpleType>
-			<xs:restriction base="xs:token"/>
+			<xs:restriction base="xs:token" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="userPassword">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:minLength value="4"/>
-				<xs:maxLength value="8"/>
+				<xs:minLength value="4" />
+				<xs:maxLength value="8" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="bufferSize" default="128">
 		<xs:simpleType>
 			<xs:restriction base="xs:short">
-				<xs:enumeration value="128"/>
+				<xs:enumeration value="128" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="frequency">
 		<xs:simpleType>
-			<xs:restriction base="xs:unsignedShort"/>
+			<xs:restriction base="xs:unsignedShort" />
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="role">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="ADMIN"/>
-				<xs:enumeration value="SUPERUSER"/>
-				<xs:enumeration value="NORMALUSER"/>
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="comment" type="xs:string"/>
-	<xs:element name="planId" type="xs:string"/>
-	<xs:element name="concurrent" type="xs:boolean"/>
-	<xs:element name="normalization" type="xs:boolean"/>
+
+	<xs:simpleType name="roleType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ADMIN" />
+			<xs:enumeration value="SUPERUSER" />
+			<xs:enumeration value="NORMALUSER" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="role" type="roleType"/>
+	<xs:element name="comment" type="xs:string" />
+	<xs:element name="planId" type="xs:string" />
+	<xs:element name="concurrent" type="xs:boolean" />
+	<xs:element name="normalization" type="xs:boolean" />
 	<xs:element name="value_boolean">
 		<xs:simpleType>
-			<xs:restriction base="xs:boolean"/>
+			<xs:restriction base="xs:boolean" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="value_integer">
 		<xs:simpleType>
-			<xs:restriction base="xs:positiveInteger"/>
+			<xs:restriction base="xs:positiveInteger" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="value_string">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="[0-9]+"/>
+				<xs:pattern value="[0-9]+" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="active" default="no">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="yes"/>
-				<xs:enumeration value="no"/>
+				<xs:enumeration value="yes" />
+				<xs:enumeration value="no" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -463,121 +482,122 @@
 			<xs:sequence>
 				<xs:element name="jobId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="scenarioId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="calendarId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="userId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="permissionId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="runId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="planId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="solsticeId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="traceId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="errorId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="slaId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="ppId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="agentId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="alarmId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="aHistoryId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="reportId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="dbConnectionId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="dbUserId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="ftpConnectionId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="wsDefinitionId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="wsUserProfileId">
 					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger"/>
+						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="transformToLocalTime" type="xs:boolean" default="false"/>
+	<xs:element name="transformToLocalTime" type="xs:boolean"
+		default="false" />
 	<xs:element name="connName">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="fileSeperator">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
 </xs:schema>
