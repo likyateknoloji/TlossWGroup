@@ -51,7 +51,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	private int pieUserWaitingCount;
 	private int pieCancelledCount;
 	private int pieTimeoutCount;
-
+	
+	private int pieDevelopmentCount;
+	private int pieTestCount;
+	private int pieRequestCount;
+	private int pieDeployedCount;
+	
 	private String pieColorList;
 
 	@PostConstruct
@@ -79,6 +84,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		column2.addWidget("userWaiting");
 		column1.addWidget("cancelled");
 		column2.addWidget("timeout");
+		
+		column1.addWidget("development");
+		column2.addWidget("test");
+		column1.addWidget("request");
+		column2.addWidget("deployed");
+		
 		
 		model.addColumn(column1);
 		model.addColumn(column2);
@@ -129,6 +140,11 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		pieCancelledCount = 0;
 		pieTimeoutCount = 0;
 		
+		pieDevelopmentCount = 0;
+		pieTestCount = 0;
+		pieRequestCount = 0;
+		pieDeployedCount = 0;
+		
 		try {
 			reportBaseList = getDbOperations().getDashboardReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
@@ -146,8 +162,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		    userChooseResource = 0,
 		    userWaiting = 0,
 		    cancelled = 0,
-		    timeout = 0;
-		
+		    timeout = 0,
+		    development = 0,
+		    test = 0,
+		    request = 0,
+		    deployed = 0;
+		     
 		if (reportBaseList != null) {
 			
 			running = reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().intValue() + reportBaseList.getRUNNING().getSTAGEIN().intValue() + reportBaseList.getRUNNING().getSTAGEOUT().intValue();
@@ -160,6 +180,10 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 			userWaiting = reportBaseList.getPENDING().getREADY().getUSERWAITING().intValue();
 			cancelled = reportBaseList.getCANCELLED().intValue();
 			timeout = reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().intValue();
+			development = reportBaseList.getPENDING().getCREATED().getDEVELOPMENT().intValue();
+			test = reportBaseList.getPENDING().getCREATED().getTEST().intValue();
+			request = reportBaseList.getPENDING().getCREATED().getREQUEST().intValue();
+			deployed = reportBaseList.getPENDING().getCREATED().getDEPLOYED().intValue();
 			
 			setPieRunningCount( running );
 			setPieFailedCount( failed );
@@ -172,8 +196,73 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 			setPieCancelledCount( cancelled );
 			setPieTimeoutCount( timeout );
 			
+			setPieDevelopmentCount( development );
+			setPieTestCount( test );
+			setPieRequestCount( request );
+			setPieDeployedCount( deployed );
+			
 			int i = 0;
 
+			if ((reportBaseList.getPENDING().getCREATED().getDEVELOPMENT() != null)
+					&& (development > 0)) {
+				pieDashboardModel.set(
+						resolveMessage("tlos.reports.chart.Development"),
+						reportBaseList.getPENDING().getCREATED().getDEVELOPMENT().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", FFBF00";
+				else
+					pieColorList = pieColorList + "FFBF00";
+				i++;
+			}
+			
+			if ((reportBaseList.getPENDING().getCREATED().getTEST() != null)
+					&& (test > 0)) {
+				pieDashboardModel.set(
+						resolveMessage("tlos.reports.chart.Test"),
+						reportBaseList.getPENDING().getCREATED().getTEST().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", FFBF00";
+				else
+					pieColorList = pieColorList + "FFBF00";
+				i++;
+			}
+			
+			if ((reportBaseList.getPENDING().getCREATED().getREQUEST() != null)
+					&& (request > 0)) {
+				pieDashboardModel.set(
+						resolveMessage("tlos.reports.chart.Request"),
+						reportBaseList.getPENDING().getCREATED().getREQUEST().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", FFBF00";
+				else
+					pieColorList = pieColorList + "FFBF00";
+				i++;
+			}
+			
+			if ((reportBaseList.getPENDING().getCREATED().getDEPLOYED() != null)
+					&& (deployed > 0)) {
+				pieDashboardModel.set(
+						resolveMessage("tlos.reports.chart.Deployed"),
+						reportBaseList.getPENDING().getCREATED().getDEPLOYED().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", FFBF00";
+				else
+					pieColorList = pieColorList + "FFBF00";
+				i++;
+			}
+			
+			if ((reportBaseList.getPENDING().getIDLED().getBYTIME() != null)
+					&& (waiting > 0)) {
+				pieDashboardModel.set(
+						resolveMessage("tlos.reports.chart.Waiting"),
+						reportBaseList.getPENDING().getIDLED().getBYTIME().doubleValue());
+				if (i > 0)
+					pieColorList = pieColorList + ", FFBF00";
+				else
+					pieColorList = pieColorList + "FFBF00";
+				i++;
+			}
+			
 			if (
 				(reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN() != null)
 				  && (running > 0 )
@@ -416,6 +505,38 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 
 	public void setPieTimeoutCount(int pieTimeoutCount) {
 		this.pieTimeoutCount = pieTimeoutCount;
+	}
+
+	public int getPieDevelopmentCount() {
+		return pieDevelopmentCount;
+	}
+
+	public void setPieDevelopmentCount(int pieDevelopmentCount) {
+		this.pieDevelopmentCount = pieDevelopmentCount;
+	}
+
+	public int getPieTestCount() {
+		return pieTestCount;
+	}
+
+	public void setPieTestCount(int pieTestCount) {
+		this.pieTestCount = pieTestCount;
+	}
+
+	public int getPieRequestCount() {
+		return pieRequestCount;
+	}
+
+	public void setPieRequestCount(int pieRequestCount) {
+		this.pieRequestCount = pieRequestCount;
+	}
+
+	public int getPieDeployedCount() {
+		return pieDeployedCount;
+	}
+
+	public void setPieDeployedCount(int pieDeployedCount) {
+		this.pieDeployedCount = pieDeployedCount;
 	}
 	
 }
