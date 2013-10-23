@@ -7,20 +7,18 @@
 
 package com.likya.tlossw.model.tree;
 
-
 public class WsScenarioNode extends WsNode {
 
 	private static final long serialVersionUID = 1676608004368003714L;
 
-	private String instanceId;
+	private String planId;
 
-
-	public String getInstanceId() {
-		return instanceId;
+	public String getPlanId() {
+		return planId;
 	}
 
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
+	public void setPlanId(String planId) {
+		this.planId = planId;
 	}
 
 }
