@@ -17,7 +17,7 @@ import org.apache.xmlbeans.XmlOptions;
 import org.primefaces.component.datatable.DataTable;
 
 import com.likya.tlos.model.xmlbeans.common.ActiveDocument.Active;
-import com.likya.tlos.model.xmlbeans.common.RoleDocument.Role;
+import com.likya.tlos.model.xmlbeans.common.RoleType;
 import com.likya.tlos.model.xmlbeans.common.UserIdDocument.UserId;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
 import com.likya.tlos.model.xmlbeans.webservice.AllowedRolesDocument.AllowedRoles;
@@ -88,7 +88,7 @@ public class WSAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	public void searchWSAccessAction(ActionEvent e) {
 		AllowedRoles allowedRoles = AllowedRoles.Factory.newInstance();
 		if (!role.equals("")) {
-			Role allowedRole = allowedRoles.addNewRole();
+			RoleType allowedRole = allowedRoles.addNewRole();
 			allowedRole.setStringValue(role);
 		}
 
