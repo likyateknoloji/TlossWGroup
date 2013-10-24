@@ -105,5 +105,22 @@ declare function wso:getWSDefinitionListForActiveUser($documentUrl as xs:string,
 	return $allowedService
 };
 
-
+(: login olan kullanicinin yetkili oldugu veya role ADMIN ise yetkilweb servisleri donuyor :)
+declare function wso:getWSDefinitionListForAccessDef($documentUrl as xs:string, $userId as xs:int) as element(ws:webServiceDefinition)* 
+ {
+    let $wsAccessProfilesDocumentUrl := met:getMetaData($documentUrl, "wsAccessProfiles")
+    let $sjWebServicesDocumentUrl := met:getMetaData($documentUrl, "jobWebServices")
+	let $userDocumentUrl := met:getMetaData($documentUrl, "user")
+	
+ 	let $profileDoc := doc($wsAccessProfilesDocumentUrl)
+ 	
+ 	let $role := for $user in doc($userDocumentUrl)/usr:user-infos/usr:userList/usr:person
+				where $user/@id = $userId
+				return $user/com:role
+				
+	for $wsDefinition in doc($sjWebServicesDocumentUrl)/ws:webServiceList/ws:webServiceDefinition
+	where data($wsDefinition/com:userId) = $userId or $role = 'ADMIN'
+    
+	return $wsDefinition
+};
 
