@@ -1214,6 +1214,23 @@ public class DBOperations implements Serializable {
 		return webServiceList;
 	}
 
+	public ArrayList<WebServiceDefinition> getWSDefinitionListForAccessDef(int userId) {
+
+		ArrayList<WebServiceDefinition> webServiceList = new ArrayList<WebServiceDefinition>();
+
+		String xQueryStr = wsFunctionConstructor("wso:getWSDefinitionListForAccessDef", userId + "");
+
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		WebServiceDefinition webServiceDefinition;
+		for (Object currentObject : objectList) {
+			webServiceDefinition = ((WebServiceDefinitionDocument) currentObject).getWebServiceDefinition();
+			webServiceList.add(webServiceDefinition);
+		}
+
+		return webServiceList;
+	}
+	
 	public ArrayList<FtpProperties> getFtpConnectionList() {
 
 		ArrayList<FtpProperties> ftpConnectionList = new ArrayList<FtpProperties>();
