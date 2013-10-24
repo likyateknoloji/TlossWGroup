@@ -45,6 +45,8 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	private WSAccessInfoTypeClient wsAccessInfoTypeClient;
 
 	private Collection<SelectItem> webServiceDefinitionList = null;
+	private Collection<SelectItem> webServiceAccessDefinitionList = null;
+	
 	private String webServiceDefinition;
 
 	private String userType;
@@ -82,6 +84,9 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 		ArrayList<WebServiceDefinition> webServiceList = getDbOperations().getWebServiceListForActiveUser(getWebAppUser().getId());
 		webServiceDefinitionList = WebInputUtils.fillWebServiceDefinitionList(webServiceList);
 
+		ArrayList<WebServiceDefinition> webServiceAccessDefList = getDbOperations().getWSDefinitionListForAccessDef(getWebAppUser().getId());
+		webServiceAccessDefinitionList = WebInputUtils.fillWebServiceDefinitionList(webServiceAccessDefList);
+		
 		if (iCheck != null && iCheck.equals("insert"))
 			insertButton = true;
 
@@ -367,6 +372,14 @@ public class WSAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedUserList(String[] selectedUserList) {
 		this.selectedUserList = selectedUserList;
+	}
+
+	public Collection<SelectItem> getWebServiceAccessDefinitionList() {
+		return webServiceAccessDefinitionList;
+	}
+
+	public void setWebServiceAccessDefinitionList(Collection<SelectItem> webServiceAccessDefinitionList) {
+		this.webServiceAccessDefinitionList = webServiceAccessDefinitionList;
 	}
 
 }
