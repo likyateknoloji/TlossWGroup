@@ -25,9 +25,12 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 	private static final long serialVersionUID = 1911439607648366142L;
 
 	private Collection<SelectItem> webServiceDefinitionList = null;
+	private Collection<SelectItem> webServiceAccessDefinitionList = null;
 	private String webServiceDefinition;
 
 	private ArrayList<WebServiceDefinition> webServiceList = new ArrayList<WebServiceDefinition>();
+	private ArrayList<WebServiceDefinition> webServiceAccessDefList = new ArrayList<WebServiceDefinition>();
+	
 	private WebServiceDefinition selectedWebService = null;
 
 	public void dispose() {
@@ -44,6 +47,9 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 
 		webServiceList = getDbOperations().getWebServiceListForActiveUser(userId);
 		setWebServiceDefinitionList(WebInputUtils.fillWebServiceDefinitionList(webServiceList));
+		
+		webServiceAccessDefList = getDbOperations().getWSDefinitionListForAccessDef(userId);
+		setWebServiceAccessDefinitionList(WebInputUtils.fillWebServiceDefinitionList(webServiceAccessDefList));
 	}
 
 	public void fillTabs() {
@@ -124,6 +130,14 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 
 	public void setSelectedWebService(WebServiceDefinition selectedWebService) {
 		this.selectedWebService = selectedWebService;
+	}
+
+	public Collection<SelectItem> getWebServiceAccessDefinitionList() {
+		return webServiceAccessDefinitionList;
+	}
+
+	public void setWebServiceAccessDefinitionList(Collection<SelectItem> webServiceAccessDefinitionList) {
+		this.webServiceAccessDefinitionList = webServiceAccessDefinitionList;
 	}
 
 }
