@@ -36,7 +36,7 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.webServiceDefinition']}" />
 					<p:selectOneMenu value="#{wsAccessPanelMBean.webServiceDefinition}">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-						<f:selectItems value="#{wsAccessPanelMBean.webServiceDefinitionList}" />
+						<f:selectItems value="#{wsAccessPanelMBean.webServiceAccessDefinitionList}" />
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
