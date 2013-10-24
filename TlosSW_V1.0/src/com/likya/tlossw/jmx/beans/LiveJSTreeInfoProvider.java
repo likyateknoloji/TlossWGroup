@@ -211,13 +211,16 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 			ScenarioNode innerScenarioNode = scenarioListContainsSpc(treeNode.getScenarioNodes(), spcId);
 
+			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
+			
 			if (innerScenarioNode != null) {
 				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
+				newInnerScenarioNode.setId(tlosSWPathType.getId().toString());
 				newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
 			} else {
 				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
-				tmpScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
+				tmpScenarioNode.setId(tlosSWPathType.getId().toString());
 				tmpScenarioNode.setName(tmpScenario.getJsName());
 				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
