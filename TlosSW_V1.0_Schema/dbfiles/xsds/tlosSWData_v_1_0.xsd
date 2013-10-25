@@ -129,6 +129,11 @@
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="runId" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
 			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
@@ -227,6 +232,11 @@
 				<xs:element ref="logAnalysis" minOccurs="0"/>
 				<xs:element ref="lt:localParameters" minOccurs="0"/>
 			</xs:sequence>
+			<xs:attribute name="runId" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
 			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
@@ -486,17 +496,17 @@
 				<xs:element ref="lt:localParameters" minOccurs="0"/>
 				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="planId" use="optional">
-				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
-				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="solsticeId" use="optional">
-				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
-				</xs:simpleType>
-			</xs:attribute>
 			<xs:attribute name="ID" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="runId" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
