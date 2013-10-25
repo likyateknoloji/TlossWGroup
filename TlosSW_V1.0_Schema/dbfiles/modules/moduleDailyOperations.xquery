@@ -452,13 +452,14 @@ return
 
 (: Jobs and Scenarios Selection Phase :)
 (: declare function hs:today-jobs-and-scenarios($n as node()) as node()* :)
-declare function hs:select-jobs-and-scenarios($n as node(), $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*) as node()*
+declare function hs:select-jobs-and-scenarios($n as node(), $runId as xs:integer, $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*) as node()*
 {
 	   typeswitch($n)
 		case $p as element(dat:jobProperties) 
 		   return element dat:jobProperties
 		     { 
 			   attribute ID {$p/@ID},
+			   attribute runId {$runId},
 			   attribute planId {$planId},
 			   attribute scenarioId {$scenarioId},
 			   attribute agentId {$p/@agentId},
@@ -470,60 +471,73 @@ declare function hs:select-jobs-and-scenarios($n as node(), $scenarioId as xs:in
 			   for $ca in $a/dat:jobProperties[not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and data(dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")]
 			      ,$calendar in $plan[data(calID)=data($ca/dat:baseJobInfos/dat:calendarId)]
 			         (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :)
-			   return hs:select-jobs-and-scenarios($ca, $scenarioId, $planId, $plan)
+			   return hs:select-jobs-and-scenarios($ca, $runId, $scenarioId, $planId, $plan)
 			 }
 	    case $es as element(dat:scenario) 
 	       return if (count($es//dat:jobProperties)>0) then element dat:scenario
 	         { 
 			   attribute ID {$es/@ID},
+			   attribute runId {$runId},
 			   attribute planId {$planId},
-			   for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $es/@ID, $planId, $plan) 
+			   for $ces in $es/* return hs:select-jobs-and-scenarios($ces, $runId, $es/@ID, $planId, $plan) 
 			 } 
 			 else ()
 		case $d as element(dat:TlosProcessData) 
 		   return element dat:TlosProcessData
 		     { 
-			   $d/@*, 
-			   for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $scenarioId, $planId, $plan) 
+			   attribute ID {$scenarioId},
+	           attribute planId {$planId},
+               attribute runId {$runId},
+			   for $cd in $d/* return hs:select-jobs-and-scenarios($cd, $runId, $scenarioId, $planId, $plan) 
 			 }
 	     default return $n 
 };
 		
-declare function hs:SelectedJobsAndScenarios($n as node(), $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*) as node()*
+declare function hs:SelectedJobsAndScenarios($n as node(), $runId as xs:integer, $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*) as node()*
 {
-		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n, $scenarioId, $planId, $plan), $scenarioId, $planId, $plan)
+		 hs:select-jobs-and-scenarios(hs:select-jobs-and-scenarios($n, $runId, $scenarioId, $planId, $plan), $runId, $scenarioId, $planId, $plan)
 };
 
-declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*, $isNewPlan as xs:boolean )
+declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $runId as xs:integer, $scenarioId as xs:integer, $planId as xs:integer, $plan as node()*, $isNewRun as xs:boolean, $isNewPlan as xs:boolean ) as element(dat:TlosProcessData)
 {
     let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
     let $dataDocument := doc($dataDocumentUrl)
-	let $scenario := $dataDocument/dat:TlosProcessData//dat:scenario[@ID=$scenarioId] 
-	
-    let $targetScenarioWithinTPD := element dat:TlosProcessData { 
-	                                                              attribute ID {$scenarioId},
-	                                                              attribute planId {$planId},
-                                                                  attribute solsticeId {xs:string(1000)},
-                                                                  $scenario/dat:baseScenarioInfos,
-	                                                              $scenario/dat:jobList,
-																  $scenario/dat:timeManagement,
-																  $scenario/dat:advancedScenarioInfos,
-																  $scenario/dat:concurrencyManagement,
-																  $scenario/dat:scenario/*
-																}
-    let $targetScenario := if($scenarioId eq 0) 
-	                       then doc($dataDocumentUrl)/dat:TlosProcessData 
-						   else $targetScenarioWithinTPD
 
-    for $calList in doc($scenariosDocumentUrl)/TlosProcessDataAll
-	return update insert
-           let $runId := sq:getNextId($documentUrl, "runId")
-		   return element RUN 
-		   { attribute id {$runId},  
-	          hs:SelectedJobsAndScenarios($targetScenario, $scenarioId, $planId, $plan)
-	       }
-    into $calList
+    let $targetScenario := if($scenarioId eq 0)
+	                       then 
+						     doc($dataDocumentUrl)/dat:TlosProcessData 
+						   else 
+	                         let $scenario := $dataDocument/dat:TlosProcessData//dat:scenario[@ID=$scenarioId] 
+                             let $targetScenarioWithinTPD := if(exists($scenario))
+							                                 then 
+							                                      element dat:TlosProcessData { 
+                                                                     $scenario/dat:baseScenarioInfos,
+	                                                                 $scenario/dat:jobList,
+																     $scenario/dat:timeManagement,
+																     $scenario/dat:advancedScenarioInfos,
+																     $scenario/dat:concurrencyManagement,
+																     $scenario/dat:scenario/*
+																  }
+															 else 
+															     ()
+						     return $targetScenarioWithinTPD
+
+    let $currentRun := hs:SelectedJobsAndScenarios($targetScenario, $runId, $scenarioId, $planId, $plan)
+
+    let $result := if( $isNewRun ) 
+	                   then 
+					     update insert
+		                    element RUN { 
+							 attribute id {$runId},  
+	                         $currentRun
+	                        }
+                         into doc($scenariosDocumentUrl)/TlosProcessDataAll
+					   else 
+					     ()
+
+    return $currentRun
+
 };
 
 (: Jobs and Scenarios Selections Phase Ended :)
@@ -539,8 +553,7 @@ declare function hs:getPlan($documentUrl as xs:string, $planId as xs:integer ) a
 	return $plan
 };
 
-(: declare function hs:getDailyJobsAndScenarios() :)
-declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $pId as xs:integer )
+declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $scenId as xs:integer, $pId as xs:integer ) as element(dat:TlosProcessData)
 {	
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
@@ -552,19 +565,42 @@ declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $
 	
 	let $planId    := xs:integer( if($isNewPlan) then sq:getId($documentUrl, "planId") else $pId )
 	
-	let $retDailyScenarios := hs:querySelectedJobsAndScenarios($documentUrl, $scenarioId, $planId, $retDailyPlan, $isNewPlan)
+	let $isNewRun := if( $scenId lt 0 ) 
+	              then true()
+				  else false()
 
+	let $runId := if( $isNewRun ) 
+	              then sq:getNextId($documentUrl, "runId")
+				  else sq:getId($documentUrl, "runId")
+
+    let $scenarioId := if( $scenId lt 0 )
+	                   then 0
+					   else $scenId
+
+	let $currentRun := hs:querySelectedJobsAndScenarios($documentUrl, $runId, $scenarioId, $planId, $retDailyPlan, $isNewRun, $isNewPlan)
+    
+	return $currentRun
+(:
 	let $runId := sq:getId($documentUrl, "runId")
-	let $solsticeId := sq:getId($documentUrl, "solsticeId")
 
     let $insertPlanId := hs:insertPlanId($documentUrl, string($runId), string($planId))
     let $insertSolsticeId := hs:insertSolsticeId($documentUrl, string($runId), string($solsticeId))
-	
+	:)	
+(:
     for $dailyRun in doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN
 	where $dailyRun/@id = $runId
 	return $dailyRun/dat:TlosProcessData
+:)
+
 };
 
+declare function hs:insertPlanId($documentUrl as xs:string, $runId as xs:string, $planId as xs:string){
+	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
+	
+	return update insert attribute planId {data($planId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData
+};
+
+(:
 declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scenarioId as xs:integer, $planId as xs:integer )
 {	
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
@@ -585,14 +621,9 @@ declare function hs:getSolsticeJobsAndScenarios($documentUrl as xs:string, $scen
 	return $dailyRun/dat:TlosProcessData
 };
 
-declare function hs:insertPlanId($documentUrl as xs:string, $runId as xs:string, $planId as xs:string){
-	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
-	
-	return update insert attribute planId {data($planId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData
-};
-
 declare function hs:insertSolsticeId($documentUrl as xs:string, $runId as xs:string, $solsticeId as xs:string){
 	let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
 	
 	return update insert attribute solsticeId {data($solsticeId)} into  doc($scenariosDocumentUrl)/TlosProcessDataAll/RUN[@id=data($runId)]/dat:TlosProcessData
 };
+:)
