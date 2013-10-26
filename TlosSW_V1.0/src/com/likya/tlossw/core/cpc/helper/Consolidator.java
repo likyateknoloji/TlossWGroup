@@ -24,18 +24,18 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 public class Consolidator {
 
 	private static Logger logger = Logger.getLogger(Consolidator.class);
-	
+
 	public static void compareAndConsolidateTwoTables(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
-	
+
 		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bugünün kuyruğu : " + spcLookupTableNew.size());
-		
-		String newSpcIdSample =  spcLookupTableNew.keySet().toArray()[0].toString();
+
+		String newSpcIdSample = spcLookupTableNew.keySet().toArray()[0].toString();
 		String planIdNew = new TlosSWPathType(newSpcIdSample).getPlanId();
-		
-		Set<String> itarationSet = new HashSet<String>(spcLookupTableOld.keySet()) ;
-		
+
+		Set<String> itarationSet = new HashSet<String>(spcLookupTableOld.keySet());
+
 		for (String spcIdOld : itarationSet) {
-			
+
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcIdOld);
 			tlosSWPathType.setPlanId(planIdNew);
 
@@ -45,87 +45,120 @@ public class Consolidator {
 			Spc spcReferanceOld = spcInfoTypeOld.getSpcReferance();
 			spcInfoTypeOld.setSpcId(tlosSWPathType);
 			String tempSpcIdOld = tlosSWPathType.getFullPath();
-			
+
 			if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
-				
-				if(spcReferanceOld == null) {
+
+				if (spcReferanceOld == null) {
 					// Empty scenario
 					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
-				} else if(!isScenarioEnsuresTheConditions(spcReferanceOld)) {
-				
-					if(spcReferanceOld.isConcurrent()) {
+				} else if (!isScenarioEnsuresTheConditions(spcReferanceOld)) {
+
+					if (spcReferanceOld.isConcurrent()) {
 						// Yenisini listeden çıkarıp kopyasını al
 						SpcInfoType tmpSpcInfoType = spcLookupTableNew.remove(tlosSWPathType.getFullPath());
 						// eskisini yeni listeye taşı
 						spcReferanceOld.setCurrentPlanId(planIdNew);
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
-						// Yenisinin instance id sini bir arttır ve öylece listeye ekle, 
+						// Yenisinin instance id sini bir arttır ve öylece listeye ekle,
 						// Örnek : scenarioId = 3245:13
 						// Yeni scenarioId = 3245:14
-						
+
 						TlosSWPathType tmpTlosSWPathType = new TlosSWPathType(tlosSWPathType);
-						while(spcLookupTableNew.containsKey(tmpTlosSWPathType.getFullPath())) {
+						while (spcLookupTableNew.containsKey(tmpTlosSWPathType.getFullPath())) {
 							tmpTlosSWPathType.incrementRuId();
 						}
 						tmpSpcInfoType.setSpcId(tmpTlosSWPathType);
 						spcLookupTableNew.put(tmpTlosSWPathType.getFullPath(), tmpSpcInfoType);
-						
+
 					} else {
-						// Bitince kendini VT'den yenilesin değerini set et. 
+						// Bitince kendini VT'den yenilesin değerini set et.
 						spcReferanceOld.setCurrentPlanId(planIdNew);
 						spcReferanceOld.setUpdateMySelfAfterMe(true);
-						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);						
+						// all T< 1 jobs.setUpdateMySelfAfterMe(true);
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 					}
 
 				}
-				
+
 				// System.out.println("Referance : " + spcLookupTableNew.get(tempSpcIdOld).getSpcReferance() + "   Yeni  durum : " + spcLookupTableNew.get(tempSpcIdOld).getSpcId().getPlanId());
-				
+
 			} else {
-				
-				if((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
+
+				if ((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
 					spcReferanceOld.setCurrentPlanId(planIdNew);
 					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 				}
+
+			}
+
+			spcLookupTableOld.remove(spcIdOld);
+
+		}
+
+		logger.info("Konsolidasyon sonrası kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bıugünün kuyruğu : " + spcLookupTableNew.size());
+	}
+	
+	public static void analyzeJobsInScenario(SpcInfoType spcInfoType) {
+
+		HashMap<String, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
+		
+		if (jobQueue != null) {
 			
+			Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
+			while (jobsIterator.hasNext()) {
+
+				Job job = jobsIterator.next();
+
+				JobProperties jobProperties = job.getJobRuntimeProperties().getJobProperties();
+
+				// String jobId = jobProperties.getID();
+				
+				String jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().toString();
+				
+				boolean isRunning = LiveStateInfoUtils.equalStates(jobProperties, StateName.RUNNING);
+				
+				boolean isPeriodic = JobBaseType.PERIODIC.equals(jobBaseType);
+
+				boolean isUpdated = true;
+				
+				if (isPeriodic && isRunning && !isUpdated) {
+					job.setUpdateMySelfAfterMe(true);
+				}
 			}
 			
-			spcLookupTableOld.remove(spcIdOld);
-			
 		}
-		
-		logger.info("Konsolidasyon sonrası kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bıugünün kuyruğu : " + spcLookupTableNew.size());
 	}
 
 	public static void compareAndConsolidateTwoTables2(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
-		
+
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
 
 			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, planIdOld, spcLookupTableOld);
 
-			// Dünün listesinde de var ise 
+			// Dünün listesinde de var ise
 			if (spcIdOld != null) {
-				
+
 				SpcInfoType spcInfoTypeOld = spcLookupTableOld.get(spcIdOld);
-				
-				if(isScenarioEnsuresTheConditions(spcInfoTypeOld.getSpcReferance())/* Completed */) {
+
+				if (isScenarioEnsuresTheConditions(spcInfoTypeOld.getSpcReferance())/* Completed */) {
 					// Eskisini sil, yenisi listede var...
-				} else /* Running */ {
-					
-				} 
+				} else /* Running */{
+
+				}
 				spcLookupTableOld.remove(spcIdOld);
 			}
 		}
-		
-		if(!spcLookupTableOld.isEmpty()) {
+
+		if (!spcLookupTableOld.isEmpty()) {
 			// Neden acaba, kimsenin kalmaması lazım ?
 			spcLookupTableOld.clear();
 		}
-		
+
 	}
-	
-public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
-		
+
+	public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+
 		ArrayList<String> spcLookupTableIntersection = new ArrayList<String>();
 
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
@@ -140,26 +173,28 @@ public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<Str
 				 */
 				continue;
 			} else {
-				spcLookupTableIntersection.add(spcIdOld);				
-				checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), (SpcInfoType) spcLookupTableOld.get(spcIdOld)) ;
+				spcLookupTableIntersection.add(spcIdOld);
+				checkAndPerformStabilityConditionsOfJobsInScenario((SpcInfoType) spcLookupTableNew.get(spcIdNew), (SpcInfoType) spcLookupTableOld.get(spcIdOld));
 			}
 		}
-		
+
 		String newInstanceId = new TlosSWPathType(spcLookupTableNew.keySet().toArray()[0].toString()).getPlanId();
-		
+
 		/**
 		 * Yenilistede olmayıp sadece eski listede olup da tamamlanmamış senaryo
 		 * var ise bunlar yeni listeye olduğu gibi taşınıyor.
 		 * Öyle mi olmalı ????
+		 * 
 		 * @author serkan taş
 		 */
 		for (String spcIdOld : spcLookupTableOld.keySet()) {
-			if(!spcLookupTableIntersection.contains(spcIdOld)) {
-				if(!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
+			if (!spcLookupTableIntersection.contains(spcIdOld)) {
+				if (!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
 					/**
 					 * taşınan işlerin instaneId leri de güncelleniyor.
 					 * tasarım kararı netleşirse, eski id de native planid olarak
 					 * saklanacak
+					 * 
 					 * @author serkan taş
 					 */
 					TlosSWPathType scenarioPathType = new TlosSWPathType(spcIdOld);
@@ -171,7 +206,7 @@ public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<Str
 	}
 
 	public static void checkAndPerformStabilityConditionsOfJobsInScenario(SpcInfoType spcInfoTypeNew, SpcInfoType spcInfoTypeOld) {
- 
+
 		HashMap<String, Job> jobQueueNew = spcInfoTypeNew.getSpcReferance().getJobQueue();
 		HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
 
@@ -186,28 +221,28 @@ public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<Str
 				JobProperties jobPropertiesOld = jobOld.getJobRuntimeProperties().getJobProperties();
 
 				String jobIdOld = jobPropertiesOld.getID();
-				
+
 				String jobBaseType = jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType().toString();
-				
+
 				if (jobQueueNew.containsKey(jobIdOld)) {
 					if (JobBaseType.PERIODIC.equals(jobBaseType)) {
 						if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 							// iş bittikten sonra aşağıdaki adımları yapacaz
 							if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
 								// iş bitince yenisini devreye al, güncelleme yok !//güncelleme yapacak şekilde ayarla ama nasıl ????
-							} 
+							}
 							jobQueueNew.put(jobIdOld, jobQueueOld.get(jobIdOld));
 						} else {
 							// eskisini bırak yenisi ile devam et
 						}
-						
+
 					} else {
 						if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 							// Eğer önceki iş ile aynı anda çalışma izni var ise,
 							// eskisini taşıyıp, yanına yenisini eklemek gerekecek
 							// Eğer aynı anda çalışma izni yok ise,
 							// Eskisinin bitmesini bekleyip sonra çalışacak ama nasıl ????
-							
+
 							// 1. yol : İki iş arasına sanal bağımlılık tanımlama ... daha önce yapıldı
 							// 2. yol : Eski işe işini bitirdikten sonra yeni sürümünü de devreye aldırma.... ama nasıl ?
 							// yeni kuyruğa taşıyoruz
@@ -216,12 +251,12 @@ public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<Str
 							// eskisini bırak yenisi ile devam et
 						}
 					}
-				
+
 				} else {
 					if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 						if (JobBaseType.PERIODIC.equals(jobBaseType)) {
 							// set old job to terminate after execution
-							jobQueueNew.get(jobIdOld).setStopRepeatativity(true);
+							//jobQueueNew.get(jobIdOld).setStopRepeatativity(true);
 						}
 						// yeni kuyruğa taşıyoruz
 						jobQueueNew.put(jobIdOld, jobQueueOld.get(jobIdOld));
@@ -305,14 +340,14 @@ public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<Str
 	// }
 
 	public static boolean isScenarioEnsuresTheConditions(Spc spcReferance) {
-		
-		LiveStateInfo liveStateInfo = null; 
-		
-		if(spcReferance.getScenario() == null || spcReferance.getScenario().getJsState() == null) {
+
+		LiveStateInfo liveStateInfo = null;
+
+		if (spcReferance.getScenario() == null || spcReferance.getScenario().getJsState() == null) {
 			// Set to default value
 			liveStateInfo = LiveStateInfoUtils.generateLiveStateInfo(StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS);
 		}
-		
+
 		if (!LiveStateInfoUtils.equalStates(spcReferance.getLiveStateInfo(), liveStateInfo)) {
 			logger.info("     > SPC Lookup Table da bir onceki calistirmadan kalan " + spcReferance.getSpcAbsolutePath() + " isimli senaryo bitiş koşullarını sağlamıyor !.");
 			return false;
