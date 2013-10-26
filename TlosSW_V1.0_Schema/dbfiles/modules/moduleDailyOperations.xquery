@@ -553,6 +553,34 @@ declare function hs:getPlan($documentUrl as xs:string, $planId as xs:integer ) a
 	return $plan
 };
 
+declare function hs:doPlanAndSelectJob($documentUrl as xs:string, $jobId as xs:integer, $pId as xs:integer ) as element(dat:jobProperties)*
+{    
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    let $dataDocument := doc($dataDocumentUrl)
+    
+    let $isNewPlan := if( $pId eq 0 ) then true() else false()
+
+    let $plan := if( $isNewPlan ) 
+	                     then hs:createPlanCalendars($documentUrl) 
+						 else hs:getPlan($documentUrl, sq:getId($documentUrl, "planId") )
+	
+	let $planId    := xs:integer( if($isNewPlan) then sq:getId($documentUrl, "planId") else $pId )
+
+	let $runId := sq:getId($documentUrl, "runId")
+
+    let $currentRun := for $job in $dataDocument//dat:jobProperties[@ID = $jobId and not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and data(dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")]
+			      ,$calendar in $plan[data(calID)=data($job/dat:baseJobInfos/dat:calendarId)]
+			   return $job
+    
+    let $result := update insert 
+                         (attribute runId {data($runId)},
+                         attribute planId {data($planId)} )
+                         into $currentRun
+	
+    return $currentRun
+
+};
+
 declare function hs:doPlanAndSelectJobsAndScenarios($documentUrl as xs:string, $scenId as xs:integer, $pId as xs:integer ) as element(dat:TlosProcessData)
 {	
     let $scenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
