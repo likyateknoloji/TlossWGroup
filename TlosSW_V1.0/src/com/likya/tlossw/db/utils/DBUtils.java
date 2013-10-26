@@ -27,6 +27,7 @@ import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInf
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
+import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
 import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
@@ -130,7 +131,7 @@ public class DBUtils extends DBBase {
 	public static TlosProcessData getTlosDailyData(int scenarioId, int planId) throws TlosFatalException {
 
 		TlosProcessData tlosProcessData = getTlosDailyDataXml(scenarioId, planId);
-
+		JobProperties jobPropertiesData = getTlosJobPropertiesXml(214, planId);
 		/**
 		 * Aşağıdaki kontroller, aslında bir nevi validasyon işlevi görüyor.
 		 * Bağımlılık kuralını alıp, kural içinde tanımlı joblar, bağımlılık
@@ -226,6 +227,24 @@ public class DBUtils extends DBBase {
 
 	}
 
+	private static JobProperties getTlosJobPropertiesXml(int jobId, int planId) {
+
+		JobProperties jobPropertiesData = null;
+		
+		String xQueryStr = dailyFunctionConstructor("hs:doPlanAndSelectJob", "" + jobId, "" + planId);
+		
+		// SpaceWideRegistry.getGlobalLogger().debug(xQueryStr);
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		for(Object currentObject : objectList) {
+			jobPropertiesData = ((JobPropertiesDocument) currentObject).getJobProperties();
+		}
+
+		return jobPropertiesData;
+
+	}
+	
 	public static GlobalStateDefinition getGlobalStateDefinitions() {
 
 		GlobalStateDefinition globalStateDefinition = null;
