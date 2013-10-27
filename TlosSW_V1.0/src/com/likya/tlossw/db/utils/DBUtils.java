@@ -131,7 +131,7 @@ public class DBUtils extends DBBase {
 	public static TlosProcessData getTlosDailyData(int scenarioId, int planId) throws TlosFatalException {
 
 		TlosProcessData tlosProcessData = getTlosDailyDataXml(scenarioId, planId);
-		JobProperties jobPropertiesData = getTlosJobPropertiesXml(214, planId);
+		//JobProperties jobPropertiesData = getTlosJobPropertiesXml(214, planId);
 		/**
 		 * Aşağıdaki kontroller, aslında bir nevi validasyon işlevi görüyor.
 		 * Bağımlılık kuralını alıp, kural içinde tanımlı joblar, bağımlılık
