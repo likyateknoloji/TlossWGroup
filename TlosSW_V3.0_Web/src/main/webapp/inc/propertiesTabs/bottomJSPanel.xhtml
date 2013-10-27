@@ -32,7 +32,7 @@
 			<p:commandButton value="#{msgs['tlos.button.ok']}"
 				rendered="#{backingBean.jsInsertButton}"
 				action="#{backingBean['insertJsAction']}"
-				update=":jobDefinitionForm :jsTreeForm:tree" 
+				update=":jobDefinitionForm :jsTreeForm:tree :jobTemplatesForm:templateTree" 
 				oncomplete="jsActiveDialog.hide();" 
 				onsuccess="activateDraggable()"/>
 
@@ -72,5 +72,9 @@
 				actionListener="#{backingBean['cancelInsertOrUpdateJsAction']}"/>
     	</p:panel>
     </p:dialog>
-
+	<script>
+		jQuery(document).ready(function() {
+			 applyDragDrop();
+		});
+	</script>
 </ui:composition>
