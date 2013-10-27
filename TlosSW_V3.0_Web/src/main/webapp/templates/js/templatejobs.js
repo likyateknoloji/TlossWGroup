@@ -1,13 +1,15 @@
 var templateJobsDraggable = true;
 
 function activateDraggable() {
-	// alert("activateDraggable");
+	//console.log('############## activateDraggable ACTIVATED !!! #######################');
+	//alert("activateDraggable");
 	templateJobsDraggable = true;
 	applyDragDrop();
 }
 
 function applyDragDrop() {
-					// alert("başta2");
+					//alert("Drag and drop basladi !!");
+	                console.log('############## applyDragDrop ACTIVATED !!! #######################');
 	                var jobs_ = document.querySelectorAll('[data-nodetype="jobGroup"] [data-nodetype="job"]');
 	                var debug = false;
 	                
