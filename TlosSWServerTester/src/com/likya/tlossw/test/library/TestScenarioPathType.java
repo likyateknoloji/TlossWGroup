@@ -15,7 +15,7 @@ public class TestScenarioPathType {
 		
 		TlosSWPathType tlosSWPathType = new TlosSWPathType();
 		tlosSWPathType.setId(new JSPathId("0"));
-		tlosSWPathType.setPlanId("1234");
+		tlosSWPathType.setRunId("1234");
 		String spcFullPath = tlosSWPathType.getFullPath();
 		
 		System.out.println(spcFullPath);
@@ -34,7 +34,7 @@ public class TestScenarioPathType {
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		String retStr = scenarioPathType.getPlanId();
+		String retStr = scenarioPathType.getRunId();
 		stop = System.currentTimeMillis();
 		System.out.println("plan id : " + retStr);
 		System.out.println("Süre : " + (stop - start) + "ms");
@@ -71,14 +71,14 @@ public class TestScenarioPathType {
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		scenarioPathType.setPlanId("444");
+		scenarioPathType.setRunId("444");
 		stop = System.currentTimeMillis();
 		System.out.println("Full Path : " + scenarioPathType.getFullPath());
-		System.out.println("Plan Id : " + scenarioPathType.getPlanId());
+		System.out.println("Plan Id : " + scenarioPathType.getRunId());
 		System.out.println("Süre : " + (stop - start) + "ms");
 
 		start = System.currentTimeMillis();
-		scenarioPathType.setPlanId("444");
+		scenarioPathType.setRunId("444");
 		stop = System.currentTimeMillis();
 		System.out.println("Full Path : " + scenarioPathType.getFullPath());
 		System.out.println("Id : " + scenarioPathType.getId());

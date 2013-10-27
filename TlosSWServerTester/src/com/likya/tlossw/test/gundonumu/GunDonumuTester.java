@@ -37,7 +37,7 @@ public class GunDonumuTester extends CpcBaseTester {
 		HashMap<String, SpcInfoType> spcLookUpTableYesterday = prepareSpcLookupTable(spaceWideRegistry, "root");
 		System.out.println("Size of Spc LookUp Table Yesterday : " + spcLookUpTableYesterday.size());
 		
-		String oldInstance = new TlosSWPathType(spcLookUpTableYesterday.keySet().toArray()[0].toString()).getPlanId();
+		String oldInstance = new TlosSWPathType(spcLookUpTableYesterday.keySet().toArray()[0].toString()).getRunId();
 		
 		Consolidator.compareAndConsolidateTwoTables(oldInstance, spcLookUpTableToday, spcLookUpTableYesterday);
 		

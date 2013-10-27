@@ -113,7 +113,7 @@ public class TestSpc extends TestSuit {
 
 		TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
 		
-		Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformTable);
+		Spc spc = new Spc(tlosSWPathType.getRunId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformTable);
 		spc.setCurrentPlanId(planId);
 
 		SpcInfoType spcInfoType = new SpcInfoType();

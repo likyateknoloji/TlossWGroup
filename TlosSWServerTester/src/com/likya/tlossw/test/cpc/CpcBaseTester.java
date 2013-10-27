@@ -309,7 +309,7 @@ public class CpcBaseTester extends GenericTestSuit {
 			
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(scenarioId);
 			
-			Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), spaceWideRegistry, transformJobList(jobList));
+			Spc spc = new Spc(tlosSWPathType.getRunId(), tlosSWPathType.getAbsolutePath(), spaceWideRegistry, transformJobList(jobList));
 
 			LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
