@@ -9,10 +9,10 @@ public class TlosSWPathType extends BasePathType {
 
 	/**
 	 * Path Type Components
-	 * root.plan.x.y.z.c.id
+	 * root.run.x.y.z.c.id
 	 * 1 : root : root
-	 * 2 : plan : plan
-	 * 3 : root.plan.x.y.z.c.id : full path
+	 * 2 : run : run
+	 * 3 : root.run.x.y.z.c.id : full path
 	 * 4 : x.y.z.c.id : absolute path
 	 * 5 : id : id
 	 */
@@ -31,9 +31,9 @@ public class TlosSWPathType extends BasePathType {
 		setPathArray(new ArrayList<String>(scenarioPathType.getPathArray()));
 	}
 
-	public TlosSWPathType(String planId, JSPathId jsPathId) {
+	public TlosSWPathType(String runId, JSPathId jsPathId) {
 		super();
-		setPlanId(planId);
+		setRunId(runId);
 		setId(jsPathId);
 	}
 	
@@ -46,25 +46,25 @@ public class TlosSWPathType extends BasePathType {
 			getPathArray().addAll(Arrays.asList(pathArray));
 		} else {
 			try {
-				throw new TlosException("Invalid path string format : [root.planId...] >> " + pathText);
+				throw new TlosException("Invalid path string format : [root.runId...] >> " + pathText);
 			} catch (TlosException e) {
 				e.printStackTrace();
 			}
 		}
 	}
  
-	public void setPlanId(String planId) {
-		if(hasDots(planId, "planId")) {
+	public void setRunId(String runId) {
+		if(hasDots(runId, "runId")) {
 			return;
 		}
 		if (getPathArray().size() > 1) {
-			getPathArray().set(1, planId);
+			getPathArray().set(1, runId);
 		} else {
-			getPathArray().add(planId);
+			getPathArray().add(runId);
 		}
 	}
 
-	public String getPlanId() {
+	public String getRunId() {
 		if (getPathArray().size() > 1) {
 			return getPathArray().get(1);
 		} else {
@@ -105,7 +105,7 @@ public class TlosSWPathType extends BasePathType {
 			return;
 		}
 		if(getPathArray().size() == 1) {
-			getPathArray().add(null); // For plan Id
+			getPathArray().add(null); // For run Id
 			getPathArray().add(idText.toString());
 		} else if(getPathArray().size() == 2) {
 			getPathArray().add(idText.toString());
