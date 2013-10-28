@@ -221,7 +221,7 @@ declare function hs:updateScenarioSuccessCodes($documentUrl as xs:string,  $docI
 };
 :)
 
-declare function hs:updateScenario($documentUrl as xs:string,  $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $scenarioPath as node(),$scenario as element(dat:scenario))
+declare function hs:updateScenario($documentUrl as xs:string,  $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $scenarioPath, $scenario as element(dat:scenario))
 {
     let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
 	
