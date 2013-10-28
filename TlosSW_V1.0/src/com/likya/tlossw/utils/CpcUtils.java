@@ -253,7 +253,7 @@ public class CpcUtils {
 
 	}
 
-	public static String getPlanId(TlosProcessData tlosProcessData, boolean isTest, Logger myLogger) {
+	public static String getRunId(TlosProcessData tlosProcessData, boolean isTest, Logger myLogger) {
 
 		String runId = null;
 
@@ -265,7 +265,7 @@ public class CpcUtils {
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
 			runId = userId;
 		} else {
-			runId = tlosProcessData.getPlanId();
+			runId = tlosProcessData.getRunId();
 			if (runId == null) {
 				runId = "" + Calendar.getInstance().getTimeInMillis();
 			}
