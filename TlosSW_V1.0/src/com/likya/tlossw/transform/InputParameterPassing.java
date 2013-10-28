@@ -33,7 +33,7 @@ import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -49,20 +49,20 @@ public class InputParameterPassing {
 
 	transient private Logger myLogger;
 	transient private SpaceWideRegistry spaceWideRegistry;
-	private String planId;
+	private String runId;
 
-	public InputParameterPassing(SpaceWideRegistry spaceWideRegistry, String planId) {
+	public InputParameterPassing(SpaceWideRegistry spaceWideRegistry, String runId) {
 
 		myLogger = Logger.getLogger(InputParameterPassing.class);
 		this.spaceWideRegistry = spaceWideRegistry;
-		this.planId = planId;
+		this.runId = runId;
 	}
 
-	private String[] findInputValue(String planId, String xpath) throws TlosFatalException {
+	private String[] findInputValue(String runId, String xpath) throws TlosFatalException {
 		String[] result;
-		PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
+		RunInfoType runInfoType = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId);
 
-		HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookupTable = runInfoType.getSpcLookupTable().getTable();
 
 		for (String spcId : spcLookupTable.keySet()) {
 
@@ -176,7 +176,7 @@ public class InputParameterPassing {
 					getMyLogger().error("     > Ana senaryo yolu : " + ownerJob.getJobRuntimeProperties().getAbsoluteJobPath());
 					getMyLogger().error("     > Uygulama sona eriyor !");
 					getMyLogger().info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-					Cpc.dumpSpcLookupTable(getPlanId(), getSpaceWideRegistry().getPlanLookupTable().get(getPlanId()).getSpcLookupTable());
+					Cpc.dumpSpcLookupTable(getPlanId(), getSpaceWideRegistry().getRunLookupTable().get(getPlanId()).getSpcLookupTable());
 					throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + getPlanId() + "." + item.getJsPath());
 				}
 
@@ -357,7 +357,7 @@ public class InputParameterPassing {
 	}
 
 	public String getPlanId() {
-		return planId;
+		return runId;
 	}
 
 }
