@@ -14,10 +14,10 @@ public class GunlukIslerNode implements Serializable {
 
 	private static final long serialVersionUID = 2439147908698379883L;
 
-	private HashMap<String, PlanNode> planNodes = new HashMap<String, PlanNode>();
+	private HashMap<String, RunNode> runNodes = new HashMap<String, RunNode>();
 
-	public HashMap<String, PlanNode> getPlanNodes() {
-		return planNodes;
+	public HashMap<String, RunNode> getRunNodes() {
+		return runNodes;
 	}
 
 }
