@@ -34,7 +34,7 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	private String resourceName;
 	private int agentId;
-	private String planId;
+	private String runId;
 	private String LSIDateTime;
 
 	private String outParameterName;
@@ -220,12 +220,12 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.inParameterType = inParameterType;
 	}
 
-	public String getPlanId() {
-		return planId;
+	public String getRunId() {
+		return runId;
 	}
 
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setRunId(String runId) {
+		this.runId = runId;
 	}
 
 
