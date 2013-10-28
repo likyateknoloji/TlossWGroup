@@ -16,7 +16,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.Cpc;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -28,7 +28,7 @@ import com.likya.tlossw.model.path.BasePathType;
 
 public class DependencyResolver {
 	
-	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String planId, HashMap<String, Job> jobQueue, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
+	public static boolean isJobDependencyResolved(Logger logger, Job ownerJob, String dependencyExpression, Item[] dependencyArray, String runId, HashMap<String, Job> jobQueue, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
 	
 		String ownerJsName = ownerJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName();
 		
@@ -66,12 +66,12 @@ public class DependencyResolver {
 				SpcInfoType spcInfoType = spcLookupTable.getTable().get(BasePathType.getRootPath() + "." + item.getJsPath());
 
 				if (spcInfoType == null) {
-					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), planId, ownerJob.getJobRuntimeProperties().getAbsoluteJobPath(), spcLookupTable);
+					SWErrorOperations.logErrorForSpcInfoType(logger, ownerJsName, item.getJsPath(), runId, ownerJob.getJobRuntimeProperties().getAbsoluteJobPath(), spcLookupTable);
 				}
 
 				Job job = spcInfoType.getSpcReferance().getJobQueue().get(item.getJsId());
 				if (job == null) {
-					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), planId, spcInfoType.getSpcReferance().getSpcAbsolutePath());
+					SWErrorOperations.logErrorForJob(logger, ownerJsName, item.getJsName(), item.getJsPath(), runId, spcInfoType.getSpcReferance().getSpcAbsolutePath());
 				}
 
 				jobRuntimeProperties = job.getJobRuntimeProperties();
@@ -127,7 +127,7 @@ public class DependencyResolver {
 		return result.intValue() == 0 ? false : true;
 	}
 	
-	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String planId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, PlanInfoType> planLookUpTable) throws TlosFatalException {
+	public static boolean isScenarioDependencyResolved(Logger logger, DependencyList dependencyList, String spcId, String jsName, String runId, LiveStateInfo liveStateInfo, SpcLookupTable spcLookUpTable, HashMap<String, RunInfoType> runLookUpTable) throws TlosFatalException {
 		
 		if (dependencyList == null || dependencyList.getItemArray().length == 0) {
 			// There is no dependency defined so it is allowed to execute
@@ -164,14 +164,14 @@ public class DependencyResolver {
 					throw new TlosFatalException();
 				} else {
 
-					SpcInfoType spcInfoType = PlanMapHelper.findSpc(item.getJsPath(), planLookUpTable);
+					SpcInfoType spcInfoType = RunMapHelper.findSpc(item.getJsPath(), runLookUpTable);
 
 					if (spcInfoType == null) {
-						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + planId + "." + item.getJsPath());
+						logger.error("Genel bağımlılık tanımı yapılan senaryo bulunamadı : " + BasePathType.getRootPath() + "." + runId + "." + item.getJsPath());
 						logger.error("Ana senaryo adı : " + spcId);
 						logger.error("Ana senaryo yolu : " + jsName);
 						logger.error("Uygulama sona eriyor !");
-						Cpc.dumpSpcLookupTable(planId, spcLookUpTable);
+						Cpc.dumpSpcLookupTable(runId, spcLookUpTable);
 						throw new TlosFatalException();
 					}
 
