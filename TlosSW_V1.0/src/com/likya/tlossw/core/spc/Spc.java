@@ -209,11 +209,7 @@ public class Spc extends SpcBase {
 					if (isUpdateMySelfAfterMe()) {
 						if (isNOKReasonIsNormalJobs(jobQueueResult)) {
 							continue;
-						} else {
-							// Burada her senaryo ve her T < 1 iş kendi başının çaresine bakacak
-							handleGDIssues();
 						}
-
 					}
 				}
 
@@ -237,6 +233,11 @@ public class Spc extends SpcBase {
 		 * We should disable monitor
 		 */
 		spcMonitor.getMyExecuter().interrupt();
+
+		// Burada her senaryo ve her T < 1 iş kendi başının çaresine bakacak
+		if (isUpdateMySelfAfterMe()) {
+			handleGDIssues();
+		}
 
 		// Bu neden bu sekilde? Buraya zaten isler biterse geliyor.
 		// isForced true ise kalan islerin zorla bitirilmesi isteniyor anlamina geliyor. Thread ler terminate ediliyor.
