@@ -37,10 +37,10 @@ import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentOperations;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
-import com.likya.tlossw.core.spc.helpers.PlanMapHelper;
+import com.likya.tlossw.core.spc.helpers.RunMapHelper;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
@@ -67,7 +67,7 @@ import com.likya.tlossw.model.tree.resource.TlosAgentNode;
 import com.likya.tlossw.model.tree.resource.TlosSWResourceNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.CpcUtils;
-import com.likya.tlossw.utils.PlanUtils;
+import com.likya.tlossw.utils.RunUtils;
 import com.likya.tlossw.utils.XmlUtils;
 import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.transform.TransformUtils;
@@ -100,7 +100,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		webSpaceWideRegistery.setFirstTime(TlosSpaceWide.getSpaceWideRegistry().isFIRST_TIME());
 		webSpaceWideRegistery.setWaitConfirmOfGUI(TlosSpaceWide.getSpaceWideRegistry().isWaitConfirmOfGUI());
 		webSpaceWideRegistery.setPersistent(TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean());
-		webSpaceWideRegistery.setInstanceCount(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().size());
+		webSpaceWideRegistery.setInstanceCount(TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().size());
 
 		return webSpaceWideRegistery;
 	}
@@ -118,7 +118,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(spcFullPath);
 		} else {
-			spcInfoType = PlanMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = RunMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable());
 		}
 
 		JobRuntimeProperties jobRuntimeProperties = null;
@@ -142,7 +142,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 		BaseJobInfos baseJobInfos = jobProperties.getBaseJobInfos();
 
-		jobInfoTypeClient.setPlanId(spcInfoType.getSpcReferance().getCurrentPlanId());
+		jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getCurrentPlanId());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
 		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
@@ -250,17 +250,17 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	private ArrayList<String> retrievePlanIds() {
 
-		HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-		Iterator<String> keyIterator = planLookUpTable.keySet().iterator();
+		HashMap<String, RunInfoType> runLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable();
+		Iterator<String> keyIterator = runLookUpTable.keySet().iterator();
 
-		ArrayList<String> planIds = new ArrayList<String>();
+		ArrayList<String> runIds = new ArrayList<String>();
 
 		while (keyIterator.hasNext()) {
-			String planId = keyIterator.next();
-			planIds.add(planId);
+			String runId = keyIterator.next();
+			runIds.add(runId);
 		}
 
-		return planIds;
+		return runIds;
 	}
 
 	public ArrayList<String> retrievePlanIds(JmxUser jmxUser) {
@@ -273,32 +273,32 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	}
 
-	private String retrieveMaxPlanId() {
+	private String retrieveMaxRunId() {
 
-		HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-		Iterator<String> keyIterator = planLookUpTable.keySet().iterator();
+		HashMap<String, RunInfoType> runLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable();
+		Iterator<String> keyIterator = runLookUpTable.keySet().iterator();
 		String maxId = null;
-		int maxPlanId = -1;
+		int maxRunId = -1;
 
 		while (keyIterator.hasNext()) {
-			String planId = keyIterator.next();
-			int tmpMaxPlanId = Integer.parseInt(planId);
-			if (tmpMaxPlanId > maxPlanId) {
-				maxPlanId = tmpMaxPlanId;
-				maxId = tmpMaxPlanId + "";
+			String runId = keyIterator.next();
+			int tmpMaxRunId = Integer.parseInt(runId);
+			if (tmpMaxRunId > maxRunId) {
+				maxRunId = tmpMaxRunId;
+				maxId = tmpMaxRunId + "";
 			}
 		}
 
 		return maxId;
 	}
 
-	public String retrieveMaxPlanId(JmxUser jmxUser) {
+	public String retrieveMaxRunId(JmxUser jmxUser) {
 
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
 
-		return retrieveMaxPlanId();
+		return retrieveMaxRunId();
 
 	}
 
@@ -350,7 +350,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		return appenderList;
 	}
 
-	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String planId, ArrayList<String> scenariodIdList) {
+	public TreeInfoType retrieveTreeInfo(JmxUser jmxUser, String runId, ArrayList<String> scenariodIdList) {
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return null;
 		}
@@ -358,7 +358,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		TreeInfoType treeInfoType = new TreeInfoType();
 		HashMap<String, ScenarioStatus> scenarioList = new HashMap<String, ScenarioStatus>();
 
-		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable().getTable();
+		HashMap<String, SpcInfoType> spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId).getSpcLookupTable().getTable();
 		Iterator<String> keyIterator = spcLookUpTable.keySet().iterator();
 
 		while (keyIterator.hasNext()) {
@@ -389,7 +389,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				scenarioStatus.setJobList(jobList);
 			}
 
-			scenarioStatus.setScenarioStatus(JobQueueOperations.isJobQueueOver(spcInfoType.getSpcReferance().getJobQueue()));
+			scenarioStatus.setScenarioStatus(JobQueueOperations.isJobQueueOver(spcInfoType.getSpcReferance().getJobQueue()).isJobQueueOver());
 			scenarioList.put(scenarioId, scenarioStatus);
 
 		}
@@ -410,7 +410,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(treePath);
 		} else {
-			spcInfoType = PlanMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = RunMapHelper.findSpc(treePath, TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable());
 		}
 
 		TlosSWPathType scenarioId = spcInfoType.getSpcId();
@@ -419,14 +419,15 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		spcInfoTypeClient.setSpcId(scenarioId.getFullPath());
 
 		if (spcInfoType.getSpcReferance() != null) {
-			String planId = spcInfoType.getSpcReferance().getConcurrencyManagement().getPlanId();
-			if (scenarioId.equals(CpcUtils.getRootScenarioPath(planId))) {
+			String runId = spcInfoType.getSpcReferance().getConcurrencyManagement().getPlanId();
+			if (scenarioId.equals(CpcUtils.getRootScenarioPath(runId))) {
 				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
 			}
-			spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
-			spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
+			
+			spcInfoTypeClient.setNumOfJobs(JobQueueOperations.getNumOfJobs(spcInfoType.getSpcReferance().getJobQueue()));
+			spcInfoTypeClient.setNumOfActiveJobs(JobQueueOperations.getNumOfActiveJobs(spcInfoType.getSpcReferance().getJobQueue()));
 
 			spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
 			spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
@@ -451,10 +452,10 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 	public Object runningJobs() {
 		String jobList = "<jobList>";
 
-		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		for (String runId : TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().keySet()) {
 
-			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
-			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
+			RunInfoType runInfoType = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId);
+			HashMap<String, SpcInfoType> spcLookupTable = runInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
@@ -769,11 +770,11 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		ArrayList<Job> jobList = new ArrayList<Job>();
 
-		// butun plan'lara bakip, calisan tum senaryolari tariyor
-		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		// butun run'lara bakip, calisan tum senaryolari tariyor
+		for (String runId : TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().keySet()) {
 
-			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
-			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
+			RunInfoType runInfoType = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId);
+			HashMap<String, SpcInfoType> spcLookupTable = runInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
@@ -890,7 +891,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 	@Override
 	public boolean runningInstanceExists(JmxUser jmxUser) {
-		return PlanUtils.runningPlanExists(TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+		return RunUtils.runningPlanExists(TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable());
 	}
 
 	@Override
