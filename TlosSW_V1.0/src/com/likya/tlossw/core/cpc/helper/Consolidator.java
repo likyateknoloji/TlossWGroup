@@ -16,6 +16,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
+import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
@@ -25,19 +26,19 @@ public class Consolidator {
 
 	private static Logger logger = Logger.getLogger(Consolidator.class);
 
-	public static void compareAndConsolidateTwoTables(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+	public static void compareAndConsolidateTwoTables(String runIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 
 		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bugünün kuyruğu : " + spcLookupTableNew.size());
 
 		String newSpcIdSample = spcLookupTableNew.keySet().toArray()[0].toString();
-		String planIdNew = new TlosSWPathType(newSpcIdSample).getPlanId();
+		String runIdNew = new TlosSWPathType(newSpcIdSample).getRunId();
 
 		Set<String> itarationSet = new HashSet<String>(spcLookupTableOld.keySet());
 
 		for (String spcIdOld : itarationSet) {
 
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcIdOld);
-			tlosSWPathType.setPlanId(planIdNew);
+			tlosSWPathType.setRunId(runIdNew);
 
 			SpcInfoType spcInfoTypeOld = spcLookupTableOld.get(spcIdOld);
 			// System.out.println("Before : " + spcInfoTypeOld.getSpcId());
@@ -57,7 +58,7 @@ public class Consolidator {
 						// Yenisini listeden çıkarıp kopyasını al
 						SpcInfoType tmpSpcInfoType = spcLookupTableNew.remove(tlosSWPathType.getFullPath());
 						// eskisini yeni listeye taşı
-						spcReferanceOld.setCurrentPlanId(planIdNew);
+						spcReferanceOld.setCurrentPlanId(runIdNew);
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 						// Yenisinin instance id sini bir arttır ve öylece listeye ekle,
 						// Örnek : scenarioId = 3245:13
@@ -72,9 +73,10 @@ public class Consolidator {
 
 					} else {
 						// Bitince kendini VT'den yenilesin değerini set et.
-						spcReferanceOld.setCurrentPlanId(planIdNew);
+						spcReferanceOld.setCurrentPlanId(runIdNew);
 						spcReferanceOld.setUpdateMySelfAfterMe(true);
 						// all T< 1 jobs.setUpdateMySelfAfterMe(true);
+						JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 					}
 
@@ -85,7 +87,7 @@ public class Consolidator {
 			} else {
 
 				if ((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
-					spcReferanceOld.setCurrentPlanId(planIdNew);
+					spcReferanceOld.setCurrentPlanId(runIdNew);
 					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 				}
 
@@ -130,11 +132,11 @@ public class Consolidator {
 		}
 	}
 
-	public static void compareAndConsolidateTwoTables2(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+	public static void compareAndConsolidateTwoTables2(String runIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
 
-			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, planIdOld, spcLookupTableOld);
+			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, runIdOld, spcLookupTableOld);
 
 			// Dünün listesinde de var ise
 			if (spcIdOld != null) {
@@ -157,13 +159,13 @@ public class Consolidator {
 
 	}
 
-	public static void compareAndConsolidateTwoTables1(String planIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+	public static void compareAndConsolidateTwoTables1(String runIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 
 		ArrayList<String> spcLookupTableIntersection = new ArrayList<String>();
 
 		for (String spcIdNew : spcLookupTableNew.keySet()) {
 
-			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, planIdOld, spcLookupTableOld);
+			String spcIdOld = ConcurrencyAnalyzer.containsScenario(spcIdNew, runIdOld, spcLookupTableOld);
 
 			if (spcIdOld == null) {
 				/**
@@ -178,7 +180,7 @@ public class Consolidator {
 			}
 		}
 
-		String newInstanceId = new TlosSWPathType(spcLookupTableNew.keySet().toArray()[0].toString()).getPlanId();
+		String newInstanceId = new TlosSWPathType(spcLookupTableNew.keySet().toArray()[0].toString()).getRunId();
 
 		/**
 		 * Yenilistede olmayıp sadece eski listede olup da tamamlanmamış senaryo
@@ -192,13 +194,13 @@ public class Consolidator {
 				if (!isScenarioEnsuresTheConditions(spcLookupTableOld.get(spcIdOld).getSpcReferance())) {
 					/**
 					 * taşınan işlerin instaneId leri de güncelleniyor.
-					 * tasarım kararı netleşirse, eski id de native planid olarak
+					 * tasarım kararı netleşirse, eski id de native runid olarak
 					 * saklanacak
 					 * 
 					 * @author serkan taş
 					 */
 					TlosSWPathType scenarioPathType = new TlosSWPathType(spcIdOld);
-					scenarioPathType.setPlanId(newInstanceId);
+					scenarioPathType.setRunId(newInstanceId);
 					spcLookupTableNew.put(scenarioPathType.getFullPath(), spcLookupTableOld.get(spcIdOld));
 				}
 			}
