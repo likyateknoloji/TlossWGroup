@@ -20,6 +20,8 @@ public class JobRuntimeProperties implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String currentRunId;
+	
 	private TlosSWPathType nativeFullJobPath;
 	
 	private JobProperties jobProperties;
@@ -228,6 +230,14 @@ public class JobRuntimeProperties implements Serializable {
 	
 	public String getAbsoluteJobPath() {
 		return getNativeFullJobPath().getAbsolutePath();
+	}
+
+	public String getCurrentRunId() {
+		return currentRunId;
+	}
+
+	public void setCurrentRunId(String currentRunId) {
+		this.currentRunId = currentRunId;
 	}
 
 }
