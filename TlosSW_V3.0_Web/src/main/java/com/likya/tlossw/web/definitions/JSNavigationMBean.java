@@ -295,7 +295,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		tlosProcessData.addNewTimeManagement();
 		tlosProcessData.addNewAdvancedScenarioInfos();
-		tlosProcessData.addNewConcurrencyManagement().setPlanId(getWebAppUser().getId() + "");
+		tlosProcessData.addNewConcurrencyManagement().setRunId(getWebAppUser().getId() + "");
 
 		tlosProcessData.addNewJobList();
 
