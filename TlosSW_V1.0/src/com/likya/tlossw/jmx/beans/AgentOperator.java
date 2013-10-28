@@ -12,7 +12,7 @@ import java.util.HashMap;
 import com.likya.tlos.model.xmlbeans.agent.TxMessageDocument.TxMessage;
 import com.likya.tlos.model.xmlbeans.agent.TxMessageTypeEnumerationDocument.TxMessageTypeEnumeration;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.AgentDbUtils;
@@ -72,19 +72,19 @@ public class AgentOperator implements AgentOperatorMBean {
 
 		if (isAgentAvailable) {
 			
-			HashMap<String, PlanInfoType> planLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
+			HashMap<String, RunInfoType> runLookupTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable();
 
 			if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB_STATE)) {
 
-				String planId = txMessageIdBean.getPlanId();
+				String runId = txMessageIdBean.getRunId();
 				String spcId = txMessageIdBean.getSpcId();
 				String jobId = txMessageIdBean.getJobKey();
 
-				Job job = planLookupTable.get(planId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
+				Job job = runLookupTable.get(runId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
 				job.insertNewLiveStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 				// job.changeStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 			} else if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB)) {
-				Spc spc = planLookupTable.get(txMessageIdBean.getPlanId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
+				Spc spc = runLookupTable.get(txMessageIdBean.getRunId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
 				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
 				
 				job.sendEndInfo(txMessageIdBean.getSpcId(), txMessage.getTxMessageBodyType().getJobProperties());
