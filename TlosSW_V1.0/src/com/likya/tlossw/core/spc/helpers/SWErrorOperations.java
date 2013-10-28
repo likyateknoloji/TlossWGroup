@@ -94,27 +94,27 @@ public class SWErrorOperations {
 		return insertResult;
 	}
 
-	public static void logErrorForJob(Logger logger, String jsName, String itemJsName, String itemJsPath, String planId, String spcId) throws UnresolvedDependencyException {
+	public static void logErrorForJob(Logger logger, String jsName, String itemJsName, String itemJsPath, String runId, String spcId) throws UnresolvedDependencyException {
 
 		logger.error("     > Genel bagimlilik tanimi yapilan :");
 		logger.error("     > Ana is adi : " + jsName);
 		logger.error("     > Bagli is : " + itemJsName + " tanimli mi? Tanimli ise bagimlilik ile ilgili bir problem olabilir! (Problem no:1045)");
-		logger.error("     >    Dizin : " + BasePathType.getRootPath() + "." + planId + "." + itemJsPath);
+		logger.error("     >    Dizin : " + BasePathType.getRootPath() + "." + runId + "." + itemJsPath);
 		logger.error("     > 	Yukaridaki is  " + spcId + " adli senaryoda bulunamadi !");
 		logger.error("     > Uygulama sona eriyor !");
 		logger.info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 		throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 	}
 
-	public static void logErrorForSpcInfoType(Logger logger, String jsName, String itemJsPath, String planId, String treePath, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
+	public static void logErrorForSpcInfoType(Logger logger, String jsName, String itemJsPath, String runId, String treePath, SpcLookupTable spcLookupTable) throws UnresolvedDependencyException {
 
-		logger.error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + planId + "." + itemJsPath);
+		logger.error("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + runId + "." + itemJsPath);
 		logger.error("     > Ana is adi : " + jsName);
 		logger.error("     > Ana senaryo yolu : " + treePath);
 		logger.error("     > Uygulama sona eriyor !");
 		logger.info("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
-		Cpc.dumpSpcLookupTable(planId, spcLookupTable);
-		throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + planId + "." + itemJsPath);
+		Cpc.dumpSpcLookupTable(runId, spcLookupTable);
+		throw new UnresolvedDependencyException("     > Genel bagimlilik tanimi yapilan senaryo bulunamadi : " + BasePathType.getRootPath() + "." + runId + "." + itemJsPath);
 	}
 
 	public static void logErrorForItemJsId(Logger logger, String jsName, String itemJsName, String treePath, String Id) throws UnresolvedDependencyException {
