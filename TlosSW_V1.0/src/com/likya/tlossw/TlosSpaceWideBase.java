@@ -429,7 +429,7 @@ public class TlosSpaceWideBase {
 
 		if (!getSpaceWideRegistry().isUserSelectedRecover()) {
 
-			loadDailyPlan();
+			loadDailyRun();
 
 			int numOfScenarios = getSpaceWideRegistry().getTlosProcessData().getScenarioArray().length;
 			JobList jobList = getSpaceWideRegistry().getTlosProcessData().getJobList();
@@ -489,7 +489,7 @@ public class TlosSpaceWideBase {
 
 	}
 	
-	private void loadDailyPlan() {
+	private void loadDailyRun() {
 		
 		logger.info("   > İş listesi KDS nden sorgulanıyor ...");
 
