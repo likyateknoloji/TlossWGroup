@@ -426,7 +426,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		spcInfoTypeClient.setSpcId(scenarioId.getFullPath());
 
 		if (spcInfoType.getSpcReferance() != null) {
-			String runId = spcInfoType.getSpcReferance().getConcurrencyManagement().getRunId();
+			String runId = spcInfoType.getSpcReferance().getConcurrencyManagement().getRunningId();
 			if (scenarioId.equals(CpcUtils.getRootScenarioPath(runId))) {
 				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
