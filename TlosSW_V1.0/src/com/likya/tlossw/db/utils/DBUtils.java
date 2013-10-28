@@ -227,7 +227,7 @@ public class DBUtils extends DBBase {
 
 	}
 
-	private static JobProperties getTlosJobPropertiesXml(int jobId, int planId) {
+	public static JobProperties getTlosJobPropertiesXml(int jobId, int planId) {
 
 		JobProperties jobPropertiesData = null;
 		
