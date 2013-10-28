@@ -11,7 +11,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -109,12 +109,12 @@ public class TestSpc extends TestSuit {
 		}
 	}
 
-	private Spc prepareSpc(String planId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
+	private Spc prepareSpc(String runId, String spcId, ArrayList<JobRuntimeProperties> transformTable) throws TlosFatalException {
 
 		TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
 		
 		Spc spc = new Spc(tlosSWPathType.getRunId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), transformTable);
-		spc.setCurrentPlanId(planId);
+		spc.setCurrentRunId(runId);
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 		spcInfoType.setSpcReferance(spc);
@@ -125,15 +125,15 @@ public class TestSpc extends TestSuit {
 		SpcLookupTable spctbl = new SpcLookupTable();
 		spctbl.setTable(spcLookupTable);
 
-		HashMap<String, PlanInfoType> myInstanceLookupTable = new HashMap<String, PlanInfoType>();
+		HashMap<String, RunInfoType> myInstanceLookupTable = new HashMap<String, RunInfoType>();
 
-		PlanInfoType instanceInfoType = new PlanInfoType();
-		instanceInfoType.setPlanId(planId);
+		RunInfoType instanceInfoType = new RunInfoType();
+		instanceInfoType.setRunId(runId);
 		instanceInfoType.setSpcLookupTable(spctbl);
 
-		myInstanceLookupTable.put(planId, instanceInfoType);
+		myInstanceLookupTable.put(runId, instanceInfoType);
 
-		getSpaceWideRegistry().setPlanLookupTable(myInstanceLookupTable);
+		getSpaceWideRegistry().setRunLookupTable(myInstanceLookupTable);
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
