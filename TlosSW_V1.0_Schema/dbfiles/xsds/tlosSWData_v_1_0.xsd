@@ -84,7 +84,7 @@
 	<xs:element name="concurrencyManagement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:planId" minOccurs="0"/>
+				<xs:element ref="lt:runId" minOccurs="0"/>
 				<xs:element ref="lt:concurrent" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
