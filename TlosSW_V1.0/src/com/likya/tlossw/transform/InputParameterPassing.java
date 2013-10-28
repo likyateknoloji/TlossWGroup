@@ -291,7 +291,7 @@ public class InputParameterPassing {
 						// calisacak job daki parametre ismi (Input)
 						String paramNameInI2 = parameterList[i].getName();
 
-						inputPar = findInputValue(SpaceWideRegistry.getInstance().getTlosProcessData().getPlanId(), sorgu);
+						inputPar = findInputValue(SpaceWideRegistry.getInstance().getTlosProcessData().getRunId(), sorgu);
 						if (inputPar != null && inputPar.length > 0) {
 							System.out.println("Gecen parametre = " + inputPar[0].toString());
 
