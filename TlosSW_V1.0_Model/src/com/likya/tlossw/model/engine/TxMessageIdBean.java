@@ -6,7 +6,7 @@ public class TxMessageIdBean implements Serializable{
 
 	private static final long serialVersionUID = -194711940047178506L;
 	
-	private String planId;
+	private String runId;
 	private String spcId;
 	private String jobKey;
 	private int agentId;
@@ -38,11 +38,11 @@ public class TxMessageIdBean implements Serializable{
 	public void setLSIDateTime(String lSIDateTime) {
 		LSIDateTime = lSIDateTime;
 	}
-	public String getPlanId() {
-		return planId;
+	public String getRunId() {
+		return runId;
 	}
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setRunId(String runId) {
+		this.runId = runId;
 	}
 	
 	
