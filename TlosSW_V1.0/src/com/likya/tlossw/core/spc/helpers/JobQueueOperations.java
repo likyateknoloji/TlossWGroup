@@ -16,10 +16,14 @@ import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfosType;
+import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.spc.SpcBase;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.model.JobQueueResult;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -32,25 +36,43 @@ public class JobQueueOperations {
 	 * @param jobQueue
 	 * @return true, false
 	 */
-	public static boolean isJobQueueOver(HashMap<String, Job> jobQueue) {
+	public static JobQueueResult isJobQueueOver(HashMap<String, Job> jobQueue) {
+
+		JobQueueResult jobQueueResult = new JobQueueResult();
 
 		if (jobQueue != null) {
+
 			Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
 			while (jobsIterator.hasNext()) {
+
 				Job scheduledJob = jobsIterator.next();
 
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 
-				if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
-					return false;
-				}
+				/**
+				 * GD kurgusu sonrası bu kontrole gerek kalmadı.
+				 * 
+				 * @author serkan
+				 *         if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+				 *         return false;
+				 *         }
+				 */
+
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
+
 				try {
 					if (jobProperties.getStateInfos() != null) {
-						if (!jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
-							return false;
+
+						if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED)) {
+							if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+								jobQueueResult.setNumOfNonDailyJobsNotOver(jobQueueResult.getNumOfNonDailyJobsNotOver() + 1);
+							} else {
+								jobQueueResult.setNumOfDailyJobsNotOver(jobQueueResult.getNumOfDailyJobsNotOver() + 1);
+							}
 						}
+
 					} else {
 						SpaceWideRegistry.getGlobalLogger().error("  > isJobQueueOver fonksiyonunda problem2 : " + scheduledJob.getJobRuntimeProperties().getJobProperties());
 					}
@@ -60,7 +82,14 @@ public class JobQueueOperations {
 				}
 			}
 		}
-		return true;
+		
+		if(jobQueueResult.getNumOfNonDailyJobsNotOver() != 0 || jobQueueResult.getNumOfDailyJobsNotOver() != 0) {
+			jobQueueResult.setJobQueueOver(false);
+		}
+			
+
+		return jobQueueResult;
+
 	}
 
 	public static void dumpJobQueue(String spcAbsolutePath, HashMap<String, Job> jobQueue) {
@@ -204,11 +233,11 @@ public class JobQueueOperations {
 			Job scheduledJob = jobsIterator.next();
 			JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 			scheduledJob.setGlobalRegistry(SpaceWideRegistry.getInstance());
-			
-			if(!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED)) {
+
+			if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED)) {
 				scheduledJob.insertNewLiveStateInfo(StateName.FINISHED.intValue(), SubstateName.COMPLETED.intValue(), StatusName.FAILED.intValue());
 			}
-			
+
 		}
 
 		return;
@@ -241,5 +270,115 @@ public class JobQueueOperations {
 		}
 		return jobList.size() == 0 ? null : jobList;
 
+	}
+
+	public static int getNumOfJobs(HashMap<String, Job> jobQueue) {
+		return jobQueue.size();
+	}
+
+	public static int getNumOfJobs(HashMap<String, Job> jobQueue, String stateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
+		while (jobsIterator.hasNext()) {
+
+			Job scheduledJob = jobsIterator.next();
+			JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+			StateName.Enum stateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName();
+
+			if (stateName != null && stateName.toString().equals(stateNameType)) {
+				counter += 1;
+			}
+
+		}
+
+		return counter;
+	}
+
+	public static LiveStateInfo getLastStateOfJob(LiveStateInfosType liveStateInfos) {
+
+		LiveStateInfo lastStateInfo = liveStateInfos.getLiveStateInfoArray(0);
+
+		return lastStateInfo;
+	}
+
+	public static int getNumOfJobsByAgent(HashMap<String, Job> jobQueue, int agentId) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+			LiveStateInfo currentStateInfo = null;
+			if (scheduledJob.getJobRuntimeProperties().getJobProperties().getAgentId() != 0 && scheduledJob.getJobRuntimeProperties().getJobProperties().getAgentId() == agentId) {
+				currentStateInfo = getLastStateOfJob(scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos());
+				if (currentStateInfo.getStateName().toString().equalsIgnoreCase(StateName.RUNNING.toString())) {
+					// System.out.println("OK !");
+					counter += 1;
+				}
+			}
+
+		}
+
+		return counter;
+	}
+
+	/*
+	 * state yapisinda time-out statusu running statusunun substate i oldugu icin
+	 * hem state i running olanlari hem de substate i timeout olanlari toplarsak
+	 * timeout olanlari iki kere saymis olacagiz. bunun icin o kismi kaldirdim
+	 */
+	public static int getNumOfActiveJobs(HashMap<String, Job> jobQueue) {
+
+		int numOfWorkingJobs = getNumOfJobs(jobQueue, StateName.RUNNING);
+
+		return numOfWorkingJobs;
+	}
+
+	public static int getNumOfJobs(HashMap<String, Job> jobQueue, SubstateName.Enum substateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+			String tmpSubstateNameType = scheduledJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString();
+			if (tmpSubstateNameType != null && tmpSubstateNameType.equals(substateNameType)) {
+				counter += 1;
+			}
+
+		}
+
+		return counter;
+	}
+
+	public static int getNumOfJobs(HashMap<String, Job> jobQueue, StateName.Enum stateNameType) {
+
+		int counter = 0;
+
+		Iterator<Job> jobsIterator = jobQueue.values().iterator();
+
+		while (jobsIterator.hasNext()) {
+			Job scheduledJob = jobsIterator.next();
+
+			if (LiveStateInfoUtils.equalStates(scheduledJob.getJobRuntimeProperties().getJobProperties(), stateNameType)) {
+				counter += 1;
+			}
+
+		}
+
+		return counter;
+	}
+	
+	public static void setAllNonNormalJobsUpdateMySelfAfterMe(SpcBase spc, boolean statu) {
+		HashMap<String, Job> jobQueue = spc.getJobQueue();
+		ArrayList<SortType> jobQueueIndex = spc.getJobQueueIndex();
+		for(Object sortType : jobQueueIndex.toArray()) {
+			jobQueue.get(((SortType)sortType).getJobId()).setUpdateMySelfAfterMe(statu);
+		}
 	}
 }
