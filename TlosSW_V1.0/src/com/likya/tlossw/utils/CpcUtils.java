@@ -52,7 +52,7 @@ public class CpcUtils {
 
 		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
 
-		scenario.getConcurrencyManagement().setPlanId(runId);
+		scenario.getConcurrencyManagement().setRunId(runId);
 
 		return scenario;
 	}
@@ -128,7 +128,7 @@ public class CpcUtils {
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spc.setUserId(userId);
 
-		tmpScenario.getConcurrencyManagement().setPlanId(runId);
+		tmpScenario.getConcurrencyManagement().setRunId(runId);
 
 		spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		spc.setDependencyList(tmpScenario.getDependencyList());
