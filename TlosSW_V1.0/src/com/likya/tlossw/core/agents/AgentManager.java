@@ -9,9 +9,10 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
+import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SWErrorOperations;
 import com.likya.tlossw.db.utils.AgentDbUtils;
 import com.likya.tlossw.db.utils.DBUtils;
@@ -158,12 +159,12 @@ public class AgentManager implements Runnable {
 
 		int totNumberOfRunningJobs = 0;
 
-		for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
+		for (String runId : TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().keySet()) {
 
 			int numOfWorkingJobs = 0;
 
-			PlanInfoType planInfoType = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId);
-			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
+			RunInfoType runInfoType = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId);
+			HashMap<String, SpcInfoType> spcLookupTable = runInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
@@ -171,7 +172,8 @@ public class AgentManager implements Runnable {
 					// No spc defined for this scenario, it is NOT a BUG !
 					continue;
 				}
-				numOfWorkingJobs = spc.getNumOfJobsByAgent(agentId);
+				
+				JobQueueOperations.getNumOfJobsByAgent(spc.getJobQueue(), agentId);
 				totNumberOfRunningJobs = totNumberOfRunningJobs + numOfWorkingJobs;
 			}
 			Logger.getLogger(AgentManager.class).info("  > AgentId = " + agentId + " icin toplam calisan is sayisi = " + totNumberOfRunningJobs);
