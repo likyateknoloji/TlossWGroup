@@ -76,12 +76,16 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private JsRealTime jobRealTime;
 
 	private GenericInfoSender genericInfoSender;
-	
+
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
-	private Job followerJob;
-	private boolean hasActiveFollower = false;
-	private boolean stopRepeatativity = false;
-	private boolean safeToRemove = false;
+	//	private Job followerJob;
+	//	private boolean hasActiveFollower = false;
+	//	private boolean stopRepeatativity = false;
+	//	private boolean safeToRemove = false;
+
+	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
+
+	boolean updateMySelfAfterMe = false;
 
 	public Job(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		this.globalRegistry = globalRegistry;
@@ -113,15 +117,37 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		performLogAnalyze();
 
 		afterFollowActions();
-		
+
 		periodicRepeatativity();
 	}
-	
+
 	private void afterFollowActions() {
-		if(followerJob != null) {
-			hasActiveFollower = true;
-			stopRepeatativity = true;
+
+		//		if(followerJob != null) {
+		//			hasActiveFollower = true;
+		//			stopRepeatativity = true;
+		//		}
+
+		if (isUpdateMySelfAfterMe()) {
+			// Burada her iş kendi başının çaresine bakacak
+			handleGDIssues();
 		}
+	}
+
+	private void handleGDIssues() {
+/*
+		String planId = getCurrentPlanId();
+
+		try {
+			CpcUtils.updateSpcLookupTable(planId, getSpcFullPath(), getMyLogger());
+			CpcUtils.startSpc(getSpcFullPath(), getMyLogger());
+			setUpdateMySelfAfterMe(false);
+		} catch (TlosFatalException e) {
+			e.printStackTrace();
+		} catch (TlosException e) {
+			e.printStackTrace();
+		}
+	*/
 	}
 
 	private void performLogAnalyze() {
@@ -136,7 +162,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private void periodicRepeatativity() {
 
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-		if (!stopRepeatativity && jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+		if (/* !stopRepeatativity && */jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
 			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
 			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
@@ -162,7 +188,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	}
 
 	public void insertNewLiveStateInfo(StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum, int returnCode, String returnDecription) {
-		
+
 		LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), stateNameEnum, substateNameEnum, statusNameEnum, returnCode, returnDecription);
 		sendStatusChangeInfo();
 		return;
@@ -174,9 +200,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		sendStatusChangeInfo();
 		return liveStateInfo;
 	}
-	
+
 	public LiveStateInfo insertNewLiveStateInfo(int enumStateName, int enumSubstateName, int enumStatusName) {
-		
+
 		LiveStateInfo liveStateInfo = LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), enumStateName, enumSubstateName, enumStatusName);
 		sendStatusChangeInfo();
 		return liveStateInfo;
@@ -187,13 +213,13 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		sendStatusChangeInfo();
 		return liveStateInfo;
 	}
-	
+
 	public synchronized void insertNewLiveStateInfo(LiveStateInfo liveStateInfo) {
 		LiveStateInfoUtils.insertNewLiveStateInfo(getJobRuntimeProperties().getJobProperties(), liveStateInfo);
 		sendStatusChangeInfo();
 		return;
 	}
-	
+
 	public String getJobInfo() {
 		LiveStateInfo liveStateInfo = jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0);
 
@@ -306,7 +332,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private synchronized void sendServerStatusChangeInfo() {
 
 		JobInfo jobInfo = new JobInfo();
-		
+
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
 		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
@@ -347,7 +373,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	public synchronized void sendStatusChangeInfo(LiveStateInfo liveStateInfo) {
 
 		JobInfo jobInfo = new JobInfo();
-		
+
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
 		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
@@ -415,7 +441,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		long timeDiff = endTime.getTime().getTime() - startTime.getTime().getTime();
 
 		String endLog = jobProperties.getBaseJobInfos().getJsName() + ":Bitis zamani : " + DateUtils.getDate(endTime.getTime());
-		String duration =  jobProperties.getBaseJobInfos().getJsName() + ": islem suresi : " + DateUtils.getFormattedElapsedTime((int) timeDiff / 1000);
+		String duration = jobProperties.getBaseJobInfos().getJsName() + ": islem suresi : " + DateUtils.getFormattedElapsedTime((int) timeDiff / 1000);
 		getJobRuntimeProperties().setCompletionDate(endTime);
 		getJobRuntimeProperties().setWorkDuration(DateUtils.getUnFormattedElapsedTime((int) timeDiff / 1000));
 
@@ -543,7 +569,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		err.printStackTrace();
 
 	}
-	
+
 	public void handleLogException(Exception err, Logger myLogger) {
 		globalLogger.error(err.getMessage());
 		err.printStackTrace();
@@ -560,7 +586,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		if (jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
 
 			sendStatusChangeInfo();
-			
+
 			String logStr = "islem bitirildi : " + jobKey + " => ";
 			logStr += StateName.FINISHED.toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().toString();
 			myLogger.info(" >>>>" + logStr + "<<<<");
@@ -623,36 +649,44 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.requestedStream = requestedStream;
 	}
 
-	public Job getFollowerJob() {
-		return followerJob;
+	//	public Job getFollowerJob() {
+	//		return followerJob;
+	//	}
+	//
+	//	public void setFollowerJob(Job followerJob) {
+	//		this.followerJob = followerJob;
+	//	}
+	//
+	//	public boolean isStopRepeatativity() {
+	//		return stopRepeatativity;
+	//	}
+	//
+	//	public void setStopRepeatativity(boolean stopRepeatativity) {
+	//		this.stopRepeatativity = stopRepeatativity;
+	//	}
+	//
+	//	public boolean hasActiveFollower() {
+	//		return hasActiveFollower;
+	//	}
+	//
+	//	public void setHasActiveFollower(boolean hasActiveFollower) {
+	//		this.hasActiveFollower = hasActiveFollower;
+	//	}
+	//
+	//	public boolean isSafeToRemove() {
+	//		return safeToRemove;
+	//	}
+	//
+	//	public void setSafeToRemove(boolean safeToRemove) {
+	//		this.safeToRemove = safeToRemove;
+	//	}
+
+	public boolean isUpdateMySelfAfterMe() {
+		return updateMySelfAfterMe;
 	}
 
-	public void setFollowerJob(Job followerJob) {
-		this.followerJob = followerJob;
-	}
-
-	public boolean isStopRepeatativity() {
-		return stopRepeatativity;
-	}
-
-	public void setStopRepeatativity(boolean stopRepeatativity) {
-		this.stopRepeatativity = stopRepeatativity;
-	}
-
-	public boolean hasActiveFollower() {
-		return hasActiveFollower;
-	}
-
-	public void setHasActiveFollower(boolean hasActiveFollower) {
-		this.hasActiveFollower = hasActiveFollower;
-	}
-
-	public boolean isSafeToRemove() {
-		return safeToRemove;
-	}
-
-	public void setSafeToRemove(boolean safeToRemove) {
-		this.safeToRemove = safeToRemove;
+	public void setUpdateMySelfAfterMe(boolean updateMySelfAfterMe) {
+		this.updateMySelfAfterMe = updateMySelfAfterMe;
 	}
 
 }
