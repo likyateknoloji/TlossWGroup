@@ -104,7 +104,7 @@ public class TlosSWAgent extends TlosSWAgentBase {
 		initApplication();
 
 		/** Start Jmx Server */
-		startJmxServer();
+		// startJmxServer();
 
 		startJmxTlsServer();
 
