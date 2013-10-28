@@ -13,9 +13,6 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -24,12 +21,10 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.agentclient.TSWAgentJmxClient;
 import com.likya.tlossw.core.agents.AgentManager;
-import com.likya.tlossw.core.cpc.helper.Consolidator;
 import com.likya.tlossw.core.dss.DssVisionaire;
 import com.likya.tlossw.core.spc.helpers.DependencyResolver;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.helpers.SortType;
-import com.likya.tlossw.core.spc.helpers.SpcUtils;
 import com.likya.tlossw.core.spc.helpers.TimeZoneCalculator;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -39,15 +34,16 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.exceptions.UnresolvedDependencyException;
 import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
+import com.likya.tlossw.model.JobQueueResult;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
+import com.likya.tlossw.utils.SpcUtils;
 import com.likya.tlossw.utils.TypeUtils;
 import com.likya.tlossw.utils.XmlUtils;
-import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.xml.ApplyXslt;
 
 /**
@@ -81,7 +77,7 @@ public class Spc extends SpcBase {
 
 	}
 
-	public void run() {
+	private SpcMonitor preRunInit() {
 
 		Thread.currentThread().setName(getCommonName());
 
@@ -119,20 +115,15 @@ public class Spc extends SpcBase {
 		SpcMonitor spcMonitor = new SpcMonitor(getJobQueue(), getJobQueueIndex());
 		spcMonitor.setMyExecuter(new Thread(spcMonitor));
 
-		// Senaryolarin baslama ve bitis bilgilerini de raporlama amacli dolduralim.
-		// ilk aklima gelen job da nasil yapildigina bakip oradan kopya cekmek oldu.
-		// daha iyi bir yontem varsa onunla degistirelim. hs
+		setJSRealTime();
 
-		startTime = Calendar.getInstance();
+		return spcMonitor;
 
-		scenarioRealTime = JsRealTime.Factory.newInstance();
+	}
 
-		StartTime startTimeTemp = StartTime.Factory.newInstance();
-		startTimeTemp.setTime(startTime);
-		startTimeTemp.setDate(startTime);
-		scenarioRealTime.setStartTime(startTimeTemp);
+	public void run() {
 
-		getTimeManagement().setJsRealTime(scenarioRealTime);
+		SpcMonitor spcMonitor = preRunInit();
 
 		// TODO job icin boyle ama senaryo icin nasil olacak? hs
 		// sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
@@ -182,35 +173,48 @@ public class Spc extends SpcBase {
 					t.printStackTrace();
 				}
 
-				if (hasNewVersionOfJob()) {
+				// if (hasNewVersionOfJob()) {
+				//
+				// Iterator<SortType> sortTypeIterator = getJobQueueIndex().iterator();
+				// while (sortTypeIterator.hasNext()) {
+				// SortType sortType = sortTypeIterator.next();
+				// String jobId = sortType.getJobId();
+				// Job scheduledJob = getJobQueue().get(jobId);
+				// if (scheduledJob.isSafeToRemove()) {
+				// getJobQueue().remove(jobId);
+				// }
+				// }
+				// // Re-index
+				// reIndexJobQueue();
+				// continue;
+				// }
 
-					Iterator<SortType> sortTypeIterator = getJobQueueIndex().iterator();
-					while (sortTypeIterator.hasNext()) {
-						SortType sortType = sortTypeIterator.next();
-						String jobId = sortType.getJobId();
-						Job scheduledJob = getJobQueue().get(jobId);
-						if (scheduledJob.isSafeToRemove()) {
-							getJobQueue().remove(jobId);
-						}
-					}
-					// Re-index
-					reIndexJobQueue();
-					continue;
-				}
+				JobQueueResult jobQueueResult = JobQueueOperations.isJobQueueOver(getJobQueue());
 
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
-				/**
-				 * @author serkan
-				 *         13.09.2013
-				 *         Ek : İşlerin içinde en az bir tane tekrarlı iş var ise,
-				 *         süreç sonlanMAmalı
-				 */
-				if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
+				if (jobQueueResult.isJobQueueOver()) {
+					/**
+					 * Şimdilik istenen koşulu aşağıdaki şekilde kabul ettim ancak
+					 * gerçek hayatta senaryo bitiş koşulu tanım sırasında verilecek
+					 * ve burada o koşula uyumluluk kontrol edilecek.
+					 * 
+					 * @author serkan taş
+					 */
 					getLiveStateInfo().setStateName(StateName.FINISHED);
 					getLiveStateInfo().setSubstateName(SubstateName.COMPLETED);
 					getLiveStateInfo().setStatusName(StatusName.SUCCESS);
 
 					break; // beklemeye gerek yok
+				} else {
+					if (isUpdateMySelfAfterMe()) {
+						if (isNOKReasonIsNormalJobs(jobQueueResult)) {
+							continue;
+						} else {
+							// Burada her senaryo ve her T < 1 iş kendi başının çaresine bakacak
+							handleGDIssues();
+						}
+
+					}
 				}
 
 				Thread.sleep(chekInterval);
@@ -223,6 +227,11 @@ public class Spc extends SpcBase {
 				System.exit(-1);
 			}
 		}
+
+		postRunClean(spcMonitor);
+	}
+
+	private void postRunClean(SpcMonitor spcMonitor) {
 
 		/**
 		 * We should disable monitor
@@ -255,35 +264,9 @@ public class Spc extends SpcBase {
 
 		setExecuterThread(null);
 
-		if (JobQueueOperations.isJobQueueOver(getJobQueue())) {
+		if (LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS)) {
 			getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin isler bitti.");
-
-			// Senaryolarin baslama ve bitis bilgilerini de raporlama amacli dolduralim.
-			// ilk aklima gelen job da nasil yapildigina bakip oradan kopya cekmek oldu.
-			// daha iyi bir yontem varsa onunla degistirelim. hs
-
-			Calendar endTime = Calendar.getInstance();
-
-			long timeDiff = endTime.getTime().getTime() - startTime.getTime().getTime();
-
-			String endLog = getJsName() + ":Bitis zamani : " + DateUtils.getDate(endTime.getTime());
-			String duration = getJsName() + ": islem suresi : " + DateUtils.getFormattedElapsedTime((int) timeDiff / 1000);
-			// getJobRuntimeProperties().setCompletionDate(endTime);
-			// getJobRuntimeProperties().setWorkDuration(DateUtils.getUnFormattedElapsedTime((int) timeDiff / 1000));
-
-			StopTime stopTimeTemp = StopTime.Factory.newInstance();
-			stopTimeTemp.setTime(endTime);
-			stopTimeTemp.setDate(endTime);
-			// scenarioRealTime.setStopTime(stopTimeTemp);
-
-			getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
-
-			getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + endLog);
-			getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + duration);
-
-			// TODO job icin boyle ama senaryo icin nasil olacak? hs
-			// sendEndInfo(Thread.currentThread().getName(), getJobRuntimeProperties().getJobProperties());
-
+			setJSRealTimeStopTime();
 		} else {
 			getMyLogger().info("     > " + getBaseScenarioInfos().getJsName() + " icin süreç durduruldu.");
 		}
@@ -295,64 +278,68 @@ public class Spc extends SpcBase {
 			getGlobalLogger().error("getSpaceWideRegistry().getInfoBusManager() == null !");
 		}
 
-		if (isUpdateMySelfAfterMe()) {
-			setUpdateMySelfAfterMe(false);
-			// Burada her senaryo kendi başının çaresine bakacak
-			handleGDIssues();
+	}
+
+	private boolean isNOKReasonIsNormalJobs(JobQueueResult jobQueueResult) {
+
+		if (jobQueueResult.getNumOfDailyJobsNotOver() != 0) {
+			return true;
 		}
 
+		return false;
 	}
 
 	private void handleGDIssues() {
 
-		boolean checkValue = Consolidator.isScenarioEnsuresTheConditions(this);
+		// boolean checkValue = Consolidator.isScenarioEnsuresTheConditions(this);
+		//
+		// if (checkValue) {
 
-		if (checkValue) {
+		String runId = getCurrentPlanId();
 
-			String planId = getCurrentPlanId();
-			
-			try {
-				CpcUtils.updateSpcLookupTable(planId, getSpcFullPath(), getMyLogger());
-				CpcUtils.startSpc(getSpcFullPath(), getMyLogger());
-			} catch (TlosFatalException e) {
-				e.printStackTrace();
-			} catch (TlosException e) {
-				e.printStackTrace();
-			}
+		try {
+			SpcUtils.updateSpcLookupTable(runId, getSpcFullPath(), getMyLogger());
+			CpcUtils.startSpc(getSpcFullPath(), getMyLogger());
+			setUpdateMySelfAfterMe(false);
+		} catch (TlosFatalException e) {
+			e.printStackTrace();
+		} catch (TlosException e) {
+			e.printStackTrace();
 		}
+		// }
 	}
 
-	private boolean hasNewVersionOfJob() {
-
-		boolean retValue = false;
-
-		synchronized (this) {
-
-			/**
-			 * Yeni sürümü yüklenecek iş var mı ?
-			 * Burada kontrol etmemiz gerekecek.
-			 * 
-			 */
-			Iterator<Job> jobsIterator = getJobQueue().values().iterator();
-			while (jobsIterator.hasNext()) {
-				Job scheduledJob = jobsIterator.next();
-				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-				if (LiveStateInfoUtils.equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS) && scheduledJob.hasActiveFollower()) {
-					Job newJob = scheduledJob.getFollowerJob();
-					newJob.setHasActiveFollower(false);
-					newJob.setFollowerJob(null);
-					retValue = true;
-					scheduledJob.setSafeToRemove(true);
-					String jobId = newJob.getJobRuntimeProperties().getJobProperties().getID();
-					getJobQueue().put(jobId, newJob);
-					SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
-					getJobQueueIndex().add(sortType);
-				}
-			}
-		}
-
-		return retValue;
-	}
+	// private boolean hasNewVersionOfJob() {
+	//
+	// boolean retValue = false;
+	//
+	// synchronized (this) {
+	//
+	// /**
+	// * Yeni sürümü yüklenecek iş var mı ?
+	// * Burada kontrol etmemiz gerekecek.
+	// *
+	// */
+	// Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+	// while (jobsIterator.hasNext()) {
+	// Job scheduledJob = jobsIterator.next();
+	// JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+	// if (LiveStateInfoUtils.equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS) && scheduledJob.hasActiveFollower()) {
+	// Job newJob = scheduledJob.getFollowerJob();
+	// newJob.setHasActiveFollower(false);
+	// newJob.setFollowerJob(null);
+	// retValue = true;
+	// scheduledJob.setSafeToRemove(true);
+	// String jobId = newJob.getJobRuntimeProperties().getJobProperties().getID();
+	// getJobQueue().put(jobId, newJob);
+	// SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
+	// getJobQueueIndex().add(sortType);
+	// }
+	// }
+	// }
+	//
+	// return retValue;
+	// }
 
 	private void passOnJobQueueForExecution(SpcMonitor spcMonitor) throws TlosFatalException {
 
