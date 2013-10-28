@@ -183,7 +183,7 @@ public abstract class CpcBase implements Runnable {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		String runId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
+		String runId = CpcUtils.getRunId(tlosProcessData, false, myLogger);
 
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(runId, tlosProcessData);
 
@@ -221,7 +221,7 @@ public abstract class CpcBase implements Runnable {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		String runId = CpcUtils.getPlanId(tlosProcessData, false, myLogger);
+		String runId = CpcUtils.getRunId(tlosProcessData, false, myLogger);
 
 		HashMap<String, Scenario> tmpScenarioList = performLinearization(runId, tlosProcessData);
 
@@ -259,13 +259,13 @@ public abstract class CpcBase implements Runnable {
 			String userId = null;
 
 			if (jobList.getJobPropertiesArray().length == 0) {
-				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
+				spcInfoType = CpcUtils.getSpcInfo(userId, tlosProcessData.getRunId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 			} else {
 				TlosSWPathType tlosSWPathType = new TlosSWPathType(scenarioId);
 				Spc spc = new Spc(tlosSWPathType.getRunId(), tlosSWPathType.getAbsolutePath(), getSpaceWideRegistry(), CpcUtils.transformJobList(jobList, myLogger));
 
-				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getPlanId(), tmpScenarioList.get(scenarioId));
+				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getRunId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 
 				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
