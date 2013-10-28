@@ -11,14 +11,14 @@ public class WsScenarioNode extends WsNode {
 
 	private static final long serialVersionUID = 1676608004368003714L;
 
-	private String planId;
+	private String runId;
 
-	public String getPlanId() {
-		return planId;
+	public String getRunId() {
+		return runId;
 	}
 
-	public void setPlanId(String planId) {
-		this.planId = planId;
+	public void setRunId(String runId) {
+		this.runId = runId;
 	}
 
 }
