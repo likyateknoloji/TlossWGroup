@@ -150,7 +150,7 @@ public class Cpc extends CpcBase {
 		 */
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, PlanID = " + tlosProcessData.getPlanId() + " ile ilişkilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo ağacı, PlanID = " + tlosProcessData.getRunId() + " ile ilişkilendirilecek.");
 
 		RunInfoType runInfoType = new RunInfoType();
 		runInfoType.setRunId(tlosProcessData.getRunId());
@@ -181,7 +181,7 @@ public class Cpc extends CpcBase {
 		runInfoType.setSpcLookupTable(null);
 		
 		String oldRunId = runInfoType.getRunId();
-		String newRunId = tlosProcessData.getPlanId();
+		String newRunId = tlosProcessData.getRunId();
 		
 		Consolidator.compareAndConsolidateTwoTables(oldRunId, spcLookupTableNew.getTable(), spcLookupTableOld);
 
@@ -216,10 +216,10 @@ public class Cpc extends CpcBase {
 		}
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getPlanId() + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + tlosProcessData.getRunId() + " ile iliskilendirilecek.");
 
 		RunInfoType runInfoType = new RunInfoType();
-		logger.info("   > Instance ID = " + tlosProcessData.getPlanId() + " olarak belirlendi.");
+		logger.info("   > Instance ID = " + tlosProcessData.getRunId() + " olarak belirlendi.");
 
 		runInfoType.setRunId(tlosProcessData.getRunId());
 		runInfoType.setSpcLookupTable(spcLookupTableNew);
