@@ -18,9 +18,10 @@ import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandTyp
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
-import com.likya.tlossw.core.spc.helpers.PlanMapHelper;
+import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
+import com.likya.tlossw.core.spc.helpers.RunMapHelper;
 import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
@@ -33,7 +34,7 @@ import com.likya.tlossw.model.path.BasePathType;
 import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.JobNode;
-import com.likya.tlossw.model.tree.PlanNode;
+import com.likya.tlossw.model.tree.RunNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -84,7 +85,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		return false;
 	}
 
-	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String planId, String treePath) {
+	private SpcLookUpTableTypeClient retrieveSpcLookupTable(JmxUser jmxUser, String runId, String treePath) {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = null;
 
@@ -93,9 +94,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		if (isTester(jmxUser)) {
 			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId()).getTable();
-			planId = new String("" + jmxUser.getId());
+			runId = new String("" + jmxUser.getId());
 		} else {
-			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable().getTable();
+			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(runId).getSpcLookupTable().getTable();
 		}
 
 		SpcLookUpTableTypeClient spcLookUpTableTypeClient = new SpcLookUpTableTypeClient();
@@ -119,8 +120,8 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			
 			if (spcInfoType.getSpcReferance() != null) {
 				// No spc defined for this scenario, it is NOT a BUG !
-				spcInfoTypeClient.setNumOfJobs(spcInfoType.getSpcReferance().getNumOfJobs());
-				spcInfoTypeClient.setNumOfActiveJobs(spcInfoType.getSpcReferance().getNumOfActiveJobs());
+				spcInfoTypeClient.setNumOfJobs(JobQueueOperations.getNumOfJobs(spcInfoType.getSpcReferance().getJobQueue()));
+				spcInfoTypeClient.setNumOfActiveJobs(JobQueueOperations.getNumOfActiveJobs(spcInfoType.getSpcReferance().getJobQueue()));
 
 				spcInfoTypeClient.setPausable(spcInfoType.getSpcReferance().isPausable());
 				spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
@@ -147,12 +148,12 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		GunlukIslerNode gunlukIslerNode = new GunlukIslerNode();
 
 		if (CommonConstantDefinitions.EXIST_MYDATA.equals(jmxUser.getViewRoleId())) {
-			PlanNode planNode = new PlanNode("" + jmxUser.getId());
-			gunlukIslerNode.getPlanNodes().put(jmxUser.getId() + "", planNode);
+			RunNode runNode = new RunNode("" + jmxUser.getId());
+			gunlukIslerNode.getRunNodes().put(jmxUser.getId() + "", runNode);
 		} else {
-			for (String planId : TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().keySet()) {
-				PlanNode planNode = new PlanNode(planId);
-				gunlukIslerNode.getPlanNodes().put(planId, planNode);
+			for (String runId : TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().keySet()) {
+				RunNode runNode = new RunNode(runId);
+				gunlukIslerNode.getRunNodes().put(runId, runNode);
 			}
 		}
 
@@ -176,11 +177,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			}
 		} else {
 
-			HashMap<String, PlanInfoType> planLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable();
-			Iterator<String> planKeyIterator = planLookUpTable.keySet().iterator();
+			HashMap<String, RunInfoType> runLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable();
+			Iterator<String> runKeyIterator = runLookUpTable.keySet().iterator();
 
-			while (planKeyIterator.hasNext()) {
-				String tmpPlanId = planKeyIterator.next();
+			while (runKeyIterator.hasNext()) {
+				String tmpPlanId = runKeyIterator.next();
 				spcLookUpTableTypeClient = retrieveSpcLookupTable(jmxUser, tmpPlanId, treePath);
 				if (spcLookUpTableTypeClient.getSpcInfoTypeClientList().size() > 0) {
 					return spcLookUpTableTypeClient;
@@ -254,7 +255,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		if (isTester(jmxUser)) {
 			spcInfoType = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(jmxUser.getId() + "").getTable().get(spcFullPath);
 		} else {
-			spcInfoType = PlanMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable());
+			spcInfoType = RunMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable());
 		}
 		
 		if (spcInfoType.getSpcReferance() == null) {
@@ -277,7 +278,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
-			jobInfoTypeClient.setPlanId(spcInfoType.getSpcReferance().getCurrentPlanId());
+			jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getCurrentPlanId());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
@@ -362,60 +363,60 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		GunlukIslerNode gunlukIslerNodeClient = tlosSWReqNode.getGunlukIslerNode();
 		
 		/**
-		 *  ekranda plan dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
-		 *  yoksa icinde plan gelmedigi icin girmiyor
+		 *  ekranda run dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
+		 *  yoksa icinde run gelmedigi icin girmiyor
 		 */
 		
 		if (gunlukIslerNodeClient != null) {
 			
-			HashMap<String, PlanNode> serverPlanNodes = gunlukIslerNodeServer.getPlanNodes();
+			HashMap<String, RunNode> serverRunNodes = gunlukIslerNodeServer.getRunNodes();
 			
-			HashMap<String, PlanNode> clientPlanNodes = gunlukIslerNodeClient.getPlanNodes();
+			HashMap<String, RunNode> clientRunNodes = gunlukIslerNodeClient.getRunNodes();
 			
-			for (String planId : gunlukIslerNodeClient.getPlanNodes().keySet()) {
+			for (String runId : gunlukIslerNodeClient.getRunNodes().keySet()) {
 
-				PlanNode clientPlanNode = clientPlanNodes.get(planId);
+				RunNode clientRunNode = clientRunNodes.get(runId);
 
-				PlanNode serverPlanNode = serverPlanNodes.get(planId);
+				RunNode serverRunNode = serverRunNodes.get(runId);
 				
-				if(serverPlanNode == null) {
-					// Bu durumda client'dan gelen plan id server tarafta bulunamadı demek.
+				if(serverRunNode == null) {
+					// Bu durumda client'dan gelen run id server tarafta bulunamadı demek.
 					// Bu ancak ve ancak server tarafta restart sonrası ya da GD sonrası
 					// oluşabilecek bir durum. Böyler bir durumda direk client'a boş
 					// bir nesne dönmesi gerekir.
 					continue;
 				}
 
-				// Okudugumuz plan'in altındaki senaryolari alip yeni TD'ye ekliyoruz
+				// Okudugumuz run'in altındaki senaryolari alip yeni TD'ye ekliyoruz
 
 				HashMap<String, SpcInfoTypeClient> spcInfoTypeClientList = null;
 
-				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientPlanNode.getPlanId());
+				String selectedNodeId = new String(BasePathType.getRootPath() + "." + clientRunNode.getRunId());
 
-				// plan altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
-				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, planId, selectedNodeId).getSpcInfoTypeClientList();
+				// run altindaki tum senaryolari spcInfoTypeClient turune donusturup, bunlari scenarioNode'un spcInfoTypeClient datasina atiyor.
+				spcInfoTypeClientList = retrieveSpcLookupTable(jmxUser, runId, selectedNodeId).getSpcInfoTypeClientList();
 
-				// Her bir scenarioNodu da plan scenarioNodeMap'ine atiyor
+				// Her bir scenarioNodu da run scenarioNodeMap'ine atiyor
 				for (String spcId : spcInfoTypeClientList.keySet()) {
 					SpcInfoTypeClient spcInfoTypeClient = spcInfoTypeClientList.get(spcId);
 
 					ScenarioNode serverNode = new ScenarioNode();
 					serverNode.setId(new TlosSWPathType(spcId).getId().toString());
 					serverNode.setSpcInfoTypeClient(spcInfoTypeClient);
-					serverPlanNode.getScenarioNodeMap().put(spcId, serverNode);
+					serverRunNode.getScenarioNodeMap().put(spcId, serverNode);
 				}
 
-				// Simdi ise, plan'ın altindaki senaryolarin detaylarini alacaz.
-				// PlanNode planNode = clientPlanNodes.get(planId);
+				// Simdi ise, run'ın altindaki senaryolarin detaylarini alacaz.
+				// PlanNode runNode = clientPlanNodes.get(runId);
 
-				for (String spcId : clientPlanNode.getScenarioNodeMap().keySet()) {
-					ScenarioNode myScenarioNode = clientPlanNode.getScenarioNodeMap().get(spcId);
+				for (String spcId : clientRunNode.getScenarioNodeMap().keySet()) {
+					ScenarioNode myScenarioNode = clientRunNode.getScenarioNodeMap().get(spcId);
 
 					ScenarioNode newScenarioNode = null;
 
 					newScenarioNode = getDetails(jmxUser, myScenarioNode);
 					newScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
-					serverPlanNode.getScenarioNodeMap().put(spcId, newScenarioNode);
+					serverRunNode.getScenarioNodeMap().put(spcId, newScenarioNode);
 				}
 
 			}
