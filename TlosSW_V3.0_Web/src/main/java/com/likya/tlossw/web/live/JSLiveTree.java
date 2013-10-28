@@ -25,7 +25,7 @@ import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
 import com.likya.tlossw.model.client.spc.SpcInfoTypeClient;
 import com.likya.tlossw.model.tree.GunlukIslerNode;
 import com.likya.tlossw.model.tree.JobNode;
-import com.likya.tlossw.model.tree.PlanNode;
+import com.likya.tlossw.model.tree.RunNode;
 import com.likya.tlossw.model.tree.ScenarioNode;
 import com.likya.tlossw.model.tree.TlosSpaceWideNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -106,21 +106,21 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		// }
 	}
 
-	private void constructPlanNodes(Set<String> planIds) {
+	private void constructPlanNodes(Set<String> runIds) {
 
-		Iterator<String> keyIterator = planIds.iterator();
+		Iterator<String> keyIterator = runIds.iterator();
 
 		while (keyIterator.hasNext()) {
-			String planId = keyIterator.next();
-			addPlan(planId);
+			String runId = keyIterator.next();
+			addRun(runId);
 		}
 	}
 
-	public void addPlan(String planId) {
+	public void addRun(String runId) {
 		DefaultTreeNode calisanIsler = (DefaultTreeNode) root.getChildren().get(0);
-		DefaultTreeNode planNode = new DefaultTreeNode(ConstantDefinitions.TREE_INSTANCE, new PlanNode(planId), calisanIsler);
-		planNode.getChildren().add(dummyNode);
-		planNode.setExpanded(false);
+		DefaultTreeNode runNode = new DefaultTreeNode(ConstantDefinitions.TREE_INSTANCE, new RunNode(runId), calisanIsler);
+		runNode.getChildren().add(dummyNode);
+		runNode.setExpanded(false);
 	}
 
 	public void addJobNode(JobProperties jobProperties, TreeNode selectedNode) {
@@ -197,8 +197,8 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 				if (tmpPlanFolder.isExpanded()) {
 
-					String planId = ((PlanNode) tmpPlanFolder.getData()).getPlanId();
-					PlanNode planNode = new PlanNode(planId);
+					String runId = ((RunNode) tmpPlanFolder.getData()).getRunId();
+					RunNode runNode = new RunNode(runId);
 
 					// instance icindeki senaryo sayisina bakiyoruz
 					int numberOfScenariosInPlan = tmpPlanFolder.getChildCount();
@@ -212,10 +212,10 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 						ScenarioNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
 
 						if (expendedNode != null) {
-							planNode.getScenarioNodeMap().put(expendedNode.getSpcInfoTypeClient().getSpcId(), expendedNode);
+							runNode.getScenarioNodeMap().put(expendedNode.getSpcInfoTypeClient().getSpcId(), expendedNode);
 						}
 					}
-					gunlukIslerNode.getPlanNodes().put(planId, planNode);
+					gunlukIslerNode.getRunNodes().put(runId, runNode);
 				}
 
 			}
@@ -267,7 +267,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		// 1. asama instance lar eklenecek
 		calisanIsler.getChildren().clear();
-		constructPlanNodes(serverGunlukIslerNode.getPlanNodes().keySet());
+		constructPlanNodes(serverGunlukIslerNode.getRunNodes().keySet());
 
 		if (calisanIsler.getChildren().size() == 0) {
 			calisanIsler.getChildren().add(dummyNode);
@@ -276,21 +276,21 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			Iterator<TreeNode> gunlukIslerIterator = calisanIsler.getChildren().iterator();
 
 			while (gunlukIslerIterator.hasNext()) {
-				DefaultTreeNode planTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
+				DefaultTreeNode runTreeNode = (DefaultTreeNode) gunlukIslerIterator.next();
 
-				String instanceId = ((PlanNode) planTreeNode.getData()).getPlanId();
-				if (serverGunlukIslerNode.getPlanNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
-					constructLiveTree(planTreeNode, serverGunlukIslerNode.getPlanNodes().get(instanceId).getScenarioNodeMap());
-					planTreeNode.setExpanded(true);
+				String instanceId = ((RunNode) runTreeNode.getData()).getRunId();
+				if (serverGunlukIslerNode.getRunNodes().get(instanceId).getScenarioNodeMap().size() > 0) {
+					constructLiveTree(runTreeNode, serverGunlukIslerNode.getRunNodes().get(instanceId).getScenarioNodeMap());
+					runTreeNode.setExpanded(true);
 				}
 			}
 		}
 		return calisanIsler;
 	}
 
-	private void constructLiveTree(TreeNode planNode, HashMap<String, ScenarioNode> serverScenarioNodes) {
+	private void constructLiveTree(TreeNode runNode, HashMap<String, ScenarioNode> serverScenarioNodes) {
 
-		planNode.getChildren().clear();
+		runNode.getChildren().clear();
 
 		Iterator<String> keyIterator = serverScenarioNodes.keySet().iterator();
 
@@ -311,10 +311,10 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 //				scenarioNode.setId(spcInfoTypeClient.getSpcId());
 //			}
 
-			scenarioNode.setPlanId(((PlanNode) planNode.getData()).getPlanId());
+			scenarioNode.setRunId(((RunNode) runNode.getData()).getRunId());
 			scenarioNode.setSpcInfoTypeClient(spcInfoTypeClient);
 
-			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, planNode);
+			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, runNode);
 			scenarioNodeTree.getChildren().add(dummyNode);
 			scenarioNodeTree.setExpanded(false);
 
