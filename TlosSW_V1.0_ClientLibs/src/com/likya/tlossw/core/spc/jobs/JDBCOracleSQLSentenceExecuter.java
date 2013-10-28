@@ -74,6 +74,7 @@ public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, err.getMessage());
 
 				try {
 					if(getStatement() != null) {
