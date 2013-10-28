@@ -26,6 +26,7 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 	private String jobTimeOut;
 	private String safeRestart; 
 	private String oSystem;
+	private String errorMessage;
 	
 	 // Paramaters from functions
 	
@@ -207,6 +208,14 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 }
