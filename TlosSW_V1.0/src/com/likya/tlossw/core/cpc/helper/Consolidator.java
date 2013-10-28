@@ -58,7 +58,7 @@ public class Consolidator {
 						// Yenisini listeden çıkarıp kopyasını al
 						SpcInfoType tmpSpcInfoType = spcLookupTableNew.remove(tlosSWPathType.getFullPath());
 						// eskisini yeni listeye taşı
-						spcReferanceOld.setCurrentPlanId(runIdNew);
+						spcReferanceOld.setCurrentRunId(runIdNew);
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 						// Yenisinin instance id sini bir arttır ve öylece listeye ekle,
 						// Örnek : scenarioId = 3245:13
@@ -73,7 +73,7 @@ public class Consolidator {
 
 					} else {
 						// Bitince kendini VT'den yenilesin değerini set et.
-						spcReferanceOld.setCurrentPlanId(runIdNew);
+						spcReferanceOld.setCurrentRunId(runIdNew);
 						spcReferanceOld.setUpdateMySelfAfterMe(true);
 						// all T< 1 jobs.setUpdateMySelfAfterMe(true);
 						JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
@@ -87,7 +87,7 @@ public class Consolidator {
 			} else {
 
 				if ((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
-					spcReferanceOld.setCurrentPlanId(runIdNew);
+					spcReferanceOld.setCurrentRunId(runIdNew);
 					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 				}
 
