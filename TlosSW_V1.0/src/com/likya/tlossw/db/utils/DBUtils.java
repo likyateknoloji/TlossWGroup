@@ -46,7 +46,7 @@ import com.likya.tlos.model.xmlbeans.state.GlobalStateDefinitionDocument.GlobalS
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument;
 import com.likya.tlos.model.xmlbeans.user.PersonDocument.Person;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.exceptions.TlosFatalException;
@@ -65,10 +65,10 @@ public class DBUtils extends DBBase {
 	
 	public static void backupCurrentStatusOfSpcsAndJobs(SpaceWideRegistry spaceWideRegistry) {
 
-		for (String planId : spaceWideRegistry.getPlanLookupTable().keySet()) {
-			PlanInfoType planInfoType = spaceWideRegistry.getPlanLookupTable().get(planId);
+		for (String runId : spaceWideRegistry.getRunLookupTable().keySet()) {
+			RunInfoType runInfoType = spaceWideRegistry.getRunLookupTable().get(runId);
 
-			HashMap<String, SpcInfoType> spcLookupTable = planInfoType.getSpcLookupTable().getTable();
+			HashMap<String, SpcInfoType> spcLookupTable = runInfoType.getSpcLookupTable().getTable();
 
 			for (String spcId : spcLookupTable.keySet()) {
 				HashMap<String, Job> jobQueue = PersistenceUtils.recoverTempFiles(spcId);
