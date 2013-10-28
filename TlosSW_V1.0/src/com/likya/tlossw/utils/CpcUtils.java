@@ -20,8 +20,6 @@ import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
-import com.likya.tlossw.db.utils.DBUtils;
-import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.engine.EngineeConstants;
@@ -32,10 +30,10 @@ import com.likya.tlossw.utils.validation.XMLValidations;
 public class CpcUtils {
 
 	public static Scenario getScenario(TlosProcessData tlosProcessData) {
-		
+
 		Scenario scenario = Scenario.Factory.newInstance();
 		scenario.setJobList(tlosProcessData.getJobList());
-		
+
 		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
 
 		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
@@ -46,40 +44,39 @@ public class CpcUtils {
 		scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
 		scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
 		scenario.setLocalParameters(tlosProcessData.getLocalParameters());
-		
-		return scenario;
-	}
-	
-	public static Scenario getScenario(TlosProcessData tlosProcessData, String planId) {
-		
-		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
-		
-		scenario.getConcurrencyManagement().setPlanId(planId);
-		
+
 		return scenario;
 	}
 
-	
-//	public static Scenario getScenarioOrj(TlosProcessData tlosProcessData, String planId) {
-//		
-//		Scenario scenario = Scenario.Factory.newInstance();
-//		scenario.setJobList(tlosProcessData.getJobList());
-//		
-//		scenario.setScenarioArray(tlosProcessData.getScenarioArray());
-//
-//		tlosProcessData.getConcurrencyManagement().setPlanId(planId);
-//
-//		scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
-//		scenario.setDependencyList(tlosProcessData.getDependencyList());
-//		scenario.setScenarioStatusList(tlosProcessData.getScenarioStatusList());
-//		scenario.setAlarmPreference(tlosProcessData.getAlarmPreference());
-//		scenario.setTimeManagement(tlosProcessData.getTimeManagement());
-//		scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
-//		scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
-//		scenario.setLocalParameters(tlosProcessData.getLocalParameters());
-//		
-//		return scenario;
-//	}
+	public static Scenario getScenario(TlosProcessData tlosProcessData, String runId) {
+
+		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
+
+		scenario.getConcurrencyManagement().setPlanId(runId);
+
+		return scenario;
+	}
+
+	// public static Scenario getScenarioOrj(TlosProcessData tlosProcessData, String planId) {
+	//
+	// Scenario scenario = Scenario.Factory.newInstance();
+	// scenario.setJobList(tlosProcessData.getJobList());
+	//
+	// scenario.setScenarioArray(tlosProcessData.getScenarioArray());
+	//
+	// tlosProcessData.getConcurrencyManagement().setPlanId(planId);
+	//
+	// scenario.setBaseScenarioInfos(tlosProcessData.getBaseScenarioInfos());
+	// scenario.setDependencyList(tlosProcessData.getDependencyList());
+	// scenario.setScenarioStatusList(tlosProcessData.getScenarioStatusList());
+	// scenario.setAlarmPreference(tlosProcessData.getAlarmPreference());
+	// scenario.setTimeManagement(tlosProcessData.getTimeManagement());
+	// scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
+	// scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
+	// scenario.setLocalParameters(tlosProcessData.getLocalParameters());
+	//
+	// return scenario;
+	// }
 
 	public static Scenario getScenario(Spc spc) {
 
@@ -96,9 +93,9 @@ public class CpcUtils {
 
 		return scenario;
 	}
-	
+
 	public static Scenario getScenario(Scenario tmpScenario) {
-		
+
 		Scenario scenario = Scenario.Factory.newInstance();
 
 		scenario.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
@@ -111,10 +108,10 @@ public class CpcUtils {
 		scenario.setLocalParameters(tmpScenario.getLocalParameters());
 
 		return scenario;
-		
+
 	}
-	
-	public static SpcInfoType getSpcInfo(Spc spc, String userId, String planId, Scenario tmpScenario) {
+
+	public static SpcInfoType getSpcInfo(Spc spc, String userId, String runId, Scenario tmpScenario) {
 
 		LiveStateInfo myLiveStateInfo = LiveStateInfo.Factory.newInstance();
 
@@ -131,7 +128,7 @@ public class CpcUtils {
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spc.setUserId(userId);
 
-		tmpScenario.getConcurrencyManagement().setPlanId(planId);
+		tmpScenario.getConcurrencyManagement().setPlanId(runId);
 
 		spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		spc.setDependencyList(tmpScenario.getDependencyList());
@@ -156,24 +153,24 @@ public class CpcUtils {
 
 		return spcInfoType;
 	}
-	
-	public static SpcInfoType getSpcInfo(String userId, String planId, Scenario tmpScenario) {
-		
+
+	public static SpcInfoType getSpcInfo(String userId, String runId, Scenario tmpScenario) {
+
 		SpcInfoType spcInfoType = new SpcInfoType();
-		
+
 		spcInfoType.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
 		spcInfoType.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spcInfoType.setUserId(userId);
 
 		Scenario scenario = CpcUtils.getScenario(tmpScenario);
-		
+
 		spcInfoType.setScenario(scenario);
 		spcInfoType.setSpcReferance(null);
 
 		return spcInfoType;
 	}
-	
+
 	public static ArrayList<JobRuntimeProperties> transformJobList(JobList jobList, Logger myLogger) {
 
 		myLogger.debug("start:transformJobList");
@@ -199,14 +196,15 @@ public class CpcUtils {
 
 		return transformTable;
 	}
+
 	public static boolean validateJobList(JobList jobList, Logger myLogger) {
 
 		XMLValidations.validateWithCode(jobList, myLogger);
 
 		return true;
 	}
-	
-	public static SpcInfoType prepareScenario(String planId, TlosSWPathType tlosSWPathType, Scenario myScenario, Logger myLogger) throws TlosFatalException {
+
+	public static SpcInfoType prepareScenario(String runId, TlosSWPathType tlosSWPathType, Scenario myScenario, Logger myLogger) throws TlosFatalException {
 
 		myLogger.info("");
 		myLogger.info("  > Senaryo ismi : " + tlosSWPathType.getFullPath());
@@ -233,12 +231,12 @@ public class CpcUtils {
 		String userId = null;
 
 		if (jobList.getJobPropertiesArray().length == 0) {
-			spcInfoType = CpcUtils.getSpcInfo(userId, planId, myScenario);
+			spcInfoType = CpcUtils.getSpcInfo(userId, runId, myScenario);
 			spcInfoType.setSpcId(tlosSWPathType);
 		} else {
-			Spc spc = new Spc(tlosSWPathType.getPlanId(), tlosSWPathType.getAbsolutePath(), TlosSpaceWide.getSpaceWideRegistry(), transformJobList(jobList, myLogger));
+			Spc spc = new Spc(tlosSWPathType.getRunId(), tlosSWPathType.getAbsolutePath(), TlosSpaceWide.getSpaceWideRegistry(), transformJobList(jobList, myLogger));
 
-			spcInfoType = CpcUtils.getSpcInfo(spc, userId, planId, myScenario);
+			spcInfoType = CpcUtils.getSpcInfo(spc, userId, runId, myScenario);
 			spcInfoType.setSpcId(tlosSWPathType);
 
 			if (!TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
@@ -250,14 +248,14 @@ public class CpcUtils {
 				}
 			}
 		}
-		
+
 		return spcInfoType;
 
 	}
-	
+
 	public static String getPlanId(TlosProcessData tlosProcessData, boolean isTest, Logger myLogger) {
 
-		String planId = null;
+		String runId = null;
 
 		if (isTest) {
 			String userId = "" + tlosProcessData.getBaseScenarioInfos().getUserId();
@@ -265,67 +263,37 @@ public class CpcUtils {
 				userId = "" + Calendar.getInstance().getTimeInMillis();
 			}
 			myLogger.info("   > InstanceID = " + userId + " olarak belirlenmistir.");
-			planId = userId;
+			runId = userId;
 		} else {
-			planId = tlosProcessData.getPlanId();
-			if (planId == null) {
-				planId = "" + Calendar.getInstance().getTimeInMillis();
+			runId = tlosProcessData.getPlanId();
+			if (runId == null) {
+				runId = "" + Calendar.getInstance().getTimeInMillis();
 			}
-			myLogger.info("   > InstanceID = " + planId + " olarak belirlenmiştir.");
+			myLogger.info("   > InstanceID = " + runId + " olarak belirlenmiştir.");
 		}
 
-		return planId;
+		return runId;
 	}
-	
-	public static SpcLookupTable updateSpcLookupTable(String planId, TlosSWPathType tlosSWPathType, Logger myLogger) throws TlosException {
 
-		
-		TlosProcessData tlosProcessData = null;
-		
-		SpcLookupTable spcLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(planId).getSpcLookupTable();
-
-		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
-
-		try {
-			
-			tlosProcessData = DBUtils.getTlosDailyData(new Long(tlosSWPathType.getId().getBaseId()).intValue(), Integer.parseInt(planId));
-			
-			Scenario myScenario = CpcUtils.getScenario(tlosProcessData);
-			SpcInfoType spcInfoType = CpcUtils.prepareScenario(planId, tlosSWPathType, myScenario, myLogger);
-			
-			synchronized (spcLookupTable) {
-				table.put(tlosSWPathType.getFullPath(), spcInfoType);
-			}
-			
-			myLogger.info("  > Senaryo yuklendi !");
-			
-		} catch (TlosFatalException e) {
-			e.printStackTrace();
-		}
-
-
-		return spcLookupTable;
-	}
-	
 	public static void startSpc(TlosSWPathType tlosSWPathType, Logger myLogger) {
-		
-		SpcLookupTable spcLookupTable = TlosSpaceWide.getSpaceWideRegistry().getPlanLookupTable().get(tlosSWPathType.getPlanId()).getSpcLookupTable();
+
+		SpcLookupTable spcLookupTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().get(tlosSWPathType.getRunId()).getSpcLookupTable();
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
-		
+
 		SpcInfoType spcInfoType = table.get(tlosSWPathType.getFullPath());
-		
+
 		startSpc(spcInfoType, myLogger);
-		
+
 	}
-	
+
 	public static void startSpc(SpcInfoType spcInfoType, Logger myLogger) {
 		/**
 		 * Bu thread daha once calistirildi mi? Degilse thread i
 		 * baslatabiliriz !!
 		 **/
 		Spc mySpc = spcInfoType.getSpcReferance();
-		
+
 		if (spcInfoType.isVirgin() && !mySpc.getExecuterThread().isAlive()) {
 
 			spcInfoType.setVirgin(false); /* Artik baslattik */
@@ -342,13 +310,13 @@ public class CpcUtils {
 
 		}
 	}
-	
-	public static String getRootScenarioPath(String planId) {
-		return getInstancePath(planId) + "." + EngineeConstants.LONELY_JOBS;
+
+	public static String getRootScenarioPath(String runId) {
+		return getInstancePath(runId) + "." + EngineeConstants.LONELY_JOBS;
 	}
-	
-	public static String getInstancePath(String planId) {
-		return BasePathType.getRootPath() + "." + planId;
+
+	public static String getInstancePath(String runId) {
+		return BasePathType.getRootPath() + "." + runId;
 	}
 
 }
