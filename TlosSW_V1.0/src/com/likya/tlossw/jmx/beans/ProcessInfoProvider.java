@@ -184,6 +184,13 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 		jobInfoTypeClient.setOver(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
+		
+		String errorMessage = null;
+		if(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode()!=null) {
+		   errorMessage = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode().getDesc().toString();
+		}
+		
+		jobInfoTypeClient.setErrorMessage(errorMessage);
 
 		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
 		// TODO geçici olarak dönüşüm yaptım ama xsd de problem var ????
