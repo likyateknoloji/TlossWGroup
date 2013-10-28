@@ -184,12 +184,12 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 		jobInfoTypeClient.setOver(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
-		
+
 		String errorMessage = null;
-		if(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode()!=null) {
-		   errorMessage = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode().getDesc().toString();
+		if (jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode() != null) {
+			errorMessage = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getReturnCode().getDesc().toString();
 		}
-		
+
 		jobInfoTypeClient.setErrorMessage(errorMessage);
 
 		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
@@ -432,7 +432,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			} else {
 				spcInfoTypeClient.setJsName(spcInfoType.getSpcReferance().getBaseScenarioInfos().getJsName());
 			}
-			
+
 			spcInfoTypeClient.setNumOfJobs(JobQueueOperations.getNumOfJobs(spcInfoType.getSpcReferance().getJobQueue()));
 			spcInfoTypeClient.setNumOfActiveJobs(JobQueueOperations.getNumOfActiveJobs(spcInfoType.getSpcReferance().getJobQueue()));
 
@@ -785,6 +785,11 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 			for (String spcId : spcLookupTable.keySet()) {
 				Spc spc = spcLookupTable.get(spcId).getSpcReferance();
+
+				if (spc == null) {
+					// No jobs in scenario, but scenarios
+					continue;
+				}
 
 				// verilen agent id'ye gore o agentta calisan, o senaryo icindeki isleri getiriyor
 				ArrayList<Job> jobListTemp = spc.getJobListForAgent(tlosAgentId);
