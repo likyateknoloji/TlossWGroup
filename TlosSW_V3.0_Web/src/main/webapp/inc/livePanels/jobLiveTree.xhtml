@@ -52,14 +52,17 @@
 
 					<h:outputText value="#{msgs['tlos.live.pannel.job.autoTry']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.jobAutoRetry}" readonly="true" maxlength="500" style="width: 150px;" />
-
+					
 					<h:outputText value="#{msgs['tlos.live.pannel.job.priority']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.jobPriority}" readonly="true" maxlength="500" style="width: 150px;" />
 
 					<h:outputText value="#{msgs['tlos.live.pannel.job.status']}" />
 					<p:inputText styleClass="#{userPreferencesBean.getJobStateColorCss(jobMBean.jobInTyCl.liveStateInfo)}" value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
+					
+					<h:outputText value="#{msgs['tlos.live.pannel.job.ResultDesc']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.errorMessage}" readonly="true" maxlength="500" style="width: 350px;" />
 				</p:panelGrid>
-				
+					
 					<!-- h:outputText value="#{msgs['tlos.live.pannel.job.stateInfo']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.liveStateInfo.stateName}" readonly="true" maxlength="500" style="width: 150px;" /-->
 
