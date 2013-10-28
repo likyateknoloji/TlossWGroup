@@ -450,7 +450,7 @@
 	<xs:element name="role" type="roleType"/>
 	<xs:element name="comment" type="xs:string" />
 	<xs:element name="planId" type="xs:string" />
-	<xs:element name="runId" type="xs:string" />
+	<xs:element name="runningId" type="xs:string" />
 	<xs:element name="concurrent" type="xs:boolean" />
 	<xs:element name="normalization" type="xs:boolean" />
 	<xs:element name="value_boolean">
