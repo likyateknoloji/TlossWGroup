@@ -18,7 +18,7 @@ import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.core.cpc.Cpc;
 import com.likya.tlossw.core.cpc.CpcTester;
 import com.likya.tlossw.core.cpc.model.AppState;
-import com.likya.tlossw.core.cpc.model.PlanInfoType;
+import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.spc.helpers.LikyaDayKeeper;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.infobus.servers.MailServer;
@@ -28,101 +28,101 @@ import com.likya.tlossw.perfmng.PerformanceManager;
 import com.likyateknoloji.xmlServerConfigTypes.ServerConfigDocument.ServerConfig;
 
 public class SpaceWideRegistry implements GlobalRegistry, Serializable {
-	
+
 	private static final long serialVersionUID = 579016499754067105L;
 
 	private transient static SpaceWideRegistry spaceWideRegistry;
-	
+
 	private int currentState = AppState.INT_NOT_STARTED;
-	
+
 	private int previousState = -1;
-	
+
 	public static boolean isDebug = true;
 
 	private boolean FIRST_TIME = true;
-	
+
 	private transient TlosSpaceWide spaceWideReference;
-	
+
 	private boolean isRecovered = false;
-	
+
 	private boolean isUserSelectedRecover = false;
-	
+
 	private transient ResourceBundle applicationResources;
-	
+
 	private transient Collection eXistColllection;
 
 	private String dbUri;
-	
+
 	private String xQueryModuleUrl;
-	
+
 	private String xmlsUrl;
-	
+
 	private transient Cpc cpcReference;
 
 	private transient CpcTester cpcTesterReference;
 
 	private static Logger globalLogger;
-	
+
 	private transient GlobalStateDefinition globalStateDefinition;
-	
+
 	private ArrayList<Parameter> parameters = null;
 
 	private HashMap<Integer, ArrayList<Parameter>> allParameters = null;
-	
+
 	private long scenarioReadTime;
-	
+
 	private transient TlosProcessData tlosProcessData;
-	
+
 	private transient TlosConfigInfo tlosSWConfigInfo;
-	
+
 	private transient ServerConfig serverConfig;
-	
+
 	private transient MailServer mailServer;
-	
+
 	private transient NagiosServer nagiosServer;
-	
+
 	/**
 	 * InfoBusManager Reference
 	 */
 	private transient InfoBus infoBus;
-	
+
 	/**
 	 * DayKeeper referance
 	 */
 
 	private transient LikyaDayKeeper dayKeeperReference;
-	
+
 	private boolean isGunDonumuPeryodPassed = false;
 
 	private boolean isSolsticePassed = false;
 
 	private transient AgentManager agentManagerReference;
-	
+
 	private transient PerformanceManager performanceManagerReference;
-	
-	private HashMap<String, PlanInfoType> planLookupTable = new HashMap<String, PlanInfoType>();
-	
+
+	private HashMap<String, RunInfoType> runLookupTable = new HashMap<String, RunInfoType>();
+
 	private transient Server httpServer;
-	
+
 	private JmxUser jmxUser;
-	
+
 	private boolean waitConfirmOfGUI = false;
-	
+
 	public static SpaceWideRegistry getInstance() {
-		if(spaceWideRegistry == null) {
+		if (spaceWideRegistry == null) {
 			spaceWideRegistry = new SpaceWideRegistry(globalLogger);
-		} 
+		}
 		return spaceWideRegistry;
 	}
-	
+
 	public static void setInstance(Object object) throws TlosException {
-		if(object instanceof SpaceWideRegistry) {
+		if (object instanceof SpaceWideRegistry) {
 			spaceWideRegistry = (SpaceWideRegistry) object;
 		} else {
 			throw new TlosException("Invalid object type for setter !");
 		}
 	}
-	
+
 	private SpaceWideRegistry(Logger globalLogger) {
 		super();
 		SpaceWideRegistry.globalLogger = globalLogger;
@@ -153,11 +153,11 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	}
 
 	public static Logger getGlobalLogger() {
-		
-		if(globalLogger == null) {
+
+		if (globalLogger == null) {
 			globalLogger = Logger.getLogger(TlosSpaceWide.class);
-		} 
-		
+		}
+
 		return globalLogger;
 	}
 
@@ -220,7 +220,7 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	public void setMailServer(MailServer mailServer) {
 		this.mailServer = mailServer;
 	}
-	
+
 	public NagiosServer getNagiosServer() {
 		return nagiosServer;
 	}
@@ -259,15 +259,6 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setAgentManagerReference(AgentManager agentManagerReference) {
 		this.agentManagerReference = agentManagerReference;
-	}
-
-	public HashMap<String, PlanInfoType> getPlanLookupTable() {
-		return planLookupTable;
-	}
-
-	public void setPlanLookupTable(
-			HashMap<String, PlanInfoType> planLookupTable) {
-		this.planLookupTable = planLookupTable;
 	}
 
 	public void setHttpServer(Server httpServer) {
@@ -392,16 +383,23 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	}
 
 	public void turnToPreviousState() {
-		if(previousState > 0) {
+		if (previousState > 0) {
 			currentState = previousState;
 			previousState = -1;
 		}
-		
+
 	}
 
-	
 	public int getPreivousState() {
 		return previousState;
+	}
+
+	public HashMap<String, RunInfoType> getRunLookupTable() {
+		return runLookupTable;
+	}
+
+	public void setRunLookupTable(HashMap<String, RunInfoType> runLookupTable) {
+		this.runLookupTable = runLookupTable;
 	}
 
 }
