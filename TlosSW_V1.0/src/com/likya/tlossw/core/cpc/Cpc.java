@@ -267,7 +267,7 @@ public class Cpc extends CpcBase {
 
 				SpcInfoType spcInfoType = spcLookupTable.get(spcId);
 
-				spcInfoType.getScenario().getConcurrencyManagement().setRunId(runInfoType.getRunId());
+				spcInfoType.getScenario().getConcurrencyManagement().setRunningId(runInfoType.getRunId());
 
 				spc.setBaseScenarioInfos(spcInfoType.getScenario().getBaseScenarioInfos());
 				spc.setDependencyList(spcInfoType.getScenario().getDependencyList());
