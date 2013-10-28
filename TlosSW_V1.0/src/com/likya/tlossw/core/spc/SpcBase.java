@@ -54,8 +54,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private String spcAbsolutePath;
 	private String jsName;
 	private String comment;
-	private String currentPlanId;
-	private String nativePlanId;
+	private String currentRunId;
+	private String nativeRunId;
 	private boolean concurrent;
 	private String userId;
 
@@ -111,10 +111,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	boolean updateMySelfAfterMe = false;
 
-	public SpcBase(String nativePlanId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
+	public SpcBase(String nativeRunId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
-		this.nativePlanId = nativePlanId;
-		this.currentPlanId = nativePlanId;
+		this.nativeRunId = nativeRunId;
+		this.currentRunId = nativeRunId;
 		this.isTester = isTester;
 		this.spcAbsolutePath = spcAbsolutePath;
 		this.taskList = taskList;
@@ -131,20 +131,20 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public TlosSWPathType getSpcFullPath() {
 
-		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getCurrentPlanId() + "." + getSpcAbsolutePath());
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getCurrentRunId() + "." + getSpcAbsolutePath());
 
 		return tlosSWPathType;
 	}
 
 	public TlosSWPathType getSpcNativeFullPath() {
 
-		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getNativePlanId() + "." + getSpcAbsolutePath());
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + getNativeRunId() + "." + getSpcAbsolutePath());
 
 		return tlosSWPathType;
 	}
 
 	protected String getCommonName() {
-		return "Spc_" + BasePathType.getRootPath() + "." + getNativePlanId();
+		return "Spc_" + BasePathType.getRootPath() + "." + getNativeRunId();
 	}
 
 	public boolean initScenarioInfo() { // Senaryolarin ilk baslatilmalari icin
@@ -175,7 +175,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			if (myJob != null && jobId != null) {
 
 				if (jobProperties.getPlanId() == null || "".equals(jobProperties.getPlanId())) {
-					jobProperties.setPlanId(nativePlanId);
+					jobProperties.setPlanId(nativeRunId);
 				}
 
 				JobIndexUtils.add(this, jobId, jobProperties);
@@ -205,10 +205,10 @@ public abstract class SpcBase implements Runnable, Serializable {
 			return getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable(userId);
 		}
 
-		RunInfoType runInfoType = getSpaceWideRegistry().getRunLookupTable().get(getCurrentPlanId());
+		RunInfoType runInfoType = getSpaceWideRegistry().getRunLookupTable().get(getCurrentRunId());
 
 		if (runInfoType == null) {
-			System.out.println("my pointer : " + this + " run id : " + getCurrentPlanId());
+			System.out.println("my pointer : " + this + " run id : " + getCurrentRunId());
 		}
 
 		return runInfoType.getSpcLookupTable();
@@ -547,16 +547,16 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
 	}
 
-	public String getCurrentPlanId() {
-		return currentPlanId;
+	public String getCurrentRunId() {
+		return currentRunId;
 	}
 
-	public void setCurrentPlanId(String currentPlanId) {
-		this.currentPlanId = currentPlanId;
+	public void setCurrentRunId(String currentRunId) {
+		this.currentRunId = currentRunId;
 	}
 
-	public String getNativePlanId() {
-		return nativePlanId;
+	public String getNativeRunId() {
+		return nativeRunId;
 	}
 
 	public boolean isUpdateMySelfAfterMe() {
