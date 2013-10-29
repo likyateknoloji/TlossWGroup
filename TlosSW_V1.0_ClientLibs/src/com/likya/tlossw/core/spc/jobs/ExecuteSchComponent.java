@@ -10,20 +10,16 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
-import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.spc.helpers.StateUtils;
-import com.likya.tlossw.core.spc.helpers.StreamGrabber;
+import com.likya.tlossw.core.spc.jobs.helpers.JobHelper;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likyateknoloji.xmlExecuteRShellTypes.ExecuteRShellParamsDocument.ExecuteRShellParams;
 
-public abstract class ExecuteSchComponent extends Job {
+public abstract class ExecuteSchComponent extends ExecuteComponent {
 
 	private static final long serialVersionUID = 7931558555995487881L;
-
-	transient private Process process;
 
 	public ExecuteSchComponent(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
@@ -52,7 +48,12 @@ public abstract class ExecuteSchComponent extends Job {
 		Session session = jsch.getSession(user, host, port);
 
 		/*
-		 * String xhost="127.0.0.1"; int xport=0; String display=JOptionPane.showInputDialog("Enter display name", xhost+":"+xport); xhost=display.substring(0, display.indexOf(':')); xport=Integer.parseInt(display.substring(display .indexOf(':')+1)); session.setX11Host(xhost); session.setX11Port(xport+6000);
+		 * String xhost="127.0.0.1"; int xport=0; 
+		 * String display=JOptionPane.showInputDialog("Enter display name", xhost+":"+xport); 
+		 * xhost=display.substring(0, display.indexOf(':')); 
+		 * xport=Integer.parseInt(display.substring(display .indexOf(':')+1)); 
+		 * session.setX11Host(xhost); 
+		 * session.setX11Port(xport+6000);
 		 */
 
 		java.util.Properties config = new java.util.Properties();
@@ -79,22 +80,7 @@ public abstract class ExecuteSchComponent extends Job {
 
 		channel.connect();
 
-		myLogger.debug(" >>" + logLabel + ">> " + "Sleeping 100 ms for error and output buffers to get ready...");
-		Thread.sleep(100);
-		myLogger.info(" >>" + logLabel + ">> " + " OK");
-
-		errorGobbler = new StreamGrabber(((ChannelExec) channel).getErrStream(), "ERROR", stringBufferForERROR);
-		errorGobbler.setName(jobKey + ".ErrorGobbler.id." + errorGobbler.getId());
-
-		// any output?
-		outputGobbler = new StreamGrabber(channel.getInputStream(), "OUTPUT", stringBufferForOUTPUT);
-		outputGobbler.setName(jobKey + ".OutputGobbler.id." + outputGobbler.getId());
-
-		myLogger.info(" >>" + logLabel + " icin islemin hata ve girdi akisi baslatiliyor. " + errorGobbler.getName() + " ve " + outputGobbler.getName());
-
-		// kick them off
-		errorGobbler.start();
-		outputGobbler.start();
+		initGrabbers(channel, jobKey, myLogger, stringBufferForERROR, stringBufferForOUTPUT);
 
 		try {
 
@@ -113,21 +99,13 @@ public abstract class ExecuteSchComponent extends Job {
 			int processExitValue = channel.getExitStatus();
 
 			myLogger.info(" >>" + logLabel + jobKey + " islemi sonlandi, islem bitis degeri : " + processExitValue);
+			
+			StringBuffer descStr = new StringBuffer();
 
-			Status localStateCheck = null;
-			StatusName.Enum statusName = null;
-
-			if ((jobProperties.getStateInfos().getJobStatusList() != null) && (localStateCheck = StateUtils.contains(jobProperties.getStateInfos().getJobStatusList(), processExitValue)) != null) {
-				statusName = localStateCheck.getStatusName();
-			} else {
-				Status mySubStateStatuses = StateUtils.globalContains(StateName.FINISHED, SubstateName.COMPLETED, getGlobalRegistry(), processExitValue);
-				if (mySubStateStatuses != null) {
-					statusName = mySubStateStatuses.getStatusName();
-				} else {
-					statusName = StatusName.FAILED;
-				}
-			}
-
+			StatusName.Enum statusName = JobHelper.searchReturnCodeInStates(getGlobalRegistry(), jobProperties, processExitValue, descStr);
+			
+			updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
+			
 			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue());
 
 		} catch (InterruptedException e) {
