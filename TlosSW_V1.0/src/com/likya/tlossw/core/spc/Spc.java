@@ -209,6 +209,8 @@ public class Spc extends SpcBase {
 					if (isUpdateMySelfAfterMe()) {
 						if (isNOKReasonIsNormalJobs(jobQueueResult)) {
 							continue;
+						} else {
+							break;
 						}
 					}
 				}
