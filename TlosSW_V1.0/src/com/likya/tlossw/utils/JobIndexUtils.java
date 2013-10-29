@@ -41,7 +41,7 @@ public class JobIndexUtils {
 
 			synchronized (jobQueueIndex) {
 
-				jobQueueIndex = new ArrayList<SortType>();
+				jobQueueIndex.clear();
 
 				Iterator<Job> jobsIterator = jobQueue.values().iterator();
 				while (jobsIterator.hasNext()) {
