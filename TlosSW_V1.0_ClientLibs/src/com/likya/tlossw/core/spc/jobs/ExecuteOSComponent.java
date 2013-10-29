@@ -8,11 +8,10 @@ import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
-import com.likya.tlos.model.xmlbeans.state.Status;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.spc.helpers.StateUtils;
 import com.likya.tlossw.core.spc.helpers.StreamGrabber;
+import com.likya.tlossw.core.spc.jobs.helpers.JobHelper;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.ValidPlatforms;
@@ -60,62 +59,86 @@ public abstract class ExecuteOSComponent extends Job {
 		StringBuffer stringBufferForOUTPUT = new StringBuffer();
 
 		ProcessBuilder processBuilder = null;
-		
-		/**
-		 * @author serkan taş
-		 * processBuilder.directory sets the directory of data needed for the process, 
-		 * not sets exact path of process, especially on MacOs
-		 */
-		String pathSeperator;
-		if(jobProperties.getBaseJobInfos().getOSystem().toString().equalsIgnoreCase("Windows")) {
-		  pathSeperator = "\\";
-		} else {
-		  pathSeperator = "/";
-		}
-		
-		if(jobPath.endsWith(pathSeperator)) {
-			jobCommand = jobPath + jobCommand;
-		} else {
-			jobCommand = jobPath + pathSeperator + jobCommand;
-		}
-		
+
+		jobCommand = JobHelper.removeSlashAtTheEnd(jobProperties, jobPath, jobCommand);
+
 		myLogger.info(" >>" + logLabel + jobKey + " Çalıştırılacak komut : " + jobCommand);
-		
+
 		if (isShell) {
 			String[] cmd = ValidPlatforms.getCommand(jobCommand);
 			processBuilder = new ProcessBuilder(cmd);
 		} else {
-			
-			String realCommand = "";
-			String arguments = "";
-			
-			int indexOfSpace = jobCommand.indexOf(" ");
-			if(indexOfSpace > 0) {
-				realCommand = jobCommand.substring(0, indexOfSpace).trim();
-				arguments = jobCommand.substring(jobCommand.indexOf(" ")).trim();
-				processBuilder = new ProcessBuilder(realCommand, arguments);
-			} else {
-				realCommand = jobCommand.trim();
-				processBuilder = new ProcessBuilder(realCommand);
-			}
+			processBuilder = JobHelper.parsJobCmdArgs(jobCommand);
 		}
 
+		/**
+		 * @author serkan taş
+		 *         processBuilder.directory sets the directory of data needed for the process,
+		 *         not sets exact path of process, especially on MacOs
+		 */
+		
 		processBuilder.directory(new File(jobPath));
 
 		Map<String, String> tempEnv = new HashMap<String, String>();
-				
+
 		if (environmentVariables != null && environmentVariables.size() > 0) {
 			tempEnv.putAll(environmentVariables);
 		}
-		
+
 		tempEnv.putAll(XmlBeansTransformer.entryToMap(jobProperties));
 
-		processBuilder.environment().putAll(tempEnv);;
-		
+		processBuilder.environment().putAll(tempEnv);
+
 		setProcess(processBuilder.start());
 
 		Process process = getProcess();
 
+		initGrabbers(jobKey, myLogger, stringBufferForERROR, stringBufferForOUTPUT);
+
+		try {
+
+			process.waitFor();
+
+			int processExitValue = process.exitValue();
+
+			myLogger.info(" >>" + logLabel + jobKey + " islemi sonlandi, islem bitis degeri : " + processExitValue);
+
+			StringBuffer descStr = new StringBuffer();
+			
+			StatusName.Enum statusName = JobHelper.searchReturnCodeInStates(getGlobalRegistry(), jobProperties, processExitValue, descStr);
+
+			if (!"".equals(stringBufferForOUTPUT)) {
+				descStr.append("OUTPUT : " + stringBufferForOUTPUT);
+			}
+
+			if (!"".equals(stringBufferForERROR)) {
+				descStr.append("\nERROR : " + stringBufferForERROR);
+			}
+
+			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue(), descStr.toString());
+
+		} catch (InterruptedException e) {
+
+			// Stop the process from running
+			myLogger.warn(" >>" + logLabel + ">> " + logClassName + " : Job timed-out terminating " + jobProperties.getBaseJobInfos().getJsName());
+			/**
+			* // TODO Windows process kill etmek için yazılan JNI kodu
+			* // buraya konmalı
+			* // Serkan Taş 13.08.2012
+			* 
+			* TL'de uygulama yapıldı ancak sadece windows için.
+			* unix için de bir şeyler yapmalı
+			* 
+			* @author serkan taş
+			* 29.10.2013
+			*/
+			process.destroy();
+
+		}
+	}
+
+	private void initGrabbers(String jobKey, Logger myLogger, StringBuffer stringBufferForERROR, StringBuffer stringBufferForOUTPUT) throws InterruptedException {
+		
 		myLogger.debug(" >>" + logLabel + ">> " + "Sleeping 100 ms for error and output buffers to get ready...");
 		Thread.sleep(100);
 		myLogger.info(" >>" + logLabel + ">> " + " OK");
@@ -132,41 +155,5 @@ public abstract class ExecuteOSComponent extends Job {
 		// kick them off
 		errorGobbler.start();
 		outputGobbler.start();
-
-		try {
-
-			process.waitFor();
-
-			int processExitValue = process.exitValue();
-
-			myLogger.info(" >>" + logLabel + jobKey + " islemi sonlandi, islem bitis degeri : " + processExitValue);
-
-			Status localStateCheck = null;
-			StatusName.Enum statusName = null;
-
-			if ((jobProperties.getStateInfos().getJobStatusList() != null) && (localStateCheck = StateUtils.contains(jobProperties.getStateInfos().getJobStatusList(), processExitValue)) != null) {
-				statusName = localStateCheck.getStatusName();
-			} else {
-				Status mySubStateStatuses = StateUtils.globalContains(StateName.FINISHED, SubstateName.COMPLETED, getGlobalRegistry(), processExitValue);
-				if (mySubStateStatuses != null) {
-					statusName = mySubStateStatuses.getStatusName();
-				} else {
-					statusName = StatusName.FAILED;
-				}
-			}
-
-			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue());
-
-		} catch (InterruptedException e) {
-
-			// Stop the process from running
-			myLogger.warn(" >>" + logLabel + ">> " + logClassName + " : Job timed-out terminating " + jobProperties.getBaseJobInfos().getJsName());
-			// TODO Windows process kill etmek i�in yazılan JNI kodu
-			// buraya konmalı
-			// Serkan Taş 13.08.2012
-			process.destroy();
-
-		}
 	}
-
 }
