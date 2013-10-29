@@ -127,7 +127,7 @@ public class WebServiceExecuter extends Job {
 					ioe.printStackTrace();
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				//insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
