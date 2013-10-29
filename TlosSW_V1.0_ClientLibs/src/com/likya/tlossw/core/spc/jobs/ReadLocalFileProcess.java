@@ -82,7 +82,7 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Yerel Dosya Okuma hatasi !");
 			}
 
 			if (processJobResult(retryFlag, myLogger, myParamList)) {
