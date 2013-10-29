@@ -693,7 +693,7 @@ public class Spc extends SpcBase {
 		// 2.tip fiziksel bagimlilik ile aktarim
 		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
 
-		scheduledJob.sendEndInfo(getSpcNativeFullPath().getFullPath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
+		scheduledJob.sendEndInfo(getSpcNativeFullPath().getAbsolutePath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// //////////////////\\\\\\\\\\\\\\\\\
 
 		/* Secilen kaynak server ise server da degilse agent a aktararak calistir. */
