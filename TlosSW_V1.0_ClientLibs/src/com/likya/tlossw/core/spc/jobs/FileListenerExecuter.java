@@ -171,7 +171,7 @@ public class FileListenerExecuter extends FileJob {
 					} catch (InterruptedException e) {
 						handleException(e, myLogger);
 
-						insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+						//insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 					}
 				}
 
@@ -202,7 +202,7 @@ public class FileListenerExecuter extends FileJob {
 					ioe.printStackTrace();
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				//insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {
