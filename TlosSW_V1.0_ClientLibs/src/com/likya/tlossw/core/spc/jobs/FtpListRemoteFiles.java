@@ -74,7 +74,7 @@ public class FtpListRemoteFiles extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 
 			}
 
