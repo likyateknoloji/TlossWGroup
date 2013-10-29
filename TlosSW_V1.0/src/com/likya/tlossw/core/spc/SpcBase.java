@@ -174,8 +174,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			if (myJob != null && jobId != null) {
 
-				if (jobProperties.getPlanId() == null || "".equals(jobProperties.getPlanId())) {
-					jobProperties.setPlanId(nativeRunId);
+				if (jobProperties.getRunId() == null || "".equals(jobProperties.getRunId())) {
+					jobProperties.setRunId(nativeRunId);
 				}
 
 				JobIndexUtils.add(this, jobId, jobProperties);
@@ -384,7 +384,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return isManagable;
 	}
 
-	private Job getMyJob(JobRuntimeProperties jobRuntimeProperties) {
+	protected Job getMyJob(JobRuntimeProperties jobRuntimeProperties) {
 
 		Job myJob = extractJobTypes(jobRuntimeProperties);
 
