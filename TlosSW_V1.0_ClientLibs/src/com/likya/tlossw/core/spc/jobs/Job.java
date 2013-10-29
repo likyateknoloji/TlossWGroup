@@ -152,7 +152,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private void forceSpcToHandleGDIssuesForMe() {
 		try {
-			this.wait();
+			synchronized (this) {
+				this.wait();
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
