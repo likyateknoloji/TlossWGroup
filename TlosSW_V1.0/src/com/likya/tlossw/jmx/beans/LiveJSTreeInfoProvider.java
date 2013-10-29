@@ -407,7 +407,6 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				}
 
 				// Simdi ise, run'ın altindaki senaryolarin detaylarini alacaz.
-				// PlanNode runNode = clientPlanNodes.get(runId);
 
 				for (String spcId : clientRunNode.getScenarioNodeMap().keySet()) {
 					ScenarioNode myScenarioNode = clientRunNode.getScenarioNodeMap().get(spcId);
