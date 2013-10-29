@@ -3,32 +3,23 @@ package com.likya.tlossw.model.path;
 import com.likya.tlossw.exceptions.TlosException;
 
 public class JSPathId {
-	
+
 	// Base Id of Scenario or Job
 	private long baseId;
-	
+
 	// Running instance id of scenario or job
 	private int ruid;
 
 	public JSPathId(String jsPathId) {
-		
+
 		String pathArray[] = jsPathId.split("\\:");
-		
+
 		if (pathArray.length == 1) {
-			String bidStr = pathArray[0];
-			try {
-				baseId = Integer.parseInt(bidStr);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
+			baseId = strToLong(pathArray[0]);
 			ruid = 0;
 		} else if (pathArray.length == 2) {
-			String ruidStr = pathArray[1];
-			try {
-				ruid = Integer.parseInt(ruidStr);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
+			baseId = strToLong(pathArray[0]);
+			ruid = strToInt(pathArray[1]);
 		} else {
 			try {
 				throw new TlosException("Invalid path string format : baseid:ruid >> " + jsPathId);
@@ -36,6 +27,32 @@ public class JSPathId {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private long strToLong(String retStr) {
+
+		long retValue = 0;
+
+		try {
+			retValue = Long.parseLong(retStr);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		return retValue;
+	}
+
+	private int strToInt(String retStr) {
+
+		int retValue = 0;
+
+		try {
+			retValue = Integer.parseInt(retStr);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		return retValue;
 	}
 
 	public long getBaseId() {
@@ -53,24 +70,24 @@ public class JSPathId {
 	public void setRuid(int ruid) {
 		this.ruid = ruid;
 	}
-	
+
 	public int incrementRuId() {
 		return ++ruid;
 	}
-	
+
 	public int incrementRuId(int incValue) {
 		return ruid += incValue;
 	}
 
 	@Override
 	public String toString() {
-		
+
 		String retValue = "" + baseId;
-		
-		if(ruid != 0) {
+
+		if (ruid != 0) {
 			retValue += ":" + ruid;
 		}
-		
+
 		return retValue;
 	}
 
