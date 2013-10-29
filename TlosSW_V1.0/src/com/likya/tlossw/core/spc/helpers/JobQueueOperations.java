@@ -25,6 +25,7 @@ import com.likya.tlossw.core.spc.SpcBase;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.model.JobQueueResult;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
+import com.likya.tlossw.utils.NullChecker;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
 public class JobQueueOperations {
@@ -63,7 +64,8 @@ public class JobQueueOperations {
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
 
 				try {
-					if (jobProperties.getStateInfos() != null) {
+					
+					if (NullChecker.checkNull(jobProperties)) {
 
 						if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED)) {
 							if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
