@@ -9,6 +9,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
+import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
@@ -314,19 +315,26 @@ public class Spc extends SpcBase {
 			
 				Job scheduledJob = jobsIterator.next();
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
+				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
 				
-				if(scheduledJob.getMyExecuter().getState() == Thread.State.WAITING && scheduledJob.isUpdateMySelfAfterMe()) {
+				if(isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() == Thread.State.WAITING) && scheduledJob.isUpdateMySelfAfterMe()) {
 					
 					// This job should terminate it self
 					scheduledJob.setUpdateMySelfAfterMe(false);
 					scheduledJob.setStopRepeatativity(true);
-					scheduledJob.getMyExecuter().notify();
 					
-					while(scheduledJob.getMyExecuter().isAlive()) {
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+					if(scheduledJob.getMyExecuter() != null) {
+						synchronized (scheduledJob.getMyExecuter()) {
+							scheduledJob.getMyExecuter().notify();
+						}
+						
+						while(scheduledJob.getMyExecuter().isAlive()) {
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 					
