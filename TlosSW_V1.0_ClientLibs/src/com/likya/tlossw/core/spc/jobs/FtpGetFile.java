@@ -46,7 +46,7 @@ public class FtpGetFile extends FtpExecutor {
 				boolean result = false;
 
 				if (!checkLogin(myLogger)) {
-					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Login failure !");
 
 					getOutputFile().close();
 
@@ -78,7 +78,7 @@ public class FtpGetFile extends FtpExecutor {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Read islemi icin processedFilesOperationType degeri Copy, Move ya da Delete olmalidir" + System.getProperty("line.separator"));
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED), (result == true ? "OK" : "Read islemi icin processedFilesOperationType degeri Copy, Move ya da Delete olmalidir"));
 
 				//kopyalama islemi yapamadiginda yerel dizinde istenilen isimdeki dosyayi bos olarak olusturdugu icin hata olursa silecek
 				if (!result) {
@@ -100,7 +100,7 @@ public class FtpGetFile extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {
