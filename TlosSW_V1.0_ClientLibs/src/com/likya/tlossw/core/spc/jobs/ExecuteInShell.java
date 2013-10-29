@@ -42,11 +42,6 @@ public class ExecuteInShell extends ExecuteOSComponent {
 				
 				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 
-				// TODO Burası eksik kaldı, 3. parametre tamamlanmalı
-				// Serkan Taş 13.08.2012
-				// Map<String, String> env = new HashMap<String, String>();
-				// env.put("PGPASSWORD", password);
-
 				startShellProcess(jobPath, jobCommand, null, this.getClass().getName(), myLogger);
 
 			} catch (Exception err) {
