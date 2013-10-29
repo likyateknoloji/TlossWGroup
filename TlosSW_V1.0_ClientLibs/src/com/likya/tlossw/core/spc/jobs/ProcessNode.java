@@ -240,7 +240,7 @@ public class ProcessNode extends Job {
 								outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "\n " + "Output from Tlos SW");
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
-								LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 								e.printStackTrace();
 							}
 						} else if (processNode.getFilter() != null && processNode.getFilter().getType().toString().equalsIgnoreCase("xpath")) {
@@ -249,10 +249,10 @@ public class ProcessNode extends Job {
 							// TODO XPath i normal xml icin yapmamisiz. Gerceklestirelim. hs.
 							// inputs = ApplyXPath.queryXmlWithXPath(fileContent, xpath);
 							System.out.println("Filtreleme i�in XPATH yerine XSLT kullan�n !!");
-							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+							insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Filtreleme icin XPATH yerine XSLT kullanilmali !!");
 						} else if (processNode.getTransform() != null && processNode.getTransform().getWith().toString().equalsIgnoreCase("xpath")) {
 							System.out.println("Transformasyon i�in XPATH kullanm�yoruz. XSLT kullan�n !!");
-							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+							insertNewLiveStateInfo( StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Transformasyon icin XPATH kullanmiyoruz. XSLT kullanilmali !!");
 						}
 					} else if (processNode.getProcess().getSource() != null && processNode.getProcess().getSource().toString().equalsIgnoreCase("text")) {
 						// TODO Text doc process
@@ -261,7 +261,7 @@ public class ProcessNode extends Job {
 							// String filterString = processNode.getFilter().getStringValue();
 
 							System.out.println("Filtreleme için XPATH yerine XSLT kullanın !!");
-							LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+							insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Filtreleme icin XPATH yerine XSLT kullanilmali !!");
 						} else if (processNode.getReplace() != null && processNode.getReplace().getFind() != null && !processNode.getReplace().getFind().toString().isEmpty()) {
 							String replaceThis = processNode.getReplace().getFind().toString();
 							String withThis = processNode.getReplace().getStringValue().toString();
@@ -269,7 +269,7 @@ public class ProcessNode extends Job {
 						}
 					} else {
 						System.out.println("XML ve TEXT Doc dışında doküman işleyemiyoruz henüz.");
-						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+						insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "XML ve TEXT Doc disinda dokuman isleyemiyoruz henuz! ");
 					}
 				}
 			}
