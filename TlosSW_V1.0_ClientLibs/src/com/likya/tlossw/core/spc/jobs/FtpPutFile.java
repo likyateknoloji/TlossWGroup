@@ -46,7 +46,7 @@ public class FtpPutFile extends FtpExecutor {
 				boolean result = false;
 
 				if (!checkLogin(myLogger)) {
-					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+					insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Login failure !");
 
 					getOutputFile().close();
 
@@ -78,7 +78,7 @@ public class FtpPutFile extends FtpExecutor {
 					result = false;
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED), (result == true ? "OK" : "Read islemi icin processedFilesOperationType degeri Copy, Move ya da Delete olmalidir"));
 				
 			} catch (Exception e) {
 
@@ -96,7 +96,7 @@ public class FtpPutFile extends FtpExecutor {
 					ioe.printStackTrace();
 				}
 
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {
