@@ -76,7 +76,6 @@ public class JDBCPostgreSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
 
 			} catch (Exception err) {
-				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 
 				try {
 					if(getStatement() != null) {
