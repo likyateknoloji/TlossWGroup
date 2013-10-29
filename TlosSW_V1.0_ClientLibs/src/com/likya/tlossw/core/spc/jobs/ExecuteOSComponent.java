@@ -10,16 +10,13 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.spc.helpers.StreamGrabber;
 import com.likya.tlossw.core.spc.jobs.helpers.JobHelper;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.ValidPlatforms;
 import com.likya.tlossw.utils.XmlBeansTransformer;
 
-public abstract class ExecuteOSComponent extends Job {
-
-	transient private Process process;
+public abstract class ExecuteOSComponent extends ExecuteComponent {
 
 	public ExecuteOSComponent(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
@@ -107,13 +104,7 @@ public abstract class ExecuteOSComponent extends Job {
 			
 			StatusName.Enum statusName = JobHelper.searchReturnCodeInStates(getGlobalRegistry(), jobProperties, processExitValue, descStr);
 
-			if (!"".equals(stringBufferForOUTPUT)) {
-				descStr.append("OUTPUT : " + stringBufferForOUTPUT);
-			}
-
-			if (!"".equals(stringBufferForERROR)) {
-				descStr.append("\nERROR : " + stringBufferForERROR);
-			}
+			updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
 
 			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue(), descStr.toString());
 
@@ -137,23 +128,4 @@ public abstract class ExecuteOSComponent extends Job {
 		}
 	}
 
-	private void initGrabbers(String jobKey, Logger myLogger, StringBuffer stringBufferForERROR, StringBuffer stringBufferForOUTPUT) throws InterruptedException {
-		
-		myLogger.debug(" >>" + logLabel + ">> " + "Sleeping 100 ms for error and output buffers to get ready...");
-		Thread.sleep(100);
-		myLogger.info(" >>" + logLabel + ">> " + " OK");
-
-		errorGobbler = new StreamGrabber(process.getErrorStream(), "ERROR", stringBufferForERROR);
-		errorGobbler.setName(jobKey + ".ErrorGobbler.id." + errorGobbler.getId());
-
-		// any output?
-		outputGobbler = new StreamGrabber(process.getInputStream(), "OUTPUT", stringBufferForOUTPUT);
-		outputGobbler.setName(jobKey + ".OutputGobbler.id." + outputGobbler.getId());
-
-		myLogger.info(" >>" + logLabel + " icin islemin hata ve girdi akisi baslatiliyor. " + errorGobbler.getName() + " ve " + outputGobbler.getName());
-
-		// kick them off
-		errorGobbler.start();
-		outputGobbler.start();
-	}
 }
