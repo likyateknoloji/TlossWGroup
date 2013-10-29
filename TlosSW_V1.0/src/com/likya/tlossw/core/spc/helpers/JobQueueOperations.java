@@ -68,7 +68,7 @@ public class JobQueueOperations {
 					if (NullChecker.checkNull(jobProperties)) {
 
 						if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED)) {
-							if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+							if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
 								jobQueueResult.setNumOfNonDailyJobsNotOver(jobQueueResult.getNumOfNonDailyJobsNotOver() + 1);
 							} else {
 								jobQueueResult.setNumOfDailyJobsNotOver(jobQueueResult.getNumOfDailyJobsNotOver() + 1);
@@ -378,7 +378,7 @@ public class JobQueueOperations {
 	
 	public static void setAllNonNormalJobsUpdateMySelfAfterMe(SpcBase spc, boolean statu) {
 		HashMap<String, Job> jobQueue = spc.getJobQueue();
-		ArrayList<SortType> jobQueueIndex = spc.getJobQueueIndex();
+		ArrayList<SortType> jobQueueIndex = spc.getNonDailyJobQueueIndex();
 		for(Object sortType : jobQueueIndex.toArray()) {
 			jobQueue.get(((SortType)sortType).getJobId()).setUpdateMySelfAfterMe(statu);
 		}
