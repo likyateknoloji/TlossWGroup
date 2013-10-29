@@ -39,6 +39,7 @@ import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.CpcUtils;
+import com.likya.tlossw.utils.JobIndexUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.SpcUtils;
@@ -173,21 +174,9 @@ public class Spc extends SpcBase {
 					t.printStackTrace();
 				}
 
-				// if (hasNewVersionOfJob()) {
-				//
-				// Iterator<SortType> sortTypeIterator = getJobQueueIndex().iterator();
-				// while (sortTypeIterator.hasNext()) {
-				// SortType sortType = sortTypeIterator.next();
-				// String jobId = sortType.getJobId();
-				// Job scheduledJob = getJobQueue().get(jobId);
-				// if (scheduledJob.isSafeToRemove()) {
-				// getJobQueue().remove(jobId);
-				// }
-				// }
-				// // Re-index
-				// reIndexJobQueue();
-				// continue;
-				// }
+				if (hasNewVersionOfJob()) {
+					continue;
+				}
 
 				JobQueueResult jobQueueResult = JobQueueOperations.isJobQueueOver(getJobQueue());
 
@@ -294,10 +283,6 @@ public class Spc extends SpcBase {
 
 	private void handleGDIssues() {
 
-		// boolean checkValue = Consolidator.isScenarioEnsuresTheConditions(this);
-		//
-		// if (checkValue) {
-
 		String runId = getCurrentRunId();
 
 		try {
@@ -309,40 +294,70 @@ public class Spc extends SpcBase {
 		} catch (TlosException e) {
 			e.printStackTrace();
 		}
-		// }
+		
 	}
 
-	// private boolean hasNewVersionOfJob() {
-	//
-	// boolean retValue = false;
-	//
-	// synchronized (this) {
-	//
-	// /**
-	// * Yeni sürümü yüklenecek iş var mı ?
-	// * Burada kontrol etmemiz gerekecek.
-	// *
-	// */
-	// Iterator<Job> jobsIterator = getJobQueue().values().iterator();
-	// while (jobsIterator.hasNext()) {
-	// Job scheduledJob = jobsIterator.next();
-	// JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-	// if (LiveStateInfoUtils.equalStates(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0), StateName.FINISHED, SubstateName.COMPLETED, StatusName.SUCCESS) && scheduledJob.hasActiveFollower()) {
-	// Job newJob = scheduledJob.getFollowerJob();
-	// newJob.setHasActiveFollower(false);
-	// newJob.setFollowerJob(null);
-	// retValue = true;
-	// scheduledJob.setSafeToRemove(true);
-	// String jobId = newJob.getJobRuntimeProperties().getJobProperties().getID();
-	// getJobQueue().put(jobId, newJob);
-	// SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
-	// getJobQueueIndex().add(sortType);
-	// }
-	// }
-	// }
-	//
-	// return retValue;
-	// }
+	/**
+	 * Yeni sürümü yüklenecek iş var mı ?
+	 * Burada kontrol etmemiz gerekecek.
+	 */
+
+	private boolean hasNewVersionOfJob() {
+
+		boolean retValue = false;
+
+		synchronized (this) {
+
+			Iterator<Job> jobsIterator = getJobQueue().values().iterator();
+
+			while (jobsIterator.hasNext()) {
+			
+				Job scheduledJob = jobsIterator.next();
+				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+				
+				if(scheduledJob.getMyExecuter().getState() == Thread.State.WAITING && scheduledJob.isUpdateMySelfAfterMe()) {
+					
+					// This job should terminate it self
+					scheduledJob.setUpdateMySelfAfterMe(false);
+					scheduledJob.setStopRepeatativity(true);
+					scheduledJob.getMyExecuter().notify();
+					
+					while(scheduledJob.getMyExecuter().isAlive()) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					// This thread is waiting for SPC to handle GD for itself.
+					String jobId = jobProperties.getID();
+					JobProperties newJobProperties = DBUtils.getTlosJobPropertiesXml(Integer.parseInt(jobId), 0);
+					
+					if(newJobProperties == null) {
+						getJobQueue().remove(jobId);
+					} else {
+						
+						JobRuntimeProperties newJobRuntimeProperties = new JobRuntimeProperties();
+
+						LiveStateInfoUtils.insertNewLiveStateInfo(newJobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+						newJobRuntimeProperties.setJobProperties(newJobProperties);
+						
+						Job newJob = getMyJob(newJobRuntimeProperties);
+						
+						getJobQueue().put(jobId, newJob);
+						SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
+						getJobQueueIndex().add(sortType);
+					}
+					
+					JobIndexUtils.reIndexJobQueue(this);
+				}
+			
+			}
+		}
+
+		return retValue;
+	}
 
 	private void passOnJobQueueForExecution(SpcMonitor spcMonitor) throws TlosFatalException {
 
