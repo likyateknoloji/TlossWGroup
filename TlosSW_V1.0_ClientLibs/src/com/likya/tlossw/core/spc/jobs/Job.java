@@ -80,12 +80,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
 	//	private Job followerJob;
 	//	private boolean hasActiveFollower = false;
-	//	private boolean stopRepeatativity = false;
 	//	private boolean safeToRemove = false;
 
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
 
 	boolean updateMySelfAfterMe = false;
+	private boolean stopRepeatativity = false;
 
 	public Job(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		this.globalRegistry = globalRegistry;
@@ -116,38 +116,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		performLogAnalyze();
 
-		afterFollowActions();
-
 		periodicRepeatativity();
-	}
-
-	private void afterFollowActions() {
-
-		//		if(followerJob != null) {
-		//			hasActiveFollower = true;
-		//			stopRepeatativity = true;
-		//		}
-
-		if (isUpdateMySelfAfterMe()) {
-			// Burada her iş kendi başının çaresine bakacak
-			handleGDIssues();
-		}
-	}
-
-	private void handleGDIssues() {
-/*
-		String planId = getCurrentPlanId();
-
-		try {
-			CpcUtils.updateSpcLookupTable(planId, getSpcFullPath(), getMyLogger());
-			CpcUtils.startSpc(getSpcFullPath(), getMyLogger());
-			setUpdateMySelfAfterMe(false);
-		} catch (TlosFatalException e) {
-			e.printStackTrace();
-		} catch (TlosException e) {
-			e.printStackTrace();
-		}
-	*/
 	}
 
 	private void performLogAnalyze() {
@@ -161,8 +130,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private void periodicRepeatativity() {
 
+		if (isUpdateMySelfAfterMe()) {
+			forceSpcToHandleGDIssuesForMe();
+		}
+
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-		if (/* !stopRepeatativity && */jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+		if (!stopRepeatativity && jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
 			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
 			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
@@ -175,6 +148,14 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			}
 		}
 
+	}
+
+	private void forceSpcToHandleGDIssuesForMe() {
+		try {
+			this.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected abstract void localRun();
@@ -687,6 +668,14 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	public void setUpdateMySelfAfterMe(boolean updateMySelfAfterMe) {
 		this.updateMySelfAfterMe = updateMySelfAfterMe;
+	}
+
+	public boolean isStopRepeatativity() {
+		return stopRepeatativity;
+	}
+
+	public void setStopRepeatativity(boolean stopRepeatativity) {
+		this.stopRepeatativity = stopRepeatativity;
 	}
 
 }
