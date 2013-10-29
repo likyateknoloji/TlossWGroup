@@ -116,11 +116,11 @@ public class Consolidator {
 
 				// String jobId = jobProperties.getID();
 				
-				String jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().toString();
+				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
 				
 				boolean isRunning = LiveStateInfoUtils.equalStates(jobProperties, StateName.RUNNING);
 				
-				boolean isPeriodic = JobBaseType.PERIODIC.equals(jobBaseType);
+				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
 
 				boolean isUpdated = true;
 				
@@ -224,10 +224,10 @@ public class Consolidator {
 
 				String jobIdOld = jobPropertiesOld.getID();
 
-				String jobBaseType = jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType().toString();
+				JobBaseType.Enum jobBaseType = jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType();
 
 				if (jobQueueNew.containsKey(jobIdOld)) {
-					if (JobBaseType.PERIODIC.equals(jobBaseType)) {
+					if ( JobBaseType.PERIODIC.intValue() == jobBaseType.intValue()) {
 						if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 							// iş bittikten sonra aşağıdaki adımları yapacaz
 							if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
@@ -256,7 +256,7 @@ public class Consolidator {
 
 				} else {
 					if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
-						if (JobBaseType.PERIODIC.equals(jobBaseType)) {
+						if (JobBaseType.PERIODIC.intValue() == jobBaseType.intValue()) {
 							// set old job to terminate after execution
 							//jobQueueNew.get(jobIdOld).setStopRepeatativity(true);
 						}
@@ -293,7 +293,7 @@ public class Consolidator {
 
 				JobProperties jobPropertiesOld = jobOld.getJobRuntimeProperties().getJobProperties();
 
-				if (JobBaseType.PERIODIC.equals(jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+				if (JobBaseType.PERIODIC.intValue() == jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
 					String jobIdOld = jobOld.getJobKey();
 					if (jobQueueNew.containsKey(jobIdOld)) {
 						if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
@@ -366,7 +366,7 @@ public class Consolidator {
 				Job scheduledJob = jobsIterator.next();
 
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-				if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+				if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
 					return false;
 				}
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
