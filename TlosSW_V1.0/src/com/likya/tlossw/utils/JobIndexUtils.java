@@ -17,7 +17,7 @@ public class JobIndexUtils {
 
 		spc.getJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
 
-		if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+		if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
 			spc.getNonDailyJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
 		} else {
 			spc.getDailyJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
