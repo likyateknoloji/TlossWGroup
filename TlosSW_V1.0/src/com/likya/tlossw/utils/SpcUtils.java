@@ -72,7 +72,12 @@ public class SpcUtils {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		/***/
+		/** 
+		 * GD öncesi listede bulunan T < 1gün işler
+		 * GD sonrası alınan senaryoya taşınıyor.
+		 * Eğer aynı işler var ise üzerine yazıyor, zira bitince yenisini kendi alacak.
+		 * Yok ise, eklenmiş oluyor.
+		 */
 		SpcInfoType spcInfoTypeOld = null;
 		
 		synchronized (table) {
@@ -81,7 +86,6 @@ public class SpcUtils {
 		ArrayList<SortType> nonDailJobQueueIndex = spcInfoTypeOld.getSpcReferance().getNonDailyJobQueueIndex();
 		HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
 		Iterator<SortType> nonDailJobQueueIndexIterator = nonDailJobQueueIndex.iterator();
-		/***/
 		
 		try {
 
