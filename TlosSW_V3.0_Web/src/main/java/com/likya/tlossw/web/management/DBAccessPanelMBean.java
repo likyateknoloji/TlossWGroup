@@ -62,6 +62,13 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 		dbConnectionProfile = DbConnectionProfile.Factory.newInstance();
 
 		JdbcConnectionPoolParams jdbcConnectionPoolParams = JdbcConnectionPoolParams.Factory.newInstance();
+		
+		jdbcConnectionPoolParams.setInitialCapacity(new BigInteger("3"));
+		jdbcConnectionPoolParams.setMaxCapacity(new BigInteger("10"));
+		jdbcConnectionPoolParams.setMinIdle(new BigInteger("0"));
+		jdbcConnectionPoolParams.setMaxWait(new BigInteger("0"));
+		jdbcConnectionPoolParams.setMaxIdle(new BigInteger("10000"));
+		
 		dbConnectionProfile.setJdbcConnectionPoolParams(jdbcConnectionPoolParams);
 
 		fillDBConnectionNameList();
