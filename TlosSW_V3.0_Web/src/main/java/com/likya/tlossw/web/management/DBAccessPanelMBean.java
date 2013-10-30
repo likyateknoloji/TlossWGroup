@@ -9,7 +9,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.xml.namespace.QName;
@@ -28,16 +29,16 @@ import com.likya.tlossw.web.TlosSWBaseBean;
 import com.likya.tlossw.web.utils.TestUtils;
 
 @ManagedBean(name = "dbAccessPanelMBean")
-@RequestScoped
+@ViewScoped
 public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
-	@ManagedProperty(value = "#{param.selectedDBAccessID}")
+//	@ManagedProperty(value = "#{param.selectedDBAccessID}")
 	private String selectedDBAccessID;
-
-	@ManagedProperty(value = "#{param.insertCheck}")
+//
+//	@ManagedProperty(value = "#{param.insertCheck}")
 	private String insertCheck;
-
-	@ManagedProperty(value = "#{param.iCheck}")
+//
+//	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
 
 	@ManagedProperty(value = "#{testUtils}")
@@ -49,6 +50,9 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	private DBAccessInfoTypeClient dbAccessInfoTypeClient;
 
 	private String dbConnectionName = null;
+	private String dbDefinitionId = null;
+	private String selectedUserName = null;
+	
 	private Collection<SelectItem> dbConnectionNameList = null;
 
 	private String confirmUserPassword;
@@ -56,20 +60,34 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	private String active;
 
 	private boolean insertButton;
-
+	private JdbcConnectionPoolParams jdbcConnectionPoolParams = null;
+			
 	@PostConstruct
 	public void init() {
-		dbConnectionProfile = DbConnectionProfile.Factory.newInstance();
+		if(dbConnectionProfile == null) {
+			dbConnectionProfile = DbConnectionProfile.Factory.newInstance();
+		}
 
-		JdbcConnectionPoolParams jdbcConnectionPoolParams = JdbcConnectionPoolParams.Factory.newInstance();
+		insertCheck = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck");
+		iCheck = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iCheck");
+		selectedDBAccessID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedDBAccessID");
+		selectedUserName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedUserName");
 		
-		jdbcConnectionPoolParams.setInitialCapacity(new BigInteger("3"));
-		jdbcConnectionPoolParams.setMaxCapacity(new BigInteger("10"));
-		jdbcConnectionPoolParams.setMinIdle(new BigInteger("0"));
-		jdbcConnectionPoolParams.setMaxWait(new BigInteger("0"));
-		jdbcConnectionPoolParams.setMaxIdle(new BigInteger("10000"));
-		
-		dbConnectionProfile.setJdbcConnectionPoolParams(jdbcConnectionPoolParams);
+		if(jdbcConnectionPoolParams == null ) {
+		  
+		  jdbcConnectionPoolParams = dbConnectionProfile.addNewJdbcConnectionPoolParams();
+		  
+		  if (selectedDBAccessID != null) {
+		     dbConnectionProfile.setDbDefinitionId(new BigInteger(selectedDBAccessID));
+		  }
+		  jdbcConnectionPoolParams.setInitialCapacity(new BigInteger("3"));
+		  jdbcConnectionPoolParams.setMaxCapacity(new BigInteger("10"));
+		  jdbcConnectionPoolParams.setMinIdle(new BigInteger("0"));
+		  jdbcConnectionPoolParams.setMaxIdle(new BigInteger("0"));
+		  jdbcConnectionPoolParams.setMaxWait(new BigInteger("10000"));
+
+		}
+		//dbConnectionProfile.setJdbcConnectionPoolParams(jdbcConnectionPoolParams);
 
 		fillDBConnectionNameList();
 
@@ -81,7 +99,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 
-				dbConnectionProfile = getDbOperations().searchDBAccessByDefID(selectedDBAccessID);
+				dbConnectionProfile = getDbOperations().searchDBAccessByDefID(selectedDBAccessID, selectedUserName);
 
 				if (dbConnectionProfile != null) {
 					setDbConnectionName(dbConnectionProfile.getDbDefinitionId() + "");
@@ -166,7 +184,8 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void testDBAccessAction(ActionEvent e) {
-		if (testUtils.testDBConnection(dbConnectionProfile)) {
+		dbConnectionProfile.setDbDefinitionId(new BigInteger(dbDefinitionId));
+		if ( testUtils.testDBConnection( dbConnectionProfile ) ) {
 			addMessage("insertDBConnection", FacesMessage.SEVERITY_INFO, "tlos.success.dbAccessDef.test", null);
 		} else {
 			addMessage("insertDBConnection", FacesMessage.SEVERITY_ERROR, "tlos.error.dbConnection.test", null);
@@ -227,6 +246,8 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setDbConnectionName(String dbConnectionName) {
 		this.dbConnectionName = dbConnectionName;
+		dbDefinitionId = new BigInteger(dbConnectionName)+""; 
+		dbConnectionProfile.setDbDefinitionId(new BigInteger(dbDefinitionId));
 	}
 
 	public Collection<SelectItem> getDbConnectionNameList() {
@@ -259,6 +280,30 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setTestUtils(TestUtils testUtils) {
 		this.testUtils = testUtils;
+	}
+
+	public JdbcConnectionPoolParams getJdbcConnectionPoolParams() {
+		return jdbcConnectionPoolParams;
+	}
+
+	public void setJdbcConnectionPoolParams(JdbcConnectionPoolParams jdbcConnectionPoolParams) {
+		this.jdbcConnectionPoolParams = jdbcConnectionPoolParams;
+	}
+
+	public String getDbDefinitionId() {
+		return dbDefinitionId;
+	}
+
+	public void setDbDefinitionId(String dbDefinitionId) {
+		this.dbDefinitionId = dbDefinitionId;
+	}
+
+	public String getSelectedUserName() {
+		return selectedUserName;
+	}
+
+	public void setSelectedUserName(String selectedUserName) {
+		this.selectedUserName = selectedUserName;
 	}
 
 }
