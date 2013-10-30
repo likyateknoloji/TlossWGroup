@@ -34,7 +34,8 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	private String resourceName;
 	private int agentId;
-	private String runId;
+	private String nativeRunId;
+	private String currentRunId;
 	private String LSIDateTime;
 
 	private String outParameterName;
@@ -220,12 +221,20 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.inParameterType = inParameterType;
 	}
 
-	public String getRunId() {
-		return runId;
+	public String getNativeRunId() {
+		return nativeRunId;
 	}
 
-	public void setRunId(String runId) {
-		this.runId = runId;
+	public void setNativeRunId(String nativeRunId) {
+		this.nativeRunId = nativeRunId;
+	}
+
+	public String getCurrentRunId() {
+		return currentRunId;
+	}
+
+	public void setCurrentRunId(String currentRunId) {
+		this.currentRunId = currentRunId;
 	}
 
 
