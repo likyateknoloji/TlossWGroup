@@ -77,11 +77,11 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="initialCapacity" type="xs:integer"/>
-	<xs:element name="maxCapacity" type="xs:integer"/>
-	<xs:element name="minIdle" type="xs:integer"/>
-	<xs:element name="maxIdle" type="xs:integer"/>
-	<xs:element name="maxWait" type="xs:integer"/>
+	<xs:element name="initialCapacity" type="xs:integer" default="3"/>
+	<xs:element name="maxCapacity" type="xs:integer" default="10"/>
+	<xs:element name="minIdle" type="xs:integer" default="0"/>
+	<xs:element name="maxIdle" type="xs:integer" default="0"/>
+	<xs:element name="maxWait" type="xs:integer" default="10000"/>
 
 	<xs:element name="sqlClientAppName">
 		<xs:simpleType>
