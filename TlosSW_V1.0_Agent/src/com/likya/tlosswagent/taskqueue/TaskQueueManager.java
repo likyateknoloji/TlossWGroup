@@ -28,6 +28,7 @@ import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.core.spc.jobs.ProcessNode;
 import com.likya.tlossw.core.spc.jobs.WebServiceExecuter;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.TypeUtils;
 import com.likya.tlosswagent.core.model.AgentGlobalRegistry;
@@ -88,11 +89,19 @@ public class TaskQueueManager implements Runnable, Serializable {
 	public synchronized boolean addTask(RxMessage rxMessage) {
 		
 		JobProperties jobProperties = rxMessage.getRxMessageBodyType().getJobProperties();
+		String messageKey = rxMessage.getId();
 		
 		JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 		jobRuntimeProperties.setJobProperties(jobProperties);
 
-		// jobRuntimeProperties.setTreePath(getSpcId());
+		
+		System.err.println("messageKey : " + jobRuntimeProperties);
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(messageKey);
+		tlosSWPathType.setRunId(jobProperties.getRunId());
+		jobRuntimeProperties.setNativeFullJobPath(tlosSWPathType);
+		
+		System.err.println("tlosSWPathType.getFullPath() : " + tlosSWPathType.getFullPath());
+
 		Job myJob = null;
 		taskQueueLogger.info("is Adi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 		taskQueueLogger.info("is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
