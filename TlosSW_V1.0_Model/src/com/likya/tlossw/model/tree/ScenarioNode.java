@@ -28,7 +28,6 @@ public class ScenarioNode extends WsScenarioNode {
 	public ScenarioNode(ScenarioNode scenarioNode) {
 		super();
 		this.setId(scenarioNode.getId());
-		this.setRunId(scenarioNode.getRunId());
 		this.setLabelText(scenarioNode.getLabelText());
 		this.setLeafIcon(scenarioNode.getLeafIcon());
 		this.setName(scenarioNode.getName());
