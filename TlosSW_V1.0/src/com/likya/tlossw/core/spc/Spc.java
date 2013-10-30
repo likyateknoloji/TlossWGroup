@@ -38,6 +38,7 @@ import com.likya.tlossw.infobus.helper.ScenarioMessageFactory;
 import com.likya.tlossw.model.JobQueueResult;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.transform.InputParameterPassing;
 import com.likya.tlossw.utils.CpcUtils;
 import com.likya.tlossw.utils.JobIndexUtils;
@@ -348,6 +349,10 @@ public class Spc extends SpcBase {
 						
 						JobRuntimeProperties newJobRuntimeProperties = new JobRuntimeProperties();
 
+						TlosSWPathType tlosSWPathType = new TlosSWPathType(getSpcNativeFullPath());
+						tlosSWPathType.setRunId(newJobProperties.getRunId());
+						newJobRuntimeProperties.setNativeFullJobPath(tlosSWPathType);
+						
 						LiveStateInfoUtils.insertNewLiveStateInfo(newJobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
 						newJobRuntimeProperties.setJobProperties(newJobProperties);
 						
