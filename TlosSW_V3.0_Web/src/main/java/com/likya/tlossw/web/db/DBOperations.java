@@ -832,8 +832,8 @@ public class DBOperations implements Serializable {
 		return dbConnectionProfile;
 	}
 
-	public DbConnectionProfile searchDBAccessByDefID(String id) {
-		String xQueryStr = dbFunctionConstructor("db:getDbCPfromDefId", id);
+	public DbConnectionProfile searchDBAccessByDefID(String id, String userName) {
+		String xQueryStr = dbFunctionConstructor("db:getDbCPfromDefId", id, toXSString(userName));
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
