@@ -11,14 +11,4 @@ public class WsScenarioNode extends WsNode {
 
 	private static final long serialVersionUID = 1676608004368003714L;
 
-	private String runId;
-
-	public String getRunId() {
-		return runId;
-	}
-
-	public void setRunId(String runId) {
-		this.runId = runId;
-	}
-
 }
