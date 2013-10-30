@@ -138,6 +138,8 @@
 								value="#{msgs['tlos.ask.update.button']}" action="dbAccessPanel.xhtml">
 								<f:param name="selectedDBAccessID"
 									value="#{item.dbConnectionProfile.dbDefinitionId}" />
+								<f:param name="selectedUserName"
+									value="#{item.dbConnectionProfile.userName}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
