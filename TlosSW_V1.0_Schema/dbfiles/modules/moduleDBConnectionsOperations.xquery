@@ -33,13 +33,15 @@ declare function db:getDbCP($documentUrl as xs:string, $id as xs:integer) as ele
 
 };
 
-declare function db:getDbCPfromDefId($documentUrl as xs:string, $id as xs:integer) as element(dbc:dbConnectionProfile)?
+declare function db:getDbCPfromDefId($documentUrl as xs:string, $id as xs:integer, $userName as xs:string) as element(dbc:dbConnectionProfile)?
 {
     let $dbProfilesDocumentUrl := met:getMetaData($documentUrl, "dbConnectionProfiles")
  
-	for $dbConnection in doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles/dbc:dbConnectionProfile
-    where $dbConnection/dbc:dbDefinitionId = $id
-    return  $dbConnection
+    let $result := (for $dbConnection in doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles/dbc:dbConnectionProfile
+    where $dbConnection/dbc:dbDefinitionId = $id and $dbConnection/com:userName = $userName
+    return  $dbConnection)[1]
+    (: Birden fazla donus varsa ilkini getir :)
+    return $result
 
 };
 
