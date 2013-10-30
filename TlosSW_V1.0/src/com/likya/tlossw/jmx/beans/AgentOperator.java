@@ -20,6 +20,8 @@ import com.likya.tlossw.jmx.JMXServer;
 import com.likya.tlossw.jmx.JMXTLSServer;
 import com.likya.tlossw.model.engine.TxMessageIdBean;
 import com.likya.tlossw.model.jmx.JmxAgentUser;
+import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.XmlUtils;
 
 public class AgentOperator implements AgentOperatorMBean {
@@ -70,22 +72,25 @@ public class AgentOperator implements AgentOperatorMBean {
 		TxMessageIdBean txMessageIdBean = XmlUtils.tokenizeTxIds(txMessage.getId());
 		boolean isAgentAvailable = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference().getSwAgentCache(txMessageIdBean.getAgentId() + "").getJmxAvailable();
 
+		String runId = txMessageIdBean.getRunId();
+		String spcId = txMessageIdBean.getSpcId();
+		String jobId = txMessageIdBean.getJobKey();
+		
+		TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." + runId + "." + spcId);
+		
 		if (isAgentAvailable) {
 			
 			HashMap<String, RunInfoType> runLookupTable = TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable();
 
 			if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB_STATE)) {
 
-				String runId = txMessageIdBean.getRunId();
-				String spcId = txMessageIdBean.getSpcId();
-				String jobId = txMessageIdBean.getJobKey();
-
-				Job job = runLookupTable.get(runId).getSpcLookupTable().getTable().get(spcId).getSpcReferance().getJobQueue().get(jobId);
+				Job job = runLookupTable.get(runId).getSpcLookupTable().getTable().get(tlosSWPathType.getFullPath()).getSpcReferance().getJobQueue().get(jobId);
 				job.insertNewLiveStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 				// job.changeStateInfo(txMessage.getTxMessageBodyType().getLiveStateInfo());
 			} else if (txMessage.getTxMessageTypeEnumeration().equals(TxMessageTypeEnumeration.JOB)) {
-				Spc spc = runLookupTable.get(txMessageIdBean.getRunId()).getSpcLookupTable().getTable().get(txMessageIdBean.getSpcId()).getSpcReferance();
-				Job job = spc.getJobQueue().get(txMessageIdBean.getJobKey());
+				
+				Spc spc = runLookupTable.get(txMessageIdBean.getRunId()).getSpcLookupTable().getTable().get(tlosSWPathType.getFullPath()).getSpcReferance();
+				Job job = spc.getJobQueue().get(jobId);
 				
 				job.sendEndInfo(txMessageIdBean.getSpcId(), txMessage.getTxMessageBodyType().getJobProperties());
 				if (txMessage.getTxMessageBodyType().getJobProperties().getAgentId() != 0) { // Baska
