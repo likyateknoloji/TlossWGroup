@@ -25,6 +25,9 @@ public class SpcInfoTypeClient implements Serializable {
 	private boolean resumable;
 	private boolean startable;
 	
+	private String nativeRunId;
+	private String currentRunId;
+	
 	public SpcInfoTypeClient() {
 		super();
 	}
@@ -56,6 +59,10 @@ public class SpcInfoTypeClient implements Serializable {
 		pausable = cloneSpcInfoTypeClient.getPausable();
 		resumable = cloneSpcInfoTypeClient.getResumable();
 		startable = cloneSpcInfoTypeClient.getStartable();
+		
+		currentRunId = cloneSpcInfoTypeClient.getCurrentRunId();
+		nativeRunId = cloneSpcInfoTypeClient.getNativeRunId();
+				
 	}
 
 	public String getSpcId() {
@@ -128,6 +135,22 @@ public class SpcInfoTypeClient implements Serializable {
 
 	public void setJsName(String jsName) {
 		this.jsName = jsName;
+	}
+
+	public String getNativeRunId() {
+		return nativeRunId;
+	}
+
+	public void setNativeRunId(String nativeRunId) {
+		this.nativeRunId = nativeRunId;
+	}
+
+	public String getCurrentRunId() {
+		return currentRunId;
+	}
+
+	public void setCurrentRunId(String currentRunId) {
+		this.currentRunId = currentRunId;
 	}
 	
 }
