@@ -90,11 +90,11 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		calisanIsler.getChildren().add(dummyNode);
 		calisanIsler.setExpanded(false);
 
-		constructPlanNodes();
+		constructRunNodes();
 
 	}
 
-	private void constructPlanNodes() {
+	private void constructRunNodes() {
 		// if (security.get("Instance").equals(Boolean.TRUE)) {
 
 		// ArrayList<String> instanceIds = TEJmxMpClient.retrieveInstanceIds(new JmxUser());
@@ -106,7 +106,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 		// }
 	}
 
-	private void constructPlanNodes(Set<String> runIds) {
+	private void constructRunNodes(Set<String> runIds) {
 
 		Iterator<String> keyIterator = runIds.iterator();
 
@@ -209,10 +209,10 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 						TreeNode tmpScenario = tmpPlanFolder.getChildren().get(j);
 						tmpScenario.getChildren().remove(dummyNode);
 						
-						ScenarioNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
+						ScenarioNode expandedNode = preRenderLiveTreeRecursive(tmpScenario);
 
-						if (expendedNode != null) {
-							runNode.getScenarioNodeMap().put(expendedNode.getSpcInfoTypeClient().getSpcId(), expendedNode);
+						if (expandedNode != null) {
+							runNode.getScenarioNodeMap().put(expandedNode.getSpcInfoTypeClient().getSpcId(), expandedNode);
 						}
 					}
 					gunlukIslerNode.getRunNodes().put(runId, runNode);
@@ -239,9 +239,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 				if (!(scenarioNode.getData() instanceof ScenarioNode)) {
 					continue;
 				}
-				ScenarioNode expendedNode = preRenderLiveTreeRecursive(tmpScenario);
-				if (expendedNode != null) {
-					myScenarioNode.getScenarioNodes().add(expendedNode);
+				ScenarioNode expandedNode = preRenderLiveTreeRecursive(tmpScenario);
+				if (expandedNode != null) {
+					myScenarioNode.getScenarioNodes().add(expandedNode);
 				}
 				
 //				if (tmpScenario.getType().equalsIgnoreCase("job")) {
@@ -267,7 +267,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 		// 1. asama instance lar eklenecek
 		calisanIsler.getChildren().clear();
-		constructPlanNodes(serverGunlukIslerNode.getRunNodes().keySet());
+		constructRunNodes(serverGunlukIslerNode.getRunNodes().keySet());
 
 		if (calisanIsler.getChildren().size() == 0) {
 			calisanIsler.getChildren().add(dummyNode);
@@ -305,13 +305,13 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			ScenarioNode scenarioNode = new ScenarioNode();
 
 			scenarioNode.setId(serverScenarioNode.getId());
+			scenarioNode.setLabelText(serverScenarioNode.getLabelText());
 			scenarioNode.setName(spcInfoTypeClient.getJsName());
 
 //			if (spcInfoTypeClient.getJsName() == null) {
 //				scenarioNode.setId(spcInfoTypeClient.getSpcId());
 //			}
-
-			scenarioNode.setRunId(((RunNode) runNode.getData()).getRunId());
+//			spcInfoTypeClient.setCurrentRunId(((RunNode) runNode.getData()).getRunId());
 			scenarioNode.setSpcInfoTypeClient(spcInfoTypeClient);
 
 			TreeNode scenarioNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_SCENARIO, scenarioNode, runNode);
@@ -367,10 +367,9 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 			JobInfoTypeClient jobInfoTypeClient = tmpJobNode.getJobInfoTypeClient();
 
 			// String jobText = jobInfoTypeClient.getJobKey();
-			String jobText = jobInfoTypeClient.getJobName();
 			JobNode jobNode = new JobNode();
 			jobNode.setId(tmpJobNode.getId());
-			jobNode.setLabelText(jobText);
+			jobNode.setLabelText(tmpJobNode.getLabelText());
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			// job.setLeafIcon(jobImageSetter(jobInfoTypeClient.getLiveStateInfo()));
 			jobNode.setName(jobInfoTypeClient.getJobName());
