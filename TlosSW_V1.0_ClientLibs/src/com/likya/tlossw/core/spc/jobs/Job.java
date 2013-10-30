@@ -399,6 +399,10 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
 		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
+		System.err.println("jobRuntimeProperties : " + jobRuntimeProperties);
+		System.err.println("jobRuntimeProperties.getNativeFullJobPath() : " + jobRuntimeProperties.getNativeFullJobPath());
+		System.err.println("jobRuntimeProperties.getNativeFullJobPath().getFullPath() : " + jobRuntimeProperties.getNativeFullJobPath().getFullPath());
+		
 		sendEndInfo(jobRuntimeProperties.getNativeFullJobPath().getFullPath(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
