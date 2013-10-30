@@ -348,7 +348,7 @@
 						requiredMessage="#{msgs['tlos.validation.ftp.sourceDirectory']}"
 						validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
 						<f:validateRegex
-							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z\/\\\.0-9_ \-])*|(\$\([a-zA-Z_-]*\))" />
 					</p:inputText>
 
 					<h:outputText
@@ -360,7 +360,7 @@
 						requiredMessage="#{msgs['tlos.validation.ftp.targetDirectory']}"
 						validatorMessage="#{msgs['tlos.validation.ftp.sourceDirectory.regex']}">
 						<f:validateRegex
-							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z\/\\\.0-9_ \-])*|(\$\([a-zA-Z_-]*\))" />
 					</p:inputText>
 				</p:panelGrid>
 
