@@ -127,6 +127,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				spcInfoTypeClient.setResumable(spcInfoType.getSpcReferance().isResumable());
 				spcInfoTypeClient.setStopable(spcInfoType.getSpcReferance().isStopable());
 				spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
+				spcInfoTypeClient.setNativeRunId(spcInfoType.getSpcReferance().getNativeRunId());
+				spcInfoTypeClient.setCurrentRunId(spcInfoType.getSpcReferance().getCurrentRunId());
+				
 			}
 			
 			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
@@ -236,6 +239,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobNode.setName(jobInfoTypeClient.getJobName());
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
+			jobNode.setLabelText(generateLabel(jobNode));
 			newScenarioNode.getJobNodes().add(jobNode);
 		}
 
@@ -278,7 +282,8 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
-			jobInfoTypeClient.setRunId(spcInfoType.getSpcReferance().getCurrentRunId());
+			jobInfoTypeClient.setCurrentRunId(spcInfoType.getSpcReferance().getCurrentRunId());
+			jobInfoTypeClient.setNativeRunId(jobRuntimeProperties.getJobProperties().getRunId());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
@@ -401,8 +406,10 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 					SpcInfoTypeClient spcInfoTypeClient = spcInfoTypeClientList.get(spcId);
 
 					ScenarioNode serverNode = new ScenarioNode();
+					serverNode.setName(spcInfoTypeClient.getJsName());
 					serverNode.setId(new TlosSWPathType(spcId).getId().toString());
 					serverNode.setSpcInfoTypeClient(spcInfoTypeClient);
+					serverNode.setLabelText(generateLabel(serverNode));
 					serverRunNode.getScenarioNodeMap().put(spcId, serverNode);
 				}
 
@@ -414,7 +421,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 					ScenarioNode newScenarioNode = null;
 
 					newScenarioNode = getDetails(jmxUser, myScenarioNode);
+					newScenarioNode.setName(newScenarioNode.getSpcInfoTypeClient().getJsName());
 					newScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
+					newScenarioNode.setLabelText(generateLabel(newScenarioNode));
 					serverRunNode.getScenarioNodeMap().put(spcId, newScenarioNode);
 				}
 
@@ -422,6 +431,34 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		}
 		
 		return tlosSWRespNode;
+	}
+	
+	private String generateLabel(ScenarioNode scenarioNode) {
+
+		String labelText = "";
+		
+		if(!scenarioNode.getSpcInfoTypeClient().getNativeRunId().equalsIgnoreCase(scenarioNode.getSpcInfoTypeClient().getCurrentRunId())) {
+			labelText = scenarioNode.getLabelText() + "[NRID:" + scenarioNode.getSpcInfoTypeClient().getNativeRunId() + "][" + scenarioNode.getId() + "]";
+		} else {
+			labelText =  scenarioNode.getLabelText() + "[" + scenarioNode.getId() + "]";
+		}
+
+		System.err.println("labelText : " + labelText);
+		return labelText;
+	}
+	
+	private String generateLabel(JobNode jobNode) {
+
+		String labelText = "";
+		
+		if(!jobNode.getJobInfoTypeClient().getNativeRunId().equalsIgnoreCase(jobNode.getJobInfoTypeClient().getCurrentRunId())) {
+			labelText = jobNode.getLabelText() + "[NRID:" + jobNode.getJobInfoTypeClient().getNativeRunId() + "][" + jobNode.getId() + "]";
+		} else {
+			labelText =  jobNode.getLabelText() + "[" + jobNode.getId() + "]";
+		}
+
+		System.err.println("labelText : " + labelText);
+		return labelText;
 	}
 
 }
