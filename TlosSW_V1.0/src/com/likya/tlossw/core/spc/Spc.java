@@ -14,6 +14,7 @@ import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -319,7 +320,7 @@ public class Spc extends SpcBase {
 				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
 				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
 				
-				if(isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() == Thread.State.WAITING) && scheduledJob.isUpdateMySelfAfterMe()) {
+				if(isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() != Thread.State.RUNNABLE) && scheduledJob.isUpdateMySelfAfterMe()) {
 					
 					// This job should terminate it self
 					scheduledJob.setUpdateMySelfAfterMe(false);
@@ -357,6 +358,10 @@ public class Spc extends SpcBase {
 						newJobRuntimeProperties.setJobProperties(newJobProperties);
 						
 						Job newJob = getMyJob(newJobRuntimeProperties);
+						
+						JsPlannedTime jsPlannedTime = jobProperties.getTimeManagement().getJsPlannedTime();
+						
+						newJobProperties.getTimeManagement().setJsPlannedTime(jsPlannedTime);
 						
 						getJobQueue().put(jobId, newJob);
 						SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
