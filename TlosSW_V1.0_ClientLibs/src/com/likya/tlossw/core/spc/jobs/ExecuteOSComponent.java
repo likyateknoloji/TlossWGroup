@@ -106,6 +106,8 @@ public abstract class ExecuteOSComponent extends ExecuteComponent {
 
 			updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
 
+			writetErrorLogFromOutputs(myLogger, logClassName, stringBufferForOUTPUT, stringBufferForERROR);
+			
 			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue(), descStr.toString());
 
 		} catch (InterruptedException e) {
