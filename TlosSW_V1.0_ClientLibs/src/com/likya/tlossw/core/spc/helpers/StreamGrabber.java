@@ -88,4 +88,8 @@ public class StreamGrabber extends Thread {
 		}
 		is = null;
 	}
+
+	public StringBuffer getOutputBuffer() {
+		return outputBuffer;
+	}
 }
