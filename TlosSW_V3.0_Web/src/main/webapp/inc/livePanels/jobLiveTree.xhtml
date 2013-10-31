@@ -60,7 +60,7 @@
 					<p:inputText styleClass="#{userPreferencesBean.getJobStateColorCss(jobMBean.jobInTyCl.liveStateInfo)}" value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}" readonly="true" maxlength="500" style="width: 150px;" />
 					
 					<h:outputText value="#{msgs['tlos.live.pannel.job.ResultDesc']}" />
-					<p:inputTextarea value="#{jobMBean.jobInTyCl.errorMessage}" rows="3" cols="40" readonly="true" counter="counter" maxlength="100" counterTemplate="{0} characters remaining." autoResize="false"/> 
+					<p:inputTextarea value="#{jobMBean.jobInTyCl.errorMessage}" rows="3" cols="40" readonly="true" maxlength="100" autoResize="false"/> 
 				</p:panelGrid>
 					
 					<!-- h:outputText value="#{msgs['tlos.live.pannel.job.stateInfo']}" />
