@@ -1184,7 +1184,7 @@ public class DBOperations implements Serializable {
 
 		ArrayList<SLA> slaList = new ArrayList<SLA>();
 
-		String xQueryStr = slaFunctionConstructor("hs:slaList", "1", "2");
+		String xQueryStr = slaFunctionConstructor("hs:slaList", "1", "10");
 
 		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
 
