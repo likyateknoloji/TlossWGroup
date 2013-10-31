@@ -89,8 +89,8 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 		HashMap<String, SpcInfoType> spcLookUpTable = null;
 
-//		StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
-//		int treeLevel = treePathToken.countTokens();
+		// StringTokenizer treePathToken = new StringTokenizer(treePath, ".");
+		// int treeLevel = treePathToken.countTokens();
 
 		if (isTester(jmxUser)) {
 			spcLookUpTable = TlosSpaceWide.getSpaceWideRegistry().getCpcTesterReference().getSpcLookupTable("" + jmxUser.getId()).getTable();
@@ -117,7 +117,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			spcInfoTypeClient.setSpcId(spcInfoType.getSpcId().getFullPath());
 
 			spcInfoTypeClient.setJsName(spcInfoType.getScenario().getBaseScenarioInfos().getJsName());
-			
+
 			if (spcInfoType.getSpcReferance() != null) {
 				// No spc defined for this scenario, it is NOT a BUG !
 				spcInfoTypeClient.setNumOfJobs(JobQueueOperations.getNumOfJobs(spcInfoType.getSpcReferance().getJobQueue()));
@@ -129,9 +129,12 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				spcInfoTypeClient.setStartable(spcInfoType.getSpcReferance().isStartable());
 				spcInfoTypeClient.setNativeRunId(spcInfoType.getSpcReferance().getNativeRunId());
 				spcInfoTypeClient.setCurrentRunId(spcInfoType.getSpcReferance().getCurrentRunId());
-				
+
+			} else {
+				spcInfoTypeClient.setNativeRunId(runId);
+				spcInfoTypeClient.setCurrentRunId(runId);
 			}
-			
+
 			// spcLookUpTableTypeClient.getSpcInfoTypeClientList().put(spcId, spcInfoTypeClient);
 
 			if (treePath == null || treeLevelComparer(treePath, spcInfoType.getSpcId().getFullPath())) {
@@ -216,7 +219,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			ScenarioNode innerScenarioNode = scenarioListContainsSpc(treeNode.getScenarioNodes(), spcId);
 
 			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcId);
-			
+
 			if (innerScenarioNode != null) {
 				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
 				newInnerScenarioNode.setId(tlosSWPathType.getId().toString());
@@ -261,7 +264,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		} else {
 			spcInfoType = RunMapHelper.findSpc(spcFullPath, TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable());
 		}
-		
+
 		if (spcInfoType.getSpcReferance() == null) {
 			return jobInfoTypeClientList;
 		}
@@ -362,29 +365,29 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		}
 
 		TlosSpaceWideNode tlosSWRespNode = createPlanNodeObject(jmxUser);
-		
+
 		GunlukIslerNode gunlukIslerNodeServer = tlosSWRespNode.getGunlukIslerNode();
 
 		GunlukIslerNode gunlukIslerNodeClient = tlosSWReqNode.getGunlukIslerNode();
-		
+
 		/**
-		 *  ekranda run dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor, 
-		 *  yoksa icinde run gelmedigi icin girmiyor
+		 * ekranda run dugumu acilmissa yani altindaki kisimlar aciktaysa buraya giriyor,
+		 * yoksa icinde run gelmedigi icin girmiyor
 		 */
-		
+
 		if (gunlukIslerNodeClient != null) {
-			
+
 			HashMap<String, RunNode> serverRunNodes = gunlukIslerNodeServer.getRunNodes();
-			
+
 			HashMap<String, RunNode> clientRunNodes = gunlukIslerNodeClient.getRunNodes();
-			
+
 			for (String runId : gunlukIslerNodeClient.getRunNodes().keySet()) {
 
 				RunNode clientRunNode = clientRunNodes.get(runId);
 
 				RunNode serverRunNode = serverRunNodes.get(runId);
-				
-				if(serverRunNode == null) {
+
+				if (serverRunNode == null) {
 					// Bu durumda client'dan gelen run id server tarafta bulunamadı demek.
 					// Bu ancak ve ancak server tarafta restart sonrası ya da GD sonrası
 					// oluşabilecek bir durum. Böyler bir durumda direk client'a boş
@@ -429,32 +432,32 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 
 			}
 		}
-		
+
 		return tlosSWRespNode;
 	}
-	
+
 	private String generateLabel(ScenarioNode scenarioNode) {
 
 		String labelText = "";
-		
-		if(!scenarioNode.getSpcInfoTypeClient().getNativeRunId().equalsIgnoreCase(scenarioNode.getSpcInfoTypeClient().getCurrentRunId())) {
+
+		if (!scenarioNode.getSpcInfoTypeClient().getNativeRunId().equalsIgnoreCase(scenarioNode.getSpcInfoTypeClient().getCurrentRunId())) {
 			labelText = scenarioNode.getLabelText() + "[NRID:" + scenarioNode.getSpcInfoTypeClient().getNativeRunId() + "][" + scenarioNode.getId() + "]";
 		} else {
-			labelText =  scenarioNode.getLabelText() + "[" + scenarioNode.getId() + "]";
+			labelText = scenarioNode.getLabelText() + "[" + scenarioNode.getId() + "]";
 		}
 
 		System.err.println("labelText : " + labelText);
 		return labelText;
 	}
-	
+
 	private String generateLabel(JobNode jobNode) {
 
 		String labelText = "";
-		
-		if(!jobNode.getJobInfoTypeClient().getNativeRunId().equalsIgnoreCase(jobNode.getJobInfoTypeClient().getCurrentRunId())) {
+
+		if (!jobNode.getJobInfoTypeClient().getNativeRunId().equalsIgnoreCase(jobNode.getJobInfoTypeClient().getCurrentRunId())) {
 			labelText = jobNode.getLabelText() + "[NRID:" + jobNode.getJobInfoTypeClient().getNativeRunId() + "][" + jobNode.getId() + "]";
 		} else {
-			labelText =  jobNode.getLabelText() + "[" + jobNode.getId() + "]";
+			labelText = jobNode.getLabelText() + "[" + jobNode.getId() + "]";
 		}
 
 		System.err.println("labelText : " + labelText);
