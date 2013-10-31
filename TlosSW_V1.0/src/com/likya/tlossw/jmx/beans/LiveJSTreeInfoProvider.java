@@ -249,7 +249,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobNode.setName(jobInfoTypeClient.getJobName());
 			jobNode.setJobInfoTypeClient(jobInfoTypeClient);
 			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
-			jobNode.setLabelText(generateLabel(jobNode));
+			jobNode.setLabelText(generateLabel(jobNode, treeNode.getSpcInfoTypeClient().getSpcId()));
 			newScenarioNode.getJobNodes().add(jobNode);
 		}
 
@@ -420,6 +420,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 					serverNode.setId(new TlosSWPathType(spcId).getId().toString());
 					serverNode.setSpcInfoTypeClient(spcInfoTypeClient);
 					serverNode.setLabelText(generateLabel(serverNode));
+					// System.err.println(serverNode.getLabelText());
 					serverRunNode.getScenarioNodeMap().put(spcId, serverNode);
 				}
 
@@ -434,6 +435,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 					newScenarioNode.setName(newScenarioNode.getSpcInfoTypeClient().getJsName());
 					newScenarioNode.setId(new TlosSWPathType(spcId).getId().toString());
 					newScenarioNode.setLabelText(generateLabel(newScenarioNode));
+					// System.err.println(newScenarioNode.getLabelText());
+					
+					// Üzerine yazmadan önce bilgiyi yenisine set edelim
+					newScenarioNode.setSpcInfoTypeClient(serverRunNode.getScenarioNodeMap().get(spcId).getSpcInfoTypeClient());
+					
 					serverRunNode.getScenarioNodeMap().put(spcId, newScenarioNode);
 				}
 
@@ -457,11 +463,11 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 		return labelText;
 	}
 
-	private String generateLabel(JobNode jobNode) {
+	private String generateLabel(JobNode jobNode, String spcId) {
 
 		String labelText = "";
 
-		if (!jobNode.getJobInfoTypeClient().getNativeRunId().equalsIgnoreCase(jobNode.getJobInfoTypeClient().getCurrentRunId())) {
+		if (!new TlosSWPathType(spcId).getRunId().equals(jobNode.getJobInfoTypeClient().getCurrentRunId()) && !jobNode.getJobInfoTypeClient().getNativeRunId().equalsIgnoreCase(jobNode.getJobInfoTypeClient().getCurrentRunId())) {
 			labelText = jobNode.getLabelText() + "[NRID:" + jobNode.getJobInfoTypeClient().getNativeRunId() + "][" + jobNode.getId() + "]";
 		} else {
 			labelText = jobNode.getLabelText() + "[" + jobNode.getId() + "]";
