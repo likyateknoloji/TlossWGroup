@@ -21,6 +21,7 @@ import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
+import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public class DssVisionaire extends DssBase {
@@ -245,7 +246,9 @@ public class DssVisionaire extends DssBase {
 		if (resourceAgentList == null || isResourceListExpired(resourceAgentList.getTime(), expireTimeAmount)) {
 			long startTime = System.currentTimeMillis();
 			resourceAgentList = DssDbUtils.swFindResourcesForAJob(jobProperties);
-			System.err.println("DssDbUtils.swFindResourcesForAJob : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			if(SpaceWideRegistry.isDebug) {
+				System.err.println("DssDbUtils.swFindResourcesForAJob : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			}
 		}
 
 		int numberOfResources = resourceAgentList.sizeOfResourceArray();
