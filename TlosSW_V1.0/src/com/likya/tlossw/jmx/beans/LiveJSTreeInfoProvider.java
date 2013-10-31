@@ -223,13 +223,20 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			if (innerScenarioNode != null) {
 				ScenarioNode newInnerScenarioNode = getDetails(jmxUser, innerScenarioNode);
 				newInnerScenarioNode.setId(tlosSWPathType.getId().toString());
+				// System.err.println("name : " + newInnerScenarioNode.getSpcInfoTypeClient().getJsName());
+				newInnerScenarioNode.setName(newInnerScenarioNode.getSpcInfoTypeClient().getJsName());
+				// System.err.println("label : " + generateLabel(newInnerScenarioNode));
+				newInnerScenarioNode.setLabelText(generateLabel(newInnerScenarioNode));
 				newScenarioNode.getScenarioNodes().add(newInnerScenarioNode);
 			} else {
-				SpcInfoTypeClient tmpScenario = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
+				SpcInfoTypeClient tmpSpcInfoTypeClient = spcLookUpTableTypeClient.getSpcInfoTypeClientList().get(spcId);
 				ScenarioNode tmpScenarioNode = new ScenarioNode();
 				tmpScenarioNode.setId(tlosSWPathType.getId().toString());
-				tmpScenarioNode.setName(tmpScenario.getJsName());
-				tmpScenarioNode.setSpcInfoTypeClient(tmpScenario);
+				// System.err.println("name 2 : " + tmpSpcInfoTypeClient.getJsName());
+				tmpScenarioNode.setName(tmpSpcInfoTypeClient.getJsName());
+				tmpScenarioNode.setSpcInfoTypeClient(tmpSpcInfoTypeClient);
+				// System.err.println("label : " + generateLabel(tmpScenarioNode));
+				tmpScenarioNode.setLabelText(generateLabel(tmpScenarioNode));
 				newScenarioNode.getScenarioNodes().add(tmpScenarioNode);
 			}
 
@@ -446,7 +453,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			labelText = scenarioNode.getLabelText() + "[" + scenarioNode.getId() + "]";
 		}
 
-		System.err.println("labelText : " + labelText);
+		// System.err.println("labelText : " + labelText);
 		return labelText;
 	}
 
@@ -460,7 +467,7 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			labelText = jobNode.getLabelText() + "[" + jobNode.getId() + "]";
 		}
 
-		System.err.println("labelText : " + labelText);
+		// System.err.println("labelText : " + labelText);
 		return labelText;
 	}
 
