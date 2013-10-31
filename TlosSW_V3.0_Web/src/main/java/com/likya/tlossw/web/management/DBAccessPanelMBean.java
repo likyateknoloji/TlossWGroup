@@ -52,6 +52,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 	private String dbConnectionName = null;
 	private String dbDefinitionId = null;
 	private String selectedUserName = null;
+	private String dbCpID = null;
 	
 	private Collection<SelectItem> dbConnectionNameList = null;
 
@@ -72,6 +73,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 		iCheck = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iCheck");
 		selectedDBAccessID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedDBAccessID");
 		selectedUserName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedUserName");
+		dbCpID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("dbCpID");
 		
 		if(jdbcConnectionPoolParams == null ) {
 		  
@@ -99,7 +101,7 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 			if (insertCheck.equals("update")) {
 				insertButton = false;
 
-				dbConnectionProfile = getDbOperations().searchDBAccessByDefID(selectedDBAccessID, selectedUserName);
+				dbConnectionProfile = getDbOperations().searchDBAccessByID(dbCpID);
 
 				if (dbConnectionProfile != null) {
 					setDbConnectionName(dbConnectionProfile.getDbDefinitionId() + "");
@@ -304,6 +306,14 @@ public class DBAccessPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedUserName(String selectedUserName) {
 		this.selectedUserName = selectedUserName;
+	}
+
+	public String getDbCpID() {
+		return dbCpID;
+	}
+
+	public void setDbCpID(String dbCpID) {
+		this.dbCpID = dbCpID;
 	}
 
 }
