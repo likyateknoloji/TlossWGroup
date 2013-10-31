@@ -31,6 +31,7 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private String workDuration = "-";
 	private boolean isOver;
 	private LiveStateInfo liveStateInfo;
+	private String SSSName;
 
 	private String resourceName;
 	private int agentId;
@@ -225,6 +226,14 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	public void setCurrentRunId(String currentRunId) {
 		this.currentRunId = currentRunId;
+	}
+
+	public String getSSSName() {
+		return SSSName;
+	}
+
+	public void setSSSName(String sSSName) {
+		SSSName = sSSName;
 	}
 
 
