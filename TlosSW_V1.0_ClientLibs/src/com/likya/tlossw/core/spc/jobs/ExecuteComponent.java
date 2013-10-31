@@ -62,15 +62,28 @@ public abstract class ExecuteComponent extends Job {
 
 	protected void updateDescStr(StringBuffer descStr, StringBuffer stringBufferForOUTPUT, StringBuffer stringBufferForERROR) {
 
-		if (!"".equals(stringBufferForOUTPUT)) {
+		if (stringBufferForOUTPUT != null && stringBufferForOUTPUT.length() > 1) {
 			descStr.append("OUTPUT : " + stringBufferForOUTPUT);
 		}
 
-		if (!"".equals(stringBufferForERROR)) {
+		if (stringBufferForOUTPUT != null && stringBufferForOUTPUT.length() > 1) {
 			descStr.append("\nERROR : " + stringBufferForERROR);
 		}
 
 		return;
 	}
+	
+	protected void writetErrorLogFromOutputs(Logger myLogger, String logClassName, StringBuffer stringBufferForOUTPUT, StringBuffer stringBufferForERROR) {
+		
+		StringBuffer descStr = new StringBuffer();
+		
+		updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
+		
+		if(descStr.length() > 1) {
+			myLogger.error(" >>" + logLabel + ">> " + logClassName + " : Job has error, terminating " +descStr.toString());
+		}
+		
+	}
+	
 
 }
