@@ -91,32 +91,36 @@ public class DssVisionaire extends DssBase {
 
 			long startTime = System.currentTimeMillis();
 			dssResult = applyUserInteractionPreference(job);
-			System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			
+			if(SpaceWideRegistry.isDebug) {
+				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			}
 			break;
 
 		case ChoiceType.INT_SIMPLE_METASCHEDULER:
 			
 			startTime = System.currentTimeMillis();
 			dssResult = applySimpleMetaScheduler(job);
-			System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			
+			if(SpaceWideRegistry.isDebug) {
+				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			}			
 			break;
 
 		case ChoiceType.INT_USER_MANDATORY_PREFERENCE:
 
 			startTime = System.currentTimeMillis();
 			dssResult = applyUserMendatoryPreference(job, agentChoiceMethod.getAgentId());
-			System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			
+			if(SpaceWideRegistry.isDebug) {
+				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			}			
 			break;
 
 		case ChoiceType.INT_ADVANCED_METASCHEDULER:
 
 			startTime = System.currentTimeMillis();
 			dssResult = applyAdvancedMetaScheduler();
-			System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			
+			if(SpaceWideRegistry.isDebug) {
+				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
+			}			
 			break;
 
 		default:
