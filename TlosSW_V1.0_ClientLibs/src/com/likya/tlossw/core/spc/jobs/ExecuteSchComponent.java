@@ -105,6 +105,8 @@ public abstract class ExecuteSchComponent extends ExecuteComponent {
 			StatusName.Enum statusName = JobHelper.searchReturnCodeInStates(getGlobalRegistry(), jobProperties, processExitValue, descStr);
 			
 			updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
+
+			writetErrorLogFromOutputs(myLogger, logClassName, stringBufferForOUTPUT, stringBufferForERROR);
 			
 			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, statusName.intValue());
 
