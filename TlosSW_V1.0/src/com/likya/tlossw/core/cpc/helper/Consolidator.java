@@ -25,8 +25,84 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 public class Consolidator {
 
 	private static Logger logger = Logger.getLogger(Consolidator.class);
-
+	
 	public static void compareAndConsolidateTwoTables(String runIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
+
+		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bugünün kuyruğu : " + spcLookupTableNew.size());
+
+		String newSpcIdSample = spcLookupTableNew.keySet().toArray()[0].toString();
+		String runIdNew = new TlosSWPathType(newSpcIdSample).getRunId();
+
+		Set<String> itarationSet = new HashSet<String>(spcLookupTableOld.keySet());
+
+		for (String spcIdOld : itarationSet) {
+
+			TlosSWPathType tlosSWPathType = new TlosSWPathType(spcIdOld);
+			tlosSWPathType.setRunId(runIdNew);
+
+			SpcInfoType spcInfoTypeOld = spcLookupTableOld.get(spcIdOld);
+			// System.out.println("Before : " + spcInfoTypeOld.getSpcId());
+			// System.out.println("After : " + spcInfoTypeOld.getSpcId());
+			Spc spcReferanceOld = spcInfoTypeOld.getSpcReferance();
+			spcInfoTypeOld.setSpcId(tlosSWPathType);
+			String tempSpcIdOld = tlosSWPathType.getFullPath();
+
+			if (spcLookupTableNew.containsKey(tempSpcIdOld)) { // Bugünün listesinde de var ise
+
+				if (spcReferanceOld == null) {
+					// Empty scenario
+					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+				} else if (!isScenarioEnsuresTheConditions(spcReferanceOld)) {
+
+					if (spcReferanceOld.isConcurrent()) {
+						// Yenisini listeden çıkarıp kopyasını al
+						// SpcInfoType tmpSpcInfoType = spcLookupTableNew.remove(tlosSWPathType.getFullPath());
+						// eskisini yeni listeye taşı
+						spcReferanceOld.setCurrentRunId(runIdNew);
+						
+						// Yenisinin instance id sini bir arttır ve öylece listeye ekle,
+						// Örnek : scenarioId = 3245:13
+						// Yeni scenarioId = 3245:14
+
+//						TlosSWPathType tmpTlosSWPathType = new TlosSWPathType(spcIdOld);
+//						tmpTlosSWPathType.setRunId(runIdNew);
+						while (spcLookupTableNew.containsKey(tlosSWPathType.getFullPath())) {
+							tlosSWPathType.incrementRuId();
+						}
+						spcInfoTypeOld.setSpcId(tlosSWPathType);
+						// spcLookupTableNew.put(tmpTlosSWPathType.getFullPath(), tmpSpcInfoType);
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+
+					} else {
+						// Bitince kendini VT'den yenilesin değerini set et.
+						spcReferanceOld.setCurrentRunId(runIdNew);
+						spcReferanceOld.setUpdateMySelfAfterMe(true);
+						// all T< 1 jobs.setUpdateMySelfAfterMe(true);
+						JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
+						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+					}
+
+				}
+
+				// System.out.println("Referance : " + spcLookupTableNew.get(tempSpcIdOld).getSpcReferance() + "   Yeni  durum : " + spcLookupTableNew.get(tempSpcIdOld).getSpcId().getPlanId());
+
+			} else {
+
+				if ((spcReferanceOld != null) && !isScenarioEnsuresTheConditions(spcReferanceOld)) {
+					spcReferanceOld.setCurrentRunId(runIdNew);
+					spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+				}
+
+			}
+
+			spcLookupTableOld.remove(spcIdOld);
+
+		}
+
+		logger.info("Konsolidasyon sonrası kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bıugünün kuyruğu : " + spcLookupTableNew.size());
+	}
+
+	public static void compareAndConsolidateTwoTablesOld(String runIdOld, HashMap<String, SpcInfoType> spcLookupTableNew, HashMap<String, SpcInfoType> spcLookupTableOld) {
 
 		logger.info("Konsolidasyon öncesi kuyruk boyları >> Dünün kuyruğu : " + spcLookupTableOld.size() + " Bugünün kuyruğu : " + spcLookupTableNew.size());
 
