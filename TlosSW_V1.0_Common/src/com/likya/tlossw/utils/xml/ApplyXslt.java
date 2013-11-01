@@ -23,7 +23,7 @@ public class ApplyXslt {
 	/* http://java.sun.com/webservices/reference/tutorials/jaxp/html/dom.html */
 	protected static String objectModel = null;
 
-	public synchronized static JobProperties transform(ArrayList<Parameter> parameterList, JobProperties job, StreamSource inputXSL) {
+	public synchronized static JobProperties transform(String transformXsl, ArrayList<Parameter> parameterList, JobProperties job) {
 
 		JobProperties jobPropertiesResult = null;
 
@@ -102,7 +102,7 @@ public class ApplyXslt {
 			// Get a transformer for this XSL
 			// Transformer transformer = templates.newTransformer();
 
-			Transformer transformer = TransformUtils.getTransformer(inputXSL);
+			Transformer transformer = TransformUtils.getTransformer(transformXsl);
 
 			// Get a transformer for this XSL
 			// Transformer transformer = factory.newTransformer(inputXSL);
@@ -142,7 +142,7 @@ public class ApplyXslt {
 
 	}
 
-	public synchronized static String transformXML(String xmlDoc, StreamSource inputXSL) {
+	public synchronized static String transformXML(String xmlDoc, String transformXsl) {
 
 		String xmlContent = null;
 
@@ -183,7 +183,7 @@ public class ApplyXslt {
 			// Get a transformer for this XSL
 			// Transformer transformer = templates.newTransformer();
 
-			Transformer transformer = TransformUtils.getTransformer(inputXSL);
+			Transformer transformer = TransformUtils.getTransformer(transformXsl);
 
 			// Get a transformer for this XSL
 			// Transformer transformer = factory.newTransformer(inputXSL);
