@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.log4j.Logger;
 import org.mortbay.jetty.Server;
 import org.xmldb.api.base.Collection;
@@ -107,6 +109,8 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 	private JmxUser jmxUser;
 
 	private boolean waitConfirmOfGUI = false;
+	
+	private StreamSource transformCode = null;
 
 	public static SpaceWideRegistry getInstance() {
 		if (spaceWideRegistry == null) {
@@ -400,6 +404,14 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	public void setRunLookupTable(HashMap<String, RunInfoType> runLookupTable) {
 		this.runLookupTable = runLookupTable;
+	}
+
+	public StreamSource getTransformCode() {
+		return transformCode;
+	}
+
+	public void setTransformCode(StreamSource transformCode) {
+		this.transformCode = transformCode;
 	}
 
 }
