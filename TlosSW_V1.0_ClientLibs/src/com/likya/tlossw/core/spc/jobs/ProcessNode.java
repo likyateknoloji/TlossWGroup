@@ -3,13 +3,10 @@ package com.likya.tlossw.core.spc.jobs;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
@@ -131,7 +128,7 @@ public class ProcessNode extends Job {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		String fileContent = null;
-		StreamSource XSLTCode = null;
+		// StreamSource XSLTCode = null;
 
 		SpecialParameters specialParameters = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
 
@@ -229,13 +226,14 @@ public class ProcessNode extends Job {
 
 							try {
 								if (processNode.getTransform().getStringValue() == null)
-									XSLTCode = getRequestedStream(); // Default cevrim. hs
+									// XSLTCode = TransformUtils.getStreamSource(); // Default cevrim. hs
+									transformedXML = ApplyXslt.transformXML(getTransformXsl(), fileContent);
 								else {
-									StringReader xslReader = new StringReader(processNode.getTransform().getStringValue());
-									XSLTCode = new StreamSource(xslReader);
+									// XSLTCode = TransformUtils.getStreamSource(processNode.getTransform().getStringValue());
+									transformedXML = ApplyXslt.transformXML(processNode.getTransform().getStringValue(), fileContent);
 								}
 
-								transformedXML = ApplyXslt.transformXML(fileContent, XSLTCode);
+								
 
 								outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + "\n " + "Output from Tlos SW");
 							} catch (IOException e) {
