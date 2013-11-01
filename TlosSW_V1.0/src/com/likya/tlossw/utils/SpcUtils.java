@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
@@ -23,6 +25,7 @@ import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.exceptions.TlosException;
 import com.likya.tlossw.exceptions.TlosFatalException;
+import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.utils.TypeUtils;
@@ -63,7 +66,7 @@ public class SpcUtils {
 
 		return jobProperties;
 	}
-	
+
 	public static SpcLookupTable updateSpcLookupTable(String runId, TlosSWPathType tlosSWPathType, Logger myLogger) throws TlosException {
 
 		TlosProcessData tlosProcessData = null;
@@ -72,21 +75,21 @@ public class SpcUtils {
 
 		HashMap<String, SpcInfoType> table = spcLookupTable.getTable();
 
-		/** 
+		/**
 		 * GD öncesi listede bulunan T < 1gün işler
 		 * GD sonrası alınan senaryoya taşınıyor.
 		 * Eğer aynı işler var ise üzerine yazıyor, zira bitince yenisini kendi alacak.
 		 * Yok ise, eklenmiş oluyor.
 		 */
 		SpcInfoType spcInfoTypeOld = null;
-		
+
 		synchronized (table) {
 			spcInfoTypeOld = table.remove(tlosSWPathType.getFullPath());
 		}
 		ArrayList<SortType> nonDailJobQueueIndex = spcInfoTypeOld.getSpcReferance().getNonDailyJobQueueIndex();
 		HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
 		Iterator<SortType> nonDailJobQueueIndexIterator = nonDailJobQueueIndex.iterator();
-		
+
 		try {
 
 			tlosProcessData = DBUtils.getTlosDailyData(new Long(tlosSWPathType.getId().getBaseId()).intValue(), Integer.parseInt(runId));
@@ -96,7 +99,7 @@ public class SpcUtils {
 			SpcInfoType spcInfoType = CpcUtils.prepareScenario(runId, tlosSWPathType, myScenario, myLogger);
 
 			HashMap<String, Job> jobQueue = spcInfoType.getSpcReferance().getJobQueue();
-			
+
 			synchronized (table) {
 				while (nonDailJobQueueIndexIterator.hasNext()) {
 					SortType sortType = nonDailJobQueueIndexIterator.next();
@@ -118,5 +121,19 @@ public class SpcUtils {
 		return spcLookupTable;
 	}
 
-		
+	public static StreamSource getTransformXslCode() throws TransformCodeCreateException {
+
+		if (SpaceWideRegistry.getInstance().getTransformCode() == null) {
+			try {
+				StreamSource transformCode = DBUtils.getTransformXslCode();
+				SpaceWideRegistry.getInstance().setTransformCode(transformCode);
+			} catch (Exception e) {
+				throw new TransformCodeCreateException(e);
+			}
+		}
+
+		return SpaceWideRegistry.getInstance().getTransformCode();
+
+	}
+
 }
