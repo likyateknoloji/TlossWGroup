@@ -491,6 +491,8 @@ public class TlosSpaceWideBase {
 	
 	private void loadDailyRun() {
 		
+		long startTime = System.currentTimeMillis();
+		
 		logger.info("   > İş listesi KDS nden sorgulanıyor ...");
 
 		try {
@@ -516,7 +518,7 @@ public class TlosSpaceWideBase {
 			}
 		}
 		
-		logger.info("   > İş listesi KDS nden sorgulandı ! ...");
+		logger.info("   > İş listesi KDS nden sorgulandı : " + DateUtils.dateDiffWithNow(startTime) + " ms");
 	}
 
 	public void startCpcTester() {
