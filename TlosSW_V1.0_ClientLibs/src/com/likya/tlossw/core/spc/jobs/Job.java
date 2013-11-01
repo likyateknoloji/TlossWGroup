@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Observable;
 
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
@@ -70,7 +68,8 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private String selectedAgentId;
 
 	// Joblarda kullanilmak icin gerekebiliyor. Ornek XSLT kodu, DB den aliniyor, agentlardan DB ye erisim olmadigindan oncesinde alinip buraya konacak. HS
-	private StreamSource requestedStream;
+	private String transformXsl;
+	// private StreamSource requestedStream;
 
 	private Calendar startTime;
 	private JsRealTime jobRealTime;
@@ -628,13 +627,13 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.genericInfoSender = genericInfoSender;
 	}
 
-	public StreamSource getRequestedStream() {
-		return requestedStream;
-	}
-
-	public void setRequestedStream(StreamSource requestedStream) {
-		this.requestedStream = requestedStream;
-	}
+//	public StreamSource getRequestedStream() {
+//		return requestedStream;
+//	}
+//
+//	public void setRequestedStream(StreamSource requestedStream) {
+//		this.requestedStream = requestedStream;
+//	}
 
 	//	public Job getFollowerJob() {
 	//		return followerJob;
@@ -682,6 +681,14 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	public void setStopRepeatativity(boolean stopRepeatativity) {
 		this.stopRepeatativity = stopRepeatativity;
+	}
+
+	public String getTransformXsl() {
+		return transformXsl;
+	}
+
+	public void setTransformXsl(String transformXsl) {
+		this.transformXsl = transformXsl;
 	}
 
 }
