@@ -302,7 +302,9 @@ public class ApplyXPath {
 					resultArray[i] = xmlContent;
 					outputXHTML.getWriter().close();
 				}
-				System.out.println("XPath result is \"" + xmlContent);
+				
+				// System.out.println("XPath result is \"" + xmlContent);
+
 				return resultArray;
 			}
 			/*
@@ -428,8 +430,10 @@ public class ApplyXPath {
 						x.printStackTrace();
 					}
 				}
-				String xmlContent = (String) outputXHTML.getWriter().toString();
-				System.out.println("XPath result is \"" + xmlContent);
+				
+				// String xmlContent = (String) outputXHTML.getWriter().toString();
+				
+				// System.out.println("XPath result is \"" + xmlContent);
 				/*
 				 * for (int i = 0; i < nodes.getLength(); i++) {
 				 * YADOM.printXmlLoop(nodes.item(i), "", ""); }
