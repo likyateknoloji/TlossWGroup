@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
@@ -28,7 +26,6 @@ import com.likya.tlossw.exceptions.TlosFatalException;
 import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.model.SpcLookupTable;
 import com.likya.tlossw.model.path.TlosSWPathType;
-import com.likya.tlossw.utils.TypeUtils;
 
 public class SpcUtils {
 
@@ -121,18 +118,18 @@ public class SpcUtils {
 		return spcLookupTable;
 	}
 
-	public static StreamSource getTransformXslCode() throws TransformCodeCreateException {
+	public static String getTransformXslCode() throws TransformCodeCreateException {
 
-		if (SpaceWideRegistry.getInstance().getTransformCode() == null) {
+		if (SpaceWideRegistry.getInstance().getJobTransformXsl() == null) {
 			try {
-				StreamSource transformCode = DBUtils.getTransformXslCode();
-				SpaceWideRegistry.getInstance().setTransformCode(transformCode);
+				String transformCode = DBUtils.getTransformXslCode();
+				SpaceWideRegistry.getInstance().setJobTransformXsl(transformCode);
 			} catch (Exception e) {
 				throw new TransformCodeCreateException(e);
 			}
 		}
 
-		return SpaceWideRegistry.getInstance().getTransformCode();
+		return SpaceWideRegistry.getInstance().getJobTransformXsl();
 
 	}
 
