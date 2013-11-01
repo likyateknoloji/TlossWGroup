@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.xml.transform.stream.StreamSource;
-
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
@@ -297,7 +295,7 @@ public class Spc extends SpcBase {
 		} catch (TlosException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -314,24 +312,24 @@ public class Spc extends SpcBase {
 			Iterator<Job> jobsIterator = getJobQueue().values().iterator();
 
 			while (jobsIterator.hasNext()) {
-			
+
 				Job scheduledJob = jobsIterator.next();
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
 				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
-				
-				if(isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() != Thread.State.RUNNABLE) && scheduledJob.isUpdateMySelfAfterMe()) {
-					
+
+				if (isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() != Thread.State.RUNNABLE) && scheduledJob.isUpdateMySelfAfterMe()) {
+
 					// This job should terminate it self
 					scheduledJob.setUpdateMySelfAfterMe(false);
 					scheduledJob.setStopRepeatativity(true);
-					
-					if(scheduledJob.getMyExecuter() != null) {
+
+					if (scheduledJob.getMyExecuter() != null) {
 						synchronized (scheduledJob.getMyExecuter()) {
 							scheduledJob.getMyExecuter().notify();
 						}
-						
-						while(scheduledJob.getMyExecuter().isAlive()) {
+
+						while (scheduledJob.getMyExecuter().isAlive()) {
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
@@ -339,38 +337,38 @@ public class Spc extends SpcBase {
 							}
 						}
 					}
-					
+
 					// This thread is waiting for SPC to handle GD for itself.
 					String jobId = jobProperties.getID();
 					JobProperties newJobProperties = DBUtils.getTlosJobPropertiesXml(Integer.parseInt(jobId), 0);
-					
-					if(newJobProperties == null) {
+
+					if (newJobProperties == null) {
 						getJobQueue().remove(jobId);
 					} else {
-						
+
 						JobRuntimeProperties newJobRuntimeProperties = new JobRuntimeProperties();
 
 						TlosSWPathType tlosSWPathType = new TlosSWPathType(getSpcNativeFullPath());
 						tlosSWPathType.setRunId(newJobProperties.getRunId());
 						newJobRuntimeProperties.setNativeFullJobPath(tlosSWPathType);
-						
+
 						LiveStateInfoUtils.insertNewLiveStateInfo(newJobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
 						newJobRuntimeProperties.setJobProperties(newJobProperties);
-						
+
 						Job newJob = getMyJob(newJobRuntimeProperties);
-						
+
 						JsPlannedTime jsPlannedTime = jobProperties.getTimeManagement().getJsPlannedTime();
-						
+
 						newJobProperties.getTimeManagement().setJsPlannedTime(jsPlannedTime);
-						
+
 						getJobQueue().put(jobId, newJob);
 						SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 						getJobQueueIndex().add(sortType);
 					}
-					
+
 					JobIndexUtils.reIndexJobQueue(this);
 				}
-			
+
 			}
 		}
 
@@ -676,19 +674,13 @@ public class Spc extends SpcBase {
 
 		int substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().intValue();
 
-		StreamSource transformCode = null;
-		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
-		try {
-			transformCode = DBUtils.getTransformXslCode();
-		} catch (Exception e) {
-			throw new TransformCodeCreateException(e);
-		}
-		// TODO bir kere registery ye yuklenmesi yeterli. Her seferinde yuklenmesine gerek yok. HS
-		try {
-			scheduledJob.setRequestedStream(transformCode);
-		} catch (Exception e) {
-			throw new TransformCodeCreateException(e);
-		}
+		String tlosJobTransformXsl = SpcUtils.getTransformXslCode();
+
+//		try {
+//			scheduledJob.setRequestedStream(streamSource);
+//		} catch (Exception e) {
+//			throw new TransformCodeCreateException(e);
+//		}
 
 		// PARAMETRE atamalari burada yapilir.
 
@@ -699,8 +691,10 @@ public class Spc extends SpcBase {
 		ArrayList<Parameter> parameterList = parameterListAll.get(agentId);
 
 		// TODO Statik ve dinamik job ayrimi yapabilirsek burada sadece dinamik joblara bu islem uygulanacak. HS
-		JobProperties transformedjobProperties = ApplyXslt.transform(parameterList, jobProperties, transformCode);
-		scheduledJob.getJobRuntimeProperties().setJobProperties(transformedjobProperties);
+		if (jobProperties.toString().contains("$(")) {
+			JobProperties transformedjobProperties = ApplyXslt.transform(tlosJobTransformXsl, parameterList, jobProperties);
+			scheduledJob.getJobRuntimeProperties().setJobProperties(transformedjobProperties);
+		}
 
 		// parametre gecisi burada yapilir !!
 
