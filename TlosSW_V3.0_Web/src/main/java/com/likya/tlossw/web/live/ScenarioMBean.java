@@ -55,22 +55,22 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	private boolean transformToLocalTime;
 
 	private LiveJobManagementBean liveJobManagementBean;
-	
+
 	private HashMap<Integer, String> jobIcons = null;
 
 	private boolean isScenarioPanel = true;
-	
+
 	@PostConstruct
 	public void init() {
 
 		DecorationUtils.jobCssSetter();
 		jobIcons = DecorationUtils.getJobIconsMappings();
-		
+
 		setLiveJobManagementBean(new LiveJobManagementBean(this));
 	}
-	
+
 	public void getJobList(String scenarioId) {
-		
+
 		SpcInfoTypeClient spcInfoTypeClient = TEJmxMpClient.retrieveSpcInfo(getWebAppUser(), scenarioId);
 
 		spcInfoTypeClient.setSpcId(spcInfoTypeClient.getSpcId());
@@ -84,9 +84,11 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		setSpcInfoTypeClient(spcInfoTypeClient);
 
 		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), transformToLocalTime);
-        // JobInfoTypeClient in icinde bu atamayi yapamadigim icin burada yapiyorum. Orada yapilirsa bunu kaldiririz. hs
+		// JobInfoTypeClient in icinde bu atamayi yapamadigim icin burada yapiyorum. Orada yapilirsa bunu kaldiririz. hs
 		for (JobInfoTypeClient job : jobInfoList) {
-		  job.setSSSName(job.getLiveStateInfo().getStatusName().toString());
+			if (job.getLiveStateInfo() != null && job.getLiveStateInfo().getStatusName() != null) {
+				job.setSSSName(job.getLiveStateInfo().getStatusName().toString());
+			}
 		}
 		System.out.println("");
 		oSList.add("Windows");
@@ -123,7 +125,10 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 
 		if (assigned) {
 			addMessage("assignAgentForJob", FacesMessage.SEVERITY_INFO, "tlos.trace.agentAssignedForJob", null);
-			/* TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + selectedRow.getJobKey(), e.getComponent().getId(), "tlos.trace.agentAssignedForJob"); */
+			/*
+			 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+			 * selectedRow.getJobKey(), e.getComponent().getId(), "tlos.trace.agentAssignedForJob");
+			 */
 		} else {
 			addMessage("assignAgentForJob", FacesMessage.SEVERITY_ERROR, "tlos.trace.agentCannotBeAssignedForJob", null);
 		}
@@ -134,7 +139,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	public void stopScenarioNormalAction(ActionEvent e) {
 		TEJmxMpClient.stopScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), false);
 		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.normal");
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+		 * getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(),
+		 * "tlos.trace.live.scenario.stop.normal");
 		 */
 	}
 
@@ -142,7 +149,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		TEJmxMpClient.stopScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), true);
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.stop.force");
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+		 * getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(),
+		 * "tlos.trace.live.scenario.stop.force");
 		 */
 	}
 
@@ -150,7 +159,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		TEJmxMpClient.suspendScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.pause");
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+		 * getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(),
+		 * "tlos.trace.live.scenario.pause");
 		 */
 	}
 
@@ -158,7 +169,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		TEJmxMpClient.resumeScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.resume");
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+		 * getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(),
+		 * "tlos.trace.live.scenario.resume");
 		 */
 	}
 
@@ -166,7 +179,9 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		TEJmxMpClient.restartScenario(getWebAppUser(), getSpcInfoTypeClient().getSpcId());
 		getJobList(getSpcInfoTypeClient().getSpcId());
 		/*
-		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(), "tlos.trace.live.scenario.start");
+		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" +
+		 * getSpcInfoTypeClient().getSpcId(), e.getComponent().getId(),
+		 * "tlos.trace.live.scenario.start");
 		 */
 	}
 
@@ -176,7 +191,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
 	}
-	
+
 	@Override
 	public void refreshTlosAgentPanel() {
 	}
@@ -295,25 +310,25 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 	}
 
 	public String getJobIconsElement(String key) {
-	
+
 		Integer jobType = new Integer(JobCommandType.Enum.forString(key).intValue());
 
 		return getJobIconsElementInt(jobType);
 	}
-	
+
 	public String getJobIconsElementInt(Integer key) {
 		String result;
-		
+
 		result = jobIcons.get(key);
-		
-		if(result == null) {
+
+		if (result == null) {
 			System.out.println("Job : " + key);
 			addMessage("getJobIconsElement", FacesMessage.SEVERITY_WARN, "Job Icon Undefined for : " + key, null);
 		}
-		
+
 		return result == null ? "default" : result;
 	}
-	
+
 	public HashMap<Integer, String> getJobIcons() {
 		return jobIcons;
 	}
