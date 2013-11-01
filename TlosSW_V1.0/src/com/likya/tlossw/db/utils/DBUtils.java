@@ -8,13 +8,11 @@
 package com.likya.tlossw.db.utils;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.xmlbeans.XmlOptions;
@@ -444,7 +442,7 @@ public class DBUtils extends DBBase {
 		return dbConnectionProfile;
 	}
 
-	public static StreamSource getTransformXslCode() throws IOException {
+	public static String getTransformXslCode() throws IOException {
 
 		String tlosJobTransformXsl = null;
 
@@ -456,11 +454,8 @@ public class DBUtils extends DBBase {
 			e.printStackTrace();
 		}
 
-		StringReader xslReader = new StringReader(tlosJobTransformXsl);
-
-		StreamSource streamSource = new StreamSource(xslReader);
-
-		return streamSource;
+		return tlosJobTransformXsl;
+		
 	}
 
 	public static String getDbDoc() throws XMLDBException, XSLLoadException {
