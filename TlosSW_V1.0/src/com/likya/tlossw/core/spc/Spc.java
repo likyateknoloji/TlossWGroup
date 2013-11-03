@@ -46,6 +46,7 @@ import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.SpcUtils;
 import com.likya.tlossw.utils.TypeUtils;
 import com.likya.tlossw.utils.XmlUtils;
+import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.xml.ApplyXslt;
 
 /**
@@ -79,7 +80,7 @@ public class Spc extends SpcBase {
 
 	}
 
-	private SpcMonitor preRunInit() {
+	private void preRunInit() {
 
 		Thread.currentThread().setName(getCommonName());
 
@@ -116,36 +117,52 @@ public class Spc extends SpcBase {
 
 		SpcMonitor spcMonitor = new SpcMonitor(getJobQueue(), getJobQueueIndex());
 		spcMonitor.setMyExecuter(new Thread(spcMonitor));
-
+		spcMonitor.getMyExecuter().setName("SpcMonitor_" + getCommonName());;
+		
+		setSpcMonitor(spcMonitor);
+		
 		setJSRealTime();
 
-		return spcMonitor;
+		return;
 
 	}
 
 	public void run() {
 
-		SpcMonitor spcMonitor = preRunInit();
+		preRunInit();
 
 		// TODO job icin boyle ama senaryo icin nasil olacak? hs
 		// sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
 
+		LiveStateInfo savedLiveStateInfo = null;
+		
 		while (executionPermission) { // Senaryonun caslistirilmasi icin gerek sart !
 
 			// Gelen deger saniye tipine çevriliyor.
 			long chekInterval = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000;
 
 			try {
+				
 				// Senaryolarin bagimliligi icin burada bir kontrol koyduk ama su anda xml lerde kullanilmadigi icin etkisiz. Herzaman true donecek.
 				// Senaryo PENDING statusune alindi ise herhangi bir isi baslatmaya calismamali. Normalde RUNNING de buraya geliyoruz.
 				// TODO Performans Yoneticisi nin de fikrini almak lazim. Fakat bu asamada kaynak belli olmadigi icin sadece genel performans kontrolu yapilabilir.
 				// Bunu sonraya birakiyoruz.
-				if (!isSpcPermittedToExecute() /* || !isScenarioDependencyResolved() */) {
+				while (isSpcSuspended() /* || !isScenarioDependencyResolved() */) {
+					if(!LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING)) {
+						savedLiveStateInfo = LiveStateInfoUtils.cloneLiveStateInfo(getLiveStateInfo());
+						setLiveStateInfo(LiveStateInfoUtils.generateLiveStateInfo(StateName.PENDING));
+					}
 					Thread.sleep(chekInterval);
-					continue;
+				}
+				
+				if(savedLiveStateInfo != null) {
+					setLiveStateInfo(savedLiveStateInfo);
+					savedLiveStateInfo = null;
 				}
 
-				passOnJobQueueForExecution(spcMonitor);
+				if(!passOnJobQueueForExecution(getSpcMonitor())) {
+					continue;
+				}
 
 				// Bundan sonraki kisim islerin RUNNING durumunda olmasi halinde
 				// isler icin yapilacaklari kapsiyor.
@@ -208,6 +225,8 @@ public class Spc extends SpcBase {
 				Thread.sleep(chekInterval);
 
 				// myLogger.info("     > "+ this.getBaseScenarioInfos().getJsName() + " icin islerin bitmesini bekliyoruz ...");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
 				getGlobalLogger().info("   > SPC Exception : " + getJobQueue());
 				e.printStackTrace();
@@ -216,15 +235,15 @@ public class Spc extends SpcBase {
 			}
 		}
 
-		postRunClean(spcMonitor);
+		postRunClean();
 	}
 
-	private void postRunClean(SpcMonitor spcMonitor) {
+	private void postRunClean() {
 
 		/**
 		 * We should disable monitor
 		 */
-		spcMonitor.getMyExecuter().interrupt();
+		getSpcMonitor().getMyExecuter().interrupt();
 
 		// Burada her senaryo ve her T < 1 iş kendi başının çaresine bakacak
 		if (isUpdateMySelfAfterMe()) {
@@ -362,11 +381,11 @@ public class Spc extends SpcBase {
 						newJobProperties.getTimeManagement().setJsPlannedTime(jsPlannedTime);
 
 						getJobQueue().put(jobId, newJob);
-						SortType sortType = new SortType(jobId, newJob.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobPriority().intValue());
-						getJobQueueIndex().add(sortType);
 					}
 
 					JobIndexUtils.reIndexJobQueue(this);
+					
+					retValue = true;
 				}
 
 			}
@@ -375,19 +394,19 @@ public class Spc extends SpcBase {
 		return retValue;
 	}
 
-	private void passOnJobQueueForExecution(SpcMonitor spcMonitor) throws TlosFatalException {
+	private boolean passOnJobQueueForExecution(SpcMonitor spcMonitor) throws TlosFatalException {
 
 		// Senaryodaki herbir isi ele alalim.
 		Iterator<SortType> jobQueueIndexIterator = getJobQueueIndex().iterator();
 
 		while (executionPermission && jobQueueIndexIterator.hasNext()) {
 
-			if (!isSpcPermittedToExecute()) {
+			if (isSpcSuspended()) {
 				// İş listesi üzerinde dolaşırken senaryo beklemeye alınırsa ya da
 				// uygulama state'i RUNNING dışında bir değer alırsa yapılan işlem
 				// ansızın yarıda kesilip, sorumluluk üst döngüye bırakılır
 				// serkan
-				return;
+				return false;
 			}
 
 			// Bu senaryo icin olusturulmus Job kuyrugundaki siradaki Job in temel bilgilerini al.
@@ -442,10 +461,14 @@ public class Spc extends SpcBase {
 					if (jobStartType.equals(JobTypeDef.TIME_BASED.toString())) {
 
 						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
-
+System.err.println(getCurrentRunId());
+System.err.println(getNativeRunId());
 						// isin planlanan calisma zamani gecti mi?
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
+							DssVisionaire.glbinfo("   > handleTransferRequestsOnDss : BEGIN");
+							long startTime = System.currentTimeMillis();
 							handleTransferRequestsOnDss(scheduledJob, dependentJobList);
+							DssVisionaire.glbinfo("   > handleTransferRequestsOnDss : END : " + DateUtils.dateDiffWithNow(startTime) + " ms");
 						} else { // Zamani bekliyor ...
 							// if (scheduledJob.getFirstLoop()) { /* status u ekle */
 							insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME);
@@ -530,6 +553,8 @@ public class Spc extends SpcBase {
 			}
 
 		}
+		
+		return true;
 	}
 
 	private void handleTransferRequestsOnDss(Job scheduledJob, DependencyList dependentJobList) throws UnresolvedDependencyException, TransformCodeCreateException {
@@ -559,7 +584,11 @@ public class Spc extends SpcBase {
 			}
 
 		} else { // Herhangi bir bagimliligi yok !!
-			if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
+			DssVisionaire.glbinfo("   > DssVisionaire.evaluateDss : BEGIN");
+			long startTime = System.currentTimeMillis();
+			int resultCode = DssVisionaire.evaluateDss(scheduledJob).getResultCode();
+			DssVisionaire.glbinfo("   > DssVisionaire.evaluateDss : END : " + DateUtils.dateDiffWithNow(startTime) + " ms");
+			if(resultCode >= 0) {
 				// if (DssFresh.transferPermission(scheduledJob)) {
 				prepareAndTransform(scheduledJob);
 			}
@@ -863,4 +892,7 @@ public class Spc extends SpcBase {
 		}
 	}
 
+	public void terminateSpcMonitor() {
+		getSpcMonitor().getMyExecuter().interrupt();
+	}
 }
