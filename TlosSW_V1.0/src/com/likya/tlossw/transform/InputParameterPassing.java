@@ -253,12 +253,13 @@ public class InputParameterPassing {
 			}
 		}
 
-		if (assignmentOk) {
-			System.out.println("Parametre gecisi yapildi.");
-		} else {
-			System.out.println("Parametre gecisi yapilMAdi.");
+		if (SpaceWideRegistry.isDebug) {
+			if (assignmentOk) {
+				System.out.println("Parametre gecisi yapildi.");
+			} else {
+				System.out.println("Parametre gecisi yapilMAdi.");
+			}
 		}
-
 		return assignmentOk;
 	}
 	
@@ -338,12 +339,16 @@ public class InputParameterPassing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		if (assignmentOk) {
-			System.out.println("Parametre gecisi yapildi.");
+			if (SpaceWideRegistry.isDebug) {
+				System.out.println("Parametre gecisi yapildi.");
+			}
 			return true;
 		} else {
-			System.out.println("Parametre gecisi yapilMAdi.");
+			if (SpaceWideRegistry.isDebug) {
+				System.out.println("Parametre gecisi yapilMAdi.");
+			}
 			return false;
 		}
 	}
