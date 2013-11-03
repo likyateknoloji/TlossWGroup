@@ -123,7 +123,7 @@ public class WebInputUtils {
 		for (Alarm alarm : alarmList) {
 			SelectItem item = new SelectItem();
 			item.setValue(alarm.getID() + "");
-			item.setLabel(alarm.getName() + ": " + alarm.getDesc());
+			item.setLabel("[" + alarm.getID() + "] <b>" + alarm.getName() + "</b> : " + alarm.getDesc());
 			item.setDescription(alarm.getDesc());
 			jsAlarmList.add(item);
 		}
@@ -151,6 +151,7 @@ public class WebInputUtils {
 			SelectItem item = new SelectItem();
 			item.setValue(sla.getID() + "");
 			item.setLabel(sla.getName() + ": " + sla.getDesc());
+			item.setLabel("[" + sla.getID() + "] " + sla.getName() + " : " + sla.getDesc());
 			jsSlaList.add(item);
 		}
 
