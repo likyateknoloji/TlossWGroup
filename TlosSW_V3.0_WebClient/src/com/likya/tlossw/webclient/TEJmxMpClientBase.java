@@ -42,9 +42,9 @@ public class TEJmxMpClientBase {
 	protected static final int WEBSO = 7;
 	protected static final int VE = 8;
 	protected static final int WSO = 9;
-
+	
 	public static JMXConnector getJMXConnection() {
-
+		
 		if (!isEnvRead) {
 			javax.naming.Context ctx;
 			try {
@@ -74,9 +74,12 @@ public class TEJmxMpClientBase {
 
 				try {
 
-					jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+					// jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+					jmxConnector = JMXConnectorFactory.newJMXConnector(url, getEnv());
+					
+					jmxConnector.connect();
 
-					if (jmxConnector != null) {
+					if (jmxConnector.getConnectionId() != null) {
 						// jmxConnector = JMXConnectorFactory.connect(url);
 						jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
 						logger.info(">> JMXMP Connection successfully established to " + url);
@@ -92,6 +95,8 @@ public class TEJmxMpClientBase {
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}
+				
+				jmxConnector.close();
 
 				logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
 				Thread.sleep(2000);
