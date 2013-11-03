@@ -70,6 +70,7 @@
 			<pathelement location="${sharedlib.dir}/dom4j-1.6.1/dom4j-1.6.1.jar" />
 			<pathelement location="${sharedlib.dir}/xom-1.2.8/xom-1.2.8.jar" />
 			<pathelement location="${tlos_schemaDefinitions.dir}/tlossw-xsd-V${version.num}${buildchar}${minor.number}.jar" />
+			<pathelement location="${tlos_model.dir}/tlossw-model-V${version.num}${buildchar}${minor.number}.jar" />
 		</path>
 
 		<mkdir dir="${build.classes.dir}" />
