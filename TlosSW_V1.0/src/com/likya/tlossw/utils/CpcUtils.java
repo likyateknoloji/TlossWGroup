@@ -303,6 +303,7 @@ public class CpcUtils {
 
 			myLogger.info("     > Senaryo " + mySpc.getSpcFullPath() + " aktive edildi !");
 
+			mySpc.getExecuterThread().setName(mySpc.getCommonName());
 			/** Senaryonun thread lerle calistirildigi yer !! **/
 			mySpc.getExecuterThread().start();
 
