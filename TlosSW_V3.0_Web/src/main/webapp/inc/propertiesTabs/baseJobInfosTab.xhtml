@@ -25,6 +25,7 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
+						style="width: 200pt"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.name']}" >
 						<p:ajax partialSubmit="true"></p:ajax>
@@ -34,6 +35,7 @@
 						value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.comment}"
+						style="width: 200pt"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.comment']}" >
 						<p:ajax partialSubmit="true"></p:ajax>
@@ -42,6 +44,7 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
+						style="width: 200pt"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.path']}">
 						<p:ajax partialSubmit="true"></p:ajax>
@@ -53,6 +56,7 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jobLogFile}"
+						style="width: 200pt"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.file']}"
 						validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
@@ -62,14 +66,14 @@
 					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
-					<p:selectOneMenu id="jsCalendar" style="text-align: center;"
+					<p:selectOneMenu id="jsCalendar" style="width: 100pt"
 						value="#{backingBean.jsCalendar}">
 						<f:selectItems value="#{backingBean.jsCalendarList}" />
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
-					<p:selectOneMenu id="oSystem" style="text-align: center;"
+					<p:selectOneMenu id="oSystem" style="width: 100pt"
 						value="#{backingBean.oSystem}">
 						<f:selectItems value="#{backingBean.oSystemList}" />
 						<p:ajax partialSubmit="true"></p:ajax>
@@ -89,7 +93,7 @@
 					<h:outputText value="" />
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
-					<p:selectOneMenu id="jobtype"
+					<p:selectOneMenu id="jobtype" style="width: 100pt"
 						value="#{backingBean.jobTypeDef}">
 						<f:selectItems value="#{backingBean.jobTypeDefList}" />
 						<p:ajax update="baseJobInfos"></p:ajax>
@@ -115,10 +119,10 @@
 				<p:panelGrid id="jobTypeGrid" columns="2">
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
-					<p:selectOneMenu id="jobBaseType"
+					<p:selectOneMenu id="jobBaseType" style="width: 100pt"
 						value="#{backingBean.jobBaseType}">
 						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
-						<p:ajax update=":jobDefinitionForm:jobDef"></p:ajax>
+						<p:ajax update="jobTypeGrid"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText
