@@ -19,23 +19,26 @@
 						<f:selectItems value="#{backingBean.definedAgentList}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
-
+          </p:panel>
+          <p:panel>
 				<p:panelGrid id="advancedJobInfosSLA" columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.sla']}" />
-					<p:selectOneMenu id="sla" value="#{backingBean.jobSLA}" style="width: 100pt">
+					<p:selectOneMenu id="sla" value="#{backingBean.jobSLA}" style="width: 200pt">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.none']}" itemValue="none" />
-						<f:selectItems value="#{backingBean.jsSLAList}" />
+						<f:selectItems value="#{backingBean.jsSLAList}" var="sla" itemLabel="#{sla.name}" itemValue="#{sla.description}"/>
 					</p:selectOneMenu>
-
+	            </p:panelGrid>
+		  </p:panel>
+			<p:panel id="resourceBasedDef">
+				<p:panelGrid id="advancedJobResourceReq" columns="2">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.defineResourceReq']}" />
 					<p:selectBooleanCheckbox value="#{backingBean.useResourceReq}">
 						<p:ajax update=":jobDefinitionForm:tabView:resourceBasedDef"></p:ajax>
 					</p:selectBooleanCheckbox>
-				</p:panelGrid>
+			   </p:panelGrid>
 
-			</p:panel>
 
-			<p:panel id="resourceBasedDef">
+
 				<p:panelGrid rendered="#{backingBean.useResourceReq}" columns="4">
 					<h:outputText value="#{msgs['tlos.management.pannel.newSla.resourceBasedDef']}" />
 					<p:selectBooleanCheckbox value="#{backingBean.resourceBasedDef}">
