@@ -8,13 +8,13 @@
 			<p:panel>
 				<p:panelGrid id="advancedJobInfosAgentChoice" columns="4">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.agentChoiceMethod']}" />
-					<p:selectOneMenu id="agentChoiceMethod" value="#{backingBean.agentChoiceMethod}" style="width: 100pt">
+					<p:selectOneMenu id="agentChoiceMethod" value="#{backingBean.agentChoiceMethod}" style="width: 200pt">
 						<f:selectItems value="#{backingBean.agentChoiceMethodList}" />
 						<p:ajax update="advancedJobInfosAgentChoice"></p:ajax>
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.agentList']}" rendered="#{backingBean.agentChoiceMethodUserMandatoryPreference}" />
-					<p:selectOneMenu rendered="#{backingBean.agentChoiceMethodUserMandatoryPreference}" required="true" requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}" value="#{backingBean.selectedAgent}" style="width: 100pt">
+					<p:selectOneMenu rendered="#{backingBean.agentChoiceMethodUserMandatoryPreference}" required="true" requiredMessage="#{msgs['tlos.validation.job.advanced.agent']}" value="#{backingBean.selectedAgent}" style="width: 200pt">
 						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.definedAgentList}" />
 					</p:selectOneMenu>
@@ -43,7 +43,7 @@
 					</p:selectBooleanCheckbox>
 
 					<h:outputText value="#{msgs['tlos.management.pannel.newSla.resourceName']}" rendered="#{backingBean.resourceBasedDef}" />
-					<p:selectOneMenu style="text-align: center;" rendered="#{backingBean.resourceBasedDef}" required="true" value="#{backingBean.selectedResourceForHardware}">
+					<p:selectOneMenu style="text-align: center; width: 200pt" rendered="#{backingBean.resourceBasedDef}" required="true" value="#{backingBean.selectedResourceForHardware}">
 						<f:selectItems value="#{backingBean.resourceNameList}" />
 						<p:ajax disabled="true"></p:ajax>
 					</p:selectOneMenu>
@@ -82,7 +82,7 @@
 					</p:selectOneButton>
 
 					<h:outputText value="#{msgs['tlos.management.pannel.newSla.memoryPart']}" />
-					<p:selectOneMenu style="text-align: center;" value="#{backingBean.memoryPart}">
+					<p:selectOneMenu style="text-align: center;width: 100pt" value="#{backingBean.memoryPart}">
 						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newSla.used']}" itemValue="used" />
 						<f:selectItem itemLabel="#{msgs['tlos.management.pannel.newSla.free']}" itemValue="free" />
 					</p:selectOneMenu>
@@ -118,7 +118,7 @@
 					</p:selectOneButton>
 
 					<h:outputText value="#{msgs['tlos.management.pannel.newSla.diskPart']}" />
-					<p:selectOneMenu style="text-align: center;" value="#{backingBean.diskPart}">
+					<p:selectOneMenu style="text-align: center;width: 100pt" value="#{backingBean.diskPart}">
 						<f:selectItem itemLabel="Kullanilan" itemValue="used" />
 						<f:selectItem itemLabel="Bos" itemValue="free" />
 					</p:selectOneMenu>
