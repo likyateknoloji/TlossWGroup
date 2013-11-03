@@ -28,7 +28,6 @@ import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioSt
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
-import com.likya.tlossw.core.cpc.model.AppState;
 import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.helpers.SortType;
@@ -103,6 +102,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	protected boolean executionPermission = true;
 
+	private boolean isSpcSuspended = false;
+	
 	protected boolean isForced = false;
 
 	protected boolean isTester = false;
@@ -110,6 +111,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
 
 	boolean updateMySelfAfterMe = false;
+	
+	private SpcMonitor spcMonitor;
 
 	public SpcBase(String nativeRunId, String spcAbsolutePath, SpaceWideRegistry spaceWideRegistry, ArrayList<JobRuntimeProperties> taskList, boolean isTester) {
 
@@ -143,7 +146,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return tlosSWPathType;
 	}
 
-	protected String getCommonName() {
+	public String getCommonName() {
 		return "Spc_" + BasePathType.getRootPath() + "." + getNativeRunId();
 	}
 
@@ -543,9 +546,9 @@ public abstract class SpcBase implements Runnable, Serializable {
 		return spcAbsolutePath;
 	}
 
-	protected boolean isSpcPermittedToExecute() {
-		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
-	}
+//	protected boolean isSpcPermittedToExecute() {
+//		return (getSpaceWideRegistry().getCurrentState() == AppState.INT_RUNNING) && !LiveStateInfoUtils.equalStates(getLiveStateInfo(), StateName.PENDING);
+//	}
 
 	public String getCurrentRunId() {
 		return currentRunId;
@@ -573,6 +576,22 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public ArrayList<SortType> getNonDailyJobQueueIndex() {
 		return nonDailyJobQueueIndex;
+	}
+
+	public SpcMonitor getSpcMonitor() {
+		return spcMonitor;
+	}
+
+	public void setSpcMonitor(SpcMonitor spcMonitor) {
+		this.spcMonitor = spcMonitor;
+	}
+
+	public boolean isSpcSuspended() {
+		return isSpcSuspended;
+	}
+
+	public void setSpcSuspended(boolean isSpcSuspended) {
+		this.isSpcSuspended = isSpcSuspended;
 	}
 
 }
