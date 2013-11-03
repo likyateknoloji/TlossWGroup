@@ -142,6 +142,17 @@ public class LiveStateInfoUtils {
 		return liveStateInfo;
 	}
 
+	public static LiveStateInfo generateLiveStateInfo(StateName.Enum stateNameEnum) {
+
+		LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
+
+		liveStateInfo.setLSIDateTime(DateUtils.getServerW3CDateTime());
+
+		liveStateInfo.setStateName(stateNameEnum);
+
+		return liveStateInfo;
+	}
+
 	public static void insertNewLiveStateInfo(JobProperties jobProperties, StateName.Enum stateNameEnum, SubstateName.Enum substateNameEnum, StatusName.Enum statusNameEnum, int returnCode, String returnDecription) {
 
 		synchronized (jobProperties) {
@@ -191,6 +202,10 @@ public class LiveStateInfoUtils {
 
 			LiveStateInfo liveStateInfo = generateLiveStateInfo(enumStateName, enumSubstateName, enumStatusName);
 
+			if(jobProperties.getStateInfos() == null || jobProperties.getStateInfos().getLiveStateInfos() == null) {
+				System.err.println(jobProperties.toString());
+			}
+			
 			LiveStateInfo returnInfo = jobProperties.getStateInfos().getLiveStateInfos().insertNewLiveStateInfo(0);
 			jobProperties.getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, liveStateInfo);
 			
