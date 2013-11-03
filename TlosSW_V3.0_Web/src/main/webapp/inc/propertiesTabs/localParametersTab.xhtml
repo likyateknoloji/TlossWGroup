@@ -8,10 +8,10 @@
 			<p:panel id="parametersPanel">
 				<p:panelGrid id="localParameters" columns="4" style="width:80%;">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
-					<p:inputText value="#{backingBean.paramName}" />
+					<p:inputText value="#{backingBean.paramName}" style="width: 200pt"/>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-					<p:inputText value="#{backingBean.paramDesc}" />
+					<p:inputText value="#{backingBean.paramDesc}" style="width: 200pt"/>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
 					<p:selectOneMenu value="#{backingBean.paramType}" style="width: 100pt">
@@ -25,8 +25,9 @@
 					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
-					<p:inputText value="#{backingBean.paramPreValue}" />
-
+					<p:inputTextarea value="#{backingBean.paramPreValue}"
+						autoResize="false" required="true" style="width: 150pt"
+						/>
 				</p:panelGrid>
 
 				<br />
