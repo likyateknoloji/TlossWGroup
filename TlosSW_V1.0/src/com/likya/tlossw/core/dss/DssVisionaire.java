@@ -19,6 +19,7 @@ import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.spc.jobs.Job;
 import com.likya.tlossw.db.utils.DBUtils;
 import com.likya.tlossw.db.utils.DssDbUtils;
+import com.likya.tlossw.utils.DebugParams;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
@@ -32,7 +33,10 @@ public class DssVisionaire extends DssBase {
 
 		JobProperties jobProperties = job.getJobRuntimeProperties().getJobProperties();
 
+		glbinfo("   > evaluateDss.getResource : BEGIN");
+		long startTime = System.currentTimeMillis();
 		DssResult dssResult = getResource(job);
+		glbinfo("   > evaluateDss.getResource : END : " + DateUtils.dateDiffWithNow(startTime) + " ms");
 		
 		if(dssResult.getResultCode() < 0) {
 			return dssResult;
@@ -58,9 +62,11 @@ public class DssVisionaire extends DssBase {
 			 */
 			myLogger.info("     > ID : " + jobProperties.getID() + ":" +  jobProperties.getBaseJobInfos().getJsName() + " DB ye insert ediliyor !");
 
+			glbinfo("   > DBUtils.insertJob : BEGIN");
+			startTime = System.currentTimeMillis();
 			DBUtils.insertJob(jobProperties, ParsingUtils.getJobXPath(job.getJobRuntimeProperties().getNativeFullJobPath().getFullPath()));
-			
-			myLogger.info("     > DB ye insert edildi !");
+			glbinfo("   > DBUtils.insertJob : END : " + DateUtils.dateDiffWithNow(startTime) + " ms");
+			glbinfo("     > DB ye insert edildi !");
 			return dssResult;
 
 		}
@@ -91,36 +97,28 @@ public class DssVisionaire extends DssBase {
 
 			long startTime = System.currentTimeMillis();
 			dssResult = applyUserInteractionPreference(job);
-			if(SpaceWideRegistry.isDebug) {
-				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			}
+			sysErr(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 			break;
 
 		case ChoiceType.INT_SIMPLE_METASCHEDULER:
 			
 			startTime = System.currentTimeMillis();
 			dssResult = applySimpleMetaScheduler(job);
-			if(SpaceWideRegistry.isDebug) {
-				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			}			
+			sysErr(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 			break;
 
 		case ChoiceType.INT_USER_MANDATORY_PREFERENCE:
 
 			startTime = System.currentTimeMillis();
 			dssResult = applyUserMendatoryPreference(job, agentChoiceMethod.getAgentId());
-			if(SpaceWideRegistry.isDebug) {
-				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			}			
+			sysErr(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 			break;
 
 		case ChoiceType.INT_ADVANCED_METASCHEDULER:
 
 			startTime = System.currentTimeMillis();
 			dssResult = applyAdvancedMetaScheduler();
-			if(SpaceWideRegistry.isDebug) {
-				System.err.println(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			}			
+			sysErr(agentChoiceMethod.enumValue().toString() + " : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 			break;
 
 		default:
@@ -250,9 +248,7 @@ public class DssVisionaire extends DssBase {
 		if (resourceAgentList == null || isResourceListExpired(resourceAgentList.getTime(), expireTimeAmount)) {
 			long startTime = System.currentTimeMillis();
 			resourceAgentList = DssDbUtils.swFindResourcesForAJob(jobProperties);
-			if(SpaceWideRegistry.isDebug) {
-				System.err.println("DssDbUtils.swFindResourcesForAJob : " + DateUtils.dateDiffWithNow(startTime) + "ms");
-			}
+			sysErr("DssDbUtils.swFindResourcesForAJob : " + DateUtils.dateDiffWithNow(startTime) + "ms");
 		}
 
 		int numberOfResources = resourceAgentList.sizeOfResourceArray();
@@ -285,4 +281,15 @@ public class DssVisionaire extends DssBase {
 
 	}
 
+	public static void glbinfo(String message) {
+		if(DebugParams.isIsdssdebug()) {
+			SpaceWideRegistry.getGlobalLogger().info(message);
+		}
+	}
+	
+	public static void sysErr(String message) {
+		if(DebugParams.isIsdssdebug()) {
+			System.err.println(message);
+		}
+	}
 }
