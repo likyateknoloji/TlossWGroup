@@ -103,6 +103,7 @@ public class SpcUtils {
 					Job oldJob = jobQueueOld.get(sortType.getJobId());
 					jobQueue.put(sortType.getJobId(), oldJob);
 				}
+				JobIndexUtils.reIndexJobQueue(spcInfoType.getSpcReferance());
 			}
 
 			synchronized (spcLookupTable) {
