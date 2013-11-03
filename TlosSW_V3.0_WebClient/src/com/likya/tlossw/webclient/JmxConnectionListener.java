@@ -14,7 +14,7 @@ public class JmxConnectionListener implements NotificationListener {
 		String notificationType = jmxConnectionNotification.getType();
 		
 		if(!notificationType.equals(JMXConnectionNotification.OPENED)) {
-			handback = null;
+			TEJmxMpClientBase.setConnected(false);
 		}
 	}
 
