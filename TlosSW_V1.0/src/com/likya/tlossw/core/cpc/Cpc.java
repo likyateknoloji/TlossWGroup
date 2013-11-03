@@ -187,9 +187,9 @@ public class Cpc extends CpcBase {
 
 
 		logger.info("");
-		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, PlanID = " + newRunId + " ile iliskilendirilecek.");
+		logger.info(" 9 - SPC (spcLookUpTable) senaryo agaci, RunID = " + newRunId + " ile iliskilendirilecek.");
 
-		logger.info("   > Plan ID = " + newRunId + " olarak belirlendi.");
+		logger.info("   > RunID = " + newRunId + " olarak belirlendi.");
 
 		runInfoType.setRunId(newRunId);
 		runInfoType.setSpcLookupTable(spcLookupTableNew);
