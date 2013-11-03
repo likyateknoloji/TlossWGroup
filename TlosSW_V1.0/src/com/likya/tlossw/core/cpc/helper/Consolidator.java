@@ -17,8 +17,11 @@ import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.cpc.model.SpcInfoType;
 import com.likya.tlossw.core.spc.Spc;
 import com.likya.tlossw.core.spc.helpers.JobQueueOperations;
+import com.likya.tlossw.core.spc.helpers.SortType;
 import com.likya.tlossw.core.spc.jobs.Job;
+import com.likya.tlossw.model.JobQueueResult;
 import com.likya.tlossw.model.path.TlosSWPathType;
+import com.likya.tlossw.utils.JobIndexUtils;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.SpaceWideRegistry;
 
@@ -74,12 +77,61 @@ public class Consolidator {
 						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
 
 					} else {
-						// Bitince kendini VT'den yenilesin değerini set et.
-						spcReferanceOld.setCurrentRunId(runIdNew);
-						spcReferanceOld.setUpdateMySelfAfterMe(true);
-						// all T< 1 jobs.setUpdateMySelfAfterMe(true);
-						JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
-						spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+						
+						JobQueueResult jobQueueResult = JobQueueOperations.isJobQueueOver(spcInfoTypeOld.getSpcReferance().getJobQueue());
+						
+						if (jobQueueResult.getNumOfDailyJobsNotOver() == 0) {
+
+							// Spc'ye suspend ol deyip, olana kadar da bekliyoruz ki,
+							// Kuyruk üzerinde çalışalım.
+							spcInfoTypeOld.getSpcReferance().setSpcSuspended(true);
+							while(!LiveStateInfoUtils.equalStates(spcInfoTypeOld.getSpcReferance().getLiveStateInfo(), StateName.PENDING)) {
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							
+							SpcInfoType spcInfoTypeNew = spcLookupTableNew.get(tempSpcIdOld);
+							
+							HashMap<String, Job> jobQueueOld = spcInfoTypeOld.getSpcReferance().getJobQueue();
+							HashMap<String, Job> jobQueueNew = spcInfoTypeNew.getSpcReferance().getJobQueue();
+								
+							JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
+							
+							synchronized (jobQueueNew) {
+								ArrayList<SortType> nonDailJobQueueIndex = spcInfoTypeOld.getSpcReferance().getNonDailyJobQueueIndex();
+								Iterator<SortType> nonDailJobQueueIndexIterator = nonDailJobQueueIndex.iterator();
+								while (nonDailJobQueueIndexIterator.hasNext()) {
+									SortType sortType = nonDailJobQueueIndexIterator.next();
+									Job oldJob = jobQueueOld.remove(sortType.getJobId());
+									jobQueueNew.put(sortType.getJobId(), oldJob);
+								}
+								JobIndexUtils.reIndexJobQueue(spcInfoTypeNew.getSpcReferance());
+							}
+							
+							spcInfoTypeOld.getSpcReferance().setSpcSuspended(false);
+							
+//							spcInfoTypeOld.getSpcReferance().setExecutionPermission(true, false);
+//							
+							while (spcInfoTypeOld.getSpcReferance().getExecuterThread() != null && spcInfoTypeOld.getSpcReferance().getExecuterThread().isAlive()) {
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+								
+						} else {
+							// Bitince kendini VT'den yenilesin değerini set et.
+							spcReferanceOld.setCurrentRunId(runIdNew);
+							spcReferanceOld.setUpdateMySelfAfterMe(true);
+							// all T< 1 jobs.setUpdateMySelfAfterMe(true);
+							JobQueueOperations.setAllNonNormalJobsUpdateMySelfAfterMe(spcReferanceOld, true);
+							spcLookupTableNew.put(tlosSWPathType.getFullPath(), spcInfoTypeOld);
+						}
+
 					}
 
 				}
