@@ -20,7 +20,13 @@ public class TEJmxMpClientBase {
 
 	private static final Logger logger = Logger.getLogger(TEJmxMpClientBase.class);
 
+	private static boolean isConnected = false;
+	
 	public static boolean tryReconnect = true;
+	
+	private static final TEJmxMpClientBase instance = new TEJmxMpClientBase();
+	
+	private static JMXConnector jmxConnector = null;
 
 	public static boolean isEnvRead = false;
 	public static String jmxIpEnv = null;
@@ -45,12 +51,15 @@ public class TEJmxMpClientBase {
 
 	public static JMXConnector getJMXConnection() {
 
+		if(isConnected) {
+			return jmxConnector;
+		}
+		
 		if (!isEnvRead) {
 			javax.naming.Context ctx;
 			try {
 				ctx = new javax.naming.InitialContext();
 				jmxIpEnv = (String) ctx.lookup("java:comp/env/jmxIp");
-				// jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxPort");
 				jmxPortEnv = (Integer) ctx.lookup("java:comp/env/jmxTlsPort"); // jmxtls icin
 				isEnvRead = true;
 			} catch (NamingException e1) {
@@ -59,7 +68,6 @@ public class TEJmxMpClientBase {
 			}
 		}
 
-		JMXConnector jmxConnector = null;
 		String host = jmxIpEnv;
 		int port = jmxPortEnv.intValue(); // jmx için 5554; //jmxtls icin 5555
 
@@ -73,12 +81,16 @@ public class TEJmxMpClientBase {
 			while (tryReconnect) {
 
 				try {
+					
+					long startTime = System.currentTimeMillis();
 
 					jmxConnector = JMXConnectorFactory.connect(url, getEnv());
+					
+					System.err.println("Connected to Jmx in " + dateDiffWithNow(startTime) + " ms");
+					setConnected(true);
 
 					if (jmxConnector != null) {
-						// jmxConnector = JMXConnectorFactory.connect(url);
-						jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, jmxConnector);
+						jmxConnector.addConnectionNotificationListener(new JmxConnectionListener(), null, TEJmxMpClientBase.getInstance());
 						logger.info(">> JMXMP Connection successfully established to " + url);
 						break;
 					}
@@ -97,13 +109,6 @@ public class TEJmxMpClientBase {
 				Thread.sleep(2000);
 				logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
 
-				//				if (attemptCount < 3) {
-				//					logger.info(">> JMXMP Connection can NOT be established ! Waiting for 2 seconds before retry...");
-				//					Thread.sleep(2000);
-				//					logger.info(">> Trying to reconnect. Attempt count " + ++attemptCount);
-				//				} else {
-				//					return null;
-				//				}
 			}
 
 			logger.info("Connected to JMXMP server on host " + host + " through port " + port);
@@ -184,8 +189,22 @@ public class TEJmxMpClientBase {
 		}
 
 		env.put("jmx.remote.profiles", "TLS");
+		
+		env.put("jmx.remote.x.server.connection.timeout", "30");
 
 		return env;
 
+	}
+
+	public static boolean isConnected() {
+		return isConnected;
+	}
+
+	public static void setConnected(boolean isConnected) {
+		TEJmxMpClientBase.isConnected = isConnected;
+	}
+
+	public static TEJmxMpClientBase getInstance() {
+		return instance;
 	}
 }
