@@ -25,6 +25,8 @@ import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.likya.tlossw.utils.SpaceWideRegistry;
+
 //http://www.java2s.com/Tutorial/Java/0440__XML/XPathevaluatescheduleseriesId.htm
 //http://blog.davber.com/2006/09/17/xpath-with-namespaces-in-java/
 //http://www.ibm.com/developerworks/library/x-javaxpathapi/index.html
@@ -179,13 +181,16 @@ public class YAXPath {
 		} catch (XPathExpressionException xpee) {
 			System.out.print(" Xpath i isletmede hata olustu :" + xpee.getMessage());
 		}
-		System.out.println("XPath result is \"");
+		
+		if (SpaceWideRegistry.isDebug) {
+			System.out.println("XPath result is \"");
 
-		if (result != null) {
-			NodeList nodes = (NodeList) result;
+			if (result != null) {
+				NodeList nodes = (NodeList) result;
 
-			for (int i = 0; i < nodes.getLength(); i++) {
-				YADOM.dumpLoop(nodes.item(i), "");
+				for (int i = 0; i < nodes.getLength(); i++) {
+					YADOM.dumpLoop(nodes.item(i), "");
+				}
 			}
 		}
 
@@ -244,13 +249,16 @@ public class YAXPath {
 
 		// 4. Evaluate the XPath expression on an input document
 		Object result = expr.evaluate(job, XPathConstants.NODESET);
-		System.out.println("XPath result is \"");
+		
+		if (SpaceWideRegistry.isDebug) {
+			System.out.println("XPath result is \"");
 
-		if (result != null) {
-			NodeList nodes = (NodeList) result;
+			if (result != null) {
+				NodeList nodes = (NodeList) result;
 
-			for (int i = 0; i < nodes.getLength(); i++) {
-				YADOM.dumpLoop(nodes.item(i), "");
+				for (int i = 0; i < nodes.getLength(); i++) {
+					YADOM.dumpLoop(nodes.item(i), "");
+				}
 			}
 		}
 
