@@ -26,11 +26,11 @@ public abstract class ExecuteComponent extends Job {
 		Thread.sleep(100);
 		myLogger.info(" >>" + logLabel + ">> " + " OK");
 
-		errorGobbler = new StreamGrabber(process.getErrorStream(), "ERROR", stringBufferForERROR);
+		errorGobbler = new StreamGrabber(process.getErrorStream(), "ERROR", stringBufferForERROR, Logger.getLogger(StreamGrabber.class));
 		errorGobbler.setName(jobKey + ".ErrorGobbler.id." + errorGobbler.getId());
 
 		// any output?
-		outputGobbler = new StreamGrabber(process.getInputStream(), "OUTPUT", stringBufferForOUTPUT);
+		outputGobbler = new StreamGrabber(process.getInputStream(), "OUTPUT", stringBufferForOUTPUT, Logger.getLogger(StreamGrabber.class));
 		outputGobbler.setName(jobKey + ".OutputGobbler.id." + outputGobbler.getId());
 
 		myLogger.info(" >>" + logLabel + " icin islemin hata ve girdi akisi baslatiliyor. " + errorGobbler.getName() + " ve " + outputGobbler.getName());
@@ -46,11 +46,11 @@ public abstract class ExecuteComponent extends Job {
 		Thread.sleep(100);
 		myLogger.info(" >>" + logLabel + ">> " + " OK");
 
-		errorGobbler = new StreamGrabber(((ChannelExec) channel).getErrStream(), "ERROR", stringBufferForERROR);
+		errorGobbler = new StreamGrabber(((ChannelExec) channel).getErrStream(), "ERROR", stringBufferForERROR, Logger.getLogger(StreamGrabber.class));
 		errorGobbler.setName(jobKey + ".ErrorGobbler.id." + errorGobbler.getId());
 
 		// any output?
-		outputGobbler = new StreamGrabber(channel.getInputStream(), "OUTPUT", stringBufferForOUTPUT);
+		outputGobbler = new StreamGrabber(channel.getInputStream(), "OUTPUT", stringBufferForOUTPUT, Logger.getLogger(StreamGrabber.class));
 		outputGobbler.setName(jobKey + ".OutputGobbler.id." + outputGobbler.getId());
 
 		myLogger.info(" >>" + logLabel + " icin islemin hata ve girdi akisi baslatiliyor. " + errorGobbler.getName() + " ve " + outputGobbler.getName());
