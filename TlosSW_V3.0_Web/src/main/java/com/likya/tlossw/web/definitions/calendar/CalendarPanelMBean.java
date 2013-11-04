@@ -59,8 +59,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	private Collection<SelectItem> dayDefList = null;
 	private String dayDef;
 
-	private int howManyTimes = 1;
-
 	private Collection<SelectItem> whichOnesList;
 	private String[] selectedWhichOnesList;
 
@@ -181,7 +179,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		validTo = null;
 		validFromTime = null;
 		validToTime = null;
-		howManyTimes = 1;
 
 		selectedWhichOnesList = null;
 		whichOnesList = new ArrayList<SelectItem>();
@@ -251,7 +248,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			selectedTypeOfTime = calendar.getTypeOfTime().toString();
 		else
 			selectedTypeOfTime = new String("Broadcast");
-		howManyTimes = calendar.getHowmanyTimes();
 
 		insertButton = false;
 	}
@@ -366,8 +362,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 		calendar.getCalendarPeriod().setDaySpecial(DaySpecial.Enum.forString(daySpecial));
 		calendar.getCalendarPeriod().setDayDef(DayDef.Enum.forString(dayDef));
-
-		calendar.setHowmanyTimes(new Byte(howManyTimes + ""));
 
 		if (specificDayList.size() > 0) {
 			SpecificDays specificDays = SpecificDays.Factory.newInstance();
@@ -690,14 +684,6 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setWhichOnesList(Collection<SelectItem> whichOnesList) {
 		this.whichOnesList = whichOnesList;
-	}
-
-	public int getHowManyTimes() {
-		return howManyTimes;
-	}
-
-	public void setHowManyTimes(int howManyTimes) {
-		this.howManyTimes = howManyTimes;
 	}
 
 	public String getCalendarName() {
