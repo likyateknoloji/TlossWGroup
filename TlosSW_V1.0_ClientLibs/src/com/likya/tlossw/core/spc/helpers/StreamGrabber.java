@@ -15,12 +15,15 @@ public class StreamGrabber extends Thread {
 	private StringBuffer outputBuffer;
 	private BufferedReader bufferedReader;
 	
+	private Logger myLogger;
+	
 	boolean live = true;
 	
-	public StreamGrabber(InputStream is, String type, StringBuffer opBuff) {
+	public StreamGrabber(InputStream is, String type, StringBuffer opBuff, Logger myLogger) {
 		this.is = is;
 		this.type = type;
 		this.outputBuffer = opBuff;
+		this.myLogger = myLogger;
 	}
 	
 	public synchronized void stopStreamGobbler() {
@@ -52,7 +55,7 @@ public class StreamGrabber extends Thread {
 
 			while ((bufferString = bufferedReader.readLine()) != null) {
 				//SpaceWideRegistry.getSpaceWideLogger().debug(type + ">" + bufferString);
-				Logger.getLogger(StreamGrabber.class).info(type + ">" + bufferString);
+				myLogger.info(type + ">" + bufferString);
 				
 				outputBuffer.append(type + ">" + bufferString + "\n");
 				while (!bufferedReader.ready()) {
@@ -67,15 +70,11 @@ public class StreamGrabber extends Thread {
 				}				
 			}
 		} catch(InterruptedIOException iioe) {
-			//SpaceWideRegistry.getSpaceWideLogger().debug("StreamGrabber : Terminating " + iioe.getMessage(), iioe);
-			Logger.getLogger(StreamGrabber.class).debug("StreamGrabber : Terminating " + iioe.getMessage(), iioe);
+			myLogger.debug("StreamGrabber : Terminating " + iioe.getMessage(), iioe);
 		} catch (IOException ioe) {
-			//SpaceWideRegistry.getSpaceWideLogger().debug("StreamGrabber : Terminating " + ioe.getMessage(), ioe);
-			Logger.getLogger(StreamGrabber.class).debug("StreamGrabber : Terminating " + ioe.getMessage(), ioe);
+			myLogger.debug("StreamGrabber : Terminating " + ioe.getMessage(), ioe);
 		} catch (InterruptedException e) {
-			//SpaceWideRegistry.getSpaceWideLogger().debug("StreamGrabber : Terminating " + this.getName());
-			Logger.getLogger(StreamGrabber.class).debug("StreamGrabber : Terminating " + this.getName());
-			// e.printStackTrace();
+			myLogger.debug("StreamGrabber : Terminating " + this.getName());
 		}
 		
 		exitClass();
