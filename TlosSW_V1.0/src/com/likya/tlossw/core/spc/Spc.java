@@ -461,8 +461,8 @@ public class Spc extends SpcBase {
 					if (jobStartType.equals(JobTypeDef.TIME_BASED.toString())) {
 
 						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
-System.err.println(getCurrentRunId());
-System.err.println(getNativeRunId());
+//System.err.println(getCurrentRunId());
+//System.err.println(getNativeRunId());
 						// isin planlanan calisma zamani gecti mi?
 						if (timeHasCome) { // GECTI, calismasi icin gerekli islemlere baslansin.
 							DssVisionaire.glbinfo("   > handleTransferRequestsOnDss : BEGIN");
