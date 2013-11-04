@@ -102,10 +102,13 @@
 		</xs:complexType>
 	</xs:element>
 
+    <xs:element name="profileName" type="xs:string"/>
+
 	<xs:element name="dbConnectionProfile">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="dbc:dbDefinitionId"/>
+				<xs:element ref="dbc:profileName"/>
 				<xs:element ref="com:userName"/>
 				<xs:element ref="com:userPassword"/>
 				<xs:element ref="dbc:jdbcConnectionPoolParams"/>
