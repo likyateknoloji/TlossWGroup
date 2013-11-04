@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://www.likyateknoloji.com/XML_dbconnection_types ../xsds/tlosSWDBConnections_v_1_0.xsd">
 	<dbc:dbConnectionProfile ID="1">
 		<dbc:dbDefinitionId>6</dbc:dbDefinitionId>
+		<dbc:profileName>postgres6</dbc:profileName>
 		<com:userName>postgres</com:userName>
 		<com:userPassword>ad0215</com:userPassword>
 		<dbc:jdbcConnectionPoolParams>
@@ -18,6 +19,7 @@
 	</dbc:dbConnectionProfile>
 	<dbc:dbConnectionProfile ID="2">
 		<dbc:dbDefinitionId>4</dbc:dbDefinitionId>
+		<dbc:profileName>test4</dbc:profileName>
 		<com:userName>test</com:userName>
 		<com:userPassword>test</com:userPassword>
 		<dbc:jdbcConnectionPoolParams>
@@ -32,6 +34,7 @@
 	</dbc:dbConnectionProfile>
 	<dbc:dbConnectionProfile ID="3">
 		<dbc:dbDefinitionId>5</dbc:dbDefinitionId>
+		<dbc:profileName>test5</dbc:profileName>
 		<com:userName>test</com:userName>
 		<com:userPassword>test</com:userPassword>
 		<dbc:jdbcConnectionPoolParams>
@@ -46,6 +49,7 @@
 	</dbc:dbConnectionProfile>
 	<dbc:dbConnectionProfile ID="4">
 		<dbc:dbDefinitionId>6</dbc:dbDefinitionId>
+		<dbc:profileName>postgres6</dbc:profileName>
 		<com:userName>postgres</com:userName>
 		<com:userPassword>ad0215</com:userPassword>
 		<dbc:jdbcConnectionPoolParams>
