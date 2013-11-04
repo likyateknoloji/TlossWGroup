@@ -586,7 +586,7 @@ public class WebInputUtils {
 				if (dbId.equals(id)) {
 					SelectItem item = new SelectItem();
 					item.setValue(dbProfiles.getID());
-					item.setLabel(dbProperties.getConnectionName() + "." + dbProfiles.getUserName());
+					item.setLabel("[DB:"+dbProperties.getConnectionName() + "]." + dbProfiles.getProfileName());
 					definitionList.add(item);
 
 					break;
