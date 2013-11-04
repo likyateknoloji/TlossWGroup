@@ -44,9 +44,9 @@
 				<p:panelGrid styleClass="companyHeaderGrid" columns="4" border="0">
 
 					<h:outputText
-						value="#{msgs['tlos.management.pannel.dbAccess.dbList']}" />
+						value="#{msgs['tlos.management.pannel.dbAccess.dbConnectionList']}" />
 					<p:selectOneMenu id="dbDef" required="true"
-						style="text-align: center;"
+						style="text-align: center; width: 100pt"
 						value="#{dbAccessPanelMBean.dbConnectionName}"
 						partialSubmit="true" rendered="true"
 						requiredMessage="#{msgs['tlos.validation.db.dbDefinition.regex']}">
@@ -54,7 +54,17 @@
 							itemValue="" />
 						<f:selectItems value="#{dbAccessPanelMBean.dbConnectionNameList}" />
 					</p:selectOneMenu>
-
+		
+					<h:outputText
+						value="#{msgs['tlos.management.pannel.dbAccess.dbConUserProfile']}" />
+					<p:inputText id="profileName"
+						value="#{dbAccessPanelMBean.dbConnectionProfile.profileName}"
+						required="true"
+						requiredMessage="#{msgs['tlos.validation.db.userName']}"
+						validatorMessage="#{msgs['tlos.validation.db.userName.min']}">
+						<f:validateLength minimum="4"></f:validateLength>
+					</p:inputText>
+					
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.dbAccess.userName']}" />
 					<p:inputText id="userName"

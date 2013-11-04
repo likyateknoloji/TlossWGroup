@@ -43,13 +43,22 @@
 
 					<p:panelGrid columns="4" styleClass="companyHeaderGrid">
 						<h:outputText
-							value="#{msgs['tlos.management.pannel.dbAccess.dbList']}" />
-						<p:selectOneMenu id="dbType" style="text-align: center;"
+							value="#{msgs['tlos.management.pannel.dbAccess.dbConnectionList']}" />
+						<p:selectOneMenu id="dbType"
+							style="text-align: center; width: 100pt"
 							value="#{dbAccessSearchPanelMBean.dbConnectionName}"
 							partialSubmit="true">
-							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-							<f:selectItems value="#{dbAccessSearchPanelMBean.dbConnectionNameList}" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItems
+								value="#{dbAccessSearchPanelMBean.dbConnectionNameList}" />
 						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbAccess.dbConUserProfile']}" />
+						<p:inputText id="profileName"
+							value="#{dbAccessSearchPanelMBean.dbProfileName}">
+						</p:inputText>
 
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.dbAccess.userName']}" />
@@ -61,8 +70,10 @@
 							value="#{msgs['tlos.management.pannel.dbAccess.deployed']}" />
 						<p:selectOneMenu id="deployed" style="text-align: center;"
 							value="#{dbAccessSearchPanelMBean.deployed}" partialSubmit="true">
-							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.yes']}"	itemValue="yes" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.yes']}"
+								itemValue="yes" />
 							<f:selectItem itemLabel="#{msgs['tlos.combo.no']}" itemValue="no" />
 						</p:selectOneMenu>
 
@@ -70,8 +81,10 @@
 							value="#{msgs['tlos.management.pannel.dbAccess.active']}" />
 						<p:selectOneMenu id="active" style="text-align: center;"
 							value="#{dbAccessSearchPanelMBean.active}" partialSubmit="true">
-							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.yes']}"	itemValue="yes" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItem itemLabel="#{msgs['tlos.combo.yes']}"
+								itemValue="yes" />
 							<f:selectItem itemLabel="#{msgs['tlos.combo.no']}" itemValue="no" />
 						</p:selectOneMenu>
 
@@ -116,7 +129,8 @@
 						widgetVar="confirmation">
 						<p:commandButton id="confirm" immediate="true" process="@this"
 							value="#{msgs['tlos.ask.delete.confirm1']}"
-							update=":searchDBAccess:dbAccessSearchPanel" onclick="confirmation.hide()"
+							update=":searchDBAccess:dbAccessSearchPanel"
+							onclick="confirmation.hide()"
 							actionListener="#{dbAccessSearchPanelMBean.deleteDBAccessAction}" />
 						<p:commandButton id="decline"
 							value="#{msgs['tlos.ask.delete.confirm2']}"
@@ -135,19 +149,22 @@
 						<p:column>
 							<p:commandButton id="dbEditButton" ajax="false"
 								rendered="#{security.DBAccessEdit}" immediate="false"
-								value="#{msgs['tlos.ask.update.button']}" action="dbAccessPanel.xhtml">
+								value="#{msgs['tlos.ask.update.button']}"
+								action="dbAccessPanel.xhtml">
 								<f:param name="selectedDBAccessID"
 									value="#{item.dbConnectionProfile.dbDefinitionId}" />
 								<f:param name="selectedUserName"
 									value="#{item.dbConnectionProfile.userName}" />
-                                <f:param name="dbCpID"
-									value="#{item.dbConnectionProfile.ID}" />
+								<f:param name="dbCpID" value="#{item.dbConnectionProfile.ID}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
 
-							<p:commandButton id="dbDeleteButton" title="#{msgs['tlos.ask.delete.button']}" value="#{msgs['tlos.ask.delete.button']}" 
-								icon="ui-icon-trash" onclick="confirmation.show()" rendered="#{security.DBAccessDelete}" 
-								action="#{dbAccessSearchPanelMBean.setSelectedRow(item)}"/>
+							<p:commandButton id="dbDeleteButton"
+								title="#{msgs['tlos.ask.delete.button']}"
+								value="#{msgs['tlos.ask.delete.button']}" icon="ui-icon-trash"
+								onclick="confirmation.show()"
+								rendered="#{security.DBAccessDelete}"
+								action="#{dbAccessSearchPanelMBean.setSelectedRow(item)}" />
 
 							<p:commandButton id="dbDeployButton"
 								value="#{msgs['tlos.button.deploy']}"
@@ -161,7 +178,15 @@
 						</p:column>
 
 						<p:column
-							headerText="#{msgs['tlos.management.pannel.dbAccess.dbDefinition']}"
+							headerText="#{msgs['tlos.management.pannel.dbAccess.dbConUserProfile']}"
+							sortBy="#{item.dbConnectionProfile.profileName}" filterBy="#{item.dbConnectionProfile.profileName}"
+							filterMatchMode="contains">
+							<h:outputText value="#{item.dbConnectionProfile.profileName}"
+								style="text-align: center;" />
+						</p:column>
+
+						<p:column
+							headerText="#{msgs['tlos.management.pannel.dbAccess.dbConnectionList']}"
 							sortBy="#{item.connectionName}" filterBy="#{item.connectionName}"
 							filterMatchMode="contains">
 							<h:outputText value="#{item.connectionName}"

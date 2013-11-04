@@ -56,10 +56,11 @@
 					<h:outputText
 						value="#{msgs['tlos.management.pannel.dbAccess.dbType']}" />
 					<p:selectOneMenu id="dbType" required="true"
-						style="text-align: center;"
+						style="text-align: center; width: 100pt"
 						requiredMessage="#{msgs['tlos.validation.db.dbType']}"
 						value="#{dbConnectionPanelMBean.dbType}" partialSubmit="true">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+							itemValue="" />
 						<f:selectItems value="#{dbConnectionPanelMBean.dbTypeList}" />
 					</p:selectOneMenu>
 
@@ -77,6 +78,7 @@
 						value="#{msgs['tlos.management.pannel.dbDefinition.dbUrl']}" />
 					<p:inputText id="dbUrl"
 						value="#{dbConnectionPanelMBean.dbProperties.dbUrl}"
+						style="width:200pt"
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.db.dbUrl']}"
 						validatorMessage="#{msgs['tlos.validation.db.dbUrl.min']}">
@@ -142,35 +144,52 @@
 						validatorMessage="#{msgs['tlos.validation.db.jdbcClassName.min']}">
 						<f:validateLength minimum="4"></f:validateLength>
 					</p:inputText>
-
-					<h:outputText
-						value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppName']}" />
-					<p:selectOneMenu id="appName" required="true"
-						style="text-align: center;"
-						requiredMessage="#{msgs['tlos.validation.db.sqlClientAppName']}"
-						value="#{dbConnectionPanelMBean.sqlClientAppName}"
-						partialSubmit="true">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-						<f:selectItems
-							value="#{dbConnectionPanelMBean.sqlClientAppNameList}" />
-					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppPath']}" />
-					<p:inputText id="appPath"
-						value="#{dbConnectionPanelMBean.dbProperties.sqlClientAppPath}"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.db.sqlClientAppPath']}"
-						validatorMessage="#{msgs['tlos.validation.db.sqlClientAppPath.regex']}">
-						<f:validateRegex
-							pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
-					</p:inputText>
-					
-					<h:inputHidden value="#{dbConnectionPanelMBean.dbProperties.ID}" id="dbID" />
-
 				</p:panelGrid>
 
-				<br></br>
+				<p:panel id="useSqlClientAppPanel">
+					<p:panelGrid id="useSqlClientAppPanelGrid" columns="4">
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppUse']}" />
+						<p:selectBooleanCheckbox
+							value="#{dbConnectionPanelMBean.useSqlClientApp}">
+							<p:ajax update="useSqlClientAppPanel"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:panelGrid>
+
+					<p:panelGrid rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
+						columns="4">
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppName']}" />
+						<p:selectOneMenu id="appName" required="true"
+							style="text-align: center; width:100pt"
+							requiredMessage="#{msgs['tlos.validation.db.sqlClientAppName']}"
+							value="#{dbConnectionPanelMBean.sqlClientAppName}"
+							partialSubmit="true">
+							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+								itemValue="" />
+							<f:selectItems
+								value="#{dbConnectionPanelMBean.sqlClientAppNameList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppPath']}" />
+						<p:inputText id="appPath"
+							value="#{dbConnectionPanelMBean.dbProperties.sqlClientAppPath}"
+							style="width:200pt"
+							required="true"
+							requiredMessage="#{msgs['tlos.validation.db.sqlClientAppPath']}"
+							validatorMessage="#{msgs['tlos.validation.db.sqlClientAppPath.regex']}">
+							<f:validateRegex
+								pattern="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" />
+						</p:inputText>
+
+
+					</p:panelGrid>
+					<h:inputHidden value="#{dbConnectionPanelMBean.dbProperties.ID}"
+						id="dbID" />
+
+				</p:panel>
 
 				<div class="tablectrl">
 					<p:panel>
