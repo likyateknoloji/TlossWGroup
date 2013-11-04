@@ -215,11 +215,6 @@
                     </fo:table-cell>
                     <fo:table-cell column-number="1" display-align="before">
                         <fo:block>
-                            <xsl:value-of select="cal:howmanyTimes"/>
-                        </fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell column-number="1" display-align="before">
-                        <fo:block>
                             <xsl:value-of select="cal:validFrom"/>
                         </fo:block>
                     </fo:table-cell>
