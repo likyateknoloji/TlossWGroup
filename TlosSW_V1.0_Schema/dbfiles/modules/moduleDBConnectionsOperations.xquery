@@ -81,9 +81,10 @@ declare function db:searchDbAccessProfile($documentUrl as xs:string, $dbConnProf
 	
 	for $dbProperty in doc($dbProfilesDocumentUrl)/dbc:dbConnectionProfiles/dbc:dbConnectionProfile
 	return if (($dbProperty/dbc:dbDefinitionId=$dbConnProfile/dbc:dbDefinitionId or data($dbConnProfile/dbc:dbDefinitionId) = "")  
-			and	(fn:lower-case($dbProperty/com:userName)=fn:lower-case($dbConnProfile/com:userName) or data($dbConnProfile/com:userName) = "")
+			and	(fn:contains(fn:lower-case($dbProperty/com:userName),fn:lower-case($dbConnProfile/com:userName)) or data($dbConnProfile/com:userName) = "")
 			and	(fn:lower-case($dbProperty/dbc:deployed)=fn:lower-case($dbConnProfile/dbc:deployed) or data($dbConnProfile/dbc:deployed) = "" )
-			and	(fn:lower-case($dbProperty/dbc:active)=fn:lower-case($dbConnProfile/dbc:active) or data($dbConnProfile/dbc:active) = ""))
+			and	(fn:lower-case($dbProperty/dbc:active)=fn:lower-case($dbConnProfile/dbc:active) or data($dbConnProfile/dbc:active) = "")
+            and (fn:contains(fn:lower-case($dbProperty/dbc:profileName), fn:lower-case($dbConnProfile/dbc:profileName)) or data($dbConnProfile/dbc:profileName) = ""))
 		then $dbProperty
 		else  ( )
 };
