@@ -37,6 +37,7 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 	private DBAccessInfoTypeClient dbAccessInfoTypeClient;
 
 	private String dbConnectionName = null;
+	private String dbProfileName = null;
 	private Collection<SelectItem> dbConnectionNameList = null;
 
 	private String deployed;
@@ -52,6 +53,7 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		dbConnectionProfile = null;
 		dbAccessInfoTypeClient = null;
 		dbConnectionNameList = null;
+		dbProfileName = null;
 	}
 
 	@PostConstruct
@@ -91,6 +93,7 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 		active = "";
 		searchDBAccessProfileList = null;
 		dbConnectionName = "";
+		dbProfileName="";
 	}
 
 	public void searchDBAccessAction(ActionEvent e) {
@@ -100,6 +103,12 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 			dbConnectionProfile.setDbDefinitionId(null);
 		}
 
+		if (!dbProfileName.equals("")) {
+			dbConnectionProfile.setProfileName(dbProfileName);
+		} else {
+			dbConnectionProfile.setProfileName(null);
+		}
+		
 		if (!deployed.equals("")) {
 			dbConnectionProfile.setDeployed(Deployed.Enum.forString(deployed));
 		} else {
@@ -220,6 +229,14 @@ public class DBAccessSearchPanelMBean extends TlosSWBaseBean implements Serializ
 
 	public void setSelectedRow(DBAccessInfoTypeClient selectedRow) {
 		this.selectedRow = selectedRow;
+	}
+
+	public String getDbProfileName() {
+		return dbProfileName;
+	}
+
+	public void setDbProfileName(String dbProfileName) {
+		this.dbProfileName = dbProfileName;
 	}
 
 }
