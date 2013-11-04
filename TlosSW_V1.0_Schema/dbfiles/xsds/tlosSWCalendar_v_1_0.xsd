@@ -58,11 +58,6 @@
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="howmanyTimes">
-		<xs:simpleType>
-			<xs:restriction base="xs:byte" />
-		</xs:simpleType>
-	</xs:element>
 	<xs:element name="whichOnes">
 		<xs:complexType>
 			<xs:choice>
@@ -111,7 +106,6 @@
 			<xs:sequence>
 				<xs:element ref="calendarName" />
 				<xs:element ref="calendarPeriod" />
-				<xs:element ref="howmanyTimes" />
 				<xs:element ref="specificDays" minOccurs="0" />
 				<xs:element ref="exceptionDays" minOccurs="0" />
 				<xs:element ref="whichOnes" minOccurs="0" />
