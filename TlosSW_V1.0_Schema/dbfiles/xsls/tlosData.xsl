@@ -281,9 +281,6 @@ background-color:#D4EEF8;
                 <xsl:value-of select="cal:calendarPeriod"/>
             </td>
             <td>
-                <xsl:value-of select="cal:howmanyTimes"/>
-            </td>
-            <td>
                 <xsl:value-of select="cal:validFrom"/>
             </td>
             <td>
