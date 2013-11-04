@@ -51,15 +51,10 @@ public class JobQueueOperations {
 
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 
-				/**
-				 * GD kurgusu sonrası bu kontrole gerek kalmadı.
-				 * 
-				 * @author serkan
-				 *         if (JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
-				 *         return false;
-				 *         }
-				 */
-
+				if (scheduledJob.isStopRepeatativity() && JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+					jobQueueResult.setJobQueueOver(false);
+					return jobQueueResult;
+				}
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element scheduledJob: " + scheduledJob.getJobRuntimeProperties());
 
