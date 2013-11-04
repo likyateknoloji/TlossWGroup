@@ -46,8 +46,11 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 	private String portNumber;
 
 	private String sqlClientAppName = null;
+	private String sqlClientAppPath = null;
+	
 	private Collection<SelectItem> sqlClientAppNameList = null;
-
+	private boolean useSqlClientApp = false;
+	
 	private boolean insertButton;
 
 	@PostConstruct
@@ -67,6 +70,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 				dbType = "";
 				sqlClientAppName = "";
+				sqlClientAppPath = "";
 
 				dbProperties = getDbOperations().searchDBByID(selectedDBConnectionID);
 
@@ -74,6 +78,10 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 					dbType = dbProperties.getDbType().toString();
 					portNumber = dbProperties.getListenerPortNumber() + "";
 					sqlClientAppName = dbProperties.getSqlClientAppName().toString();
+					sqlClientAppPath = dbProperties.getSqlClientAppPath().toString();
+					if(!sqlClientAppName.isEmpty()) {
+						setUseSqlClientApp(true);
+					}
 				}
 
 			} else {
@@ -114,6 +122,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 		dbType = "";
 		sqlClientAppName = "";
+		sqlClientAppPath = "";
 		portNumber = null;
 	}
 
@@ -178,6 +187,12 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 			dbProperties.setSqlClientAppName(SqlClientAppName.Enum.forString(sqlClientAppName));
 		} else {
 			dbProperties.setSqlClientAppName(null);
+		}
+		
+		if (!sqlClientAppPath.equals("")) {
+			dbProperties.setSqlClientAppPath(sqlClientAppPath);
+		} else {
+			dbProperties.setSqlClientAppPath(null);
 		}
 	}
 
@@ -273,4 +288,28 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 		this.selectedDBConnectionID = selectedDBConnectionID;
 	}
 
+	public boolean getUseSqlClientApp() {
+		return useSqlClientApp;
+	}
+
+	public void setUseSqlClientApp(boolean useSqlClientApp) {
+		changeUseSqlConnection(useSqlClientApp);
+		this.useSqlClientApp = useSqlClientApp;
+	}
+
+	public void changeUseSqlConnection(boolean useSqlClientApp) {
+		if(useSqlClientApp) {
+			this.useSqlClientApp = false;
+		} else {
+			this.useSqlClientApp = true;
+		}
+	}
+
+	public String getSqlClientAppPath() {
+		return sqlClientAppPath;
+	}
+
+	public void setSqlClientAppPath(String sqlClientAppPath) {
+		this.sqlClientAppPath = sqlClientAppPath;
+	}
 }
