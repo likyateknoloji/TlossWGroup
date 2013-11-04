@@ -66,7 +66,7 @@ public abstract class ExecuteComponent extends Job {
 			descStr.append("OUTPUT : " + stringBufferForOUTPUT);
 		}
 
-		if (stringBufferForOUTPUT != null && stringBufferForOUTPUT.length() > 1) {
+		if (stringBufferForERROR != null && stringBufferForERROR.length() > 1) {
 			descStr.append("\nERROR : " + stringBufferForERROR);
 		}
 
