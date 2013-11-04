@@ -235,7 +235,6 @@ declare function hs:createPlanCalendars($documentUrl as xs:string) as node()*
            let $yearOddFlg := $currentYear mod 2
            let $yearEvenFlg:= if ($yearOddFlg = 0) then 1 else 0
 
-	       let $howmanyTimes   := $calendar/cal:howmanyTimes//text()
 	       let $whichOnes := $calendar/cal:whichOnes/cal:Name
 		   let $specificDays := $calendar/cal:specificDays/com:date
 		   let $exceptionDays := $calendar/cal:exceptionDays/com:date
