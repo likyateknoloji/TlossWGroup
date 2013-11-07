@@ -268,7 +268,7 @@ public abstract class CpcBase implements Runnable {
 				spcInfoType = CpcUtils.getSpcInfo(spc, userId, tlosProcessData.getRunId(), tmpScenarioList.get(scenarioId));
 				spcInfoType.setSpcId(new TlosSWPathType(scenarioId));
 
-				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+				if (!getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getUse() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 					if (!spc.initScenarioInfo()) {
 						myLogger.warn(scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 						Logger.getLogger(CpcBase.class).warn(" WARNING : " + scenarioId + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
