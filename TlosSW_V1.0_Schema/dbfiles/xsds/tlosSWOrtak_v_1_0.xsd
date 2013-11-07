@@ -1,4 +1,3 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_common_types"
 	xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:db="http://www.likyateknoloji.com/XML_db_job_types"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ws="http://www.likyateknoloji.com/XML_web_service_types"
@@ -26,11 +25,13 @@
 		schemaLocation="tlosSWSJProcessNode_v_1_0.xsd" />
 	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types"
 		schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd" />
+		
 	<xs:element name="date">
 		<xs:simpleType>
 			<xs:restriction base="xs:date" />
 		</xs:simpleType>
 	</xs:element>
+	
 	<xs:element name="time">
 		<xs:simpleType>
 			<xs:restriction base="xs:time" />
@@ -186,6 +187,50 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+
+	<xs:complexType name="thresholdType">
+		<xs:sequence>
+			<xs:element ref="high" />
+			<xs:element ref="low" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="low" default="5">
+		<xs:simpleType>
+			<xs:restriction base="xs:unsignedByte" />
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="high" default="10">
+		<xs:simpleType>
+			<xs:restriction base="xs:unsignedByte">
+				<xs:enumeration value="10" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:complexType name="frequencyType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+			<xs:element ref="frequency" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="dirType">
+		<xs:restriction base="xs:string">
+			<!-- xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" / -->
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="paths">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="comment" />
+				<xs:element name="homeDir" type="dirType" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:element name="jobPath">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -243,6 +288,30 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+
+	<xs:simpleType name="licenseTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BASE" />
+			<xs:enumeration value="DISTRIBUTED" />
+			<xs:enumeration value="TRIAL" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="licenseCodeSyntax">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+
+	<xs:element name="licenseInfo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="validFrom" type="xs:date" />
+				<xs:element name="validTo" type="xs:date" />
+				<xs:element name="licenseType" type="licenseTypeEnum" />
+				<xs:element name="licenseCode" type="licenseCodeSyntax" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:simpleType name="ST_Email">
 		<xs:restriction base="xs:string">
 			<xs:pattern
@@ -268,6 +337,13 @@
 				<xs:element name="email" type="ST_Email" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
+	</xs:element>
+	<xs:element name="url">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(((https?):(//))?([a-zA-Z/\\\.0-9_])*)" />
+			</xs:restriction>
+		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jsName">
 		<xs:simpleType>
@@ -394,38 +470,43 @@
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="ipAddress">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="userName">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="([0-9a-zA-Z])+" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+
+	<xs:simpleType name="ipAddressType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="userNameType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9a-zA-Z])+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="userName" type="userNameType" />
+
 	<xs:element name="userId">
 		<xs:simpleType>
 			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
+
 	<xs:element name="address">
 		<xs:simpleType>
 			<xs:restriction base="xs:token" />
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="userPassword">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:minLength value="4" />
-				<xs:maxLength value="8" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+
+	<xs:simpleType name="passwordType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4" />
+			<xs:maxLength value="8" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="userPassword" type="passwordType" />
+
 	<xs:element name="bufferSize" default="128">
 		<xs:simpleType>
 			<xs:restriction base="xs:short">
@@ -447,29 +528,34 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="role" type="roleType"/>
+	<xs:element name="role" type="roleType" />
 	<xs:element name="comment" type="xs:string" />
 	<xs:element name="planId" type="xs:string" />
 	<xs:element name="runningId" type="xs:string" />
 	<xs:element name="concurrent" type="xs:boolean" />
 	<xs:element name="normalization" type="xs:boolean" />
-	<xs:element name="value_boolean">
-		<xs:simpleType>
-			<xs:restriction base="xs:boolean" />
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="value_integer">
-		<xs:simpleType>
-			<xs:restriction base="xs:positiveInteger" />
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="value_string">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="[0-9]+" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+
+	<xs:simpleType name="booleanType">
+		<xs:restriction base="xs:boolean" />
+	</xs:simpleType>
+
+	<xs:simpleType name="integerType">
+		<xs:restriction base="xs:positiveInteger" />
+	</xs:simpleType>
+
+	<xs:simpleType name="stringType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="commentedBooleanType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+		</xs:sequence>
+		<xs:attribute name="use" use="required" type="booleanType" />
+	</xs:complexType>
+
 	<xs:element name="active" default="no">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -478,6 +564,14 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+
+	<xs:simpleType name="monitoringAgentType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NAGIOS" />
+			<xs:enumeration value="OTHER" />
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:element name="TlosSequenceData">
 		<xs:complexType>
 			<xs:sequence>
@@ -512,11 +606,6 @@
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="planId">
-					<xs:simpleType>
-						<xs:restriction base="xs:positiveInteger" />
-					</xs:simpleType>
-				</xs:element>
-				<xs:element name="solsticeId">
 					<xs:simpleType>
 						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
@@ -589,16 +678,83 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
 	<xs:element name="transformToLocalTime" type="xs:boolean"
 		default="false" />
+
 	<xs:element name="connName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
+
 	<xs:element name="fileSeperator">
 		<xs:simpleType>
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
+
+	<xs:complexType name="companyType">
+		<xs:sequence>
+			<xs:element ref="name" />
+			<xs:element ref="address" />
+			<xs:element ref="telephone" />
+			<xs:element ref="Email" />
+			<xs:element ref="url" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="company" type="companyType" />
+
+	<xs:element name="licensedTo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="company" type="companyType" />
+				<xs:element ref="licenseInfo" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="productInfoType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+			<xs:element ref="date" />
+			<xs:element ref="version" />
+			<xs:element ref="company" />
+			<xs:element ref="licensedTo" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="machineInfoType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+			<xs:element ref="name" />
+			<xs:choice>
+				<xs:element name="ipAddress" type="ipAddressType" />
+				<xs:element ref="url" />
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="remoteManagerType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+			<xs:element name="portNumber" type="portType" />
+			<xs:element ref="bufferSize" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="remoteManagerProperties" type="remoteManagerType" />
+
+	<xs:complexType name="jmxPortType">
+		<xs:sequence>
+			<xs:element ref="comment" />
+			<xs:element name="portNumber" type="portType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="jmxTlsPort" type="jmxPortType" />
+
+	<xs:element name="jmxPort" type="jmxPortType" />
+
 </xs:schema>
