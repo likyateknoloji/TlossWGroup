@@ -155,7 +155,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 		
 		/** Start alert servers (Log, Mail, SMS, ...) */
-		boolean isEmailEnabled = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
+		boolean isEmailEnabled = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getUse();
 		if (isEmailEnabled) {
 			/** Mail Server */
 			startMailSystem();
@@ -212,18 +212,18 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 		if (TlosSpaceWide.isRecoverable()) {
 			getSpaceWideRegistry().setFIRST_TIME(false);
-			initGunDonumuPeryodPassed();
+			initGunDonumuPeriodPassed();
 		}
 
 		/** gun donumunun gecip gecmedigini kontrol edelim **/
-		initSolsticePassed();
+		initTransitionTimePassed();
 
 		/**
 		 * @author serkan recover etme durumunda kullanıcı onayı sonrası
 		 *         çalışması gerekiyor.
 		 * 
 		 */
-		if (!isRecoverable() || getSpaceWideRegistry().isSolsticePassed()) {
+		if (!isRecoverable() || getSpaceWideRegistry().isTransactionTimePassed()) {
 			processQueueStarters();
 		}
 		
@@ -242,7 +242,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 			logger.info(" 1 - ilk kez calisiyor ...");
 
-			if (!getSpaceWideRegistry().isSolsticePassed()) {
+			if (!getSpaceWideRegistry().isTransactionTimePassed()) {
 
 				/**
 				 * Uygulama ilk defa çalıştığından ya da süreç bilgilerini
@@ -287,7 +287,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 			logger.info(" 1 - ilk calismasi degil.");
 
-			if (!getSpaceWideRegistry().isSolsticePassed()) {
+			if (!getSpaceWideRegistry().isTransactionTimePassed()) {
 				logger.info(" 2 - Gundonumu gecmedi.");
 				logger.info("");
 				logger.info("   RECOVERY YAPIYORUM (GUNDONUMU GECMEDI) kullaniciya soruyorum ...");
@@ -309,7 +309,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				changeApplicationState(AppState.INT_SUSPENDED);
 
 
-			} else if (getSpaceWideRegistry().isSolsticePassed()) {
+			} else if (getSpaceWideRegistry().isTransactionTimePassed()) {
 
 				logger.info(" 2 - Gundonumu gecti. Son gun donumu okumasi uzerinden bir peryod gecti.");
 				logger.info("");
