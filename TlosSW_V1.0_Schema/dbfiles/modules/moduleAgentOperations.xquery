@@ -82,12 +82,21 @@ declare function lk:agentList($documentUrl as xs:string, $firstElement as xs:int
 };
 
 (: ornek kullanim lk:searchAgentByjmxPort('5555') :)
+declare function lk:searchAgentByjmxTlsPort($documentUrl as xs:string, $searchjmxTlsPort as xs:string) as element(agnt:SWAgent)* 
+ {
+    let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
+	
+    for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
+    where $agent/agnt:jmxTlsPort=$searchjmxTlsPort
+    return $agent
+};
+
 declare function lk:searchAgentByjmxPort($documentUrl as xs:string, $searchjmxPort as xs:string) as element(agnt:SWAgent)* 
  {
     let $agentDocumentUrl := met:findDocPath($documentUrl, "agents", true())
 	
     for $agent in doc($agentDocumentUrl)/agnt:SWAgents/agnt:SWAgent
-    where $agent/agnt:jmxTlsPort=$searchjmxPort
+    where $agent/agnt:jmxPort=$searchjmxPort
     return $agent
 };
 
