@@ -1,147 +1,159 @@
 
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_data_types" xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types" xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
-           xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep"
-           xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" targetNamespace="http://www.likyateknoloji.com/XML_data_types" elementFormDefault="qualified">
-	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
-	<xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
-	<xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep/functions" schemaLocation="sweep-functions.xsd"/>
-	<xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types" schemaLocation="tlosSWSLA_v_1_0.xsd"/>
-	<xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep" schemaLocation="sweep.xsd"/>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_data_types"
+	xmlns:pn="http://www.likyateknoloji.com/XML_process_node" xmlns:file="http://www.likyateknoloji.com/XML_file_adapter_types"
+	xmlns:ftp="http://www.likyateknoloji.com/XML_ftp_adapter_types"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:lt="http://www.likyateknoloji.com/XML_common_types" xmlns:sweep="http://schemas.ogf.org/jsdl/2009/03/sweep"
+	xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types"
+	targetNamespace="http://www.likyateknoloji.com/XML_data_types"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/state-types"
+		schemaLocation="tlosSWState_v_1_0.xsd" />
+	<xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl"
+		schemaLocation="jsdl.2005_11.xsd" />
+	<xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep/functions"
+		schemaLocation="sweep-functions.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types"
+		schemaLocation="tlosSWSLA_v_1_0.xsd" />
+	<xs:import namespace="http://schemas.ogf.org/jsdl/2009/03/sweep"
+		schemaLocation="sweep.xsd" />
 	<xs:element name="timeManagement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="jsPlannedTime" minOccurs="0"/>
-				<xs:element ref="jsRealTime" minOccurs="0"/>
-				<xs:element ref="lt:timeZone" minOccurs="0"/>
-				<xs:element ref="lt:typeOfTime" minOccurs="0"/>
-				<xs:element ref="jsRelativeTimeOption" minOccurs="0"/>
-				<xs:element ref="jsTimeOut" minOccurs="0"/>
-				<xs:element ref="expectedTime" minOccurs="0"/>
-				<xs:element ref="tolerancePercentage" minOccurs="0"/>
-				<xs:element ref="minPercentage" minOccurs="0"/>
+				<xs:element ref="jsPlannedTime" minOccurs="0" />
+				<xs:element ref="jsRealTime" minOccurs="0" />
+				<xs:element ref="lt:timeZone" minOccurs="0" />
+				<xs:element ref="lt:typeOfTime" minOccurs="0" />
+				<xs:element ref="jsRelativeTimeOption" minOccurs="0" />
+				<xs:element ref="jsTimeOut" minOccurs="0" />
+				<xs:element ref="expectedTime" minOccurs="0" />
+				<xs:element ref="tolerancePercentage" minOccurs="0" />
+				<xs:element ref="minPercentage" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="stopTime">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:date" minOccurs="0"/>
-				<xs:element ref="lt:time"/>
+				<xs:element ref="lt:date" minOccurs="0" />
+				<xs:element ref="lt:time" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="startTime">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:date" minOccurs="0"/>
-				<xs:element ref="lt:time"/>
+				<xs:element ref="lt:date" minOccurs="0" />
+				<xs:element ref="lt:time" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jsPlannedTime">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="startTime"/>
-				<xs:element ref="stopTime" minOccurs="0"/>
+				<xs:element ref="startTime" />
+				<xs:element ref="stopTime" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jsRealTime">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="startTime"/>
-				<xs:element ref="stopTime"/>
+				<xs:element ref="startTime" />
+				<xs:element ref="stopTime" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jsTimeOut">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:value_integer"/>
-				<xs:element ref="lt:unit"/>
+				<xs:element name="value_integer" type="lt:integerType" />
+				<xs:element ref="lt:unit" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="expectedTime">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:value_integer"/>
-				<xs:element ref="lt:unit"/>
+				<xs:element name="value_integer" type="lt:integerType" />
+				<xs:element ref="lt:unit" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="tolerancePercentage" default="10">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="minPercentage" default="10">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="concurrencyManagement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:runningId" minOccurs="0"/>
-				<xs:element ref="lt:concurrent" minOccurs="0"/>
+				<xs:element ref="lt:runningId" minOccurs="0" />
+				<xs:element ref="lt:concurrent" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="baseScenarioInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:jsName"/>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="calendarId" minOccurs="0"/>
-				<xs:element ref="jsIsActive"/>
-				<xs:element ref="lt:userId"/>
+				<xs:element ref="lt:jsName" />
+				<xs:element ref="lt:comment" />
+				<xs:element ref="calendarId" minOccurs="0" />
+				<xs:element ref="jsIsActive" />
+				<xs:element ref="lt:userId" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="advancedScenarioInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:agentChoiceMethod" minOccurs="0"/>
-				<xs:element ref="lt:schedulingAlgorithm" minOccurs="0"/>
+				<xs:element ref="lt:agentChoiceMethod" minOccurs="0" />
+				<xs:element ref="lt:schedulingAlgorithm" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="scenario">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="baseScenarioInfos"/>
-				<xs:element ref="DependencyList" minOccurs="0"/>
-				<xs:element ref="stateInfos" minOccurs="0"/>
-				<xs:element ref="state-types:jsState" minOccurs="0"/>
-				<xs:element ref="jobList"/>
-				<xs:element ref="state-types:ScenarioStatusList" minOccurs="0"/>
-				<xs:element ref="alarmPreference" minOccurs="0"/>
-				<xs:element ref="timeManagement"/>
-				<xs:element ref="advancedScenarioInfos"/>
-				<xs:element ref="concurrencyManagement"/>
-				<xs:element ref="lt:localParameters" minOccurs="0"/>
-				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="baseScenarioInfos" />
+				<xs:element ref="DependencyList" minOccurs="0" />
+				<xs:element ref="stateInfos" minOccurs="0" />
+				<xs:element ref="state-types:jsState" minOccurs="0" />
+				<xs:element ref="jobList" />
+				<xs:element ref="state-types:ScenarioStatusList"
+					minOccurs="0" />
+				<xs:element ref="alarmPreference" minOccurs="0" />
+				<xs:element ref="timeManagement" />
+				<xs:element ref="advancedScenarioInfos" />
+				<xs:element ref="concurrencyManagement" />
+				<xs:element ref="lt:localParameters" minOccurs="0" />
+				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 			<xs:attribute name="ID" use="required">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="runId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="LSIDateTime" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
@@ -149,117 +161,117 @@
 	<xs:element name="jobInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:jobBaseType"/>
-				<xs:element ref="lt:jobTypeDef"/>
-				<xs:element ref="lt:jobTypeDetails" minOccurs="0"/>
+				<xs:element ref="lt:jobBaseType" />
+				<xs:element ref="lt:jobTypeDef" />
+				<xs:element ref="lt:jobTypeDetails" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="baseJobInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:jsName"/>
-				<xs:element ref="lt:comment" minOccurs="0"/>
-				<xs:element ref="jobInfos"/>
-				<xs:element ref="calendarId" minOccurs="0"/>
-				<xs:element ref="periodInfo" minOccurs="0"/>
-				<xs:element ref="jobLogFile"/>
-				<xs:element ref="jobLogPath"/>
-				<xs:element ref="jobDeploymentPath" minOccurs="0"/>
-				<xs:element ref="oSystem"/>
-				<xs:element ref="jobPriority"/>
-				<xs:element ref="jsIsActive"/>
-				<xs:element ref="lt:userId"/>
+				<xs:element ref="lt:jsName" />
+				<xs:element ref="lt:comment" minOccurs="0" />
+				<xs:element ref="jobInfos" />
+				<xs:element ref="calendarId" minOccurs="0" />
+				<xs:element ref="periodInfo" minOccurs="0" />
+				<xs:element ref="jobLogFile" />
+				<xs:element ref="jobLogPath" />
+				<xs:element ref="jobDeploymentPath" minOccurs="0" />
+				<xs:element ref="oSystem" />
+				<xs:element ref="jobPriority" />
+				<xs:element ref="jsIsActive" />
+				<xs:element ref="lt:userId" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="cascadingConditions">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="runEvenIfFailed"/>
-				<xs:element ref="jobSafeToRestart"/>
-				<xs:element ref="jobAutoRetry"/>
+				<xs:element ref="runEvenIfFailed" />
+				<xs:element ref="jobSafeToRestart" />
+				<xs:element ref="jobAutoRetry" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="stateInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="state-types:JobStatusList" minOccurs="0"/>
-				<xs:element ref="state-types:LiveStateInfos"/>
+				<xs:element ref="state-types:JobStatusList" minOccurs="0" />
+				<xs:element ref="state-types:LiveStateInfos" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="advancedJobInfos">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="SLAId" minOccurs="0"/>
-				<xs:element ref="resourceRequirement" minOccurs="0"/>
-				<xs:element ref="lt:agentChoiceMethod" minOccurs="0"/>
+				<xs:element ref="lt:agentChoiceMethod" />
+				<xs:element ref="SLAId" minOccurs="0" />
+				<xs:element ref="resourceRequirement" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="alarmPreference">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="alarmId" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="alarmId" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="logAnalysis">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="findWhat"/>
-				<xs:element ref="action"/>
+				<xs:element ref="findWhat" />
+				<xs:element ref="action" />
 			</xs:sequence>
-			<xs:attribute name="active" use="required" type="xs:boolean"/>
-			<xs:attribute name="id" use="required" type="xs:integer"/>
+			<xs:attribute name="active" use="required" type="xs:boolean" />
+			<xs:attribute name="id" use="required" type="xs:integer" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jobProperties">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="jsdl:JobDescription" minOccurs="0"/>
-				<xs:element ref="sweep:Sweep" minOccurs="0"/>
-				<xs:element ref="baseJobInfos"/>
-				<xs:element ref="DependencyList" minOccurs="0"/>
-				<xs:element ref="cascadingConditions"/>
-				<xs:element ref="stateInfos"/>
-				<xs:element ref="advancedJobInfos"/>
-				<xs:element ref="concurrencyManagement"/>
-				<xs:element ref="alarmPreference" minOccurs="0"/>
-				<xs:element ref="timeManagement"/>
-				<xs:element ref="logAnalysis" minOccurs="0"/>
-				<xs:element ref="lt:localParameters" minOccurs="0"/>
+				<xs:element ref="jsdl:JobDescription" minOccurs="0" />
+				<xs:element ref="sweep:Sweep" minOccurs="0" />
+				<xs:element ref="baseJobInfos" />
+				<xs:element ref="DependencyList" minOccurs="0" />
+				<xs:element ref="cascadingConditions" />
+				<xs:element ref="stateInfos" />
+				<xs:element ref="advancedJobInfos" />
+				<xs:element ref="concurrencyManagement" />
+				<xs:element ref="alarmPreference" minOccurs="0" />
+				<xs:element ref="timeManagement" />
+				<xs:element ref="logAnalysis" minOccurs="0" />
+				<xs:element ref="lt:localParameters" minOccurs="0" />
 			</xs:sequence>
 			<xs:attribute name="runId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="scenarioId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="ID" use="required">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="agentId" use="required">
 				<xs:simpleType>
-					<xs:restriction base="xs:int"/>
+					<xs:restriction base="xs:int" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="LSIDateTime" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
@@ -267,10 +279,10 @@
 	<xs:element name="jobPriority" default="1">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="1"/>
-				<xs:enumeration value="2"/>
-				<xs:enumeration value="3"/>
-				<xs:enumeration value="4"/>
+				<xs:enumeration value="1" />
+				<xs:enumeration value="2" />
+				<xs:enumeration value="3" />
+				<xs:enumeration value="4" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -291,111 +303,106 @@
 	<xs:element name="jobLogFile">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:pattern value="([a-zA-Z/\\\.0-9_ \-])*"/>
+				<xs:pattern value="([a-zA-Z/\\\.0-9_ \-])*" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobList">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="jobProperties" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="jobProperties" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="DependencyExpression">
 		<xs:simpleType>
-			<xs:restriction base="xs:string"/>
+			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
-	<!--xs:element name="jobCommandType">
-        <xs:simpleType>
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="SYSTEM COMMAND"/>
-                <xs:enumeration value="SHELL SCRIPT"/>
-                <xs:enumeration value="ORACLE"/>
-                <xs:enumeration value="SAP"/>
-                <xs:enumeration value="SAS"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element-->
+	<!--xs:element name="jobCommandType"> <xs:simpleType> <xs:restriction base="xs:string"> 
+		<xs:enumeration value="SYSTEM COMMAND"/> <xs:enumeration value="SHELL SCRIPT"/> 
+		<xs:enumeration value="ORACLE"/> <xs:enumeration value="SAP"/> <xs:enumeration 
+		value="SAS"/> </xs:restriction> </xs:simpleType> </xs:element -->
 	<xs:element name="calendarId">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="SLAId">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="alarmId">
 		<xs:simpleType>
-			<xs:restriction base="xs:int"/>
+			<xs:restriction base="xs:int" />
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobAutoRetry">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES"/>
-				<xs:enumeration value="NO"/>
+				<xs:enumeration value="YES" />
+				<xs:enumeration value="NO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jsRelativeTimeOption" default="NO">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES"/>
-				<xs:enumeration value="NO"/>
+				<xs:enumeration value="YES" />
+				<xs:enumeration value="NO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobSafeToRestart">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES"/>
-				<xs:enumeration value="NO"/>
+				<xs:enumeration value="YES" />
+				<xs:enumeration value="NO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="runEvenIfFailed" default="NO">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES"/>
-				<xs:enumeration value="NO"/>
+				<xs:enumeration value="YES" />
+				<xs:enumeration value="NO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="oSystem" default="Windows">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="Windows"/>
-				<xs:enumeration value="Unix"/>
+				<xs:enumeration value="Windows" />
+				<xs:enumeration value="Unix" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jsIsActive" default="YES">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES"/>
-				<xs:enumeration value="NO"/>
+				<xs:enumeration value="YES" />
+				<xs:enumeration value="NO" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="periodInfo">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:comment" minOccurs="0"/>
+				<xs:element ref="lt:comment" minOccurs="0" />
 			</xs:sequence>
-			<xs:attribute name="relativeStart" use="optional" type="xs:boolean" default="true"/>
-			<xs:attribute name="step" use="required" type="xs:duration"/>
-			<xs:attribute name="counter" default="0" use="optional" type="xs:integer"/>
-			<xs:attribute name="maxCount" use="optional" type="xs:integer"/>
+			<xs:attribute name="relativeStart" use="optional" type="xs:boolean"
+				default="true" />
+			<xs:attribute name="step" use="required" type="xs:duration" />
+			<xs:attribute name="counter" default="0" use="optional"
+				type="xs:integer" />
+			<xs:attribute name="maxCount" use="optional" type="xs:integer" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="resourceRequirement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="sla:Hardware"/>
+				<xs:element ref="sla:Hardware" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -403,10 +410,10 @@
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="xs:normalizedString">
-					<xs:attribute name="direction" use="required" type="directionType"/>
-					<xs:attribute name="matchCase" use="required" type="xs:boolean"/>
-					<xs:attribute name="matchWholeWordOnly" type="xs:boolean"/>
-					<xs:attribute name="mode" use="required" type="modeType"/>
+					<xs:attribute name="direction" use="required" type="directionType" />
+					<xs:attribute name="matchCase" use="required" type="xs:boolean" />
+					<xs:attribute name="matchWholeWordOnly" type="xs:boolean" />
+					<xs:attribute name="mode" use="required" type="modeType" />
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
@@ -414,43 +421,45 @@
 	<xs:element name="action">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="then"/>
-				<xs:element minOccurs="0" ref="else"/>
+				<xs:element ref="then" />
+				<xs:element minOccurs="0" ref="else" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="then">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="event"/>
-				<xs:element ref="forcedResult"/>
+				<xs:element ref="event" />
+				<xs:element ref="forcedResult" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="else">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="event"/>
-				<xs:element ref="forcedResult"/>
+				<xs:element ref="event" />
+				<xs:element ref="forcedResult" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="event">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:EmailList" minOccurs="0"/>
-				<xs:element ref="content" minOccurs="0"/>
+				<xs:element ref="lt:EmailList" minOccurs="0" />
+				<xs:element ref="content" minOccurs="0" />
 			</xs:sequence>
-			<xs:attribute name="code" use="required" type="codeType"/>
-			<xs:attribute name="id" use="required" type="xs:integer"/>
+			<xs:attribute name="code" use="required" type="codeType" />
+			<xs:attribute name="id" use="required" type="xs:integer" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="content">
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="xs:string">
-					<xs:attribute name="logLineNumBack" use="optional" type="xs:positiveInteger"/>
-					<xs:attribute name="logLineNumForward" use="optional" type="xs:positiveInteger"/>
+					<xs:attribute name="logLineNumBack" use="optional"
+						type="xs:positiveInteger" />
+					<xs:attribute name="logLineNumForward" use="optional"
+						type="xs:positiveInteger" />
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
@@ -458,62 +467,63 @@
 	<xs:element name="forcedResult">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="state-types:LiveStateInfo"/>
+				<xs:element ref="state-types:LiveStateInfo" />
 			</xs:sequence>
-			<xs:attribute name="active" use="required" type="xs:boolean"/>
+			<xs:attribute name="active" use="required" type="xs:boolean" />
 		</xs:complexType>
 	</xs:element>
 	<xs:simpleType name="modeType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="normal"/>
-			<xs:enumeration value="regEx"/>
+			<xs:enumeration value="normal" />
+			<xs:enumeration value="regEx" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="directionType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Up"/>
-			<xs:enumeration value="Down"/>
+			<xs:enumeration value="Up" />
+			<xs:enumeration value="Down" />
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="codeType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="email"/>
-			<xs:enumeration value="waitMe"/>
+			<xs:enumeration value="email" />
+			<xs:enumeration value="waitMe" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:element name="TlosProcessData">
 		<xs:complexType mixed="true">
 			<xs:sequence>
-				<xs:element ref="baseScenarioInfos"/>
-				<xs:element ref="DependencyList" minOccurs="0"/>
-				<xs:element ref="jobList"/>
-				<xs:element ref="state-types:ScenarioStatusList" minOccurs="0"/>
-				<xs:element ref="alarmPreference" minOccurs="0"/>
-				<xs:element ref="timeManagement"/>
-				<xs:element ref="advancedScenarioInfos"/>
-				<xs:element ref="concurrencyManagement"/>
-				<xs:element ref="lt:localParameters" minOccurs="0"/>
-				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="baseScenarioInfos" />
+				<xs:element ref="DependencyList" minOccurs="0" />
+				<xs:element ref="jobList" />
+				<xs:element ref="state-types:ScenarioStatusList"
+					minOccurs="0" />
+				<xs:element ref="alarmPreference" minOccurs="0" />
+				<xs:element ref="timeManagement" />
+				<xs:element ref="advancedScenarioInfos" />
+				<xs:element ref="concurrencyManagement" />
+				<xs:element ref="lt:localParameters" minOccurs="0" />
+				<xs:element ref="scenario" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
 			<xs:attribute name="ID" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="runId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="planId" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 			<xs:attribute name="LSIDateTime" use="optional">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
@@ -521,34 +531,35 @@
 	<xs:element name="DependencyList">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="Item" maxOccurs="unbounded"/>
-				<xs:element ref="DependencyExpression"/>
+				<xs:element ref="Item" maxOccurs="unbounded" />
+				<xs:element ref="DependencyExpression" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Item">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:jsName"/>
-				<xs:element ref="lt:jsId"/>
-				<xs:element ref="lt:jsType"/>
-				<xs:element ref="lt:jsPath" minOccurs="0"/>
-				<xs:element ref="lt:comment"/>
-				<xs:element ref="state-types:jsDependencyRule"/>
+				<xs:element ref="lt:jsName" />
+				<xs:element ref="lt:jsId" />
+				<xs:element ref="lt:jsType" />
+				<xs:element ref="lt:jsPath" minOccurs="0" />
+				<xs:element ref="lt:comment" />
+				<xs:element ref="state-types:jsDependencyRule" />
 			</xs:sequence>
 			<xs:attribute name="dependencyID" use="required">
 				<xs:simpleType>
-					<xs:restriction base="xs:string"/>
+					<xs:restriction base="xs:string" />
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="JobDefinition_Type">
 		<xs:sequence>
-			<xs:element ref="jsdl:JobDescription"/>
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="jsdl:JobDescription" />
+			<xs:any namespace="##other" processContents="lax" minOccurs="0"
+				maxOccurs="unbounded" />
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:ID" use="optional"/>
-		<xs:anyAttribute namespace="##other" processContents="lax"/>
+		<xs:attribute name="id" type="xs:ID" use="optional" />
+		<xs:anyAttribute namespace="##other" processContents="lax" />
 	</xs:complexType>
 </xs:schema>
