@@ -1,65 +1,62 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <con:AgentConfigInfo xmlns:con="http://www.likyateknoloji.com/XML_agentconfig_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"  xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agentconfig_types ../xsds/tlosSWAgentConfig_v_1_0.xsd">
-    <con:Product-info>
+    <con:productInfo>
         <com:comment>urun hakkindaki temel bilgileri icerir.</com:comment>
-        <com:date>2009-01-01</com:date>
-        <com:version>2.0</com:version>
-        <con:company>
-            <com:name>Likya Bilgi Teknolojileri</com:name>
-            <com:address>kayisdagi</com:address>
-            <com:telephone id="1">2124509876</com:telephone>
-        </con:company>
-    </con:Product-info>
+        <com:date>2013-01-01</com:date>
+        <com:version>1.0 Beta</com:version>
+        <com:company>
+			<com:name>Likya Bilgi Teknolojileri</com:name>
+			<com:address>kayisdagi</com:address>
+			<com:telephone id="1">2124509876</com:telephone>
+			<com:Email id="1">support@likyateknoloji.com</com:Email>
+			<com:url>http://www.likyateknoloji.com</com:url>
+        </com:company>
+    </con:productInfo>
     <con:settings>
-        <con:machine-info>
+        <con:machineInfo>
             <com:comment>urunun calisacagi makina hakkinda bilgiler</com:comment>
             <com:name>SUN</com:name>
-        </con:machine-info>
-        <con:server-info>
-            <res:Resource>merve-laptop</res:Resource>
-        	<com:ipAddress>192.168.1.64</com:ipAddress>
+            <com:ipAddress>127.0.0.1</com:ipAddress>
+        </con:machineInfo>
+        <con:serverInfo>
+        	<res:Resource>laptop-hakan</res:Resource>
+        	<con:ipAddress>127.0.0.1</con:ipAddress>
         	<con:portNumber>5555</con:portNumber>
-        </con:server-info>
-        <con:paths>
+        </con:serverInfo>
+        <com:paths>
             <com:comment>Urunun calisacagi dizin bilgilerini icerir</com:comment>
-            <con:agent-bins>\homebin\</con:agent-bins>
-            <con:agent-jobs>/home/tlos2.0/jobs/</con:agent-jobs>
-            <con:agent-logs>/home/tlos2.0/logs/</con:agent-logs>
-        </con:paths>
-        <con:isPersistent>
+            <com:homeDir>\homebin\</com:homeDir>
+        </com:paths>
+        <con:isPersistent use="false">
             <com:comment>programın normal olmayan bir şekilde sonlanması durumunda, 
 			son halini diskten yükleyip tekrar baslayabilir. default deger false</com:comment>
-            <com:value_boolean>false</com:value_boolean>
         </con:isPersistent>
-        <con:isAuthenticationPersistent>
+        <con:isAuthenticationPersistent use="true">
             <com:comment>program server'a başarılı bir şekilde bağlandıktan sonra username password'i , 
 			diske yükleyip bir sonraki restart'da diskten okuyup baslayabilir. default deger true</com:comment>
-            <com:value_boolean>true</com:value_boolean>
         </con:isAuthenticationPersistent>
-        <con:logFile>TlosEkran.log</con:logFile>
         <con:agentFrequency>
             <com:comment>Scheduler'ın calisma sikiligi (sn)</com:comment>
             <com:frequency>1</com:frequency>
         </con:agentFrequency>
-        <con:remoteManagerProperties>
+        <com:remoteManagerProperties>
             <com:comment>		managementPort : yonetim konsolu haberlesme portu
 		managementBufferSize : yonetim konsolu buffer boyu</com:comment>
-            <con:portNumber>3001</con:portNumber>
+            <com:portNumber>3001</com:portNumber>
             <com:bufferSize>128</com:bufferSize>
-        </con:remoteManagerProperties>
-        <con:jmxTlsPort>
+        </com:remoteManagerProperties>
+        <com:jmxTlsPort>
             <com:comment>jmxTlsPort</com:comment>
-            <con:portNumber>5556</con:portNumber>
-        </con:jmxTlsPort>
-        <con:jmxPort>
+            <com:portNumber>5556</com:portNumber>
+        </com:jmxTlsPort>
+        <com:jmxPort>
             <com:comment>jmxPort</com:comment>
-            <con:portNumber>5559</con:portNumber>
-        </con:jmxPort>
+            <com:portNumber>5559</com:portNumber>
+        </com:jmxPort>
     </con:settings>
     <con:performance>
-        <con:threshold>
-            <con:high>10</con:high>
-            <con:low>5</con:low>
-        </con:threshold>
+        <con:agentThreshold>
+            <com:high>10</com:high>
+            <com:low>5</com:low>
+        </con:agentThreshold>
     </con:performance>
 </con:AgentConfigInfo>
