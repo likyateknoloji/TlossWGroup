@@ -29,9 +29,8 @@ declare function hs:updateTlosConfigMailOptions($documentUrl as xs:string, $mail
 	for $moption in doc($configDocumentUrl)/con:TlosConfigInfo/con:settings/con:mailOptions
 	return  update replace $moption with 	
 	<con:mailOptions>
-		<con:useMail>
+		<con:useMail use="{data($mailOption/con:useMail/@use)}">
 			<com:comment>{data($mailOption/con:useMail/com:comment)}</com:comment>
-			<com:value_boolean>{data($mailOption/con:useMail/com:value_boolean)}</com:value_boolean>
 		</con:useMail>
 		<con:smtpServerUserName id="1">
 		 <com:name>{data($mailOption/con:smtpServerUserName/com:name)}</com:name>
