@@ -18,6 +18,7 @@ declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
 declare namespace sla = "http://www.likyateknoloji.com/XML_SLA_types";
 declare namespace pp  = "http://www.likyateknoloji.com/XML_PP_types";
 declare namespace functx = "http://www.functx.com"; 
+declare namespace funcp = "http://www.likyateknoloji.com/XML_FuncPass_types";
 
 (:
 Mappings
