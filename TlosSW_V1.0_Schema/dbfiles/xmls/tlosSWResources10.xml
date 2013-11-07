@@ -1,34 +1,32 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <lrns:ResourceList xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns"
 	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types"
 	xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SWResourceNS_types ../xsds/tlosSW-rns.xsd
-	http://schemas.ggf.org/jsdl/2005/11/jsdl ../xsds/jsdl.2005_11.xsd">
+	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SWResourceNS_types ../xsds/tlosSW-rns.xsd  http://schemas.ggf.org/jsdl/2005/11/jsdl ../xsds/jsdl.2005_11.xsd">
 	<lrns:Resource entry-name="WINSRVSTD2012">
 		<rns:endpoint>
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
 	<lrns:Resource entry-name="laptop-hakan">
-        <rns:endpoint>
-            <wsa:Address>http://tempuri.org/example</wsa:Address>
-        </rns:endpoint>
-        <rns:metadata>
-            <rns:supports-rns value="true"/>
-        </rns:metadata>
-        <jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
-    </lrns:Resource>
+		<rns:endpoint>
+			<wsa:Address>http://tempuri.org/example</wsa:Address>
+		</rns:endpoint>
+		<rns:metadata>
+			<rns:supports-rns value="true" />
+		</rns:metadata>
+		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
+	</lrns:Resource>
 	<lrns:Resource entry-name="patarafedora">
 		<rns:endpoint>
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Unix</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -37,7 +35,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -46,7 +44,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -55,7 +53,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -64,7 +62,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -73,7 +71,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Windows</jsdl:OperatingSystemName>
 	</lrns:Resource>
@@ -82,7 +80,7 @@
 			<wsa:Address>http://tempuri.org/example</wsa:Address>
 		</rns:endpoint>
 		<rns:metadata>
-			<rns:supports-rns value="true"/>
+			<rns:supports-rns value="true" />
 		</rns:metadata>
 		<jsdl:OperatingSystemName>Unix</jsdl:OperatingSystemName>
 	</lrns:Resource>
