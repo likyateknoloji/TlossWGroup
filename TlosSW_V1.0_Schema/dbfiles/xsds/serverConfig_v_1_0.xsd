@@ -18,54 +18,22 @@
 		</xs:complexType>
 	</xs:element>
 
-
 	<xs:element name="serverParams">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="lt:ipAddress" />
+				<xs:element name="machineInfo" type="lt:machineInfoType" />
+				<xs:element ref="lt:paths" />
+				<xs:element name="ipAddress" type="lt:ipAddressType"/>
 				<xs:element ref="isPersistent" />
-				<xs:element ref="logFile" />
+				<xs:element ref="logFileName" />
 				<xs:element ref="debugMode" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="debugMode">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="lt:comment" />
-				<xs:element ref="lt:value_boolean" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+	<xs:element name="isPersistent" type="lt:commentedBooleanType" />
 
-	<xs:element name="dbparams">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="name" type="xs:string" />
-				<xs:element name="type" type="xs:string" />
-				<xs:element name="id" type="xs:string" />
-				<xs:element ref="lt:ipAddress" />
-				<xs:element name="portNumber" type="lt:portType" />
-				<xs:element name="xmlrpcpath" type="xs:string" />
-				<xs:element name="rootcollection" type="xs:string" />
-				<xs:element name="usercollection" type="xs:string" />
-				<xs:element name="username" type="xs:string" />
-				<xs:element name="password" type="xs:string" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="isPersistent">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="lt:comment" />
-				<xs:element ref="lt:value_boolean" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="logFile">
+	<xs:element name="logFileName">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
 				<xs:pattern
@@ -74,4 +42,24 @@
 			<!-- <xs:restriction base="lt:filename"/> -->
 		</xs:simpleType>
 	</xs:element>
+	
+	<xs:element name="debugMode" type="lt:commentedBooleanType" />
+	
+	<xs:element name="dbparams">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string" />
+				<xs:element name="type" type="xs:string" />
+				<xs:element name="id" type="xs:string" />
+				<xs:element name="ipAddress" type="lt:ipAddressType"/>
+				<xs:element name="portNumber" type="lt:portType" />
+				<xs:element name="xmlrpcpath" type="xs:string" />
+				<xs:element name="rootcollection" type="xs:string" />
+				<xs:element name="usercollection" type="xs:string" />
+				<xs:element name="username" type="lt:userNameType" />
+				<xs:element name="password" type="lt:passwordType" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 </xs:schema>
