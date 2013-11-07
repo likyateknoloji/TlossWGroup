@@ -194,10 +194,10 @@ public class TlosSpaceWideBase {
 		 * Redirect logging to appropriate destinations according to the config
 		 * values
 		 */
-		if (serverConfig.getServerParams().getLogFile() != null) {
+		if (serverConfig.getServerParams().getLogFileName() != null) {
 			RollingFileAppender appndr = (RollingFileAppender) Logger.getLogger("com.likya.tlos").getAppender("dosya");
 			if (appndr != null) {
-				appndr.setFile(serverConfig.getServerParams().getLogFile());
+				appndr.setFile(serverConfig.getServerParams().getLogFileName());
 				appndr.activateOptions();
 			}
 		}
@@ -211,7 +211,7 @@ public class TlosSpaceWideBase {
 
 	private void setPersistRecoverRules(ServerConfig serverConfig, ResourceBundle resourceBaundle) {
 
-		boolean isPers = serverConfig.getServerParams().getIsPersistent().getValueBoolean();
+		boolean isPers = serverConfig.getServerParams().getIsPersistent().getUse();
 
 		setPersistent(isPers);
 
@@ -618,32 +618,34 @@ public class TlosSpaceWideBase {
 		getSpaceWideRegistry().setCpcReference(null);
 	}
 
-	protected void initGunDonumuPeryodPassed() {
+	protected void initGunDonumuPeriodPassed() {
 
 		long currentTime = Calendar.getInstance().getTimeInMillis();
 		long diff = currentTime - getSpaceWideRegistry().getScenarioReadTime();
-
-		if ((diff / (1000 * 60 * 60 * 24)) > getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getPeriod().getPeriodValue().longValue()) {
-			getSpaceWideRegistry().setGunDonumuPeryodPassed(true);
+		
+		long periodInMillis = DateUtils.getTransitionDateTime( spaceWideRegistry.getTlosSWConfigInfo().getSettings().getTransitionPeriod().getPeriod()).getTimeInMillis();
+		
+		if (diff > periodInMillis) {
+			getSpaceWideRegistry().setGunDonumuPeriodPassed(true);
 		}
 
 		return;
 	}
 
-	protected void initSolsticePassed() {
+	protected void initTransitionTimePassed() {
 
 		Date currentDateTime = Calendar.getInstance().getTime();
-		Calendar solsticeCalendar = DateUtils.normalizeDate(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getSolstice().getTime());
+		Calendar transactionCalendar = DateUtils.normalizeDate(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition().getTime());
 
-		if (solsticeCalendar.getTime().before(currentDateTime)) {
-			getSpaceWideRegistry().setSolsticePassed(true);
+		if (transactionCalendar.getTime().before(currentDateTime)) {
+			getSpaceWideRegistry().setTransactionTimePassed(true);
 		}
 
 		logger.info("");
 		logger.info("#################### INFO ###################");
 
 		logger.info("Su an " + currentDateTime + " dir.");
-		logger.info("Gundonumu " + solsticeCalendar.getTime() + " dir.");
+		logger.info("Gundonumu " + transactionCalendar.getTime() + " dir.");
 
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
 		logger.info("");
