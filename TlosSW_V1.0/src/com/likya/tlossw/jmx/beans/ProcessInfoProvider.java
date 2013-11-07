@@ -99,7 +99,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		webSpaceWideRegistery.setFirstTime(TlosSpaceWide.getSpaceWideRegistry().isFIRST_TIME());
 		webSpaceWideRegistery.setWaitConfirmOfGUI(TlosSpaceWide.getSpaceWideRegistry().isWaitConfirmOfGUI());
-		webSpaceWideRegistery.setPersistent(TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean());
+		webSpaceWideRegistery.setPersistent(TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getUse());
 		webSpaceWideRegistery.setInstanceCount(TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().size());
 
 		return webSpaceWideRegistery;
