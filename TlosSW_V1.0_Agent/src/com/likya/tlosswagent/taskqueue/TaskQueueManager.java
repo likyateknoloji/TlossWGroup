@@ -60,7 +60,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 		
 		String fileName = "taskQueue";
 
-		boolean isRecoverAction = agentGlobalRegistry.getAgentConfigInfo().getSettings().getIsPersistent().getValueBoolean();
+		boolean isRecoverAction = agentGlobalRegistry.getAgentConfigInfo().getSettings().getIsPersistent().getUse();
 		boolean recoverFileExist = FileUtils.checkFile(System.getProperty("tlosAgent.tmpdir") + "/" + fileName);
 		if (isRecoverAction && recoverFileExist) {
 			TaskQueueOperations.recoverTaskInputQueue(fileName, taskInputQueue);
