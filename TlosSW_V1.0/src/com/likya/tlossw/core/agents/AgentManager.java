@@ -177,9 +177,9 @@ public class AgentManager implements Runnable {
 				totNumberOfRunningJobs = totNumberOfRunningJobs + numOfWorkingJobs;
 			}
 			Logger.getLogger(AgentManager.class).info("  > AgentId = " + agentId + " icin toplam calisan is sayisi = " + totNumberOfRunningJobs);
-			if(SpaceWideRegistry.isDebug) {
-				System.out.println("  > AgentId = " + agentId + " icin toplam calisan is sayisi = " + totNumberOfRunningJobs);
-			}
+//			if(SpaceWideRegistry.isDebug) {
+//				System.out.println("  > AgentId = " + agentId + " icin toplam calisan is sayisi = " + totNumberOfRunningJobs);
+//			}
 		}
 
 		return totNumberOfRunningJobs;
