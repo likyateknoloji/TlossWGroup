@@ -82,11 +82,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -148,11 +148,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -214,11 +214,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -239,11 +239,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -317,11 +317,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -342,7 +342,7 @@
 							<com:jobPath>C:\Users\test\Desktop</com:jobPath>
 							<com:specialParameters>
 								<rs:executeRShellParams>
-									<com:ipAddress>192.168.1.67</com:ipAddress>
+									<rs:ipAddress>192.168.1.67</rs:ipAddress>
 									<rs:port>22</rs:port>
 									<com:userName>test</com:userName>
 									<com:userPassword>test</com:userPassword>
@@ -386,11 +386,11 @@
 					</dat:jsPlannedTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -451,11 +451,11 @@
 					</dat:jsPlannedTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -520,11 +520,11 @@
 					</dat:jsPlannedTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -545,11 +545,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -659,11 +659,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -684,11 +684,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -800,11 +800,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -900,11 +900,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -989,11 +989,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>3</com:value_integer>
+						<dat:value_integer>3</dat:value_integer>
 						<com:unit>HOURS</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -1014,11 +1014,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -1127,11 +1127,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1234,11 +1234,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>1</com:value_integer>
+						<dat:value_integer>1</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1259,11 +1259,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -1353,11 +1353,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1433,11 +1433,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1458,11 +1458,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -1545,11 +1545,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1616,11 +1616,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1687,11 +1687,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1758,11 +1758,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1829,11 +1829,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1934,11 +1934,11 @@
 					<com:typeOfTime>Actual</com:typeOfTime>
 					<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 					<dat:jsTimeOut>
-						<com:value_integer>10</com:value_integer>
+						<dat:value_integer>10</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:jsTimeOut>
 					<dat:expectedTime>
-						<com:value_integer>100</com:value_integer>
+						<dat:value_integer>100</dat:value_integer>
 						<com:unit>MINUTES</com:unit>
 					</dat:expectedTime>
 					<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -1959,11 +1959,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -1999,11 +1999,11 @@
 			<com:typeOfTime>Actual</com:typeOfTime>
 			<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 			<dat:jsTimeOut>
-				<com:value_integer>3</com:value_integer>
+				<dat:value_integer>3</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:jsTimeOut>
 			<dat:expectedTime>
-				<com:value_integer>1</com:value_integer>
+				<dat:value_integer>1</dat:value_integer>
 				<com:unit>HOURS</com:unit>
 			</dat:expectedTime>
 			<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -2092,11 +2092,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2171,11 +2171,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2249,11 +2249,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2274,11 +2274,11 @@
 				<com:typeOfTime>Actual</com:typeOfTime>
 				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 				<dat:jsTimeOut>
-					<com:value_integer>3</com:value_integer>
+					<dat:value_integer>3</dat:value_integer>
 					<com:unit>HOURS</com:unit>
 				</dat:jsTimeOut>
 				<dat:expectedTime>
-					<com:value_integer>1</com:value_integer>
+					<dat:value_integer>1</dat:value_integer>
 					<com:unit>HOURS</com:unit>
 				</dat:expectedTime>
 				<dat:tolerancePercentage>1</dat:tolerancePercentage>
@@ -2367,11 +2367,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2446,11 +2446,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2524,11 +2524,11 @@
 						<com:typeOfTime>Actual</com:typeOfTime>
 						<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 						<dat:jsTimeOut>
-							<com:value_integer>1</com:value_integer>
+							<dat:value_integer>1</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:jsTimeOut>
 						<dat:expectedTime>
-							<com:value_integer>100</com:value_integer>
+							<dat:value_integer>100</dat:value_integer>
 							<com:unit>MINUTES</com:unit>
 						</dat:expectedTime>
 						<dat:tolerancePercentage>10</dat:tolerancePercentage>
@@ -2549,11 +2549,11 @@
 				<com:typeOfTime>Actual</com:typeOfTime>
 				<dat:jsRelativeTimeOption>NO</dat:jsRelativeTimeOption>
 				<dat:jsTimeOut>
-					<com:value_integer>3</com:value_integer>
+					<dat:value_integer>3</dat:value_integer>
 					<com:unit>HOURS</com:unit>
 				</dat:jsTimeOut>
 				<dat:expectedTime>
-					<com:value_integer>1</com:value_integer>
+					<dat:value_integer>1</dat:value_integer>
 					<com:unit>HOURS</com:unit>
 				</dat:expectedTime>
 				<dat:tolerancePercentage>1</dat:tolerancePercentage>
