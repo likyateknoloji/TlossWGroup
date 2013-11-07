@@ -20,7 +20,7 @@ public abstract class DBBase {
 
 	private static final String standartNameSpaceDeclaritions = CommonConstantDefinitions.decNsDat + CommonConstantDefinitions.decNsCom + CommonConstantDefinitions.decNsCal
 			   + CommonConstantDefinitions.decNsAgnt + CommonConstantDefinitions.decNsXsi + CommonConstantDefinitions.decNsFn 
-			   + CommonConstantDefinitions.decNsLrns + CommonConstantDefinitions.decNsNrp + CommonConstantDefinitions.decNsRes;
+			   + CommonConstantDefinitions.decNsLrns + CommonConstantDefinitions.decNsNrp + CommonConstantDefinitions.decNsRes + CommonConstantDefinitions.decNsfuncp;
 	
 	protected static String localFunctionConstructor(String moduleName, String functionName, String moduleNamesSpace, String... param) {
 		
