@@ -1,4 +1,3 @@
-
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_ftp_adapter_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            targetNamespace="http://www.likyateknoloji.com/XML_ftp_adapter_types" elementFormDefault="qualified">
 	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
@@ -243,7 +242,7 @@
 				<xs:element ref="com:userName"/>
 				<xs:element ref="com:userPassword"/>
 				<xs:element name="ftpPortNumber" type="com:portType"/>
-				<xs:element ref="com:ipAddress"/>
+				<xs:element name="ipAddress" type="com:ipAddressType"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -323,7 +322,7 @@
 	<xs:element name="proxyProperties">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="com:ipAddress"/>
+				<xs:element name="ipAddress" type="com:ipAddressType"/>
 				<xs:element name="portNumber" type="com:portType"/>
 				<xs:element ref="com:userName"/>
 				<xs:element ref="com:userPassword"/>
