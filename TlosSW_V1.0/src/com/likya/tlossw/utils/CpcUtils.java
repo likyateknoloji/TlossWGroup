@@ -239,7 +239,7 @@ public class CpcUtils {
 			spcInfoType = CpcUtils.getSpcInfo(spc, userId, runId, myScenario);
 			spcInfoType.setSpcId(tlosSWPathType);
 
-			if (!TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getValueBoolean() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
+			if (!TlosSpaceWide.getSpaceWideRegistry().getServerConfig().getServerParams().getIsPersistent().getUse() || !JobQueueOperations.recoverJobQueue(spcInfoType.getSpcReferance().getSpcAbsolutePath(), spc.getJobQueue(), spc.getJobQueueIndex())) {
 				if (!spc.initScenarioInfo()) {
 					myLogger.warn(tlosSWPathType.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
 					Logger.getLogger(CpcBase.class).warn(" WARNING : " + tlosSWPathType.getFullPath() + " isimli senaryo bilgileri yüklenemedi ya da iş listesi boş geldi !");
