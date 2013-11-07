@@ -10,7 +10,7 @@
 		<dbc:dbName>test</dbc:dbName>
 		<dbc:hostName>192.168.1.70</dbc:hostName>
 		<dbc:listenerPortNumber>5432</dbc:listenerPortNumber>
-		<com:ipAddress>192.168.1.70</com:ipAddress>
+		<dbc:ipAddress>192.168.1.70</dbc:ipAddress>
 		<dbc:jdbcClassName>className</dbc:jdbcClassName>
 		<dbc:sqlClientAppName>psql</dbc:sqlClientAppName>
 		<dbc:sqlClientAppPath>D:\postgresql-9.2.4-1-windows-x64-binaries\pgsql\bin\
@@ -25,7 +25,7 @@
 		<dbc:dbName>orcl</dbc:dbName>
 		<dbc:hostName>192.168.1.75</dbc:hostName>
 		<dbc:listenerPortNumber>1521</dbc:listenerPortNumber>
-		<com:ipAddress>192.168.1.75</com:ipAddress>
+		<dbc:ipAddress>192.168.1.75</dbc:ipAddress>
 		<dbc:jdbcClassName>className</dbc:jdbcClassName>
 		<dbc:sqlClientAppName>sqlplus</dbc:sqlClientAppName>
 		<dbc:sqlClientAppPath>D:\instantclient-basic-windows.x64-11.2.0.3.0\instantclient_11_2\
@@ -40,17 +40,23 @@
 		<dbc:dbName>postgres</dbc:dbName>
 		<dbc:hostName>192.168.1.70</dbc:hostName>
 		<dbc:listenerPortNumber>5432</dbc:listenerPortNumber>
-		<com:ipAddress>192.168.1.70</com:ipAddress>
+		<dbc:ipAddress>192.168.1.70</dbc:ipAddress>
 		<dbc:jdbcClassName>className</dbc:jdbcClassName>
 		<dbc:sqlClientAppName>psql</dbc:sqlClientAppName>
 		<dbc:sqlClientAppPath>D:\postgresql-9.2.4-1-windows-x64-binaries\pgsql\bin\</dbc:sqlClientAppPath>
 	</dbc:dbProperties>
-	<!-- dbc:dbProperties ID="1"> <dbc:connectionName>PostgreSQL Connection</dbc:connectionName> 
-		<dbc:dbUrl>jdbc:postgresql://</dbc:dbUrl> <dbc:dbType>PostgreSQL</dbc:dbType> 
-		<dbc:dbVersion>9.1</dbc:dbVersion> <dbc:driverName>JDBC</dbc:driverName> 
-		<dbc:dbName>Carre</dbc:dbName> <dbc:hostName>ayhan-laptop2</dbc:hostName> 
-		<dbc:listenerPortNumber>5432</dbc:listenerPortNumber> <com:ipAddress>127.0.0.1</com:ipAddress> 
-		<dbc:jdbcClassName>className</dbc:jdbcClassName> <dbc:sqlClientAppName>psql</dbc:sqlClientAppName> 
-		<dbc:sqlClientAppPath>C:/Program Files/PostgreSQL/9.1/bin/</dbc:sqlClientAppPath> 
-		</dbc:dbProperties -->
+    <dbc:dbProperties ID="11">
+        <dbc:connectionName>ayhandb</dbc:connectionName>
+        <dbc:dbUrl>jdbc:oracle:thin:</dbc:dbUrl>
+        <dbc:dbType>Oracle</dbc:dbType>
+        <dbc:dbVersion>11</dbc:dbVersion>
+        <dbc:driverName>JDBC</dbc:driverName>
+        <dbc:dbName>orcl</dbc:dbName>
+        <dbc:hostName>ayhan-laptop2</dbc:hostName>
+        <dbc:listenerPortNumber>1523</dbc:listenerPortNumber>
+        <dbc:ipAddress>192.168.1.210</dbc:ipAddress>
+        <dbc:jdbcClassName>className</dbc:jdbcClassName>
+        <dbc:sqlClientAppName>sqlplus</dbc:sqlClientAppName>
+        <dbc:sqlClientAppPath>D:\likya\projeler\tlos\tlos3.0\dss_module</dbc:sqlClientAppPath>
+    </dbc:dbProperties>
 </dbc:dbList>
