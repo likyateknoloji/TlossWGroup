@@ -175,8 +175,8 @@ public class TlosSWAgentBase {
 		getSwAgentRegistry().setAgentConfigInfo(agentConfigInfo);
 		swAgentLogger.info("  > Okundu.");
 
-		boolean isAuthenticationPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsAuthenticationPersistent().getValueBoolean();
-		boolean isPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getValueBoolean();
+		boolean isAuthenticationPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsAuthenticationPersistent().getUse();
+		boolean isPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getUse();
 
 		String tempDir = System.getProperty(tempDirPropertyName);
 
@@ -191,7 +191,7 @@ public class TlosSWAgentBase {
 
 	protected boolean checkJmxUser() {
 
-		boolean isAuthenticationPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsAuthenticationPersistent().getValueBoolean();
+		boolean isAuthenticationPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsAuthenticationPersistent().getUse();
 
 		if (isAuthenticationPersistent) {
 
