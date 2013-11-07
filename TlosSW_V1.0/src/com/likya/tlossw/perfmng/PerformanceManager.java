@@ -17,7 +17,7 @@ public class PerformanceManager extends PerformanceManagerBase {
 
 		super(spaceWideRegistry);
 
-		SpaceWideRegistry.getGlobalLogger().info("PerformanceManager ba�lat�l�yor !");
+		SpaceWideRegistry.getGlobalLogger().info("PerformanceManager baslatiliyor !");
 
 	}
 
@@ -96,8 +96,8 @@ public class PerformanceManager extends PerformanceManagerBase {
 	
 	public synchronized boolean checkThresholdOverflow(boolean isPermitted, int swagentid) {
 
-		int lowerLimit = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getThreshold().getLow();
-		int higherLimit = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getThreshold().getHigh();
+		int lowerLimit = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getOverAllThreshold().getLow();
+		int higherLimit = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getOverAllThreshold().getHigh();
 
 		int numOfActiveJobs = agentManagerRef.numberOfRunningJobs(swagentid);
 
