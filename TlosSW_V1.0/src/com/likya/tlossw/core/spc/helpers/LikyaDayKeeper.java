@@ -16,9 +16,9 @@ public final class LikyaDayKeeper implements Runnable {
 
 	private static SpaceWideRegistry spaceWideRegistry;
 
-	private Date solsticeTime = null;
+	private Calendar transitionTime = null;
 
-	private static int fONCE_PER_PERIOD;
+	private static Calendar TRANSITION_PERIOD;
 
 	private boolean isForced = false;
 
@@ -33,13 +33,10 @@ public final class LikyaDayKeeper implements Runnable {
 	private LikyaDayKeeper(SpaceWideRegistry spaceWideRegistry) {
 
 		LikyaDayKeeper.spaceWideRegistry = spaceWideRegistry;
-
-		Calendar solsticeCalendar = Calendar.getInstance();
-		solsticeCalendar = DateUtils.getSolsticeDateTime(solsticeCalendar, spaceWideRegistry.getTlosSWConfigInfo().getSettings().getSolstice().getTime());
-
-		solsticeTime = solsticeCalendar.getTime();
-
-		fONCE_PER_PERIOD = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getPeriod().getPeriodValue().intValue();
+		
+		transitionTime = DateUtils.getTransitionDateTime(spaceWideRegistry.getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition());
+		
+		TRANSITION_PERIOD = DateUtils.getTransitionPeriod( spaceWideRegistry.getTlosSWConfigInfo().getSettings().getTransitionPeriod().getPeriod());
 
 	}
 
@@ -49,12 +46,12 @@ public final class LikyaDayKeeper implements Runnable {
 
 			Date currentTime = Calendar.getInstance().getTime();
 
-			if (solsticeTime.before(currentTime)) {
+			if (transitionTime.before(currentTime)) {
 
 				SpaceWideRegistry.getGlobalLogger().info("");
 				SpaceWideRegistry.getGlobalLogger().info("   > Gündönümü gelmiştir !!");
 
-				shiftSolsticeTime();
+				shiftTransitionTime();
 
 				SpaceWideRegistry.getGlobalLogger().info("   > is yuku islenmesi sureci baslamistir !!");
 				spaceWideRegistry.getSpaceWideReference().startCpc();
@@ -74,18 +71,18 @@ public final class LikyaDayKeeper implements Runnable {
 		}
 	}
 
-	public void shiftSolsticeTime() {
+	public void shiftTransitionTime() {
 
 		Calendar nextTime = Calendar.getInstance();
 
 		SpaceWideRegistry.getGlobalLogger().info("   > Şimdi : " + DateUtils.getDate(nextTime.getTime()));
 
-		nextTime.setTime(solsticeTime);
-		nextTime.add(Calendar.HOUR, fONCE_PER_PERIOD);
+		nextTime = DateUtils.addPeriod2TransitionDateTime(transitionTime, TRANSITION_PERIOD); 
+
 
 		SpaceWideRegistry.getGlobalLogger().info("   > Süreç sonrası yeni Gündönümü : " + DateUtils.getDate(nextTime.getTime()) + " olarak set edilecektir.");
 
-		solsticeTime = nextTime.getTime();
+		transitionTime = nextTime;
 
 	}
 
@@ -113,7 +110,7 @@ public final class LikyaDayKeeper implements Runnable {
 		this.isForced = isForced;
 	}
 
-	public Date getSolsticeTime() {
-		return solsticeTime;
+	public Calendar getTransitionTime() {
+		return transitionTime;
 	}
 }
