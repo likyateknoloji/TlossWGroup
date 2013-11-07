@@ -68,10 +68,10 @@ public class InfoBusManager implements InfoBus, Runnable {
 
 	public InfoBusManager() throws TlosRecoverException {
 
-		timeout = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getInfoBusOptions().getPeriod().getPeriodValue().intValue();
-		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getValueBoolean();
+		timeout = (int) spaceWideRegistry.getTlosSWConfigInfo().getSettings().getInfoBusOptions().getPeriodValue();
+		debug = spaceWideRegistry.getServerConfig().getServerParams().getDebugMode().getUse();
 
-		isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getValueBoolean();
+		isEmailEnabled = spaceWideRegistry.getTlosSWConfigInfo().getSettings().getMailOptions().getUseMail().getUse();
 
 		mailServer = spaceWideRegistry.getMailServer();
 
