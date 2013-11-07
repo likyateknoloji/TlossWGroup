@@ -8,6 +8,7 @@ import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceDocument.Re
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.agents.AgentManager;
 import com.likya.tlossw.perfmng.PerformanceManager;
+import com.likya.tlossw.utils.SpaceWideRegistry;
 import com.likya.tlossw.utils.date.DateUtils;
 
 public abstract class DssBase {
@@ -35,7 +36,9 @@ public abstract class DssBase {
 		}
 
 		myLogger.info("     > JOB " + jobId + " icin " + kacKaynakVar + " adet uygun kaynak var;" + allResourcesText);
-
+        if(SpaceWideRegistry.isDebug) {
+        	System.out.println("     > JOB " + jobId + " icin " + kacKaynakVar + " adet uygun kaynak var;" + allResourcesText);
+        }
 	}
 
 	public static boolean isResourceListExpired(long agentListTime, long amountOfTimeToExpire) {
@@ -62,6 +65,9 @@ public abstract class DssBase {
 			
 			if (resource.enumValue().equals(ResourceType.FALSE)) {
 				myLogger.info("     > JOB " + jobId + " icin " + ResourceType.FALSE + " " + resource);
+				if(SpaceWideRegistry.isDebug) {
+					System.out.println("     > JOB " + jobId + " icin " + ResourceType.FALSE + " " + resource);
+				}
 				continue;
 			}
 			
@@ -81,10 +87,12 @@ public abstract class DssBase {
 			if(!agentManagerReference.getSwAgentCache(agentId).getIsPermitted()) {
 				
 				int numberOfRunningJobs = agentManagerReference.numberOfRunningJobs(agentId);
-				int lowerThresholdValue = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getThreshold().getLow();
+				int lowerThresholdValue = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getPerformance().getOverAllThreshold().getLow();
 				
 				myLogger.info("     > JOB " + jobId + " icin AgentId = " + agentId + " cok fazla sayida is ile (" + numberOfRunningJobs + ") yuklu oldugundan su anda kullanilamaz !" + "kaynagin kullanilabilmesi icin islerin set edilen " + lowerThresholdValue + " degerinin altina dusmesi gerekir.");
-				
+				if(SpaceWideRegistry.isDebug) {
+					System.out.println("     > JOB " + jobId + " icin AgentId = " + agentId + " cok fazla sayida is ile (" + numberOfRunningJobs + ") yuklu oldugundan su anda kullanilamaz !" + "kaynagin kullanilabilmesi icin islerin set edilen " + lowerThresholdValue + " degerinin altina dusmesi gerekir.");
+				}
 				continue;
 			
 			}
@@ -93,10 +101,15 @@ public abstract class DssBase {
 			newResource.set(resource);
 			
 			myLogger.info("     > JOB " + jobId + " icin " + ResourceType.TRUE + " " + newResource);
-			
+			if(SpaceWideRegistry.isDebug) {
+				System.out.println("     > JOB " + jobId + " icin " + ResourceType.TRUE + " " + newResource);
+			}
 		}
 		
 		myLogger.info("     > JOB " + jobId + " icin " + availableResourceList.sizeOfResourceArray() + " adet uygun kaynak var.");
+		if(SpaceWideRegistry.isDebug) {
+			System.out.println("     > JOB " + jobId + " icin " + availableResourceList.sizeOfResourceArray() + " adet uygun kaynak var.");
+		}
 		
 		return availableResourceList;
 	}
