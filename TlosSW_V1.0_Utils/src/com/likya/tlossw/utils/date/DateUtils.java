@@ -17,6 +17,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 
@@ -74,23 +75,6 @@ public class DateUtils {
 		return formatter.format(executionTime);
 	}
 
-	/*
-	 * public static String getCurrentGMTDate() {
-	 * final int msInMin = 60000;
-	 * final int minInHr = 60;
-	 * Date date = new Date();
-	 * int Hours, Minutes;
-	 * // DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG );
-	 * DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DATE_FIELD, DateFormat.LONG, new Locale("EN") );
-	 * TimeZone zone = dateFormat.getTimeZone();
-	 * 
-	 * Minutes =zone.getOffset( date.getTime() ) / msInMin;
-	 * Hours = Minutes / minInHr;
-	 * zone = zone.getTimeZone( "GMT Time" +(Hours>=0?"+":"")+Hours+":"+ Minutes);
-	 * dateFormat.setTimeZone( zone );
-	 * return dateFormat.format( date )+"+"+Hours;
-	 * }
-	 */
 
 	public static String getFormattedElapsedTimeMS(long timeInMilliSeconds) {
 
@@ -159,34 +143,12 @@ public class DateUtils {
 
 	public static Date getDateTime(String dateTimeInString) {
 
-		// You want to convert a string reprenting a time into a time object
-		// in Java. As we know that Java is representing a time information
-		// in a class java.util.Date, this class keep information about date
-		// and time.
-
-		// Now if you have a string of time you can use a SimpleDateFormat
-		// object to parse the string date and return a date object. The pattern
-		// of the string should be passed to the simple date format constructor.
-		// In the example below the string is formatted as hh:mm:ss
-		// (hour:minutes:
-		// second).
-
 		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		Date dateTime = null;
 
 		try {
-			// The get the date object from the string just called the parse
-			// method and pass the time string to it. The method throws
-			// ParseException
-			// if the time string is in an invalid format. But remember as we
-			// don't
-			// pass the date information this date object will represent the 1st
-			// of
 
 			dateTime = dateTimeFormat.parse(dateTimeInString);
-
-			// As the parse process success we'll have our time string in the
-			// created date instance.
 
 			// System.out.println("Date and Time: " + date);
 
@@ -200,34 +162,12 @@ public class DateUtils {
 
 	public static Date getTime(String timeInString) {
 
-		// You want to convert a string reprenting a time into a time object
-		// in Java. As we know that Java is representing a time information
-		// in a class java.util.Date, this class keep information about date
-		// and time.
-
-		// Now if you have a string of time you can use a SimpleDateFormat
-		// object to parse the string date and return a date object. The pattern
-		// of the string should be passed to the simple date format constructor.
-		// In the example below the string is formatted as hh:mm:ss
-		// (hour:minutes:
-		// second).
-
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
 		Date date = null;
 
 		try {
-			// The get the date object from the string just called the parse
-			// method and pass the time string to it. The method throws
-			// ParseException
-			// if the time string is in an invalid format. But remember as we
-			// don't
-			// pass the date information this date object will represent the 1st
-			// of
 
 			date = dateFormat.parse(timeInString);
-
-			// As the parse process success we'll have our time string in the
-			// created date instance.
 
 			// System.out.println("Date and Time: " + date);
 
@@ -239,38 +179,53 @@ public class DateUtils {
 
 	}
 
-	public static Calendar getSolsticeDateTime(Calendar now, Calendar solsticeCalendar) {
+	public static Calendar addPeriod2TransitionDateTime(Calendar transitionDateTime, Calendar transitionPeriod) {
+		DateTime transitionDateTime2 = new DateTime(transitionDateTime); 
+		transitionDateTime2.plus(transitionPeriod.getTimeInMillis());
+		return transitionDateTime2.toCalendar(Locale.US);
+	}
+	
+	public static Calendar getTransitionDateTime(DatetimeType transitionDateTime) {
 
-		now.set(Calendar.HOUR_OF_DAY, solsticeCalendar.get(Calendar.HOUR_OF_DAY));
-		now.set(Calendar.MINUTE, solsticeCalendar.get(Calendar.MINUTE));
-		now.set(Calendar.SECOND, solsticeCalendar.get(Calendar.SECOND));
+		Calendar newCalendar = Calendar.getInstance();
+		 
+		LocalTime localTime = new LocalTime(transitionDateTime.getTime().toString());
 
-		return now;
+		LocalDate d = new LocalDate(newCalendar.getTime());
+		LocalDateTime dt =  d.toLocalDateTime(localTime);
+
+		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+		String dateStr = dt.toString(outputFormat);
+
+		DateTime dateTime = DateTime.parse(dateStr);
+
+		return dateTime.toCalendar(Locale.US);
+		
 	}
 
-	/*
-	 * public static Date xmlbeansToNative(Time myTime) {
-	 * 
-	 * Calendar tmpCalendar = Calendar.getInstance();
-	 * 
-	 * tmpCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(myTime.getHour()));
-	 * tmpCalendar.set(Calendar.MINUTE, Integer.parseInt(myTime.getMinute()));
-	 * tmpCalendar.set(Calendar.SECOND, Integer.parseInt(myTime.getSecond()));
-	 * 
-	 * return tmpCalendar.getTime();
-	 * }
-	 * 
-	 * public static Date castorToNative(Time myTime) {
-	 * 
-	 * Calendar tmpCalendar = Calendar.getInstance();
-	 * 
-	 * tmpCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(myTime.getHour()));
-	 * tmpCalendar.set(Calendar.MINUTE, Integer.parseInt(myTime.getMinute()));
-	 * tmpCalendar.set(Calendar.SECOND, Integer.parseInt(myTime.getSecond()));
-	 * 
-	 * return tmpCalendar.getTime();
-	 * }
-	 */
+	public static Calendar getTransitionPeriod(DatetimeType transitionDateTime) {
+
+		LocalTime localTime = new LocalTime(transitionDateTime.getTime().toString());
+		
+		LocalDate d = null;
+		
+		if( transitionDateTime.getDate() != null ) {
+			d = new LocalDate(transitionDateTime.getDate().toString());
+		} else {
+			d = new LocalDate("0000-01-01");
+		}
+
+		//LocalDate d = new LocalDate(newCalendar.getTime());
+		LocalDateTime dt =  d.toLocalDateTime(localTime);
+
+		String outputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+		String dateStr = dt.toString(outputFormat);
+
+		DateTime dateTime = DateTime.parse(dateStr+"+00:00");
+
+		return dateTime.toCalendar(Locale.US);
+		
+	}
 
 	public static Calendar normalizeDate(Calendar calendar) {
 
@@ -282,100 +237,6 @@ public class DateUtils {
 
 		return tmpCalendar;
 	}
-
-	/*
-	 * public static Time nativeToCastor(Date myDate) {
-	 * 
-	 * Time myTime = Time.Factory.newInstance();
-	 * 
-	 * Calendar tmpCalendar = Calendar.getInstance();
-	 * tmpCalendar.setTime(myDate);
-	 * 
-	 * myTime.setHour("" + tmpCalendar.get(Calendar.HOUR_OF_DAY));
-	 * myTime.setMinute("" + tmpCalendar.get(Calendar.MINUTE));
-	 * myTime.setSecond("" + tmpCalendar.get(Calendar.SECOND));
-	 * 
-	 * return myTime;
-	 * }
-	 * 
-	 * public static com.likya.tlos.model.xmlbeans.common.TimeDocument.Time nativeToXMLBeansTime(Date myDate) {
-	 * 
-	 * com.likya.tlos.model.xmlbeans.common.TimeDocument.Time myTime = com.likya.tlos.model.xmlbeans.common.TimeDocument.Time.Factory.newInstance();
-	 * 
-	 * Calendar tmpCalendar = Calendar.getInstance();
-	 * tmpCalendar.setTime(myDate);
-	 * 
-	 * myTime.setHour(appendZero(tmpCalendar.get(Calendar.HOUR_OF_DAY)));
-	 * myTime.setMinute(appendZero(tmpCalendar.get(Calendar.MINUTE)));
-	 * myTime.setSecond(appendZero(tmpCalendar.get(Calendar.SECOND)));
-	 * 
-	 * return myTime;
-	 * }
-	 * 
-	 * public static com.likya.tlos.model.xmlbeans.common.DateDocument.Date nativeToXMLBeansDate(Date myDate) {
-	 * 
-	 * com.likya.tlos.model.xmlbeans.common.DateDocument.Date xmlDate = com.likya.tlos.model.xmlbeans.common.DateDocument.Date.Factory.newInstance();
-	 * 
-	 * Calendar tmpCalendar = Calendar.getInstance();
-	 * tmpCalendar.setTime(myDate);
-	 * 
-	 * xmlDate.setDay(appendZero(tmpCalendar.get(Calendar.DAY_OF_MONTH)));
-	 * xmlDate.setMonth(appendZero((tmpCalendar.get(Calendar.MONTH) + 1)));
-	 * xmlDate.setYear("" + tmpCalendar.get(Calendar.YEAR));
-	 * 
-	 * return xmlDate;
-	 * }
-	 * 
-	 * public static com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime nativeDateToXMLStartTime(Date myDate){
-	 * com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime startTime = com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime.Factory.newInstance();
-	 * com.likya.tlos.model.xmlbeans.common.DateDocument.Date xmlDate = com.likya.tlos.model.xmlbeans.common.DateDocument.Date.Factory.newInstance();
-	 * com.likya.tlos.model.xmlbeans.common.TimeDocument.Time xmlTime = com.likya.tlos.model.xmlbeans.common.TimeDocument.Time.Factory.newInstance();
-	 * 
-	 * xmlDate = nativeToXMLBeansDate(myDate);
-	 * xmlTime = nativeToXMLBeansTime(myDate);
-	 * 
-	 * startTime.setDate(xmlDate);
-	 * startTime.setTime(xmlTime);
-	 * 
-	 * return startTime;
-	 * }
-	 * 
-	 * public static com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime nativeDateToXMLStopTime(Date myDate){
-	 * com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime stopTime = com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime.Factory.newInstance();
-	 * com.likya.tlos.model.xmlbeans.common.DateDocument.Date xmlDate = com.likya.tlos.model.xmlbeans.common.DateDocument.Date.Factory.newInstance();
-	 * com.likya.tlos.model.xmlbeans.common.TimeDocument.Time xmlTime = com.likya.tlos.model.xmlbeans.common.TimeDocument.Time.Factory.newInstance();
-	 * 
-	 * xmlDate = nativeToXMLBeansDate(myDate);
-	 * xmlTime = nativeToXMLBeansTime(myDate);
-	 * 
-	 * stopTime.setDate(xmlDate);
-	 * stopTime.setTime(xmlTime);
-	 * 
-	 * return stopTime;
-	 * }
-	 */
-
-	/*
-	 * public static String jobTimeToString(JobPlannedTime jobPlannedTime, boolean startTime) {
-	 * 
-	 * String jobTime = "";
-	 * 
-	 * if (startTime) {
-	 * if (jobPlannedTime.getStartTime().getDate() != null) {
-	 * jobTime = jobPlannedTime.getStartTime().getDate().getDay() + "." + jobPlannedTime.getStartTime().getDate().getMonth() + "." + jobPlannedTime.getStartTime().getDate().getYear() + " ";
-	 * }
-	 * 
-	 * jobTime = jobTime + jobPlannedTime.getStartTime().getTime().getHour() + ":" + jobPlannedTime.getStartTime().getTime().getMinute() + ":" + jobPlannedTime.getStartTime().getTime().getSecond();
-	 * } else {
-	 * if (jobPlannedTime.getStopTime().getDate() != null) {
-	 * jobTime = jobPlannedTime.getStopTime().getDate().getDay() + "." + jobPlannedTime.getStopTime().getDate().getMonth() + "." + jobPlannedTime.getStopTime().getDate().getYear() + " ";
-	 * }
-	 * 
-	 * jobTime = jobTime + jobPlannedTime.getStopTime().getTime().getHour() + ":" + jobPlannedTime.getStopTime().getTime().getMinute() + ":" + jobPlannedTime.getStopTime().getTime().getSecond();
-	 * }
-	 * return jobTime;
-	 * }
-	 */
 
 	public static String calendarToString(Calendar date, boolean transformToLocalTime) {
 		// clienttan alacagimiz degerlerle dolduracagiz
@@ -460,64 +321,6 @@ public class DateUtils {
 			return formatter.format(jobCalendar.getTime());
 		}
 	}
-
-	/*
-	public static String jobTimeToString(JsPlannedTime jobPlannedTime, boolean startTime, boolean transformToLocalTime) {
-		// clienttan alacagimiz degerlerle dolduracagiz
-		int clientZoneOffset = 7200000; // milisecond
-		int clientDSTOffset = 3600000; // milisecond
-
-		Calendar jobCalendar = Calendar.getInstance();
-
-		if (startTime) {
-			// jobCalendar = jobPlannedTime.getStartTime().getTime();
-			jobCalendar.set(Calendar.HOUR_OF_DAY, jobPlannedTime.getStartTime().getTime().get(Calendar.HOUR_OF_DAY));
-			jobCalendar.set(Calendar.MINUTE, jobPlannedTime.getStartTime().getTime().get(Calendar.MINUTE));
-			jobCalendar.set(Calendar.SECOND, jobPlannedTime.getStartTime().getTime().get(Calendar.SECOND));
-			jobCalendar.set(Calendar.ZONE_OFFSET, jobPlannedTime.getStartTime().getTime().get(Calendar.ZONE_OFFSET));
-			jobCalendar.set(Calendar.DST_OFFSET, 0);
-		} else {
-			// jobCalendar = jobPlannedTime.getStopTime().getTime();
-			jobCalendar.set(Calendar.HOUR_OF_DAY, jobPlannedTime.getStopTime().getTime().get(Calendar.HOUR_OF_DAY));
-			jobCalendar.set(Calendar.MINUTE, jobPlannedTime.getStopTime().getTime().get(Calendar.MINUTE));
-			jobCalendar.set(Calendar.SECOND, jobPlannedTime.getStopTime().getTime().get(Calendar.SECOND));
-			jobCalendar.set(Calendar.ZONE_OFFSET, jobPlannedTime.getStopTime().getTime().get(Calendar.ZONE_OFFSET));
-			jobCalendar.set(Calendar.DST_OFFSET, 0);
-		}
-
-		int localTimeShift = clientDSTOffset + clientZoneOffset;
-		int jobTimeShift = jobCalendar.get(Calendar.ZONE_OFFSET);
-
-		if (!transformToLocalTime) {
-			String jobTime = appendZero(jobCalendar.get(Calendar.HOUR_OF_DAY)) + ":" + appendZero(jobCalendar.get(Calendar.MINUTE)) + ":" + appendZero(jobCalendar.get(Calendar.SECOND));
-
-			if (jobTimeShift != localTimeShift) {
-				jobTime += getTimeZoneStr(jobTimeShift);
-			}
-
-			return jobTime;
-
-		} else {
-			SimpleDateFormat formatter = null;
-
-			// formatter = new SimpleDateFormat("HH:mm:ss Z");
-			formatter = new SimpleDateFormat("HH:mm:ss");
-
-			TimeZone timeZone = TimeZone.getDefault();
-			if (clientDSTOffset == timeZone.getDSTSavings()) {
-				timeZone.setRawOffset(clientZoneOffset);
-			} else if (clientDSTOffset > timeZone.getDSTSavings()) {
-				timeZone.setRawOffset(clientZoneOffset + clientDSTOffset);
-			} else {
-				timeZone.setRawOffset(clientZoneOffset - timeZone.getDSTSavings());
-			}
-			formatter.setTimeZone(timeZone);
-
-			return formatter.format(jobCalendar.getTime());
-		}
-	}
-	
-	*/
 
 	private static String getTimeZoneStr(int timeShift) {
 
