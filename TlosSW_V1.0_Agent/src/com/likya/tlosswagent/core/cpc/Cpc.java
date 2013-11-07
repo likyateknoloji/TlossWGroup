@@ -22,7 +22,7 @@ public class Cpc extends CpcBase {
 
 	public Cpc(SWAgentRegistry swAgentRegistry) {
 		super(swAgentRegistry);
-		this.isRecoverAction = swAgentRegistry.getAgentConfigInfo().getSettings().getIsPersistent().getValueBoolean();
+		this.isRecoverAction = swAgentRegistry.getAgentConfigInfo().getSettings().getIsPersistent().getUse();
 	}
 
 	public void run() {
@@ -46,7 +46,7 @@ public class Cpc extends CpcBase {
 					}
 				}
 
-				boolean isPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getValueBoolean();
+				boolean isPersistent = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getUse();
 				try {
 					if (isPersistent && taskQueueManager.getTaskInputQueue() != null && taskQueueManager.getTaskInputQueue().size() > 0 && !TaskQueueOperations.persistTaskInputQueue("taskQueue", taskQueueManager.getTaskInputQueue())) {
 						getCpcLogger().error("Taskqueue persist error : Queue name : " + "taskQueue");
