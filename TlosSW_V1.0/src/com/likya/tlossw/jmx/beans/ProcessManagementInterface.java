@@ -655,18 +655,18 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		}
 	}
 
-	public void shiftSolstice(JmxUser jmxUser, boolean backupReports) {
+	public void shiftTransactionTime(JmxUser jmxUser, boolean backupReports) {
 		
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return;
 		}
 		
-		shiftSolstice(backupReports);
+		shiftTransactionTime(backupReports);
 
 		return; 
 	}
 	
-	public void shiftSolstice(boolean backupReports) {
+	public void shiftTransactionTime(boolean backupReports) {
 
 		TlosSpaceWide.getSpaceWideRegistry().setWaitConfirmOfGUI(false);
 
@@ -679,7 +679,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		TlosSpaceWide.getSpaceWideRegistry().getRunLookupTable().clear();
 
 		TlosSpaceWide.getSpaceWideRegistry().getSpaceWideReference().initDayKeeper();
-		TlosSpaceWide.getSpaceWideRegistry().getDayKeeperReference().shiftSolsticeTime();
+		TlosSpaceWide.getSpaceWideRegistry().getDayKeeperReference().shiftTransitionTime();
 		TlosSpaceWide.getSpaceWideRegistry().getSpaceWideReference().startDayKeeper();
 	}
 
