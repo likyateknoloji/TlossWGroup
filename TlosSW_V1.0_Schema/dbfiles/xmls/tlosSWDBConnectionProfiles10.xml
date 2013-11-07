@@ -62,4 +62,19 @@
 		<dbc:deployed>no</dbc:deployed>
 		<com:active>yes</com:active>
 	</dbc:dbConnectionProfile>
+    <dbc:dbConnectionProfile ID="15">
+        <dbc:dbDefinitionId>5</dbc:dbDefinitionId>
+        <dbc:profileName>test6</dbc:profileName>
+        <com:userName>test</com:userName>
+        <com:userPassword>test</com:userPassword>
+        <dbc:jdbcConnectionPoolParams>
+            <dbc:initialCapacity>3</dbc:initialCapacity>
+            <dbc:maxCapacity>10</dbc:maxCapacity>
+            <dbc:minIdle>0</dbc:minIdle>
+            <dbc:maxIdle>10000</dbc:maxIdle>
+            <dbc:maxWait>0</dbc:maxWait>
+        </dbc:jdbcConnectionPoolParams>
+        <dbc:deployed>no</dbc:deployed>
+        <com:active>yes</com:active>
+    </dbc:dbConnectionProfile>
 </dbc:dbConnectionProfiles>
