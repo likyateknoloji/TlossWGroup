@@ -95,6 +95,7 @@ public class CommonConstantDefinitions {
 	public static final String decNsXslfo = "declare namespace xslfo = \"http://exist-db.org/xquery/xslfo\";";
 	public static final String decNsMeta = "declare namespace  meta = \"http://www.likyateknoloji.com/XML_metaData_types\";";
 	public static final String decNsJsdl = "declare namespace  jsdl = \"http://schemas.ggf.org/jsdl/2005/11/jsdl\";";
+	public static final String decNsfuncp = "declare namespace  funcp = \"http://www.likyateknoloji.com/XML_FuncPass_types\";";
 	
 	/**
 	 * MetaDataId ler
