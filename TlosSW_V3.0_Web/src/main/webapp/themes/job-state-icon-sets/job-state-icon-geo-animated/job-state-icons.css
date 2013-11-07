@@ -1,0 +1,118 @@
+.ui-success-state-icon {
+	background: none repeat scroll 0 0 #008000;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-failed-state-icon { 
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #FF0000;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-failed-state-icon + .green-square {
+	background: none repeat scroll 0 0 #FFFF00;
+	border-radius: 50px 50px 50px 50px;
+	color: #000000;
+	left: 627px;
+	transform: rotate(360deg);
+}
+
+.ui-working-state-icon {
+	animation-duration: 4000ms;
+	animation-iteration-count: 3;
+	animation-name: spin;
+	animation-timing-function: linear;
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #0000FF;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-timeout-state-icon {
+	animation-duration: 4000ms;
+	animation-iteration-count: 3;
+	animation-name: spin;
+	animation-timing-function: linear;
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #FFC0CB;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-waiting-state-icon {
+	animation-duration: 4000ms;
+	animation-iteration-count: 3;
+	animation-name: spin;
+	animation-timing-function: linear;
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #A52A2A;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-bytime-state-icon {
+	animation-duration: 4000ms;
+	animation-iteration-count: 3;
+	animation-name: spin;
+	animation-timing-function: linear;
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #A52A2A;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+.ui-default-state-icon {
+	animation-duration: 4000ms;
+	animation-iteration-count: 3;
+	animation-name: spin;
+	animation-timing-function: linear;
+	border-radius: 10px 10px 10px 10px;
+	background: none repeat scroll 0 0 #FFA500;
+	border: 1px solid #666666;
+	color: #FFFFFF;
+	height: 14px;
+	right: 3px;
+	position: relative;
+	width: 14px;
+}
+
+#box4:hover {
+	background: none repeat scroll 0 0 #FFFF00;
+	border-radius: 10px 10px 10px 10px;
+	color: #000000;
+	transform: rotate(360deg);
+}
+
+#box3:hover+.green-square {
+	background: none repeat scroll 0 0 #FFFF00;
+	border-radius: 50px 50px 50px 50px;
+	color: #000000;
+	left: 627px;
+	transform: rotate(360deg);
+}
