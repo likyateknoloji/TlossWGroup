@@ -35,7 +35,7 @@ public class OutputQueueManager implements Runnable, Serializable {
 		this.swAgentRegistry = swAgentRegistry;
 		this.outputQueueLogger = SWAgentRegistry.getsWAgentLogger();
 
-		boolean isRecoverAction = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getValueBoolean();
+		boolean isRecoverAction = getSwAgentRegistry().getAgentConfigInfo().getSettings().getIsPersistent().getUse();
 		if (isRecoverAction) {
 			OutputQueueOperations.recoverOutputQueue("outputQueue", outputQueue);
 		}
