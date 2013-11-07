@@ -92,9 +92,9 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	private transient LikyaDayKeeper dayKeeperReference;
 
-	private boolean isGunDonumuPeryodPassed = false;
+	private boolean isGunDonumuPeriodPassed = false;
 
-	private boolean isSolsticePassed = false;
+	private boolean isTransactionTimePassed = false;
 
 	private transient AgentManager agentManagerReference;
 
@@ -247,12 +247,12 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 		this.dayKeeperReference = dayKeeperReference;
 	}
 
-	public boolean isSolsticePassed() {
-		return isSolsticePassed;
+	public boolean isTransactionTimePassed() {
+		return isTransactionTimePassed;
 	}
 
-	public void setSolsticePassed(boolean isSolsticePassed) {
-		this.isSolsticePassed = isSolsticePassed;
+	public void setTransactionTimePassed(boolean isTransactionTimePassed) {
+		this.isTransactionTimePassed = isTransactionTimePassed;
 	}
 
 	public AgentManager getAgentManagerReference() {
@@ -367,12 +367,12 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 		this.cpcTesterReference = cpcTesterReference;
 	}
 
-	public boolean isGunDonumuPeryodPassed() {
-		return isGunDonumuPeryodPassed;
+	public boolean isGunDonumuPeriodPassed() {
+		return isGunDonumuPeriodPassed;
 	}
 
-	public void setGunDonumuPeryodPassed(boolean isGunDonumuPeryodPassed) {
-		this.isGunDonumuPeryodPassed = isGunDonumuPeryodPassed;
+	public void setGunDonumuPeriodPassed(boolean isGunDonumuPeriodPassed) {
+		this.isGunDonumuPeriodPassed = isGunDonumuPeriodPassed;
 	}
 
 	public int getCurrentState() {
