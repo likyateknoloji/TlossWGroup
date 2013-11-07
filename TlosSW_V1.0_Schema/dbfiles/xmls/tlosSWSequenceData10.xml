@@ -1,4 +1,3 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <com:TlosSequenceData xmlns:com="http://www.likyateknoloji.com/XML_common_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_common_types ../xsds/tlosSWOrtak_v_1_0.xsd">
     <com:jobId>200</com:jobId>
     <com:scenarioId>100</com:scenarioId>
@@ -7,7 +6,6 @@
     <com:permissionId>78</com:permissionId>
     <com:runId>1076</com:runId>
     <com:planId>1051</com:planId>
-    <com:solsticeId>1</com:solsticeId>
     <com:traceId>262</com:traceId>
     <com:errorId>2771</com:errorId>
     <com:slaId>22</com:slaId>
