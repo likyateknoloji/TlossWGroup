@@ -38,13 +38,18 @@ public class DssDbUtils extends DBBase {
 	public static ResourceAgentList swFindResourcesForAJob(JobProperties jobProperties){
 
 		JobPropFuncPass jobPropFuncPass = JobPropFuncPass.Factory.newInstance();
+		
 		String OSystemType = jobProperties.getBaseJobInfos().getOSystem().toString();
 		
 		jobPropFuncPass.setOSystem(OSystem.Enum.forString(OSystemType));
 		jobPropFuncPass.setID(jobProperties.getID());
-		if(jobPropFuncPass.getSLAId()>0) jobPropFuncPass.setSLAId(jobProperties.getAdvancedJobInfos().getSLAId());
+		if(jobProperties.getAdvancedJobInfos().getSLAId()>0) {
+			jobPropFuncPass.setSLAId(jobProperties.getAdvancedJobInfos().getSLAId());
+		}
 		
-		if( jobPropFuncPass.getResourceRequirement() != null ) jobPropFuncPass.setResourceRequirement((ResourceRequirement) jobProperties.getAdvancedJobInfos().getResourceRequirement());
+		if( jobPropFuncPass.getResourceRequirement() != null ) {
+			jobPropFuncPass.setResourceRequirement((ResourceRequirement) jobProperties.getAdvancedJobInfos().getResourceRequirement());
+		}
 		
 		QName qName = JobPropFuncPass.type.getOuterType().getDocumentElementName();
 		XmlOptions xmlOptions = XMLNameSpaceTransformer.transformXML(qName);
