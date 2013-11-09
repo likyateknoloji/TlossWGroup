@@ -1,7 +1,8 @@
-<lrns:ResourceList xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns"
-	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types"
+<lrns:ResourceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:lrns="http://www.likyateknoloji.com/XML_SWResourceNS_types" 
+    xmlns:rns="http://schemas.ogf.org/rns/2009/12/rns"
+	xmlns:agnt="http://www.likyateknoloji.com/XML_agent_types" 
 	xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.likyateknoloji.com/XML_SWResourceNS_types ../xsds/tlosSW-rns.xsd  http://schemas.ggf.org/jsdl/2005/11/jsdl ../xsds/jsdl.2005_11.xsd">
 	<lrns:Resource entry-name="WINSRVSTD2012">
 		<rns:endpoint>
