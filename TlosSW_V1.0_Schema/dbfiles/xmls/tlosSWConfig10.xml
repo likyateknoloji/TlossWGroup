@@ -62,6 +62,9 @@
 		<con:useSms use="false">
 			<com:comment>sms sistemi kullan/kullanma</com:comment>
 		</con:useSms>
+		<con:useSLA use="false">
+			<com:comment>SLA sistemi kullan/kullanma</com:comment>
+		</con:useSLA>
 		<con:tlosFrequency>
 			<com:comment>Scheduler'ın calisma sikiligi (sn)</com:comment>
 			<com:frequency>1</com:frequency>
@@ -78,12 +81,12 @@
 		</con:httpManagerProperties>
 		<con:agentOptions>
 			<con:InOutJmxDurationForUnavailability>
-				<com:comment>hata durumunda agent inJmxAvailable, outJmxAvailable degerlerinin false olması icin beklenecek sure (sn)</com:comment>
+				<com:comment>ulasilamama veya is atamada hata durumunda agent inJmxAvailable, outJmxAvailable degerlerinin false olması icin beklenecek sure (sn)</com:comment>
 				<con:durationValue>15</con:durationValue>
 			</con:InOutJmxDurationForUnavailability>
 			<con:resourceListDuration>
 				<com:comment>job bazında alınan kaynak listesinin time-out suresi sn. olarak</com:comment>
-				<con:durationValue>900</con:durationValue>
+				<con:durationValue>20</con:durationValue>
 			</con:resourceListDuration>
 		</con:agentOptions>
 		<con:infoBusOptions>
