@@ -32,6 +32,8 @@
 	</xs:element>
 
 	<xs:element name="useSms" type="lt:commentedBooleanType" />
+	
+	<xs:element name="useSLA" type="lt:commentedBooleanType" />
 
 	<xs:element name="settings">
 		<xs:complexType>
@@ -40,6 +42,7 @@
 				<xs:element ref="transitionPeriod" />
 				<xs:element ref="mailOptions" />
 				<xs:element ref="useSms" />
+				<xs:element ref="useSLA" />
 				<xs:element ref="tlosFrequency" />
 				<xs:element ref="lt:remoteManagerProperties" />
 				<xs:element ref="httpManagerProperties" />
