@@ -543,22 +543,35 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
   Return: Onay varsa True, yoksa False donulur.
 :)
 
-declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
 {
-  let $AvailableResourceListx := dss:GetAvailableResourcesList($documentUrl, 'root.') 
+    
+  (: ------------------------------------------ AGENTS -------------------------------------------------------------:)
+  let $AvailableResourceListAll := dss:GetAvailableResourcesList($documentUrl, 'root.') 
   (: let $AvailableResourceListy := $AvailableResourceListx[resource/@os = $jobPropertiesFuncPass/*/text()] :)
-  let $par := $jobPropertiesFuncPass/*/text()
-  let $AvailableResourceListy := for $d in $AvailableResourceListx/resource
-                                 where $d/@os = $par
-                                 return $d
-  let $AvailableResourceList := if( not(fn:exists($AvailableResourceListy)) ) then <resource_list/> else <resource_list> { $AvailableResourceListy } </resource_list>
+  let $oSystem := $jobPropertiesFuncPass/funcp:oSystem
+  let $slaId := $jobPropertiesFuncPass/funcp:SLAId
+  let $AvailableResourceListFiltered := $AvailableResourceListAll/resource[@os = $oSystem]
+
+  let $AvailableResourceList := if( not(fn:exists($AvailableResourceListFiltered)) ) 
+                                then 
+                                   <resource_list/> 
+                                else 
+                                   <resource_list> 
+                                    { 
+                                      $AvailableResourceListFiltered 
+                                    } 
+                                   </resource_list>
   
+  (: ------------------------------------------ HARDWARE -------------------------------------------------------------:)
+
   let $HardwareCheck         := dss:ResourceHardwareCheck($documentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
+  
   let $HardwareCheckLogic    := <HardwareCheckLogic>
                                 { 
                                          for $sira in $HardwareCheck/*
                                          return 
-										 <SLA ID="{$sira/@ID}"> 
+    									 <SLA ID="{$sira/@ID}"> 
 										 {
 										    for $don in $sira/*
 											return 
@@ -581,6 +594,8 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
 								} 
 								</HardwareCheckLogic>
 
+  (: ------------------------------------------ SOFTWARE PROVISION -------------------------------------------------------------:)
+  
   let $ProvisioningCheck          := dss:ResourceProvisioningCheck($documentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
   let $ProvisioningCheckLogic    := <ProvisioningCheckLogic>
                                { 
@@ -606,6 +621,8 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
 								 </SLA>
 							   } 
 							   </ProvisioningCheckLogic>
+                               
+  (: ------------------------------------------ AGENTS EVALUATIONS-------------------------------------------------------------:)                               
   let $AgentCheck      := $AvailableResourceList
   let $AgentCheckLogic := <AgentCheckLogic>
                           {
@@ -629,6 +646,8 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
                           }
                           </AgentCheckLogic>
 
+  (: ------------------------------------------ CONCLUSION  -------------------------------------------------------------:)
+  
   let $sonuc := <rsr:ResourceAgentList 
                     xmlns:rsr="http://www.likyateknoloji.com/XML_ResourceAgent_results" 
 					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -671,6 +690,7 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
                      </rsr:resource>
                 }
                 </rsr:ResourceAgentList>
+                
   let $iste_sonuc := if($prev = "Result") then $sonuc
                      else
                        if($prev = "HardwareCheckLogic") then $HardwareCheckLogic
@@ -685,6 +705,7 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
                                else
                                  if($prev = "AgentCheckLogicDetail") then $AgentCheck
                                  else ()
+                                 
   let $istesonuc := 
                              if($prev = "AllDetails") 
 							 then <sonuc>{($sonuc, $HardwareCheck, $ProvisioningCheck, $AgentCheck, dss:ResourceSLACheck($documentUrl, $gunzaman, "kk")/SLACheck)}</sonuc>
