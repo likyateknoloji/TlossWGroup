@@ -15,6 +15,7 @@ import org.xmldb.api.modules.XPathQueryService;
 
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
+import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.functionpass.JobPropFuncPassDocument.JobPropFuncPass;
 import com.likya.tlos.model.xmlbeans.functionpass.OSystemDocument.OSystem;
@@ -43,6 +44,15 @@ public class DssDbUtils extends DBBase {
 		
 		jobPropFuncPass.setOSystem(OSystem.Enum.forString(OSystemType));
 		jobPropFuncPass.setID(jobProperties.getID());
+		
+		TlosConfigInfo tlosConfigInfo = TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo();
+		
+		jobPropFuncPass.setUseSLA( tlosConfigInfo.getSettings().getUseSLA().getUse() );
+		jobPropFuncPass.setUseMonitoringData( tlosConfigInfo.getMonitoringAgentParams().getUse() );
+		jobPropFuncPass.setPlanId( TlosSpaceWide.getSpaceWideRegistry().getTlosProcessData().getPlanId() );
+		
+		//TODO Server in timezone bilgisini DB ye gondermemiz gerekiyor.
+		
 		if(jobProperties.getAdvancedJobInfos().getSLAId()>0) {
 			jobPropFuncPass.setSLAId(jobProperties.getAdvancedJobInfos().getSLAId());
 		}
