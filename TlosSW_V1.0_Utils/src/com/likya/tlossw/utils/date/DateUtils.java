@@ -35,6 +35,14 @@ public class DateUtils {
 		return getUnFormattedDuration(sDate);
 	}
 
+	public static long dateDiffWithNow(Calendar sDate) {
+
+		Date now = Calendar.getInstance().getTime();
+		long timeDiff = now.getTime() - sDate.getTimeInMillis();
+
+		return timeDiff;
+	}
+
 	public static long dateDiffWithNow(Date sDate) {
 
 		Date now = Calendar.getInstance().getTime();
@@ -42,7 +50,7 @@ public class DateUtils {
 
 		return timeDiff;
 	}
-
+	
 	public static long dateDiffWithNow(long sDate) {
 
 		Date now = Calendar.getInstance().getTime();
