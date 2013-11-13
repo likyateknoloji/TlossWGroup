@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.CpcBase;
@@ -117,6 +118,7 @@ public class CpcUtils {
 
 		myLiveStateInfo.setStateName(StateName.PENDING);
 		myLiveStateInfo.setSubstateName(SubstateName.IDLED);
+		myLiveStateInfo.setStatusName(StatusName.BYTIME);
 		spc.setLiveStateInfo(myLiveStateInfo);
 
 		Thread thread = new Thread(spc);
@@ -185,7 +187,7 @@ public class CpcUtils {
 			JobRuntimeProperties jobRuntimeProperties = new JobRuntimeProperties();
 
 			/* IDLED state i ekle */
-			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+			LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
 			jobRuntimeProperties.setJobProperties(jobProperties);
 			// TODO infoBusInfo Manager i bilgilendir.
 
