@@ -371,7 +371,7 @@ public class Spc extends SpcBase {
 						tlosSWPathType.setRunId(newJobProperties.getRunId());
 						newJobRuntimeProperties.setNativeFullJobPath(tlosSWPathType);
 
-						LiveStateInfoUtils.insertNewLiveStateInfo(newJobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED);
+						LiveStateInfoUtils.insertNewLiveStateInfo(newJobProperties, StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
 						newJobRuntimeProperties.setJobProperties(newJobProperties);
 
 						Job newJob = getMyJob(newJobRuntimeProperties);
@@ -445,7 +445,7 @@ public class Spc extends SpcBase {
 				if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
 					// Already executed
 					continue;
-				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED)) {
+				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME)) {
 					// job in PENDING olmasi halinde yapilacaklarin başladığı yer.
 					// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
 					/*
@@ -847,7 +847,7 @@ public class Spc extends SpcBase {
 				if (!TypeUtils.resolveState(jobProperties).equals(StateName.FINISHED)) {
 					/* FAILED state i ekle */
 					scheduledJob.insertNewLiveStateInfo(StateName.FAILED, null, null, 555, "Agent a ulasilamiyor.");
-					scheduledJob.insertNewLiveStateInfo(StateName.PENDING, SubstateName.IDLED, null, 111, "Is yeniden kurgulandi.");
+					scheduledJob.insertNewLiveStateInfo(StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME, 111, "Is yeniden kurgulandi.");
 				}
 
 			}
@@ -886,7 +886,7 @@ public class Spc extends SpcBase {
 			Job scheduledJob = getJobQueue().get(sortType.getJobId());
 			// JobRuntimeProperties jobRuntimeProperties = scheduledJob.getJobRuntimeProperties();
 			// JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-			insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.IDLED, null);
+			insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME);
 			// LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.PENDING, SubstateName.IDLED, null);
 			// scheduledJob.sendStatusChangeInfo();
 		}
