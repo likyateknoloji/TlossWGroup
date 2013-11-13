@@ -4,6 +4,7 @@ module namespace dss = "http://tlos.dss.com/";
 
 import module namespace lk = "http://likya.tlos.com/" at "moduleNrpeOperations.xquery";
 import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
+import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
 
 declare namespace dat = "http://www.likyateknoloji.com/XML_data_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
@@ -30,7 +31,6 @@ $resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
 $nrpeDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWNrpeData10.xml")
 :)
 
-
 declare function functx:repeat-string 
   ( $stringToRepeat as xs:string? ,
     $count as xs:integer )  as xs:string {
@@ -39,8 +39,7 @@ declare function functx:repeat-string
                         '')
  } ;
 
-
-declare function functx:pad-integer-to-length 
+ declare function functx:pad-integer-to-length 
   ( $integerToPad as xs:anyAtomicType? ,
     $length as xs:integer )  as xs:string {
        
@@ -83,20 +82,22 @@ declare function dss:distinct-deep
    Return : tanimli kaynak listesinin benzeri fakat muhtemelen bir alt listesi seklinde bir liste doner.
  :)
 
-declare function dss:ResourceUnique($n as node()) as node()*
+declare function dss:ResourceUnique($n as node(), $jobPropertiesFuncPass as element(funcp:jobPropFuncPass)) as node()*
 {
+      let $useMonitoringData := xs:boolean($jobPropertiesFuncPass/@useMonitoringData)
+      
       let $resources := for $tek in $n/nrpr:nrpeCall
-						where $tek/nrpr:message/nrpr:response/nrpr:disk[data(@forWhat)="free"] or 
-							  $tek/nrpr:message/nrpr:response/nrpr:mem[data(@forWhat)="free"] or 
-                              $tek/nrpr:message/nrpr:response/nrpr:cpu[data(@timein)="1"]
 						return <resource entry-name="{ $tek/@entry-name }" 
 						                         id="{ $tek/@id }" 
 									 inJmxAvailable="{ $tek/@inJmxAvailable }" 
 									   JmxAvailable="{ $tek/@JmxAvailable }"
                                        os="{ $tek/@os }">
-						                                                  { $tek/nrpr:message/nrpr:response/nrpr:disk[data(@forWhat)="free"] ,
-										                                    $tek/nrpr:message/nrpr:response/nrpr:mem[data(@forWhat)="free"] ,
-																			$tek/nrpr:message/nrpr:response/nrpr:cpu[data(@timein)="1"]
+						                                                  { if($useMonitoringData and exists($tek/nrpr:message)) then 
+                                                                              ($tek/nrpr:message/nrpr:response/nrpr:disk[data(@forWhat)="free"] ,
+										                                      $tek/nrpr:message/nrpr:response/nrpr:mem[data(@forWhat)="free"] ,
+																			  $tek/nrpr:message/nrpr:response/nrpr:cpu[data(@timein)="1"])
+                                                                            else
+                                                                              ()
 										                                  } 
                               </resource>
 	  let $kaynaklar := <resource_list>{dss:distinct-deep($resources)}</resource_list>
@@ -104,95 +105,102 @@ declare function dss:ResourceUnique($n as node()) as node()*
       return $kaynaklar
 };
 
-(:
-declare function dss:GetAvailableResourcesListxxx($documentUrl as xs:string, $n as node(), $prev as xs:string) as node()*
-{
-  let $nrpeOutput := lk:nrpeOutput($documentUrl, 1, 1, "All")
-  let $liste1 := (for $tek in $nrpeOutput/nrp:nrpeCall
-                  return 
-                   <nrp:nrpeCall entry-name="{$tek/@entry-name}" port="{$tek/@port}">
-                   {
-				     for $tektek in $tek/nrp:message[1] return $tektek
-                   }
-                   </nrp:nrpeCall>
-  )
-  let $liste2 := (for $tek in $nrpeOutput/nrp:nrpeCall
-                  return 
-                   <nrp:nrpeCall entry-name="{$tek/@entry-name}" port="{$tek/@port}">
-                   {
-				     (for $tektek in $tek/nrp:message
-                     order by $tektek/@time descending return $tektek)[1]
-                   }
-                   </nrp:nrpeCall>
-  )
-   return <ss>{$liste1, $liste2}</ss>
-};
-
-:)
-declare function dss:GetAvailableResourcesList($documentUrl as xs:string, $prev as xs:string) as node()*
-{
-	
-  let $agentsDocumentUrl := met:getMetaData($documentUrl, "agents")
-  let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
-		
-  let $nrpeOutput := lk:nrpeOutput($documentUrl, 1, 1, "All")
-  let $liste1 := (for $tek in $nrpeOutput/nrpr:nrpeCall
+declare function dss:getMonitoringData($documentUrl as xs:string, $agentName as xs:string) as node()*
+{                
+  let $nrpeOutput := lk:nrpeOutput($documentUrl, 1, 1, $agentName)
+  
+  let $monitoringData := for $tek in $nrpeOutput/nrpr:nrpeCall
                   return 
                    <nrpr:nrpeCall entry-name="{$tek/@entry-name}" port="{$tek/@port}" os="{$tek/@os}">
                    {
-				     (: for $tektek in $tek/nrp:message[1] return $tektek :)
-				     (for $tektek in $tek/nrpr:message
-                     order by $tektek/@time descending return $tektek)[1]
+                      let $lastMessage := (for $tektek in $tek/nrpr:message
+                                          order by $tektek/@time descending 
+                                          return $tektek)[1]
+				      return $lastMessage
                    }
                    </nrpr:nrpeCall>
-  )
   
-  let $liste2 := <yy> 
+  let $monitoringDataList := <lrns:ResourceList>
+                             { 
+                                $monitoringData 
+                             }
+                             </lrns:ResourceList>
+
+  return $monitoringDataList
+
+};
+
+declare function dss:GetAvailableResourcesList($documentUrl as xs:string, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass)) as node()*
+{
+  let $agentsDocumentUrl := met:getMetaData($documentUrl, "agents")
+  let $resourcesDocumentUrl := met:getMetaData($documentUrl, "resources")
+		
+  let $oSystem := $jobPropertiesFuncPass/funcp:oSystem
+  let $useMonitoringData := xs:boolean($jobPropertiesFuncPass/@useMonitoringData)
+  
+  let $agentAvailabilityList := <agentList> 
                      {
                        for $kek in doc($agentsDocumentUrl)/agnt:SWAgents/agnt:SWAgent
+                       where $kek/agnt:osType = $oSystem (:)//TODO OS belli olmadan bir is calistirilir mi?:)
                        return 
-                         <kk id="{data($kek/@id)}" 
-						 entry-name="{$kek/res:Resource/text()}"
-						 inJmxAvailable="{ $kek/agnt:inJmxAvailable/text() }"
-						 JmxAvailable="{ $kek/agnt:jmxAvailable/text() }"
-						 > </kk>
+                         <agent id="{data($kek/@id)}" 
+    					   entry-name="{$kek/res:Resource/text()}"
+						   inJmxAvailable="{ $kek/agnt:inJmxAvailable/text() }"
+						   JmxAvailable="{ $kek/agnt:jmxAvailable/text() }"
+                           os="{$kek/agnt:osType/text()}" >
+						 </agent>
 				      }
-				 </yy>
-(:  let $liste2 := <yy>
-	<kk id="0" entry-name="hakan-laptop"/>
-	<kk id="1" entry-name="nurkan-laptop"/>
-  </yy>:)
-
-  (:let $mega := <mega>{ $liste2, $liste3 } </mega>:)
-  let $montoring_last_results := <lrns:ResourceList>{ $liste1 } </lrns:ResourceList>
-  let $results :=
+				 </agentList>
+                 
+  let $resultWithMDL := if($useMonitoringData)
+                        then 
+                          let $monitoringDataList := dss:getMonitoringData($documentUrl, "All")
+                          let $result :=
+                              <lrns:ResourceList>
+                              {
+                                for $cd in doc($resourcesDocumentUrl)/*/*, (: \\ TODO lrns:ResourceList/lrns:Resource, neden calismiyor? ns ile ilgili bir problem galiba :)
+                                    $tek in $monitoringDataList/nrpr:nrpeCall,
+                                    $de in $agentAvailabilityList/agent
+	                            where data($tek/@entry-name)=data($cd/@entry-name) and data($de/@entry-name)=data($cd/@entry-name)
+	                            return 
+                                  let $monData :=  if( xs:boolean(doc($agentsDocumentUrl)/agnt:SWAgents/agnt:SWAgent[@id = $de/@id]/agnt:nrpeAvailable) )
+                                                   then
+                                                       $tek/nrpr:message
+                                                   else
+                                                       ()
+                                  return
+	                              <nrpr:nrpeCall 
+	                                entry-name="{$cd/@entry-name}" 
+		                            id="{$de/@id}"
+		                            inJmxAvailable="{ $de/@inJmxAvailable }"
+	                                JmxAvailable="{ $de/@JmxAvailable }"
+                                    os="{$tek/@os}"> { $monData } </nrpr:nrpeCall>
+                              }
+                              </lrns:ResourceList>
+                           return $result
+                        else ()
+   
+  let $resultWithoutMDL :=
    <lrns:ResourceList>
    {
-     for $cd in doc($resourcesDocumentUrl)/lrns:ResourceList/lrns:Resource,
-	  $tek in $montoring_last_results/nrpr:nrpeCall,
-	  $de in $liste2/*
-	 where data($tek/@entry-name)=data($cd/@entry-name) and data($de/@entry-name)=data($cd/@entry-name)
+     for $cd in doc($resourcesDocumentUrl)/*/*, (: \\ TODO lrns:ResourceList/lrns:Resource, neden calismiyor? ns ile ilgili bir problem galiba :)
+	  $de in $agentAvailabilityList/agent
+	 where data($de/@entry-name)=data($cd/@entry-name)
 	 return 
 	   <nrpr:nrpeCall 
 	     entry-name="{$cd/@entry-name}" 
 		 id="{$de/@id}"
 		 inJmxAvailable="{ $de/@inJmxAvailable }"
 	     JmxAvailable="{ $de/@JmxAvailable }"
-         os="{$tek/@os}"> { $tek/nrpr:message } </nrpr:nrpeCall>
-
+         os="{$de/@os}"></nrpr:nrpeCall>
    }
    </lrns:ResourceList>
-(:  let $results2 :=
-   <ResourceList>
-   {
-     for $cd in $liste2/*,
-	  $tek in $results/nrpr:nrpeCall
-	 where data($tek/@entry-name)=data($cd/@entry-name)
-	 return <nrpr:nrpeCall entry-name="{$tek/@entry-name}" id="{$cd/@id}" > { $tek/nrpr:message } </nrpr:nrpeCall>
 
-   }
-   </ResourceList>:)
-   return dss:ResourceUnique($results)
+   let $result := if($useMonitoringData)
+               then $resultWithMDL
+               else $resultWithoutMDL
+
+   return dss:ResourceUnique($result, $jobPropertiesFuncPass)
 };
 
 (: 
@@ -214,43 +222,54 @@ declare function dss:GetAvailableResourcesListUnique($n as node()) as node()*
       return $kaynaklar
 };
 
-declare function dss:ResourceSLACheck($documentUrl as xs:string, $gununtarihi as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceSLACheck($documentUrl as xs:string, $gununtarihi as xs:dateTime, $planId as xs:integer, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass)) as node()*
 {
   let $planDocumentUrl := met:getMetaData($documentUrl, "plan")
   let $slaDocumentUrl := met:getMetaData($documentUrl, "sla")
+
+  let $currentPlanId := if($planId eq 0) 
+                        then 
+                          sq:getId($documentUrl, "planId") 
+                        else 
+                          $planId
   
-  (: let $maxid := 130 :)
   let $dailyPlan := doc($planDocumentUrl)
-  let $planCnt := count($dailyPlan/AllPlanParameters/plan)
-  let $maxid := if($planCnt = 0) then 0 else max($dailyPlan/AllPlanParameters/plan/@id)
   
+  let $slaId := $jobPropertiesFuncPass/funcp:SLAId
+  let $acceptedSLAId := if(exists($slaId))
+                        then 
+                          $slaId 
+                        else 
+                          "0"
+                          
   let $zaman := functx:time( fn:hours-from-dateTime($gununtarihi),
                              fn:minutes-from-dateTime($gununtarihi),
                              fn:seconds-from-dateTime($gununtarihi))
-							 
+    						 
 (:  let $gununtarihi := fn:dateTime(xs:date("2011-09-30"), xs:time("09:30:10+06:00")) :)
 
-  return
+return
     <ResourceSLACheck>
       {
-        for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA,
-            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $maxid]
-        (:    where data($calendar/calID)=data($tek/calendarId):)
+        for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA[@ID=$acceptedSLAId or $acceptedSLAId = "0"],
+            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $currentPlanId and data(calID) = data($tek/sla:calendarId)]
         return
           <SLACheck>
     	  {
             $tek, 
-            <result>{
-                     if(data($calendar/calID) = data($tek/sla:calendarId) and (data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi) and data($calendar/calID) = data($tek/sla:calendarId)
-					     and (xs:time($tek/sla:SInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:SInterval/sla:stopTime) > xs:time($zaman))
-					 )  
-					 then "TRUE"
-                     else "FALSE"
-                    }
-			</result>
+            if( data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi ) 
+			then 
+                if( xs:time($tek/sla:SInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:SInterval/sla:stopTime) > xs:time($zaman) ) 
+                then 
+                  if( xs:time($tek/sla:RInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:RInterval/sla:stopTime) > xs:time($zaman) ) 
+                  then <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat haric tutulan zamandadir. Gecersizdir !</slaValidation>
+                  else <slaValidation result="true">SLA tarih ve zaman kontrolu. Gecerli !</slaValidation>
+                else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat belirtilen zaman araligi disindadir. Gecersizdir !</slaValidation>
+            else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi disindadir. Gecersizdir !</slaValidation>
           }</SLACheck>
       }
 	</ResourceSLACheck>
+
 };
 
 
@@ -260,7 +279,7 @@ declare function dss:ResourceSLACheck($documentUrl as xs:string, $gununtarihi as
 :)
 
 
-declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass)) as node()*
 {
   (: SLA kosullari kontrol ediliyor :)
   (: Software/license :)
@@ -268,20 +287,20 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
   (: kaynak ismi ve varsa kullanim parametresini alalim :)
 
   let $programProvisioningDocumentUrl := met:getMetaData($documentUrl, "programProvisioning")
-	
+    
   let $kaynaklar := $n
 
  (:------------------------------------------------------------------------:)
 
   let $sonuc := <ResourceProvisioningCheck> 
                 { (: SLA den kosullari alalim :)
-                  for $tek in dss:ResourceSLACheck($documentUrl, $gunzaman, "kk")/SLACheck
+                  for $sla in dss:ResourceSLACheck($documentUrl, $gunzaman, 0, $jobPropertiesFuncPass)/SLACheck
                          
                    (: --------------------- ATAMALAR ----------------------------------------:)
                    (: SLA den ilgili parametreleri degiskenlere aktaralim (Burada License)   :)
 				   
-                  let $License_list := $tek/sla:SLA/sla:ResourceReq/sla:Software
-                  let $ResourcePool := $tek/sla:SLA/sla:ResourcePool
+                  let $slaSoftwareList := $sla/sla:SLA/sla:ResourceReq/sla:Software
+                  let $ResourcePool := $sla/sla:SLA/sla:ResourcePool
                   (: where data($tek/result) = "TRUE" *HS SLA ler uymazsa hardware kontrolu yapamiyordu. O yuzden kaldirdim. :)
 
 				   (:------------------------------------------------------------------------:)
@@ -299,7 +318,7 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
                          
 				    (:----------------------- UYGUNLUK KONTROLU / ESAS ISLEMLER --------------:)
                   return
-                     <SLA ID="{ $tek/sla:SLA/@ID }">{
+                     <SLA ID="{ $sla/sla:SLA/@ID }">{
                      (:  Secilen SLA icin kaynak bazında kontrolleri yapmak icin hersey hazir :)
                      for $resources_data in $kaynaklar/resource
                       (: Her bir kaynak icin ... :)
@@ -313,15 +332,16 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
 						   
                          let $ara := <hepsi>
 						             {
-									 for $donbaba in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License,
-                                         $License in $License_list/sla:Program
-                                     where $donbaba/@licenseID = $License/@licenseID
+									 for $license in doc($programProvisioningDocumentUrl)/pp:Licenses/pp:License,
+                                         $software in $slaSoftwareList
+                                     where $license/@licenseID = $software/sla:Program/@licenseID or count($software/sla:Program) eq 0
                                      return <ResourcePool>
 									        {   
-											    $donbaba/@licenseID,
-												$donbaba/pp:ResourcePool/pp:Resource, 
-												$donbaba/pp:StartDate, 
-												$donbaba/pp:EndDate 
+											    $license/@licenseID,
+												$license/pp:ResourcePool/pp:Resource, 
+												$license/pp:StartDate, 
+												$license/pp:EndDate,
+                                                $software
 											}
 											</ResourcePool>
 									 }
@@ -332,34 +352,48 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
                          (: let $gununtarihi := fn:dateTime(xs:date("2011-09-30"), xs:time("09:30:10+06:00")) :)
                          
                          (: ------------------ KONTROL NOKTASI ------------------------------------:)
-                         let $resource_SLA_result := for $abc in $ara/ResourcePool
+                         let $licenseResourceSLA := for $abc in $ara/ResourcePool
                                                    (:where $resources_data/@entry-name = data($abc/Resource):)
                                                      return
                                                        <license>
 						                               { 
-                                                         if(data($resources_data/@entry-name) = data($abc/pp:Resource) or 
-							                                  fn:count($abc/pp:Resource) = 0)(: Kaynak kistlanmis mi? :)  
-						                                 then
-                                                           if(data($abc/pp:StartDate) <= $gunzaman and data($abc/pp:EndDate) > $gunzaman) 
-							                               then ($abc/@licenseID, <result>TRUE</result>, $abc)
-                                                           else ($abc/@licenseID, <result>FALSE</result>, $abc)
-                                                         else ($abc/@licenseID, <result>FALSE</result>, $abc)
+                                                         let $arasonuc := 
+                                                         
+                                                           let $listedeVarmi := count( for $don in $abc/pp:Resource
+                                                                                      where data($resources_data/@entry-name) = data($don)
+                                                                                      return $don )
+                                                           let $checkSoft :=
+                                                           if( $listedeVarmi > 0 or 
+							                                   not(exists($abc/pp:Resource)) or 
+                                                               not(exists($abc/sla:Software/sla:Program)) 
+                                                             )(: Kaynak kisitlanmis mi? :)  
+						                                   then
+                                                             if(data($abc/pp:StartDate) <= $gunzaman and data($abc/pp:EndDate) > $gunzaman) 
+							                                 then <provisionCheck result="true">Kaynak icin software provision ok!</provisionCheck>
+                                                             else <provisionCheck result="false">Kaynak icin software provision u yok! Listede var ama tarihi gecerli degil.</provisionCheck>
+                                                           else 
+                                                             <provisionCheck result="false">Kaynak icin software provision u yok! Listede yok!</provisionCheck>
+                                                           return $checkSoft
+                                                           
+                                                          return 
+                                                          ($abc/@licenseID, $arasonuc, $abc)
                                                        }
 						                               </license>
                          let $vaybe := <fact> 
 						               {
-									    $resource_SLA_result,
-						               <result> 
+									    $licenseResourceSLA,
+    					               <result> 
   					                   { (: Her bir kaynak icin SLA de kaynak tanimi acisindan problem var mi? ... :)
-							             if (sum(for $herbiri in $resource_SLA_result/license
-							                     return 
-								                 if (data($herbiri/result) = "FALSE")
-								                 then 1 
-								                 else 0) 
-								                = 0
-								            ) 
-							             then "TRUE" 
-							             else "FALSE"
+                                         let $toplam := sum(for $herbiri in $licenseResourceSLA
+    						                                return 
+								                              if (not(xs:boolean($herbiri/provisionCheck/@result)))
+								                              then 1 
+								                              else 0
+                                                            )
+							             return 
+                                           if ($toplam eq 0 ) 
+							               then "TRUE" 
+							               else "FALSE"
                                         }
 						                </result>
 										}
@@ -369,14 +403,15 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
 
                        (:------------------------------------------------------------------------:)
                        }
-					 </resource>
+					 </resource>,
+                     $sla/slaValidation
                    }
 				 </SLA>
                  (:$tek/ResourceReq/Hardware/disk :)
                 }
               </ResourceProvisioningCheck>
              (:let $SLA := for $tek in $SLA/ResourceReq/Hardware/disk return $tek:)
-             return $sonuc						  
+             return $sonuc
 };
 
 
@@ -385,18 +420,21 @@ declare function dss:ResourceProvisioningCheck($documentUrl as xs:string, $n as 
   Return :  Eger uygun ise XXX degilse false doner.
 :)
 
-declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node(), $gunzaman as xs:dateTime, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass)) as node()*
 {
-	(:---------------------------- KAYNAK TANIMLA ----------------------------:)
+    (:---------------------------- KAYNAK TANIMLA ----------------------------:)
 	(: kaynak ismi ve varsa kullanim parametresini alalim (burada disk) :)
 
 	  let $kaynaklar := $n
 
     (:------------------------------------------------------------------------:)
   (: SLA kosullari kontrol ediliyor :)
+  
+   let $slaId := $jobPropertiesFuncPass/funcp:SLAId
+  
    (: Hardware/disk :)
    let $sonuc := <ResourceHardwareCheck> { (: SLA den kosullari alalim :)
-                         for $tek in dss:ResourceSLACheck($documentUrl, $gunzaman, "kk")/SLACheck
+                         for $tek in dss:ResourceSLACheck($documentUrl, $gunzaman, 0, $jobPropertiesFuncPass)/SLACheck
                          
 						 (: --------------------- ATAMALAR -----------------------------------:)
                          (: SLA den ilgili parametreleri degiskenlere aktaralim (Burada DISK) :)
@@ -469,14 +507,13 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
 						 (: Her bir SLA icin kaynak bazında kontrolleri yapmak icin hersey hazir :)
 						   for $resources_data in $kaynaklar/resource (: Her bir kaynak icin ... :)
                            return 
+                             let $isResourceIncluded := if(data($ResourcePool/sla:Resource) = $resources_data/@entry-name or fn:count($ResourcePool/sla:Resource) = 0) 
+    									            then <isResourceIncuded result="true" >Kaynak ismi Resource Pool da Var</isResourceIncuded>
+                                                    else <isResourceIncuded result="false" >Kaynak ismi Resource Pool da Yok</isResourceIncuded>
+                             return
                              <resource entry-name="{ $resources_data/@entry-name }">
-                                <result>{
-                                          if(data($ResourcePool/Resource) = $resources_data/@entry-name or fn:count($ResourcePool/Resource) = 0) 
-										  then "TRUE"
-                                          else "FALSE"
-                                        }
-								</result>
 						          {
+                                      $isResourceIncluded,
 								  (:------- Birden fazla alt bilgi kontrolu olabilir diye for dongusu ile donerek kontrolleri yapiyoruz ---------:)
 
 								  for $donbaba in $resources_data/nrpr:disk
@@ -491,10 +528,16 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
 								  (: ------------------ KONTROL NOKTASI ------------------------------------:)
 						          let $resource_disk_result := if ($SLA_disk_condition_gt_result) then (: GT :)
 						                                          (: KURAL : Kaynaktaki bos disk miktari, SLA deki ihtiyactan az olamaz :)
-						                                           (if ( $resource_disk_free > $SLA_disk_birim_result ) then "TRUE" else "FALSE" )
-						                                       else if ( $resource_disk_free < $SLA_disk_birim_result ) then "TRUE" else "FALSE"  (:Disk condition=LT:)
+						                                           (if ( $resource_disk_free > $SLA_disk_birim_result ) 
+                                                                   then <resourceDisk result="true" >Kaynaktaki bos disk miktari, SLA deki miktardan cok!</resourceDisk>
+                                                                   else <resourceDisk result="false" >Kaynaktaki bos disk miktari, SLA deki miktardan az olamaz!</resourceDisk>
+						                                           )
+						                                       else if ( $resource_disk_free < $SLA_disk_birim_result ) 
+                                                                    then <resourceDisk result="true" >Kaynaktaki bos disk miktari, SLA deki miktardan az!</resourceDisk>
+                                                                    else <resourceDisk result="false" >Kaynaktaki bos disk miktari, SLA deki miktardan fazla olamaz!</resourceDisk>
+                                                                    (:Disk condition=LT:)
 								  (:return ( $donbaba , <result> { $resource_SLA_result } </result> ):)
-								  return <Condition> {$donbaba, <result> { $resource_disk_result } </result>} </Condition> ,
+								  return <Condition> {$donbaba, $resource_disk_result } </Condition> ,
 
 								  for $donbaba in $resources_data/nrpr:mem
                                   (:--------------------- CEVIRI ve TRANSFORMASYONLAR ----------------------:)
@@ -508,10 +551,16 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
 								  (: ------------------ KONTROL NOKTASI ------------------------------------:)
 						          let $resource_mem_result := if ($SLA_mem_condition_gt_result) then (: GT :)
 						                                         (: KURAL : Kaynaktaki bos memory miktari, SLA deki ihtiyactan az olamaz :)
-						                                         (if ( $resource_mem_free > $SLA_mem_birim_result ) then "TRUE" else "FALSE" )
-						                                 else if (     $resource_mem_free < $SLA_mem_birim_result ) then "TRUE" else "FALSE"   (:Mem condition=LT:)
+						                                         (if ( $resource_mem_free > $SLA_mem_birim_result ) 
+                                                                  then <resourceMem result="true" >Kaynaktaki bos memory miktari, SLA deki ihtiyactan cok!</resourceMem>
+                                                                  else <resourceMem result="false" >Kaynaktaki bos memory miktari, SLA deki ihtiyactan az olamaz!</resourceMem>
+						                                         )
+						                                 else if (     $resource_mem_free < $SLA_mem_birim_result ) 
+                                                              then <resourceMem result="true" >Kaynaktaki bos memory miktari, SLA deki ihtiyactan az!</resourceMem>
+                                                              else <resourceMem result="false" >Kaynaktaki bos memory miktari, SLA deki ihtiyactan fazla olamaz!</resourceMem>
+   (:Mem condition=LT:)
 								  
-								  return <Condition> {$donbaba, <result> { $resource_mem_result } </result>} </Condition> ,
+								  return <Condition> {$donbaba, $resource_mem_result } </Condition> ,
 								  (:------------------------------------------------------------------------:)
 
 								  for $donbaba in $resources_data/nrpr:cpu
@@ -521,12 +570,18 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
 								    (: ------------------ KONTROL NOKTASI ------------------------------------:)
 						            let $resource_cpu_result := if ($SLA_cpu_condition_lt_result) then (: LT :)
 						                                         (: KURAL : Kaynakta CPU kullanimi SLA deki degeri asiyor mu? :)
-						                                          (if ( xs:integer($resource_cpu_value) < xs:integer($SLA_cpu_value_result)  ) then "TRUE" else "FALSE" )
-						                                        else if (  xs:integer($resource_cpu_value) > xs:integer($SLA_cpu_value_result) ) then "TRUE" else "FALSE"   (:CPU condition=GT:)
+						                                          (if ( xs:integer($resource_cpu_value) < xs:integer($SLA_cpu_value_result)  )  
+                                                                  then <resourceCpu result="true" >Kaynakta CPU kullanimi SLA deki degeri asmiyor!</resourceCpu>
+                                                                  else <resourceCpu result="false" >Kaynakta CPU kullanimi SLA deki degeri asiyor!</resourceCpu>
+						                                          )
+						                                        else if (  xs:integer($resource_cpu_value) > xs:integer($SLA_cpu_value_result) ) 
+                                                                     then <resourceCpu result="true" >Kaynakta CPU kullanimi SLA deki degeri asiyor?</resourceCpu>
+                                                                     else <resourceCpu result="false" >Kaynakta CPU kullanimi SLA deki degeri asmiyor!</resourceCpu>   (:CPU condition=GT:)
 								  
-								  return <Condition> {$donbaba, <result> { $resource_cpu_result } </result>} </Condition>
+								  return <Condition> {$donbaba , $resource_cpu_result } </Condition>
 								  (:------------------------------------------------------------------------:)
-								  } </resource>
+								  } </resource>,
+                                  $tek/slaValidation
 						  }</SLA>
 						 (:$tek/ResourceReq/Hardware/disk :)
 					   } 
@@ -543,15 +598,22 @@ declare function dss:ResourceHardwareCheck($documentUrl as xs:string, $n as node
   Return: Onay varsa True, yoksa False donulur.
 :)
 
-declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass), $gunzaman as xs:dateTime, $prev as xs:string) as node()*
+declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass), $gunzaman as xs:dateTime, $reportType as xs:string) as node()*
 {
-    
+  let $agentsDocumentUrl := met:getMetaData($documentUrl, "agents")
+  let $agentsDoc := doc($agentsDocumentUrl)
+  
   (: ------------------------------------------ AGENTS -------------------------------------------------------------:)
-  let $AvailableResourceListAll := dss:GetAvailableResourcesList($documentUrl, 'root.') 
-  (: let $AvailableResourceListy := $AvailableResourceListx[resource/@os = $jobPropertiesFuncPass/*/text()] :)
+  let $AvailableResourceListAll := dss:GetAvailableResourcesList($documentUrl, $jobPropertiesFuncPass) 
+
   let $oSystem := $jobPropertiesFuncPass/funcp:oSystem
   let $slaId := $jobPropertiesFuncPass/funcp:SLAId
-  let $AvailableResourceListFiltered := $AvailableResourceListAll/resource[@os = $oSystem]
+  
+  let $useSLA := xs:boolean($jobPropertiesFuncPass/@useSLA)
+  let $useMonitoringData := xs:boolean($jobPropertiesFuncPass/@useMonitoringData)
+  let $useProvisionData :=xs:boolean("true")
+  
+  let $AvailableResourceListFiltered := $AvailableResourceListAll/resource
 
   let $AvailableResourceList := if( not(fn:exists($AvailableResourceListFiltered)) ) 
                                 then 
@@ -563,180 +625,274 @@ declare function dss:FindResourcesForAJob($documentUrl as xs:string, $jobPropert
                                     } 
                                    </resource_list>
   
-  (: ------------------------------------------ HARDWARE -------------------------------------------------------------:)
-
-  let $HardwareCheck         := dss:ResourceHardwareCheck($documentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
-  
-  let $HardwareCheckLogic    := <HardwareCheckLogic>
-                                { 
-                                         for $sira in $HardwareCheck/*
-                                         return 
-    									 <SLA ID="{$sira/@ID}"> 
-										 {
-										    for $don in $sira/*
-											return 
-											<resource entry-name="{$don/@entry-name}">
-											{
-											  (:data($don/Condition/result):)
-											   if (sum(for $herbiri in $don/*
-											           return 
-											            if (data($don/Condition/result) = "FALSE" or data($don/result) = "FALSE")
-												        then 1 
-												        else 0) 
-														= 0
-												   ) 
-												then "TRUE" 
-												else "FALSE"
-											}
-											</resource>
-										 }
-										 </SLA>
-								} 
-								</HardwareCheckLogic>
-
-  (: ------------------------------------------ SOFTWARE PROVISION -------------------------------------------------------------:)
-  
-  let $ProvisioningCheck          := dss:ResourceProvisioningCheck($documentUrl, dss:GetAvailableResourcesListUnique($AvailableResourceList), $gunzaman, 'root.')
-  let $ProvisioningCheckLogic    := <ProvisioningCheckLogic>
-                               { 
-                                 for $sira in $ProvisioningCheck/*
-                                 return 
-								 <SLA ID="{$sira/@ID}"> 
-								 {
-								   for $don in $sira/*
-								   return 
-								   <resource entry-name="{$don/@entry-name}">
-								   {
-								     if (sum(for $herbiri in $don/*
-									         return 
-									          if (data($don/license/result) = "FALSE" or data($don/result) = "FALSE")
-									          then 1 
-									          else 0) 
-											 = 0) 
-									 then "TRUE" 
-									 else "FALSE"
-								   }
-								   </resource>
-								 }
-								 </SLA>
-							   } 
-							   </ProvisioningCheckLogic>
-                               
   (: ------------------------------------------ AGENTS EVALUATIONS-------------------------------------------------------------:)                               
   let $AgentCheck      := $AvailableResourceList
   let $AgentCheckLogic := <AgentCheckLogic>
                           {
-                            for $agnt in $AvailableResourceList/*
+                            for $agnt in $AvailableResourceList/resource
                             return
-                              <agent     ID="{ $agnt/@id }" 
-							        entry-name="{ $agnt/@entry-name }" 
+                              <agent ID="{ $agnt/@id }" 
+    						        entry-name="{ $agnt/@entry-name }" 
 								inJmxAvailable="{ $agnt/@inJmxAvailable }" 
 								  JmxAvailable="{ $agnt/@JmxAvailable }">
                               {
-                                if(sum(for $herbiri in $agnt/*
-                                       return
-                                         if($agnt/@inJmxAvailable = "false" or $agnt/@JmxAvailable = "false") 
+                                if(sum(
+                                         if(xs:boolean($agnt/@inJmxAvailable) or xs:boolean($agnt/@JmxAvailable) ) 
 										 then 1
                                          else 0) 
-									   = 0) 
+									   > 0) 
 								then "TRUE"
                                 else "FALSE"
                               }
                               </agent>
                           }
                           </AgentCheckLogic>
+                          
+  (: Eger SLA kullanilmiyorsa bastan halledip gerikalan SLA islemlerini yapmayalim :)
+  
+  let $sonuc := 
+        if(not($useSLA))
+        then
+          <rsr:ResourceAgentList 
+            xmlns:rsr="http://www.likyateknoloji.com/XML_ResourceAgent_results" 
+    		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:schemaLocation="http://www.likyateknoloji.com/XML_ResourceAgent_results tlosSW_RALv_1_0.xsd"
+            time="{adjust-dateTime-to-timezone(
+                     current-dateTime(),
+                     xs:dayTimeDuration('PT2H'))}"
+          >
+          {
+            for $resource in $AvailableResourceList/resource
+            (:for $resource in $LicenseCheckLogic/*:)
+            return
+              <rsr:resource 
+		       entry-name="{ $resource/@entry-name }" 
+			   agentid="{ $resource/@id }"
+			   totalCost="123">
+              {
+                let $tutAgent := sum(for $Agent in $AgentCheckLogic/agent
+                                     where data($resource/@entry-name) = data($Agent/@entry-name) and data($resource/@id) = data($Agent/@ID)
+                                     return
+                                       if(data($Agent) = "FALSE") 
+    								   then 1
+                                       else 0
+									)
+                return
+                  if( $tutAgent > 0 )
+				  then "FALSE"
+                  else "TRUE"
+                }
+              </rsr:resource>
+          }
+          </rsr:ResourceAgentList>
+        else
+  (: ------------------------------------------ HARDWARE -------------------------------------------------------------:)
+
+          let $resourceListUnique := dss:GetAvailableResourcesListUnique($AvailableResourceList)
+          let $HardwareCheck         := dss:ResourceHardwareCheck($documentUrl, $resourceListUnique, $gunzaman, $jobPropertiesFuncPass)
+  
+          let $HardwareCheckLogic    := <HardwareCheckLogic>
+                                { 
+                                         for $sla in $HardwareCheck/SLA
+                                         return 
+    									 <SLA ID="{$sla/@ID}"> 
+										 {
+                                            let $validation := xs:boolean($sla/slaValidation/@result)
+										    for $resource in $sla/resource    (: Herbir SLA icin kaynak bazinda hardware kontrolleri yapalim :)
+											return 
+											<resource entry-name="{$resource/@entry-name}">
+											{
+											  (:data($don/Condition/result):)
+											   if (sum(for $herbiri in $resource/*
+											           return 
+											            if ( 
+                                                             ( exists($resource/Condition)) and 
+                                                               (
+                                                                 not(xs:boolean($resource/Condition/resourceDisk/@result)) or 
+                                                                 not(xs:boolean($resource/Condition/resourceMem/@result)) or 
+                                                                 not(xs:boolean($resource/Condition/resourceCpu/@result)
+                                                               )
+                                                              ) or 
+                                                              not(xs:boolean($resource/isResourceIncuded/@result))
+                                                            )
+												        then 1 
+												        else 0) 
+														= 0
+												   ) 
+												then "true" 
+												else "false"
+											}
+											</resource>
+										 ,$sla/slaValidation}
+										 </SLA>
+								} 
+								</HardwareCheckLogic>
+
+  (: ------------------------------------------ SOFTWARE PROVISION -------------------------------------------------------------:)
+  
+          let $ProvisioningCheck          := dss:ResourceProvisioningCheck($documentUrl, $resourceListUnique, $gunzaman, $jobPropertiesFuncPass)
+          let $ProvisioningCheckLogic    := <ProvisioningCheckLogic>
+                               { 
+                                 for $sla in $ProvisioningCheck/SLA
+                                 return 
+								 <SLA ID="{$sla/@ID}"> 
+								 {
+								   for $resource in $sla/resource
+								   return 
+								   <resource entry-name="{$resource/@entry-name}">
+								   {
+								     if (sum(for $herbiri in $resource/fact/license
+									         return 
+									          if (not(xs:boolean($herbiri/provisionCheck/@result)) or data($herbiri/ancestor::result) = "FALSE")
+									          then 1 
+									          else 0) 
+											 = 0) 
+									 then "true" 
+									 else "false"
+								   }
+								   </resource>,
+                                    $sla/slaValidation
+								 }
+								 </SLA>
+							   } 
+							   </ProvisioningCheckLogic>
 
   (: ------------------------------------------ CONCLUSION  -------------------------------------------------------------:)
-  
-  let $sonuc := <rsr:ResourceAgentList 
+  (: SLA lerin birden fazla olmasi durumunda butun SLA lere gore uygun olan kaynaga atama yapaagiz. 
+     //TODO Diger durum yani bazi SLA lere uymasa da uyan SLA veya
+     //     agirliklandirilmis SLA ileriye donuk calismalara birakildi. :)
+     
+              let $sonuc := <rsr:ResourceAgentList 
                     xmlns:rsr="http://www.likyateknoloji.com/XML_ResourceAgent_results" 
 					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-					xsi:schemaLocation="http://www.likyateknoloji.com/XML_ResourceAgent_results tlosSW_RALv_1_0.xsd">
+					xsi:schemaLocation="http://www.likyateknoloji.com/XML_ResourceAgent_results tlosSW_RALv_1_0.xsd"
+                    time="{adjust-dateTime-to-timezone(
+                             current-dateTime(),
+                             xs:dayTimeDuration('PT2H'))}"
+                    >
                 {
-                  for $resource in $AvailableResourceList/*
-                  (:for $resource in $LicenseCheckLogic/*:)
+                  for $resource in $AvailableResourceList/resource
                   return
                     <rsr:resource 
 					   entry-name="{ $resource/@entry-name }" 
 					   agentid="{ $resource/@id }"
 					   totalCost="123">
                     {
-                      let $tutLicense := sum(for $license in $ProvisioningCheckLogic/SLA/*
-                                             where data($resource/@entry-name) = data($license/@entry-name)
-                                             return
-                                               if(data($license) = "FALSE") 
-											   then 1
-                                               else 0
-											)
-                      let $tutHardware := sum(for $hardware in $HardwareCheckLogic/SLA/*
-                                              where data($resource/@entry-name) = data($hardware/@entry-name)
-                                              return
-                                                if(data($hardware) = "FALSE") 
-												then 1
-                                                else 0
-											  )
+                      let $tutLicense := <tutLicense>
+                                              {
+                                              attribute slaValidation {xs:boolean("true")},
+                                              let $top :=sum( for $license in $ProvisioningCheckLogic/SLA/resource
+                                                              where data($resource/@entry-name) = data($license/@entry-name)
+                                                              return
+                                                               if( xs:boolean($license) or xs:boolean($license/ancestor::SLA/slaValidation/@result) ) 
+											                   then 0
+                                                               else 1
+											                 )
+                                                return $top
+                                              }
+                                              </tutLicense>
+                      let $tutHardware := <tutHardware>
+                                              {
+                                              attribute slaValidation {xs:boolean("true")},
+                                              let $top :=sum(for $hardware in $HardwareCheckLogic/SLA/resource
+                                                             where data($resource/@entry-name) = data($hardware/@entry-name)
+                                                             return
+                                                               if( xs:boolean($hardware) or xs:boolean($hardware/ancestor::SLA/slaValidation/@result)) 
+												               then 0
+                                                               else 1
+											                 )
+                                                return $top
+                                              }
+                                              </tutHardware>
                       let $tutAgent := sum(for $Agent in $AgentCheckLogic/agent
                                            where data($resource/@entry-name) = data($Agent/@entry-name) and data($resource/@id) = data($Agent/@ID)
                                            return
                                              if(data($Agent) = "FALSE") 
-											 then 1
+    										 then 1
                                              else 0
 										   )
                       return
-                        if($tutLicense > 0 or $tutHardware > 0 or $tutAgent > 0) 
+                        let $hardwareLogic := if(xs:boolean($tutHardware/@slaValidation))
+                                              then
+                                                if( $useMonitoringData and xs:boolean($agentsDoc/agnt:SWAgents/agnt:SWAgent[@id=$resource/@id]/agnt:nrpeAvailable) ) 
+                                                then
+                                                  if( data($tutHardware) > 0 )
+                                                  then false()
+                                                  else true()
+                                                 else
+                                                  true() (://TODO Monitoring datasi yoksa veya kullanilmasin denmis ise hardware acisindan problem yok olarak kabul ediyoruz. Alternatif ? :)
+                                              else
+                                                false()
+                        let $softwareLogic := if(xs:boolean($tutLicense/@slaValidation))
+                                              then
+                                                if( $useProvisionData ) 
+                                                then
+                                                  if( data($tutLicense) > 0 )
+                                                  then false()
+                                                  else true()
+                                                 else
+                                                  true() (://TODO Provisioning kullanilmasin denmis ise software acisindan problem yok olarak kabul ediyoruz. Alternatif ? :)
+                                              else
+                                                false()
+                        return
+                        if(
+                             $tutAgent > 0
+                          )
 						then "FALSE"
-                        else "TRUE"
+                        else if( $hardwareLogic and $softwareLogic ) then "TRUE" else "FALSE"
                     }
                      </rsr:resource>
                 }
                 </rsr:ResourceAgentList>
+
                 
-  let $iste_sonuc := if($prev = "Result") then $sonuc
+              let $iste_sonuc := if($reportType = "Result") then $sonuc
                      else
-                       if($prev = "HardwareCheckLogic") then $HardwareCheckLogic
+                       if($reportType = "HardwareCheckLogic") then $HardwareCheckLogic
                        else
-                         if($prev = "HardwareCheckLogicDetail") then $HardwareCheck
+                         if($reportType = "HardwareCheckLogicDetail") then $HardwareCheck
                          else
-                           if($prev = "ProvisioningCheckLogic") then $ProvisioningCheckLogic
+                           if($reportType = "ProvisioningCheckLogic") then $ProvisioningCheckLogic
                            else
-                             if($prev = "ProvisioningCheckLogicDetail") then $ProvisioningCheck
+                             if($reportType = "ProvisioningCheckLogicDetail") then $ProvisioningCheck
                              else
-                               if($prev = "AgentCheckLogic") then $AgentCheckLogic
+                               if($reportType = "AgentCheckLogic") then $AgentCheckLogic
                                else
-                                 if($prev = "AgentCheckLogicDetail") then $AgentCheck
+                                 if($reportType = "AgentCheckLogicDetail") then $AgentCheck
                                  else ()
                                  
-  let $istesonuc := 
-                             if($prev = "AllDetails") 
-							 then <sonuc>{($sonuc, $HardwareCheck, $ProvisioningCheck, $AgentCheck, dss:ResourceSLACheck($documentUrl, $gunzaman, "kk")/SLACheck)}</sonuc>
+              let $istesonuc := 
+                             if($reportType = "AllDetails") 
+							 then <sonuc>{($sonuc, $HardwareCheck, $ProvisioningCheck, $AgentCheck, dss:ResourceSLACheck($documentUrl, $gunzaman, 0, $jobPropertiesFuncPass)/SLACheck)}</sonuc>
                              else $iste_sonuc
+                             
+              return $istesonuc
 
-  return $istesonuc
+  return $sonuc
 };
 
 
-declare function dss:SWFindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as node(), $gunzaman as xs:dateTime)
+declare function dss:SWFindResourcesForAJob($documentUrl as xs:string, $jobPropertiesFuncPass as element(funcp:jobPropFuncPass), $gunzaman as xs:dateTime)
 {
 	dss:FindResourcesForAJob($documentUrl, $jobPropertiesFuncPass , $gunzaman, 'Result')
 };
 
 
-(:dss:GetAvailableResourcesList(doc("//db/TLOSSW/xmls/tlosSWResources10.xml")/*, 'root.'):)
-(:let $cikti := dss:GetAvailableResourcesList(doc("//db/TLOSSW/xmls/tlosSWResources.xml")/*, 'root.'):)
+(: 
+local:GetAvailableResourcesList("xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db/apps/tlossw-test", 
+<funcp:jobPropFuncPass xmlns:funcp="http://www.likyateknoloji.com/XML_FuncPass_types" ID="204" useSLA="false" useMonitoringData="true" planId="1639">
+  <funcp:oSystem>Windows</funcp:oSystem>
+  <funcp:SLAId>1</funcp:SLAId>
+</funcp:jobPropFuncPass>) 
 
-(:return dss:hakan($cikti, 'root.'):)
-(:return $cikti:)
-(:return dss:ResourceUnique($cikti):)
-(:return dss:ResourceHardwareCheck($cikti, 'root.'):)
-(:return dss:ResourceProvisioningCheck($cikti, 'root.'):)
+local:ResourceSLACheck("xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db/apps/tlossw-test", fn:current-dateTime(), 0, "kk")
 
-(: Genel sonuc :)
-(:dss:FindResourcesForAJob(<JobList><jobProperties ID="2"/></JobList>, 'Result'):)
+local:getMonitoringData("xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db/apps/tlossw-test", "All")
 
-(: Donanim detay bilgi :)
-(:dss:FindResourcesForAJob(<JobList><jobProperties ID="2"/></JobList>, 'HardwareCheckLogicDetail'):)
-(:return dss:FindResourcesForAJob(<JobList><jobProperties ID="2"/></JobList>, 'HardwareCheckLogic'):)
 
-(: Yazilim lisans detay bilgi:)
-(:dss:FindResourcesForAJob(<JobList><jobProperties ID="2"/></JobList>, 'ProvisioningCheckLogicDetail'):)
-(:return dss:FindResourcesForAJob(<JobList><jobProperties ID="2"/></JobList>, 'ProvisioningCheckLogic'):)
+local:SWFindResourcesForAJob("xmldb:exist://127.0.0.1:8093/exist/xmlrpc/db/apps/tlossw-test", 
+<funcp:jobPropFuncPass xmlns:funcp="http://www.likyateknoloji.com/XML_FuncPass_types" ID="204" useSLA="true" useMonitoringData="true" planId="1641">
+  <funcp:oSystem>Windows</funcp:oSystem>
+  <funcp:SLAId>1</funcp:SLAId>
+</funcp:jobPropFuncPass>,  fn:current-dateTime() )
+:)
