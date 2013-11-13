@@ -1,5 +1,7 @@
 package com.likya.tlossw.core.dss;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.swresourcenagentresults.ResourceType;
@@ -41,7 +43,7 @@ public abstract class DssBase {
         }
 	}
 
-	public static boolean isResourceListExpired(long agentListTime, long amountOfTimeToExpire) {
+	public static boolean isResourceListExpired(Calendar agentListTime, long amountOfTimeToExpire) {
 
 		boolean isExpired = true;
 
