@@ -140,7 +140,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
 			if (nextPeriodTime != null) {
 				// yeni zamana kuruldu
-				insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_IDLED);
+				insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
 			} else {
 				// yeni zamana kurulmadı, artık çalışmayacak
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED);
