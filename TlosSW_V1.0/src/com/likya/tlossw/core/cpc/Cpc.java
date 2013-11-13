@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
+import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.helper.ConcurrencyAnalyzer;
@@ -258,6 +259,7 @@ public class Cpc extends CpcBase {
 
 				myLiveStateInfo.setStateName(StateName.PENDING);
 				myLiveStateInfo.setSubstateName(SubstateName.IDLED);
+				myLiveStateInfo.setStatusName(StatusName.BYTIME);
 
 				spc.setLiveStateInfo(myLiveStateInfo);
 
