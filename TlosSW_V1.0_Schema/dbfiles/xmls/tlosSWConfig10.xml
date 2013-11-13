@@ -86,7 +86,7 @@
 			</con:InOutJmxDurationForUnavailability>
 			<con:resourceListDuration>
 				<com:comment>job bazında alınan kaynak listesinin time-out suresi sn. olarak</com:comment>
-				<con:durationValue>20</con:durationValue>
+				<con:durationValue>180</con:durationValue>
 			</con:resourceListDuration>
 		</con:agentOptions>
 		<con:infoBusOptions>
