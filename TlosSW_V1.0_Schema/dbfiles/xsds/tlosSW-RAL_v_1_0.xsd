@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
 <xs:schema xmlns="http://www.likyateknoloji.com/XML_ResourceAgent_results" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 		   targetNamespace="http://www.likyateknoloji.com/XML_ResourceAgent_results" elementFormDefault="qualified">
 
@@ -8,7 +6,7 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="resource"/>
       </xs:sequence>
-	  <xs:attribute name="time" use="optional" type="xs:long"/>      
+	  <xs:attribute name="time" use="optional" type="xs:dateTime"/>      
     </xs:complexType>
   </xs:element>
 
@@ -18,7 +16,7 @@
         <xs:extension base="resourceType">
           <xs:attribute name="entry-name" use="required" type="xs:NCName"/>
           <xs:attribute name="agentid" use="required" type="xs:int"/>
-          <xs:attribute name="time" use="optional" type="xs:long"/>          
+          <xs:attribute name="totalCost" use="optional" type="xs:decimal"/>          
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>
