@@ -1,42 +1,58 @@
-<!-- Created for the TLOS Scheduler http://www.likyateknoloji.com -->
-<xs:schema xmlns="http://www.likyateknoloji.com/XML_FuncPass_types" xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl" xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:lt="http://www.likyateknoloji.com/XML_common_types" targetNamespace="http://www.likyateknoloji.com/XML_FuncPass_types" elementFormDefault="qualified">
-    <xs:import namespace="http://www.likyateknoloji.com/XML_common_types" schemaLocation="tlosSWOrtak_v_1_0.xsd"/>
-    <xs:import namespace="http://www.likyateknoloji.com/state-types" schemaLocation="tlosSWState_v_1_0.xsd"/>
-    <xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl" schemaLocation="jsdl.2005_11.xsd"/>
-    <xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types" schemaLocation="tlosSWSLA_v_1_0.xsd"/>
-    <xs:import namespace="http://www.likyateknoloji.com/XML_data_types" schemaLocation="tlosSWData_v_1_0.xsd"/>
-    <xs:element name="SLAId">
-        <xs:simpleType>
-            <xs:restriction base="xs:int"/>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="oSystem" default="Windows">
-        <xs:simpleType>
-            <xs:restriction base="xs:string">
-                <xs:enumeration value="Windows"/>
-                <xs:enumeration value="Unix"/>
-            </xs:restriction>
-        </xs:simpleType>
-    </xs:element>
-    <xs:element name="resourceRequirement">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="sla:Hardware"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="jobPropFuncPass">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="oSystem"/>
-                <xs:element ref="SLAId" minOccurs="0"/>
-                <xs:element ref="resourceRequirement" minOccurs="0"/>
-            </xs:sequence>
-            <xs:attribute name="ID" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string"/>
-                </xs:simpleType>
-            </xs:attribute>
-        </xs:complexType>
-    </xs:element>
+<xs:schema xmlns="http://www.likyateknoloji.com/XML_FuncPass_types"
+	xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl"
+	xmlns:state-types="http://www.likyateknoloji.com/state-types" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:sla="http://www.likyateknoloji.com/XML_SLA_types" xmlns:lt="http://www.likyateknoloji.com/XML_common_types"
+	targetNamespace="http://www.likyateknoloji.com/XML_FuncPass_types"
+	elementFormDefault="qualified">
+	<xs:import namespace="http://www.likyateknoloji.com/XML_common_types"
+		schemaLocation="tlosSWOrtak_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/state-types"
+		schemaLocation="tlosSWState_v_1_0.xsd" />
+	<xs:import namespace="http://schemas.ggf.org/jsdl/2005/11/jsdl"
+		schemaLocation="jsdl.2005_11.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_SLA_types"
+		schemaLocation="tlosSWSLA_v_1_0.xsd" />
+	<xs:import namespace="http://www.likyateknoloji.com/XML_data_types"
+		schemaLocation="tlosSWData_v_1_0.xsd" />
+
+	<xs:element name="SLAId">
+		<xs:simpleType>
+			<xs:restriction base="xs:int" />
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="oSystem" default="Windows">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Windows" />
+				<xs:enumeration value="Unix" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="resourceRequirement">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sla:Hardware" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="jobPropFuncPass">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="oSystem" />
+				<xs:element ref="SLAId" minOccurs="0" />
+				<xs:element ref="resourceRequirement" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="ID" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="useSLA" default="false" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="useMonitoringData" default="false" use="optional"
+				type="xs:boolean" />
+			<xs:attribute name="planId" use="required" type="xs:string" />
+			<xs:attribute name="tz" use="optional" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
