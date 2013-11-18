@@ -15,10 +15,10 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="Job Distribution Graphics" widgetVar="dashWidget"
+			<p:fieldset legend="#{msgs['tlos.reports.chartDistribution.header']}" widgetVar="dashWidget"
 				style="width: 1300px;">
 
-				<p:panel id="density" header="Overall Job Execution Density">
+				<p:panel id="density" header="#{msgs['tlos.reports.chartDistribution.header']}">
 
 					<p:ohlcChart id="candleStick" value="#{jobsDistributionGraphicsMBean.ohlcModel}"
 					    xaxisAngle="20"
@@ -29,7 +29,7 @@
 						style="width:1200px;height:600px" />
 						
 					<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-						action="#{jobsDistributionGraphicsMBean.refreshOhlcChart}" />
+						ajax="true" update="density" actionListener="#{jobsDistributionGraphicsMBean.refreshOhlcChart}" />
 				</p:panel>
 
 				<br />
