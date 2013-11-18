@@ -141,7 +141,7 @@
 							style="width:800px;height:536px;font-weight: bold;color : F8FBEF; font-size:2em"
 							seriesColors="#{currentStatesOfJobsMBean.pieColorList}" />
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-							action="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
+							ajax="true" update="board" actionListener="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
 					</p:panel>
 
 				</p:dashboard>
