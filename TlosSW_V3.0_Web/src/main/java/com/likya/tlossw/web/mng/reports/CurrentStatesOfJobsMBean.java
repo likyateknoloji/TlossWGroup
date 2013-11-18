@@ -1,6 +1,7 @@
 package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -20,6 +21,7 @@ import org.primefaces.model.chart.PieChartModel;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.ReportDocument.Report;
+import com.likya.tlossw.utils.ColorMappings;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -59,16 +61,24 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	
 	private String pieColorList;
 
+	private HashMap<String, String> colorSpace;
+	
+	private ColorMappings colorMappings;
+	
 	@PostConstruct
 	public void init() {
 
 		logger.info("begin : init");
 
+		colorMappings = new ColorMappings();
+		
+		colorSpace = ColorMappings.getColorHashMap();
+		
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		String parameter_value = (String) facesContext.getExternalContext().getRequestParameterMap().get("id");
 
 		System.out.println(parameter_value);
-
+		
 		model = new DefaultDashboardModel();
 		DashboardColumn column1 = new DefaultDashboardColumn();
 		DashboardColumn column2 = new DefaultDashboardColumn();
@@ -208,10 +218,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Development"),
 						reportBaseList.getPENDING().getCREATED().getDEVELOPMENT().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("development");
+				
 				i++;
 			}
 			
@@ -220,10 +232,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Test"),
 						reportBaseList.getPENDING().getCREATED().getTEST().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("test");
+
 				i++;
 			}
 			
@@ -232,10 +246,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Request"),
 						reportBaseList.getPENDING().getCREATED().getREQUEST().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("request");
+
 				i++;
 			}
 			
@@ -244,10 +260,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Deployed"),
 						reportBaseList.getPENDING().getCREATED().getDEPLOYED().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("deployed");
+				
 				i++;
 			}
 			
@@ -256,10 +274,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Waiting"),
 						reportBaseList.getPENDING().getIDLED().getBYTIME().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("waiting");
+				
 				i++;
 			}
 			
@@ -270,7 +290,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Running"),
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEIN().doubleValue());
-				pieColorList = pieColorList + "4962EE";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("running");
+				
 				i++;
 			}
 
@@ -279,10 +304,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Waiting"),
 						reportBaseList.getPENDING().getIDLED().getBYTIME().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FFBF00";
-				else
-					pieColorList = pieColorList + "FFBF00";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("waiting");
+				
 				i++;
 			}
 
@@ -291,10 +318,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Ready"),
 						reportBaseList.getPENDING().getREADY().getWAITING().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", DAC9D7";
-				else
-					pieColorList = pieColorList + "DAC9D7";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("ready");
+				
 				i++;
 			}
 
@@ -303,10 +332,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Look"),
 						reportBaseList.getPENDING().getREADY().getLOOKFORRESOURCE().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", F65FE2";
-				else
-					pieColorList = pieColorList + "F65FE2";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("look4resource");
+				
 				i++;
 			}
 			if ((reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE() != null)
@@ -314,10 +345,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUR"),
 						reportBaseList.getPENDING().getREADY().getUSERCHOOSERESOURCE().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", F6C660";
-				else
-					pieColorList = pieColorList + "F6C660";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("userChooseResource");
+				
 				i++;
 			}
 
@@ -326,10 +359,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.LookUW"),
 						reportBaseList.getPENDING().getREADY().getUSERWAITING().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ",60E5F6";
-				else
-					pieColorList = pieColorList + "60E5F6";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("userWaiting");
+				
 				i++;
 			}
 			if ((reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS() != null)
@@ -337,10 +372,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Success"),
 						reportBaseList.getFINISHED().getCOMPLETED().getSUCCESS().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", 31B404";
-				else
-					pieColorList = pieColorList + "31B404";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("success");
+				
 				i++;
 			}
 			if ((reportBaseList.getFINISHED().getCOMPLETED().getFAILED() != null)
@@ -348,10 +385,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Failed"),
 						reportBaseList.getFINISHED().getCOMPLETED().getFAILED().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", FA1B0B";
-				else
-					pieColorList = pieColorList + "FA1B0B";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("failed");
+				
 				i++;
 			}
 			if ((reportBaseList.getCANCELLED() != null)
@@ -359,10 +398,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.Cancelled"),
 						reportBaseList.getCANCELLED().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", F6EA60";
-				else
-					pieColorList = pieColorList + "F6EA60";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("cancelled");
+				
 				i++;
 			}
 			if ((reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT() != null)
@@ -370,10 +411,12 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 				pieDashboardModel.set(
 						resolveMessage("tlos.reports.chart.TimeOut"),
 						reportBaseList.getRUNNING().getONRESOURCE().getTIMEOUT().doubleValue());
-				if (i > 0)
-					pieColorList = pieColorList + ", BE81F7";
-				else
-					pieColorList = pieColorList + "BE81F7";
+				
+				if (i > 0) {
+					pieColorList = pieColorList + ", ";
+				}
+				pieColorList = pieColorList + colorMappings.getColorHex("timeout");
+				
 				i++;
 			}
 		}
@@ -538,5 +581,24 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	public void setPieDeployedCount(int pieDeployedCount) {
 		this.pieDeployedCount = pieDeployedCount;
 	}
+
+	public HashMap<String, String> getColorSpace() {
+		return colorSpace;
+	}
+
+	public void setColorSpace(HashMap<String, String> colorSpace) {
+		this.colorSpace = colorSpace;
+	}
 	
+	public String getStateColor4PieChart(String color) {
+		return "font-weight:bold; color:#" + colorMappings.getColorHex(color) + "; font-size: 8em; display: block; position: relative; right: -40px;";
+	}
+
+	public ColorMappings getColorMappings() {
+		return colorMappings;
+	}
+
+	public void setColorMappings(ColorMappings colorMappings) {
+		this.colorMappings = colorMappings;
+	}
 }
