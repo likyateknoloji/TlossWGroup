@@ -23,7 +23,7 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget"
+			<p:fieldset legend="#{msgs['tlos.reports.chartExecution.header']}" widgetVar="dashWidget"
 				style="width: 1350px;">
 				<p:dashboard id="board" model="#{zonesOfExecutionsMBean.model}">
 					<p:ajax event="reorder"
@@ -39,7 +39,7 @@
 							style="width:600px;height:400px;font-weight: bold;color : 000000; font-size:1.5em"
 							label="#{msgs['tlos.report.gauge.desc']} ( #{msgs['tlos.report.gauge.unit']} )" />
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-							action="#{zonesOfExecutionsMBean.refreshGaugeChart}" />
+							ajax="true" update="board" actionListener="#{zonesOfExecutionsMBean.refreshGaugeChart}" />
 					</p:panel>
 
 					<p:panel id="info" header="#{msgs['tlos.report.gauge.header']}">
