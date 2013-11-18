@@ -23,6 +23,7 @@ public class DevelopmentLifeCycleTabBean extends BaseTabBean {
 	private String statusName;
 
 	private Collection<SelectItem> jobSubStateNameList;
+	private Collection<SelectItem> jobStatusNameList;
 
 	public JSBasePanelMBean jsBasePanelMBean;
 
@@ -39,6 +40,10 @@ public class DevelopmentLifeCycleTabBean extends BaseTabBean {
 
 		if (jobSubStateNameList == null) {
 			jobSubStateNameList = ComboListUtils.constructJobSubStateList();
+		}
+		
+		if (jobStatusNameList == null) {
+			jobStatusNameList = ComboListUtils.constructJobStatusNameList();
 		}
 	}
 
@@ -107,6 +112,14 @@ public class DevelopmentLifeCycleTabBean extends BaseTabBean {
 
 	public void setJsBasePanelMBean(JSBasePanelMBean jsBasePanelMBean) {
 		this.jsBasePanelMBean = jsBasePanelMBean;
+	}
+
+	public Collection<SelectItem> getJobStatusNameList() {
+		return jobStatusNameList;
+	}
+
+	public void setJobStatusNameList(Collection<SelectItem> jobStatusNameList) {
+		this.jobStatusNameList = jobStatusNameList;
 	}
 
 }
