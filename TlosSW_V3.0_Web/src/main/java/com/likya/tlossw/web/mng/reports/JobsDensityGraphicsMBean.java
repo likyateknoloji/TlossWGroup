@@ -2,10 +2,13 @@ package com.likya.tlossw.web.mng.reports;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -97,14 +100,14 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 		return "<span style=\"display:none;\">%s</span><span>%s</span>";
 	}
 
-	public void refreshDenseChart() {
+	public void stackedDenseChart() {
 		if(stacked) stacked = false;
 		else stacked = true;
 		
 		createDenseModel();
 	}
 
-	public void changeDensityStep() {
+	public void refreshDensityChart() {
 		createDenseModel();
 	}
 	
@@ -143,16 +146,24 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 			String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
 			numberOfJobsInThisGroup = densityJobCountList.getDataArray(i).getCount().intValue();
 
-			for (int j = 0; j < numberOfJobsInThisGroup.intValue(); j++) {
-				agentId = densityJobCountList.getDataArray(i).getGroupArray(j).getAgentId().intValue();
+			for (int j = 0; j <= numberOfJobsInThisGroup.intValue(); j++) {
+				if(densityJobCountList.getDataArray(i).getCount().intValue() > 0) {
+				   agentId = densityJobCountList.getDataArray(i).getGroupArray(j).getAgentId().intValue();
+				} else {
+					agentId = 0;
+				}
 				if (agentMap.get(agentId + "") == null) {
 					statsByAgent = new StatsByAgent(new Integer(i));
+					statsByAgent.setAgentId(agentId);
 					agentMap.put(agentId + "", statsByAgent);
 				}
 				if (agentMap.get(agentId + "").getStatsArray().get(formattedTime) == null) {
 					agentMap.get(agentId + "").setStatsArray(formattedTime, 0);
 				}
-				agentMap.get(agentId + "").incrementCount(formattedTime);
+				//TODO RUNNING degilse count 0 kabul ediyoruz. Alternatif, bekleyen isleri sayma nasil olur?
+				if(agentId != 0 ) {
+					agentMap.get(agentId + "").incrementCount(formattedTime);
+				}
 			}
 		}
 		
@@ -175,7 +186,12 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 			Integer numberOfJobs = new Integer(0);
 
 			for (int j = 0; j < densityJobCountList.sizeOfDataArray(); j++) {
-				String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(j).getEDTime().getTime()); // 9:00
+				DateFormat df = new SimpleDateFormat("HH:mm:ss");
+				TimeZone timeZone = densityJobCountList.getDataArray(j).getEDTime().getTimeZone();
+				df.setTimeZone(TimeZone.getTimeZone(timeZone.getID())); 
+				Date date = densityJobCountList.getDataArray(j).getEDTime().getTime();
+				
+				String formattedTime = df.format(date); // 9:00
 				numberOfJobs = value.getStatsArray().containsKey(formattedTime) ? value.getStatsArray().get(formattedTime).intValue() : 0;
 				dense.set(formattedTime, numberOfJobs);
 				maxVal = (numberOfJobs) > maxVal ? numberOfJobs : maxVal;
