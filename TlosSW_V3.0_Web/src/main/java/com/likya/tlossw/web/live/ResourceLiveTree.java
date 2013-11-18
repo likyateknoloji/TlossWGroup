@@ -232,7 +232,8 @@ public class ResourceLiveTree extends TlosSWBaseBean implements Serializable {
 			jobNode.setPath(jobInfoTypeClient.getTreePath());
 
 			jobNode.setJobType(JobCommandType.Enum.forString(jobInfoTypeClient.getJobCommandType().toUpperCase()).intValue());
-			
+			jobNode.getJobInfoTypeClient().setNativeRunId(jobInfoTypeClient.getNativeRunId());
+			jobNode.getJobInfoTypeClient().setCurrentRunId(jobInfoTypeClient.getCurrentRunId());
 			TreeNode jobNodeTree = new DefaultTreeNode(ConstantDefinitions.TREE_JOB, jobNode, treeNode);
 			jobNodeTree.setExpanded(false);
 		}
