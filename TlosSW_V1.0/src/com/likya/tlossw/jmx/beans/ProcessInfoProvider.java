@@ -796,7 +796,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 				// gelen isleri job listesine ekliyor
 				for (int i = 0; i < jobListTemp.size(); i++) {
-					jobList.add(jobListTemp.get(i));
+					Job tmpJob = jobListTemp.get(i);
+					tmpJob.getJobRuntimeProperties().setCurrentRunId(spc.getCurrentRunId());
+					jobList.add(tmpJob);
 				}
 			}
 		}
@@ -816,6 +818,8 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
 			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
+			jobInfoTypeClient.setCurrentRunId(jobRuntimeProperties.getCurrentRunId());
+			jobInfoTypeClient.setNativeRunId(jobRuntimeProperties.getJobProperties().getRunId());
 			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
