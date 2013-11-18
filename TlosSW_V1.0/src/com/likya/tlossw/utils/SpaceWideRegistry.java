@@ -94,7 +94,7 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 
 	private boolean isGunDonumuPeriodPassed = false;
 
-	private boolean isTransactionTimePassed = false;
+	private boolean isTransitionTimePassed = false;
 
 	private transient AgentManager agentManagerReference;
 
@@ -247,12 +247,12 @@ public class SpaceWideRegistry implements GlobalRegistry, Serializable {
 		this.dayKeeperReference = dayKeeperReference;
 	}
 
-	public boolean isTransactionTimePassed() {
-		return isTransactionTimePassed;
+	public boolean isTransitionTimePassed() {
+		return isTransitionTimePassed;
 	}
 
-	public void setTransactionTimePassed(boolean isTransactionTimePassed) {
-		this.isTransactionTimePassed = isTransactionTimePassed;
+	public void setTransitionTimePassed(boolean isTransitionTimePassed) {
+		this.isTransitionTimePassed = isTransitionTimePassed;
 	}
 
 	public AgentManager getAgentManagerReference() {
