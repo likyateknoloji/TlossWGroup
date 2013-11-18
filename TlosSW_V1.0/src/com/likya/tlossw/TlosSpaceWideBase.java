@@ -635,17 +635,17 @@ public class TlosSpaceWideBase {
 	protected void initTransitionTimePassed() {
 
 		Date currentDateTime = Calendar.getInstance().getTime();
-		Calendar transactionCalendar = DateUtils.normalizeDate(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition().getTime());
+		Calendar transitionCalendar = DateUtils.normalizeDate(getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition().getTime());
 
-		if (transactionCalendar.getTime().before(currentDateTime)) {
-			getSpaceWideRegistry().setTransactionTimePassed(true);
+		if (transitionCalendar.getTime().before(currentDateTime)) {
+			getSpaceWideRegistry().setTransitionTimePassed(true);
 		}
 
 		logger.info("");
 		logger.info("#################### INFO ###################");
 
 		logger.info("Su an " + currentDateTime + " dir.");
-		logger.info("Gundonumu " + transactionCalendar.getTime() + " dir.");
+		logger.info("Gundonumu " + transitionCalendar.getTime() + " dir.");
 
 		logger.info(ResourceMapper.SECTION_DIVISON_KARE);
 		logger.info("");

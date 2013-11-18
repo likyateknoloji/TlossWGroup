@@ -223,7 +223,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 		 *         çalışması gerekiyor.
 		 * 
 		 */
-		if (!isRecoverable() || getSpaceWideRegistry().isTransactionTimePassed()) {
+		if (!isRecoverable() || getSpaceWideRegistry().isTransitionTimePassed()) {
 			processQueueStarters();
 		}
 		
@@ -242,7 +242,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 			logger.info(" 1 - ilk kez calisiyor ...");
 
-			if (!getSpaceWideRegistry().isTransactionTimePassed()) {
+			if (!getSpaceWideRegistry().isTransitionTimePassed()) {
 
 				/**
 				 * Uygulama ilk defa çalıştığından ya da süreç bilgilerini
@@ -287,7 +287,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 
 			logger.info(" 1 - ilk calismasi degil.");
 
-			if (!getSpaceWideRegistry().isTransactionTimePassed()) {
+			if (!getSpaceWideRegistry().isTransitionTimePassed()) {
 				logger.info(" 2 - Gundonumu gecmedi.");
 				logger.info("");
 				logger.info("   RECOVERY YAPIYORUM (GUNDONUMU GECMEDI) kullaniciya soruyorum ...");
@@ -309,7 +309,7 @@ public class TlosSpaceWide extends TlosSpaceWideBase {
 				changeApplicationState(AppState.INT_SUSPENDED);
 
 
-			} else if (getSpaceWideRegistry().isTransactionTimePassed()) {
+			} else if (getSpaceWideRegistry().isTransitionTimePassed()) {
 
 				logger.info(" 2 - Gundonumu gecti. Son gun donumu okumasi uzerinden bir peryod gecti.");
 				logger.info("");
