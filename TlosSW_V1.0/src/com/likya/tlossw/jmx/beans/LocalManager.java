@@ -32,8 +32,8 @@ public class LocalManager implements LocalManagerMBean {
 		TlosSpaceWide.stopSpacewide();
 	}
 	
-	public void shiftTransactionTime(boolean backupReports) {
-		new ProcessManagementInterface().shiftTransactionTime(backupReports);
+	public void shiftTransitionTime(boolean backupReports) {
+		new ProcessManagementInterface().shiftTransitionTime(backupReports);
 	}
 	
 	public void startOver(boolean backupReports) {

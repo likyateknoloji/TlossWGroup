@@ -98,7 +98,7 @@ public interface ProcessManagementInterfaceMBean {
 	
 	public void recover(JmxUser jmxUser);
 	
-	public void shiftTransactionTime(JmxUser jmxUser, boolean backupReports);
+	public void shiftTransitionTime(JmxUser jmxUser, boolean backupReports);
 	
 	public void startOver(JmxUser jmxUser, boolean backupReports);
 	

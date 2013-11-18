@@ -2538,9 +2538,9 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 			return null;
 		}
 
-		Calendar transactionCalendar = DateUtils.normalizeDate(TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition().getTime());
+		Calendar transitionCalendar = DateUtils.normalizeDate(TlosSpaceWide.getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTransitionTime().getTransition().getTime());
 
-		return transactionCalendar;
+		return transitionCalendar;
 	}
 
 	@Override

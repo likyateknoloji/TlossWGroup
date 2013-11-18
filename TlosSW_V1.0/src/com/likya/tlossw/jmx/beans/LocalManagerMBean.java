@@ -64,7 +64,7 @@ public interface LocalManagerMBean {
     
 	public void shutdown(String str);
 	
-	public void shiftTransactionTime(boolean backupReports);
+	public void shiftTransitionTime(boolean backupReports);
 	
 	public void startOver(boolean backupReports);
 	

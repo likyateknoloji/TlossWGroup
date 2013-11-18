@@ -655,18 +655,18 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 		}
 	}
 
-	public void shiftTransactionTime(JmxUser jmxUser, boolean backupReports) {
+	public void shiftTransitionTime(JmxUser jmxUser, boolean backupReports) {
 		
 		if (!JMXTLSServer.authorizeWeb(jmxUser)) {
 			return;
 		}
 		
-		shiftTransactionTime(backupReports);
+		shiftTransitionTime(backupReports);
 
 		return; 
 	}
 	
-	public void shiftTransactionTime(boolean backupReports) {
+	public void shiftTransitionTime(boolean backupReports) {
 
 		TlosSpaceWide.getSpaceWideRegistry().setWaitConfirmOfGUI(false);
 
