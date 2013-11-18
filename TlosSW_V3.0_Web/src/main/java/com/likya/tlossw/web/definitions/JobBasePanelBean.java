@@ -595,6 +595,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		if (!isJsOverrideAndDeployDialog()) {
 			if (!jobIdCheckUp()) {
+				addMessage("jobDeploymentRequest", FacesMessage.SEVERITY_INFO, "tlos.error.job.deployRequest.problemId", null);
 				return;
 			}
 	
