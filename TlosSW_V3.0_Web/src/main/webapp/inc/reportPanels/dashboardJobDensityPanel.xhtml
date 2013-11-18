@@ -15,10 +15,10 @@
 
 			<p:growl id="growl" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="Job Density Graphics" widgetVar="dashWidget"
+			<p:fieldset legend="#{msgs['tlos.reports.chartDensity.header']}" widgetVar="dashWidget"
 				style="width: 1300px;">
 
-				<p:panel id="density" header="Overall Job Execution Density">
+				<p:panel id="density" header="#{msgs['tlos.reports.chartDensity.header']}">
 					<p:barChart id="category"
 						value="#{jobsDensityGraphicsMBean.denseModel}"
 						seriesColors="F73C84, 13253e, b22924, 009ec5, dc143c, ffc613, ff0097, 40e0d1, 00ff00"
@@ -34,12 +34,12 @@
 					<p:commandButton id="densityStackedButton"
 						value="#{msgs['tlos.button.chartStacked']}" update="density"
 						ajax="true"
-						actionListener="#{jobsDensityGraphicsMBean.refreshDenseChart}" />
+						actionListener="#{jobsDensityGraphicsMBean.stackedDenseChart}" />
 
-					<p:commandButton id="densityStepButton"
+					<p:commandButton id="densityRefreshButton"
 						value="#{msgs['tlos.button.chartRefresh']}" update="density"
 						ajax="true"
-						actionListener="#{jobsDensityGraphicsMBean.changeDensityStep}" />
+						actionListener="#{jobsDensityGraphicsMBean.refreshDensityChart}" />
 					<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
 						<ui:param name="backingBean" value="#{jobsDensityGraphicsMBean}" />
 					</ui:include>
