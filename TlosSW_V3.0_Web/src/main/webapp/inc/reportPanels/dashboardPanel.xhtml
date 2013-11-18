@@ -15,14 +15,14 @@
 
 			<p:messages id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="TLOS SW Dashboard" widgetVar="dashWidget"
+			<p:fieldset legend="#{msgs['tlos.reports.chartDuration.header']}" widgetVar="dashWidget"
 				style="width: 1300px;">
 
 
-                    <p:poll interval="15" update="top10" />
+                    <p:poll interval="15" update="jobsDuration" />
 
-					<p:panel id="top10"
-						header="The Top 10 longest duration jobs finished in last 1 hour">
+					<p:panel id="jobsDuration"
+						header="#{msgs['tlos.reports.chartDuration.header']}">
 						<p:barChart id="curHorizontal" 
 						    xaxisAngle="20"
 						    min="0.0"
@@ -35,10 +35,10 @@
 							legendPosition="ne" 
 							style="width:1200px;height:600px"
 							orientation="vertical" 
-							widgetVar="top10Widget"/>
+							widgetVar="jobsDurationWidget"/>
 							
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-							action="#{mostLongestJobsReportMBean.refreshCurDurationChart}" />
+							ajax="true" update="jobsDuration" actionListener="#{mostLongestJobsReportMBean.refreshCurDurationChart}" />
 							
 						<p:commandButton type="button" value="Export"
 							icon="ui-icon-extlink" onclick="exportChart()" />
@@ -62,7 +62,7 @@
 		<script type="text/javascript">
 			function exportChart() {
 				//export image  
-				$('#output').empty().append(top10Widget.exportAsImage());
+				$('#output').empty().append(jobsDurationWidget.exportAsImage());
 
 				//show the dialog  
 				dlg.show();
