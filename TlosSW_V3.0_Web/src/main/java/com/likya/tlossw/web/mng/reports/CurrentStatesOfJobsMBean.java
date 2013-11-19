@@ -80,36 +80,41 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 		System.out.println(parameter_value);
 		
 		model = new DefaultDashboardModel();
-		DashboardColumn column1 = new DefaultDashboardColumn();
-		DashboardColumn column2 = new DefaultDashboardColumn();
-		DashboardColumn column3 = new DefaultDashboardColumn();
-
-		column1.addWidget("running");
-		column2.addWidget("failed");
-		column1.addWidget("ready");
-		column2.addWidget("waiting");
-		column1.addWidget("success");
-		column2.addWidget("look4resource");
-		column1.addWidget("userChooseResource");
-		column2.addWidget("userWaiting");
-		column1.addWidget("cancelled");
-		column2.addWidget("timeout");
+		DashboardColumn pendingColumn = new DefaultDashboardColumn();
+		DashboardColumn runningColumn = new DefaultDashboardColumn();
+		DashboardColumn finishedColumn = new DefaultDashboardColumn();
+		DashboardColumn pieChartColumn = new DefaultDashboardColumn();
 		
-		column1.addWidget("development");
-		column2.addWidget("test");
-		column1.addWidget("request");
-		column2.addWidget("deployed");
+		//PENDING Column
+		pendingColumn.addWidget("userWaiting");
+		pendingColumn.addWidget("userChooseResource");
+		pendingColumn.addWidget("look4resource");
+		pendingColumn.addWidget("deployed");
+		pendingColumn.addWidget("waiting");
+		pendingColumn.addWidget("ready");
+		pendingColumn.addWidget("request");
+		pendingColumn.addWidget("test");
+		pendingColumn.addWidget("development");
 		
+		//RUNNING Column
+		runningColumn.addWidget("running");
+		runningColumn.addWidget("timeout");
 		
-		model.addColumn(column1);
-		model.addColumn(column2);
-		model.addColumn(column3);
+		//FINISHED Column
+		finishedColumn.addWidget("failed");
+		finishedColumn.addWidget("success");
+		finishedColumn.addWidget("cancelled");
+		
+		pieChartColumn.addWidget("statePanel");
+		
+		model.addColumn(pendingColumn);
+		model.addColumn(runningColumn);
+		model.addColumn(finishedColumn);
+		model.addColumn(pieChartColumn);
 
-		column3.addWidget("statePanel");
-
+		
 		if (getReportParameters() == null) {
 			setReportParameters(new ReportsParameters());
-			
 		}
 		
 		createPieModel();
@@ -591,7 +596,7 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 	}
 	
 	public String getStateColor4PieChart(String color) {
-		return "font-weight:bold; color:#" + colorMappings.getColorHex(color) + "; font-size: 8em; display: block; position: relative; right: -40px;";
+		return "font-weight:bold; color:#" + colorMappings.getColorHex(color) + "; font-size: 5em; display: block; position: relative; right: -40px;";
 	}
 
 	public ColorMappings getColorMappings() {
@@ -600,5 +605,9 @@ public class CurrentStatesOfJobsMBean extends ReportBase implements Serializable
 
 	public void setColorMappings(ColorMappings colorMappings) {
 		this.colorMappings = colorMappings;
+	}
+	
+	public String getStateBoxSize(int width, int height, String unit) {
+		return "width:"+width+unit+"; height:"+height+unit+";";
 	}
 }
