@@ -1,5 +1,6 @@
 package com.likya.tlossw.web.definitions;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,6 +58,7 @@ import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
+import com.likya.tlossw.web.utils.FileIO;
 
 public abstract class JobBasePanelBean extends JSBasePanelMBean implements Serializable {
 
@@ -65,6 +67,8 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	@ManagedProperty(value = "#{jSTree}")
 	private JSTree jSTree;
 
+	private String file = null;
+	
 	public final static String CONFIRM = "confirm";
 
 	public final static String NONE = "none";
@@ -1341,6 +1345,17 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void setSubstateToState(HashMap<String, String> substateToState) {
 		this.substateToState = substateToState;
+	}
+
+	public String getFile(File fileName) {
+		if(file!=null) {
+			file = FileIO.readFile(fileName);
+		}
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 }
