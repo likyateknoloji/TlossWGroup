@@ -24,7 +24,7 @@
 
 					<p:panel id="running" rendered="#{currentStatesOfJobsMBean.pieRunningCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Running']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieRunningCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('running')}" />
 
@@ -32,7 +32,7 @@
 
 					<p:panel id="failed" rendered="#{currentStatesOfJobsMBean.pieFailedCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Failed']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieFailedCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('failed')}" />
 
@@ -40,7 +40,7 @@
 
 					<p:panel id="ready" rendered="#{currentStatesOfJobsMBean.pieReadyCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Ready']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieReadyCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('ready')}" />
 
@@ -48,7 +48,7 @@
 
 					<p:panel id="waiting" rendered="#{currentStatesOfJobsMBean.pieWaitingCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Waiting']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieWaitingCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('waiting')}" />
 
@@ -56,7 +56,7 @@
 
 					<p:panel id="success" rendered="#{currentStatesOfJobsMBean.pieSuccessCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Success']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieSuccessCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('success')}" />
 
@@ -64,7 +64,7 @@
 
 					<p:panel id="look4resource" rendered="#{currentStatesOfJobsMBean.pieLook4RCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Look4Resource']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieLook4RCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('look4resource')}" />
 
@@ -72,7 +72,7 @@
 
 					<p:panel id="userChooseResource" rendered="#{currentStatesOfJobsMBean.pieUserChooseResourceCount > 0}"
 						header="#{msgs['tlos.reports.chartState.UserChooseResource']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieUserChooseResourceCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('userChooseResource')}" />
 
@@ -80,7 +80,7 @@
 					
 					<p:panel id="userWaiting" rendered="#{currentStatesOfJobsMBean.pieUserWaitingCount > 0}"
 						header="#{msgs['tlos.reports.chartState.UserWaiting']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieUserWaitingCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('userWaiting')}" />
 
@@ -88,7 +88,7 @@
 					
 					<p:panel id="cancelled" rendered="#{currentStatesOfJobsMBean.pieCancelledCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Cancelled']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieCancelledCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('cancalled')}" />
 
@@ -96,7 +96,7 @@
 					
 					<p:panel id="timeout" rendered="#{currentStatesOfJobsMBean.pieTimeoutCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Timeout']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieTimeoutCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('timeout')}" />
 
@@ -104,7 +104,7 @@
 					
 					<p:panel id="development" rendered="#{currentStatesOfJobsMBean.pieDevelopmentCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Development']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieDevelopmentCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('development')}" />
 
@@ -112,7 +112,7 @@
 					
 					<p:panel id="test" rendered="#{currentStatesOfJobsMBean.pieTestCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Test']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieTestCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('test')}" />
 
@@ -120,7 +120,7 @@
 					
 					<p:panel id="request" rendered="#{currentStatesOfJobsMBean.pieRequestCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Request']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieRequestCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('request')}" />
 
@@ -128,7 +128,7 @@
 					
 					<p:panel id="deployed" rendered="#{currentStatesOfJobsMBean.pieDeployedCount > 0}"
 						header="#{msgs['tlos.reports.chartState.Deployed']}"
-						style="width:200px;height:200px">
+						style="#{currentStatesOfJobsMBean.getStateBoxSize(150,150,'px')}">
 						<h:outputText value="#{currentStatesOfJobsMBean.pieDeployedCount}"
 							style="#{currentStatesOfJobsMBean.getStateColor4PieChart('deployed')}" />
 
@@ -138,7 +138,7 @@
 						<p:pieChart id="dashboardC"
 							value="#{currentStatesOfJobsMBean.pieDashboardModel}"
 							legendPosition="e" sliceMargin="5" showDataLabels="true"
-							style="width:800px;height:536px;font-weight: bold;color : F8FBEF; font-size:2em"
+							style="width:500px;height:336px;font-weight: bold;color : F8FBEF; font-size:1.5em"
 							seriesColors="#{currentStatesOfJobsMBean.pieColorList}" />
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
 							ajax="true" update="board" actionListener="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
