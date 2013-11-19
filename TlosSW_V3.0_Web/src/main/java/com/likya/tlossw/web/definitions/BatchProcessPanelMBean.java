@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlossw.utils.FileUtils;
 
 @ManagedBean
 @ViewScoped
@@ -19,7 +20,9 @@ public class BatchProcessPanelMBean extends JobBasePanelBean implements Serializ
 
 	private String jobPath;
 	private String jobCommand;
-
+	private StringBuffer jobFileText;
+	private boolean isFileExist = false;
+	
 	public void dispose() {
 
 	}
@@ -71,6 +74,19 @@ public class BatchProcessPanelMBean extends JobBasePanelBean implements Serializ
 
 	public void setJobCommand(String jobCommand) {
 		this.jobCommand = jobCommand;
+	}
+
+	public StringBuffer getJobFileText() {
+			jobFileText = FileUtils.readFile(jobPath + "\\" + jobCommand);
+		return jobFileText;
+	}
+
+	public boolean isFileExist() {
+			isFileExist = FileUtils.checkFileExist(jobPath + "\\" + jobCommand);
+		return isFileExist;
+	}
+	public void setJobFileText(StringBuffer jobFileText) {
+		this.jobFileText = jobFileText;
 	}
 
 }
