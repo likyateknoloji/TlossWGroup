@@ -39,6 +39,15 @@
 								<f:validateRegex
 									pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" /-->
 							</p:inputText>
+							
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.job.jobCommandFileText']}"
+						rendered="#{batchProcessPanelMBean.isFileExist()}" />
+					<p:inputTextarea value="#{batchProcessPanelMBean.jobFileText}" readonly="true"
+						rendered="#{batchProcessPanelMBean.isFileExist()}"
+						autoResize="false" required="true" style="width: 400pt; height:150pt"
+						requiredMessage="#{msgs['tlos.workspace.pannel.job.jobCommandFileText']}" />
+							
 						</p:panelGrid>
 					</p:panel>
 				</p:tab>
