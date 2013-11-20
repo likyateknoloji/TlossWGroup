@@ -227,10 +227,10 @@ public class ProcessNode extends Job {
 							try {
 								if (processNode.getTransform().getStringValue() == null)
 									// XSLTCode = TransformUtils.getStreamSource(); // Default cevrim. hs
-									transformedXML = ApplyXslt.transformXML(getTransformXsl(), fileContent);
+									transformedXML = ApplyXslt.transformXML(fileContent, getTransformXsl());
 								else {
 									// XSLTCode = TransformUtils.getStreamSource(processNode.getTransform().getStringValue());
-									transformedXML = ApplyXslt.transformXML(processNode.getTransform().getStringValue(), fileContent);
+									transformedXML = ApplyXslt.transformXML(fileContent, processNode.getTransform().getStringValue());
 								}
 
 								
