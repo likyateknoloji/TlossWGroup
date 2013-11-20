@@ -138,7 +138,7 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 		
 		if(densityJobCountList.sizeOfDataArray() > 0 ) setSizeOfReport(densityJobCountList.getDataArray(0).getCount());
 
-		Integer numberOfJobsInThisGroup = new Integer(0);
+		int numberOfJobsInThisGroup = 0;
 		int agentId;
 
 		for (int i = 0; i < densityJobCountList.sizeOfDataArray(); i++) {
@@ -146,8 +146,8 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 			String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
 			numberOfJobsInThisGroup = densityJobCountList.getDataArray(i).getCount().intValue();
 
-			for (int j = 0; j <= numberOfJobsInThisGroup.intValue(); j++) {
-				if(densityJobCountList.getDataArray(i).getCount().intValue() > 0) {
+			for (int j = 0; j < numberOfJobsInThisGroup|| numberOfJobsInThisGroup == 0; j++) {
+				if(numberOfJobsInThisGroup > 0) {
 				   agentId = densityJobCountList.getDataArray(i).getGroupArray(j).getAgentId().intValue();
 				} else {
 					agentId = 0;
@@ -164,6 +164,8 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 				if(agentId != 0 ) {
 					agentMap.get(agentId + "").incrementCount(formattedTime);
 				}
+				if(numberOfJobsInThisGroup == 0) 
+					break;
 			}
 		}
 		
