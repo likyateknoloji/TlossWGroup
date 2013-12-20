@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
@@ -244,12 +243,10 @@ public class Consolidator {
 
 				// String jobId = jobProperties.getID();
 				
-				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
-				
 				boolean isRunning = LiveStateInfoUtils.equalStates(jobProperties, StateName.RUNNING);
 				
-				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
-
+				boolean isPeriodic = jobProperties.getManagement().getPeriodInfo() != null ? true : false;
+				
 				boolean isUpdated = true;
 				
 				if (isPeriodic && isRunning && !isUpdated) {
@@ -351,11 +348,11 @@ public class Consolidator {
 				JobProperties jobPropertiesOld = jobOld.getJobRuntimeProperties().getJobProperties();
 
 				String jobIdOld = jobPropertiesOld.getID();
-
-				JobBaseType.Enum jobBaseType = jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType();
-
+	
+				boolean isPeriodic = jobPropertiesOld.getManagement().getPeriodInfo() != null ? true : false;
+				
 				if (jobQueueNew.containsKey(jobIdOld)) {
-					if ( JobBaseType.PERIODIC.intValue() == jobBaseType.intValue()) {
+					if ( isPeriodic ) {
 						if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
 							// iş bittikten sonra aşağıdaki adımları yapacaz
 							if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
@@ -384,7 +381,7 @@ public class Consolidator {
 
 				} else {
 					if (LiveStateInfoUtils.equalStates(jobPropertiesOld, StateName.RUNNING)) {
-						if (JobBaseType.PERIODIC.intValue() == jobBaseType.intValue()) {
+						if ( isPeriodic ) {
 							// set old job to terminate after execution
 							//jobQueueNew.get(jobIdOld).setStopRepeatativity(true);
 						}
@@ -420,8 +417,10 @@ public class Consolidator {
 				Job jobOld = jobsIteratorOld.next();
 
 				JobProperties jobPropertiesOld = jobOld.getJobRuntimeProperties().getJobProperties();
-
-				if (JobBaseType.PERIODIC.intValue() == jobPropertiesOld.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
+				
+				boolean isPeriodic = jobPropertiesOld.getManagement().getPeriodInfo() != null ? true : false;
+				
+				if ( isPeriodic ) {
 					String jobIdOld = jobOld.getJobKey();
 					if (jobQueueNew.containsKey(jobIdOld)) {
 						if (!identical(jobQueueNew.get(jobIdOld), jobOld)) {
@@ -494,7 +493,9 @@ public class Consolidator {
 				Job scheduledJob = jobsIterator.next();
 
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-				if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
+				boolean isPeriodic = jobProperties.getManagement().getPeriodInfo() != null ? true : false;
+				
+				if ( isPeriodic ) {
 					return false;
 				}
 				// SpaceWideRegistry.getSpaceWideLogger().info("   > JobQueue element jobsIterator: " + jobsIterator);
