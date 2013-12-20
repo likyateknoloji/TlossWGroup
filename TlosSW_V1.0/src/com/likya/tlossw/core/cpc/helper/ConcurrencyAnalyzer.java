@@ -29,7 +29,7 @@ public class ConcurrencyAnalyzer {
 				SpcInfoType spcInfoTypeMaster = spcLookupTableOld.get(keyStr);
 				SpcInfoType spcInfoTypeNew = spcLookupTableNew.get(spcId);
 
-				if (!spcInfoTypeNew.getSpcReferance().getConcurrencyManagement().getConcurrent()) {
+				if (!spcInfoTypeNew.getSpcReferance().getManagement().getConcurrencyManagement().getConcurrent()) {
 					// if (!spcInfoTypeNew.getSpcReferance().isConcurrent()) {
 
 					// ** Biraz parsing lazım :( *//*
