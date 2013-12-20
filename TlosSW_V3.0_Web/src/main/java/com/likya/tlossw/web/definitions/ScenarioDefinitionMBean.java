@@ -26,9 +26,8 @@ import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenario
 import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
-import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
+import com.likya.tlos.model.xmlbeans.data.ManagementDocument.Management;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
-import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -87,11 +86,11 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		JobList jobList = JobList.Factory.newInstance();
 		getScenario().setJobList(jobList);
 
-		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
-		getScenario().setTimeManagement(timeManagement);
+		Management management = Management.Factory.newInstance();
+		getScenario().setManagement(management);
 
 		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
-		getScenario().setConcurrencyManagement(concurrencyManagement);
+		getScenario().getManagement().setConcurrencyManagement(concurrencyManagement);
 
 		resetScenarioPanelInputs();
 	}
@@ -107,30 +106,37 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	}
 
 	protected void fillConcurrencyManagement() {
-		scenario.getConcurrencyManagement().setConcurrent(isConcurrent());
+		scenario.getManagement().getConcurrencyManagement().setConcurrent(isConcurrent());
 	}
 
-	protected void fillTimeManagement() {
+	protected void fillManagement() {
 
-		TimeManagement timeManagement;
+		Management management;
 
-		if (!getTimeManagementTabBean().isUseTimeManagement() || scenario == null) {
+		if (!getManagementTabBean().isUseManagement() || scenario == null) {
 			return;
 		}
 
-		timeManagement = scenario.getTimeManagement();
-		getTimeManagementTabBean().fillTimeManagement(timeManagement);
+		management = scenario.getManagement();
+		getManagementTabBean().fillManagement(management);
+		
+		scenario.getManagement().getConcurrencyManagement().setConcurrent(isConcurrent());
 	}
 
-	public void fillTimeManagementTab() {
+	public void fillManagementTab() {
 
-		TimeManagement timeManagement = null;
+		Management management = null;
 
 		if (scenario != null) {
-			timeManagement = scenario.getTimeManagement();
-			getTimeManagementTabBean().fillTimeManagementTab(timeManagement);
+			management = scenario.getManagement();
+			getManagementTabBean().fillManagementTab(management);
 		}
 
+		if (getScenario() != null) {
+			setConcurrent(getScenario().getManagement().getConcurrencyManagement().getConcurrent());
+		} else {
+			System.out.println("scenario is NULL in fillConcurrencyManagementTab !!");
+		}
 	}
 
 	protected void fillAlarmPreference() {
@@ -186,11 +192,11 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 	// ekrandan girilen degerler scenario icine dolduruluyor
 	public void fillScenarioProperties() {
 		fillBaseScenarioInfos();
-		fillTimeManagement();
+		fillManagement();
 		// şimdilik senaryolar arası bağımlılık yok
 		// fillDependencyDefinitions();
 		fillStateInfos();
-		fillConcurrencyManagement();
+		//fillConcurrencyManagement();
 		fillAlarmPreference();
 		fillLocalParameters();
 		fillAdvancedScenarioInfos();
@@ -203,13 +209,9 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		baseScenarioInfos.setComment(comment);
 
 		if (isJsActive()) {
-			baseScenarioInfos.setJsIsActive(JsIsActive.YES);
+			baseScenarioInfos.setJsIsActive(true);
 		} else {
-			baseScenarioInfos.setJsIsActive(JsIsActive.NO);
-		}
-
-		if (useCalendarDef) {
-			baseScenarioInfos.setCalendarId(Integer.parseInt(getJsCalendar()));
+			baseScenarioInfos.setJsIsActive(false);
 		}
 
 		baseScenarioInfos.setUserId(getWebAppUser().getId());
@@ -326,7 +328,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void fillScenarioPanel() {
 		fillBaseScenarioInfosTab();
-		fillTimeManagementTab();
+		fillManagementTab();
 		// şimdilik senaryolar arası bağımlılık yok
 		// fillDependencyDefinitionsTab();
 		// fillStateInfosTab();
@@ -343,14 +345,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 			scenarioName = baseScenarioInfos.getJsName();
 			comment = baseScenarioInfos.getComment();
 
-			if (baseScenarioInfos.getCalendarId() != 0) {
-				useCalendarDef = true;
-				setJsCalendar(baseScenarioInfos.getCalendarId() + "");
-			} else {
-				useCalendarDef = false;
-			}
-
-			if (baseScenarioInfos.getJsIsActive().equals(JsIsActive.YES)) {
+			if (baseScenarioInfos.getJsIsActive()) {
 				setJsActive(true);
 			} else {
 				setJsActive(false);
@@ -390,7 +385,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 
 	public void fillConcurrencyManagementTab() {
 		if (getScenario() != null) {
-			setConcurrent(getScenario().getConcurrencyManagement().getConcurrent());
+			setConcurrent(getScenario().getManagement().getConcurrencyManagement().getConcurrent());
 		} else {
 			System.out.println("scenario is NULL in fillConcurrencyManagementTab !!");
 		}
@@ -618,10 +613,10 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		jsBuffer.setToDocId( getSessionMediator().getCurrentDoc(Integer.valueOf(toTree)) );
 		jsBuffer.setToScope( getSessionMediator().getScope(Integer.valueOf(toTree)) );
 
-		if (jsBuffer.getFromDocId().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
-				&& getSessionMediator().getScopeText(jsBuffer.getFromScope()).equals(CommonConstantDefinitions.EXIST_MYDATA)) {
-			scenarioPath = "/dat:TlosProcessData";
-		}
+//		if (jsBuffer.getFromDocId().equals(CommonConstantDefinitions.EXIST_DEPLOYMENTDATA) 
+//				&& getSessionMediator().getScopeText(jsBuffer.getFromScope()).equals(CommonConstantDefinitions.EXIST_MYDATA)) {
+//			scenarioPath = "/dat:TlosProcessData";
+//		}
 
 		if (getDbOperations().copyJSToJS(jsBuffer.getFromDocId(), jsBuffer.getToDocId(), jsBuffer.getFromScope(), jsBuffer.getToScope(), getWebAppUser().getId(), jsBuffer.isJob(), jsBuffer.getJsId(), scenarioPath, jsBuffer.getNewJSName())) {
 			addMessage( purpose, FacesMessage.SEVERITY_INFO, "tlos.success.js."+purpose, null);

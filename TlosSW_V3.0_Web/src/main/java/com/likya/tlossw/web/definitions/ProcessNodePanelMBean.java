@@ -104,7 +104,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	private void fillProcessNodeProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getProcessNodes() != null && jobTypeDetails.getSpecialParameters().getProcessNodes().sizeOfProcessNodeArray() > 0) {
 			ProcessNodes processNodes = jobTypeDetails.getSpecialParameters().getProcessNodes();
 			processNode = processNodes.getProcessNodeArray(0);
@@ -172,7 +172,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
 		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin
@@ -195,7 +195,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 				append.setType(Append.Type.LINE);
 
 			} else if (sourceType.equals(Source.XML.toString())) {
-				append.setType(Append.Type.TAG);
+				append.setType(Append.Type.X_PATH);
 			}
 
 			processNode.setAppend(append);
@@ -265,7 +265,7 @@ public class ProcessNodePanelMBean extends JobBasePanelBean implements Serializa
 					split.setStringValue(lineToSplit);
 				}
 			} else if (sourceType.equals(Source.XML.toString())) {
-				split.setType(Split.Type.TAG);
+				split.setType(Split.Type.X_PATH);
 				split.setStringValue(tagToSplit);
 			}
 

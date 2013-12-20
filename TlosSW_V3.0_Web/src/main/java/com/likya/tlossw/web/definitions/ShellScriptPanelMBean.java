@@ -38,7 +38,7 @@ public class ShellScriptPanelMBean extends JobBasePanelBean implements Serializa
 
 	private void fillShellScriptProperties() {
 		if (getJobProperties() != null) {
-			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 			jobPath = jobTypeDetails.getJobPath();
 			jobCommand = jobTypeDetails.getJobCommand();
@@ -48,7 +48,7 @@ public class ShellScriptPanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);
 	}

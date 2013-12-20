@@ -16,7 +16,7 @@ import javax.xml.namespace.QName;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
 import com.likya.tlos.model.xmlbeans.common.JsTypeDocument.JsType;
 import com.likya.tlos.model.xmlbeans.data.AdvancedJobInfosDocument.AdvancedJobInfos;
@@ -26,13 +26,11 @@ import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.Concurre
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobAutoRetryDocument.JobAutoRetry;
-import com.likya.tlos.model.xmlbeans.data.JobInfosDocument.JobInfos;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.JobSafeToRestartDocument.JobSafeToRestart;
-import com.likya.tlos.model.xmlbeans.data.JsTimeOutDocument.JsTimeOut;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
-import com.likya.tlos.model.xmlbeans.data.RunEvenIfFailedDocument.RunEvenIfFailed;
+import com.likya.tlos.model.xmlbeans.data.ManagementDocument.Management;
 import com.likya.tlos.model.xmlbeans.data.StateInfosDocument.StateInfos;
+import com.likya.tlos.model.xmlbeans.data.TimeControlDocument.TimeControl;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.JobStatusListDocument.JobStatusList;
 import com.likya.tlos.model.xmlbeans.state.JsDependencyRuleDocument.JsDependencyRule;
@@ -54,7 +52,6 @@ import com.likya.tlossw.web.definitions.helpers.EnvVariablesTabBean;
 import com.likya.tlossw.web.definitions.helpers.StateInfosTabBean;
 import com.likya.tlossw.web.model.JSBuffer;
 import com.likya.tlossw.web.tree.JSTree;
-import com.likya.tlossw.web.utils.BeanUtils;
 import com.likya.tlossw.web.utils.ComboListUtils;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
@@ -119,11 +116,6 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	private boolean dependencyInsertButton = true;
 
-	// cascadingConditions
-	private boolean runEvenIfFailed;
-	private boolean jobSafeToRestart;
-	private boolean jobAutoRetry;
-
 //	/* live state info */
 //	private String stateName;
 //	private String subStateName;
@@ -152,29 +144,31 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		super.init();
 
-		baseJobInfosTabBean = new BaseJobInfosTabBean(this, getJobBaseType());
+		baseJobInfosTabBean = new BaseJobInfosTabBean(this);
 		stateInfosTabBean = new StateInfosTabBean(this);
 		envVariablesTabBean = new EnvVariablesTabBean();
 
 		jobProperties = JobProperties.Factory.newInstance();
 
 		BaseJobInfos baseJobInfos = BaseJobInfos.Factory.newInstance();
-		JobInfos jobInfos = JobInfos.Factory.newInstance();
+
 		JobTypeDetails jobTypeDetails = JobTypeDetails.Factory.newInstance();
-		jobInfos.setJobTypeDetails(jobTypeDetails);
-		baseJobInfos.setJobInfos(jobInfos);
+
 		jobProperties.setBaseJobInfos(baseJobInfos);
 
-		TimeManagement timeManagement = TimeManagement.Factory.newInstance();
-		JsTimeOut jobTimeOut = JsTimeOut.Factory.newInstance();
-		timeManagement.setJsTimeOut(jobTimeOut);
-		jobProperties.setTimeManagement(timeManagement);
+		Management management = Management.Factory.newInstance();
+		jobProperties.setManagement(management);
+		TimeControl timeControl = TimeControl.Factory.newInstance();
+		
+		DatetimeType jobTimeOut = DatetimeType.Factory.newInstance();
+		timeControl.setJsTimeOut(jobTimeOut);
+		jobProperties.getManagement().setTimeControl(timeControl);
 
 		CascadingConditions cascadingConditions = CascadingConditions.Factory.newInstance();
-		jobProperties.setCascadingConditions(cascadingConditions);
+		jobProperties.getManagement().setCascadingConditions(cascadingConditions);
 
 		ConcurrencyManagement concurrencyManagement = ConcurrencyManagement.Factory.newInstance();
-		jobProperties.setConcurrencyManagement(concurrencyManagement);
+		jobProperties.getManagement().setConcurrencyManagement(concurrencyManagement);
 
 		resetPanelInputs();
 
@@ -182,7 +176,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 		ComboListUtils.logTimeInfo("JobBasePanelBean.initJobPanel Süre : ", startTime);
 
-		fill3S();
+		fill3S(); 
 	}
 
 	private void fill3S() {
@@ -192,11 +186,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	public void fillJobPanel() {
 		fillBaseInfosTab();
-		fillTimeManagementTab();
+		fillManagementTab();
 		fillDependencyDefinitionsTab();
-		fillCascadingConditionsTab();
+		//fillCascadingConditionsTab();
 		fillStateInfosTab();
-		fillConcurrencyManagementTab();
+		//fillConcurrencyManagementTab();
 		fillAlarmPreferenceTab();
 		fillLocalParametersTab();
 		fillEnvVariablesTab();
@@ -228,15 +222,44 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	}
 
-	public void fillTimeManagementTab() {
+	public void fillManagementTab() {
 
-		TimeManagement timeManagement = null;
+		Management management = null;
 
 		if (jobProperties != null) {
-			timeManagement = jobProperties.getTimeManagement();
-			getTimeManagementTabBean().fillTimeManagementTab(timeManagement);
+			management = jobProperties.getManagement();
+			getManagementTabBean().fillManagementTab(management);
+		}
+		
+		if (jobProperties != null) {
+			setConcurrent(jobProperties.getManagement().getConcurrencyManagement().getConcurrent());
+		} else {
+			System.out.println("jobProperties is NULL in fillConcurrencyManagementTab !!");
 		}
 
+		if (jobProperties != null) {
+			CascadingConditions cascadingConditions = jobProperties.getManagement().getCascadingConditions();
+
+			if (cascadingConditions.getJobAutoRetry().getBooleanValue()) {
+				setJsAutoRetry(true);
+			} else {
+				setJsAutoRetry(false);
+			}
+			
+			if (cascadingConditions.getJobSafeToRestart()) {
+				setJsSafeToRestart(true);
+			} else {
+				setJsSafeToRestart(false);
+			}
+			
+			if (cascadingConditions.getRunEvenIfFailed()) {
+				setRunEvenIfFailed(true);
+			} else {
+				setRunEvenIfFailed(false);
+			}
+		} else {
+			System.out.println("jobProperties is NULL in fillCascadingConditionsTab !!");
+		}
 	}
 
 	public void fillDependencyDefinitionsTab() {
@@ -250,31 +273,31 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	}
 
-	private void fillCascadingConditionsTab() {
-		if (jobProperties != null) {
-			CascadingConditions cascadingConditions = jobProperties.getCascadingConditions();
-
-			if (cascadingConditions.getJobAutoRetry().equals(JobAutoRetry.YES)) {
-				jobAutoRetry = true;
-			} else {
-				jobAutoRetry = false;
-			}
-
-			if (cascadingConditions.getJobSafeToRestart().equals(JobSafeToRestart.YES)) {
-				jobSafeToRestart = true;
-			} else {
-				jobSafeToRestart = false;
-			}
-
-			if (cascadingConditions.getRunEvenIfFailed().equals(RunEvenIfFailed.YES)) {
-				runEvenIfFailed = true;
-			} else {
-				runEvenIfFailed = false;
-			}
-		} else {
-			System.out.println("jobProperties is NULL in fillCascadingConditionsTab !!");
-		}
-	}
+//	private void fillCascadingConditionsTab() {
+//		if (jobProperties != null) {
+//			CascadingConditions cascadingConditions = jobProperties.getManagement().getCascadingConditions();
+//
+//			if (cascadingConditions.getJobAutoRetry()) {
+//				jobAutoRetry = true;
+//			} else {
+//				jobAutoRetry = false;
+//			}
+//
+//			if (cascadingConditions.getJobSafeToRestart()) {
+//				jobSafeToRestart = true;
+//			} else {
+//				jobSafeToRestart = false;
+//			}
+//
+//			if (cascadingConditions.getRunEvenIfFailed()) {
+//				runEvenIfFailed = true;
+//			} else {
+//				runEvenIfFailed = false;
+//			}
+//		} else {
+//			System.out.println("jobProperties is NULL in fillCascadingConditionsTab !!");
+//		}
+//	}
 
 	private void fillStateInfosTab() {
 		if (jobProperties != null) {
@@ -299,13 +322,13 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
-	private void fillConcurrencyManagementTab() {
-		if (jobProperties != null) {
-			setConcurrent(jobProperties.getConcurrencyManagement().getConcurrent());
-		} else {
-			System.out.println("jobProperties is NULL in fillConcurrencyManagementTab !!");
-		}
-	}
+//	private void fillConcurrencyManagementTab() {
+//		if (jobProperties != null) {
+//			setConcurrent(jobProperties.getManagement().getConcurrencyManagement().getConcurrent());
+//		} else {
+//			System.out.println("jobProperties is NULL in fillConcurrencyManagementTab !!");
+//		}
+//	}
 
 	public void fillAlarmPreferenceTab() {
 		getAlarmPreferencesTabBean().fillAlarmPreferenceTab(false, jobProperties);
@@ -327,10 +350,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
+	// Eger Trigger Time ise
 	// bir ise ya baslayacagi zaman verilmeli ya da bagimlilik tanimlanmali
 	// ikisi de yoksa validasyondan gecemiyor
 	public boolean validateTimeManagement() {
-		if (getTimeManagementTabBean().getStartTime() == null || getTimeManagementTabBean().getStartTime().equals("")) {
+		if (getManagementTabBean().getStartTime() == null || getManagementTabBean().getStartTime().equals("")) {
 			if (jobProperties.getDependencyList() == null || jobProperties.getDependencyList().getItemArray().length == 0) {
 				addMessage("jobInsert", FacesMessage.SEVERITY_ERROR, "tlos.validation.job.timeOrDependency", null);
 				return false;
@@ -343,11 +367,11 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	public void fillJobProperties() {
 		fillBaseJobInfos();
 		fillEnvVariables();
-		fillTimeManagement();
+		fillManagement();
 		fillDependencyDefinitions();
-		fillCascadingConditions();
+		//fillCascadingConditions();
 		fillStateInfos();
-		fillConcurrencyManagement();
+		//fillConcurrencyManagement();
 		fillAlarmPreference();
 		fillLocalParameters();
 		fillAdvancedJobInfos();
@@ -380,24 +404,36 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 
 	}
 
-	protected void fillTimeManagement() {
+	protected void fillManagement() {
 
-		TimeManagement timeManagement;
+		Management management;
 
-		if (!getTimeManagementTabBean().isUseTimeManagement() || jobProperties == null) {
+		if (!getManagementTabBean().isUseManagement() || jobProperties == null) {
 			return;
 		}
 
-		timeManagement = jobProperties.getTimeManagement();
-		getTimeManagementTabBean().fillTimeManagement(timeManagement);
+		management = jobProperties.getManagement();
+		getManagementTabBean().fillManagement(management);
 
+		jobProperties.getManagement().getCascadingConditions().setRunEvenIfFailed(isRunEvenIfFailed());
+
+		jobProperties.getManagement().getCascadingConditions().setJobSafeToRestart(isJsSafeToRestart());
+
+		JobAutoRetry jobAutoRetry = JobAutoRetry.Factory.newInstance();
+		jobAutoRetry.setBooleanValue(isJsAutoRetry());
+		jobProperties.getManagement().getCascadingConditions().setJobAutoRetry(jobAutoRetry);
+		
+		jobProperties.getManagement().getConcurrencyManagement().setConcurrent(isConcurrent());
 	}
 
 	private void fillDependencyDefinitions() {
 		// periyodik olmayan isler icin bagimlilik tanimlarina bakiyor, son
 		// durumda bagimlik tanimlanmamissa jobproperties icindeki ilgili kismi
 		// kaldiriyor
-		if (jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().equals(JobBaseType.NON_PERIODIC)) {
+		
+		boolean isPeriodic = jobProperties.getManagement().getPeriodInfo() != null ? true : false;
+		
+		if (!isPeriodic) {
 
 			if (jobProperties.getDependencyList() != null && jobProperties.getDependencyList().getItemArray().length == 0) {
 				XmlCursor xmlCursor = jobProperties.getDependencyList().newCursor();
@@ -406,28 +442,28 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		}
 	}
 
-	private void fillCascadingConditions() {
-
-		jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.Enum.forString(BeanUtils.boolToWord(runEvenIfFailed)));
-
-		jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.Enum.forString(BeanUtils.boolToWord(jobSafeToRestart)));
-
-		jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.Enum.forString(BeanUtils.boolToWord(jobAutoRetry)));
-
-		/*
-		 * if (runEvenIfFailed) {
-		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.YES); } else {
-		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.NO); }
-		 * 
-		 * if (jobSafeToRestart) {
-		 * jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.YES); } else
-		 * { jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.NO); }
-		 * 
-		 * if (jobAutoRetry) {
-		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.YES); } else {
-		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.NO); }
-		 */
-	}
+//	private void fillCascadingConditions() {
+//
+//		jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.Enum.forString(BeanUtils.boolToWord(runEvenIfFailed)));
+//
+//		jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.Enum.forString(BeanUtils.boolToWord(jobSafeToRestart)));
+//
+//		jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.Enum.forString(BeanUtils.boolToWord(jobAutoRetry)));
+//
+//		/*
+//		 * if (runEvenIfFailed) {
+//		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.YES); } else {
+//		 * jobProperties.getCascadingConditions().setRunEvenIfFailed(RunEvenIfFailed.NO); }
+//		 * 
+//		 * if (jobSafeToRestart) {
+//		 * jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.YES); } else
+//		 * { jobProperties.getCascadingConditions().setJobSafeToRestart(JobSafeToRestart.NO); }
+//		 * 
+//		 * if (jobAutoRetry) {
+//		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.YES); } else {
+//		 * jobProperties.getCascadingConditions().setJobAutoRetry(JobAutoRetry.NO); }
+//		 */
+//	}
 
 	private void fillStateInfos() {
 		if (jobProperties.getStateInfos() == null) {
@@ -477,7 +513,7 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 	}
 
 	protected void fillConcurrencyManagement() {
-		jobProperties.getConcurrencyManagement().setConcurrent(isConcurrent());
+		jobProperties.getManagement().getConcurrencyManagement().setConcurrent(isConcurrent());
 	}
 
 	protected void fillAlarmPreference() {
@@ -756,11 +792,32 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
 		
 		JobProperties draggedJobProperties = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), draggedWsNode.getId());
-
-		if (jobProperties.getBaseJobInfos().getCalendarId() != draggedJobProperties.getBaseJobInfos().getCalendarId()) {
+		
+		TimeManagement timeManagement = jobProperties.getManagement().getTimeManagement();
+		int nedir = 0;
+		int iSizeArray = timeManagement.getCalendars().sizeOfCalendarIdArray();
+		int jSizeArray = draggedJobProperties.getManagement().getTimeManagement().getCalendars().sizeOfCalendarIdArray();
+		
+        //TODO CalendarId lerin farkli olmasi durumunda bile uyumlu olma olabilir. Calisilacak.
+		for(int i=0; i < iSizeArray; i++) {
+			
+			String calendarIdi = timeManagement.getCalendars().getCalendarIdArray(i).toString(); 
+			
+			for(int j=0; j < jSizeArray; j++) {
+				
+				String calendarIdj = draggedJobProperties.getManagement().getTimeManagement().getCalendars().getCalendarIdArray(j).toString(); 
+				
+				if ( calendarIdi.equalsIgnoreCase(calendarIdj)) {
+					nedir++;
+				}
+				
+			}
+		}
+		if ( iSizeArray != nedir) { //bagimli olan is, bagli oldugu isin butun calendarId lerini icermeli !!
 			addMessage("addDependency", FacesMessage.SEVERITY_ERROR, "tlos.info.job.dependency.calendar", null);
 			return false;
 		}
+
 
 		return true;
 	}
@@ -1127,29 +1184,29 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		this.jobPathInScenario = jobPathInScenario;
 	}
 
-	public boolean isRunEvenIfFailed() {
-		return runEvenIfFailed;
-	}
-
-	public void setRunEvenIfFailed(boolean runEvenIfFailed) {
-		this.runEvenIfFailed = runEvenIfFailed;
-	}
-
-	public boolean isJobSafeToRestart() {
-		return jobSafeToRestart;
-	}
-
-	public void setJobSafeToRestart(boolean jobSafeToRestart) {
-		this.jobSafeToRestart = jobSafeToRestart;
-	}
-
-	public boolean isJobAutoRetry() {
-		return jobAutoRetry;
-	}
-
-	public void setJobAutoRetry(boolean jobAutoRetry) {
-		this.jobAutoRetry = jobAutoRetry;
-	}
+//	public boolean isRunEvenIfFailed() {
+//		return runEvenIfFailed;
+//	}
+//
+//	public void setRunEvenIfFailed(boolean runEvenIfFailed) {
+//		this.runEvenIfFailed = runEvenIfFailed;
+//	}
+//
+//	public boolean isJobSafeToRestart() {
+//		return jobSafeToRestart;
+//	}
+//
+//	public void setJobSafeToRestart(boolean jobSafeToRestart) {
+//		this.jobSafeToRestart = jobSafeToRestart;
+//	}
+//
+//	public boolean isJobAutoRetry() {
+//		return jobAutoRetry;
+//	}
+//
+//	public void setJobAutoRetry(boolean jobAutoRetry) {
+//		this.jobAutoRetry = jobAutoRetry;
+//	}
 
 	/*public String getStateName() {
 		return stateName;

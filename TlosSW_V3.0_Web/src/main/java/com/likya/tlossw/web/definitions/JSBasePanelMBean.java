@@ -7,7 +7,6 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
@@ -17,7 +16,7 @@ import com.likya.tlossw.web.definitions.helpers.AlarmPreferencesTabBean;
 import com.likya.tlossw.web.definitions.helpers.DevelopmentLifeCycleTabBean;
 import com.likya.tlossw.web.definitions.helpers.LocalParametersTabBean;
 import com.likya.tlossw.web.definitions.helpers.LogAnalyzingTabBean;
-import com.likya.tlossw.web.definitions.helpers.TimeManagementTabBean;
+import com.likya.tlossw.web.definitions.helpers.ManagementTabBean;
 import com.likya.tlossw.web.utils.ComboListUtils;
 
 public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterface {
@@ -28,10 +27,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private Collection<SelectItem> definedAgentList;
 	private Collection<SelectItem> jsSLAList;
 	private Collection<SelectItem> resourceNameList;
-	private Collection<SelectItem> jobBaseTypeList;
 	private Collection<SelectItem> eventTypeDefList;
-	private Collection<SelectItem> jobTypeDefList;
-	private Collection<SelectItem> relativeTimeOptionList;
+	private Collection<SelectItem> triggerList;
 	private Collection<SelectItem> unitTypeList;
 	private Collection<SelectItem> jobStateNameList;
 	private Collection<SelectItem> jobSubStateNameList;
@@ -40,6 +37,11 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private Collection<SelectItem> jobStateList;
 	private Collection<SelectItem> jobSubstateList;
 
+	// cascadingConditions
+	private boolean runEvenIfFailed;
+	private boolean jsSafeToRestart;
+	private boolean jsAutoRetry;
+	
 	private boolean isScenario = false;
 	private boolean jsActive = false;
 
@@ -63,9 +65,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private String oSystem;
 	private Collection<SelectItem> oSystemList = null;
 
-	private String jobBaseType = JobBaseType.NON_PERIODIC.toString();
-
-	private TimeManagementTabBean timeManagementTabBean;
+	private ManagementTabBean managementTabBean;
 	private LocalParametersTabBean localParametersTabBean;
 	private LogAnalyzingTabBean logAnalyzingTabBean;
 	private AdvancedJobInfosTab advancedJobInfosTab;
@@ -73,7 +73,9 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 	private DevelopmentLifeCycleTabBean developmentLifeCycleTabBean;
 
 	public void init() {
-		timeManagementTabBean = new TimeManagementTabBean(this, isScenario);
+		boolean isPeriodic = false;
+		
+		managementTabBean = new ManagementTabBean(this, isScenario, isPeriodic);
 		logAnalyzingTabBean = new LogAnalyzingTabBean();
 		localParametersTabBean = new LocalParametersTabBean();
 		advancedJobInfosTab = new AdvancedJobInfosTab(this);
@@ -113,7 +115,7 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	public void resetPanelInputs() {
 
-		timeManagementTabBean.resetTab();
+		managementTabBean.resetTab();
 
 		advancedJobInfosTab.resetTab();
 
@@ -228,8 +230,8 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		return logAnalyzingTabBean;
 	}
 
-	public TimeManagementTabBean getTimeManagementTabBean() {
-		return timeManagementTabBean;
+	public ManagementTabBean getManagementTabBean() {
+		return managementTabBean;
 	}
 
 	public LocalParametersTabBean getLocalParametersTabBean() {
@@ -249,14 +251,6 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	public void setJsCalendarList(Collection<SelectItem> jsCalendarList) {
 		this.jsCalendarList = jsCalendarList;
-	}
-
-	public String getJobBaseType() {
-		return jobBaseType;
-	}
-
-	public void setJobBaseType(String jobBaseType) {
-		this.jobBaseType = jobBaseType;
 	}
 
 	public String getoSystem() {
@@ -352,16 +346,13 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		this.resourceNameList = resourceNameList;
 	}
 
-	public Collection<SelectItem> getJobBaseTypeList() {
-		if (jobBaseTypeList == null) {
-			jobBaseTypeList = ComboListUtils.constructJobBaseTypeList();
-		}
-		return jobBaseTypeList;
-	}
+//	public Collection<SelectItem> getJobBaseTypeList() {
+//		if (jobBaseTypeList == null) {
+//			jobBaseTypeList = ComboListUtils.constructJobBaseTypeList();
+//		}
+//		return jobBaseTypeList;
+//	}
 
-	public void setJobBaseTypeList(Collection<SelectItem> jobBaseTypeList) {
-		this.jobBaseTypeList = jobBaseTypeList;
-	}
 
 	public Collection<SelectItem> getEventTypeDefList() {
 		if (eventTypeDefList == null) {
@@ -374,27 +365,19 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 		this.eventTypeDefList = eventTypeDefList;
 	}
 
-	public Collection<SelectItem> getJobTypeDefList() {
-		if (jobTypeDefList == null) {
-			jobTypeDefList = ComboListUtils.constructJobTypeDefList();
+	public Collection<SelectItem> getTriggerList() {
+		if (triggerList == null) {
+			triggerList = ComboListUtils.constructTriggerList();
 		}
-		return jobTypeDefList;
+		return triggerList;
 	}
 
-	public void setJobTypeDefList(Collection<SelectItem> jobTypeDefList) {
-		this.jobTypeDefList = jobTypeDefList;
-	}
-
-	public Collection<SelectItem> getRelativeTimeOptionList() {
-		if (relativeTimeOptionList == null) {
-			relativeTimeOptionList = ComboListUtils.constructRelativeTimeOptionList();
-		}
-		return relativeTimeOptionList;
-	}
-
-	public void setRelativeTimeOptionList(Collection<SelectItem> relativeTimeOptionList) {
-		this.relativeTimeOptionList = relativeTimeOptionList;
-	}
+//	public Collection<SelectItem> getRelativeTimeOptionList() {
+//		if (relativeTimeOptionList == null) {
+//			relativeTimeOptionList = ComboListUtils.constructRelativeTimeOptionList();
+//		}
+//		return relativeTimeOptionList;
+//	}
 
 	public Collection<SelectItem> getUnitTypeList() {
 		if (unitTypeList == null) {
@@ -473,6 +456,30 @@ public class JSBasePanelMBean extends TlosSWBaseBean implements JSDefPanelInterf
 
 	public void setJsOverrideAndDeployDialog(boolean jsOverrideAndDeployDialog) {
 		this.jsOverrideAndDeployDialog = jsOverrideAndDeployDialog;
+	}
+
+	public boolean isRunEvenIfFailed() {
+		return runEvenIfFailed;
+	}
+
+	public void setRunEvenIfFailed(boolean runEvenIfFailed) {
+		this.runEvenIfFailed = runEvenIfFailed;
+	}
+
+	public boolean isJsSafeToRestart() {
+		return jsSafeToRestart;
+	}
+
+	public void setJsSafeToRestart(boolean jsSafeToRestart) {
+		this.jsSafeToRestart = jsSafeToRestart;
+	}
+
+	public boolean isJsAutoRetry() {
+		return jsAutoRetry;
+	}
+
+	public void setJsAutoRetry(boolean jsAutoRetry) {
+		this.jsAutoRetry = jsAutoRetry;
 	}
 
 	// public int getGmt() {

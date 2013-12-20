@@ -83,7 +83,7 @@ public class DBJobsPanelMBean extends JobBasePanelBean implements Serializable {
 	}
 
 	private void fillDBJobProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getDbJobDefinition() != null) {
 			dbJobDefinition = jobTypeDetails.getSpecialParameters().getDbJobDefinition();
 
@@ -110,7 +110,7 @@ public class DBJobsPanelMBean extends JobBasePanelBean implements Serializable {
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
 		dbJobDefinition = DbJobDefinition.Factory.newInstance();

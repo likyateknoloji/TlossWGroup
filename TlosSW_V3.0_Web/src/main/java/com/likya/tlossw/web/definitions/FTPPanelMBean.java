@@ -154,7 +154,7 @@ public class FTPPanelMBean extends JobBasePanelBean implements Serializable {
 	}
 
 	private void fillFTPProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getFtpAdapterProperties() != null) {
 			ftpProperties = jobTypeDetails.getSpecialParameters().getFtpAdapterProperties();
@@ -258,7 +258,7 @@ public class FTPPanelMBean extends JobBasePanelBean implements Serializable {
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
 		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin bu

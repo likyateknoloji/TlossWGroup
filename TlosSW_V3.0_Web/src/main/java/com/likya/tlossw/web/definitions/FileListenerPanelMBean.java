@@ -77,7 +77,7 @@ public class FileListenerPanelMBean extends JobBasePanelBean implements Serializ
 	}
 
 	private void fillFileListenerProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getFileListener() != null) {
 			fileListener = jobTypeDetails.getSpecialParameters().getFileListener();
 
@@ -117,7 +117,7 @@ public class FileListenerPanelMBean extends JobBasePanelBean implements Serializ
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
 		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin

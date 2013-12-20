@@ -58,7 +58,7 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 	}
 
 	private void fillWebServiceProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getWebServiceDefinition() != null) {
 			selectedWebService = jobTypeDetails.getSpecialParameters().getWebServiceDefinition();
@@ -83,7 +83,7 @@ public class WebServicePanelMBean extends JobBasePanelBean implements Serializab
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 		if (jobTypeDetails.getSpecialParameters() == null) {
 			SpecialParameters specialParameters = SpecialParameters.Factory.newInstance();

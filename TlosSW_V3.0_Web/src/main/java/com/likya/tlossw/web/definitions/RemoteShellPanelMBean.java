@@ -55,7 +55,7 @@ public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializa
 
 	private void fillRemoteShellProperties() {
 		if (getJobProperties() != null) {
-			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 			jobPath = jobTypeDetails.getJobPath();
 			jobCommand = jobTypeDetails.getJobCommand();
@@ -73,7 +73,7 @@ public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);
 
@@ -81,10 +81,10 @@ public class RemoteShellPanelMBean extends JobBasePanelBean implements Serializa
 		executeRShellParams.setIpAddress(ipAddress);
 		executeRShellParams.setPort(Integer.parseInt(port));
 
-		userName = executeRShellParams.getUserName();
-		password = executeRShellParams.getUserPassword();
-		confirmPassword = password;
-		fileSeperator = executeRShellParams.getFileSeperator();
+		executeRShellParams.setUserName(userName);
+		executeRShellParams.setUserPassword(password);
+		//confirmPassword = password;
+		executeRShellParams.setFileSeperator(fileSeperator);
 	}
 
 	public static Logger getLogger() {

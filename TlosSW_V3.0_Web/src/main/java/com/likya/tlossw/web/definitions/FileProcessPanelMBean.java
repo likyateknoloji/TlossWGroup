@@ -185,7 +185,7 @@ public class FileProcessPanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	private void fillFileProcessProperties() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		if (jobTypeDetails.getSpecialParameters() != null && jobTypeDetails.getSpecialParameters().getFileAdapterProperties() != null) {
 			fileProcessProperties = jobTypeDetails.getSpecialParameters().getFileAdapterProperties();
 
@@ -346,7 +346,7 @@ public class FileProcessPanelMBean extends JobBasePanelBean implements Serializa
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		SpecialParameters specialParameters;
 
 		// periyodik job alanlari doldurulurken bu alan olusturuldugu icin

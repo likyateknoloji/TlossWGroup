@@ -19,7 +19,7 @@ import org.primefaces.model.TreeNode;
 
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
-import com.likya.tlos.model.xmlbeans.data.JsIsActiveDocument.JsIsActive;
+import com.likya.tlos.model.xmlbeans.data.ManagementDocument.Management;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
@@ -290,12 +290,12 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 
 		tlosProcessData.addNewBaseScenarioInfos().setJsName("Ana Senaryo");
 		tlosProcessData.getBaseScenarioInfos().setComment("Ana Senaryo burada yer alir");
-		tlosProcessData.getBaseScenarioInfos().setJsIsActive(JsIsActive.YES);
+		tlosProcessData.getBaseScenarioInfos().setJsIsActive(true);
 		tlosProcessData.getBaseScenarioInfos().setUserId(getWebAppUser().getId());
 
-		tlosProcessData.addNewTimeManagement();
+		Management management = tlosProcessData.addNewManagement();
 		tlosProcessData.addNewAdvancedScenarioInfos();
-		tlosProcessData.addNewConcurrencyManagement().setRunningId(getWebAppUser().getId() + "");
+		management.addNewConcurrencyManagement().setRunningId(getWebAppUser().getId() + "");
 
 		tlosProcessData.addNewJobList();
 
@@ -316,11 +316,11 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		} else {
 			// tek job ise
 			Calendar calendar = Calendar.getInstance();
-			Calendar jobCalendar = jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime();
+			Calendar jobCalendar = jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStartTime().getTime();
 			jobCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
 			jobCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
 			jobCalendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-			jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setDate(jobCalendar);
+			jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStartTime().setDate(jobCalendar);
 			tlosProcessData.getJobList().addNewJobProperties().set(jobProperties);
 		}
 
@@ -345,7 +345,7 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		jobProperties = getDbOperations().getJobCopyFromId(CommonConstantDefinitions.EXIST_TEMPLATEDATA, getWebAppUser().getId(), getSessionMediator().getDocumentScope(CommonConstantDefinitions.EXIST_TEMPLATEDATA), draggedTemplateName.getId());
 		//jobProperties.setID("0");
 
-		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+		int jobType = jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 		initializeJobPanel(jobType);
 	}

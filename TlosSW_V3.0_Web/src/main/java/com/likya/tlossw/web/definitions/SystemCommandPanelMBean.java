@@ -39,7 +39,7 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 
 	private void fillSystemCommandProperties() {
 		if (getJobProperties() != null) {
-			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+			JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 
 			jobPath = jobTypeDetails.getJobPath();
 			jobCommand = jobTypeDetails.getJobCommand();
@@ -50,7 +50,7 @@ public class SystemCommandPanelMBean extends JobBasePanelBean implements Seriali
 	}
 
 	public void fillJobPropertyDetails() {
-		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		JobTypeDetails jobTypeDetails = getJobProperties().getBaseJobInfos().getJobTypeDetails();
 		jobTypeDetails.setJobCommand(jobCommand);
 		jobTypeDetails.setJobPath(jobPath);
 	}
