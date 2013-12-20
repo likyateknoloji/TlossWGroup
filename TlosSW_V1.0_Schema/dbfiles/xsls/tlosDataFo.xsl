@@ -308,7 +308,7 @@
                     </fo:table-cell>
                     <fo:table-cell column-number="5" display-align="before">
                         <fo:block>
-                            <xsl:value-of select="dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:jobCommandType"/>
+                            <xsl:value-of select="dat:baseJobInfos/com:jobTypeDetails/com:jobCommandType"/>
                         </fo:block>
                     </fo:table-cell>
                     <fo:table-cell column-number="6" display-align="before">
