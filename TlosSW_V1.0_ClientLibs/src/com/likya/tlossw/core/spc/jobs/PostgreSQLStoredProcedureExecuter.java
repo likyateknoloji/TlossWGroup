@@ -58,8 +58,8 @@ public class PostgreSQLStoredProcedureExecuter extends SQLScriptExecuter {
 					remoteInfo = " -h " + ipAddress + " -p " + port;
 				}
 				
-				String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureSchemaName();
-				String sqlStoredProcedureName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureName();
+				String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureSchemaName();
+				String sqlStoredProcedureName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureName();
 
 				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -c \"Select " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedureName + "\"";
 

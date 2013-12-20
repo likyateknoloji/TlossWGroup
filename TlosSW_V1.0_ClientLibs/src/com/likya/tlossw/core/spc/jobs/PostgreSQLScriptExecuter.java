@@ -58,8 +58,8 @@ public class PostgreSQLScriptExecuter extends SQLScriptExecuter {
 					remoteInfo = " -h " + ipAddress + " -p " + port;
 				}
 
-				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
-				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
+				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
+				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
 
 				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -f " + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
 

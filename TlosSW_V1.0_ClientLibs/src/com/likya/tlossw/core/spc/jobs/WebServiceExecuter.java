@@ -62,7 +62,7 @@ public class WebServiceExecuter extends Job {
 
 	transient protected Process process;
 
-	public final static String WS_RESULT = "wsResult";
+	public final static String WS_RESULT = "output1";
 
 	public WebServiceExecuter(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);
@@ -119,6 +119,9 @@ public class WebServiceExecuter extends Job {
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Web servis isinde hata !" + System.getProperty("line.separator"));
 					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " " + err.getMessage() + System.getProperty("line.separator"));
 
+					ParamList thisParam = new ParamList(ERR_RESULT, "STRING", "VARIABLE", err.getMessage());
+					myParamList.add(thisParam);
+					
 					for (StackTraceElement element : err.getStackTrace()) {
 						outputFile.write("\t" + element.toString() + System.getProperty("line.separator"));
 					}
@@ -130,7 +133,7 @@ public class WebServiceExecuter extends Job {
 				//insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
 			}
 
-			if (processJobResult(retryFlag, myLogger, myParamList)) {
+			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
 			}
@@ -142,6 +145,12 @@ public class WebServiceExecuter extends Job {
 
 		try {
 			outputFile.close();
+			
+			ParamList thisParam = new ParamList(LOG_RESULT, "STRING", "VARIABLE", outputFile.toString());
+			myParamList.add(thisParam);
+			
+			processJobResult(retryFlag, myLogger, myParamList);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -151,7 +160,7 @@ public class WebServiceExecuter extends Job {
 	public String callOperation() {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
-		WebServiceDefinition webService = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getWebServiceDefinition();
+		WebServiceDefinition webService = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getWebServiceDefinition();
 
 		// sadece soap 1.1 icin calisiyor
 		if (!webService.getBindingList().getBindingArray(0).getBindingName().equals(BindingName.SOAP_1_1)) {

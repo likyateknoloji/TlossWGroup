@@ -37,8 +37,8 @@ public class ExecuteInRemoteSch extends ExecuteSchComponent {
 
 				startWathcDogTimer();
 
-				String jobPath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath();
-				String jobCommand = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand();
+				String jobPath = jobProperties.getBaseJobInfos().getJobTypeDetails().getJobPath();
+				String jobCommand = jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommand();
 
 				insertNewLiveStateInfo(StateName.INT_RUNNING, SubstateName.INT_ON_RESOURCE, StatusName.INT_TIME_IN);
 

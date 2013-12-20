@@ -23,7 +23,7 @@ public abstract class FileProcessExecuter extends FileJob {
 
 	transient protected Process process;
 	
-	public final static String READ_FILE_RESULT = "readFileResult";
+	public final static String READ_FILE_RESULT = "output1";
 	
 	public FileProcessExecuter(GlobalRegistry globalRegistry, Logger globalLogger, JobRuntimeProperties jobRuntimeProperties) {
 		super(globalRegistry, globalLogger, jobRuntimeProperties);

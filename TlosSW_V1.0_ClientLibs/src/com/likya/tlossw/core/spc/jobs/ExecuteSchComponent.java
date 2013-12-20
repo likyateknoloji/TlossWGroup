@@ -35,7 +35,7 @@ public abstract class ExecuteSchComponent extends ExecuteComponent {
 
 		JSch jsch = new JSch();
 
-		ExecuteRShellParams executeRShellParams = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getExecuteRShellParams();
+		ExecuteRShellParams executeRShellParams = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getExecuteRShellParams();
 
 		String host = executeRShellParams.getIpAddress(); // "192.168.1.39";
 		String user = executeRShellParams.getUserName(); // "likya";

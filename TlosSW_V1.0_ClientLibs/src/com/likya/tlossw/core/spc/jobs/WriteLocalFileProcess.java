@@ -36,7 +36,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 		initializeFileProcessJob();
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
-		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
+		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
 
 		while (true) {
 
@@ -53,9 +53,9 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 
 				String fileContent = "";
 
-				if (jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters() != null && jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam() != null) {
+				if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
 
-					Parameter[] inParamList = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getInParam().getParameterArray();
+					Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();
 					ArrayList<Parameter> dependencyList = new ArrayList<Parameter>(Arrays.asList(inParamList));
 
 					Iterator<Parameter> parameterIterator = dependencyList.iterator();

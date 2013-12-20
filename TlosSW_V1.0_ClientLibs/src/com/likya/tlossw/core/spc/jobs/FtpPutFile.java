@@ -34,7 +34,7 @@ public class FtpPutFile extends FtpExecutor {
 		initializeFtpJob();
 		
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
-		FtpAdapterProperties ftpJobProperties = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFtpAdapterProperties();
+		FtpAdapterProperties ftpJobProperties = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFtpAdapterProperties();
 
 		while (true) {
 

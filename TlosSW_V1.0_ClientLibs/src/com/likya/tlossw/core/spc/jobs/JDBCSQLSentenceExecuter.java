@@ -12,7 +12,7 @@ public abstract class JDBCSQLSentenceExecuter extends DbJob {
 
 	private static final long serialVersionUID = 1L;
 
-	public final static String DB_RESULT = "dbResult";
+	public final static String DB_RESULT = "output1";
 	
 	public final static int DB_RESULT_MAX_ROWSIZE = 10;
 	

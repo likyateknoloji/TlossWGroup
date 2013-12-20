@@ -35,7 +35,7 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 		initializeFileProcessJob();
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
-		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
+		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
 
 		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
 

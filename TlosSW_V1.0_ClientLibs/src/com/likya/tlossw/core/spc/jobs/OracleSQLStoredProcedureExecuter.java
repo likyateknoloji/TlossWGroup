@@ -66,9 +66,9 @@ public class OracleSQLStoredProcedureExecuter extends SQLScriptExecuter {
 					dbPath = dbName;
 				}
 
-				String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureSchemaName();
-				String sqlStoredProcedureName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureName();
-				String sqlStoredProcedurePackageName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedurePackageName();
+				String sqlStoredProcedureSchemaName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureSchemaName();
+				String sqlStoredProcedureName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedureName();
+				String sqlStoredProcedurePackageName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getStoreProcedureProperties().getSqlStoredProcedurePackageName();
 
 				if (sqlStoredProcedurePackageName != "") {
 					osqlClientName = "echo execute " + sqlStoredProcedureSchemaName + "." + sqlStoredProcedurePackageName + "." + sqlStoredProcedureName + "|" + osqlClientName + " " + userName + "/" + password + "@" + dbPath;

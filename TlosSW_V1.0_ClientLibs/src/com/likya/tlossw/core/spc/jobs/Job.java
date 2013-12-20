@@ -9,13 +9,10 @@ import java.util.Observable;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
-import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -56,6 +53,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	transient protected StreamGrabber errorGobbler;
 	transient protected StreamGrabber outputGobbler;
 
+	public final static String LOG_RESULT = "LogOutput";
+	public final static String ERR_RESULT = "ErrorOutput";
+	
 	private JobRuntimeProperties jobRuntimeProperties;
 
 	protected boolean isExecuterOver = false;
@@ -63,7 +63,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private ResourceAgentList resourceAgentList;
 
-	//	private Boolean firstLoop = true;
+	// private Boolean firstLoop = true;
 
 	private String selectedAgentId;
 
@@ -77,9 +77,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 	private GenericInfoSender genericInfoSender;
 
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
-	//	private Job followerJob;
-	//	private boolean hasActiveFollower = false;
-	//	private boolean safeToRemove = false;
+	// private Job followerJob;
+	// private boolean hasActiveFollower = false;
+	// private boolean safeToRemove = false;
 
 	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
 
@@ -134,7 +134,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		}
 
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
-		if (!stopRepeatativity && jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
+		if (!stopRepeatativity && jobProperties.getManagement().getPeriodInfo() != null) {
 			Calendar nextPeriodTime = PeriodCalculations.forward(jobProperties);
 			// Serkan burada ayni ise state eklendigi icin uzun bir state listesi ortaya cikiyor.
 			// JobProperties in coklanmasi gerekiyor, yoksa hepsi tek bir job olarak gorunecek, her bir run i ayri bir job olarak dusunmek mi gerekir acaba?
@@ -318,7 +318,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
 		jobInfo.setTreePath(ParsingUtils.getJobXFullPath(getJobRuntimeProperties().getNativeFullJobPath().getFullPath(), jobProperties.getID(), jobProperties.getAgentId() + "", jobProperties.getLSIDateTime()));
-		//jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
+		// jobInfo.setJobKey(getJobRuntimeProperties().getJobProperties().getID());
 		jobInfo.setJobName(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 		jobInfo.setJobID(getJobRuntimeProperties().getJobProperties().getID());
 		jobInfo.setUserID(getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getUserId());
@@ -390,18 +390,18 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		jobRealTime = JsRealTime.Factory.newInstance();
 
-		StartTime startTimeTemp = StartTime.Factory.newInstance();
+		DatetimeType startTimeTemp = DatetimeType.Factory.newInstance();
 		startTimeTemp.setTime(startTime);
 		startTimeTemp.setDate(startTime);
 		jobRealTime.setStartTime(startTimeTemp);
 
-		getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
+		getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().setJsRealTime(jobRealTime);
 
 		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
-//		System.err.println("jobRuntimeProperties : " + jobRuntimeProperties);
-//		System.err.println("jobRuntimeProperties.getNativeFullJobPath() : " + jobRuntimeProperties.getNativeFullJobPath());
-//		System.err.println("jobRuntimeProperties.getNativeFullJobPath().getFullPath() : " + jobRuntimeProperties.getNativeFullJobPath().getFullPath());
-		
+		// System.err.println("jobRuntimeProperties : " + jobRuntimeProperties);
+		// System.err.println("jobRuntimeProperties.getNativeFullJobPath() : " + jobRuntimeProperties.getNativeFullJobPath());
+		// System.err.println("jobRuntimeProperties.getNativeFullJobPath().getFullPath() : " + jobRuntimeProperties.getNativeFullJobPath().getFullPath());
+
 		sendEndInfo(jobRuntimeProperties.getNativeFullJobPath().getFullPath(), jobRuntimeProperties.getJobProperties());
 
 		String startLog = jobKey + " Baslatildi. Baslangic zamani : " + DateUtils.getDate(startTime.getTime());
@@ -431,12 +431,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		getJobRuntimeProperties().setCompletionDate(endTime);
 		getJobRuntimeProperties().setWorkDuration(DateUtils.getUnFormattedElapsedTime((int) timeDiff / 1000));
 
-		StopTime stopTimeTemp = StopTime.Factory.newInstance();
+		DatetimeType stopTimeTemp = DatetimeType.Factory.newInstance();
 		stopTimeTemp.setTime(endTime);
 		stopTimeTemp.setDate(endTime);
 		jobRealTime.setStopTime(stopTimeTemp);
 
-		jobProperties.getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
+		jobProperties.getManagement().getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 		// getJobRuntimeProperties().getJobProperties().getTimeManagement().setJsRealTime(jobRealTime);
 
 		sendEndInfo(jobRuntimeProperties.getNativeFullJobPath().getFullPath(), jobProperties);
@@ -491,13 +491,13 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		return selectedAgentId;
 	}
 
-	//	public Boolean getFirstLoop() {
-	//		return firstLoop;
-	//	}
+	// public Boolean getFirstLoop() {
+	// return firstLoop;
+	// }
 	//
-	//	public void setFirstLoop(Boolean firstLoop) {
-	//		this.firstLoop = firstLoop;
-	//	}
+	// public void setFirstLoop(Boolean firstLoop) {
+	// this.firstLoop = firstLoop;
+	// }
 
 	public String getJobKey() {
 		return jobKey;
@@ -526,15 +526,15 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		Long timeOut = jobProperties.getTimeManagement().getJsTimeOut().getValueInteger().longValue();
+		Long timeOut = jobProperties.getManagement().getTimeControl().getJsTimeOut().getTime().getTimeInMillis();
+		PeriodCalculations.getTimeInMilliSecs(jobProperties.getManagement().getTimeControl().getJsTimeOut().getTime());
+		// if (jobProperties.getTimeManagement().getJsTimeOut().getUnit() == Unit.HOURS) {
+		// timeOut = timeOut * 3600;
+		// } else if (jobProperties.getTimeManagement().getJsTimeOut().getUnit() == Unit.MINUTES) {
+		// timeOut = timeOut * 60;
+		// }
 
-		if (jobProperties.getTimeManagement().getJsTimeOut().getUnit() == Unit.HOURS) {
-			timeOut = timeOut * 3600;
-		} else if (jobProperties.getTimeManagement().getJsTimeOut().getUnit() == Unit.MINUTES) {
-			timeOut = timeOut * 60;
-		}
-
-		watchDogTimer = new WatchDogTimer(this, jobKey, Thread.currentThread(), timeOut * 1000, globalLogger);
+		watchDogTimer = new WatchDogTimer(this, jobKey, Thread.currentThread(), timeOut, globalLogger);
 		watchDogTimer.setName(jobKey + ".WatchDogTimer.id." + watchDogTimer.getId());
 		watchDogTimer.start();
 	}
@@ -561,11 +561,32 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		err.printStackTrace();
 	}
 
-	public boolean processJobResult(boolean retryFlag, Logger myLogger) {
-		return processJobResult(retryFlag, myLogger, null);
+	public boolean processJobResult(boolean retryFlag, Logger myLogger, ArrayList<ParamList> paramList) {
+		
+		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
+		boolean sonuc = false;
+		
+		// Parametre output atamasi burada yapiliyor !!
+		// Case 1 : Var olan bir output parametresine atama
+		// Case 2 : Var olMAYan bir output parametresine atama
+		if (paramList != null) {
+			Iterator<ParamList> itr = paramList.iterator();
+			while (itr.hasNext()) {
+				ParamList element = itr.next();
+				boolean yapildimi = OutputParameterPassing.putOutputParameter(jobProperties, element.getParamRef(), element.getParamName(), element.getType());
+				if (yapildimi) {
+					sonuc = true;
+					System.out.println("isin sonucu output parametreye yazildi !!");
+				} else {
+					sonuc = false;
+					System.out.println("isin sonucu output parametre uretmedi !!");
+				}
+			}
+		}
+		return sonuc;
 	}
 
-	public boolean processJobResult(boolean retryFlag, Logger myLogger, ArrayList<ParamList> paramList) {
+	public boolean processJobResult(boolean retryFlag, Logger myLogger) {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
@@ -577,26 +598,9 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			logStr += StateName.FINISHED.toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().toString() + ":" + jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStatusName().toString();
 			myLogger.info(" >>>>" + logStr + "<<<<");
 
-			// Parametre output atamasi burada yapiliyor !!
-			// Case 1 : Var olan bir output parametresine atama
-			// Case 2 : Var olMAYan bir output parametresine atama
-			if (paramList != null) {
-				Iterator<ParamList> itr = paramList.iterator();
-				while (itr.hasNext()) {
-					ParamList element = itr.next();
-					boolean yapildimi = OutputParameterPassing.putOutputParameter(jobProperties, element.getParamRef(), element.getParamName());
-					if (yapildimi) {
-						System.out.println("isin sonucu output parametreye yazildi !!");
-					} else {
-						System.out.println("isin sonucu output parametre uretmedi !!");
-					}
-				}
-			}
-
 		} else {
 
-			// TODO Hoşuma gitmedi ama tip dönüşümü yaptım
-			if (Boolean.parseBoolean(jobProperties.getCascadingConditions().getJobAutoRetry().toString()) && retryFlag) {
+			if (jobProperties.getManagement().getCascadingConditions().getJobAutoRetry().getBooleanValue() && retryFlag) {
 
 				myLogger.info(" >> " + "ExecuteInShell : Job Failed ! Restarting " + getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJsName());
 
@@ -627,45 +631,45 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		this.genericInfoSender = genericInfoSender;
 	}
 
-//	public StreamSource getRequestedStream() {
-//		return requestedStream;
-//	}
-//
-//	public void setRequestedStream(StreamSource requestedStream) {
-//		this.requestedStream = requestedStream;
-//	}
+	// public StreamSource getRequestedStream() {
+	// return requestedStream;
+	// }
+	//
+	// public void setRequestedStream(StreamSource requestedStream) {
+	// this.requestedStream = requestedStream;
+	// }
 
-	//	public Job getFollowerJob() {
-	//		return followerJob;
-	//	}
+	// public Job getFollowerJob() {
+	// return followerJob;
+	// }
 	//
-	//	public void setFollowerJob(Job followerJob) {
-	//		this.followerJob = followerJob;
-	//	}
+	// public void setFollowerJob(Job followerJob) {
+	// this.followerJob = followerJob;
+	// }
 	//
-	//	public boolean isStopRepeatativity() {
-	//		return stopRepeatativity;
-	//	}
+	// public boolean isStopRepeatativity() {
+	// return stopRepeatativity;
+	// }
 	//
-	//	public void setStopRepeatativity(boolean stopRepeatativity) {
-	//		this.stopRepeatativity = stopRepeatativity;
-	//	}
+	// public void setStopRepeatativity(boolean stopRepeatativity) {
+	// this.stopRepeatativity = stopRepeatativity;
+	// }
 	//
-	//	public boolean hasActiveFollower() {
-	//		return hasActiveFollower;
-	//	}
+	// public boolean hasActiveFollower() {
+	// return hasActiveFollower;
+	// }
 	//
-	//	public void setHasActiveFollower(boolean hasActiveFollower) {
-	//		this.hasActiveFollower = hasActiveFollower;
-	//	}
+	// public void setHasActiveFollower(boolean hasActiveFollower) {
+	// this.hasActiveFollower = hasActiveFollower;
+	// }
 	//
-	//	public boolean isSafeToRemove() {
-	//		return safeToRemove;
-	//	}
+	// public boolean isSafeToRemove() {
+	// return safeToRemove;
+	// }
 	//
-	//	public void setSafeToRemove(boolean safeToRemove) {
-	//		this.safeToRemove = safeToRemove;
-	//	}
+	// public void setSafeToRemove(boolean safeToRemove) {
+	// this.safeToRemove = safeToRemove;
+	// }
 
 	public boolean isUpdateMySelfAfterMe() {
 		return updateMySelfAfterMe;

@@ -57,7 +57,7 @@ public class PostgreSQLSentenceExecuter extends SQLScriptExecuter {
 					remoteInfo = " -h " + ipAddress + " -p " + port;
 				}
 				
-				String sqlSentence = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getFreeSQLProperties().getSqlSentence();
+				String sqlSentence = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getFreeSQLProperties().getSqlSentence();
 
 				psqlClientName = psqlClientName + remoteInfo + " -U " + userName + " -d " + dbName + " -c " + sqlSentence;
 

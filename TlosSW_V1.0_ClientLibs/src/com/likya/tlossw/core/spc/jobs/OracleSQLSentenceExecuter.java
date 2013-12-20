@@ -68,7 +68,7 @@ public class OracleSQLSentenceExecuter extends SQLScriptExecuter {
 
 				//echo SQL_Clause; | sqlplus username/password@ipadres:portnumber/oracle_sid
 				 
-				String sqlSentence = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getFreeSQLProperties().getSqlSentence();
+				String sqlSentence = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getFreeSQLProperties().getSqlSentence();
 
 				osqlClientName = "echo execute " + sqlSentence + "; | " + osqlClientName + " " + userName + "/" + password + "@" + dbPath;
 

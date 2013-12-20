@@ -67,8 +67,8 @@ public class OracleSQLScriptExecuter extends SQLScriptExecuter {
 					dbPath = dbName;
 				}
 				
-				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
-				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
+				String sqlScriptFileName = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFileName();
+				String sqlScriptFilePath = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getScriptProperties().getSqlScriptFilePath();
 
 				osqlClientName = osqlClientName + " " + userName + "/" + password + "@" + dbPath + " @" + ParsingUtils.getConcatenatedPathAndFileName(sqlScriptFilePath, sqlScriptFileName);
 

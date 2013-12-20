@@ -49,7 +49,7 @@ public class FileListenerExecuter extends FileJob {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 
-		FileListener fileListener = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFileListener();
+		FileListener fileListener = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileListener();
 
 		while (true) {
 
