@@ -77,7 +77,7 @@ public class XXXSelectPath {
 		// Create a variable with the query expression.
 		//String pathExpression = m_namespaceDeclaration + "./com:localParameters";
 		
-		String pathExpression = m_namespaceDeclaration + "./dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters";
+		String pathExpression = m_namespaceDeclaration + "./dat:baseJobInfos/com:jobTypeDetails/com:specialParameters";
 		
 		//String queryExpression =
 		//	    "declare namespace xq='http://xmlbeans.apache.org/samples/xquery/employees';" +
