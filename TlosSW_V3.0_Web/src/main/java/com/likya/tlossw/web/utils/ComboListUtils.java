@@ -138,15 +138,15 @@ public class ComboListUtils {
 		return resourceNameList;
 	}
 
-	public static Collection<SelectItem> constructJobBaseTypeList() {
-
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobBaseTypeList = WebInputUtils.fillJobBaseTypeList();
-		logTimeInfo("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : ", startTime);
-		startTime = System.currentTimeMillis();
-
-		return jobBaseTypeList;
-	}
+//	public static Collection<SelectItem> constructJobBaseTypeList() {
+//
+//		long startTime = System.currentTimeMillis();
+//		Collection<SelectItem> jobBaseTypeList = WebInputUtils.fillJobBaseTypeList();
+//		logTimeInfo("JobBaseBean.WebInputUtils.fillJobBaseTypeList fill things Süre : ", startTime);
+//		startTime = System.currentTimeMillis();
+//
+//		return jobBaseTypeList;
+//	}
 
 	public static Collection<SelectItem> constructEventTypeDefList() {
 
@@ -158,25 +158,25 @@ public class ComboListUtils {
 		return eventTypeDefList;
 	}
 
-	public static Collection<SelectItem> constructJobTypeDefList() {
+	public static Collection<SelectItem> constructTriggerList() {
 
 		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> jobTypeDefList = WebInputUtils.fillJobTypeDefList();
-		logTimeInfo("JobBaseBean.WebInputUtils.fillJobTypeDefList fill things Süre : ", startTime);
+		Collection<SelectItem> jobTriggerList = WebInputUtils.fillTriggerList();
+		logTimeInfo("JobBaseBean.WebInputUtils.fillJobTriggerList fill things Süre : ", startTime);
 		startTime = System.currentTimeMillis();
 
-		return jobTypeDefList;
+		return jobTriggerList;
 	}
 
-	public static Collection<SelectItem> constructRelativeTimeOptionList() {
-
-		long startTime = System.currentTimeMillis();
-		Collection<SelectItem> relativeTimeOptionList = WebInputUtils.fillRelativeTimeOptionList();
-		logTimeInfo("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : ", startTime);
-		startTime = System.currentTimeMillis();
-
-		return relativeTimeOptionList;
-	}
+//	public static Collection<SelectItem> constructRelativeTimeOptionList() {
+//
+//		long startTime = System.currentTimeMillis();
+//		Collection<SelectItem> relativeTimeOptionList = WebInputUtils.fillRelativeTimeOptionList();
+//		logTimeInfo("JobBaseBean.WebInputUtils.fillRelativeTimeOptionList fill things Süre : ", startTime);
+//		startTime = System.currentTimeMillis();
+//
+//		return relativeTimeOptionList;
+//	}
 
 	public static Collection<SelectItem> constructUnitTypeList() {
 
