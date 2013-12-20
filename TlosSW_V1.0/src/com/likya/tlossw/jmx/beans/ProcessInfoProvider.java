@@ -25,11 +25,14 @@ import org.xmldb.api.base.XMLDBException;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
+import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.BaseJobInfosDocument.BaseJobInfos;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.data.TimeControlDocument.TimeControl;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbTypeDocument.DbType;
@@ -145,10 +148,10 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setCurrentRunId(spcInfoType.getSpcReferance().getCurrentRunId());
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		jobInfoTypeClient.setJobName(baseJobInfos.getJsName());
-		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommand());
-		jobInfoTypeClient.setJobCommandType(baseJobInfos.getJobInfos().getJobTypeDetails().getJobCommandType().toString());
+		jobInfoTypeClient.setJobCommand(baseJobInfos.getJobTypeDetails().getJobCommand());
+		jobInfoTypeClient.setJobCommandType(baseJobInfos.getJobTypeDetails().getJobCommandType().toString());
 		jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
-		jobInfoTypeClient.setJobPath(baseJobInfos.getJobInfos().getJobTypeDetails().getJobPath());
+		jobInfoTypeClient.setJobPath(baseJobInfos.getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(baseJobInfos.getJobLogPath());
 		jobInfoTypeClient.setJobLogName(baseJobInfos.getJobLogFile());
 		jobInfoTypeClient.setoSystem(baseJobInfos.getOSystem().toString());
@@ -156,16 +159,19 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		// TODO Geçici olarak tip dönüşümü yaptım.
 		jobInfoTypeClient.setJobPriority(baseJobInfos.getJobPriority().intValue());
 
-		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), false));
-		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().getValueInteger().toString() + " " + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
+		TimeManagement timeManagement = jobProperties.getManagement().getTimeManagement();
+		TimeControl timeControl = jobProperties.getManagement().getTimeControl();
+		
+		jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStartTime().getTime(), false));
+		jobInfoTypeClient.setJobTimeOut(timeControl.getJsTimeOut().toString() );
 
 		// agentlarda calisan joblarin PlannedExecutionDate, CompletionDate ve WorkDuration alanlari set edilmediginden onlari jobRealTime kismindan set ediyoruz
-		if (jobRuntimeProperties.getPlannedExecutionDate() == null && (jobProperties.getTimeManagement().getJsRealTime() != null)) {
-			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(jobProperties.getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+		if (jobRuntimeProperties.getPlannedExecutionDate() == null && (timeManagement.getJsRealTime() != null)) {
+			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), true, transformToLocalTime));
 
 			// is hala calisiyorsa
-			if (jobProperties.getTimeManagement().getJsRealTime().getStopTime() != null) {
-				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(jobProperties.getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+			if (timeManagement.getJsRealTime().getStopTime() != null) {
+				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), false, transformToLocalTime));
 			}
 
 		} else if (jobRuntimeProperties.getPlannedExecutionDate() != null) {
@@ -176,7 +182,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			}
 		}
 
-		jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobProperties.getTimeManagement().getJsRealTime(), false));
+		jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(timeManagement.getJsRealTime(), false));
 
 		// jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getLiveStateInfo().getStateName().equals(StateName.FINISHED));
 		// jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getLiveStateInfo());
@@ -192,9 +198,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 		jobInfoTypeClient.setErrorMessage(errorMessage);
 
-		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
+		jobInfoTypeClient.setJobAutoRetry(jobProperties.getManagement().getCascadingConditions().getJobAutoRetry().getBooleanValue());
 		// TODO geçici olarak dönüşüm yaptım ama xsd de problem var ????
-		jobInfoTypeClient.setSafeRestart(jobProperties.getCascadingConditions().getJobSafeToRestart().toString());
+		jobInfoTypeClient.setSafeRestart(jobProperties.getManagement().getCascadingConditions().getJobSafeToRestart());
 
 		jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
 		jobInfoTypeClient.setSuccessable(jobRuntimeProperties.isSuccessable());
@@ -225,11 +231,39 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 
 		// output parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
-		SpecialParameters specialParameters = baseJobInfos.getJobInfos().getJobTypeDetails().getSpecialParameters();
+		LocalParameters localParameters = jobProperties.getLocalParameters();
+		
+		if (localParameters != null) {
 
-		if (specialParameters != null && specialParameters.getOutParam() != null && specialParameters.getOutParam().sizeOfParameterArray() > 0) {
+			if (localParameters.getInParam() != null) {
+				InParam inParam = localParameters.getInParam();
 
-			OutParam outParam = specialParameters.getOutParam();
+				for (Parameter parameter : inParam.getParameterArray()) {
+					parameter.setIoType(false);
+					jobInfoTypeClient.getParameterList().add(parameter);
+				}
+			}
+
+			if (localParameters.getOutParam() != null) {
+				OutParam outParam = localParameters.getOutParam();
+
+				for (Parameter parameter : outParam.getParameterArray()) {
+					parameter.setIoType(true);
+					jobInfoTypeClient.getParameterList().add(parameter);
+				}
+			}
+
+		}
+
+		if (localParameters.getInParam() == null && localParameters.getOutParam() == null) {
+			jobInfoTypeClient.setParameterList(new ArrayList<Parameter>());
+		}
+
+		
+
+		if (localParameters != null && localParameters.getOutParam() != null && localParameters.getOutParam().sizeOfParameterArray() > 0) {
+
+			OutParam outParam = localParameters.getOutParam();
 
 			for (Parameter param : outParam.getParameterArray()) {
 				jobInfoTypeClient.setOutParameterName(param.getName());
@@ -240,9 +274,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		}
 
 		// input parametre kısmına parametre yazıldıysa ekrandan gösterilmek üzere burada dolduruluyor
-		if (specialParameters != null && specialParameters.getInParam() != null && specialParameters.getInParam().sizeOfParameterArray() > 0) {
+		if (localParameters != null && localParameters.getInParam() != null && localParameters.getInParam().sizeOfParameterArray() > 0) {
 
-			InParam inParam = specialParameters.getInParam();
+			InParam inParam = localParameters.getInParam();
 
 			for (Parameter param : inParam.getParameterArray()) {
 				jobInfoTypeClient.setInParameterName(param.getName());
@@ -426,7 +460,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		spcInfoTypeClient.setSpcId(scenarioId.getFullPath());
 
 		if (spcInfoType.getSpcReferance() != null) {
-			String runId = spcInfoType.getSpcReferance().getConcurrencyManagement().getRunningId();
+			String runId = spcInfoType.getSpcReferance().getManagement().getConcurrencyManagement().getRunningId();
 			if (scenarioId.equals(CpcUtils.getRootScenarioPath(runId))) {
 				spcInfoTypeClient.setJsName(scenarioId.getFullPath());
 			} else {
@@ -815,12 +849,12 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setJobId(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
-			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
-			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
+			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommand());
+			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
 			jobInfoTypeClient.setCurrentRunId(jobRuntimeProperties.getCurrentRunId());
 			jobInfoTypeClient.setNativeRunId(jobRuntimeProperties.getJobProperties().getRunId());
-			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
+			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
@@ -828,16 +862,19 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			// TODO Gecici olarak tip donusumu yaptim.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
-			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
-			jobInfoTypeClient.setJobTimeOut(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsTimeOut().getValueInteger().toString() + " " + jobRuntimeProperties.getJobProperties().getTimeManagement().getJsTimeOut().getUnit());
+			TimeManagement timeManagement = jobRuntimeProperties.getJobProperties().getManagement().getTimeManagement();
+			TimeControl timeControl = jobRuntimeProperties.getJobProperties().getManagement().getTimeControl();
+			
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+			jobInfoTypeClient.setJobTimeOut(timeControl.getJsTimeOut().toString());
 
 			// agentlarda calisan joblarin PlannedExecutionDate, CompletionDate ve WorkDuration alanlari set edilmediginden onlari jobRealTime kismindan set ediyoruz
-			if (jobRuntimeProperties.getPlannedExecutionDate() == null && (jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime() != null)) {
-				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+			if (jobRuntimeProperties.getPlannedExecutionDate() == null && (timeManagement.getJsRealTime() != null)) {
+				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), true, transformToLocalTime));
 
 				// is hala calisiyorsa
-				if (jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime().getStopTime() != null) {
-					jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+				if (timeManagement.getJsRealTime().getStopTime() != null) {
+					jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), false, transformToLocalTime));
 				}
 
 			} else if (jobRuntimeProperties.getPlannedExecutionDate() != null) {
@@ -848,14 +885,14 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				}
 			}
 
-			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), false));
+			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(timeManagement.getJsRealTime(), false));
 
 			// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
 			// TODO geçici olarak dönüşüm yaptım ama xsd de problem var ????
-			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
+			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getManagement().getCascadingConditions().getJobSafeToRestart());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
 			jobInfoTypeClient.setSuccessable(jobRuntimeProperties.isSuccessable());
