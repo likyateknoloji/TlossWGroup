@@ -10,7 +10,7 @@
 	<ui:composition>
 		<p:tab id="dependencyDefTab"
 			title="#{msgs['tlos.workspace.pannel.job.dependencyDefinitions']}"
-			rendered="#{backingBean.jobBaseType ne 'PERIODIC'}">
+			rendered="#{!backingBean.managementTabBean.periodic}">
 			<p:panel id="dependencyPanel">
 				<p:panelGrid id="dependencyDef" columns="4">
 					<h:outputText value="#{msgs['tlos.workspace.pannel.dependencies']}" />
