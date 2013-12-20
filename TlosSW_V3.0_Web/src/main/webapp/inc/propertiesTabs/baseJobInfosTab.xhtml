@@ -12,22 +12,15 @@
 			title="#{msgs['tlos.workspace.pannel.job.baseJobInfos']}">
 			<p:panel>
 				<p:panelGrid id="baseJobInfos" columns="4" style="width:80%;">
+					<f:facet name="header">  
+                       <h:outputText value="#{msgs['tlos.workspace.pannel.job.ID']} : #{backingBean.jobProperties.ID}" />
+                    </f:facet>
 
-					<h:outputText value="#{msgs['tlos.workspace.pannel.js.ID']}" />
-					<p:inputText
-						value="#{backingBean.jobProperties.ID}" disabled="true">
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputText>
-					
-					<h:outputText value="" />
-					<h:outputText value="" />
-					
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobName']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jsName}"
-						style="width: 200pt"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.job.name']}" >
+						style="width: 200pt" required="true"
+						requiredMessage="#{msgs['tlos.validation.job.name']}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
 
@@ -35,17 +28,15 @@
 						value="#{msgs['tlos.workspace.pannel.job.jobComment']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.comment}"
-						style="width: 200pt"
-						required="true"
-						requiredMessage="#{msgs['tlos.validation.job.comment']}" >
+						style="width: 200pt" required="true"
+						requiredMessage="#{msgs['tlos.validation.job.comment']}">
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:inputText>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logPath']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jobLogPath}"
-						style="width: 200pt"
-						required="true"
+						style="width: 200pt" required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.path']}">
 						<p:ajax partialSubmit="true"></p:ajax>
 						<!-- validatorMessage="#{msgs['tlos.validation.job.log.path.valid']}">
@@ -56,21 +47,13 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.logFile']}" />
 					<p:inputText
 						value="#{backingBean.jobProperties.baseJobInfos.jobLogFile}"
-						style="width: 200pt"
-						required="true"
+						style="width: 200pt" required="true"
 						requiredMessage="#{msgs['tlos.validation.job.log.file']}"
 						validatorMessage="#{msgs['tlos.validation.job.log.file.valid']}">
 						<p:ajax partialSubmit="true"></p:ajax>
 						<f:validateRegex
 							pattern="[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*\.[A-Za-z0-9_]+([-.][A-Za-z0-9_]+)*" />
 					</p:inputText>
-
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
-					<p:selectOneMenu id="jsCalendar" style="width: 100pt"
-						value="#{backingBean.jsCalendar}">
-						<f:selectItems value="#{backingBean.jsCalendarList}" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:selectOneMenu>
 
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 					<p:selectOneMenu id="oSystem" style="width: 100pt"
@@ -82,70 +65,15 @@
 					<h:outputText
 						value="#{msgs['tlos.workspace.pannel.job.jobPriority']}" />
 					<p:panelGrid columns="1">
-						<p:inputText id="priority"
-							value="#{backingBean.jobPriority}" />
-						<p:slider for="priority" minValue="1" maxValue="5" >
+						<p:inputText id="priority" value="#{backingBean.jobPriority}" />
+						<p:slider for="priority" minValue="1" maxValue="5">
 							<p:ajax partialSubmit="true"></p:ajax>
 						</p:slider>
 					</p:panelGrid>
 
-					<h:outputText value="" />
-					<h:outputText value="" />
-
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.jobType']}" />
-					<p:selectOneMenu id="jobtype" style="width: 100pt"
-						value="#{backingBean.jobTypeDef}">
-						<f:selectItems value="#{backingBean.jobTypeDefList}" />
-						<p:ajax update="baseJobInfos"></p:ajax>
-					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.eventTypeDef']}"
-						rendered="#{backingBean.jobTypeDef eq 'EVENT BASED'}" />
-					<p:selectOneMenu id="eventTypeDef"
-						rendered="#{backingBean.jobTypeDef eq 'EVENT BASED'}"
-						value="#{backingBean.eventTypeDef}">
-						<f:selectItems value="#{backingBean.eventTypeDefList}" />
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:selectOneMenu>
-
-					<h:outputText value=""
-						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
-					<h:outputText value=""
-						rendered="#{backingBean.jobTypeDef ne 'EVENT BASED'}" />
 				</p:panelGrid>
-				<br/>
+				<br />
 
-				<p:panelGrid id="jobTypeGrid" columns="2">
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.jobBaseType']}" />
-					<p:selectOneMenu id="jobBaseType" style="width: 100pt"
-						value="#{backingBean.jobBaseType}">
-						<f:selectItems value="#{backingBean.jobBaseTypeList}" />
-						<p:ajax update="jobTypeGrid"></p:ajax>
-					</p:selectOneMenu>
-
-					<h:outputText
-						value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}" />
-					<p:inputMask value="#{backingBean.periodTime}"
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"
-						mask="99:99:99" required="true"
-						requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}" >
-						<p:ajax partialSubmit="true"></p:ajax>
-					</p:inputMask>
-					
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}" 
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
-					<p:inputText value="#{backingBean.maxCount}" label="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}" 
-						type="integer" rendered="#{backingBean.jobBaseType eq 'PERIODIC'}">
-					</p:inputText>
-
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.periodic.relativeStart']}" 
-						rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
-					<p:selectBooleanCheckbox value="#{backingBean.relativeStart}" rendered="#{backingBean.jobBaseType eq 'PERIODIC'}"/>
-
-				</p:panelGrid>
 			</p:panel>
 		</p:tab>
 	</ui:composition>
