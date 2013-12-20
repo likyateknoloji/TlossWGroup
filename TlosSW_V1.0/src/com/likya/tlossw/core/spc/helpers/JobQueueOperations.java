@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -50,8 +49,10 @@ public class JobQueueOperations {
 				Job scheduledJob = jobsIterator.next();
 
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-
-				if (scheduledJob.isStopRepeatativity() && JobBaseType.PERIODIC.equals(jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType())) {
+				
+				boolean isPeriodic = jobProperties.getManagement().getPeriodInfo() != null ? true : false;
+				
+				if (scheduledJob.isStopRepeatativity() && isPeriodic) {
 					jobQueueResult.setJobQueueOver(false);
 					return jobQueueResult;
 				}
@@ -63,7 +64,7 @@ public class JobQueueOperations {
 					if (NullChecker.checkNull(jobProperties)) {
 
 						if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED)) {
-							if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
+							if (isPeriodic) {
 								jobQueueResult.setNumOfNonDailyJobsNotOver(jobQueueResult.getNumOfNonDailyJobsNotOver() + 1);
 							} else {
 								jobQueueResult.setNumOfDailyJobsNotOver(jobQueueResult.getNumOfDailyJobsNotOver() + 1);
@@ -125,7 +126,7 @@ public class JobQueueOperations {
 			// queueDumpDebug += "[" + currentStatus + ":" +
 			// scheduledJob.getJobRuntimeProperties().getJobProperties().getJobPlannedTime().getStartTime().getTime().getTime()
 			// + "]";
-			queueDumpDebug += "[" + currentStatus + ":" + scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime().getStartTime().getTime() + "]";
+			queueDumpDebug += "[" + currentStatus + ":" + scheduledJob.getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().getJsPlannedTime().getStartTime().getTime() + "]";
 			// SpaceWideRegistry.getSpaceWideLogger().debug(queueDumpDebug);
 			// SpaceWideRegistry.getSpaceWideLogger().info(queueDumpDebug);
 
