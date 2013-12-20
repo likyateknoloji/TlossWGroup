@@ -25,23 +25,25 @@
 		schemaLocation="tlosSWSJProcessNode_v_1_0.xsd" />
 	<xs:import namespace="http://www.likyateknoloji.com/XML_executeRShell_types"
 		schemaLocation="tlosSWSJExecuteRemoteShell_v_1_0.xsd" />
-		
+
 	<xs:element name="date">
 		<xs:simpleType>
 			<xs:restriction base="xs:date" />
 		</xs:simpleType>
 	</xs:element>
-	
+
 	<xs:element name="time">
 		<xs:simpleType>
 			<xs:restriction base="xs:time" />
 		</xs:simpleType>
 	</xs:element>
+
 	<xs:element name="creationDateTime">
 		<xs:simpleType>
 			<xs:restriction base="xs:dateTime" />
 		</xs:simpleType>
 	</xs:element>
+
 	<xs:complexType name="datetimeType">
 		<xs:sequence>
 			<xs:element ref="date" minOccurs="0" />
@@ -66,6 +68,23 @@
 
 	<xs:element name="timeZone" type="timeZoneType" />
 
+	<xs:simpleType name="operatorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AND" />
+			<xs:enumeration value="OR" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="calendars">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="calendarId" minOccurs="0" maxOccurs="10"
+					type="integerType" />
+			</xs:sequence>
+			<xs:attribute name="operator" use="optional" type="operatorType" />
+		</xs:complexType>
+	</xs:element>
+	
 	<xs:element name="unit">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
@@ -93,8 +112,6 @@
 	<xs:element name="dayDef">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="PERPETUAL" />
-				<xs:enumeration value="TIMELY" />
 				<xs:enumeration value="DAILY" />
 				<xs:enumeration value="WEEKLY" />
 				<xs:enumeration value="MONTHLY" />
@@ -106,8 +123,6 @@
 	<xs:element name="specialParameters">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="inParam" minOccurs="0" />
-				<xs:element ref="outParam" minOccurs="0" />
 				<xs:element ref="envVariables" minOccurs="0" />
 				<xs:choice minOccurs="0">
 					<xs:element ref="ftp:ftpAdapterProperties" />
@@ -156,6 +171,16 @@
 			<xs:sequence>
 				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
+			<xs:attribute name="minCount" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedByte" />
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="maxCount" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedByte" />
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="outParam">
@@ -163,6 +188,16 @@
 			<xs:sequence>
 				<xs:element ref="par:parameter" minOccurs="0" maxOccurs="unbounded" />
 			</xs:sequence>
+			<xs:attribute name="minCount" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedByte" />
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="maxCount" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedByte" />
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="jobCommand">
@@ -170,20 +205,15 @@
 			<xs:restriction base="xs:string" />
 		</xs:simpleType>
 	</xs:element>
-	<xs:element name="jobBaseType" default="NON_PERIODIC">
+
+	<xs:element name="isPeriodic" default="false" type="booleanType" />
+
+	<xs:element name="trigger" default="TIME">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:enumeration value="NON_PERIODIC" />
-				<xs:enumeration value="PERIODIC" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
-	<xs:element name="jobTypeDef" default="TIME BASED">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="TIME BASED" />
-				<xs:enumeration value="EVENT BASED" />
-				<xs:enumeration value="USER BASED" />
+				<xs:enumeration value="TIME" />
+				<xs:enumeration value="EVENT" />
+				<xs:enumeration value="USER" />
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -218,7 +248,8 @@
 
 	<xs:simpleType name="dirType">
 		<xs:restriction base="xs:string">
-			<!-- xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" / -->
+			<!-- xs:pattern value="([abcdefgABCDEFG]:[\\/])?([a-zA-Z/\\\.0-9_ \-])*" 
+				/ -->
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -241,22 +272,12 @@
 	<xs:element name="jobTypeDetails">
 		<xs:complexType>
 			<xs:sequence minOccurs="0">
-				<xs:element ref="eventTypeDef" minOccurs="0" />
 				<xs:element ref="jobCommandType" minOccurs="0" />
 				<xs:element ref="jobCommand" minOccurs="0" />
 				<xs:element ref="jobPath" minOccurs="0" />
 				<xs:element ref="specialParameters" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="eventTypeDef">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="FILE" />
-				<xs:enumeration value="SYSTEM" />
-				<xs:enumeration value="NETWORK" />
-			</xs:restriction>
-		</xs:simpleType>
 	</xs:element>
 	<xs:element name="jobCommandType">
 		<xs:simpleType>
@@ -528,16 +549,16 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="booleanType">
+		<xs:restriction base="xs:boolean" />
+	</xs:simpleType>
+
 	<xs:element name="role" type="roleType" />
 	<xs:element name="comment" type="xs:string" />
 	<xs:element name="planId" type="xs:string" />
 	<xs:element name="runningId" type="xs:string" />
-	<xs:element name="concurrent" type="xs:boolean" />
-	<xs:element name="normalization" type="xs:boolean" />
-
-	<xs:simpleType name="booleanType">
-		<xs:restriction base="xs:boolean" />
-	</xs:simpleType>
+	<xs:element name="concurrent" type="booleanType" />
+	<xs:element name="normalization" type="booleanType" />
 
 	<xs:simpleType name="integerType">
 		<xs:restriction base="xs:positiveInteger" />
@@ -620,6 +641,11 @@
 						<xs:restriction base="xs:positiveInteger" />
 					</xs:simpleType>
 				</xs:element>
+				<xs:element name="parameterId">
+					<xs:simpleType>
+						<xs:restriction base="xs:positiveInteger" />
+					</xs:simpleType>
+				</xs:element>
 				<xs:element name="slaId">
 					<xs:simpleType>
 						<xs:restriction base="xs:positiveInteger" />
@@ -679,7 +705,7 @@
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="transformToLocalTime" type="xs:boolean"
+	<xs:element name="transformToLocalTime" type="booleanType"
 		default="false" />
 
 	<xs:element name="connName">
