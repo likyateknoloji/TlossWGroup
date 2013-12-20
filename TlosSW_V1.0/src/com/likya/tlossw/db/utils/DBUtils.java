@@ -20,6 +20,7 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentsDocument.SWAgents;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument;
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
@@ -28,7 +29,6 @@ import com.likya.tlos.model.xmlbeans.data.JobListDocument.JobList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument;
@@ -158,10 +158,10 @@ public class DBUtils extends DBBase {
 					}
 
 					// baska islere bagimli islerde baslangic zamani girilmesi zorunlu olmadigi icin bagli oldugu islerden birinden bu bilgiyi kopyaliyoruz
-					if (jobPropertiesType.getTimeManagement().getJsPlannedTime() == null || jobPropertiesType.getTimeManagement().getJsPlannedTime().getStartTime() == null) {
+					if (jobPropertiesType.getManagement().getTimeManagement().getJsPlannedTime() == null || jobPropertiesType.getManagement().getTimeManagement().getJsPlannedTime().getStartTime() == null) {
 						JsPlannedTime jsPlannedTime = JsPlannedTime.Factory.newInstance();
 						jsPlannedTime.addNewStartTime();
-						StartTime startTime = getStartTimeFromDependentJobs(dependentJobList, jobList.getJobPropertiesArray());
+						DatetimeType startTime = getStartTimeFromDependentJobs(dependentJobList, jobList.getJobPropertiesArray());
 
 						if (startTime != null) {
 							jsPlannedTime.setStartTime(startTime);
@@ -171,8 +171,8 @@ public class DBUtils extends DBBase {
 							throw new TlosFatalException();
 						}
 
-						jobPropertiesType.getTimeManagement().addNewJsPlannedTime();
-						jobPropertiesType.getTimeManagement().setJsPlannedTime(jsPlannedTime);
+						jobPropertiesType.getManagement().getTimeManagement().addNewJsPlannedTime();
+						jobPropertiesType.getManagement().getTimeManagement().setJsPlannedTime(jsPlannedTime);
 					}
 				}
 			}
@@ -181,7 +181,7 @@ public class DBUtils extends DBBase {
 		return tlosProcessData;
 	}
 
-	private static StartTime getStartTimeFromDependentJobs(DependencyList dependentJobList, JobProperties[] jobList) {
+	private static DatetimeType getStartTimeFromDependentJobs(DependencyList dependentJobList, JobProperties[] jobList) {
 
 		ArrayIterator dependentJobListIterator = new ArrayIterator(dependentJobList.getItemArray());
 
@@ -195,8 +195,8 @@ public class DBUtils extends DBBase {
 				JobProperties jobProperties = (JobProperties) jobListIterator.next();
 
 				if (jobProperties.getID().equals(jobId)) {
-					if (jobProperties.getTimeManagement().getJsPlannedTime() != null && jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
-						return jobProperties.getTimeManagement().getJsPlannedTime().getStartTime();
+					if (jobProperties.getManagement().getTimeManagement().getJsPlannedTime() != null && jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStartTime() != null) {
+						return jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStartTime();
 					} else {
 						break;
 					}
