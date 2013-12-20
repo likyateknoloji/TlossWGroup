@@ -28,13 +28,13 @@ public abstract class TlosSWBaseBean {
 	@ManagedProperty(value = "#{sessionMediator.webAppUser}")
 	private WebAppUser webAppUser;
 	
-	public String resolveMessage(String errorMessage) {
+	public String resolveMessage(String message) {
 
 		ResourceBundle messages = sessionMediator.getMessageBundle();
 
-		errorMessage = BeanUtils.resolveMessage(messages, errorMessage);
+		message = BeanUtils.resolveMessage(messages, message);
 		
-		return errorMessage;
+		return message;
 	}
 
 	protected void setPassedParameters() {
