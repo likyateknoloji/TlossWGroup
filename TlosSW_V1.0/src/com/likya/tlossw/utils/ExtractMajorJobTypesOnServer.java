@@ -29,7 +29,7 @@ public class ExtractMajorJobTypesOnServer {
 
 		Job myJob = null;
 
-		int jobType = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+		int jobType = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 		switch (jobType) {
 
