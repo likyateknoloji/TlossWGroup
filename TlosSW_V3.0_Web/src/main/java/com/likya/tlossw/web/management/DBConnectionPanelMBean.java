@@ -35,6 +35,9 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 	@ManagedProperty(value = "#{param.iCheck}")
 	private String iCheck;
+	
+	@ManagedProperty(value = "#{param.selectCheckBox}")
+	private String selectCheckBox;
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,6 +59,7 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 	@PostConstruct
 	public void init() {
 
+		useSqlClientApp = Boolean.parseBoolean(selectCheckBox != null ? selectCheckBox : "false");
 		dbProperties = DbProperties.Factory.newInstance();
 		fillDBTypeList();
 		fillSqlClientAppNameList();
@@ -69,17 +73,15 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 				insertButton = false;
 
 				dbType = "";
-				sqlClientAppName = "";
-				sqlClientAppPath = "";
 
 				dbProperties = getDbOperations().searchDBByID(selectedDBConnectionID);
 
 				if (dbProperties != null) {
 					dbType = dbProperties.getDbType().toString();
 					portNumber = dbProperties.getListenerPortNumber() + "";
-					sqlClientAppName = dbProperties.getSqlClientAppName().toString();
-					sqlClientAppPath = dbProperties.getSqlClientAppPath().toString();
-					if(!sqlClientAppName.isEmpty()) {
+					sqlClientAppName = dbProperties.getSqlClientAppName() != null ? dbProperties.getSqlClientAppName().toString() : null;
+					sqlClientAppPath = dbProperties.getSqlClientAppPath() != null ? dbProperties.getSqlClientAppPath().toString() : null;
+					if(sqlClientAppName != null && !sqlClientAppName.isEmpty()) {
 						setUseSqlClientApp(true);
 					}
 				}
@@ -121,8 +123,8 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 		dbProperties = DbProperties.Factory.newInstance();
 
 		dbType = "";
-		sqlClientAppName = "";
-		sqlClientAppPath = "";
+		sqlClientAppName = null;
+		sqlClientAppPath = null;
 		portNumber = null;
 	}
 
@@ -183,16 +185,12 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 			dbProperties.setDbType(null);
 		}
 
-		if (!sqlClientAppName.equals("")) {
+		if (sqlClientAppName != null && !sqlClientAppName.equals("")) {
 			dbProperties.setSqlClientAppName(SqlClientAppName.Enum.forString(sqlClientAppName));
-		} else {
-			dbProperties.setSqlClientAppName(null);
 		}
 		
-		if (!sqlClientAppPath.equals("")) {
+		if (sqlClientAppPath != null && !sqlClientAppPath.equals("")) {
 			dbProperties.setSqlClientAppPath(sqlClientAppPath);
-		} else {
-			dbProperties.setSqlClientAppPath(null);
 		}
 	}
 
@@ -293,17 +291,16 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 	}
 
 	public void setUseSqlClientApp(boolean useSqlClientApp) {
-		changeUseSqlConnection(useSqlClientApp);
 		this.useSqlClientApp = useSqlClientApp;
 	}
 
-	public void changeUseSqlConnection(boolean useSqlClientApp) {
-		if(useSqlClientApp) {
-			this.useSqlClientApp = false;
-		} else {
-			this.useSqlClientApp = true;
-		}
-	}
+//	public void changeUseSqlConnection() {
+//		if(useSqlClientApp) {
+//			this.useSqlClientApp = false;
+//		} else {
+//			this.useSqlClientApp = true;
+//		}
+//	}
 
 	public String getSqlClientAppPath() {
 		return sqlClientAppPath;
@@ -311,5 +308,13 @@ public class DBConnectionPanelMBean extends TlosSWBaseBean implements Serializab
 
 	public void setSqlClientAppPath(String sqlClientAppPath) {
 		this.sqlClientAppPath = sqlClientAppPath;
+	}
+
+	public String getSelectCheckBox() {
+		return selectCheckBox;
+	}
+
+	public void setSelectCheckBox(String selectCheckBox) {
+		this.selectCheckBox = selectCheckBox;
 	}
 }
