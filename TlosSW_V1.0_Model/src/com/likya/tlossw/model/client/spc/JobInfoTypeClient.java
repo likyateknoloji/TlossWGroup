@@ -9,6 +9,7 @@ package com.likya.tlossw.model.client.spc;
 
 import java.util.ArrayList;
 
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 
 public class JobInfoTypeClient extends JobInfoTypeClientBase {
@@ -22,7 +23,7 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	private String jobCommandType;
 	private ArrayList<String> jobDependencyList;
-	private String jobAutoRetry;
+	private boolean jobAutoRetry;
 	private ArrayList<Integer> jobReturnCodeIgnoreList;
 
 	// Paramaters from JobRunPropertiesType
@@ -47,6 +48,9 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private int inParameterType;
 	private String inParameterValue;
 
+	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
+	private Parameter selectedRow;
+	
 	// Paramaters for webpage
 	// private String statusStr;
 
@@ -100,11 +104,11 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		this.jobDependencyList = jobDependencyList;
 	}
 
-	public String getJobAutoRetry() {
+	public boolean getJobAutoRetry() {
 		return jobAutoRetry;
 	}
 
-	public void setJobAutoRetry(String jobAutoRetry) {
+	public void setJobAutoRetry(boolean jobAutoRetry) {
 		this.jobAutoRetry = jobAutoRetry;
 	}
 
@@ -236,6 +240,20 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 		SSSName = sSSName;
 	}
 
+	public ArrayList<Parameter> getParameterList() {
+		return parameterList;
+	}
 
+	public void setParameterList(ArrayList<Parameter> parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	public Parameter getSelectedRow() {
+		return selectedRow;
+	}
+
+	public void setSelectedRow(Parameter selectedRow) {
+		this.selectedRow = selectedRow;
+	}
 
 }
