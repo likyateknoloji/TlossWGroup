@@ -6,13 +6,13 @@
 	<ui:composition>
 
 
-		<ui:include src="/inc/propertiesTabs/timeManagementTab.xhtml">
-			<ui:param name="backingBean" value="#{backingBean.timeManagementTabBean}" />
-		</ui:include>
-
-		<ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
+		<ui:include src="/inc/propertiesTabs/managementTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean}" />
 		</ui:include>
+
+		<!-- ui:include src="/inc/propertiesTabs/concurrencyManagementTab.xhtml">
+			<ui:param name="backingBean" value="#{backingBean}" />
+		</ui:include -->
 
 		<ui:include src="/inc/propertiesTabs/alarmPreferenceTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean.alarmPreferencesTabBean}" />
