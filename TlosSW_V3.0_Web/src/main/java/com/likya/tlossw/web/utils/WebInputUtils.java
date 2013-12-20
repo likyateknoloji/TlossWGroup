@@ -14,13 +14,11 @@ import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.alarm.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.calendar.CalendarPropertiesDocument.CalendarProperties;
 import com.likya.tlos.model.xmlbeans.common.AgentChoiceMethodDocument;
-import com.likya.tlos.model.xmlbeans.common.EventTypeDefDocument.EventTypeDef;
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
-import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
 import com.likya.tlos.model.xmlbeans.common.RoleType;
+import com.likya.tlos.model.xmlbeans.common.TriggerDocument.Trigger;
 import com.likya.tlos.model.xmlbeans.common.TypeOfTimeType;
 import com.likya.tlos.model.xmlbeans.common.UnitDocument.Unit;
-import com.likya.tlos.model.xmlbeans.data.JsRelativeTimeOptionDocument.JsRelativeTimeOption;
+import com.likya.tlos.model.xmlbeans.data.EventTypeDefDocument.EventTypeDef;
 import com.likya.tlos.model.xmlbeans.data.OSystemDocument.OSystem;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument.DbConnectionProfile;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbPropertiesDocument.DbProperties;
@@ -117,6 +115,19 @@ public class WebInputUtils {
 		return jsCalendarList;
 	}
 
+//	public static Collection<SelectItem> fillCalendarNameList(ArrayList<Calendars> calendars) {
+//		Collection<SelectItem> calendarNameList = new ArrayList<SelectItem>();
+//
+//		for (Calendars calendar : calendars) {
+//			SelectItem item = new SelectItem();
+//			item.setValue(calendar.getEntryName());
+//			item.setLabel(calendar.getEntryName());
+//			calendarNameList.add(item);
+//		}
+//
+//		return calendarNameList;
+//	}
+	
 	public static Collection<SelectItem> fillAlarmList(ArrayList<Alarm> alarmList) {
 		Collection<SelectItem> jsAlarmList = new ArrayList<SelectItem>();
 
@@ -216,36 +227,36 @@ public class WebInputUtils {
 		return eventTypeDefList;
 	}
 
-	public static Collection<SelectItem> fillJobBaseTypeList() {
-		String jobBaseType = null;
+//	public static Collection<SelectItem> fillJobBaseTypeList() {
+//		String jobBaseType = null;
+//
+//		Collection<SelectItem> jobBaseTypeList = new ArrayList<SelectItem>();
+//
+//		for (int i = 0; i < JobBaseType.Enum.table.lastInt(); i++) {
+//			SelectItem item = new SelectItem();
+//			jobBaseType = JobBaseType.Enum.table.forInt(i + 1).toString();
+//			item.setValue(jobBaseType);
+//			item.setLabel(jobBaseType);
+//			jobBaseTypeList.add(item);
+//		}
+//
+//		return jobBaseTypeList;
+//	}
 
-		Collection<SelectItem> jobBaseTypeList = new ArrayList<SelectItem>();
+	public static Collection<SelectItem> fillTriggerList() {
+		String trigger = null;
 
-		for (int i = 0; i < JobBaseType.Enum.table.lastInt(); i++) {
+		Collection<SelectItem> triggerList = new ArrayList<SelectItem>();
+
+		for (int i = 0; i < Trigger.Enum.table.lastInt(); i++) {
 			SelectItem item = new SelectItem();
-			jobBaseType = JobBaseType.Enum.table.forInt(i + 1).toString();
-			item.setValue(jobBaseType);
-			item.setLabel(jobBaseType);
-			jobBaseTypeList.add(item);
+			trigger = Trigger.Enum.table.forInt(i + 1).toString();
+			item.setValue(trigger);
+			item.setLabel(trigger);
+			triggerList.add(item);
 		}
 
-		return jobBaseTypeList;
-	}
-
-	public static Collection<SelectItem> fillJobTypeDefList() {
-		String jobTypeDef = null;
-
-		Collection<SelectItem> jobTypeDefList = new ArrayList<SelectItem>();
-
-		for (int i = 0; i < JobTypeDef.Enum.table.lastInt(); i++) {
-			SelectItem item = new SelectItem();
-			jobTypeDef = JobTypeDef.Enum.table.forInt(i + 1).toString();
-			item.setValue(jobTypeDef);
-			item.setLabel(jobTypeDef);
-			jobTypeDefList.add(item);
-		}
-
-		return jobTypeDefList;
+		return triggerList;
 	}
 
 	public static Collection<SelectItem> fillAgentChoiceMethodList() {
@@ -264,21 +275,21 @@ public class WebInputUtils {
 		return agentChoiceMethodList;
 	}
 
-	public static Collection<SelectItem> fillRelativeTimeOptionList() {
-		String relativeTimeOption = null;
-
-		Collection<SelectItem> relativeTimeOptionList = new ArrayList<SelectItem>();
-
-		for (int i = 0; i < JsRelativeTimeOption.Enum.table.lastInt(); i++) {
-			SelectItem item = new SelectItem();
-			relativeTimeOption = JsRelativeTimeOption.Enum.forInt(i + 1).toString();
-			item.setValue(relativeTimeOption);
-			item.setLabel(relativeTimeOption);
-			relativeTimeOptionList.add(item);
-		}
-
-		return relativeTimeOptionList;
-	}
+//	public static Collection<SelectItem> fillRelativeTimeOptionList() {
+//		String relativeTimeOption = null;
+//
+//		Collection<SelectItem> relativeTimeOptionList = new ArrayList<SelectItem>();
+//
+//		for (int i = 0; i < JsRelativeTimeOption.Enum.table.lastInt(); i++) {
+//			SelectItem item = new SelectItem();
+//			relativeTimeOption = JsRelativeTimeOption.Enum.forInt(i + 1).toString();
+//			item.setValue(relativeTimeOption);
+//			item.setLabel(relativeTimeOption);
+//			relativeTimeOptionList.add(item);
+//		}
+//
+//		return relativeTimeOptionList;
+//	}
 
 	public static Collection<SelectItem> fillUnitTypeList() {
 		String unitType = null;
