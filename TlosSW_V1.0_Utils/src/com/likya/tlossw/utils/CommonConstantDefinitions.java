@@ -125,5 +125,6 @@ public class CommonConstantDefinitions {
 	public static final String WSUSERPROFILE_ID = "wsUserProfileId";
 	public static final String FTPCONNECTION_ID = "ftpConnectionId";
 	public static final String ERROR_ID = "errorId";
+	public static final String PARAMETER_ID = "parameterId";
 	
 }
