@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -28,7 +29,6 @@ import com.likya.tlos.model.xmlbeans.alarm.FocusDocument.Focus;
 import com.likya.tlos.model.xmlbeans.alarm.JobDocument.Job;
 import com.likya.tlos.model.xmlbeans.alarm.JobsDocument.Jobs;
 import com.likya.tlos.model.xmlbeans.alarm.PersonDocument.Person;
-import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
 import com.likya.tlos.model.xmlbeans.alarm.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.alarm.ScenariosDocument.Scenarios;
 import com.likya.tlos.model.xmlbeans.alarm.StateManagementDocument.StateManagement;
@@ -54,6 +54,7 @@ import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.model.DocMetaDataHolder;
+import com.likya.tlossw.web.utils.ConstantDefinitions;
 import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.FacesUtils;
 import com.likya.tlossw.web.utils.WebAlarmUtils;
@@ -83,6 +84,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	private boolean skip;
 
+	private HashMap<String, String> statusToSubstate = new HashMap<String, String>();
+	private HashMap<String, String> substateToState = new HashMap<String, String>();
+
 	private Collection<SelectItem> tZList;
 
 	@PostConstruct
@@ -93,7 +97,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setAlarmType("");
 		setCaseType("");
 		setUserType(SubscriptionType.USER.toString());
-		setAlarmDepth("1");
 
 		setTimeOutControl(false);
 		setTolerancePercentage(false);
@@ -125,12 +128,12 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		try {
-			
-			String docId = getDocId( DocMetaDataHolder.SECOND_COLUMN );
-			// ilk 20 iş ekranda görünecek
-			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 20)));
 
-			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId) ) ));
+			String docId = getDocId(DocMetaDataHolder.SECOND_COLUMN);
+			// ilk 20 iş ekranda görünecek
+			setAlarmJobNameList(WebAlarmUtils.fillJobsNameList(getDbOperations().getJobList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), 20)));
+
+			setAlarmScenarioNameList(WebAlarmUtils.fillScenariosNameList(getDbOperations().getScenarioList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId))));
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
@@ -182,6 +185,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	public void fillPanelFromAlarm() {
 
+		setUseSlaManagement(false);
 		setAlarmName(getAlarm().getName());
 		setAlarmDesc(getAlarm().getDesc());
 		setAlarmType(getAlarm().getAlarmType().toString());
@@ -204,11 +208,14 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		else
 			setSelectedTypeOfTime(new String("Broadcast"));
 
-		setAlarmLevel(getAlarm().getLevel().toString());
+		Short n = new Short(getAlarm().getLevel());
+
+		setAlarmLevel(n.toString());
 
 		setSelectedWarnByList(new String[getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length]);
 		for (int i = 0; i < getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray().length; i++) {
-			getSelectedWarnByList()[i] = getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray(i).getId().toString();
+			Short id = new Short(getAlarm().getSubscriber().getAlarmChannelTypes().getWarnByArray(i).getId());
+			getSelectedWarnByList()[i] = id.toString();
 		}
 
 		if (getAlarm().getSubscriptionType().equals(SubscriptionType.USER)) {
@@ -228,7 +235,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			for (int i = 0; i < getAlarm().getFocus().getJobs().getJobArray().length; i++) {
 				getSelectedJobNameList()[i] = getAlarm().getFocus().getJobs().getJobArray(i).getId().toString();
 			}
-			setAlarmDepth(getAlarm().getFocus().getJobs().getJobArray(0).getDepth().toString());
 
 		} else if (getAlarm().getAlarmType().equals(AlarmType.SCENARIO)) {
 			setSelectedScenarioNameList(new String[getAlarm().getFocus().getScenarios().getScenarioArray().length]);
@@ -236,7 +242,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			for (int i = 0; i < getAlarm().getFocus().getScenarios().getScenarioArray().length; i++) {
 				getSelectedScenarioNameList()[i] = getAlarm().getFocus().getScenarios().getScenarioArray(i).getId().toString();
 			}
-			setAlarmDepth(getAlarm().getFocus().getScenarios().getScenarioArray(0).getDepth().toString());
 
 		} else if (getAlarm().getAlarmType().equals(AlarmType.SYSTEM)) {
 			setSelectedResourceList(new String[getAlarm().getFocus().getSystems().getSystemArray().length]);
@@ -254,17 +259,17 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				String stateName = "";
 				if (getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getStateName() != null) {
 					stateName = getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getStateName().toString();
-					setStateDepth("State");
+					setStateDepth(ConstantDefinitions.STATE);
 
 				}
 				if (getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getSubstateName() != null) {
-					stateName += "|" + getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getSubstateName().toString();
-					setStateDepth("SubState");
+					stateName += ConstantDefinitions.AYRAC + getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getSubstateName().toString();
+					setStateDepth(ConstantDefinitions.SUBSTATE);
 
 				}
 				if (getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getStatusName() != null) {
-					stateName += "|" + getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getStatusName().toString();
-					setStateDepth("Status");
+					stateName += ConstantDefinitions.AYRAC + getAlarm().getCaseManagement().getStateManagement().getLiveStateInfoArray(i).getStatusName().toString();
+					setStateDepth(ConstantDefinitions.STATUS);
 				}
 
 				getStateList().add(new SelectItem(stateName));
@@ -278,13 +283,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				setTolerancePercentage(timeManagement.getTolerancePercentage());
 				setMinPercentage(timeManagement.getMinPercentage());
 			}
-		} else if (getAlarm().getCaseManagement().getSLAManagement() != null) {
+		} else if (getAlarm().getCaseManagement().getSLAManagement()) {
 			setCaseType(SLA_CASE_TYPE);
-			if (getAlarm().getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
-				setUseSlaManagement(true);
-			} else {
-				setUseSlaManagement(false);
-			}
+			setUseSlaManagement(true);
 		} else if (getAlarm().getCaseManagement().getSystemManagement() != null) {
 			setCaseType(SYSTEM_CASE_TYPE);
 			Hardware tmpHardware = getAlarm().getCaseManagement().getSystemManagement().getHardware();
@@ -350,13 +351,32 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 			setStateList(new ArrayList<SelectItem>());
 		}
 
+		if (getStateDepth().equals(ConstantDefinitions.STATUS)) {
+			statusToSubstate = DefinitionUtils.fillStatusToSubstateList();
+
+			setSubstate(statusToSubstate.get(getStatus()));
+
+		}
+
+		if (getStateDepth().equals(ConstantDefinitions.SUBSTATE) || getStateDepth().equals(ConstantDefinitions.STATUS)) {
+			substateToState = DefinitionUtils.fillSubstateToStateList();
+
+			setState(substateToState.get(getSubstate()));
+
+			java.lang.System.out.println(StatusName.Enum.forString(getStatus()));
+
+			java.lang.System.out.println(SubstateName.Enum.forString(getSubstate()));
+
+			java.lang.System.out.println(StateName.Enum.forString(getState()));
+		}
+
 		String stateName = getState();
 
-		if (getStateDepth().equals("SubState") || getStateDepth().equals("Status")) {
-			stateName += "|" + getSubstate();
+		if (getStateDepth().equals(ConstantDefinitions.SUBSTATE) || getStateDepth().equals(ConstantDefinitions.STATUS)) {
+			stateName += ConstantDefinitions.AYRAC + getSubstate();
 
-			if (getStateDepth().equals("Status")) {
-				stateName += "|" + getStatus();
+			if (getStateDepth().equals(ConstantDefinitions.STATUS)) {
+				stateName += ConstantDefinitions.AYRAC + getStatus();
 			}
 		}
 
@@ -396,7 +416,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		getAlarm().setEndDate(DefinitionUtils.dateToXmlDate(getEndDate()));
 		getAlarm().setTimeZone(getSelectedTZone());
 		getAlarm().setTypeOfTime(TypeOfTimeType.Enum.forString(getSelectedTypeOfTime()));
-		getAlarm().setLevel(new BigInteger(getAlarmLevel()));
+		getAlarm().setLevel(new Short(getAlarmLevel()));
 
 		Subscriber subscriber = Subscriber.Factory.newInstance();
 		if (getUserType().equals(SubscriptionType.USER.toString())) {
@@ -418,7 +438,7 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 		if (getSelectedWarnByList() != null) {
 			for (int i = 0; i < getSelectedWarnByList().length; i++) {
 				WarnBy warnBy = WarnBy.Factory.newInstance();
-				warnBy.setId(new BigInteger(getSelectedWarnByList()[i]));
+				warnBy.setId(new Short(getSelectedWarnByList()[i]));
 				alarmChannelTypes.addNewWarnBy();
 				alarmChannelTypes.setWarnByArray(i, warnBy);
 			}
@@ -437,10 +457,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 					Job job = Job.Factory.newInstance();
 					job.setId(new BigInteger(getSelectedJobNameList()[i].toString()));
 
-					if (getAlarmDepth() != null) {
-						job.setDepth(new BigInteger(getAlarmDepth()));
-					}
-
 					jobs.addNewJob();
 					jobs.setJobArray(i, job);
 				}
@@ -454,10 +470,6 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				for (int i = 0; i < getSelectedScenarioNameList().length; i++) {
 					Scenario scenario = Scenario.Factory.newInstance();
 					scenario.setId(new BigInteger(getSelectedScenarioNameList()[i].toString()));
-
-					if (getAlarmDepth() != null) {
-						scenario.setDepth(new BigInteger(getAlarmDepth()));
-					}
 
 					scenarios.addNewScenario();
 					scenarios.setScenarioArray(i, scenario);
@@ -550,8 +562,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 				for (int i = 0; i < getStateList().size(); i++) {
 					LiveStateInfo liveStateInfo = LiveStateInfo.Factory.newInstance();
 
-					StringTokenizer stateTokenizer = new StringTokenizer(getStateList().get(i).getValue().toString(), "|");
-
+					StringTokenizer stateTokenizer = new StringTokenizer(getStateList().get(i).getValue().toString(), ConstantDefinitions.AYRAC);
+					if(!stateTokenizer.hasMoreElements()) 
+						continue;
 					liveStateInfo.setStateName(StateName.Enum.forString(stateTokenizer.nextToken()));
 
 					if (stateTokenizer.hasMoreTokens()) {
@@ -572,9 +585,9 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 		} else if (getCaseType().equals(SLA_CASE_TYPE)) {
 			if (isUseSlaManagement()) {
-				caseManagement.setSLAManagement(SLAManagement.YES);
+				caseManagement.setSLAManagement(true);
 			} else {
-				caseManagement.setSLAManagement(SLAManagement.NO);
+				caseManagement.setSLAManagement(false);
 			}
 
 		} else if (getCaseType().equals(TIME_CASE_TYPE)) {
@@ -651,6 +664,22 @@ public class AlarmPanelMBean extends AlarmBaseBean {
 
 	public void settZList(Collection<SelectItem> tZList) {
 		this.tZList = tZList;
+	}
+
+	public HashMap<String, String> getStatusToSubstate() {
+		return statusToSubstate;
+	}
+
+	public void setStatusToSubstate(HashMap<String, String> statusToSubstate) {
+		this.statusToSubstate = statusToSubstate;
+	}
+
+	public HashMap<String, String> getSubstateToState() {
+		return substateToState;
+	}
+
+	public void setSubstateToState(HashMap<String, String> substateToState) {
+		this.substateToState = substateToState;
 	}
 
 }
