@@ -20,8 +20,8 @@ import java.util.Iterator;
 import org.apache.xmlbeans.XmlException;
 
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
+import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
-import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
@@ -87,14 +87,14 @@ public class ParameterPassing {
 		Boolean assignmentOk = false;
 
 		if (job instanceof JobProperties) {
-			SpecialParameters specialParameter = job.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-			if (specialParameter == null) {
-				job.getBaseJobInfos().getJobInfos().getJobTypeDetails().addNewSpecialParameters();
+			LocalParameters localParameter = job.getLocalParameters();
+			if (localParameter == null) {
+				job.addNewLocalParameters();
 			}
-			if (specialParameter.getOutParam() == null) {
-				specialParameter.addNewOutParam();
+			if (localParameter.getOutParam() == null) {
+				localParameter.addNewOutParam();
 			}
-			OutParam outParam = specialParameter.getOutParam();
+			OutParam outParam = localParameter.getOutParam();
 			Boolean paramF = false;
 			for (int j = 0; j < outParam.sizeOfParameterArray(); j++) {
 				paramF = outParam.getParameterArray(j).getName().equalsIgnoreCase(parameterName);
@@ -133,7 +133,7 @@ public class ParameterPassing {
 		// kosulu aranir.
 
 		String inputs[] = null, inputPar[] = null;
-		String xpath = "/dat:jobProperties/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters/com:inParam/par:parameter[par:preValue/@type=\"6\"]";
+		String xpath = "/dat:jobProperties/com:localParameters/com:inParam/par:parameter[par:preValue/@type=\"6\"]";
 		try {
 			inputs = ApplyXPath.queryXmlWithXPath(job, xpath);
 			Parameter parameterList[] = new Parameter[inputs.length];
@@ -155,14 +155,14 @@ public class ParameterPassing {
 						String result = parameterInput.getValueString();
 
 						if (job instanceof JobProperties) {
-							SpecialParameters specialParameter = job.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-							if (specialParameter == null) {
-								job.getBaseJobInfos().getJobInfos().getJobTypeDetails().addNewSpecialParameters();
+							LocalParameters localParameter = job.getLocalParameters();
+							if (localParameter == null) {
+								job.addNewLocalParameters();
 							}
-							if (specialParameter.getInParam() == null) {
-								specialParameter.addNewInParam();
+							if (localParameter.getInParam() == null) {
+								localParameter.addNewInParam();
 							}
-							InParam inParam = specialParameter.getInParam();
+							InParam inParam = localParameter.getInParam();
 							Boolean paramF = false;
 							for (int j = 0; j < inParam.sizeOfParameterArray(); j++) {
 								paramF = inParam.getParameterArray(j).getName().equalsIgnoreCase(parameterName);
