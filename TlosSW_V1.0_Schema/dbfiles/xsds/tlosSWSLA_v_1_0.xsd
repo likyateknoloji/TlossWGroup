@@ -23,7 +23,7 @@
                 <xs:element ref="Priority"/>
                 <xs:element ref="ResourcePool"/>
                 <xs:element ref="ResourceReq"/>
-                <xs:element ref="calendarId"/>
+                <xs:element ref="lt:calendars"/>
                 <xs:element ref="QueueFrame"/>
                 <xs:element ref="ResolveIncident"/>
                 <xs:element ref="JobsInStatus"/>
@@ -187,6 +187,7 @@
 	</xs:element>
 	-->
     <xs:element name="calendarId" type="xs:nonNegativeInteger"/>
+    
     <xs:element name="QueueFrame">
         <xs:complexType>
             <xs:sequence>
@@ -194,15 +195,9 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="MaxTimeInQueue">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="xs:nonNegativeInteger">
-                    <xs:attribute ref="birim" use="required"/>
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
+    
+    <xs:element name="MaxTimeInQueue" type="lt:datetimeType" />
+
     <xs:element name="ResolveIncident">
         <xs:complexType>
             <xs:sequence>
@@ -210,15 +205,8 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="MaxTimeToResolve">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="xs:nonNegativeInteger">
-                    <xs:attribute ref="birim" use="required"/>
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="MaxTimeToResolve" type="lt:datetimeType" />
+
     <xs:element name="JobsInStatus">
         <xs:complexType>
             <xs:sequence>
