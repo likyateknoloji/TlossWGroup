@@ -35,7 +35,7 @@
 
 		<h:form id="newDBConnection">
 
-			<p:fieldset
+			<p:fieldset id="fieldSet4DB"
 				legend="#{msgs['tlos.management.pannel.dbDefinition.definition']}"
 				widgetVar="regWidget" style="width: 850px;">
 
@@ -78,8 +78,7 @@
 						value="#{msgs['tlos.management.pannel.dbDefinition.dbUrl']}" />
 					<p:inputText id="dbUrl"
 						value="#{dbConnectionPanelMBean.dbProperties.dbUrl}"
-						style="width:200pt"
-						required="true"
+						style="width:200pt" required="true"
 						requiredMessage="#{msgs['tlos.validation.db.dbUrl']}"
 						validatorMessage="#{msgs['tlos.validation.db.dbUrl.min']}">
 						<f:validateLength minimum="4"></f:validateLength>
@@ -92,7 +91,7 @@
 						required="true"
 						requiredMessage="#{msgs['tlos.validation.db.dbVersion']}"
 						validatorMessage="#{msgs['tlos.validation.db.dbVersion.regex']}">
-						<f:validateRegex pattern="^(?:(\d+)\.)?(?:(\d+)\.)?(\*|\d+)$" />
+						<f:validateRegex pattern="^(?:(\d+[a-zA-Z])\.?)?(?:(\d+)\.)?(\*|\d+)?$" />
 					</p:inputText>
 
 					<h:outputText
@@ -150,18 +149,18 @@
 					<p:panelGrid id="useSqlClientAppPanelGrid" columns="4">
 						<h:outputText
 							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppUse']}" />
-						<p:selectBooleanCheckbox
+						<p:selectBooleanCheckbox id="checkboxId"
 							value="#{dbConnectionPanelMBean.useSqlClientApp}">
-							<p:ajax update="useSqlClientAppPanel"></p:ajax>
+							<p:ajax event="change" update="sqlClientAppPG" />
 						</p:selectBooleanCheckbox>
 					</p:panelGrid>
 
-					<p:panelGrid rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
-						columns="4">
+					<p:panelGrid id="sqlClientAppPG" columns="4">
 
-						<h:outputText
+						<h:outputText rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
 							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppName']}" />
-						<p:selectOneMenu id="appName" required="true"
+						<p:selectOneMenu id="appName"
+							rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
 							style="text-align: center; width:100pt"
 							requiredMessage="#{msgs['tlos.validation.db.sqlClientAppName']}"
 							value="#{dbConnectionPanelMBean.sqlClientAppName}"
@@ -172,12 +171,12 @@
 								value="#{dbConnectionPanelMBean.sqlClientAppNameList}" />
 						</p:selectOneMenu>
 
-						<h:outputText
+						<h:outputText rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
 							value="#{msgs['tlos.management.pannel.dbDefinition.sqlClientAppPath']}" />
 						<p:inputText id="appPath"
-							value="#{dbConnectionPanelMBean.dbProperties.sqlClientAppPath}"
+							rendered="#{dbConnectionPanelMBean.useSqlClientApp}"
+							value="#{dbConnectionPanelMBean.sqlClientAppPath}"
 							style="width:200pt"
-							required="true"
 							requiredMessage="#{msgs['tlos.validation.db.sqlClientAppPath']}"
 							validatorMessage="#{msgs['tlos.validation.db.sqlClientAppPath.regex']}">
 							<f:validateRegex
@@ -198,13 +197,15 @@
 							rendered="#{dbConnectionPanelMBean.insertButton and security.DBAccessSave}"
 							actionListener="#{dbConnectionPanelMBean.insertDBConnectionAction}">
 							<f:param name="iCheck" value="insert" />
+							<f:param name="selectCheckBox" value="true" />
 						</p:commandButton>
 
 						<p:commandButton id="dbUpdateButton"
 							value="#{msgs['tlos.button.update']}"
 							rendered="#{not dbConnectionPanelMBean.insertButton and security.DBAccessUpdate}"
-							actionListener="#{dbConnectionPanelMBean.updateDBConnectionAction}" />
-
+							actionListener="#{dbConnectionPanelMBean.updateDBConnectionAction}">
+							<f:param name="selectCheckBox" value="true" />
+						</p:commandButton>
 						<p:commandButton value="#{msgs['tlos.button.back']}" ajax="false"
 							immediate="true" rendered="#{security.DBAccessBack}"
 							action="dbConnectionSearchPanel.xhtml">
