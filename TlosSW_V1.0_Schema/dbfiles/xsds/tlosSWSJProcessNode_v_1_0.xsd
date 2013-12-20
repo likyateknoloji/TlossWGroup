@@ -39,12 +39,12 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 	<xs:element name="append">
 		<xs:complexType>
 			<xs:simpleContent>
-				<xs:extension base="xs:integer">
+				<xs:extension base="xs:string">
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:token">
 								<xs:enumeration value="line"/>
-								<xs:enumeration value="tag"/>
+								<xs:enumeration value="xPath"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -54,7 +54,7 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 	</xs:element>
 	<xs:element name="delete">
 		<xs:complexType>
-			<xs:attribute name="find" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="find" use="required" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="filter">
@@ -94,13 +94,13 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 	<xs:element name="split">
 		<xs:complexType>
 			<xs:simpleContent>
-				<xs:extension base="xs:integer">
+				<xs:extension base="xs:string">
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
 							<xs:restriction base="xs:token">
 								<xs:enumeration value="word"/>
 								<xs:enumeration value="line"/>
-								<xs:enumeration value="tag"/>
+								<xs:enumeration value="xPath"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -116,6 +116,7 @@ targetNamespace="http://www.likyateknoloji.com/XML_process_node" elementFormDefa
 						<xs:simpleType>
 							<xs:restriction base="xs:token">
 								<xs:enumeration value="xslt"/>
+								<xs:enumeration value="xQuery"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
