@@ -10,18 +10,16 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.data.AdvancedScenarioInfosDocument.AdvancedScenarioInfos;
 import com.likya.tlos.model.xmlbeans.data.AlarmPreferenceDocument.AlarmPreference;
 import com.likya.tlos.model.xmlbeans.data.BaseScenarioInfosDocument.BaseScenarioInfos;
-import com.likya.tlos.model.xmlbeans.data.ConcurrencyManagementDocument.ConcurrencyManagement;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
+import com.likya.tlos.model.xmlbeans.data.ManagementDocument.Management;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.ScenarioStatusListDocument.ScenarioStatusList;
@@ -62,9 +60,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private DependencyList dependencyList;
 	private ScenarioStatusList scenarioStatusList;
 	private AlarmPreference alarmPreference;
-	private TimeManagement timeManagement;
+	private Management management;
 	private AdvancedScenarioInfos advancedScenarioInfos;
-	private ConcurrencyManagement concurrencyManagement;
 	private LocalParameters localParameters;
 	private Scenario scenario;
 
@@ -171,7 +168,7 @@ public abstract class SpcBase implements Runnable, Serializable {
 			Job myJob = null;
 
 			myLogger.info("   > Is ismi : " + jobProperties.getBaseJobInfos().getJsName());
-			myLogger.info("   > is Tipi : " + jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().toString());
+			myLogger.info("   > is Tipi : " + jobProperties.getManagement().getPeriodInfo() != null ? "PERIODIC" : "NORMAL");
 
 			myJob = getMyJob(jobRuntimeProperties);
 
@@ -235,17 +232,20 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 			Job myJob = null;
 
+			boolean isPeriodic = jobRuntimeProperties.getJobProperties().getManagement().getPeriodInfo() != null ? true : false;
+			
 			myLogger.info("   > Is ismi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-			myLogger.info("   > is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
-			if (jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().intValue() == JobBaseType.PERIODIC.intValue()) {
-				if (!jobRuntimeProperties.getAbsoluteJobPath().equals(CpcUtils.getRootScenarioPath(getConcurrencyManagement().getRunningId()))) {
+			myLogger.info("   > is Tipi : " + (isPeriodic ? "PERIODIC" : "NORMAL"));
+			
+			if (isPeriodic) {
+				if (!jobRuntimeProperties.getAbsoluteJobPath().equals(CpcUtils.getRootScenarioPath(getManagement().getConcurrencyManagement().getRunningId()))) {
 					globalLogger.warn("Periodik job root disinda kullanilamaz ! Base : " + BasePathType.getRootPath());
 					globalLogger.warn("JobName : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 					globalLogger.warn("TreePath : " + jobRuntimeProperties.getAbsoluteJobPath());
 
 				} else { // TODO PARAMETRE ekleme
-					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters());
-					myLogger.info("     > Periyodik is calitirma kismi henuz aktif degil. Burada olacak !!");
+					myLogger.info("     > Periodik is geldi ! period : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getSpecialParameters());
+					myLogger.info("     > Periyodik is calistirma kismi henuz aktif degil. Burada olacak !!");
 					// myJob = new PeriodicExternalProgram(getSwAgentRegistry(),
 					// jobRuntimeProperties);
 				}
@@ -281,12 +281,16 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 		scenarioRealTime = JsRealTime.Factory.newInstance();
 
-		StartTime startTimeTemp = StartTime.Factory.newInstance();
+		DatetimeType startTimeTemp = DatetimeType.Factory.newInstance();
 		startTimeTemp.setTime(startTime);
 		startTimeTemp.setDate(startTime);
 		scenarioRealTime.setStartTime(startTimeTemp);
 
-		getTimeManagement().setJsRealTime(scenarioRealTime);
+		if(getManagement().getTimeManagement() == null) {
+			TimeManagement timeManagement = TimeManagement.Factory.newInstance();
+			getManagement().setTimeManagement(timeManagement);
+		}
+		getManagement().getTimeManagement().setJsRealTime(scenarioRealTime);
 	}
 
 	protected void setJSRealTimeStopTime() {
@@ -304,12 +308,12 @@ public abstract class SpcBase implements Runnable, Serializable {
 		// getJobRuntimeProperties().setCompletionDate(endTime);
 		// getJobRuntimeProperties().setWorkDuration(DateUtils.getUnFormattedElapsedTime((int) timeDiff / 1000));
 
-		StopTime stopTimeTemp = StopTime.Factory.newInstance();
+		DatetimeType stopTimeTemp = DatetimeType.Factory.newInstance();
 		stopTimeTemp.setTime(endTime);
 		stopTimeTemp.setDate(endTime);
 		// scenarioRealTime.setStopTime(stopTimeTemp);
 
-		getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
+		getManagement().getTimeManagement().getJsRealTime().setStopTime(stopTimeTemp);
 
 		getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + endLog);
 		getMyLogger().info(" >>" + "Spc_" + getSpcAbsolutePath() + ">> " + duration);
@@ -454,28 +458,12 @@ public abstract class SpcBase implements Runnable, Serializable {
 		this.alarmPreference = alarmPreference;
 	}
 
-	public TimeManagement getTimeManagement() {
-		return timeManagement;
-	}
-
-	public void setTimeManagement(TimeManagement timeManagement) {
-		this.timeManagement = timeManagement;
-	}
-
 	public AdvancedScenarioInfos getAdvancedScenarioInfos() {
 		return advancedScenarioInfos;
 	}
 
 	public void setAdvancedScenarioInfos(AdvancedScenarioInfos advancedScenarioInfos) {
 		this.advancedScenarioInfos = advancedScenarioInfos;
-	}
-
-	public ConcurrencyManagement getConcurrencyManagement() {
-		return concurrencyManagement;
-	}
-
-	public void setConcurrencyManagement(ConcurrencyManagement concurrencyManagement) {
-		this.concurrencyManagement = concurrencyManagement;
 	}
 
 	public LocalParameters getLocalParameters() {
@@ -592,6 +580,14 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public void setSpcSuspended(boolean isSpcSuspended) {
 		this.isSpcSuspended = isSpcSuspended;
+	}
+
+	public Management getManagement() {
+		return management;
+	}
+
+	public void setManagement(Management management) {
+		this.management = management;
 	}
 
 }
