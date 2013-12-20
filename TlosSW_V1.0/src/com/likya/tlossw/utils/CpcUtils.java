@@ -41,9 +41,8 @@ public class CpcUtils {
 		scenario.setDependencyList(tlosProcessData.getDependencyList());
 		scenario.setScenarioStatusList(tlosProcessData.getScenarioStatusList());
 		scenario.setAlarmPreference(tlosProcessData.getAlarmPreference());
-		scenario.setTimeManagement(tlosProcessData.getTimeManagement());
+		scenario.setManagement(tlosProcessData.getManagement());
 		scenario.setAdvancedScenarioInfos(tlosProcessData.getAdvancedScenarioInfos());
-		scenario.setConcurrencyManagement(tlosProcessData.getConcurrencyManagement());
 		scenario.setLocalParameters(tlosProcessData.getLocalParameters());
 
 		return scenario;
@@ -53,7 +52,7 @@ public class CpcUtils {
 
 		Scenario scenario = CpcUtils.getScenario(tlosProcessData);
 
-		scenario.getConcurrencyManagement().setRunningId(runId);
+		scenario.getManagement().getConcurrencyManagement().setRunningId(runId);
 
 		return scenario;
 	}
@@ -87,9 +86,8 @@ public class CpcUtils {
 		scenario.setDependencyList(spc.getDependencyList());
 		scenario.setScenarioStatusList(spc.getScenarioStatusList());
 		scenario.setAlarmPreference(spc.getAlarmPreference());
-		scenario.setTimeManagement(spc.getTimeManagement());
+		scenario.setManagement(spc.getManagement());
 		scenario.setAdvancedScenarioInfos(spc.getAdvancedScenarioInfos());
-		scenario.setConcurrencyManagement(spc.getConcurrencyManagement());
 		scenario.setLocalParameters(spc.getLocalParameters());
 
 		return scenario;
@@ -103,9 +101,8 @@ public class CpcUtils {
 		scenario.setDependencyList(tmpScenario.getDependencyList());
 		scenario.setScenarioStatusList(tmpScenario.getScenarioStatusList());
 		scenario.setAlarmPreference(tmpScenario.getAlarmPreference());
-		scenario.setTimeManagement(tmpScenario.getTimeManagement());
+		scenario.setManagement(tmpScenario.getManagement());
 		scenario.setAdvancedScenarioInfos(tmpScenario.getAdvancedScenarioInfos());
-		scenario.setConcurrencyManagement(tmpScenario.getConcurrencyManagement());
 		scenario.setLocalParameters(tmpScenario.getLocalParameters());
 
 		return scenario;
@@ -126,25 +123,24 @@ public class CpcUtils {
 		spc.setExecuterThread(thread);
 
 		spc.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
-		spc.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
+		spc.setConcurrent(tmpScenario.getManagement().getConcurrencyManagement().getConcurrent());
 		spc.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spc.setUserId(userId);
 
-		tmpScenario.getConcurrencyManagement().setRunningId(runId);
+		tmpScenario.getManagement().getConcurrencyManagement().setRunningId(runId);
 
 		spc.setBaseScenarioInfos(tmpScenario.getBaseScenarioInfos());
 		spc.setDependencyList(tmpScenario.getDependencyList());
 		spc.setScenarioStatusList(tmpScenario.getScenarioStatusList());
 		spc.setAlarmPreference(tmpScenario.getAlarmPreference());
-		spc.setTimeManagement(tmpScenario.getTimeManagement());
+		spc.setManagement(tmpScenario.getManagement());
 		spc.setAdvancedScenarioInfos(tmpScenario.getAdvancedScenarioInfos());
-		spc.setConcurrencyManagement(tmpScenario.getConcurrencyManagement());
 		spc.setLocalParameters(tmpScenario.getLocalParameters());
 
 		SpcInfoType spcInfoType = new SpcInfoType();
 
 		spcInfoType.setJsName(spc.getBaseScenarioInfos().getJsName());
-		spcInfoType.setConcurrent(spc.getConcurrencyManagement().getConcurrent());
+		spcInfoType.setConcurrent(spc.getManagement().getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(spc.getBaseScenarioInfos().getComment());
 		spcInfoType.setUserId(userId);
 
@@ -161,7 +157,7 @@ public class CpcUtils {
 		SpcInfoType spcInfoType = new SpcInfoType();
 
 		spcInfoType.setJsName(tmpScenario.getBaseScenarioInfos().getJsName());
-		spcInfoType.setConcurrent(tmpScenario.getConcurrencyManagement().getConcurrent());
+		spcInfoType.setConcurrent(tmpScenario.getManagement().getConcurrencyManagement().getConcurrent());
 		spcInfoType.setComment(tmpScenario.getBaseScenarioInfos().getComment());
 		spcInfoType.setUserId(userId);
 
