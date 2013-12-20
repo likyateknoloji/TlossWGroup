@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/cxf-2.6.0.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="/SharedLibs/apache-cxf-2.6.0/wsdl4j-1.6.2.jar"/>
