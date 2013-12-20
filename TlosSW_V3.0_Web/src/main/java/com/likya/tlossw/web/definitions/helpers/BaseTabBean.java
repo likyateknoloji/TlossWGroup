@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 
 import com.likya.tlossw.web.appmng.SessionMediator;
@@ -13,10 +14,21 @@ public class BaseTabBean implements Serializable {
 
 	private static final long serialVersionUID = -8738173023349050795L;
 
+	@ManagedProperty(value = "#{sessionMediator}")
+	private SessionMediator sessionMediator;
+	
 	public void addMessage(String fieldName, FacesMessage.Severity severity, String errorMessage, String miscText) {
 		SessionMediator sessionMediator = (SessionMediator) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionMediator");
 		ResourceBundle messages = sessionMediator.getMessageBundle();
 		BeanUtils.addMessage(messages, fieldName, severity, errorMessage, miscText);
+	}
+
+	public SessionMediator getSessionMediator() {
+		return sessionMediator;
+	}
+
+	public void setSessionMediator(SessionMediator sessionMediator) {
+		this.sessionMediator = sessionMediator;
 	}
 	
 }

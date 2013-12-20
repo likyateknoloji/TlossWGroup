@@ -97,8 +97,8 @@ public class AlarmPreferencesTabBean {
 
 		}
 
-		if (alarmPreference != null && alarmPreference.getAlarmIdArray() != null && alarmPreference.getAlarmIdArray().length > 0) {
-			int length = alarmPreference.getAlarmIdArray().length;
+		if (alarmPreference != null && alarmPreference.sizeOfAlarmIdArray() > 0) {
+			int length = alarmPreference.sizeOfAlarmIdArray();
 			selectedAlarmList = new String[length];
 
 			for (int i = 0; i < length; i++) {

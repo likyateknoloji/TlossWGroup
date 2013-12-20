@@ -97,7 +97,7 @@ public class EnvVariablesTabBean extends BaseTabBean {
 
 	public void fillEnvVariables(Object refObject) {
 
-		SpecialParameters specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
+		SpecialParameters specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobTypeDetails().getSpecialParameters();
 		if (specialParameters == null) {
 			specialParameters = SpecialParameters.Factory.newInstance();
 		}
@@ -111,10 +111,10 @@ public class EnvVariablesTabBean extends BaseTabBean {
 			}
 
 			specialParameters.setEnvVariables(envVariables);
-			((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().setSpecialParameters(specialParameters);
+			((JobProperties) refObject).getBaseJobInfos().getJobTypeDetails().setSpecialParameters(specialParameters);
 
 		} else if (specialParameters.getEnvVariables() != null) {
-			XmlCursor xmlCursor = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().newCursor();
+			XmlCursor xmlCursor = ((JobProperties) refObject).getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getEnvVariables().newCursor();
 			xmlCursor.removeXml();
 		}
 	}
@@ -124,7 +124,7 @@ public class EnvVariablesTabBean extends BaseTabBean {
 		EnvVariables envVariables = null;
 
 		if (((JobProperties) refObject) != null) {
-			SpecialParameters specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
+			SpecialParameters specialParameters = ((JobProperties) refObject).getBaseJobInfos().getJobTypeDetails().getSpecialParameters();
 
 			if (specialParameters != null && specialParameters.getEnvVariables() != null) {
 				envVariables = specialParameters.getEnvVariables();
