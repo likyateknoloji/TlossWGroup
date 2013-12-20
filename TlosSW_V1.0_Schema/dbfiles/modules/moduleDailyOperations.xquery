@@ -15,6 +15,13 @@ declare namespace functx = "http://www.functx.com";
 
 (:**************************Run PLAN**********************************:) 
 
+declare function functx:is-value-in-sequence 
+  ( $value as xs:anyAtomicType? ,
+    $seq as xs:anyAtomicType* )  as xs:boolean {
+       
+   $value = $seq
+ } ;
+ 
 declare function functx:is-leap-year 
 		  ( $date as xs:anyAtomicType? )  as xs:boolean {
 		       
@@ -346,22 +353,6 @@ declare function hs:createPlanCalendars($documentUrl as xs:string) as node()*
 				 else if (xs:string($daySpecial) eq 'EVEN'  and $yearEvenFlg) then true()
 	             else false()
 	            )
-		        else if (xs:string($dayDef) eq 'TIMELY') then  (
-	             if (xs:string($daySpecial) eq 'ALL') then true() 
-	             else if (xs:string($daySpecial) eq 'FIRST') then true() 
-	             else if (xs:string($daySpecial) eq 'LAST') then true()
-				 else if (xs:string($daySpecial) eq 'ODD') then true()
-				 else if (xs:string($daySpecial) eq 'EVEN') then true()
-	             else false()
-	            )
-		        else if (xs:string($dayDef) eq 'PERPETUAL') then  (
-	             if (xs:string($daySpecial) eq 'ALL') then true() 
-	             else if (xs:string($daySpecial) eq 'FIRST') then true() 
-	             else if (xs:string($daySpecial) eq 'LAST') then true()
-				 else if (xs:string($daySpecial) eq 'ODD') then true()
-				 else if (xs:string($daySpecial) eq 'EVEN') then true()
-	             else false()
-	            )
 			    else false()
 			   )
 			  )
@@ -467,10 +458,40 @@ declare function hs:select-jobs-and-scenarios($n as node(), $runId as xs:integer
 	    case $a as element(dat:jobList)
 			 return element dat:jobList
 			 {
-			   for $ca in $a/dat:jobProperties[not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and data(dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")]
-			      ,$calendar in $plan[data(calID)=data($ca/dat:baseJobInfos/dat:calendarId)]
-			         (: $ca/dat:baseJobInfos/dat:jobInfos/com:jobTypeDef/text()='TIME BASED' and :)
-			   return hs:select-jobs-and-scenarios($ca, $runId, $scenarioId, $planId, $plan)
+			   for $ca in $a/dat:jobProperties[ not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and 
+			                                    dat:baseJobInfos/dat:jsIsActive and
+												( 
+												  ( 
+												    exists(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date) and 
+													dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date = fn:adjust-date-to-timezone( current-date(), timezone-from-date(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date)) 
+												  )
+												  or
+												  not( exists(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date) )
+												)
+											  ]
+            let $calendarCountInJob := count($ca/dat:management/dat:timeManagement/com:calendars/com:calendarId)
+            let $calendarUnionOpForJob := $ca/dat:management/dat:timeManagement/com:calendars/@operator
+            let $calendarUnionOpForJobExist := exists($ca/dat:management/dat:timeManagement/com:calendars/@operator)
+            let $c := <job>{for $calendar in $plan[functx:is-value-in-sequence(data(calID), data($ca/dat:management/dat:timeManagement/com:calendars/com:calendarId))]
+			   return $calendar/calID
+               }</job>
+            let $araResult := if(count($c/calID) eq $calendarCountInJob) 
+                             then 2
+                             else if(count($c/calID) gt 0) 
+                                  then 1
+                                  else 0
+            return if( (compare($calendarUnionOpForJob, xs:string("AND")) eq 0 or not($calendarUnionOpForJobExist)) and $araResult gt 1) 
+                   then hs:select-jobs-and-scenarios($ca, $runId, $scenarioId, $planId, $plan)
+                   else if(compare($calendarUnionOpForJob, xs:string("OR")) eq 0  and $araResult ge 1) 
+                        then hs:select-jobs-and-scenarios($ca, $runId, $scenarioId, $planId, $plan)
+                        else ()
+						(:
+ let $result := update insert 
+                         (attribute runId {data($runId)},
+                         attribute planId {data($planId)} )
+                         into $currentRun
+						 :)
+			   (: return hs:select-jobs-and-scenarios($ca, $runId, $scenarioId, $planId, $plan) :)
 			 }
 	    case $es as element(dat:scenario) 
 	       return if (count($es//dat:jobProperties)>0) then element dat:scenario
@@ -513,9 +534,8 @@ declare function hs:querySelectedJobsAndScenarios($documentUrl as xs:string, $ru
 							                                      element dat:TlosProcessData { 
                                                                      $scenario/dat:baseScenarioInfos,
 	                                                                 $scenario/dat:jobList,
-																     $scenario/dat:timeManagement,
+																     $scenario/dat:management,
 																     $scenario/dat:advancedScenarioInfos,
-																     $scenario/dat:concurrencyManagement,
 																     $scenario/dat:scenario/*
 																  }
 															 else 
@@ -566,8 +586,8 @@ declare function hs:doPlanAndSelectJob($documentUrl as xs:string, $jobId as xs:i
 	let $planId    := xs:integer( if($isNewPlan) then sq:getId($documentUrl, "planId") else $pId )
 
 	let $runId := sq:getId($documentUrl, "runId")
-
-    let $currentRun := for $job in $dataDocument//dat:jobProperties[@ID = $jobId and not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and data(dat:baseJobInfos/dat:jsIsActive) = xs:string("YES")]
+(:
+    let $currentRun := for $job in $dataDocument//dat:jobProperties[@ID = $jobId and not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and dat:baseJobInfos/dat:jsIsActive]
 			      ,$calendar in $plan[data(calID)=data($job/dat:baseJobInfos/dat:calendarId)]
 			   return $job
     
@@ -575,7 +595,36 @@ declare function hs:doPlanAndSelectJob($documentUrl as xs:string, $jobId as xs:i
                          (attribute runId {data($runId)},
                          attribute planId {data($planId)} )
                          into $currentRun
-	
+:)
+	    let $currentRun := for $job in $dataDocument//dat:jobProperties[@ID = $jobId and not(dat:stateInfos/state-types:LiveStateInfos/state-types:LiveStateInfo/state-types:SubstateName/text()='DEACTIVATED') and dat:baseJobInfos/dat:jsIsActive and
+        											( 
+												  ( 
+												    exists(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date) and 
+													dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date = fn:adjust-date-to-timezone( current-date(), timezone-from-date(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date)) 
+												  )
+												  or
+												  not( exists(dat:management/dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:date) )
+												)]
+            let $calendarCountInJob := count($job/dat:management/dat:timeManagement/com:calendars/com:calendarId)
+            let $calendarUnionOpForJob := $job/dat:management/dat:timeManagement/com:calendars/@operator
+            let $calendarUnionOpForJobExist := exists($job/dat:management/dat:timeManagement/com:calendars/@operator)
+            let $c := <job>{for $calendar in $plan[functx:is-value-in-sequence(data(calID), data($job/dat:management/dat:timeManagement/com:calendars/com:calendarId))]
+			   return $calendar/calID
+               }</job>
+            let $araResult := if(count($c/calID) eq $calendarCountInJob) 
+                             then 2
+                             else if(count($c/calID) gt 0) 
+                                  then 1
+                                  else 0
+            return if( (compare($calendarUnionOpForJob, xs:string("AND")) eq 0 or not($calendarUnionOpForJobExist)) and $araResult gt 1) 
+                   then $job
+                   else if(compare($calendarUnionOpForJob, xs:string("OR")) eq 0  and $araResult ge 1) 
+                        then $job 
+                        else ()
+ let $result := update insert 
+                         (attribute runId {data($runId)},
+                         attribute planId {data($planId)} )
+                         into $currentRun
     return $currentRun
 
 };
