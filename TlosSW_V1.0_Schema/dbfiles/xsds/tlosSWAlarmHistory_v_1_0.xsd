@@ -38,7 +38,7 @@
 			</xs:sequence>
 			<xs:attribute name="aHistoryId" use="required" type="xs:positiveInteger" />
 			<xs:attribute name="agentId" use="required" type="xs:string" />
-			<xs:attribute name="runId" use="required" type="xs:int" />
+			<xs:attribute name="runId" use="required" type="xs:positiveInteger" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="caseOccured">
