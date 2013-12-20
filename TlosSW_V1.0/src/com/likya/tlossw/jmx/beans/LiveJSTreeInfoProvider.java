@@ -16,6 +16,8 @@ import java.util.StringTokenizer;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.common.JobCommandTypeDocument.JobCommandType;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
+import com.likya.tlos.model.xmlbeans.data.TimeControlDocument.TimeControl;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.model.RunInfoType;
@@ -288,10 +290,10 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobInfoTypeClient.setJobId(jobRuntimeProperties.getJobProperties().getID());
 			jobInfoTypeClient.setJobName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
 			// jobInfoTypeClient.setJobKey(jobRuntimeProperties.getJobProperties().getID());
-			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
-			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
+			jobInfoTypeClient.setJobCommand(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommand());
+			jobInfoTypeClient.setJobCommandType(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString());
 			jobInfoTypeClient.setTreePath(jobRuntimeProperties.getAbsoluteJobPath());
-			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
+			jobInfoTypeClient.setJobPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobPath());
 			jobInfoTypeClient.setCurrentRunId(spcInfoType.getSpcReferance().getCurrentRunId());
 			jobInfoTypeClient.setNativeRunId(jobRuntimeProperties.getJobProperties().getRunId());
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
@@ -301,16 +303,19 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			// TODO Geçici olarak tip dönüşümü yaptım.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
-			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
-			jobInfoTypeClient.setJobTimeOut(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsTimeOut().getValueInteger().toString() + " " + jobRuntimeProperties.getJobProperties().getTimeManagement().getJsTimeOut().getUnit());
+			TimeManagement timeManagement = jobRuntimeProperties.getJobProperties().getManagement().getTimeManagement();
+			TimeControl timeControl = jobRuntimeProperties.getJobProperties().getManagement().getTimeControl();
+			
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+			jobInfoTypeClient.setJobTimeOut(timeControl.getJsTimeOut().toString());
 
 			// agentlarda calisan joblarin PlannedExecutionDate, CompletionDate ve WorkDuration alanlari set edilmediginden onlari jobRealTime kismindan set ediyoruz
-			if (jobRuntimeProperties.getPlannedExecutionDate() == null && (jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime() != null)) {
-				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+			if (jobRuntimeProperties.getPlannedExecutionDate() == null && (timeManagement.getJsRealTime() != null)) {
+				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), true, transformToLocalTime));
 
 				// is hala calisiyorsa
-				if (jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime().getStopTime() != null) {
-					jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+				if (timeManagement.getJsRealTime().getStopTime() != null) {
+					jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToString(timeManagement.getJsRealTime(), false, transformToLocalTime));
 				}
 
 			} else if (jobRuntimeProperties.getPlannedExecutionDate() != null) {
@@ -321,14 +326,14 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				}
 			}
 
-			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobRuntimeProperties.getJobProperties().getTimeManagement().getJsRealTime(), false));
+			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(timeManagement.getJsRealTime(), false));
 
 			// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 			jobInfoTypeClient.setOver(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 			jobInfoTypeClient.setLiveStateInfo(jobRuntimeProperties.getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
 			// TODO geçici olarak döüşüm yaptım ama xsd de problem var ????
-			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getCascadingConditions().getJobSafeToRestart().toString());
+			jobInfoTypeClient.setSafeRestart(jobRuntimeProperties.getJobProperties().getManagement().getCascadingConditions().getJobSafeToRestart());
 
 			jobInfoTypeClient.setRetriable(jobRuntimeProperties.isRetriable());
 			jobInfoTypeClient.setSuccessable(jobRuntimeProperties.isSuccessable());
