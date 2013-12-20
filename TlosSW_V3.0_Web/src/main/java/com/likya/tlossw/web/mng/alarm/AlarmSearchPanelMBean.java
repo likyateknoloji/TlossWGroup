@@ -37,6 +37,8 @@ public class AlarmSearchPanelMBean extends AlarmBaseBean implements Serializable
 		
 		logger.info("begin : init");
 		
+		setPassedParameters();
+		
 		setAlarmType(AlarmType.JOB.toString());
 		setUserType(SubscriptionType.USER.toString());
 
