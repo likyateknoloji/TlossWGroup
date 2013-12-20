@@ -212,7 +212,7 @@ background-color:#D4EEF8;
                 <xsl:value-of select="dat:timeManagement/dat:jsPlannedTime/dat:startTime/com:time"/>
             </td>
             <td>
-               <xsl:value-of select="dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:jobCommandType"/>
+               <xsl:value-of select="dat:baseJobInfos/com:jobTypeDetails/com:jobCommandType"/>
             </td>
             <td>
                 <xsl:value-of select="state-types:LiveStateInfos"/>
