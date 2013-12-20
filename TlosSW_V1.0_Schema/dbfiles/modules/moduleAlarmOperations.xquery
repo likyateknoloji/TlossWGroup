@@ -220,11 +220,61 @@ declare function lk:insertAlarm($documentUrl as xs:string, $alarm as element(alm
 	into doc($alarmsDocumentUrl)/alm:alarmManagement
 } ;
 
+declare function lk:updateJobViaAlarm($documentUrl as xs:string, $alarm as element(alm:alarm)) as node()*
+{
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+    
+    (:
+    <alm:focus>
+      <alm:jobs>
+        <alm:job id="337"/>
+      </alm:jobs>
+    </alm:focus>
+    :)
+         
+    let $sonuc := for $job in $alarm/alm:focus/alm:jobs/alm:job
+    
+                    let $alarmsTag := doc($dataDocumentUrl)//dat:jobProperties[@ID=$job/@id]/dat:alarmPreference
+                    let $theAlarm := $alarmsTag/dat:alarmId[@ID = $alarm/@ID]
+                  
+                    let $ekle := if(not(exists($alarmsTag))) 
+                                 then 
+                                   let $eklenecek := <dat:alarmPreference>
+                                                       <dat:alarmId>{$alarm/@ID}</dat:alarmId>
+                                                     </dat:alarmPreference>
+                                   return update insert $eklenecek into doc($dataDocumentUrl)//dat:jobProperties[@ID=$job/@id]
+                                 else
+                                   let $guncelle := if ( not(exists($theAlarm)) ) 
+                                                    then
+                                                      let $eklenecek := <dat:alarmId>{$alarm/@ID}</dat:alarmId>
+                                                      return update insert $eklenecek into doc($dataDocumentUrl)//dat:jobProperties[@ID=$job/@id]/dat:alarmPreference
+                                                    else
+                                                     ()
+                                   return $guncelle
+                    return $job
+    return $sonuc
+};
+
+declare function lk:updateJobViaAlarmLock($documentUrl as xs:string, $alarm as element(alm:alarm))
+{
+    let $dataDocumentUrl := met:getMetaData($documentUrl, "sjData")
+	
+    return util:exclusive-lock(doc($dataDocumentUrl)/dat:TlosProcessData, lk:updateJobViaAlarm($documentUrl, $alarm))     
+};
+
 declare function lk:updateAlarm($documentUrl as xs:string, $alarm as element(alm:alarm))
 {
     let $alarmsDocumentUrl := met:getMetaData($documentUrl, "alarms")
-	
-	for $alarmdon in doc($alarmsDocumentUrl)/alm:alarmManagement/alm:alarm
+    
+    (:
+    <alm:focus>
+      <alm:jobs>
+        <alm:job id="337"/>
+      </alm:jobs>
+    </alm:focus>
+    :)
+     
+    for $alarmdon in doc($alarmsDocumentUrl)/alm:alarmManagement/alm:alarm
 	where $alarmdon/@ID = $alarm/@ID
 	return  update replace $alarmdon with $alarm
 };
@@ -233,8 +283,9 @@ declare function lk:updateAlarmLock($documentUrl as xs:string, $alarm as element
 {
     let $alarmsDocumentUrl := met:getMetaData($documentUrl, "alarms")
 	
-    return util:exclusive-lock(doc($alarmsDocumentUrl)/alm:alarmManagement/alm:alarm, lk:updateAlarm($documentUrl, $alarm))     
+    return util:exclusive-lock(doc($alarmsDocumentUrl)/alm:alarmManagement, lk:updateAlarm($documentUrl, $alarm))     
 };
+
 
 declare function lk:deleteAlarm($documentUrl as xs:string, $alarm as element(alm:alarm))
 {
