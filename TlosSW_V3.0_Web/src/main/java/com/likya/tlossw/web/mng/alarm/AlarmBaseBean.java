@@ -28,7 +28,6 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 	private String userType;
 
 	private String alarmLevel;
-	private String alarmDepth;
 	private String alarmDesc;
 
 	private String hardwareName;
@@ -295,19 +294,11 @@ public abstract class AlarmBaseBean extends TlosSWBaseBean implements Serializab
 		return alarmLevel;
 	}
 
-	public void setAlarmLevel(String alarmLevel) {
-		this.alarmLevel = alarmLevel;
+	public void setAlarmLevel(String s) {
+		this.alarmLevel = s;
 		// if (alarmLevel != null && !alarmLevel.equals("")) {
 		// alarm.setLevel(new BigInteger(alarmLevel));
 		// }
-	}
-
-	public String getAlarmDepth() {
-		return alarmDepth;
-	}
-
-	public void setAlarmDepth(String alarmDepth) {
-		this.alarmDepth = alarmDepth;
 	}
 
 	public String getAlarmDesc() {
