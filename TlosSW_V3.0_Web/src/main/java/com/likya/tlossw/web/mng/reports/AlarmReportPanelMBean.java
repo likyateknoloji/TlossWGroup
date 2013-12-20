@@ -16,9 +16,8 @@ import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmReportDocument.AlarmReport;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
-import com.likya.tlos.model.xmlbeans.data.StopTimeDocument.StopTime;
 import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.web.mng.alarm.AlarmBaseBean;
 import com.likya.tlossw.web.utils.DefinitionUtils;
@@ -83,10 +82,10 @@ public class AlarmReportPanelMBean extends AlarmBaseBean implements Serializable
 		}
 
 			jsRealTime = JsRealTime.Factory.newInstance();
-			StartTime startTime = StartTime.Factory.newInstance();
+			DatetimeType startTime = DatetimeType.Factory.newInstance();
 			startTime.setDate(DefinitionUtils.dateToXmlDate(getAlarmReportStartDate()));
 
-			StopTime stopTime = StopTime.Factory.newInstance();
+			DatetimeType stopTime = DatetimeType.Factory.newInstance();
 			stopTime.setDate(DefinitionUtils.dateToXmlDate(getAlarmReportFinishDate()));
 
 			jsRealTime.setStartTime(startTime);
