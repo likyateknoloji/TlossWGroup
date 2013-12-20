@@ -93,7 +93,7 @@ public class Cpc extends CpcBase {
 				starterThread.setName(taskKey);
 				job.setMyExecuter(starterThread);
 				job.getJobRuntimeProperties().setRealExecutionDate(Calendar.getInstance().getTime());
-				SWAgentRegistry.getsWAgentLogger().info("Starting " + job.getJobRuntimeProperties().getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString() + " job !");
+				SWAgentRegistry.getsWAgentLogger().info("Starting " + (job.getJobRuntimeProperties().getJobProperties().getManagement().getPeriodInfo() != null ? "PERIODIC" : "")+ " job !");
 				job.getMyExecuter().start();
 				// OutputQueueOperations.addLiveStateInfo(job.getJobRuntimeProperties().getJobProperties().getLiveStateInfos().getLiveStateInfoArray(0),taskKey);
 			} else {
