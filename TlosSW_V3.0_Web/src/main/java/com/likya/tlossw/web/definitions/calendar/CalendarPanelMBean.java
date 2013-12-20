@@ -88,6 +88,8 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean insertButton;
 
+	private String timeOutputFormat;
+	
 	@PostConstruct
 	public void init() {
 		resetCalendarAction();
@@ -96,6 +98,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 		fillDayDefList();
 		fillWhichOnesList();
 
+		timeOutputFormat = new String("dd.MM.yyyy");
 		selectedCalendarID = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedCalendarID"));
 		insertCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("insertCheck"));
 		iCheck = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("iCheck"));
@@ -267,9 +270,10 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	public void fillSpecificDays() {
 		specificDayList = new ArrayList<SelectItem>();
 		if (calendar.getSpecificDays() != null) {
-
+			String timeOutputFormat = new String("dd.MM.yyyy");
+			
 			for (int i = 0; i < calendar.getSpecificDays().getDateArray().length; i++) {
-				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime(), selectedTZone); // example 01.07.2009
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getSpecificDays().getDateArray(i).getTime(), selectedTZone, timeOutputFormat); // example 01.07.2009
 				specificDayList.add(new SelectItem(dateStr, dateStr));
 			}
 		}
@@ -278,9 +282,9 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	public void fillExceptionDays() {
 		exceptionDayList = new ArrayList<SelectItem>();
 		if (calendar.getExceptionDays() != null) {
-
+			String timeOutputFormat = new String("dd.MM.yyyy");
 			for (int i = 0; i < calendar.getExceptionDays().getDateArray().length; i++) {
-				String dateStr = DefinitionUtils.dateToStringDate(calendar.getExceptionDays().getDateArray(i).getTime(), selectedTZone);
+				String dateStr = DefinitionUtils.dateToStringDate(calendar.getExceptionDays().getDateArray(i).getTime(), selectedTZone, timeOutputFormat);
 				exceptionDayList.add(new SelectItem(dateStr, dateStr));
 			}
 		}
@@ -423,14 +427,14 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			return;
 		}
 
-		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone, timeOutputFormat );
 		specificDayList.add(new SelectItem(date, date));
 
 		specificDate = null;
 	}
 
 	private boolean specificDateCheck() {
-		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone, timeOutputFormat );
 
 		for (int j = 0; j < specificDayList.size(); j++) {
 			if (specificDayList.get(j).getValue().equals(date)) {
@@ -442,7 +446,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public boolean exceptionDayListCheckForSpecificDate() {
-		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(specificDate, selectedTZone, timeOutputFormat );
 
 		for (int j = 0; j < exceptionDayList.size(); j++) {
 			if (exceptionDayList.get(j).getValue().equals(date)) {
@@ -477,14 +481,14 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 			addMessage("insertCalendar", FacesMessage.SEVERITY_WARN, "tlos.info.calendar.specificDay.duplicate", null);
 			return;
 		}
-		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone, timeOutputFormat );
 		exceptionDayList.add(new SelectItem(date, date));
 
 		exceptionDate = null;
 	}
 
 	private boolean exceptionDateCheck() {
-		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone, timeOutputFormat );
 
 		for (int j = 0; j < exceptionDayList.size(); j++) {
 			if (exceptionDayList.get(j).getValue().equals(date)) {
@@ -496,7 +500,7 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	private boolean specificDayListCheckForExceptionDate() {
-		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone);
+		String date = DefinitionUtils.dateToStringDate(exceptionDate, selectedTZone, timeOutputFormat );
 
 		for (int j = 0; j < specificDayList.size(); j++) {
 			if (specificDayList.get(j).getValue().equals(date)) {
@@ -724,5 +728,13 @@ public class CalendarPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
 		this.selectedTypeOfTime = selectedTypeOfTime;
+	}
+
+	public String getTimeOutputFormat() {
+		return timeOutputFormat;
+	}
+
+	public void setTimeOutputFormat(String timeOutputFormat) {
+		this.timeOutputFormat = timeOutputFormat;
 	}
 }
