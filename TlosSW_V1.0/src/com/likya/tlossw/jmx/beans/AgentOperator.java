@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import com.likya.tlos.model.xmlbeans.agent.TxMessageDocument.TxMessage;
 import com.likya.tlos.model.xmlbeans.agent.TxMessageTypeEnumerationDocument.TxMessageTypeEnumeration;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlossw.TlosSpaceWide;
 import com.likya.tlossw.core.cpc.model.RunInfoType;
 import com.likya.tlossw.core.spc.Spc;
@@ -97,14 +98,17 @@ public class AgentOperator implements AgentOperatorMBean {
 																								// ne
 																								// olabilir
 																								// ki?
-					if (job.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().getStartTime() == null) {
-						job.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().addNewStartTime().setTime(txMessage.getTxMessageBodyType().getJobProperties().getTimeManagement().getJsRealTime().getStartTime().getTime());
+					TimeManagement timeManagement = job.getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement();
+					TimeManagement timeManagementTx = txMessage.getTxMessageBodyType().getJobProperties().getManagement().getTimeManagement();
+					
+					if (timeManagement.getJsRealTime().getStartTime() == null) {
+						timeManagement.getJsRealTime().addNewStartTime().setTime(timeManagementTx.getJsRealTime().getStartTime().getTime());
 					} else {
-						job.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().getStartTime().setTime(txMessage.getTxMessageBodyType().getJobProperties().getTimeManagement().getJsRealTime().getStartTime().getTime());
+						timeManagement.getJsRealTime().getStartTime().setTime(timeManagementTx.getJsRealTime().getStartTime().getTime());
 					}
 
-					if (txMessage.getTxMessageBodyType().getJobProperties().getTimeManagement().getJsRealTime().getStopTime() != null) {
-						job.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsRealTime().addNewStopTime().setTime(txMessage.getTxMessageBodyType().getJobProperties().getTimeManagement().getJsRealTime().getStopTime().getTime());
+					if (timeManagementTx.getJsRealTime().getStopTime() != null) {
+						timeManagement.getJsRealTime().addNewStopTime().setTime(timeManagementTx.getJsRealTime().getStopTime().getTime());
 					}
 
 					// ftp, file listener gibi islerde log dosyasinin ismine zaman ifadesi eklendigi icin agentta calisan islerde bu bilgi sunucu tarafinda set ediliyor
