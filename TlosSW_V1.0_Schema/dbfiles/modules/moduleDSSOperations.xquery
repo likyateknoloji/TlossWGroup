@@ -31,6 +31,13 @@ $resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
 $nrpeDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWNrpeData10.xml")
 :)
 
+declare function functx:is-value-in-sequence 
+  ( $value as xs:anyAtomicType? ,
+    $seq as xs:anyAtomicType* )  as xs:boolean {
+       
+   $value = $seq
+ } ;
+ 
 declare function functx:repeat-string 
   ( $stringToRepeat as xs:string? ,
     $count as xs:integer )  as xs:string {
@@ -251,21 +258,42 @@ declare function dss:ResourceSLACheck($documentUrl as xs:string, $gununtarihi as
 return
     <ResourceSLACheck>
       {
-        for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA[@ID=$acceptedSLAId or $acceptedSLAId = "0"],
-            $calendar in $dailyPlan/AllPlanParameters/plan[@id = $currentPlanId and data(calID) = data($tek/sla:calendarId)]
+	    
+        for $tek in doc($slaDocumentUrl)/sla:ServiceLevelAgreement/sla:SLA[@ID=$acceptedSLAId or $acceptedSLAId = "0"]
+		   let $calendarCountInSla := count($tek/com:calendars/com:calendarId)
+		   let $calendarUnionOpForSla := $tek/com:calendars/@operator
+		   let $calendarUnionOpForSlaExist := exists($tek/com:calendars/@operator)
+           let $c := <job>{for $calendar in $dailyPlan/AllPlanParameters/plan[@id = $currentPlanId and 
+			                                              functx:is-value-in-sequence(data(calID), data($tek/com:calendars/com:calendarId))]
+			   return $calendar/calID
+               }</job>
+           let $araResult := if(count($c/calID) eq $calendarCountInSla) 
+                             then 2
+                             else if(count($c/calID) gt 0) 
+                                  then 1
+                                  else 0
+								  
+            let $takvimOk := if( (compare($calendarUnionOpForSla, xs:string("AND")) eq 0 or not($calendarUnionOpForSlaExist)) and $araResult gt 1) 
+                   then true()
+                   else if(compare($calendarUnionOpForSla, xs:string("OR")) eq 0  and $araResult ge 1) 
+                        then true()
+                        else false()
         return
           <SLACheck>
     	  {
             $tek, 
-            if( data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi ) 
+            if( $takvimOk ) 
 			then 
-                if( xs:time($tek/sla:SInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:SInterval/sla:stopTime) > xs:time($zaman) ) 
-                then 
-                  if( xs:time($tek/sla:RInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:RInterval/sla:stopTime) > xs:time($zaman) ) 
-                  then <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat haric tutulan zamandadir. Gecersizdir !</slaValidation>
-                  else <slaValidation result="true">SLA tarih ve zaman kontrolu. Gecerli !</slaValidation>
-                else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat belirtilen zaman araligi disindadir. Gecersizdir !</slaValidation>
-            else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi disindadir. Gecersizdir !</slaValidation>
+              if( data($tek/sla:StartDate) <= $gununtarihi and data($tek/sla:EndDate) > $gununtarihi ) 
+			  then 
+                  if( xs:time($tek/sla:SInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:SInterval/sla:stopTime) > xs:time($zaman) ) 
+                  then 
+                    if( xs:time($tek/sla:RInterval/sla:startTime) <= xs:time($zaman) and xs:time($tek/sla:RInterval/sla:stopTime) > xs:time($zaman) ) 
+                    then <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat haric tutulan zamandadir. Gecersizdir !</slaValidation>
+                    else <slaValidation result="true">SLA tarih ve zaman kontrolu. Gecerli !</slaValidation>
+                  else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi icinde fakat belirtilen zaman araligi disindadir. Gecersizdir !</slaValidation>
+              else <slaValidation result="false">Bu SLA tanimli oldugu tarih araligi disindadir. Gecersizdir !</slaValidation>
+			else <slaValidation result="false">Bu SLA in takvim tanimi bugune uymamaktadir ({count($c/calID)}/{$calendarCountInSla}). Gecersizdir !</slaValidation>
           }</SLACheck>
       }
 	</ResourceSLACheck>
