@@ -131,12 +131,14 @@ declare function hs:insertSla($documentUrl as xs:string, $sla as element(sla:SLA
                   <sla:CreationDate>{data($XXX/sla:CreationDate)}</sla:CreationDate>
                   <sla:StartDate>{data($XXX/sla:StartDate)}</sla:StartDate>
                   <sla:EndDate>{data($XXX/sla:EndDate)}</sla:EndDate>
+				  <com:timeZone>{data($XXX/com:timeZone)}</com:timeZone>
+				  <com:typeOfTime>{data($XXX/com:typeOfTime)}</com:typeOfTime>
                   <sla:SInterval>{$XXX/sla:SInterval/*}</sla:SInterval>
                   <sla:RInterval>{$XXX/sla:RInterval/*}</sla:RInterval>
                   <sla:Priority>{data($XXX/sla:Priority)}</sla:Priority>
                   <sla:ResourcePool>{$XXX/sla:ResourcePool/*}</sla:ResourcePool>
                   <sla:ResourceReq>{$XXX/sla:ResourceReq/*}</sla:ResourceReq>
-                  <sla:calendarId>{data($XXX/sla:calendarId)}</sla:calendarId>
+                  <com:calendars>{$XXX/com:calendars/*}</com:calendars>
                   <sla:QueueFrame>{$XXX/sla:QueueFrame/*}</sla:QueueFrame>
                   <sla:ResolveIncident>{$XXX/sla:ResolveIncident/*}</sla:ResolveIncident>
                   <sla:JobsInStatus>{$XXX/sla:JobsInStatus/*}</sla:JobsInStatus>
