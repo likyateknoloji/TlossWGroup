@@ -22,9 +22,8 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 
 import com.likya.tlos.model.xmlbeans.common.InParamDocument.InParam;
-import com.likya.tlos.model.xmlbeans.common.JobTypeDetailsDocument.JobTypeDetails;
+import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.common.OutParamDocument.OutParam;
-import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -67,6 +66,10 @@ public class InputParameterPassing {
 		for (String spcId : spcLookupTable.keySet()) {
 
 			Spc spc = spcLookupTable.get(spcId).getSpcReferance();
+			
+			if (spc == null)
+				continue;	
+			
 			try {
 				result = findInputValue(spc, xpath);
 				if (result != null && result.length > 0)
@@ -83,6 +86,7 @@ public class InputParameterPassing {
 
 		JobProperties xmlDoc = null;
 		String[] result;
+
 		Iterator<Job> jobsIterator = spcc.getJobQueue().values().iterator();
 
 		while (jobsIterator.hasNext()) {
@@ -131,7 +135,7 @@ public class InputParameterPassing {
 				throw new UnresolvedDependencyException(errorMessage);
 			}
 
-			JobTypeDetails ownerJobTypeDetails = ownerJobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails();
+			JobProperties jobProperties = ownerJobProperties;
 
 			if (item.getJsPath() == null || item.getJsPath() == "") {// Lokal bir bagimlilik
 
@@ -160,7 +164,7 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 				}
 
-				boolean retValue = assignParameter(ownerJobTypeDetails, depJobProperties);
+				boolean retValue = assignParameter(jobProperties, depJobProperties);
 
 				System.out.println("Parametre gecisi yapiliyor.1.");
 
@@ -195,7 +199,7 @@ public class InputParameterPassing {
 					throw new UnresolvedDependencyException("     > Bagimlilikla ilgili bir problemden dolayi uygulama sona eriyor !");
 				}
 
-				boolean retValue = assignParameter(ownerJobTypeDetails, depJobProperties);
+				boolean retValue = assignParameter(jobProperties, depJobProperties);
 
 				System.out.println("Parametre gecisi yapiliyor.2.");
 
@@ -207,49 +211,69 @@ public class InputParameterPassing {
 		return false;
 	}
 
-	private boolean assignParameter(JobTypeDetails ownerJobTypeDetails, JobProperties depJobProperties) {
+	private boolean assignParameter(JobProperties jobProperties, JobProperties depJobProperties) {
 
 		boolean assignmentOk = false;
 
-		JobTypeDetails depJobTypeDetails = depJobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails();
+		LocalParameters depJobLocalParameters = depJobProperties.getLocalParameters();
 
-		if (depJobTypeDetails.getSpecialParameters() == null) {
-			return assignmentOk;
-		}
+//		if (depJobTypeDetails.getSpecialParameters() == null) {
+//			return assignmentOk;
+//		}
 
-		OutParam outParameter = depJobTypeDetails.getSpecialParameters().getOutParam();
+		OutParam outParameter = depJobLocalParameters.getOutParam();
 
 		if (outParameter == null) {
 			return assignmentOk;
 		}
 
-		SpecialParameters specialParameter = ownerJobTypeDetails.getSpecialParameters();
+		LocalParameters localParameter = jobProperties.getLocalParameters();
 
 		// Durum 2: icin
-		if (specialParameter == null) {
-			ownerJobTypeDetails.addNewSpecialParameters();
-			ownerJobTypeDetails.getSpecialParameters().addNewInParam();
-		} else if (specialParameter.getInParam() == null) {
-			specialParameter.addNewInParam();
+		if (localParameter == null) {
+			jobProperties.addNewLocalParameters();
+			jobProperties.getLocalParameters().addNewInParam();
+		} else if (localParameter.getInParam() == null) {
+			localParameter.addNewInParam();
 		}
 
-		specialParameter = ownerJobTypeDetails.getSpecialParameters();
-		InParam inParam = specialParameter.getInParam();
+		// localParameter = jobProperties.getLocalParameters();
+		InParam inParam = localParameter.getInParam();
 		boolean paramF = false;
 
 		// Durum 2
 		for (int i = 0; i < outParameter.sizeOfParameterArray(); i++) {
-			if (!paramF) {
-				inParam.addNewParameter();
-				inParam.getParameterArray(0).setName(outParameter.getParameterArray(i).getName());
+			for (int j = 0; j < inParam.sizeOfParameterArray(); j++) {
+				if (!paramF) {
+					// inParam.addNewParameter();
+					//if (inParam.getParameterArray(j).getName().equalsIgnoreCase(outParameter.getParameterArray(i).getName()) || outParameter.getParameterArray(i).getActive()) {
+					Parameter inParamElement = inParam.getParameterArray(j);
+					Parameter outParamElement = outParameter.getParameterArray(i);
+					
+					if ( outParamElement.getActive() && inParamElement.getConnectedId() != null && inParamElement.getConnectedId().equals(outParamElement.getId()) )
+//						( (inParamElement.getIoName() != null && inParamElement.getIoName().equalsIgnoreCase(outParamElement.getIoName()) ) ||
+//						  (inParamElement.getName() != null && inParamElement.getName().equalsIgnoreCase(outParamElement.getName()) )) ) 
+					{
+						// inParam.getParameterArray(0).setName(outParameter.getParameterArray(i).getName());
 
-				PreValue preValue = PreValue.Factory.newInstance();
-				preValue.setType(outParameter.getParameterArray(i).getPreValue().getType());
-				preValue.setStringValue(" Bu parametre " + depJobProperties.getBaseJobInfos().getJsName() + " isine olan bagimliliktan geliyor.");
+						PreValue preValue = PreValue.Factory.newInstance();
+						preValue.setStringValue(outParamElement.getPreValue().getStringValue());
+						preValue.setType(outParamElement.getPreValue().getType());
 
-				inParam.getParameterArray(0).setPreValue(preValue);
-				inParam.getParameterArray(0).setValueString(outParameter.getParameterArray(i).getValueString());
-				assignmentOk = true;
+						// preValue.setStringValue(" Bu parametre " + depJobProperties.getBaseJobInfos().getJsName() + " isine olan bagimliliktan geliyor.");
+
+						inParamElement.setPreValue(preValue);
+						
+						if(outParamElement.getPreValue().getType().equals(new BigInteger("2")))
+							inParamElement.setValueString(outParamElement.getValueString());
+						
+						inParamElement.setJsId(depJobProperties.getID());
+						inParamElement.setFromUser(false);
+						inParamElement.setIoType(false);
+
+						assignmentOk = true;
+					}
+				}
 			}
 		}
 
@@ -262,7 +286,7 @@ public class InputParameterPassing {
 		}
 		return assignmentOk;
 	}
-	
+
 	public boolean setInputParameter(JobProperties job) {
 
 		boolean assignmentOk = false;
@@ -276,7 +300,7 @@ public class InputParameterPassing {
 		// kosulu aranir.
 
 		String inputs[] = null, inputPar[] = null;
-		String xpath = "/dat:jobProperties/dat:baseJobInfos/dat:jobInfos/com:jobTypeDetails/com:specialParameters/com:inParam/par:parameter[par:preValue/@type=\"6\"]";
+		String xpath = "/dat:jobProperties/com:localParameters/com:inParam/par:parameter[par:preValue/@type=\"6\"]";
 		try {
 			inputs = ApplyXPath.queryXmlWithXPath(job, xpath);
 			Parameter parameterList[] = new Parameter[inputs.length];
@@ -302,17 +326,17 @@ public class InputParameterPassing {
 							String result = parameterInput.getValueString();
 							System.out.println("Parametre mapping i : " + paramNameInI1 + " --> " + paramNameInI2 + " = " + result);
 							if (job instanceof JobProperties) {
-								SpecialParameters specialParameter = job.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-								if (specialParameter == null) {
-									job.getBaseJobInfos().getJobInfos().getJobTypeDetails().addNewSpecialParameters();
-									job.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().addNewInParam();
-								} else if (specialParameter.getInParam() == null) {
-									specialParameter.addNewInParam();
+								LocalParameters localParameter = job.getLocalParameters();
+								if (localParameter == null) {
+									job.addNewLocalParameters();
+									job.getLocalParameters().addNewInParam();
+								} else if (localParameter.getInParam() == null) {
+									localParameter.addNewInParam();
 								}
 
 								// ///////////////////////////////////////////////////
-								specialParameter = job.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
-								InParam inParam = specialParameter.getInParam();
+								localParameter = job.getLocalParameters();
+								InParam inParam = localParameter.getInParam();
 								Boolean paramF = false;
 								// Durum 1:
 								for (int j = 0; j < inParam.sizeOfParameterArray(); j++) {
@@ -339,7 +363,7 @@ public class InputParameterPassing {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		if (assignmentOk) {
 			if (SpaceWideRegistry.isDebug) {
 				System.out.println("Parametre gecisi yapildi.");
