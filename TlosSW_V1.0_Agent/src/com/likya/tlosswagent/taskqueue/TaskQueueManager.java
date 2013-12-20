@@ -104,7 +104,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 
 		Job myJob = null;
 		taskQueueLogger.info("is Adi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName());
-		taskQueueLogger.info("is Tipi : " + jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobBaseType().toString());
+		taskQueueLogger.info("is Tipi : " + (jobRuntimeProperties.getJobProperties().getManagement().getPeriodInfo() != null ? "PERIODIC" : "NORMAL"));
 
 		//myJob = new ExecuteInShell(getGlobalRegistery(), taskQueueLogger, jobRuntimeProperties);
 		GenericInfoSender genericInfoSender = new AgentStatusChangeInfoSender();
@@ -126,7 +126,7 @@ public class TaskQueueManager implements Runnable, Serializable {
 
 		Job myJob = null;
 
-		int jobType = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+		int jobType = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 		switch (jobType) {
 		
