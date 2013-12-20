@@ -18,6 +18,7 @@ public class StaticMenuBean implements Serializable {
 	private final String DEF_BASE_URL = "/inc/definitionPanels/jobsDef.jsf?";
 	private final String LIVEJS_BASE_URL = "/inc/livePanels/liveJobsScenarios.jsf?";
 	private final String DEPLOYMENT_BASE_URL = "/inc/definitionPanels/deploymentPage.jsf?";
+	private final String ALARM_BASE_URL = "/inc/definitionPanels/alarmSearchPanel.jsf?";
 
 	private String globalDefsUrl;
 	private String myDefsUrl;
@@ -26,7 +27,8 @@ public class StaticMenuBean implements Serializable {
 	private String myLiveJsUrl;
 
 	private String deploymentUrl;
-
+	private String alarmDefsUrl;
+	
 	@PostConstruct
 	public void init() {
 		
@@ -37,7 +39,7 @@ public class StaticMenuBean implements Serializable {
 		myLiveJsUrl = LIVEJS_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_LIVE_SCENARIOS + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL;
 
 		deploymentUrl = DEPLOYMENT_BASE_URL +  "doc1Id=" + CommonConstantDefinitions.EXIST_DEPLOYMENTDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.LOCAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
-	
+		alarmDefsUrl = ALARM_BASE_URL + "doc1Id=" + CommonConstantDefinitions.EXIST_TEMPLATEDATA + "&" + CommonConstantDefinitions.FIRST_COLUMN_STR + "=" + MetaDataType.GLOBAL + "&" + "doc2Id=" + CommonConstantDefinitions.EXIST_SJDATA + "&" + CommonConstantDefinitions.SECOND_COLUMN_STR + "=" + MetaDataType.GLOBAL;
 	}
 
 
@@ -88,6 +90,16 @@ public class StaticMenuBean implements Serializable {
 
 	public void setDeploymentUrl(String deploymentUrl) {
 		this.deploymentUrl = deploymentUrl;
+	}
+
+
+	public String getAlarmDefsUrl() {
+		return alarmDefsUrl;
+	}
+
+
+	public void setAlarmDefsUrl(String alarmDefsUrl) {
+		this.alarmDefsUrl = alarmDefsUrl;
 	}
 
 }
