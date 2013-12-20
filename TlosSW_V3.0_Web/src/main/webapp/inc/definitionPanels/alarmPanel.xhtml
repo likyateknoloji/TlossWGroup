@@ -239,12 +239,6 @@
 									<f:selectItems value="#{alarmPanelMBean.alarmJobNameList}" />
 								</p:selectManyMenu>
 	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.depth']}" />
-								<p:panelGrid columns="1" >
-									<p:inputText id="jobDepth" value="#{alarmPanelMBean.alarmDepth}" />
-									<p:slider for="jobDepth" minValue="1" />
-								</p:panelGrid>
 							</p:panelGrid>
 							
 						</p:panel>
@@ -271,13 +265,7 @@
 									style="width:170px; height:150px;">
 									<f:selectItems value="#{alarmPanelMBean.alarmScenarioNameList}" />
 								</p:selectManyMenu>
-	
-								<h:outputText
-									value="#{msgs['tlos.management.pannel.alarmProcesses.depth']}" />
-								<p:panelGrid columns="1" >
-									<p:inputText id="scenarioDepth" value="#{alarmPanelMBean.alarmDepth}" />
-									<p:slider for="scenarioDepth" />
-								</p:panelGrid>
+		
 							</p:panelGrid>
 	
 						</p:panel>
@@ -303,14 +291,14 @@
 									value="#{msgs['tlos.management.pannel.alarmProcesses.stateType']}" />
 								<p:selectOneRadio value="#{alarmPanelMBean.stateDepth}">
 									<f:selectItem
-										itemLabel="#{msgs['tlos.popup.dependency.state']}"
-										itemValue="State" />
+										itemLabel="#{msgs['tlos.popup.dependency.status']}"
+										itemValue="Status" />
 									<f:selectItem
 										itemLabel="#{msgs['tlos.popup.dependency.substate']}"
 										itemValue="SubState" />
 									<f:selectItem
-										itemLabel="#{msgs['tlos.popup.dependency.status']}"
-										itemValue="Status" />
+										itemLabel="#{msgs['tlos.popup.dependency.state']}"
+										itemValue="State" />
 									<p:ajax update="alarmStatePanel" />
 								</p:selectOneRadio>
 							</h:panelGrid>
@@ -318,17 +306,18 @@
 							<br />
 
 							<p:panelGrid columns="2">
-								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" />
-								<p:selectOneMenu value="#{alarmPanelMBean.state}">
+								<h:outputText value="#{msgs['tlos.popup.dependency.state']}" 
+								    rendered="#{alarmPanelMBean.stateDepth eq 'State'}" />
+								<p:selectOneMenu value="#{alarmPanelMBean.state}" rendered="#{alarmPanelMBean.stateDepth eq 'State'}">
 									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 										itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmStateList}" />
 								</p:selectOneMenu>
 
 								<h:outputText value="#{msgs['tlos.popup.dependency.substate']}"
-									rendered="#{alarmPanelMBean.stateDepth ne 'State'}" />
+									rendered="#{alarmPanelMBean.stateDepth eq 'SubState'}" />
 								<p:selectOneMenu value="#{alarmPanelMBean.substate}"
-									rendered="#{alarmPanelMBean.stateDepth ne 'State'}">
+									rendered="#{alarmPanelMBean.stateDepth eq 'SubState'}" >
 									<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
 										itemValue="" />
 									<f:selectItems value="#{alarmPanelMBean.alarmSubStateList}" />
