@@ -24,7 +24,7 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 	private String jobPlanTime;
 	private String jobPlanEndTime;
 	private String jobTimeOut;
-	private String safeRestart; 
+	private boolean safeRestart; 
 	private String oSystem;
 	private String errorMessage;
 	
@@ -154,11 +154,11 @@ public class JobInfoTypeClientBase implements JobInfoTypeClientInterface {
 		this.startable = startable;
 	}
 
-	public String getSafeRestart() {
+	public boolean getSafeRestart() {
 		return safeRestart;
 	}
 
-	public void setSafeRestart(String safeRestart) {
+	public void setSafeRestart(boolean safeRestart) {
 		this.safeRestart = safeRestart;
 	}
 
