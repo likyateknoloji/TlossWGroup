@@ -25,8 +25,8 @@ public class PeriodCalculations {
 
 	public static Calendar forward(JobProperties jobProperties) {
 
-		PeriodInfo periodInfo = jobProperties.getBaseJobInfos().getPeriodInfo();
-		TimeManagement timeManagement = jobProperties.getTimeManagement();
+		PeriodInfo periodInfo = jobProperties.getManagement().getPeriodInfo();
+		TimeManagement timeManagement = jobProperties.getManagement().getTimeManagement();
 
 		String selectedTZone = timeManagement.getTimeZone();
 		Calendar startTime = timeManagement.getJsPlannedTime().getStartTime().getTime();
@@ -51,13 +51,13 @@ public class PeriodCalculations {
 
 		Calendar newDateTime = findNextPeriod(startDateTime, periodOfRepeatance, selectedTZone, periodInfo.getRelativeStart());
 
-		jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().setTime(newDateTime);
+		jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStartTime().setTime(newDateTime);
 
-		if (jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
-			Calendar stopTime = jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime();
+		if (jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStopTime() != null) {
+			Calendar stopTime = jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStopTime().getTime();
 			Calendar stopDateTime = dateToXmlTime(stopTime.toString(), selectedTZone);
 
-			jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().setTime(stopDateTime);
+			jobProperties.getManagement().getTimeManagement().getJsPlannedTime().getStopTime().setTime(stopDateTime);
 
 			// Serkan burayi konusalim. Simdilik cikardim. Hs
 
@@ -199,6 +199,19 @@ public class PeriodCalculations {
 		return durationInMillis;
 	}
 
+	public static long getTimeInMilliSecs(Calendar calendar) {
+
+//		Calendar startCalendar = Calendar.getInstance();
+//		startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+//		startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+//		startCalendar.set(Calendar.SECOND, calendar.get(Calendar.SECOND));
+////		startCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+////		startCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+////		startCalendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+//		return startCalendar.getTimeInMillis();
+		return (calendar.get(Calendar.HOUR_OF_DAY)*3600+calendar.get(Calendar.MINUTE)*60+calendar.get(Calendar.SECOND))*1000;
+	}
+	
 	public static Calendar dateToXmlTime(String time, String selectedTZone) {
 
 		DateTimeZone zonex = DateTimeZone.forID(selectedTZone);
