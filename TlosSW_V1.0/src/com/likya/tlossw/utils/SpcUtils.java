@@ -33,7 +33,7 @@ public class SpcUtils {
 
 		JobProperties jobProperties = jobRuntimeProperties.getJobProperties();
 
-		int jobType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue();
+		int jobType = jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue();
 
 		switch (jobType) {
 		case JobCommandType.INT_FTP:
