@@ -38,6 +38,8 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlos.model.xmlbeans.data.TimeControlDocument.TimeControl;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument;
@@ -2196,7 +2198,7 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		// alarm tipini set ediyor
 		if (alarm.getCaseManagement().getStateManagement() != null) {
 			alarmInfoTypeClient.setAlarmType("State");
-		} else if (alarm.getCaseManagement().getSLAManagement() != null) {
+		} else if (alarm.getCaseManagement().getSLAManagement()) {
 			alarmInfoTypeClient.setAlarmType("SLA");
 		} else if (alarm.getCaseManagement().getTimeManagement() != null) {
 			alarmInfoTypeClient.setAlarmType("Time");
@@ -2372,32 +2374,35 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		// jobInfoTypeClient.setJobKey(jobProperties.getID());
 		jobInfoTypeClient.setJobName(jobProperties.getBaseJobInfos().getJsName());
-		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
-		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
+		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommand());
+		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString());
 		// jobInfoTypeClient.setTreePath(jobRuntimeProperties.getTreePath());
-		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
+		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(jobProperties.getBaseJobInfos().getJobLogPath());
 		jobInfoTypeClient.setJobLogName(jobProperties.getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
-		if(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
-			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+		TimeManagement timeManagement = jobProperties.getManagement().getTimeManagement();
+		TimeControl timeControl = jobProperties.getManagement().getTimeControl();
+		
+		if(timeManagement.getJsPlannedTime().getStartTime() != null) {
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
 		}
 
-		if(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
-			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
+		if(timeManagement.getJsPlannedTime().getStopTime() != null) {
+			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
 		}
 		
-		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
+		jobInfoTypeClient.setJobTimeOut(timeControl.getJsTimeOut().toString());
 
-		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
-			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+		if (timeManagement.getJsRealTime() != null) {
+			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToStringReport(timeManagement.getJsRealTime(), true, transformToLocalTime));
 
 			// is bitmisse
-			if (jobProperties.getTimeManagement().getJsRealTime().getStopTime() != null) {
-				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+			if (timeManagement.getJsRealTime().getStopTime() != null) {
+				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToStringReport(timeManagement.getJsRealTime(), false, transformToLocalTime));
 			} else {
 				jobInfoTypeClient.setCompletionDate("?");
 			}
@@ -2408,16 +2413,16 @@ public class RemoteDBOperator implements RemoteDBOperatorMBean {
 				pastExecution = false;
 			}
 
-			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobProperties.getTimeManagement().getJsRealTime(), pastExecution));
+			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(timeManagement.getJsRealTime(), pastExecution));
 		}
 
 		// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 		jobInfoTypeClient.setOver(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
+		jobInfoTypeClient.setJobAutoRetry(jobProperties.getManagement().getCascadingConditions().getJobAutoRetry().getBooleanValue());
 		// TODO ge�ici olarak d�n���m yapt�m ama xsd de problem var ????
-		jobInfoTypeClient.setSafeRestart(jobProperties.getCascadingConditions().getJobSafeToRestart().toString());
+		jobInfoTypeClient.setSafeRestart(jobProperties.getManagement().getCascadingConditions().getJobSafeToRestart());
 
 		if (jobProperties.getDependencyList() != null) {
 			List<Item> myList = Arrays.asList(jobProperties.getDependencyList().getItemArray());
