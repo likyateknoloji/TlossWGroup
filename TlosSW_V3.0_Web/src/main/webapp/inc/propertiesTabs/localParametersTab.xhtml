@@ -1,93 +1,209 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
 	<ui:composition>
-		<p:tab id="localParametersTab" title="#{msgs['tlos.workspace.pannel.job.localParameters']}">
+		<p:tab id="localParametersTab"
+			title="#{msgs['tlos.workspace.pannel.job.localParameters']}">
 			<p:panel id="parametersPanel">
-				<p:panelGrid id="localParameters" columns="4" style="width:80%;">
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
-					<p:inputText value="#{backingBean.paramName}" style="width: 200pt"/>
+				<p:fieldset rendered="#{backingBean.isParamDetails()}">
+					<p:panelGrid id="localParameters" cellpadding="10" columns="4"
+						rendered="#{backingBean.isParamDetails()}" style="width:80%;">
 
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-					<p:inputText value="#{backingBean.paramDesc}" style="width: 200pt"/>
+						<f:facet name="header">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterId']} : #{backingBean.paramId}" />
+						</f:facet>
 
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
-					<p:selectOneMenu value="#{backingBean.paramType}" style="width: 100pt">
-						<f:selectItem itemLabel="#{msgs['tlos.combo.select']}" itemValue="" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}" itemValue="1" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.string']}" itemValue="2" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.date']}" itemValue="3" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.time']}" itemValue="4" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}" itemValue="5" />
-						<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}" itemValue="6" />
-					</p:selectOneMenu>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
+						<p:inputText value="#{backingBean.paramName}" style="width: 200pt" />
 
-					<h:outputText value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
-					<p:inputTextarea value="#{backingBean.paramPreValue}"
-						autoResize="false" style="width: 150pt"
-						/>
-				</p:panelGrid>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
+						<p:inputText value="#{backingBean.paramDesc}" style="width: 200pt" />
 
-				<br />
 
-				<p:commandButton value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}" 
-					rendered="#{!backingBean.renderUpdateParamButton}" action="#{backingBean['addInputParameter']}" 
-					update=":jobDefinitionForm:tabView:parametersPanel"/>
-				<p:commandButton value="#{msgs['tlos.button.update']}" 
-					rendered="#{backingBean.renderUpdateParamButton}" action="#{backingBean['updateInputParameter']}" 
-					update=":jobDefinitionForm:tabView:parametersPanel"/>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
 
-				<br />
-				<br />
+						<p:panelGrid id="parameters" columns="2" style="width:80%;">
+							<p:selectOneMenu value="#{backingBean.paramType}"
+								style="width: 100pt">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}"
+									itemValue="1" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.string']}"
+									itemValue="2" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.date']}"
+									itemValue="3" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.time']}"
+									itemValue="4" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}"
+									itemValue="5" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
+									itemValue="6" />
+							</p:selectOneMenu>
+							<p:selectBooleanButton value="#{backingBean.ioType}"
+								onLabel="#{msgs['tlos.workspace.pannel.job.parameterOutput']}"
+								offLabel="#{msgs['tlos.workspace.pannel.job.parameterInput']}" />
+						</p:panelGrid>
 
-				<p:dataTable var="item" rows="10" id="parameterDataTable" value="#{backingBean.parameterList}" 
-					binding="#{backingBean.parameterTable}" rendered="#{not empty backingBean.parameterList}"
-					paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
-					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" >
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterValue']}" />
+						<p:inputTextarea value="#{backingBean.paramValue}"
+							autoResize="false" style="width: 150pt" />
 
-					<p:column>
-						<p:commandButton value="#{msgs['tlos.button.update']}" actionListener="#{backingBean['editInputParamAction']}"
-							update=":jobDefinitionForm:tabView:parametersPanel" >
-						</p:commandButton>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameter.active']}" />
+						<p:selectBooleanCheckbox id="isParamActive"
+							value="#{backingBean.paramActive}">
+							<p:ajax partialSubmit="true" update="parametersPanel" />
+						</p:selectBooleanCheckbox>
+						
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
+						<p:inputTextarea value="#{backingBean.paramPreValue}"
+							autoResize="false" style="width: 150pt" />
 
-						<p:commandButton value="#{msgs['tlos.button.delete']}" onclick="deleteParam.show()" />
-						<p:dialog id="paramDeleteDialog" header="#{msgs['tlos.ask.delete.cHeader']}" 
-							severity="alert" widgetVar="deleteParam" resizable="false">
+						<h:outputText rendered="#{!backingBean.ioType}"
+							value="#{msgs['tlos.workspace.pannel.job.parameter.connectedId']}" />
+						<p:inputText value="#{backingBean.connectedId}" style="width: 100pt" rendered="#{!backingBean.ioType}"/>	
+						
+						<h:outputText rendered="#{backingBean.jsId}"
+							value="#{msgs['tlos.workspace.pannel.job.parameter.dependentJobId']}" />
+						<p:inputText value="#{backingBean.jsId}" style="width: 100pt" rendered="#{backingBean.jsId}"/>
+						
+					</p:panelGrid>
+					<p:commandButton
+						value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
+						rendered="#{!backingBean.renderUpdateParamButton}"
+						action="#{backingBean['addParameter']}"
+						update=":jobDefinitionForm:tabView:parametersPanel" />
+					<p:commandButton value="#{msgs['tlos.button.update']}"
+						rendered="#{backingBean.renderUpdateParamButton}"
+						action="#{backingBean['updateParameter']}"
+						update=":jobDefinitionForm:tabView:parametersPanel" />
+				</p:fieldset>
 
-							<h:outputText value="#{msgs['tlos.ask.delete.confirm']}" />
 
-							<br/><br/>
-							<p:commandButton immediate="true" process="@this" value="#{msgs['tlos.ask.delete.confirm1']}" onclick="deleteParam.hide()" 
-								update=":jobDefinitionForm:tabView:parametersPanel" actionListener="#{backingBean['deleteInputParamAction']}" />
-							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}" onclick="deleteParam.hide()" type="button" />
-						</p:dialog>
+				<p:dataTable var="item" rows="10" id="parameterDataTable"
+					value="#{backingBean.parameterList}"
+					binding="#{backingBean.parameterTable}"
+					rendered="#{not empty backingBean.parameterList}" paginator="true"
+					paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameter.active']}"
+						sortBy="#{item.active}">
+						<p:selectBooleanCheckbox id="isActive" value="#{item.active}">
+							<p:ajax partialSubmit="true" update="parameterDataTable" />
+						</p:selectBooleanCheckbox>
 					</p:column>
 
-					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}" sortBy="#{item.name}">
-						<h:outputText value="#{item.name}" style="text-align: center;" />
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
+						sortBy="#{item.name}">
+						<h:outputText value="#{item.name}"
+							style="text-align: center;" />
+					</p:column>
+					
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterIoType']}"
+						sortBy="#{item.ioType}">
+						<h:outputText style="text-align: center;"
+							value="#{item.ioType ? msgs['tlos.workspace.pannel.job.parameterOutput'] : msgs['tlos.workspace.pannel.job.parameterInput']}" />
 					</p:column>
 
-					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" sortBy="#{item.desc}">
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
+						sortBy="#{item.desc}">
 						<h:outputText value="#{item.desc}" style="text-align: center;" />
 					</p:column>
 
-					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" sortBy="#{item.preValue.stringValue}">
-						<h:outputText value="#{item.preValue.stringValue}" style="text-align: center;" />
+					<!-- p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterMapped']}"
+						sortBy="#{item.mapped}">
+						<p:selectBooleanCheckbox id="isMapped" value="#{item.mapped}">
+							<p:ajax partialSubmit="true" update="parameterDataTable" />
+						</p:selectBooleanCheckbox>
+					</p:column -->
+
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameter.connectedId']}"
+						sortBy="#{item.connectedId}">
+						<h:outputText value="#{(item.connectedId == 0) ? '' : item.connectedId}"
+							style="text-align: center;" />
 					</p:column>
 
-					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterType']}">
-						<h:outputText value="#{msgs['tlos.combo.integer']}" style="text-align: center;" rendered="#{item.preValue.type eq 1}" />
-						<h:outputText value="#{msgs['tlos.combo.string']}" style="text-align: center;" rendered="#{item.preValue.type eq 2}" />
-						<h:outputText value="#{msgs['tlos.combo.date']}" style="text-align: center;" rendered="#{item.preValue.type eq 3}" />
-						<h:outputText value="#{msgs['tlos.combo.time']}" style="text-align: center;" rendered="#{item.preValue.type eq 4}" />
-						<h:outputText value="#{msgs['tlos.combo.dateTime']}" style="text-align: center;" rendered="#{item.preValue.type eq 5}" />
-						<h:outputText value="#{msgs['tlos.combo.xPath']}" style="text-align: center;" rendered="#{item.preValue.type eq 6}" />
+					<p:column rendered="#{backingBean.isParamPreValueTF()}"
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
+						sortBy="#{item.preValue.stringValue}">
+						<h:outputText value="#{item.preValue.stringValue}"
+							style="text-align: center;" />
 					</p:column>
 
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterType']}">
+						<h:outputText value="#{msgs['tlos.combo.integer']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 1}" />
+						<h:outputText value="#{msgs['tlos.combo.string']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 2}" />
+						<h:outputText value="#{msgs['tlos.combo.date']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 3}" />
+						<h:outputText value="#{msgs['tlos.combo.time']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 4}" />
+						<h:outputText value="#{msgs['tlos.combo.dateTime']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 5}" />
+						<h:outputText value="#{msgs['tlos.combo.xPath']}"
+							style="text-align: center;" rendered="#{item.preValue.type eq 6}" />
+					</p:column>
+					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterGrouping']}">
+						<p:selectOneMenu rendered="#{!item.ioType and !item.mapped}" style='width:100pt;'
+							value="#{backingBean.selectedJob}">
+							<f:selectItem itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}" itemValue="" />
+							<f:selectItems value="#{backingBean.dependentJobParamList}" />
+							<p:ajax update="parameterDataTable"
+								listener="#{backingBean.handleParamListChange}" />
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column>
+						<p:commandButton value="#{msgs['tlos.button.update']}"
+							actionListener="#{backingBean['editParamAction']}"
+							update=":jobDefinitionForm:tabView:parametersPanel">
+						</p:commandButton>
+
+						<p:commandButton value="#{msgs['tlos.button.delete']}"
+							onclick="deleteParam.show()" />
+						<p:dialog id="paramDeleteDialog"
+							header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
+							widgetVar="deleteParam" resizable="false">
+
+							<h:outputText value="#{msgs['tlos.ask.delete.confirm']}" />
+
+							<br />
+							<br />
+							<p:commandButton process="@this"
+								value="#{msgs['tlos.ask.delete.confirm1']}"
+								onclick="deleteParam.hide()"
+								update=":jobDefinitionForm:tabView:parametersPanel"
+								actionListener="#{backingBean['deleteParamAction']}" />
+							<p:commandButton value="#{msgs['tlos.ask.delete.confirm2']}"
+								onclick="deleteParam.hide()" type="button" />
+						</p:dialog>
+
+					</p:column>
 				</p:dataTable>
+
+
 			</p:panel>
 		</p:tab>
 	</ui:composition>
