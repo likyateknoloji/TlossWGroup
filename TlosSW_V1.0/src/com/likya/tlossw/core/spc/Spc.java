@@ -7,8 +7,7 @@ import java.util.Iterator;
 
 import com.likya.tlos.model.xmlbeans.agent.RxMessageDocument.RxMessage;
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
-import com.likya.tlos.model.xmlbeans.common.JobTypeDefDocument.JobTypeDef;
+import com.likya.tlos.model.xmlbeans.common.TriggerDocument.Trigger;
 import com.likya.tlos.model.xmlbeans.data.DependencyListDocument.DependencyList;
 import com.likya.tlos.model.xmlbeans.data.ItemDocument.Item;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
@@ -334,8 +333,7 @@ public class Spc extends SpcBase {
 
 				Job scheduledJob = jobsIterator.next();
 				JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-				JobBaseType.Enum jobBaseType = jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType();
-				boolean isPeriodic = JobBaseType.PERIODIC.intValue() == jobBaseType.intValue();
+				boolean isPeriodic = scheduledJob.getJobRuntimeProperties().getJobProperties().getManagement().getPeriodInfo() != null ? true : false;
 
 				if (isPeriodic && (scheduledJob.getMyExecuter() == null || scheduledJob.getMyExecuter().getState() != Thread.State.RUNNABLE) && scheduledJob.isUpdateMySelfAfterMe()) {
 
@@ -376,9 +374,9 @@ public class Spc extends SpcBase {
 
 						Job newJob = getMyJob(newJobRuntimeProperties);
 
-						JsPlannedTime jsPlannedTime = jobProperties.getTimeManagement().getJsPlannedTime();
+						JsPlannedTime jsPlannedTime = jobProperties.getManagement().getTimeManagement().getJsPlannedTime();
 
-						newJobProperties.getTimeManagement().setJsPlannedTime(jsPlannedTime);
+						newJobProperties.getManagement().getTimeManagement().setJsPlannedTime(jsPlannedTime);
 
 						getJobQueue().put(jobId, newJob);
 					}
@@ -456,11 +454,11 @@ public class Spc extends SpcBase {
 					scheduledJob.sendFirstJobInfo(getSpcNativeFullPath().getFullPath(), jobProperties);
 					// }
 
-					String jobStartType = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDef().toString();
+					String jobTriggerType = jobProperties.getManagement().getTrigger().toString();
 
-					if (jobStartType.equals(JobTypeDef.TIME_BASED.toString())) {
+					if (jobTriggerType.equals(Trigger.TIME.toString())) {
 
-						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getTimeManagement());
+						boolean timeHasCome = TimeZoneCalculator.calculateExecutionTime(jobProperties.getManagement().getTimeManagement());
 //System.err.println(getCurrentRunId());
 //System.err.println(getNativeRunId());
 						// isin planlanan calisma zamani gecti mi?
@@ -477,7 +475,7 @@ public class Spc extends SpcBase {
 							// }
 						}
 
-					} else if (jobStartType.equals(JobTypeDef.USER_BASED.toString())) {
+					} else if (jobTriggerType.equals(Trigger.USER.toString())) {
 
 						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
 						insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.IDLED, StatusName.BYUSER);
@@ -490,7 +488,7 @@ public class Spc extends SpcBase {
 						 * Boolean userChoice = true; if (userChoice) { jobRun = true; }
 						 */
 
-					} else if (jobStartType.equals(JobTypeDef.EVENT_BASED.toString())) {
+					} else if (jobTriggerType.equals(Trigger.EVENT.toString())) {
 
 						// if (scheduledJob.getFirstLoop()) { /* status u ekle */
 						insertLastStateInfo(scheduledJob, StateName.PENDING, SubstateName.IDLED, StatusName.BYEVENT);
@@ -716,10 +714,13 @@ public class Spc extends SpcBase {
 		// LOCAL VE GLOBAL
 		SpcLookupTable spcLookupTable = getSpcLookupTable();
 		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
+		
+		//TODO Her bir agent icin parametreleri hashMap a koyuyoruz. Tekrarlar oluyor. Bunu engelleyecek bir yapi iyi olur.
 		HashMap<Integer, ArrayList<Parameter>> parameterListAll = TlosSpaceWide.getSpaceWideRegistry().getAllParameters();
+		
+		// Bu agent icin gecerli olan Global + bu agent a Lokal olan Parametre Listesi
 		ArrayList<Parameter> parameterList = parameterListAll.get(agentId);
 
-		// TODO Statik ve dinamik job ayrimi yapabilirsek burada sadece dinamik joblara bu islem uygulanacak. HS
 		if (jobProperties.toString().contains("$(")) {
 			JobProperties transformedjobProperties = ApplyXslt.transform(tlosJobTransformXsl, parameterList, jobProperties);
 			scheduledJob.getJobRuntimeProperties().setJobProperties(transformedjobProperties);
@@ -742,7 +743,7 @@ public class Spc extends SpcBase {
 		if (agentManagerRef.checkDestIfServer(agentId)) {
 			executeJob(scheduledJob);
 		} else {
-			scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().addNewJsRealTime().addNewStartTime().setTime(Calendar.getInstance());
+			scheduledJob.getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().addNewJsRealTime().addNewStartTime().setTime(Calendar.getInstance());
 
 			boolean transferSuccess = transferJobToAgent(scheduledJob);
 
