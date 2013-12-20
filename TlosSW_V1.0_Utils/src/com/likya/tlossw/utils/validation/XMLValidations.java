@@ -28,7 +28,7 @@ public class XMLValidations {
 			
 			JobProperties jobProperties = (JobProperties) (jobListIterator.next());
 
-			PeriodInfo periodInfo = jobProperties.getBaseJobInfos().getPeriodInfo();
+			PeriodInfo periodInfo = jobProperties.getManagement().getPeriodInfo();
 
 			if ((periodInfo != null) && (periodInfo.getMaxCount() == null || (periodInfo.getCounter().intValue() + 1) >= periodInfo.getMaxCount().intValue())) {
 				
