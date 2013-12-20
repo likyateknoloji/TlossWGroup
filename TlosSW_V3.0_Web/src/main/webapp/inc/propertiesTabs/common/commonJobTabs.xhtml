@@ -7,11 +7,12 @@
 
 		<ui:include src="/inc/propertiesTabs/baseJobInfosTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean.baseJobInfosTabBean}" />
+			<ui:param name="managementTabBeanParam" value="#{backingBean.jobBasePanelBean.managementTabBean}" />
 		</ui:include>
 
-		<ui:include src="/inc/propertiesTabs/cascadingConditionsTab.xhtml">
+		<!-- ui:include src="/inc/propertiesTabs/cascadingConditionsTab.xhtml">
 			<ui:param name="backingBean" value="#{backingBean}" />
-		</ui:include>
+		</ui:include-->
 
 		<ui:include src="/inc/propertiesTabs/common/commonTabs.xhtml">
 			<ui:param name="backingBean" value="#{backingBean}" />
