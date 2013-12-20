@@ -91,12 +91,12 @@ public class ReportBase extends TlosSWBaseBean implements Serializable {
 			
 			String timeInputFormat = new String("HH:mm:ss.SSSZZ");
 			//reportsParameters.setStepForDensityCalendar( DefinitionUtils.calendarToStringTimeFormat(stepForDensity, "UTC", timeInputFormat) );
-			String currentStep = DefinitionUtils.calendarToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat);
+			String currentStep = DefinitionUtils.calendarTimeToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat);
 			if (!getStepForDensity().equals(currentStep)) {
 
 				reportsParameters.setStepForDensityCalendar(DefinitionUtils.dateTimeToXmlDateTime(new String("1970-01-01"), stepForDensity, "UTC"));
 			} else {
-				setStepForDensity(DefinitionUtils.calendarToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat));
+				setStepForDensity(DefinitionUtils.calendarTimeToStringTimeFormat(reportsParameters.getStepForDensityCalendar(),"UTC", timeInputFormat));
 			}
 
 		}
