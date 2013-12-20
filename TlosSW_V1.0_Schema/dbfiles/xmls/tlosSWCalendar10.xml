@@ -154,7 +154,7 @@
         <cal:calendarName>ereee</cal:calendarName>
         <cal:calendarPeriod>
             <com:daySpecial>ALL</com:daySpecial>
-            <com:dayDef>PERPETUAL</com:dayDef>
+            <com:dayDef>DAILY</com:dayDef>
         </cal:calendarPeriod>
         <cal:validFrom>
             <com:date>2013-01-01+02:00</com:date>
