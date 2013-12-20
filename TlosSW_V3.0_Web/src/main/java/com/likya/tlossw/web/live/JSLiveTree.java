@@ -81,7 +81,7 @@ public class JSLiveTree extends TlosSWBaseBean implements Serializable {
 
 	public void constructJSTree() {
 
-		String testString = resolveMessage("tlos.workspace.pannel.job.timeManagement");
+		String testString = resolveMessage("tlos.workspace.pannel.job.management");
 		System.out.println(testString);
 
 		root = new DefaultTreeNode(ConstantDefinitions.TREE_ROOT, resolveMessage("root"), null);

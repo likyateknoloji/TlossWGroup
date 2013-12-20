@@ -11,7 +11,6 @@ import javax.faces.bean.ViewScoped;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 
-import com.likya.tlos.model.xmlbeans.alarm.SLAManagementDocument.SLAManagement;
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
@@ -60,6 +59,8 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	private JobInfoTypeClient selectedJobBaseReport;
 
+	private transient DataTable parameterTable;
+	
 	private boolean transformToLocalTime;
 	
 	private LiveJobManagementBean liveJobManagementBean;
@@ -74,7 +75,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
-
+	
 	public void setJobInfo(String spcFullPath, String jobId) {
 		jobInTyCl = new JobInfoTypeClient();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), spcFullPath, jobId, transformToLocalTime);
@@ -163,7 +164,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		job = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId());
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
-			if (selectedAlarmHistory.getCaseManagement().getSLAManagement().equals(SLAManagement.YES)) {
+			if (selectedAlarmHistory.getCaseManagement().getSLAManagement()) {
 				slaName = getDbOperations().searchSlaByID(job.getAdvancedJobInfos().getSLAId() + "").getName();
 			}
 		}
@@ -339,6 +340,14 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	public void setScenarioMBean(ScenarioMBean scenarioMBean) {
 		this.scenarioMBean = scenarioMBean;
+	}
+
+	public DataTable getParameterTable() {
+		return parameterTable;
+	}
+
+	public void setParameterTable(DataTable parameterTable) {
+		this.parameterTable = parameterTable;
 	}
 
 }
