@@ -107,7 +107,7 @@ public class XmlBeansTransformer {
 		
 		Map<String, String> envMap = new HashMap<String, String>();
 		
-		SpecialParameters specialParameters = jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters();
+		SpecialParameters specialParameters = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters();
 		
 		if (specialParameters != null && specialParameters.getEnvVariables() != null) {
 			Entry [] envVars = specialParameters.getEnvVariables().getEntryArray();
