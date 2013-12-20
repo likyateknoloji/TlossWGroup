@@ -68,10 +68,12 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 	private String minUser;
 	private String maxUser;
 
+	private String timeOutputFormat;
 	private boolean insertButton;
 
 	@PostConstruct
 	public void init() {
+		timeOutputFormat = new String("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 		resetProvisionAction();
 
 		setResourceNameList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
@@ -139,15 +141,19 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 		// startDate = license.getStartDate().getTime();
 		// endDate = license.getEndDate().getTime();
 
+		selectedTZone = license.getTimeZone();
+		if (license.getTypeOfTime() != null)
+			selectedTypeOfTime = license.getTypeOfTime().toString();
+		else
+			selectedTypeOfTime = new String("Broadcast");
+		
 		startDate = DefinitionUtils.dateToDate(license.getStartDate().getTime(), selectedTZone);
 		endDate = DefinitionUtils.dateToDate(license.getEndDate().getTime(), selectedTZone);
 
-		String timeOutputFormat = new String("HH:mm:ss");
-
 		// startTime = DefinitionUtils.dateToStringTime(license.getStartDate().getTime());
 		// endTime = DefinitionUtils.dateToStringTime(license.getEndDate().getTime());
-		startTime = DefinitionUtils.calendarToStringTimeFormat(license.getStartDate(), selectedTZone, timeOutputFormat);
-		endTime = DefinitionUtils.calendarToStringTimeFormat(license.getEndDate(), selectedTZone, timeOutputFormat);
+		startTime = DefinitionUtils.dateToStringDate(license.getStartDate().getTime(), selectedTZone, timeOutputFormat);
+		endTime = DefinitionUtils.dateToStringDate(license.getEndDate().getTime(), selectedTZone, timeOutputFormat);
 
 		licenseType = license.getType().getStringValue();
 
@@ -158,12 +164,6 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 		if (license.getType().getMinUser() != null) {
 			minUser = license.getType().getMinUser().toString();
 		}
-
-		selectedTZone = license.getTimeZone();
-		if (license.getTypeOfTime() != null)
-			selectedTypeOfTime = license.getTypeOfTime().toString();
-		else
-			selectedTypeOfTime = new String("Broadcast");
 
 		fillResourcePool();
 	}
@@ -386,6 +386,14 @@ public class ProgramProvisionPanelMBean extends TlosSWBaseBean implements Serial
 
 	public void setSelectedTypeOfTime(String selectedTypeOfTime) {
 		this.selectedTypeOfTime = selectedTypeOfTime;
+	}
+
+	public String getTimeOutputFormat() {
+		return timeOutputFormat;
+	}
+
+	public void setTimeOutputFormat(String timeOutputFormat) {
+		this.timeOutputFormat = timeOutputFormat;
 	}
 
 }
