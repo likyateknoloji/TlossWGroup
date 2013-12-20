@@ -20,11 +20,11 @@ import org.xmldb.api.base.Collection;
 
 import com.likya.tlos.model.xmlbeans.agent.SWAgentDocument.SWAgent;
 import com.likya.tlos.model.xmlbeans.agent.UserStopRequestDocument.UserStopRequest;
+import com.likya.tlos.model.xmlbeans.common.DatetimeType;
 import com.likya.tlos.model.xmlbeans.config.TlosConfigInfoDocument.TlosConfigInfo;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsPlannedTimeDocument.JsPlannedTime;
-import com.likya.tlos.model.xmlbeans.data.StartTimeDocument.StartTime;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
@@ -314,7 +314,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				Calendar myCalendar = Calendar.getInstance();
 				updateStartConditions(jobQueue, jobId, myCalendar);
 				// TODO �lk eleman� ald�k ama pek i�ime sinmedi
-				JsPlannedTime jobPlannedTime = myJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
+				JsPlannedTime jobPlannedTime = myJob.getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().getJsPlannedTime();
 
 				// TODO Art�k date yok, g�n var.
 				// jobPlanTime.setDate(new
@@ -327,7 +327,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				// myCalendar.get(Calendar.SECOND), (short)
 				// myCalendar.get(Calendar.MILLISECOND)};
 
-				StartTime startTime = StartTime.Factory.newInstance();
+				DatetimeType startTime = DatetimeType.Factory.newInstance();
 				// startTime.setTime(DateUtils.nativeToXMLBeansTime(myCalendar.getTime()));
 				startTime.setTime(myCalendar);
 				jobPlannedTime.setStartTime(startTime);
@@ -470,7 +470,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				updateStartConditions(jobQueue, tmpJobId, myCalendar);
 			}
 			// TODO ilk eleman� al�yoruz ama emin de�ilim
-			JsPlannedTime jobPlannedTime = scheduledJob.getJobRuntimeProperties().getJobProperties().getTimeManagement().getJsPlannedTime();
+			JsPlannedTime jobPlannedTime = scheduledJob.getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().getJsPlannedTime();
 
 			// TODO Art�k date yok, g�n var.
 			// jobPlanTime.setDate(new
@@ -484,7 +484,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 			// myCalendar.get(Calendar.MILLISECOND)};
 			// jobPlanTime.setTime(new Time(timeArray));
 
-			StartTime startTime = StartTime.Factory.newInstance();
+			DatetimeType startTime = DatetimeType.Factory.newInstance();
 			// startTime.setTime(DateUtils.nativeToXMLBeansTime(myCalendar.getTime()));
 			startTime.setTime(myCalendar);
 			jobPlannedTime.setStartTime(startTime);
