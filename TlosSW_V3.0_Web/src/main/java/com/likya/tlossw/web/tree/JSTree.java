@@ -97,10 +97,10 @@ public class JSTree extends TreeBaseBean implements Serializable {
 
 		WsJobNode wsJobNode = new WsJobNode();
 		wsJobNode.setId(jobProperties.getID());
-		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
 
-		wsJobNode.setLeafIcon(getScenarioMBean().getJobIconsElement(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString()));
+		wsJobNode.setLeafIcon(getScenarioMBean().getJobIconsElement(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString()));
 
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
 
