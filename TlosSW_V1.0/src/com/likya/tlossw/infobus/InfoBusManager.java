@@ -154,7 +154,7 @@ public class InfoBusManager implements InfoBus, Runnable {
 							logger.info("  > ");
 							logger.info("  > DB guncellemesi. " + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName() + " icin baslama bitis zamani ve butun state ler.");
 							logger.info("  > " + jobAllInfo.getSpcNativeFullPath() + jobAllInfo.getJobProperties().getBaseJobInfos().getJsName());
-							logger.info("  > " + jobProperties.getTimeManagement().getJsRealTime());
+							logger.info("  > " + jobProperties.getManagement().getTimeManagement().getJsRealTime());
 							logger.info("  > " + jobProperties.getBaseJobInfos().getJsName() + " " + jobProperties.getStateInfos().getLiveStateInfos());
 						}
 
@@ -274,11 +274,11 @@ public class InfoBusManager implements InfoBus, Runnable {
 		WarnBy[] warnBies = alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray();
 
 		for (int i = 0; i < warnBies.length; i++) {
-			if (warnBies[i].getId().intValue() == 1)
+			if (warnBies[i].getId() == 1)
 				isEmailAlarm = true;
-			if (warnBies[i].getId().intValue() == 2)
+			if (warnBies[i].getId() == 2)
 				isSmsAlarm = true;
-			if (warnBies[i].getId().intValue() == 3)
+			if (warnBies[i].getId() == 3)
 				isGuiAlarm = true;
 		}
 
