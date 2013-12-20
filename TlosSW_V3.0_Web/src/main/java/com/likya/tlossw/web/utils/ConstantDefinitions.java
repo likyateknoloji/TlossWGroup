@@ -62,4 +62,5 @@ public class ConstantDefinitions {
 	public final static String SUBSTATE = "SubState";
 	public final static String STATUS = "Status";
 
+	public final static String AYRAC = ">";
 }
