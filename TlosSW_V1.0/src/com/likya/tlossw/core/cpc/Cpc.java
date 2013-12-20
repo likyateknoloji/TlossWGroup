@@ -269,15 +269,14 @@ public class Cpc extends CpcBase {
 
 				SpcInfoType spcInfoType = spcLookupTable.get(spcId);
 
-				spcInfoType.getScenario().getConcurrencyManagement().setRunningId(runInfoType.getRunId());
+				spcInfoType.getScenario().getManagement().getConcurrencyManagement().setRunningId(runInfoType.getRunId());
 
 				spc.setBaseScenarioInfos(spcInfoType.getScenario().getBaseScenarioInfos());
 				spc.setDependencyList(spcInfoType.getScenario().getDependencyList());
 				spc.setScenarioStatusList(spcInfoType.getScenario().getScenarioStatusList());
 				spc.setAlarmPreference(spcInfoType.getScenario().getAlarmPreference());
-				spc.setTimeManagement(spcInfoType.getScenario().getTimeManagement());
+				spc.setManagement(spcInfoType.getScenario().getManagement());
 				spc.setAdvancedScenarioInfos(spcInfoType.getScenario().getAdvancedScenarioInfos());
-				spc.setConcurrencyManagement(spcInfoType.getScenario().getConcurrencyManagement());
 				spc.setLocalParameters(spcInfoType.getScenario().getLocalParameters());
 
 				spc.setJsName(spcInfoType.getJsName());
