@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.likya.tlos.model.xmlbeans.common.JobBaseTypeDocument.JobBaseType;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlossw.core.spc.SpcBase;
 import com.likya.tlossw.core.spc.helpers.SortType;
@@ -17,7 +16,9 @@ public class JobIndexUtils {
 
 		spc.getJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
 
-		if (JobBaseType.PERIODIC.intValue() == jobProperties.getBaseJobInfos().getJobInfos().getJobBaseType().intValue()) {
+		boolean isPeriodic = jobProperties.getManagement().getPeriodInfo() != null ? true : false;
+		
+		if (isPeriodic) {
 			spc.getNonDailyJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
 		} else {
 			spc.getDailyJobQueueIndex().add(new SortType(jobId, jobProperties.getBaseJobInfos().getJobPriority().intValue()));
