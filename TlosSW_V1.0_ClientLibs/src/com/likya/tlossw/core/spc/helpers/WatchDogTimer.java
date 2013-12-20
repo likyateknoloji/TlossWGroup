@@ -35,7 +35,7 @@ public class WatchDogTimer extends Thread {
 				System.out.println("WARNING : TIME-OUT is negative setting it to deafault " + timeout);
 			}
 			Thread.sleep(timeout);
-			if (!Boolean.parseBoolean(job.getJobRuntimeProperties().getJobProperties().getCascadingConditions().getJobAutoRetry().toString())) {
+			if ( !job.getJobRuntimeProperties().getJobProperties().getManagement().getCascadingConditions().getJobAutoRetry().getBooleanValue() ) {
 				//					if (counter < 1) {
 				LiveStateInfoUtils.insertNewLiveStateInfo(job.getJobRuntimeProperties().getJobProperties(), StateName.RUNNING, SubstateName.ON_RESOURCE, StatusName.TIME_OUT);
 				//						++counter;
