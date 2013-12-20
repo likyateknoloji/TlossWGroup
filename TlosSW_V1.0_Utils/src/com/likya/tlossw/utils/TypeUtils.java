@@ -26,20 +26,20 @@ public class TypeUtils {
 	}
 
 	public static FtpAdapterProperties resolveFtpAdapterProperties(JobProperties jobProperties) {
-		return jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFtpAdapterProperties();
+		return jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFtpAdapterProperties();
 	}
 
 	public static DbJobDefinition resolveDbJobDefinition(JobProperties jobProperties) {
-		return jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition();
+		return jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition();
 	}
 	
 	
 	public static DbConnectionProperties resolvedbConnectionProperties(JobProperties jobProperties) {
-		return jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getDbConnectionProperties();
+		return jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getDbJobDefinition().getDbConnectionProperties();
 	}
 
 	public static FileAdapterProperties resolveFileAdapterProperties(JobProperties jobProperties) {
-		return jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
+		return jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
 	}
 
 	public static boolean containsNull(JsDependencyRule jsDependencyRule) {
