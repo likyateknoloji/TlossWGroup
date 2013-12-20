@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -18,6 +19,7 @@ import org.primefaces.model.TreeNode;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
+import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.tree.WsJobNode;
 import com.likya.tlossw.model.tree.WsScenarioNode;
 import com.likya.tlossw.utils.CommonConstantDefinitions;
@@ -96,12 +98,12 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 
 		WsJobNode wsJobNode = new WsJobNode();
 		wsJobNode.setId(jobProperties.getID());
-		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		wsJobNode.setName(jobProperties.getBaseJobInfos().getJsName());
-		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().intValue());
+		wsJobNode.setJobType(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().intValue());
 		
 		wsJobNode.setLabelText(jobProperties.getBaseJobInfos().getJsName());
-		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
+		wsJobNode.setLeafIcon( getScenarioMBean().getJobIconsElement( jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString() ));
 		
 		new DefaultTreeNode(ConstantDefinitions.TREE_JOB, wsJobNode, selectedNode);
 	}
@@ -167,6 +169,26 @@ public class JobTemplatesTree  extends TreeBaseBean implements Serializable {
 		 */
 	}
 
+	public void onNodeSelect(NodeSelectEvent event) {
+		selectedTreeNode = event.getTreeNode();
+		/*
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Unselected", event.getTreeNode().toString());
+		 * 
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 */
+	}
+	
+	// işe sağ tıklayarak sil dediğimizde buraya geliyor
+	public boolean deleteJob() {
+		boolean result = true;
+		
+		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		System.err.println("Job Template Tree den is silinemedi !! TODO listesinde");
+
+
+		return result;
+	}
+	
 	public DBOperations getDbOperations() {
 		return dbOperations;
 	}
