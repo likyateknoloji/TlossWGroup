@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="/SharedLibs/saxonb9-1-0-8j/saxon9-xom.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/SharedLibs/joda-time-2.2/joda-time-2.2.jar"/>
+	<classpathentry kind="lib" path="/SharedLibs/apache/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
