@@ -38,7 +38,7 @@
 				<xs:element ref="focus" />
 				<xs:element ref="caseManagement" />
 			</xs:sequence>
-			<xs:attribute name="ID" use="required" type="xs:integer" />
+			<xs:attribute name="ID" use="required" type="com:integerType" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="name" type="xs:string" />
@@ -46,7 +46,7 @@
 	<xs:element name="creationDate" type="xs:dateTime" />
 	<xs:element name="startDate" type="xs:dateTime" />
 	<xs:element name="endDate" type="xs:dateTime" />
-	<xs:element name="level" type="xs:integer" />
+	<xs:element name="level" type="xs:unsignedByte" />
 	<xs:element name="subscriber">
 		<xs:complexType>
 			<xs:sequence>
@@ -83,7 +83,7 @@
 	</xs:element>
 	<xs:element name="warnBy">
 		<xs:complexType>
-			<xs:attribute name="id" use="required" type="xs:integer" />
+			<xs:attribute name="id" use="required" type="xs:unsignedByte" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="alarmType" default="Job">
@@ -105,13 +105,12 @@
 	</xs:element>
 	<xs:element name="person">
 		<xs:complexType>
-			<xs:attribute name="id" use="required" type="xs:integer" />
+			<xs:attribute name="id" use="required" type="com:integerType" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="job">
 		<xs:complexType>
-			<xs:attribute name="id" use="required" type="xs:integer" />
-			<xs:attribute name="depth" use="required" type="xs:integer" />
+			<xs:attribute name="id" use="required" type="com:integerType" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="scenarios">
@@ -123,8 +122,7 @@
 	</xs:element>
 	<xs:element name="scenario">
 		<xs:complexType>
-			<xs:attribute name="id" use="required" type="xs:integer" />
-			<xs:attribute name="depth" use="required" type="xs:integer" />
+			<xs:attribute name="id" use="required" type="com:integerType" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="systems">
@@ -164,16 +162,9 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<!--xs:element name="SLAManagement"> <xs:complexType> <xs:attribute name="control" 
-		use="required" type="xs:NCName"/> </xs:complexType> </xs:element -->
-	<xs:element name="SLAManagement" default="NO">
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:enumeration value="YES" />
-				<xs:enumeration value="NO" />
-			</xs:restriction>
-		</xs:simpleType>
-	</xs:element>
+		
+	<xs:element name="SLAManagement" default="false" type="com:booleanType" />
+
 	<xs:element name="timeManagement">
 		<xs:complexType>
 			<xs:sequence>
