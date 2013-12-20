@@ -84,10 +84,10 @@ declare function hs:updateTlosConfigPerformance($documentUrl as xs:string, $perf
 	for $tPerformance in doc($configDocumentUrl)/con:TlosConfigInfo/con:performance
 	return  update replace $tPerformance with 	
 	<con:performance>
-		<con:threshold>
-			<con:high>{data($perform/con:threshold/con:high)}</con:high>
-			<con:low>{data($perform/con:threshold/con:low)}</con:low>
-		</con:threshold>
+		<con:overAllThreshold>
+			<com:high>{data($perform/con:threshold/con:high)}</com:high>
+			<com:low>{data($perform/con:threshold/con:low)}</com:low>
+		</con:overAllThreshold>
 	</con:performance>
 };
 
@@ -187,24 +187,27 @@ declare function hs:updateTlosConfigInfo2($documentUrl as xs:string, $tlosConfig
 				<com:frequency>{data($tlosConfigInfo/con:settings/con:tlosFrequency/com:frequency)}</com:frequency>
 			</con:tlosFrequency>	
 
-			<con:remoteManagerProperties>
+			<com:remoteManagerProperties>
 				<com:comment>{data($tlosConfigInfo/con:settings/con:remoteManagerProperties/com:comment)}</com:comment>
 				<com:portNumber>{data($tlosConfigInfo/con:settings/con:remoteManagerProperties/com:portNumber)}</com:portNumber>
 				<com:bufferSize>{data($tlosConfigInfo/con:settings/con:remoteManagerProperties/com:bufferSize)}</com:bufferSize>
-			</con:remoteManagerProperties>
+			</com:remoteManagerProperties>
 
 			<con:httpManagerProperties>
-				<com:ipAddress>{data($tlosConfigInfo/con:settings/con:httpManagerProperties/com:ipAddress)}</com:ipAddress>
-				<com:portNumber>{data($tlosConfigInfo/con:settings/con:httpManagerProperties/com:portNumber)}</com:portNumber>
+				<con:ipAddress>{data($tlosConfigInfo/con:settings/con:httpManagerProperties/con:ipAddress)}</con:ipAddress>
+				<con:portNumber>{data($tlosConfigInfo/con:settings/con:httpManagerProperties/con:portNumber)}</con:portNumber>
 			</con:httpManagerProperties>
 		</con:settings>
 		
 		<con:performance>
-			<con:threshold>
-				<con:high>{data($tlosConfigInfo/con:performance/con:threshold/con:high)}</con:high>
-				<con:low>{data($tlosConfigInfo/con:performance/con:threshold/con:low)}</con:low>
-			</con:threshold>
+                 {$tlosConfigInfo/con:performance/con:overAllThreshold}
 		</con:performance>
+		<con:monitoringAgentParams>
+		   {$tlosConfigInfo/con:monitoringAgentParams/*}
+		</con:monitoringAgentParams>
+		<con:jmxParams>
+		   {$tlosConfigInfo/con:jmxParams/*}
+		</con:jmxParams>
  </con:TlosConfigInfo>
 };
 
