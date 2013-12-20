@@ -16,7 +16,7 @@
 		</alm:subscriber>
 		<alm:focus>
 			<alm:jobs>
-				<alm:job id="0" depth="1"/>
+				<alm:job id="1"/>
 			</alm:jobs>
 		</alm:focus>
 		<alm:caseManagement>
