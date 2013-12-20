@@ -93,9 +93,9 @@ public class TransformUtils {
 
 	public static StreamSource getStreamSource(String transformCode) throws TransformCodeCreateException {
 
-		StringReader xslReader = new StringReader(transformCode);
+		StringReader xslReader = transformCode != null ? new StringReader(transformCode) : null;
 
-		StreamSource streamSource = new StreamSource(xslReader);
+		StreamSource streamSource = xslReader != null ? new StreamSource(xslReader) : null;
 
 		return streamSource;
 	}
