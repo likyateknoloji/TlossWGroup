@@ -64,6 +64,7 @@
 		<path id="build.path">
 			<pathelement location="${build.classes.dir}" />
 			<pathelement location="${sharedlib.dir}/apache/commons-net-3.0.1.jar" />
+			<pathelement location="${sharedlib.dir}/apache/commons-io-2.4.jar" />
 			<pathelement location="${sharedlib.dir}/apache/commons-collections-3.2.1.jar" />
 			<pathelement location="${sharedlib.dir}/log4j/log4j-1.2.15.jar" />
 			<pathelement location="${sharedlib.dir}/xmlbeans-2.5.0/xbean.jar" />
