@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+		<p:tab id="managementTab"
+			title="#{msgs['tlos.workspace.pannel.job.management']}">
+
+			<p:panel rendered="#{backingBean.managementTabBean.scenario}">
+				<p:panelGrid columns="2">
+					<h:outputText
+						value="#{msgs['tlos.workspace.pannel.scenario.defineTimeManagement']}" />
+					<p:selectBooleanCheckbox
+						value="#{backingBean.managementTabBean.useManagement}">
+						<p:ajax update=":jobDefinitionForm:tabView:managementPanel" />
+					</p:selectBooleanCheckbox>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel id="managementPanel">
+				<p:panelGrid id="management" columns="2"
+					rendered="#{backingBean.managementTabBean.useManagement or !backingBean.managementTabBean.scenario}">
+
+					<p:panelGrid id="periodicPanelGrid" columns="3">
+						<f:facet name="header">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.recurrence']}" />
+							<h:outputText
+								rendered="#{backingBean.managementTabBean.periodic}" value="" />
+						</f:facet>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.periodic']}" />
+						<p:selectBooleanCheckbox id="isPeriodic"
+							value="#{backingBean.managementTabBean.periodic}">
+							<p:ajax partialSubmit="true" update="periodicPanelGrid" />
+						</p:selectBooleanCheckbox>
+
+
+
+						<p:panelGrid id="periodicPanelInnerGrid" columns="2">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.periodicTime']}"
+								rendered="#{backingBean.managementTabBean.periodic}" />
+							<p:inputMask value="#{backingBean.managementTabBean.periodTime}"
+								rendered="#{backingBean.managementTabBean.periodic}"
+								mask="99:99:99" required="true"
+								requiredMessage="#{msgs['tlos.validation.job.periyodicTime']}">
+								<p:ajax partialSubmit="true"></p:ajax>
+							</p:inputMask>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}"
+								rendered="#{backingBean.managementTabBean.periodic}" />
+							<p:inputText value="#{backingBean.managementTabBean.maxCount}"
+								label="#{msgs['tlos.workspace.pannel.job.periodic.maxCount']}"
+								type="integer"
+								rendered="#{backingBean.managementTabBean.periodic}">
+							</p:inputText>
+
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.periodic.relativeStart']}"
+								rendered="#{backingBean.managementTabBean.periodic}" />
+							<p:selectBooleanCheckbox
+								value="#{backingBean.managementTabBean.relativeStart}"
+								rendered="#{backingBean.managementTabBean.periodic}" />
+						</p:panelGrid>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.calendar']}" />
+						<p:selectBooleanCheckbox
+							value="#{backingBean.managementTabBean.useCalendarDef}">
+							<p:ajax partialSubmit="true" update="periodicPanelGrid" />
+						</p:selectBooleanCheckbox>
+
+						<h:outputText
+							rendered="#{!backingBean.managementTabBean.useCalendarDef}"
+							value="" />
+
+						<p:selectManyMenu id="jsCalendar"
+							value="#{backingBean.managementTabBean.calendarList}"
+							style="width: 100pt; height:100px"
+							rendered="#{backingBean.managementTabBean.useCalendarDef}">
+							<f:selectItems
+								value="#{backingBean.managementTabBean.jsBasePanelMBean.jsCalendarList}" />
+						</p:selectManyMenu>
+					</p:panelGrid>
+
+					<p:panelGrid id="RunConditionsGrid" rendered="#{!backingBean.managementTabBean.scenario}" columns="2">
+						<f:facet name="header">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.runSettings']}" />
+						</f:facet>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.runEvenIfFailed']}" />
+						<p:selectBooleanCheckbox value="#{backingBean.runEvenIfFailed}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.safe2restart']}" />
+						<p:selectBooleanCheckbox value="#{backingBean.jsSafeToRestart}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.autoretry']}" />
+						<p:selectBooleanCheckbox value="#{backingBean.jsAutoRetry}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.concurrent']}" />
+						<p:selectBooleanCheckbox value="#{backingBean.concurrent}" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.triggerType']}" />
+						<p:selectOneMenu id="jobtype" style="width: 100pt"
+							value="#{backingBean.managementTabBean.trigger}">
+							<f:selectItems
+								value="#{backingBean.managementTabBean.triggerList}" />
+							<p:ajax update="RunConditionsGrid"></p:ajax>
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.eventTypeDef']}"
+							rendered="#{backingBean.managementTabBean.trigger eq 'EVENT'}" />
+						<p:selectOneMenu id="eventTypeDef"
+							rendered="#{backingBean.managementTabBean.trigger eq 'EVENT'}"
+							value="#{backingBean.managementTabBean.eventTypeDef}">
+							<f:selectItems
+								value="#{backingBean.managementTabBean.eventTypeDefList}" />
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:panelGrid id="stopTime" columns="4">
+						<f:facet name="header">
+							<h:outputText value="Zaman Bilgisi" />
+						</f:facet>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.startDate']}" />
+
+						<p:calendar id="startDateCal"
+							value="#{backingBean.managementTabBean.specificDate}"
+							navigator="true" locale="tr" update="managementPanel">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:calendar>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.startTime']}" />
+
+						<p:inputMask value="#{backingBean.managementTabBean.startTime}"
+							mask="99:99:99" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.timezone']}" />
+						<p:selectOneMenu id="TZone" style="width: 150pt"
+							value="#{backingBean.managementTabBean.selectedTZone}"
+							filter="true" filterMatchMode="startsWith">
+							<f:selectItems value="#{backingBean.managementTabBean.tzList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.typeOfTime']}" />
+						<p:selectOneMenu id="typeOfTime" style="width: 100pt"
+							value="#{backingBean.managementTabBean.selectedTypeOfTime}"
+							filter="true" filterMatchMode="startsWith">
+							<f:selectItems
+								value="#{backingBean.managementTabBean.typeOfTimeList}" />
+						</p:selectOneMenu>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.jsRelativeTimeOption']}" />
+						<p:selectBooleanCheckbox
+							value="#{backingBean.managementTabBean.relativeTimeOption}">
+							<p:ajax update="stopTime" />
+						</p:selectBooleanCheckbox>
+
+						<h:outputText value="" />
+						<h:outputText value="" />
+
+					</p:panelGrid>
+					<p:panelGrid id="timeControl" columns="4"
+						rendered="#{backingBean.managementTabBean.useManagement or !backingBean.managementTabBean.scenario}"
+						style="width:80%;">
+						<f:facet name="header">
+							<h:outputText value="Zaman Control" />
+						</f:facet>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.definePlannedStopTime']}" />
+						<p:selectBooleanCheckbox
+							value="#{backingBean.managementTabBean.defineStopTime}">
+							<p:ajax update="timeControl" />
+						</p:selectBooleanCheckbox>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.plannedStopTime']}"
+							rendered="#{backingBean.managementTabBean.defineStopTime}" />
+						<p:inputMask value="#{backingBean.managementTabBean.stopTime}"
+							rendered="#{backingBean.managementTabBean.defineStopTime}"
+							mask="99:99:99"
+							requiredMessage="#{msgs['tlos.validation.sla.endTime']}">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputMask>
+
+						<h:outputText
+							rendered="#{!backingBean.managementTabBean.defineStopTime}"
+							value="" />
+						<h:outputText
+							rendered="#{!backingBean.managementTabBean.defineStopTime}"
+							value="" />
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.expectedTime']}" />
+						<p:inputMask value="#{backingBean.managementTabBean.expectedTime}"
+							mask="99:99:99"
+							requiredMessage="#{msgs['tlos.workspace.pannel.job.expectedTime']}">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputMask>
+						
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.minPercentage']}" />
+						<p:spinner id="minPercentage"
+							value="#{backingBean.managementTabBean.minPercentage}"
+							prefix="%" min="0" max="100"/>
+							
+						<h:outputText value="#{msgs['tlos.workspace.pannel.job.timeOut']}" />
+						<p:inputMask
+							value="#{backingBean.managementTabBean.jobTimeOutValue}"
+							mask="99:99:99"
+							requiredMessage="#{msgs['tlos.workspace.pannel.job.timeOut']}">
+							<p:ajax partialSubmit="true"></p:ajax>
+						</p:inputMask>
+
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.tolerancePercentage']}" />
+						<p:spinner id="tolerancePercentage"
+							value="#{backingBean.managementTabBean.tolerancePercentage}"
+							prefix="%" min="0" max="100"/>
+
+
+					</p:panelGrid>
+
+				</p:panelGrid>
+			</p:panel>
+		</p:tab>
+	</ui:composition>
+</h:body>
+</html>
