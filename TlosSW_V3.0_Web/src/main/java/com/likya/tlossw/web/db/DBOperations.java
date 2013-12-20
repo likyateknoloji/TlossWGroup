@@ -38,6 +38,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument;
 import com.likya.tlos.model.xmlbeans.data.ScenarioDocument.Scenario;
+import com.likya.tlos.model.xmlbeans.data.TimeManagementDocument.TimeManagement;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument;
 import com.likya.tlos.model.xmlbeans.data.TlosProcessDataDocument.TlosProcessData;
 import com.likya.tlos.model.xmlbeans.dbconnections.DbConnectionProfileDocument;
@@ -92,6 +93,7 @@ import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.utils.transform.TransformUtils;
 import com.likya.tlossw.web.exist.ExistClient;
 import com.likya.tlossw.web.exist.ExistConnectionHolder;
+import com.likya.tlossw.web.utils.DefinitionUtils;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likyateknoloji.xmlMetaDataTypes.MetaDataDocument;
 import com.likyateknoloji.xmlMetaDataTypes.MetaDataDocument.MetaData;
@@ -1699,11 +1701,11 @@ public class DBOperations implements Serializable {
 		String warnByStr = "";
 		for (int j = 0; j < alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray().length; j++) {
 
-			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(1)) == 0)
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId() == 1)
 				warnByStr = warnByStr + "e-mail;";
-			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(2)) == 0)
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId() == 2)
 				warnByStr = warnByStr + "SMS;";
-			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId().compareTo(BigInteger.valueOf(3)) == 0)
+			if (alarm.getSubscriber().getAlarmChannelTypes().getWarnByArray(j).getId() == 3)
 				warnByStr = warnByStr + "GUI;";
 		}
 
@@ -1712,7 +1714,7 @@ public class DBOperations implements Serializable {
 		// alarm tipini set ediyor
 		if (alarm.getCaseManagement().getStateManagement() != null) {
 			alarmInfoTypeClient.setAlarmType("State");
-		} else if (alarm.getCaseManagement().getSLAManagement() != null) {
+		} else if (alarm.getCaseManagement().getSLAManagement()) {
 			alarmInfoTypeClient.setAlarmType("SLA");
 		} else if (alarm.getCaseManagement().getTimeManagement() != null) {
 			alarmInfoTypeClient.setAlarmType("Time");
@@ -1784,30 +1786,32 @@ public class DBOperations implements Serializable {
 		jobInfoTypeClient.setJobId(jobProperties.getID());
 		// jobInfoTypeClient.setJobKey(jobProperties.getID());
 		jobInfoTypeClient.setJobName(jobProperties.getBaseJobInfos().getJsName());
-		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommand());
-		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobCommandType().toString());
-		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobInfos().getJobTypeDetails().getJobPath());
+		jobInfoTypeClient.setJobCommand(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommand());
+		jobInfoTypeClient.setJobCommandType(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobCommandType().toString());
+		jobInfoTypeClient.setJobPath(jobProperties.getBaseJobInfos().getJobTypeDetails().getJobPath());
 		jobInfoTypeClient.setJobLogPath(jobProperties.getBaseJobInfos().getJobLogPath());
 		jobInfoTypeClient.setJobLogName(jobProperties.getBaseJobInfos().getJobLogFile());
 		jobInfoTypeClient.setoSystem(jobProperties.getBaseJobInfos().getOSystem().toString());
 		jobInfoTypeClient.setJobPriority(jobProperties.getBaseJobInfos().getJobPriority().intValue());
 
-		if (jobProperties.getTimeManagement().getJsPlannedTime().getStartTime() != null) {
-			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
+		TimeManagement timeManagement = jobProperties.getManagement().getTimeManagement();
+		if (timeManagement.getJsPlannedTime().getStartTime() != null) {
+			jobInfoTypeClient.setJobPlanTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStartTime().getTime(), transformToLocalTime));
 		}
 
-		if (jobProperties.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
-			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(jobProperties.getTimeManagement().getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
+		if (timeManagement.getJsPlannedTime().getStopTime() != null) {
+			jobInfoTypeClient.setJobPlanEndTime(DateUtils.jobTimeToString(timeManagement.getJsPlannedTime().getStopTime().getTime(), transformToLocalTime));
 		}
+		String timeOutputFormatHms = new String("HH:mm:ss");
+		String jsTimeOutValue = DefinitionUtils.calendarTimeToStringTimeFormat(jobProperties.getManagement().getTimeControl().getJsTimeOut().getTime(), "Zulu", timeOutputFormatHms);
+		jobInfoTypeClient.setJobTimeOut(jsTimeOutValue);
 
-		jobInfoTypeClient.setJobTimeOut(jobProperties.getTimeManagement().getJsTimeOut().toString() + jobProperties.getTimeManagement().getJsTimeOut().getUnit());
-
-		if (jobProperties.getTimeManagement().getJsRealTime() != null) {
-			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), true, transformToLocalTime));
+		if (timeManagement.getJsRealTime() != null) {
+			jobInfoTypeClient.setPlannedExecutionDate(DateUtils.jobRealTimeToStringReport(timeManagement.getJsRealTime(), true, transformToLocalTime));
 
 			// is bitmisse
-			if (jobProperties.getTimeManagement().getJsRealTime().getStopTime() != null) {
-				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToStringReport(jobProperties.getTimeManagement().getJsRealTime(), false, transformToLocalTime));
+			if (timeManagement.getJsRealTime().getStopTime() != null) {
+				jobInfoTypeClient.setCompletionDate(DateUtils.jobRealTimeToStringReport(timeManagement.getJsRealTime(), false, transformToLocalTime));
 			} else {
 				jobInfoTypeClient.setCompletionDate("?");
 			}
@@ -1818,15 +1822,15 @@ public class DBOperations implements Serializable {
 				pastExecution = false;
 			}
 
-			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(jobProperties.getTimeManagement().getJsRealTime(), pastExecution));
+			jobInfoTypeClient.setWorkDuration(DateUtils.getJobWorkDuration(timeManagement.getJsRealTime(), pastExecution));
 		}
 
 		// LiveStateInfo listesindeki ilk eleman alinarak islem yapildi, yani guncel state i alindi
 		jobInfoTypeClient.setOver(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED));
 		jobInfoTypeClient.setLiveStateInfo(jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0));
 
-		jobInfoTypeClient.setJobAutoRetry(jobProperties.getCascadingConditions().getJobAutoRetry().toString());
-		jobInfoTypeClient.setSafeRestart(jobProperties.getCascadingConditions().getJobSafeToRestart().toString());
+		jobInfoTypeClient.setJobAutoRetry(jobProperties.getManagement().getCascadingConditions().getJobAutoRetry().getBooleanValue());
+		jobInfoTypeClient.setSafeRestart(jobProperties.getManagement().getCascadingConditions().getJobSafeToRestart());
 
 		if (jobProperties.getDependencyList() != null) {
 			List<Item> myList = Arrays.asList(jobProperties.getDependencyList().getItemArray());
