@@ -118,11 +118,14 @@ public class DefinitionUtils {
 //		return c;
 //	}
 	
-	public static String calendarToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
-		//String timeStr = zeroCheck(date.get(Calendar.HOUR_OF_DAY) + "") + ":" + zeroCheck(date.get(Calendar.MINUTE) + "") + ":" + zeroCheck(date.get(Calendar.SECOND) + "");
+	public static String calendarTimeToStringTimeFormat(Calendar time, String selectedTZone, String timeOutputFormat) {
 
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-		LocalTime jobLocalTime = new LocalTime(time);
+		
+		DateTimeParser[] parsers = { DateTimeFormat.forPattern("HH:mm:ss.SSSZZ").getParser(), DateTimeFormat.forPattern("HH:mm:ss.SSS").getParser(), DateTimeFormat.forPattern("HH:mm:ss").getParser() };
+		DateTimeFormatter dtf = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+		LocalTime jobLocalTime = dtf.parseLocalTime(time.toString());
+
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
 		String timeString = jobLocalTime.toDateTimeToday(zone).toString(formatter);
 
@@ -136,6 +139,24 @@ public class DefinitionUtils {
 		return timeString;
 	}
 
+	public static String calendarDateToStringTimeFormat(Calendar date, String selectedTZone, String timeOutputFormat) {
+
+		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+
+		LocalTime jobLocalTime =new LocalTime(date);
+
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
+		String timeString = jobLocalTime.toDateTimeToday(zone).toString(formatter);
+
+		//		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
+		//		DateTimeFormatter dtf = DateTimeFormat.forPattern(timeInputFormat);
+		//		LocalTime localTime = dtf.parseLocalTime(time.toString());
+		//		
+		//		DateTimeFormatter formatter = DateTimeFormat.forPattern(timeOutputFormat);
+		//		String jobLocalTime = localTime.toDateTimeToday(zone).toString(formatter);
+
+		return timeString;
+	}
 	//	public static int calendarToGMT(Calendar date) {
 	//		int gmt = date.getTimeZone().getRawOffset() / 3600000;
 	//		return gmt;
@@ -154,11 +175,9 @@ public class DefinitionUtils {
 		return timeStr;
 	}
 
-	public static String dateToStringDate(java.util.Date date, String selectedTZone) {
+	public static String dateToStringDate(java.util.Date date, String selectedTZone, String timeOutputFormat) {
 
 		DateTimeZone zone = DateTimeZone.forID(selectedTZone);
-
-		String timeOutputFormat = new String("dd.MM.yyyy");
 
 		DateTime dateTime = new DateTime(date, zone);
 		String dateStr = dateTime.toString(timeOutputFormat);
