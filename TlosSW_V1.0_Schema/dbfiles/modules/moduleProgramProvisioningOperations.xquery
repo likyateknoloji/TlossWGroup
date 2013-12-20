@@ -112,6 +112,8 @@ declare function ks:insertPp($documentUrl as xs:string, $pp as element(pp:Licens
         <pp:version>{data($XXX/pp:version)}</pp:version>
         <pp:StartDate>{data($XXX/pp:StartDate)}</pp:StartDate>
         <pp:EndDate>{data($XXX/pp:EndDate)}</pp:EndDate>
+	    <com:timeZone>{data($XXX/com:timeZone)}</com:timeZone>
+		<com:typeOfTime>{data($XXX/com:typeOfTime)}</com:typeOfTime>
         <pp:ResourcePool>{$XXX/pp:ResourcePool/*}</pp:ResourcePool>
         {$XXX/pp:Type}
         <com:userId>{data($XXX/com:userId)}</com:userId>
