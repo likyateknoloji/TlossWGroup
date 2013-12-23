@@ -66,10 +66,22 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean insertButton;
 
+	// localParameters
 	private String paramName;
 	private String paramDesc;
-	private String paramType;
+	private short paramType;
 	private String paramPreValue;
+	private boolean paramPreValueTF;
+	private String paramValue;
+	private boolean paramActive;
+	private BigInteger selectedParamId;
+	private BigInteger paramId;
+	private String ioName;
+	private String jsId;
+
+	private boolean ioType; // input; false -- output; true
+	private boolean mapped = false;
+	private String connectedId;
 	private String paramPreValueTime;
 
 	private String selectedParamName;
@@ -79,6 +91,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private boolean renderUpdateParamButton = false;
 
+	private boolean paramDetails;
+	
 	@PostConstruct
 	public void init() {
 		resetAgentAction();
@@ -246,7 +260,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void addInputParameter() {
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || ((paramPreValue == null || paramPreValue.equals("")) && (paramPreValueTime == null || paramPreValueTime.equals(""))) || paramType == null || paramType.equals("")) {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || ((paramPreValue == null || paramPreValue.equals("")) && (paramPreValueTime == null || paramPreValueTime.equals(""))) ) {
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 
 			return;
@@ -257,11 +271,11 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		parameter.setDesc(paramDesc);
 
 		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setType(new BigInteger(paramType));
+		preValue.setType(paramType);
 
-		if (paramType.equals("4")) {
+		if (paramType == 4) {
 			preValue.setStringValue(paramPreValueTime);
-		} else if (paramType.equals("5")) {
+		} else if (paramType == 5) {
 			preValue.setStringValue(paramPreValue + "T" + paramPreValueTime);
 		} else {
 			preValue.setStringValue(paramPreValue);
@@ -279,7 +293,6 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		paramDesc = "";
 		paramPreValue = "";
 		paramPreValueTime = "";
-		paramType = "";
 	}
 
 	public void deleteInputParamAction(ActionEvent e) {
@@ -298,13 +311,13 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		paramName = new String(inParam.getName());
 		paramDesc = new String(inParam.getDesc());
 
-		String type = inParam.getPreValue().getType().toString();
-		paramType = new String(type);
+		short type = inParam.getPreValue().getType();
+		paramType = type;
 
 		String paramValue = inParam.getPreValue().getStringValue();
-		if (type.equals("4")) {
+		if (type == 4) {
 			paramPreValueTime = paramValue;
-		} else if (type.equals("5")) {
+		} else if (type == 5) {
 			StringTokenizer tokenizer = new StringTokenizer(paramValue, "T");
 
 			if (tokenizer.hasMoreTokens()) {
@@ -333,15 +346,15 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 				PreValue preValue = PreValue.Factory.newInstance();
 
-				if (paramType.equals("4")) {
+				if (paramType == 4) {
 					preValue.setStringValue(paramPreValueTime);
-				} else if (paramType.equals("5")) {
+				} else if (paramType == 5) {
 					preValue.setStringValue(paramPreValue + "T" + paramPreValueTime);
 				} else {
 					preValue.setStringValue(paramPreValue);
 				}
 
-				preValue.setType(new BigInteger(paramType));
+				preValue.setType((short) paramType);
 				parameterList.get(i).setPreValue(preValue);
 
 				break;
@@ -453,11 +466,11 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.paramDesc = paramDesc;
 	}
 
-	public String getParamType() {
+	public short getParamType() {
 		return paramType;
 	}
 
-	public void setParamType(String paramType) {
+	public void setParamType(short paramType) {
 		this.paramType = paramType;
 	}
 
@@ -561,4 +574,21 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		this.paramPreValueTime = paramPreValueTime;
 	}
 
+	public boolean isParamDetails() {
+		if (paramId != null)
+			paramDetails = paramId.equals(new BigInteger("0")) ? false : true;
+		return paramDetails;
+	}
+
+	public void setParamDetails(boolean paramDetails) {
+		this.paramDetails = paramDetails;
+	}
+	
+	public BigInteger getParamId() {
+		return paramId;
+	}
+
+	public void setParamId(BigInteger paramId) {
+		this.paramId = paramId;
+	}
 }
