@@ -100,7 +100,7 @@ public class ParameterPassing {
 				paramF = outParam.getParameterArray(j).getName().equalsIgnoreCase(parameterName);
 				if (paramF) {
 					outParam.getParameterArray(j).getPreValue().setStringValue(result);
-					outParam.getParameterArray(j).getPreValue().setType(new BigInteger("2"));
+					outParam.getParameterArray(j).getPreValue().setType((short) 2);
 					outParam.getParameterArray(j).setValueString(result);
 					assignmentOk = true;
 					break;
@@ -110,7 +110,7 @@ public class ParameterPassing {
 				outParam.addNewParameter();
 				outParam.getParameterArray(outParam.getParameterArray().length - 1).addNewPreValue();
 				outParam.getParameterArray(outParam.getParameterArray().length - 1).getPreValue().setStringValue(result);
-				outParam.getParameterArray(outParam.getParameterArray().length - 1).getPreValue().setType(new BigInteger("2"));
+				outParam.getParameterArray(outParam.getParameterArray().length - 1).getPreValue().setType((short) 2);
 				outParam.getParameterArray(outParam.getParameterArray().length - 1).setValueString(result);
 				assignmentOk = true;
 			}
@@ -168,7 +168,7 @@ public class ParameterPassing {
 								paramF = inParam.getParameterArray(j).getName().equalsIgnoreCase(parameterName);
 								if (paramF) {
 									inParam.getParameterArray(j).getPreValue().setStringValue(result);
-									inParam.getParameterArray(j).getPreValue().setType(new BigInteger("2"));
+									inParam.getParameterArray(j).getPreValue().setType((short) 2);
 									inParam.getParameterArray(j).setValueString(result);
 									assignmentOk = true;
 									break;
@@ -177,7 +177,7 @@ public class ParameterPassing {
 							if (!paramF) {
 								inParam.addNewParameter();
 								inParam.getParameterArray(0).getPreValue().setStringValue(result);
-								inParam.getParameterArray(0).getPreValue().setType(new BigInteger("2"));
+								inParam.getParameterArray(0).getPreValue().setType((short) 2);
 								inParam.getParameterArray(0).setValueString(result);
 								assignmentOk = true;
 							}
