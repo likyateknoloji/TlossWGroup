@@ -267,7 +267,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 			for (Parameter param : outParam.getParameterArray()) {
 				jobInfoTypeClient.setOutParameterName(param.getName());
-				jobInfoTypeClient.setOutParameterType(param.getPreValue().getType().intValue());
+				jobInfoTypeClient.setOutParameterType(param.getPreValue().getType());
 
 				jobInfoTypeClient.setOutParameterValue(TransformUtils.typeSelector(param));
 			}
@@ -280,7 +280,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 
 			for (Parameter param : inParam.getParameterArray()) {
 				jobInfoTypeClient.setInParameterName(param.getName());
-				jobInfoTypeClient.setInParameterType(param.getPreValue().getType().intValue());
+				jobInfoTypeClient.setInParameterType(param.getPreValue().getType());
 
 				jobInfoTypeClient.setInParameterValue(TransformUtils.typeSelector(param));
 			}
