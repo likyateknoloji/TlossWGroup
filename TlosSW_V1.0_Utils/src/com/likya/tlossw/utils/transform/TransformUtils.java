@@ -98,7 +98,7 @@ public class TransformUtils {
 	public static String typeSelector(Parameter parameter) {
 		
 		
-		int paramType = parameter.getPreValue().getType().intValue();
+		int paramType = parameter.getPreValue().getType();
 		
 		Object retValue = "";
 		
