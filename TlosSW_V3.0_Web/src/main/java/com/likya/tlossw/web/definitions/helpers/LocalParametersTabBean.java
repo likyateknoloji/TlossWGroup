@@ -43,7 +43,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 	// localParameters
 	private String paramName;
 	private String paramDesc;
-	private String paramType;
+	private short paramType;
 	private String paramPreValue;
 	private boolean paramPreValueTF;
 	private String paramValue;
@@ -89,7 +89,6 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramDesc = "";
 		paramPreValue = "";
 		paramValue = "";
-		paramType = "";
 		ioType = false; // input
 		paramActive = false;
 		mapped = false;
@@ -151,7 +150,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void addParameter() {
 
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") || paramType == null || paramType.equals("")) {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") ) {
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 			return;
 		}
@@ -164,10 +163,10 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 		PreValue preValue = PreValue.Factory.newInstance();
 		preValue.setStringValue(paramPreValue);
-		preValue.setType(new BigInteger(paramType));
+		preValue.setType((short) paramType);
 		parameter.setPreValue(preValue);
 
-		if (paramType.equals("2"))
+		if (paramType == 2)
 			parameter.setValueString(paramValue);
 
 		parameter.setIoName(ioName);
@@ -187,9 +186,9 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramName = new String(ioParam.getName());
 		paramDesc = new String(ioParam.getDesc());
 		paramPreValue = new String(ioParam.getPreValue().getStringValue());
-		paramType = new String(ioParam.getPreValue().getType().toString());
+		paramType = ioParam.getPreValue().getType();
 
-		if (paramType.equals("2"))
+		if (paramType == 2)
 			paramValue = ioParam.getValueString();
 
 		ioType = ioParam.getIoType();
@@ -214,12 +213,13 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramDesc = new String(ioParam.getDesc());
 		paramPreValue = new String(ioParam.getPreValue().getStringValue());
 
-		if (ioParam.getPreValue().getType().toString() == "2")
-			paramValue = new String(ioParam.getValueString());
+		if (ioParam.getPreValue().getType()== 2 && ioParam.getIoType())
+			if(ioParam.getValueString() != null)
+				paramValue = new String(ioParam.getValueString());
 
-		paramType = new String(ioParam.getPreValue().getType().toString());
+		paramType = ioParam.getPreValue().getType();
 
-		if (paramType.equals("2"))
+		if (paramType == 2)
 			paramValue = ioParam.getValueString();
 
 		ioType = ioParam.getIoType();
@@ -256,7 +256,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 				PreValue preValue = PreValue.Factory.newInstance();
 				preValue.setStringValue(paramPreValue);
-				preValue.setType(new BigInteger(paramType));
+				preValue.setType((short) paramType);
 				parameterList.get(i).setPreValue(preValue);
 				parameterList.get(i).setIoType(ioType);
 				parameterList.get(i).setActive(paramActive);
@@ -264,7 +264,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 				parameterList.get(i).setConnectedId(new BigInteger(connectedId));
 				parameterList.get(i).setMapped(mapped);
 				parameterList.get(i).setJsId(jsId);
-				if (paramType.equals("2"))
+				if (paramType == 2)
 					parameterList.get(i).setValueString(paramValue);
 				break;
 			}
@@ -352,13 +352,13 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	}
 
-	public Parameter setParameter(String name, String desc, String type, String value, boolean ioType, String ioName) {
+	public Parameter setParameter(String name, String desc, short type, String value, boolean ioType, String ioName) {
 
 		Parameter parameter = Parameter.Factory.newInstance();
 		parameter.setName(name);
 		parameter.setDesc("desc");
 		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setType(new BigInteger(type));
+		preValue.setType((short) type);
 		preValue.setStringValue("");
 		parameter.setPreValue(preValue);
 		parameter.setValueString(value);
@@ -371,7 +371,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		parameter.setMapped(mapped);
 		parameter.setJsId(jsId);
 
-		if (paramType.equals("2"))
+		if (paramType == 2)
 			parameter.setValueString(paramValue);
 		parameter.setConnectedId(new BigInteger(connectedId));
 
@@ -422,11 +422,11 @@ public class LocalParametersTabBean extends BaseTabBean {
 				// if (parameter != null)
 				// optionalList.put("JobResult", parameter);
 
-				parameter = setParameter("LogOutput", "Log output", "2", "", true, "LogOutput");
+				parameter = setParameter("LogOutput", "Log output", (short) 2, "", true, "LogOutput");
 				if (parameter != null)
 					optionalList.put(parameter.getIoName(), parameter);
 
-				parameter = setParameter("ErrorOutput", "Error output", "2", "", true, "ErrorOutput");
+				parameter = setParameter("ErrorOutput", "Error output", (short) 2, "", true, "ErrorOutput");
 				if (parameter != null)
 					optionalList.put(parameter.getIoName(), parameter);
 			}
@@ -597,11 +597,11 @@ public class LocalParametersTabBean extends BaseTabBean {
 		this.paramDesc = paramDesc;
 	}
 
-	public String getParamType() {
+	public short getParamType() {
 		return paramType;
 	}
 
-	public void setParamType(String paramType) {
+	public void setParamType(short paramType) {
 		this.paramType = paramType;
 	}
 
