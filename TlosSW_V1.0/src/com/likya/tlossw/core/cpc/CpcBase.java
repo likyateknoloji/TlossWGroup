@@ -302,7 +302,7 @@ public abstract class CpcBase implements Runnable {
 				String paramName = parameterList.get(i).getName();
 				// String paramValueString = parameterList.get(i).getValueString();
 				String paramPreValueString = parameterList.get(i).getPreValue().getStringValue();
-				BigInteger paramPreValueType = parameterList.get(i).getPreValue().getType();
+				short paramPreValueType = parameterList.get(i).getPreValue().getType();
 				String paramDesc = parameterList.get(i).getDesc();
 
 				System.out.println(paramName + paramPreValueString + paramPreValueType + paramDesc);
