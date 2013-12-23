@@ -47,7 +47,7 @@ public class OutputParameterPassing {
 		}
 		OutParam outParam = localParameter.getOutParam();
 
-		String paramType = "0";
+		short paramType = 0;
 		for (int j = 0; j < outParam.sizeOfParameterArray(); j++) {
 			
 			Parameter parameter = outParam.getParameterArray(j);
@@ -55,14 +55,14 @@ public class OutputParameterPassing {
 			paramF = parameter.getName().equalsIgnoreCase(parameterName); //parameter.getActive();
 			 
 			if (type.equalsIgnoreCase("STRING")) {
-				paramType = "2";
+				paramType = 2;
 			} else if (type.equalsIgnoreCase("INTEGER")) {
-				paramType = "1";
+				paramType = 1;
 			}
 			if (paramF) {
 				if(paramRef.toString().contains("$("))
 					parameter.getPreValue().setStringValue(paramRef.toString());
-				parameter.getPreValue().setType(new BigInteger(paramType));
+				parameter.getPreValue().setType(paramType);
 				switch(new Integer(paramType)) {
 				case 1 : parameter.setValueInteger(new BigInteger(paramRef.toString()));
 				         break;
