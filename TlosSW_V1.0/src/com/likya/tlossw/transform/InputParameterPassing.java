@@ -264,7 +264,7 @@ public class InputParameterPassing {
 
 						inParamElement.setPreValue(preValue);
 						
-						if(outParamElement.getPreValue().getType().equals(new BigInteger("2")))
+						if(outParamElement.getPreValue().getType() == 2)
 							inParamElement.setValueString(outParamElement.getValueString());
 						
 						inParamElement.setJsId(depJobProperties.getID());
@@ -343,7 +343,7 @@ public class InputParameterPassing {
 									paramF = inParam.getParameterArray(j).getName().equalsIgnoreCase(paramNameInI2);
 									if (paramF) {
 										inParam.getParameterArray(j).getPreValue().setStringValue(sorgu);
-										inParam.getParameterArray(j).getPreValue().setType(new BigInteger("2"));
+										inParam.getParameterArray(j).getPreValue().setType((short) 2);
 										inParam.getParameterArray(j).setValueString(result);
 										assignmentOk = true;
 										break;
