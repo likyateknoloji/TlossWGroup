@@ -167,42 +167,63 @@
 				<p:separator />
 
 				<p:panel id="parametersPanel">
-					<p:panelGrid id="localParameters" columns="4">
-						<h:outputText
+					<p:panelGrid id="localParameters" cellpadding="10" columns="4"
+						rendered="#{agentPanelMBean.isParamDetails() or agentPanelMBean.isShowInputParameterPanelGrid()}"
+						style="width:80%;">
+
+						<f:facet name="header">
+							<h:outputText
+								value="#{msgs['tlos.workspace.pannel.job.parameterId']} : #{agentPanelMBean.paramId}" />
+						</f:facet>
+
+						<h:outputText id="parameterName"
 							value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
-						<p:inputText value="#{agentPanelMBean.paramName}">
-							<p:ajax partialSubmit="true"></p:ajax>
+						<p:inputText value="#{agentPanelMBean.paramName}"
+							style="width: 200pt" >
+							<p:ajax event="blur" update="parameterName" />
 						</p:inputText>
 
-						<h:outputText
+						<h:outputText id="parameterDesc"
 							value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-						<p:inputText value="#{agentPanelMBean.paramDesc}">
-							<p:ajax partialSubmit="true"></p:ajax>
+						<p:inputText value="#{agentPanelMBean.paramDesc}"
+							style="width: 200pt" >
+							<p:ajax event="blur" update="parameterDesc" />
 						</p:inputText>
 
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterType']}" />
-						<p:selectOneMenu value="#{agentPanelMBean.paramType}">
-							<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
-								itemValue="" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}"
-								itemValue="1" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.string']}"
-								itemValue="2" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.date']}"
-								itemValue="3" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.time']}"
-								itemValue="4" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}"
-								itemValue="5" />
-							<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
-								itemValue="6" />
-							<p:ajax update="localParameters"></p:ajax>
-						</p:selectOneMenu>
+
+						<p:panelGrid id="parameters" columns="2" style="width:80%;">
+							<p:selectOneMenu value="#{agentPanelMBean.paramType}"
+								style="width: 100pt">
+								<f:selectItem itemLabel="#{msgs['tlos.combo.select']}"
+									itemValue="" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.integer']}"
+									itemValue="1" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.string']}"
+									itemValue="2" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.date']}"
+									itemValue="3" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.time']}"
+									itemValue="4" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.dateTime']}"
+									itemValue="5" />
+								<f:selectItem itemLabel="#{msgs['tlos.combo.xPath']}"
+									itemValue="6" />
+								<p:ajax partialSubmit="true" update="parametersPanel" />
+							</p:selectOneMenu>
+							<p:selectBooleanButton value="#{agentPanelMBean.ioType}"
+								onLabel="#{msgs['tlos.workspace.pannel.job.parameterOutput']}"
+								offLabel="#{msgs['tlos.workspace.pannel.job.parameterInput']}" />
+						</p:panelGrid>
 
 						<h:outputText
-							value="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}" />
-						<p:inputText value="#{agentPanelMBean.paramPreValue}"
+							value="#{msgs['tlos.workspace.pannel.job.parameterValue']}" />
+						<h:outputText value=""
+							rendered="#{agentPanelMBean.paramType eq ''}" />
+
+						<p:inputTextarea value="#{agentPanelMBean.paramPreValue}"
+							autoResize="false" style="width: 150pt"
 							rendered="#{agentPanelMBean.paramType eq '2' or agentPanelMBean.paramType eq '6'}" />
 
 						<p:inputText value="#{agentPanelMBean.paramPreValue}"
@@ -224,8 +245,18 @@
 								rendered="#{agentPanelMBean.paramType eq '4' or agentPanelMBean.paramType eq '5'}" />
 						</p:panelGrid>
 
-					</p:panelGrid>
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameter.active']}" />
+						<p:selectBooleanCheckbox id="isParamActive"
+							value="#{agentPanelMBean.paramActive}">
+							<p:ajax partialSubmit="true" update="parametersPanel" />
+						</p:selectBooleanCheckbox>
 
+						<h:outputText rendered="#{agentPanelMBean.jsId}"
+							value="#{msgs['tlos.workspace.pannel.job.parameter.dependentJobId']}" />
+						<p:inputText value="#{agentPanelMBean.jsId}" style="width: 100pt"
+							rendered="#{agentPanelMBean.jsId}" />
+					</p:panelGrid>
 					<br />
 
 					<p:commandButton
@@ -237,6 +268,7 @@
 						rendered="#{agentPanelMBean.renderUpdateParamButton}"
 						update=":yeniKullaniciForm:parametersPanel"
 						action="#{agentPanelMBean.updateInputParameter}" />
+
 
 					<br />
 					<br />
@@ -285,9 +317,9 @@
 						</p:column>
 
 						<p:column
-							headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
+							headerText="#{msgs['tlos.workspace.pannel.job.parameterValue']}"
 							sortBy="#{item.preValue.stringValue}">
-							<h:outputText value="#{item.preValue.stringValue}"
+							<h:outputText value="#{item.valueString}"
 								style="text-align: center;" />
 						</p:column>
 
