@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,10 @@ import com.likya.tlos.model.xmlbeans.jsdl.OperatingSystemTypeEnumeration;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.parameters.PreValueDocument.PreValue;
 import com.likya.tlos.model.xmlbeans.resourceextdefs.ResourceDocument.Resource;
+import com.likya.tlossw.utils.CommonConstantDefinitions;
 import com.likya.tlossw.utils.xml.XMLNameSpaceTransformer;
 import com.likya.tlossw.web.TlosSWBaseBean;
+import com.likya.tlossw.web.appmng.SessionMediator;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.utils.WebInputUtils;
 
@@ -47,6 +50,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private boolean showInputParameterPanelGrid;
 	private String osType;
 
 	private String resource;
@@ -98,6 +102,10 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		resetAgentAction();
 		fillAgentTypeList();
 
+		paramDetails = false;
+		ioType = false;
+		paramValue = "";
+		showInputParameterPanelGrid = true;
 		setResourceList(WebInputUtils.fillResourceNameList(getDbOperations().getResources()));
 
 		selectedAgentID = String.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedAgentID"));
@@ -220,7 +228,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		osType = "";
 
 		jmxPassword2 = null;
-
+		paramDetails = false;
 		durationForUnavailability = 900;
 		jobTransferFailureTime = 0;
 
@@ -243,12 +251,32 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		setAgentTypeList(agentTypeList);
 	}
 
+	private BigInteger getParameterId() {
+		SessionMediator sessionMediator = (SessionMediator) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionMediator");
+		int parameterId = sessionMediator.getDbOperations().getNextId(CommonConstantDefinitions.PARAMETER_ID);
+		if (parameterId < 0) {
+			addMessage("insertParameter", FacesMessage.SEVERITY_WARN, "tlos.info.parameter.db.getId", null);
+			return new BigInteger("0");
+		}
+		paramId = new BigInteger(parameterId + "");
+
+		return paramId;
+	}
+	
 	private void setLocalParameters() {
 		if (parameterList != null && parameterList.size() > 0) {
 			Locals locals = Locals.Factory.newInstance();
 
 			for (Parameter parameter : parameterList) {
 				Parameter newParam = locals.addNewParameter();
+				
+				BigInteger rasgeleIdSiniri = new BigInteger("100000");
+				BigInteger defaultIdSiniri = new BigInteger("100");
+
+				if (parameter.getId().compareTo(rasgeleIdSiniri) > 0 || parameter.getId().compareTo(defaultIdSiniri) < 0) {
+					parameter.setId(getParameterId());
+				}
+				
 				newParam.set(parameter);
 			}
 			agent.setLocals(locals);
@@ -260,7 +288,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 	}
 
 	public void addInputParameter() {
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || ((paramPreValue == null || paramPreValue.equals("")) && (paramPreValueTime == null || paramPreValueTime.equals(""))) ) {
+		if (paramName == null || paramName.equals("") || paramDesc == null  ) {
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 
 			return;
@@ -269,10 +297,12 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		Parameter parameter = Parameter.Factory.newInstance();
 		parameter.setName(paramName);
 		parameter.setDesc(paramDesc);
-
+		parameter.setIoType(ioType);
+		parameter.setActive(paramActive);
+		
 		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setType(paramType);
-
+		preValue.setType((short) paramType);
+		
 		if (paramType == 4) {
 			preValue.setStringValue(paramPreValueTime);
 		} else if (paramType == 5) {
@@ -282,12 +312,29 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		}
 
 		parameter.setPreValue(preValue);
+		parameter.setValueString(preValue.getStringValue());
+		
+		parameter.setIoName(ioName);
+		parameter.setMapped(mapped);
+		if(connectedId != null)
+		   parameter.setConnectedId(new BigInteger(connectedId));
+		if(jsId != null)
+			parameter.setJsId(jsId);
+		
+		int max = 10000000;
+		int min = 100001;
 
+		Random rand = new Random();
+
+		long id = rand.nextInt((max - min) + 1) + min;
+
+		parameter.setId(new BigInteger(id + ""));
+		
 		parameterList.add(parameter);
 
 		resetInputParameterFields();
 	}
-
+	
 	private void resetInputParameterFields() {
 		paramName = "";
 		paramDesc = "";
@@ -330,8 +377,10 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 			paramPreValue = paramValue;
 		}
 
+		this.paramValue=paramPreValue;
 		selectedParamName = paramName;
-
+		paramActive = inParam.getActive();
+		selectedParamId = inParam.getId();
 		renderUpdateParamButton = true;
 
 		RequestContext context = RequestContext.getCurrentInstance();
@@ -340,12 +389,28 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void updateInputParameter() {
 		for (int i = 0; i < parameterList.size(); i++) {
-			if (selectedParamName.equals(parameterList.get(i).getName())) {
+
+			if (selectedParamId.equals(parameterList.get(i).getId())) {
 				parameterList.get(i).setName(paramName);
 				parameterList.get(i).setDesc(paramDesc);
 
 				PreValue preValue = PreValue.Factory.newInstance();
-
+				preValue.setStringValue(paramPreValue);
+				preValue.setType((short) paramType);
+				parameterList.get(i).setPreValue(preValue);
+				parameterList.get(i).setIoType(ioType);
+				parameterList.get(i).setActive(paramActive);
+				parameterList.get(i).setIoName(ioName);
+				
+				parameterList.get(i).setMapped(mapped);
+				
+				parameterList.get(i).setActive(paramActive);
+				
+				if(connectedId != null)
+					parameterList.get(i).setConnectedId(new BigInteger(connectedId));
+				if(jsId != null)
+						parameterList.get(i).setJsId(jsId);
+					
 				if (paramType == 4) {
 					preValue.setStringValue(paramPreValueTime);
 				} else if (paramType == 5) {
@@ -353,10 +418,9 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 				} else {
 					preValue.setStringValue(paramPreValue);
 				}
-
-				preValue.setType((short) paramType);
-				parameterList.get(i).setPreValue(preValue);
-
+				
+				parameterList.get(i).setValueString(preValue.getStringValue());
+				
 				break;
 			}
 		}
@@ -590,5 +654,53 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setParamId(BigInteger paramId) {
 		this.paramId = paramId;
+	}
+
+	public boolean isShowInputParameterPanelGrid() {
+		return showInputParameterPanelGrid;
+	}
+
+	public void setShowInputParameterPanelGrid(boolean showInputParameterPanelGrid) {
+		this.showInputParameterPanelGrid = showInputParameterPanelGrid;
+	}
+
+	public boolean isIoType() {
+		return ioType;
+	}
+
+	public void setIoType(boolean ioType) {
+		this.ioType = ioType;
+	}
+
+	public String getParamValue() {
+		return paramValue;
+	}
+
+	public void setParamValue(String paramValue) {
+		this.paramValue = paramValue;
+	}
+
+	public boolean isParamActive() {
+		return paramActive;
+	}
+
+	public void setParamActive(boolean paramActive) {
+		this.paramActive = paramActive;
+	}
+
+	public String getConnectedId() {
+		return connectedId;
+	}
+
+	public void setConnectedId(String connectedId) {
+		this.connectedId = connectedId;
+	}
+
+	public String getJsId() {
+		return jsId;
+	}
+
+	public void setJsId(String jsId) {
+		this.jsId = jsId;
 	}
 }
