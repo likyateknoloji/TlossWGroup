@@ -53,6 +53,8 @@ public class LocalParametersTabBean extends BaseTabBean {
 	private String ioName;
 	private String jsId;
 
+	private String paramPreValueTime;
+
 	private boolean ioType; // input; false -- output; true
 	private boolean mapped = false;
 	private String connectedId;
@@ -150,7 +152,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void addParameter() {
 
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("") ) {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("")) {
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 			return;
 		}
@@ -166,13 +168,24 @@ public class LocalParametersTabBean extends BaseTabBean {
 		preValue.setType((short) paramType);
 		parameter.setPreValue(preValue);
 
+		if (paramType == 4) {
+			preValue.setStringValue(paramPreValueTime);
+		} else if (paramType == 5) {
+			preValue.setStringValue(paramPreValue + "T" + paramPreValueTime);
+		} else {
+			preValue.setStringValue(paramPreValue);
+		}
+
 		if (paramType == 2)
 			parameter.setValueString(paramValue);
 
 		parameter.setIoName(ioName);
 		parameter.setMapped(mapped);
-		parameter.setConnectedId(new BigInteger(connectedId));
-		parameter.setJsId(jsId);
+
+		if (connectedId != null)
+			parameter.setConnectedId(new BigInteger(connectedId));
+		if (jsId != null)
+			parameter.setJsId(jsId);
 
 		parameterList.add(parameter);
 
@@ -213,8 +226,8 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramDesc = new String(ioParam.getDesc());
 		paramPreValue = new String(ioParam.getPreValue().getStringValue());
 
-		if (ioParam.getPreValue().getType()== 2 && ioParam.getIoType())
-			if(ioParam.getValueString() != null)
+		if (ioParam.getPreValue().getType() == 2 && ioParam.getIoType())
+			if (ioParam.getValueString() != null)
 				paramValue = new String(ioParam.getValueString());
 
 		paramType = ioParam.getPreValue().getType();
@@ -264,8 +277,17 @@ public class LocalParametersTabBean extends BaseTabBean {
 				parameterList.get(i).setConnectedId(new BigInteger(connectedId));
 				parameterList.get(i).setMapped(mapped);
 				parameterList.get(i).setJsId(jsId);
-				if (paramType == 2)
-					parameterList.get(i).setValueString(paramValue);
+
+				if (paramType == 4) {
+					preValue.setStringValue(paramPreValueTime);
+				} else if (paramType == 5) {
+					preValue.setStringValue(paramPreValue + "T" + paramPreValueTime);
+				} else {
+					preValue.setStringValue(paramPreValue);
+				}
+
+				parameterList.get(i).setValueString(preValue.getStringValue());
+
 				break;
 			}
 		}
@@ -314,9 +336,9 @@ public class LocalParametersTabBean extends BaseTabBean {
 				if (parameterList.get(i).getActive()) {
 					BigInteger rasgeleIdSiniri = new BigInteger("100000");
 					BigInteger defaultIdSiniri = new BigInteger("100");
-					
+
 					Parameter parameter = parameterList.get(i);
-					if (parameter.getId().compareTo(rasgeleIdSiniri) > 0 || parameter.getId().compareTo(defaultIdSiniri) < 0 ) {
+					if (parameter.getId().compareTo(rasgeleIdSiniri) > 0 || parameter.getId().compareTo(defaultIdSiniri) < 0) {
 						parameter.setId(getParameterId());
 					}
 
@@ -486,7 +508,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 			// }
 			// }
 			// }
-			
+
 			for (Object parameter : optionalList.values()) {
 				parameterList.add((Parameter) parameter);
 			}
@@ -787,6 +809,14 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void setJsId(String jsId) {
 		this.jsId = jsId;
+	}
+
+	public String getParamPreValueTime() {
+		return paramPreValueTime;
+	}
+
+	public void setParamPreValueTime(String paramPreValueTime) {
+		this.paramPreValueTime = paramPreValueTime;
 	}
 
 }
