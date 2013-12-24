@@ -64,17 +64,18 @@ declare function met:getDataDocument($documentUrl as xs:string, $docId as xs:str
     <dat:baseScenarioInfos>
         <com:jsName>Serbest isler</com:jsName>
         <com:comment>Serbest isler burada yer alir</com:comment>
-        <dat:jsIsActive>YES</dat:jsIsActive>
+        <dat:jsIsActive>true</dat:jsIsActive>
         <com:userId>{$userId}</com:userId>
     </dat:baseScenarioInfos>
     <dat:jobList/>
-    <dat:timeManagement/>
+    <dat:management>
+        <dat:concurrencyManagement>
+            <com:concurrent>true</com:concurrent>
+        </dat:concurrencyManagement>
+    </dat:management>
     <dat:advancedScenarioInfos>
         <com:schedulingAlgorithm>FirstComeFirstServed</com:schedulingAlgorithm>
     </dat:advancedScenarioInfos>
-    <dat:concurrencyManagement>
-        <com:concurrent>true</com:concurrent>
-    </dat:concurrencyManagement>
    </dat:TlosProcessData>
   else  
    if( not(fn:compare( $docId, "scenarios" )) ) then
