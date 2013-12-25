@@ -296,7 +296,8 @@ public class JSNavigationMBean extends TlosSWBaseBean implements Serializable {
 		Management management = tlosProcessData.addNewManagement();
 		tlosProcessData.addNewAdvancedScenarioInfos();
 		management.addNewConcurrencyManagement().setRunningId(getWebAppUser().getId() + "");
-
+        management.getConcurrencyManagement().setConcurrent(true);
+        
 		tlosProcessData.addNewJobList();
 
 		// TODO Ekrandan senaryo tıklandığında bütün senaryo bilgisi içindeki herşeyle birlikte geliyor.
