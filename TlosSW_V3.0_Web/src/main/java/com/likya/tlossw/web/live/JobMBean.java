@@ -34,7 +34,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	@ManagedProperty(value = "#{scenarioMBean}")
 	private ScenarioMBean scenarioMBean;
-	
+
 	private JobInfoTypeClient jobInTyCl;
 	private JobProperties job;
 
@@ -60,9 +60,9 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	private JobInfoTypeClient selectedJobBaseReport;
 
 	private transient DataTable parameterTable;
-	
+
 	private boolean transformToLocalTime;
-	
+
 	private LiveJobManagementBean liveJobManagementBean;
 
 	@PostConstruct
@@ -75,31 +75,34 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
-	
+
 	public void setJobInfo(String spcFullPath, String jobId) {
 		jobInTyCl = new JobInfoTypeClient();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), spcFullPath, jobId, transformToLocalTime);
 
-		// TODO Eger XML ise uygulanmali.
-		//jobInTyCl.getOutParameterType() hakans
-		WebOutputUtils webOutputUtils= new WebOutputUtils();
-		jobInTyCl.setOutParameterValue(webOutputUtils.formatXml(jobInTyCl.getOutParameterValue()));
-		
-		// her isin komut dosyasi yok
-		if (jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
-			jobCommandExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
-		}
+		if (jobInTyCl != null) {
+			// TODO Eger XML ise uygulanmali.
+			// jobInTyCl.getOutParameterType() hakans
+			WebOutputUtils webOutputUtils = new WebOutputUtils();
+			jobInTyCl.setOutParameterValue(webOutputUtils.formatXml(jobInTyCl.getOutParameterValue()));
 
-		jobLogExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName()));
-
-		jobDependencyListStr = "";
-		if (jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
-			for (String depJobId : jobInTyCl.getJobDependencyList()) {
-				jobDependencyListStr += depJobId + ",";
+			// her isin komut dosyasi yok
+			if (jobInTyCl.getJobPath() != null && jobInTyCl.getJobCommand() != null) {
+				jobCommandExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobPath(), jobInTyCl.getJobCommand()));
 			}
-			jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
+
+			jobLogExist = TEJmxMpClient.checkFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobInTyCl.getJobLogPath(), jobInTyCl.getJobLogName()));
+
+			jobDependencyListStr = "";
+			if (jobInTyCl.getJobDependencyList() != null && jobInTyCl.getJobDependencyList().size() > 0) {
+				for (String depJobId : jobInTyCl.getJobDependencyList()) {
+					jobDependencyListStr += depJobId + ",";
+				}
+				jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
+			}
+		} else {
+			System.out.println("Sunucudan is bilgisi alinamadi. Sunucu kapali, yada erisim saglanamiyor !!!");
 		}
-		
 	}
 
 	public void openJobCommandAction() {
@@ -144,10 +147,10 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	public void fillJobReportGrid() {
 		// son 3 rundaki calisma listesini istiyor
 
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
+		String docId = getDocId(DocMetaDataHolder.FIRST_COLUMN);
 		int numberOfRun = 3;
-		
-		jobBaseReportList = getDbOperations().getJobResultList( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), numberOfRun, transformToLocalTime);
+
+		jobBaseReportList = getDbOperations().getJobResultList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), numberOfRun, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -158,10 +161,10 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	public void openAlarmDetailAction() {
 		selectedAlarm = (AlarmInfoTypeClient) jobAlarmTable.getRowData();
 		selectedAlarmHistory = getDbOperations().getAlarmHistoryById(Integer.parseInt(selectedAlarm.getAlarmHistoryId()));
-		
-		String docId = getDocId( DocMetaDataHolder.FIRST_COLUMN );
-				
-		job = getDbOperations().getJobFromId( docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId());
+
+		String docId = getDocId(DocMetaDataHolder.FIRST_COLUMN);
+
+		job = getDbOperations().getJobFromId(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId());
 
 		if (selectedAlarm.getAlarmType().equals("SLA")) {
 			if (selectedAlarmHistory.getCaseManagement().getSLAManagement()) {
@@ -189,7 +192,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	@Override
 	public void refreshTlosAgentPanel() {
 	}
-	
+
 	public boolean isTransformToLocalTime() {
 		return transformToLocalTime;
 	}
