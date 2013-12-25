@@ -428,9 +428,9 @@ declare function hs:getOverallReport($documentUrl as xs:string, $reportParameter
 declare function hs:getJobStartDate($job as element(dat:jobProperties) ) as xs:string 
 {
   
-     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) 
+     let $date := if(exists($job/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) 
                        then 
-                           $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
+                           $job/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
                        else 
                            if(exists($job/@LSIDateTime)) 
                            then xs:string(xs:date(hs:stringToDateTime($job/@LSIDateTime))) 
@@ -443,9 +443,9 @@ declare function hs:getJobStartDate($job as element(dat:jobProperties) ) as xs:s
 declare function hs:getJobStartTime($job as element(dat:jobProperties) ) as xs:string 
 {
   
-     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) 
+     let $date := if(exists($job/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time)) 
                        then 
-                           $job/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time
+                           $job/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:time
                        else 
                            if(exists($job/@LSIDateTime)) 
                            then xs:string(xs:time(hs:stringToDateTime($job/@LSIDateTime))) 
@@ -458,9 +458,9 @@ declare function hs:getJobStartTime($job as element(dat:jobProperties) ) as xs:s
 declare function hs:getJobStopDate($job as element(dat:jobProperties) ) as xs:string 
 {
   
-     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) 
+     let $date := if(exists($job/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date)) 
                        then 
-                           $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date
+                           $job/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date
                        else 
                            xs:string("N/A")
                            
@@ -471,9 +471,9 @@ declare function hs:getJobStopDate($job as element(dat:jobProperties) ) as xs:st
 declare function hs:getJobStopTime($job as element(dat:jobProperties) ) as xs:string 
 {
   
-     let $date := if(exists($job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) 
+     let $date := if(exists($job/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time)) 
                        then 
-                           $job/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time
+                           $job/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:time
                        else 
                            xs:string("N/A")
                            
@@ -549,11 +549,11 @@ declare function hs:getJobs($documentUrl as xs:string, $jobProperty as element(d
 	let $doc := doc($dailyScenariosDocumentUrl)
 	for $jobs in $jobPath (:/TlosProcessDataAll/RUN/dat:TlosProcessData/dat:scenario[com:jsName = 'Senaryo3']/dat:jobList/dat:jobProperties:)
 		where $jobs/dat:baseJobInfos/com:jsName = $jobProperty/dat:baseJobInfos/com:jsName and not($jobs[@agentId="0"])
-		and ( if(not(empty($jobProperty/dat:timeManagement/dat:jsRealTime/dat:startTime)) and not(empty($jobProperty/dat:timeManagement/dat:jsRealTime/dat:stopTime)))
- 				 then 	not(empty($jobs/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) 
-						and (string($jobs/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date) != '') 
-						and	$jobs/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date >= $jobProperty/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
-						and $jobs/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date <= $jobProperty/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date
+		and ( if(not(empty($jobProperty/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime)) and not(empty($jobProperty/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime)))
+ 				 then 	not(empty($jobs/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date)) 
+						and (string($jobs/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date) != '') 
+						and	$jobs/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date >= $jobProperty/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date
+						and $jobs/dat:management/dat:timeManagement/dat:jsRealTime/dat:startTime/com:date <= $jobProperty/dat:management/dat:timeManagement/dat:jsRealTime/dat:stopTime/com:date
 				  else true()
 			)
 	return  $jobs
