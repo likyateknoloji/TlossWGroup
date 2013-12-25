@@ -100,10 +100,16 @@ declare function density:SSSInterval($documentUrl as xs:string, $startDateTime a
 
 } ;
 
-declare function density:calcStat($documentUrl as xs:string, $stateName as xs:string, $substateName as xs:string, $statusName as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $reportParameters as element(rep:reportParameters) ) as node()
+declare function density:calcStat($documentUrl as xs:string, $startDateTime as xs:dateTime, $endDateTime as xs:dateTime, $reportParameters as element(rep:reportParameters) ) as node()
 {
 let $focused := density:SSSInterval($documentUrl, $startDateTime, $endDateTime, $reportParameters)
 
+  let $stateRelatedA1 := $reportParameters/rep:stateRelatedA1
+  let $liveStateInfo  := $stateRelatedA1/state-types:LiveStateInfo[1] (: //TODO Simdilik bir taneye bakacagiz, birden fazla olma durumunu dusunecegiz. :)
+  let $stateName      := $liveStateInfo/state-types:StateName/text()
+  let $substateName   := $liveStateInfo/state-types:SubstateName/text()
+  let $statusName     := $liveStateInfo/state-types:StatusName/text()
+  
 let $tektek :=
   let $sonuc := for $liveStateInfos in $focused/rep:group
                  let $lsi := 
@@ -157,12 +163,6 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
   let $sortingA  := $reportParameters/rep:sortingA
   let $orderBy := $sortingA/@orderBy
   let $order := $sortingA/@order
-
-  let $stateRelatedA1 := $reportParameters/rep:stateRelatedA1
-  let $liveStateInfo  := $stateRelatedA1/state-types:LiveStateInfo[1] (: //TODO Simdilik bir taneye bakacagiz, birden fazla olma durumunu dusunecegiz. :)
-  let $stateName      := $liveStateInfo/state-types:StateName/text()
-  let $substateName   := $liveStateInfo/state-types:SubstateName/text()
-  let $statusName     := $liveStateInfo/state-types:StatusName/text()
 
   let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
   let $includedJobs  := $stateRelatedA2/@includedJobs
@@ -222,7 +222,7 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
        let $kac := xs:integer($n)-1
        let $startDTime := $startDateTimex+ $kac*$stepCalc 
        let $endDTime := $startDateTimex+ $n*$stepCalc
-       let $fonk := density:calcStat($documentUrl, $stateName, $substateName, $statusName, $startDTime, $endDTime, $reportParameters)
+       let $fonk := density:calcStat($documentUrl, $startDTime, $endDTime, $reportParameters)
       return $fonk      
     return <rep:statistics xmlns:rep="http://www.likyateknoloji.com/XML_report_types" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> { $sonuc } </rep:statistics>
    else ()
