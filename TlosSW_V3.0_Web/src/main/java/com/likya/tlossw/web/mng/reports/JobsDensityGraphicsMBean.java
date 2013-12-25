@@ -143,7 +143,15 @@ public class JobsDensityGraphicsMBean extends ReportBase implements Serializable
 
 		for (int i = 0; i < densityJobCountList.sizeOfDataArray(); i++) {
 
-			String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
+			DateFormat df = new SimpleDateFormat("HH:mm:ss");
+			TimeZone timeZone = densityJobCountList.getDataArray(i).getEDTime().getTimeZone();
+			df.setTimeZone(TimeZone.getTimeZone(timeZone.getID())); 
+			Date date = densityJobCountList.getDataArray(i).getEDTime().getTime();
+			
+			String formattedTime = df.format(date); // 9:00
+			
+			
+			//String formattedTime = new SimpleDateFormat("HH:mm:ss").format(densityJobCountList.getDataArray(i).getEDTime().getTime()); // 9:00
 			numberOfJobsInThisGroup = densityJobCountList.getDataArray(i).getCount().intValue();
 
 			for (int j = 0; j < numberOfJobsInThisGroup|| numberOfJobsInThisGroup == 0; j++) {
