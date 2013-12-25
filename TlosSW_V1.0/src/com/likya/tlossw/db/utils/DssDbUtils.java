@@ -49,6 +49,7 @@ public class DssDbUtils extends DBBase {
 		
 		jobPropFuncPass.setUseSLA( tlosConfigInfo.getSettings().getUseSLA().getUse() );
 		jobPropFuncPass.setUseMonitoringData( tlosConfigInfo.getMonitoringAgentParams().getUse() );
+
 		jobPropFuncPass.setPlanId( TlosSpaceWide.getSpaceWideRegistry().getTlosProcessData().getPlanId() );
 		
 		//TODO Server in timezone bilgisini DB ye gondermemiz gerekiyor.
