@@ -52,7 +52,7 @@ public class OutputParameterPassing {
 			
 			Parameter parameter = outParam.getParameterArray(j);
 			
-			paramF = parameter.getName().equalsIgnoreCase(parameterName); //parameter.getActive();
+			paramF = parameter.getIoName().equalsIgnoreCase(parameterName); //parameter.getActive();
 			 
 			if (type.equalsIgnoreCase("STRING")) {
 				paramType = 2;
