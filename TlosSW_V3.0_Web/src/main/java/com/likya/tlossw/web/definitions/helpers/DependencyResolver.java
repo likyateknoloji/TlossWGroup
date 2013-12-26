@@ -58,7 +58,8 @@ public class DependencyResolver extends TlosSWBaseBean implements Serializable {
 			JobProperties jobPropertiesDep = sessionMediator.getDbOperations().getJobFromId("sjData", sessionMediator.getWebAppUser().getId(), 1, item.getJsId());
 
 			if (jobPropertiesDep != null) {
-				for (Parameter parameter : jobPropertiesDep.getLocalParameters().getOutParam().getParameterArray()) {
+				if(jobPropertiesDep.getLocalParameters().getOutParam() != null) {
+				  for (Parameter parameter : jobPropertiesDep.getLocalParameters().getOutParam().getParameterArray()) {
 					if(parameter.getActive()) {
 						
 						parameter.setJsId(item.getJsId());
@@ -69,6 +70,7 @@ public class DependencyResolver extends TlosSWBaseBean implements Serializable {
 							depJobParameterlList.put(parameter.getId() + "", parameter);
 						
 					}
+				  }
 				}
 				if (dependencyExpression.indexOf(item.getDependencyID().toUpperCase()) < 0) {
 					String errorMessage = "     > " + ownerJsName + " isi icin hatali bagimlilik tanimlamasi yapilmis ! (" + dependencyExpression + ") kontrol ediniz.";
