@@ -89,7 +89,7 @@ public class JDBCOracleSQLSentenceExecuter extends JDBCSQLSentenceExecuter {
 				handleException(err, myLogger);
 			}
 
-			if (processJobResult(retryFlag, myLogger, myParamList)) {
+			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
 			}
