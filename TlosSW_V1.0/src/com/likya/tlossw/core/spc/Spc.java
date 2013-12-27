@@ -1,5 +1,6 @@
 package com.likya.tlossw.core.spc;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -182,9 +183,16 @@ public class Spc extends SpcBase {
 					 * 
 					 * @author serkan taş
 					 *         20.09.2012
-					 */
+					 */		    	
+			    	
 					if (SpaceWideRegistry.isDebug) {
-						JobQueueOperations.dumpJobQueue(getSpcAbsolutePath(), getJobQueue());
+				    	Calendar cal = Calendar.getInstance();
+				    	cal.getTime();
+				    	SimpleDateFormat sdf = new SimpleDateFormat("ss");
+				    	String saniye = sdf.format(cal.getTime());
+				    	
+						if( saniye.equalsIgnoreCase("00") || saniye.equalsIgnoreCase("15") || saniye.equalsIgnoreCase("30") || saniye.equalsIgnoreCase("45"))
+							JobQueueOperations.dumpJobQueue(getSpcAbsolutePath(), getJobQueue());
 					}
 
 				} catch (Throwable t) {
@@ -569,7 +577,7 @@ public class Spc extends SpcBase {
 			if (isJobDependencyResolved(scheduledJob, dependencyExpression, dependencyArray)) {
 				if (DssVisionaire.evaluateDss(scheduledJob).getResultCode() >= 0) {
 					// if (DssFresh.transferPermission(scheduledJob)) {
-					prepareAndTransform(scheduledJob);
+					prepareAndExecute(scheduledJob);
 				}
 			} else {
 				// Bu durumda job bagimliliklarindan beklenenler var demektir.
@@ -588,7 +596,7 @@ public class Spc extends SpcBase {
 			DssVisionaire.glbinfo("   > DssVisionaire.evaluateDss : END : " + DateUtils.dateDiffWithNow(startTime) + " ms");
 			if(resultCode >= 0) {
 				// if (DssFresh.transferPermission(scheduledJob)) {
-				prepareAndTransform(scheduledJob);
+				prepareAndExecute(scheduledJob);
 			}
 		}
 
@@ -694,26 +702,30 @@ public class Spc extends SpcBase {
 		return transferSuccess;
 	}
 
-	private synchronized void prepareAndTransform(Job scheduledJob) throws UnresolvedDependencyException, TransformCodeCreateException {
-
-		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
-		int agentId = jobProperties.getAgentId();
-
-		int substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().intValue();
-
-		String tlosJobTransformXsl = SpcUtils.getTransformXslCode();
-
-//		try {
-//			scheduledJob.setRequestedStream(streamSource);
-//		} catch (Exception e) {
-//			throw new TransformCodeCreateException(e);
-//		}
-
+	private synchronized void preRunParameterPassing(Job scheduledJob) throws UnresolvedDependencyException, TransformCodeCreateException {
+		
 		// PARAMETRE atamalari burada yapilir.
 
 		// LOCAL VE GLOBAL
 		SpcLookupTable spcLookupTable = getSpcLookupTable();
-		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
+		
+		// parametre gecisi burada yapilir !!
+
+		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getCurrentRunId());
+
+		// 1.tip verilen xpath ile aktarim.
+		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
+		// 2.tip fiziksel bagimlilik ile aktarim
+		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
+		
+	}
+	
+	private synchronized void setPreRunParameters(Job scheduledJob) throws UnresolvedDependencyException, TransformCodeCreateException {
+		
+		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+		int agentId = jobProperties.getAgentId();
+		
+		String tlosJobTransformXsl = SpcUtils.getTransformXslCode();
 		
 		//TODO Her bir agent icin parametreleri hashMap a koyuyoruz. Tekrarlar oluyor. Bunu engelleyecek bir yapi iyi olur.
 		HashMap<Integer, ArrayList<Parameter>> parameterListAll = TlosSpaceWide.getSpaceWideRegistry().getAllParameters();
@@ -723,23 +735,70 @@ public class Spc extends SpcBase {
 
 		if (jobProperties.toString().contains("$(")) {
 			JobProperties transformedjobProperties = ApplyXslt.transform(tlosJobTransformXsl, parameterList, jobProperties);
-			scheduledJob.getJobRuntimeProperties().setJobProperties(transformedjobProperties);
+			//scheduledJob.getJobRuntimeProperties().setJobProperties(transformedjobProperties);
+			
+			JobProperties updatedJobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
+			
+			if(transformedjobProperties.getJobDescription() != null ) {
+			   updatedJobProperties.setJobDescription(transformedjobProperties.getJobDescription());	
+			}
+			if(transformedjobProperties.getSweep() != null ) {
+				updatedJobProperties.setSweep(transformedjobProperties.getSweep());	
+			}
+			if(transformedjobProperties.getBaseJobInfos() != null ) {
+				updatedJobProperties.setBaseJobInfos(transformedjobProperties.getBaseJobInfos());	
+			}
+//			if(transformedjobProperties.getDependencyList() != null ) {
+//				updatedJobProperties.setDependencyList(transformedjobProperties.getDependencyList());	
+//			}
+//			if(transformedjobProperties.getStateInfos() != null ) {
+//				updatedJobProperties.setStateInfos(transformedjobProperties.getStateInfos());
+//			}
+//			if(transformedjobProperties.getAdvancedJobInfos()!= null ) {
+//				updatedJobProperties.setAdvancedJobInfos(transformedjobProperties.getAdvancedJobInfos());
+//			}
+
+//			if(transformedjobProperties.getAlarmPreference() != null ) {
+//				updatedJobProperties.setAlarmPreference(transformedjobProperties.getAlarmPreference());
+//			}
+//			if(transformedjobProperties.getManagement() != null ) {
+//				updatedJobProperties.setManagement(transformedjobProperties.getManagement());	
+//			}
+//			if(transformedjobProperties.getLogAnalysis() != null ) {
+//				updatedJobProperties.setLogAnalysis(transformedjobProperties.getLogAnalysis());
+//			}
+			if(transformedjobProperties.getLocalParameters() != null ) {
+				updatedJobProperties.setLocalParameters(transformedjobProperties.getLocalParameters());
+			}
+			
 		}
+		
+	}
+	
+	private synchronized void prepareAndExecute(Job scheduledJob) throws UnresolvedDependencyException, TransformCodeCreateException {
 
-		// parametre gecisi burada yapilir !!
+		JobProperties jobProperties = scheduledJob.getJobRuntimeProperties().getJobProperties();
 
-		InputParameterPassing parameterPassing = new InputParameterPassing(getSpaceWideRegistry(), getCurrentRunId());
+		int substateName = jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().intValue();
 
-		// 1.tip verilen xpath ile aktarim.
-		parameterPassing.setInputParameter(scheduledJob.getJobRuntimeProperties().getJobProperties());
-		// 2.tip fiziksel bagimlilik ile aktarim
-		parameterPassing.setInputParameterViaDependency(getJobQueue(), scheduledJob, spcLookupTable);
+//		try {
+//			scheduledJob.setRequestedStream(streamSource);
+//		} catch (Exception e) {
+//			throw new TransformCodeCreateException(e);
+//		}
+
+		preRunParameterPassing(scheduledJob);
+		
+		setPreRunParameters(scheduledJob);
+		
+		AgentManager agentManagerRef = TlosSpaceWide.getSpaceWideRegistry().getAgentManagerReference();
 
 		scheduledJob.sendEndInfo(getSpcNativeFullPath().getAbsolutePath(), scheduledJob.getJobRuntimeProperties().getJobProperties());
 		// //////////////////\\\\\\\\\\\\\\\\\
 
 		/* Secilen kaynak server ise server da degilse agent a aktararak calistir. */
-
+		int agentId = jobProperties.getAgentId();
+		
 		if (agentManagerRef.checkDestIfServer(agentId)) {
 			executeJob(scheduledJob);
 		} else {
