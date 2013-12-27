@@ -18,6 +18,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument;
 import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
+import com.likya.tlossw.exceptions.TransformCodeCreateException;
 
 public class ApplyXslt {
 	/* http://java.sun.com/webservices/reference/tutorials/jaxp/html/dom.html */
@@ -137,16 +138,19 @@ public class ApplyXslt {
 			System.out.println("The underlying XSL processor " + "does not support the requested features.");
 		} catch (TransformerException e) {
 			System.out.println("Error occurred obtaining " + "XSL processor.");
+		} catch (TransformCodeCreateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		return jobPropertiesResult;
 
 	}
 
-	public synchronized static String transformXML(String xmlDoc, String transformXsl) {
+	public synchronized static String transformXML(String xmlDoc, String transformXsl) throws TransformCodeCreateException, TransformerException {
 
 		String xmlContent = null;
 
-		try {
+//		try {
 			// Set up input documents
 
 			// StreamSource inputXSL = new StreamSource(new File("D:\\likya\\projeler\\tlos\\tlos3.0\\parameters\\job_sample11_xslt_1.0.xsl"));
@@ -184,7 +188,7 @@ public class ApplyXslt {
 			// Transformer transformer = templates.newTransformer();
 
 			Transformer transformer = TransformUtils.getTransformer(transformXsl);
-
+			//TransformUtils.getTransformError();
 			// Get a transformer for this XSL
 			// Transformer transformer = factory.newTransformer(inputXSL);
 
@@ -215,11 +219,14 @@ public class ApplyXslt {
 			 * return null;
 			 * }
 			 */
-		} catch (TransformerConfigurationException e) {
-			System.err.println("The underlying XSL processor " + "does not support the requested features.");
-		} catch (TransformerException e) {
-			System.err.println("Error occurred obtaining " + "XSL processor.");
-		}
+//		} catch (TransformerConfigurationException e) {
+//			System.err.println("The underlying XSL processor " + "does not support the requested features.");
+//		} catch (TransformerException e) {
+//			System.err.println("Error occurred obtaining " + "XSL processor.");
+//		} catch (TransformCodeCreateException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return xmlContent;
 
 	}
