@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import javax.xml.transform.TransformerException;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
@@ -20,6 +22,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -47,6 +50,7 @@ public class ProcessNode extends Job {
 	}
 
 	public void localRun() {
+		String hataMesaji = null;
 
 		initStartUp(myLogger);
 
@@ -80,7 +84,11 @@ public class ProcessNode extends Job {
 				ParamList thisParam = new ParamList(PN_RESULT, "STRING", "VARIABLE", processInput());
 				myParamList.add(thisParam);
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
+				if (jobProperties.getStateInfos() != null) {
+					if (!jobProperties.getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getStateName().equals(StateName.FINISHED)) {
+						LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
+					}
+				}
 
 				try {
 					// outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " Result:" + System.getProperty("line.separator"));
@@ -94,12 +102,17 @@ public class ProcessNode extends Job {
 				handleException(err, myLogger);
 
 				try {
-					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " XSLT transformasyon isinde hata !" + System.getProperty("line.separator"));
-					outputFile.write(DateUtils.getCurrentTimeWithMilliseconds() + " " + err.getMessage() + System.getProperty("line.separator"));
 
-					ParamList thisParam = new ParamList(ERR_RESULT, "STRING", "VARIABLE", err.getMessage());
+					if (err.getMessage() == null) {
+						hataMesaji = DateUtils.getCurrentTimeWithMilliseconds() + " XSLT transformasyon isinde hata !" + System.getProperty("line.separator") + " " + err.getMessage() + System.getProperty("line.separator");
+					} else {
+						hataMesaji = err.getMessage();
+					}
+					outputFile.write(hataMesaji);
+
+					ParamList thisParam = new ParamList(ERR_RESULT, "STRING", "VARIABLE", hataMesaji);
 					myParamList.add(thisParam);
-					
+
 					for (StackTraceElement element : err.getStackTrace()) {
 						outputFile.write("\t" + element.toString() + System.getProperty("line.separator"));
 					}
@@ -108,7 +121,10 @@ public class ProcessNode extends Job {
 					ioe.printStackTrace();
 				}
 
-				LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				if (hataMesaji == null)
+					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED);
+				else
+					LiveStateInfoUtils.insertNewLiveStateInfo(jobProperties, StateName.FINISHED, SubstateName.COMPLETED, StatusName.FAILED, -1, hataMesaji);
 			}
 
 			if (processJobResult(retryFlag, myLogger)) {
@@ -123,11 +139,11 @@ public class ProcessNode extends Job {
 
 		try {
 			outputFile.close();
-			
+
 			ParamList thisParam = new ParamList(LOG_RESULT, "STRING", "VARIABLE", outputFile.toString());
 			myParamList.add(thisParam);
-			
-			processJobResult(retryFlag, myLogger, myParamList);
+
+			processParameters(myParamList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -164,22 +180,22 @@ public class ProcessNode extends Job {
 				 * 
 				 * }
 				 */
-//				if (parameter.getIoType()) { // OutPut
-//					if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
-//						fileContent = parameter.getValueString();
-//						// break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
-//
-//					} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
-//						fileContent = parameter.getValueString();
-//						// break;
-//					} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
-//						fileContent = parameter.getValueString();
-//						// break;
-//					} else if (parameter.getName().equals(PN_RESULT)) {
-//						fileContent = parameter.getValueString();
-//						// break;
-//					}
-//				}
+				// if (parameter.getIoType()) { // OutPut
+				// if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
+				//
+				// } else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// } else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// } else if (parameter.getName().equals(PN_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// }
+				// }
 				// input parametresi ilgili degiskene ataniyor.
 				if (!parameter.getIoType() && parameter.getIoName().equalsIgnoreCase("input1")) { // OutPut
 					fileContent = parameter.getValueString();
@@ -187,44 +203,44 @@ public class ProcessNode extends Job {
 			}
 		}
 
-//		if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
-//
-//			Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();
-//			ArrayList<Parameter> parameterList = new ArrayList<Parameter>(Arrays.asList(inParamList));
-//
-//			Iterator<Parameter> parameterIterator = parameterList.iterator();
-//
-//			while (parameterIterator.hasNext()) {
-//
-//				Parameter parameter = parameterIterator.next();
-//
-//				if (parameter.getName() == null)
-//					continue;
-//				/*
-//				 * if (parameter.getName().equals(ProcessNode.XSLT_CODE)) {
-//				 * 
-//				 * StringReader xslReader = new StringReader(parameter.getValueString());
-//				 * 
-//				 * XSLTCode = new StreamSource(xslReader);
-//				 * 
-//				 * }
-//				 */
-//				if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
-//					fileContent = parameter.getValueString();
-//					// break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
-//
-//				} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
-//					fileContent = parameter.getValueString();
-//					// break;
-//				} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
-//					fileContent = parameter.getValueString();
-//					// break;
-//				} else if (parameter.getName().equals(PN_RESULT)) {
-//					fileContent = parameter.getValueString();
-//					// break;
-//				}
-//			}
-//		}
+		// if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
+		//
+		// Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();
+		// ArrayList<Parameter> parameterList = new ArrayList<Parameter>(Arrays.asList(inParamList));
+		//
+		// Iterator<Parameter> parameterIterator = parameterList.iterator();
+		//
+		// while (parameterIterator.hasNext()) {
+		//
+		// Parameter parameter = parameterIterator.next();
+		//
+		// if (parameter.getName() == null)
+		// continue;
+		// /*
+		// * if (parameter.getName().equals(ProcessNode.XSLT_CODE)) {
+		// *
+		// * StringReader xslReader = new StringReader(parameter.getValueString());
+		// *
+		// * XSLTCode = new StreamSource(xslReader);
+		// *
+		// * }
+		// */
+		// if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
+		// fileContent = parameter.getValueString();
+		// // break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
+		//
+		// } else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
+		// fileContent = parameter.getValueString();
+		// // break;
+		// } else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
+		// fileContent = parameter.getValueString();
+		// // break;
+		// } else if (parameter.getName().equals(PN_RESULT)) {
+		// fileContent = parameter.getValueString();
+		// // break;
+		// }
+		// }
+		// }
 
 		String transformedXML = "";
 
@@ -259,6 +275,14 @@ public class ProcessNode extends Job {
 								// TODO Auto-generated catch block
 								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 								e.printStackTrace();
+							} catch (TransformCodeCreateException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
+							} catch (TransformerException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 							}
 						} else if (processNode.getFilter() != null && processNode.getFilter().getType().toString().equalsIgnoreCase("xpath")) {
 							// String inputs[] = null;
