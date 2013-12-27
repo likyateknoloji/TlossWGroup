@@ -17,8 +17,8 @@ import com.likya.tlossw.exceptions.TransformCodeCreateException;
 public class TransformUtils {
 
 	protected static String objectModel = null;
-
-	public static Transformer getTransformer(String transformXsl) {
+	
+	public static Transformer getTransformer(String transformXsl) throws TransformCodeCreateException, TransformerConfigurationException {
 		
 		
 
@@ -29,8 +29,7 @@ public class TransformUtils {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = null;
 		
-		try {
-			
+
 			StreamSource streamSource = getStreamSource(transformXsl);
 			
 			if (streamSource != null) {
@@ -40,12 +39,7 @@ public class TransformUtils {
 			}
 			//return impl.newTransformer(streamSource);
 			return transformer;
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformCodeCreateException e) {
-			e.printStackTrace();
-		}
-		return null;
+
 	}
 
 	public static XPathFactory getXPathFactory(String objModel) {
@@ -99,4 +93,5 @@ public class TransformUtils {
 
 		return streamSource;
 	}
+
 }
