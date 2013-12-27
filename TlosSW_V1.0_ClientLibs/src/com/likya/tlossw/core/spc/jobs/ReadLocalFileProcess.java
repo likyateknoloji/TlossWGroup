@@ -85,7 +85,7 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, "Yerel Dosya Okuma hatasi !");
 			}
 
-			if (processJobResult(retryFlag, myLogger, myParamList)) {
+			if (processJobResult(retryFlag, myLogger)) {
 				retryFlag = false;
 				continue;
 			}
