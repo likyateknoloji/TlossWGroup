@@ -98,8 +98,18 @@ public class WebServiceExecuter extends Job {
 				// DBUtils.insertLogFileNameForJob(jobProperties, jobPath, logFileName);
 
 				jobProperties.getBaseJobInfos().setJobLogFile(logFileName);
+				
+				Object paramOperation = null;
 
-				ParamList thisParam = new ParamList(WS_RESULT, "STRING", "VARIABLE", callOperation());
+				ParamList thisParam = null;
+				for(int i=0; i<=3; i++) {
+				   paramOperation = callOperation();
+				   thisParam = new ParamList(WS_RESULT, "STRING", "VARIABLE", paramOperation);
+				   if(!((String) paramOperation).equalsIgnoreCase("")) {
+					 break;
+				   }
+				   System.out.println("WebServis den yanit boş geldi. Bir daha deniyorum ...");
+				}
 				myParamList.add(thisParam);
 
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_SUCCESS);
@@ -149,7 +159,7 @@ public class WebServiceExecuter extends Job {
 			ParamList thisParam = new ParamList(LOG_RESULT, "STRING", "VARIABLE", outputFile.toString());
 			myParamList.add(thisParam);
 			
-			processJobResult(retryFlag, myLogger, myParamList);
+			processParameters(myParamList);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
