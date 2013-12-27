@@ -1,6 +1,7 @@
 package com.likya.tlossw.core.spc.jobs;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.jobs.helpers.JobHelper;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.GlobalRegistry;
@@ -105,6 +107,8 @@ public abstract class ExecuteOSComponent extends ExecuteComponent {
 			StatusName.Enum statusName = JobHelper.searchReturnCodeInStates(getGlobalRegistry(), jobProperties, processExitValue, descStr);
 
 			updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
+			
+			processParameters(new ArrayList<ParamList>(), stringBufferForOUTPUT, stringBufferForERROR);
 
 			writetErrorLogFromOutputs(myLogger, logClassName, stringBufferForOUTPUT, stringBufferForERROR);
 			
