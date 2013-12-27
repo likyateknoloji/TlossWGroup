@@ -80,7 +80,7 @@ public abstract class ExecuteComponent extends Job {
 		updateDescStr(descStr, stringBufferForOUTPUT, stringBufferForERROR);
 		
 		if(descStr.length() > 1) {
-			myLogger.error(" >>" + logLabel + ">> " + logClassName + " : Job has error, terminating " +descStr.toString());
+			myLogger.error(" >>" + logLabel + ">> " + logClassName + " : Job has error, terminating " + descStr.toString());
 		}
 		
 	}
