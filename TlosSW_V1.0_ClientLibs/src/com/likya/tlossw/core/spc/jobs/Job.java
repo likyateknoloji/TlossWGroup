@@ -384,7 +384,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		logLabel = Thread.currentThread().getName() + ":";
 
-		jobKey = jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJsName();
+		jobKey = jobRuntimeProperties.getJobProperties().getID(); //BaseJobInfos().getJsName();
 
 		startTime = Calendar.getInstance();
 
@@ -560,11 +560,26 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		globalLogger.error(err.getMessage());
 		err.printStackTrace();
 	}
+	
+	public void processParameters(ArrayList<ParamList> paramList) {
+		processParameters(paramList, null, null);
+		return;
+	}
 
-	public boolean processJobResult(boolean retryFlag, Logger myLogger, ArrayList<ParamList> paramList) {
+	public void processParameters(ArrayList<ParamList> paramList, StringBuffer stringBufferForOUTPUT, StringBuffer stringBufferForERROR) {
+
+		if (stringBufferForOUTPUT != null && stringBufferForOUTPUT.length() > 1) {
+			ParamList thisParam = new ParamList(LOG_RESULT, "STRING", "VARIABLE", stringBufferForOUTPUT.toString());
+			paramList.add(thisParam);
+		}
+
+		if (stringBufferForERROR != null && stringBufferForERROR.length() > 1) {
+			ParamList thisParam = new ParamList(ERR_RESULT, "STRING", "VARIABLE", stringBufferForERROR.toString());
+			paramList.add(thisParam);
+		}
 		
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
-		boolean sonuc = false;
+		// boolean sonuc = false;
 		
 		// Parametre output atamasi burada yapiliyor !!
 		// Case 1 : Var olan bir output parametresine atama
@@ -575,15 +590,15 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 				ParamList element = itr.next();
 				boolean yapildimi = OutputParameterPassing.putOutputParameter(jobProperties, element.getParamRef(), element.getParamName(), element.getType());
 				if (yapildimi) {
-					sonuc = true;
+					// sonuc = true;
 					System.out.println("isin sonucu output parametreye yazildi !!");
 				} else {
-					sonuc = false;
+					// sonuc = false;
 					System.out.println("isin sonucu output parametre uretmedi !!");
 				}
 			}
 		}
-		return sonuc;
+		return; // sonuc;
 	}
 
 	public boolean processJobResult(boolean retryFlag, Logger myLogger) {
