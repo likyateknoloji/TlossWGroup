@@ -10,6 +10,7 @@ declare namespace state-types="http://www.likyateknoloji.com/state-types";
 declare namespace fn = "http://www.w3.org/2005/xpath-functions";
 declare namespace jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl";
 declare namespace alm = "http://www.likyateknoloji.com/XML_alarm_types";
+declare namespace sweep = "http://schemas.ogf.org/jsdl/2009/03/sweep";
 
 (:
 Mapping
@@ -369,6 +370,12 @@ declare function hs:copyScenario($documentUrl as xs:string, $scenario as element
 	return $copiedScenario
 };
 
+declare function hs:getIfExists($element as element()?) as element()?
+{
+   let $sonuc := if(exists($element) ) then $element else ()
+   return $sonuc
+};
+
 declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobProperties), $newJobName as xs:string, $isNewJobIdRequired as xs:boolean) as element(dat:jobProperties)
 {
 
@@ -382,8 +389,9 @@ declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobPr
         attribute agentId {$job/@agentId }, 
         attribute ID { $jobId },
         $job/jsdl:JobDescription,
+		hs:getIfExists($job/sweep:Sweep),
         element dat:baseJobInfos {
-		  $baseJobInfos/com:jsName,
+		  element com:jsName { $newJobName },
           $baseJobInfos/com:comment,
           $baseJobInfos/com:jobTypeDetails, 
           $baseJobInfos/dat:jobLogFile, 
@@ -394,12 +402,13 @@ declare function hs:copyJob($documentUrl as xs:string, $job as element(dat:jobPr
           $baseJobInfos/dat:jsIsActive, 
           $baseJobInfos/com:userId
         },
-        $selectedJS/dat:stateInfos,
-        $selectedJS/dat:advancedJobInfos,
-		$selectedJS/dat:alarmPreference,
-        $selectedJS/dat:management,
-        $selectedJS/dat:logAnalysis,
-		$selectedJS/com:localParameters
+		$job/dat:DependencyList,
+        $job/dat:stateInfos,
+        $job/dat:advancedJobInfos,
+		$job/dat:alarmPreference,
+        $job/dat:management,
+        $job/dat:logAnalysis,
+		$job/com:localParameters
     }
 	
 	return $copiedJob
