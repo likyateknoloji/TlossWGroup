@@ -697,7 +697,7 @@
 				<com:localParameters>
 					<com:outParam minCount="1" maxCount="1">
 						<par:parameter id="1" ioType="true" fromUser="false" active="true" ioName="output1">
-							<par:name>input1</par:name>
+							<par:name>output1</par:name>
 							<par:preValue type="2"/>
 							<par:desc>Web Service output</par:desc>
 						</par:parameter>
