@@ -274,7 +274,8 @@ public class LocalParametersTabBean extends BaseTabBean {
 				parameterList.get(i).setIoType(ioType);
 				parameterList.get(i).setActive(paramActive);
 				parameterList.get(i).setIoName(ioName);
-				parameterList.get(i).setConnectedId(new BigInteger(connectedId));
+				if(connectedId != null)
+					parameterList.get(i).setConnectedId(new BigInteger(connectedId));
 				parameterList.get(i).setMapped(mapped);
 				parameterList.get(i).setJsId(jsId);
 
