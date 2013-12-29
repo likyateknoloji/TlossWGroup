@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
@@ -778,8 +779,22 @@ public abstract class JobBasePanelBean extends JSBasePanelMBean implements Seria
 		dependencyItem.setJsDependencyRule(JsDependencyRule.Factory.newInstance());
 		dependencyItem.setJsName(draggedWsNode.getName());
 		dependencyItem.setJsId(draggedWsNode.getId());
-		dependencyItem.setDependencyID("ID" + jsId + "_DEP_ID" + draggedWsNode.getId());
-		dependencyItem.setComment("JobID=" + jsId + " is dependent to jobID=" + draggedWsNode.getId());
+		
+		int max = 10000000;
+		int min = 100001;
+
+		Random rand = new Random();
+
+		long id = rand.nextInt((max - min) + 1) + min;
+
+		String thisJob;
+		if(jsId != null) 
+		   thisJob = jsId;
+		else
+		   thisJob = new String(id+"");
+		
+		dependencyItem.setDependencyID("ID" + thisJob + "_DEP_ID" + draggedWsNode.getId());
+		dependencyItem.setComment("JobID=" + thisJob + " is dependent to jobID=" + draggedWsNode.getId());
 		depStateName = "";
 		depSubstateName = "";
 
