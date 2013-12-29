@@ -74,6 +74,7 @@ public class ScenarioDefinitionMBean extends JSBasePanelMBean implements Seriali
 		initScenarioPanel();
 
 		fillSchedulingAlgorithmList();
+		fillConcurrencyManagement();
 	}
 
 	public void initScenarioPanel() {
