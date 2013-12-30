@@ -14,15 +14,15 @@
 
 		<ui:param name="title1" value="Main Menu" />
 		<ui:param name="title2" value="Definitions" />
-		<ui:param name="title3" value="Advanced D." />
-		<ui:param name="title4" value="Agents" />
+		<ui:param name="title3" value="Agents" />
+		<ui:param name="title4" value="" />
 		<ui:param name="title5" value="" />
 
 		<ui:param name="title1link" value="/" />
 		<ui:param name="title2link" value="agentPanel.xhtml" />
 		<ui:param name="title3link" value="agentPanel.xhtml" />
 		<ui:param name="title4link"
-			value="/inc/definitionPanels/advancedDefinitions/agentPanel.xhtml" />
+			value="/inc/definitionPanels/agentPanel.xhtml" />
 		<ui:param name="title5link"
 			value="Tlos SW Workload Automation Software v1.0 - Agent Management Page" />
 		<h:form>
@@ -36,7 +36,7 @@
 
 		<br></br>
 
-		<h:form id="yeniKullaniciForm">
+		<h:form id="agentForm">
 			<p:fieldset
 				legend="#{msgs['tlos.management.pannel.agentProcesses.newAgentPanel']}"
 				widgetVar="regWidget" style="width:65%;">
@@ -172,8 +172,12 @@
 						style="width:80%;">
 
 						<f:facet name="header">
+						    <h:outputText
+								value="#{agentPanelMBean.selectedParamId == null ? '' : msgs['tlos.workspace.pannel.job.parameterId']}" />
+						    <h:outputText
+								value="#{agentPanelMBean.selectedParamId == null ? '' : ' : '}" />
 							<h:outputText
-								value="#{msgs['tlos.workspace.pannel.job.parameterId']} : #{agentPanelMBean.paramId}" />
+								value="#{agentPanelMBean.selectedParamId == null ? '' : agentPanelMBean.selectedParamId}" />
 						</f:facet>
 
 						<h:outputText id="parameterName"
@@ -245,13 +249,6 @@
 								rendered="#{agentPanelMBean.paramType eq '4' or agentPanelMBean.paramType eq '5'}" />
 						</p:panelGrid>
 
-						<h:outputText
-							value="#{msgs['tlos.workspace.pannel.job.parameter.active']}" />
-						<p:selectBooleanCheckbox id="isParamActive"
-							value="#{agentPanelMBean.paramActive}">
-							<p:ajax partialSubmit="true" update="parametersPanel" />
-						</p:selectBooleanCheckbox>
-
 						<h:outputText rendered="#{agentPanelMBean.jsId}"
 							value="#{msgs['tlos.workspace.pannel.job.parameter.dependentJobId']}" />
 						<p:inputText value="#{agentPanelMBean.jsId}" style="width: 100pt"
@@ -263,10 +260,10 @@
 						value="#{msgs['tlos.workspace.pannel.job.addToParameterList']}"
 						rendered="#{!agentPanelMBean.renderUpdateParamButton}"
 						action="#{agentPanelMBean.addInputParameter}"
-						update=":yeniKullaniciForm:parametersPanel" />
+						update=":agentForm:parametersPanel" />
 					<p:commandButton value="#{msgs['tlos.button.update']}"
 						rendered="#{agentPanelMBean.renderUpdateParamButton}"
-						update=":yeniKullaniciForm:parametersPanel"
+						update=":agentForm:parametersPanel"
 						action="#{agentPanelMBean.updateInputParameter}" />
 
 
