@@ -63,11 +63,23 @@ public class DependencyResolver extends TlosSWBaseBean implements Serializable {
 					if(parameter.getActive()) {
 						
 						parameter.setJsId(item.getJsId());
-						
-						if (!parameter.getIoName().isEmpty())
-							depJobParameterlList.put(parameter.getIoName(), parameter);
+
+						boolean isUserDefined = parameter.getIoName().contains("UserDefined");
+						if (!parameter.getIoName().isEmpty() || isUserDefined) {
+							String name;
+							if(isUserDefined)
+								name = parameter.getIoName() + parameter.getId() + "";
+							else
+								name = parameter.getIoName();
+							depJobParameterlList.put(name, parameter);
+						}
 						else
 							depJobParameterlList.put(parameter.getId() + "", parameter);
+						
+//						if (!parameter.getIoName().isEmpty())
+//							depJobParameterlList.put(parameter.getIoName(), parameter);
+//						else
+//							depJobParameterlList.put(parameter.getIoName() + parameter.getId() + "", parameter);
 						
 					}
 				  }
