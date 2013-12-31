@@ -165,8 +165,8 @@
 
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterValue']}">
-							<p:inputTextarea value="#{item.valueString}"
-								rendered="#{item.valueString != null}" rows="3"
+							<p:inputTextarea value="#{item.valueString != null ? item.valueString : item.preValue.stringValue}"
+								rows="3"
 								cols="100" autoResize="false" />
 					</p:column>
 						
