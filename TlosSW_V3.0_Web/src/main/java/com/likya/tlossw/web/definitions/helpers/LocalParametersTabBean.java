@@ -59,7 +59,10 @@ public class LocalParametersTabBean extends BaseTabBean {
 	private boolean mapped = false;
 	private String connectedId;
 
+	private boolean fromUser;
 	private boolean renderUpdateParamButton = false;
+
+	private boolean showAddParameterGrid = false;
 
 	private ArrayList<Parameter> parameterList = null;
 	private Parameter selectedRow;
@@ -99,7 +102,8 @@ public class LocalParametersTabBean extends BaseTabBean {
 		connectedId = "0";
 		jsId = "";
 		ioName = "";
-
+		fromUser=false;
+		
 		if (resetList) {
 			setParameterList(new ArrayList<Parameter>());
 		}
@@ -152,22 +156,22 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void addParameter() {
 
-		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("") || paramPreValue == null || paramPreValue.equals("")) {
+		if (paramName == null || paramName.equals("") || paramDesc == null || paramDesc.equals("")) {
 			addMessage("addInputParam", FacesMessage.SEVERITY_ERROR, "tlos.workspace.pannel.job.paramValidationError", null);
 			return;
 		}
 
+		ioName = "UserDefined";
 		Parameter parameter = Parameter.Factory.newInstance();
 		parameter.setName(paramName);
 		parameter.setDesc(paramDesc);
 		parameter.setIoType(ioType);
 		parameter.setActive(paramActive);
-
+		parameter.setFromUser(true);
+		
 		PreValue preValue = PreValue.Factory.newInstance();
-		preValue.setStringValue(paramPreValue);
 		preValue.setType((short) paramType);
-		parameter.setPreValue(preValue);
-
+		
 		if (paramType == 4) {
 			preValue.setStringValue(paramPreValueTime);
 		} else if (paramType == 5) {
@@ -175,9 +179,13 @@ public class LocalParametersTabBean extends BaseTabBean {
 		} else {
 			preValue.setStringValue(paramPreValue);
 		}
-
-		if (paramType == 2)
-			parameter.setValueString(paramValue);
+		
+		parameter.setPreValue(preValue);
+		
+//		if (paramPreValue.contains("$(")) {
+//		} else {
+//			parameter.setValueString(paramValue);
+//		}
 
 		parameter.setIoName(ioName);
 		parameter.setMapped(mapped);
@@ -187,6 +195,15 @@ public class LocalParametersTabBean extends BaseTabBean {
 		if (jsId != null)
 			parameter.setJsId(jsId);
 
+		int max = 10000000;
+		int min = 100001;
+
+		Random rand = new Random();
+
+		long id = rand.nextInt((max - min) + 1) + min;
+
+		parameter.setId(new BigInteger(id + ""));
+		
 		parameterList.add(parameter);
 
 		resetTab(false);
@@ -209,7 +226,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		ioName = ioParam.getIoName();
 		mapped = ioParam.getMapped();
 		connectedId = (ioParam.getConnectedId() == null) ? null : ioParam.getConnectedId().toString();
-
+        fromUser = ioParam.getFromUser();
 		jsId = ioParam.getJsId();
 
 		paramId = ioParam.getId();
@@ -221,7 +238,13 @@ public class LocalParametersTabBean extends BaseTabBean {
 	public void editParamAction(ActionEvent e) {
 
 		Parameter ioParam = (Parameter) parameterTable.getRowData();
-
+		
+		selectedParamId = ioParam.getId();
+		
+		selectedJob = ioParam.getConnectedId().toString();
+		
+		fillDepJobListParameterList();
+		
 		paramName = new String(ioParam.getName());
 		paramDesc = new String(ioParam.getDesc());
 		paramPreValue = new String(ioParam.getPreValue().getStringValue());
@@ -239,11 +262,13 @@ public class LocalParametersTabBean extends BaseTabBean {
 		paramActive = ioParam.getActive();
 		ioName = ioParam.getIoName();
 		mapped = ioParam.getMapped();
+		fromUser = ioParam.getFromUser();
+		
 		connectedId = (ioParam.getConnectedId() == null) ? null : ioParam.getConnectedId().toString();
 		jsId = ioParam.getJsId();
 
 		paramId = ioParam.getId();
-		selectedParamId = ioParam.getId();
+
 
 		renderUpdateParamButton = true;
 	}
@@ -264,20 +289,26 @@ public class LocalParametersTabBean extends BaseTabBean {
 		for (int i = 0; i < parameterList.size(); i++) {
 
 			if (selectedParamId.equals(parameterList.get(i).getId())) {
-				parameterList.get(i).setName(paramName);
-				parameterList.get(i).setDesc(paramDesc);
+				Parameter parameter = parameterList.get(i);
+				
+				parameter.setName(paramName);
+				parameter.setDesc(paramDesc);
 
 				PreValue preValue = PreValue.Factory.newInstance();
 				preValue.setStringValue(paramPreValue);
 				preValue.setType((short) paramType);
-				parameterList.get(i).setPreValue(preValue);
-				parameterList.get(i).setIoType(ioType);
-				parameterList.get(i).setActive(paramActive);
-				parameterList.get(i).setIoName(ioName);
-				if(connectedId != null)
-					parameterList.get(i).setConnectedId(new BigInteger(connectedId));
-				parameterList.get(i).setMapped(mapped);
-				parameterList.get(i).setJsId(jsId);
+				
+				parameter.setPreValue(preValue);
+				parameter.setIoType(ioType);
+				parameter.setActive(paramActive);
+				parameter.setIoName(ioName);
+				parameter.setFromUser(fromUser);
+				
+				if (connectedId != null)
+					parameter.setConnectedId(new BigInteger(connectedId));
+				
+				parameter.setMapped(mapped);
+				parameter.setJsId(jsId);
 
 				if (paramType == 4) {
 					preValue.setStringValue(paramPreValueTime);
@@ -287,7 +318,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 					preValue.setStringValue(paramPreValue);
 				}
 
-				parameterList.get(i).setValueString(preValue.getStringValue());
+				parameter.setValueString(preValue.getStringValue());
 
 				break;
 			}
@@ -393,7 +424,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		parameter.setIoName(ioName);
 		parameter.setMapped(mapped);
 		parameter.setJsId(jsId);
-
+		
 		if (paramType == 2)
 			parameter.setValueString(paramValue);
 		parameter.setConnectedId(new BigInteger(connectedId));
@@ -485,8 +516,15 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 					if (parameter != null) {
 						parameter.setIoType(true);
-						if (!parameter.getIoName().isEmpty())
-							optionalList.put(parameter.getIoName(), parameter);
+						boolean isUserDefined = parameter.getIoName().contains("UserDefined");
+						if (!parameter.getIoName().isEmpty() || isUserDefined) {
+							String name;
+							if(isUserDefined)
+								name = parameter.getIoName() + parameter.getId() + "";
+							else
+								name = parameter.getIoName();
+							optionalList.put(name, parameter);
+						}
 						else
 							optionalList.put(parameter.getId() + "", parameter);
 					}
@@ -568,7 +606,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 						selectedJobMapping = new HashMap<String, Parameter>();
 					}
 					selectedJobMapping.put(element.getId().toString(), element);
-
+                    break;
 					// parameter = new String(ioParam.getName());
 					// paramDesc = new String(ioParam.getDesc());
 					// paramPreValue = new String(ioParam.getPreValue().getStringValue());
@@ -583,9 +621,10 @@ public class LocalParametersTabBean extends BaseTabBean {
 				// parameterList.add((Parameter) parameter);
 			}
 			fillDepJobListParameterList();
-		} else
+		} else {
 			dependentJobParamList = new ArrayList<SelectItem>();
-		selectedJob = "0";
+		    selectedJob = "0";
+		}
 	}
 
 	public boolean isRenderUpdateParamButton() {
@@ -818,6 +857,29 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void setParamPreValueTime(String paramPreValueTime) {
 		this.paramPreValueTime = paramPreValueTime;
+	}
+
+	public boolean isShowAddParameterGrid() {
+		return showAddParameterGrid;
+	}
+
+	public void setShowAddParameterGrid() {
+		if (showAddParameterGrid)
+			showAddParameterGrid = false;
+		else
+			showAddParameterGrid = true;
+	}
+
+	public boolean isFromUser() {
+		return fromUser;
+	}
+
+	public void setFromUser(boolean fromUser) {
+		this.fromUser = fromUser;
+	}
+
+	public boolean isParamValueNeedsTextArea(String param) {
+		return param.length() > 20 ? true : false;
 	}
 
 }
