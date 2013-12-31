@@ -96,6 +96,16 @@
 						<p:selectBooleanCheckbox id="isParamActive"
 							value="#{backingBean.paramActive}">
 						</p:selectBooleanCheckbox>
+						
+						<h:outputText
+							value="#{msgs['tlos.workspace.pannel.job.parameterGrouping']}" />
+						<p:selectOneMenu rendered="#{!backingBean.ioType}" style='width:100pt;'
+							value="#{backingBean.selectedJob}">
+							<f:selectItem itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}" itemValue="" />
+							<f:selectItems value="#{backingBean.dependentJobParamList}" />
+							<p:ajax update="parameterDataTable"
+								listener="#{backingBean.handleParamListChange}" />
+						</p:selectOneMenu>
 					</p:panelGrid>
 					<br/>
 					<p:commandButton
@@ -144,7 +154,7 @@
 							value="#{item.ioType ? msgs['tlos.workspace.pannel.job.parameterOutput'] : msgs['tlos.workspace.pannel.job.parameterInput']}" />
 					</p:column>
 
-					<p:column
+					<p:column 
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
 						sortBy="#{item.desc}">
 						<h:outputText value="#{item.desc}" style="text-align: center;" />
