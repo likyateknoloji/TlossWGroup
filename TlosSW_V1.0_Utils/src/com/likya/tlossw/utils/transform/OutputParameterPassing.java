@@ -54,12 +54,12 @@ public class OutputParameterPassing {
 			
 			paramF = parameter.getIoName().equalsIgnoreCase(parameterName); //parameter.getActive();
 			 
-			if (type.equalsIgnoreCase("STRING")) {
-				paramType = 2;
-			} else if (type.equalsIgnoreCase("INTEGER")) {
-				paramType = 1;
-			}
 			if (paramF) {
+				if (type.equalsIgnoreCase("STRING")) {
+					paramType = 2;
+				} else if (type.equalsIgnoreCase("INTEGER")) {
+					paramType = 1;
+				}
 				if(paramRef.toString().contains("$("))
 					parameter.getPreValue().setStringValue(paramRef.toString());
 				parameter.getPreValue().setType(paramType);
