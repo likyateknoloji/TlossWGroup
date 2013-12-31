@@ -244,7 +244,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		selectedJob = ioParam.getConnectedId().toString();
 		
 		fillDepJobListParameterList();
-		
+		showAddParameterGrid = true;
 		paramName = new String(ioParam.getName());
 		paramDesc = new String(ioParam.getDesc());
 		paramPreValue = new String(ioParam.getPreValue().getStringValue());
