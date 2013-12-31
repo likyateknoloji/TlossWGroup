@@ -293,7 +293,8 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 			return;
 		}
-
+		paramActive = true;
+		ioName="UserDefined";
 		Parameter parameter = Parameter.Factory.newInstance();
 		parameter.setName(paramName);
 		parameter.setDesc(paramDesc);
@@ -349,7 +350,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		renderUpdateParamButton = false;
 
 		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("yeniKullaniciForm:parametersPanel");
+		context.update("agent:parametersPanel");
 	}
 
 	public void editInputParamAction(ActionEvent e) {
@@ -384,7 +385,7 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 		renderUpdateParamButton = true;
 
 		RequestContext context = RequestContext.getCurrentInstance();
-		context.update("yeniKullaniciForm:parametersPanel");
+		context.update("agentForm:parametersPanel");
 	}
 
 	public void updateInputParameter() {
@@ -702,5 +703,13 @@ public class AgentPanelMBean extends TlosSWBaseBean implements Serializable {
 
 	public void setJsId(String jsId) {
 		this.jsId = jsId;
+	}
+
+	public BigInteger getSelectedParamId() {
+		return selectedParamId;
+	}
+
+	public void setSelectedParamId(BigInteger selectedParamId) {
+		this.selectedParamId = selectedParamId;
 	}
 }
