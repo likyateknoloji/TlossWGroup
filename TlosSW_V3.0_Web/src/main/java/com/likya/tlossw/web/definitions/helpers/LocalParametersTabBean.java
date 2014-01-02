@@ -241,7 +241,9 @@ public class LocalParametersTabBean extends BaseTabBean {
 		
 		selectedParamId = ioParam.getId();
 		
-		selectedJob = ioParam.getConnectedId().toString();
+		connectedId = (ioParam.getConnectedId() == null) ? null : ioParam.getConnectedId().toString();
+		
+		selectedJob = connectedId;
 		
 		fillDepJobListParameterList();
 		showAddParameterGrid = true;
@@ -264,7 +266,6 @@ public class LocalParametersTabBean extends BaseTabBean {
 		mapped = ioParam.getMapped();
 		fromUser = ioParam.getFromUser();
 		
-		connectedId = (ioParam.getConnectedId() == null) ? null : ioParam.getConnectedId().toString();
 		jsId = ioParam.getJsId();
 
 		paramId = ioParam.getId();
