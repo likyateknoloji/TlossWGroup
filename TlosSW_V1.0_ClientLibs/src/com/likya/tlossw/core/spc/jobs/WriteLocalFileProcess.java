@@ -92,7 +92,8 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 //					    }
 //					}
 //				}
-
+                System.out.println("targetFile" + targetFile);
+                System.out.println("fileContent" + fileContent);
 				boolean result = FileUtils.writeFile(targetFile, fileContent);
 
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
