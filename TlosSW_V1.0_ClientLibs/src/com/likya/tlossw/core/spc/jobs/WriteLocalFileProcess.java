@@ -105,8 +105,8 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 				}
 
 			} catch (Exception e) {
-				myLogger.error("Yerel Dosya Yazma hatasi !" + e.getMessage());
-
+				myLogger.error("Yerel Dosya Yazma hatasi !");
+				e.printStackTrace();
 				try {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Yerel Dosya Yazma hatasi !" + System.getProperty("line.separator"));
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " " + e.getMessage() + System.getProperty("line.separator"));
