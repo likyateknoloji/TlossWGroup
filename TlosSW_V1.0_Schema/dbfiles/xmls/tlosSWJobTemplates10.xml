@@ -695,7 +695,7 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="1" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -1305,6 +1305,16 @@
 						<dat:jobAutoRetry>true</dat:jobAutoRetry>
 					</dat:cascadingConditions>
 				</dat:management>
+				<com:localParameters>
+					<com:inParam minCount="1" maxCount="10">
+						<par:parameter fromUser="false" ioType="false" active="true" ioName="input1" mapped="false" jsId="" connectedId="0" id="23">
+							<par:name>input1</par:name>
+							<par:valueString/>
+							<par:preValue type="2"/>
+							<par:desc>Text for Processing</par:desc>
+						</par:parameter>
+					</com:inParam>
+				</com:localParameters>
 			</dat:jobProperties>
 		</dat:jobList>
 		<dat:management>
@@ -1652,7 +1662,7 @@
 							<par:desc>Eklenecek XML</par:desc>
 						</par:parameter>
 					</com:inParam>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="4" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -1733,14 +1743,14 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:inParam minCount="1" maxCount="1">
+					<com:inParam minCount="1" maxCount="10">
 						<par:parameter id="5" ioType="false" fromUser="false" active="true" ioName="input1">
 							<par:name>input1</par:name>
 							<par:preValue type="2"/>
 							<par:desc>XML Doc</par:desc>
 						</par:parameter>
 					</com:inParam>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="6" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -1821,14 +1831,14 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:inParam minCount="1" maxCount="1">
+					<com:inParam minCount="1" maxCount="10">
 						<par:parameter id="7" ioType="false" fromUser="false" active="true" ioName="input1">
 							<par:name>input1</par:name>
 							<par:preValue type="2"/>
 							<par:desc>XML Doc</par:desc>
 						</par:parameter>
 					</com:inParam>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="8" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -1909,14 +1919,14 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:inParam minCount="1" maxCount="1">
+					<com:inParam minCount="1" maxCount="10">
 						<par:parameter id="9" ioType="false" fromUser="false" active="true" ioName="input1">
 							<par:name>input1</par:name>
 							<par:preValue type="2"/>
 							<par:desc>XML Doc</par:desc>
 						</par:parameter>
 					</com:inParam>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="10" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -1997,7 +2007,7 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:inParam minCount="1" maxCount="1">
+					<com:inParam minCount="1" maxCount="10">
 						<par:parameter id="11" ioType="false" fromUser="false" active="true" ioName="input1">
 							<par:name>input1</par:name>
 							<par:preValue type="2"/>
@@ -2119,14 +2129,14 @@
 					</dat:cascadingConditions>
 				</dat:management>
 				<com:localParameters>
-					<com:inParam minCount="1" maxCount="1">
+					<com:inParam minCount="1" maxCount="10">
 						<par:parameter id="13" ioType="false" fromUser="false" active="true" ioName="input1">
 							<par:name>input1</par:name>
 							<par:preValue type="2"/>
 							<par:desc>XML Doc</par:desc>
 						</par:parameter>
 					</com:inParam>
-					<com:outParam minCount="1" maxCount="1">
+					<com:outParam minCount="1" maxCount="10">
 						<par:parameter id="14" ioType="true" fromUser="false" active="true" ioName="output1">
 							<par:name>output1</par:name>
 							<par:preValue type="2"/>
@@ -2312,7 +2322,7 @@
 						</dat:cascadingConditions>
 					</dat:management>
 					<com:localParameters>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="15" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
@@ -2400,7 +2410,7 @@
 						</dat:cascadingConditions>
 					</dat:management>
 					<com:localParameters>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="16" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
@@ -2486,7 +2496,7 @@
 						</dat:cascadingConditions>
 					</dat:management>
 					<com:localParameters>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="17" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
@@ -2623,7 +2633,7 @@
 						</dat:cascadingConditions>
 					</dat:management>
 					<com:localParameters>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="18" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
@@ -2724,7 +2734,7 @@
 								<par:desc>XML Doc</par:desc>
 							</par:parameter>
 						</com:inParam>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="21" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
@@ -2811,7 +2821,7 @@
 						</dat:cascadingConditions>
 					</dat:management>
 					<com:localParameters>
-						<com:outParam minCount="1" maxCount="1">
+						<com:outParam minCount="1" maxCount="10">
 							<par:parameter id="22" ioType="true" fromUser="false" active="true" ioName="output1">
 								<par:name>output1</par:name>
 								<par:preValue type="2"/>
