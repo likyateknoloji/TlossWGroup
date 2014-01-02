@@ -11,27 +11,27 @@
 		<p:tab id="localParametersTab"
 			title="#{msgs['tlos.workspace.pannel.job.localParameters']}">
 			<p:panel id="parametersPanel">
-				<p:fieldset >
+				<p:fieldset>
 					<p:panelGrid id="localParameters" cellpadding="10" columns="4"
-						rendered="#{backingBean.isParamDetails() or backingBean.isShowAddParameterGrid()}" style="width:80%;">
+						rendered="#{backingBean.isParamDetails() or backingBean.isShowAddParameterGrid()}"
+						style="width:80%;">
 
 						<f:facet name="header">
-						    <h:outputText
+							<h:outputText
 								value="#{backingBean.paramId == null ? '' : msgs['tlos.workspace.pannel.job.parameterId']}" />
-						    <h:outputText
-								value="#{backingBean.paramId == null ? '' : ' : '}" />
+							<h:outputText value="#{backingBean.paramId == null ? '' : ' : '}" />
 							<h:outputText
 								value="#{backingBean.paramId == null ? '' : backingBean.paramId}" />
 						</f:facet>
 						<h:outputText id="parameterName"
 							value="#{msgs['tlos.workspace.pannel.job.parameterName']}" />
-						<p:inputText value="#{backingBean.paramName}" style="width: 200pt" >
+						<p:inputText value="#{backingBean.paramName}" style="width: 200pt">
 							<p:ajax event="blur" update="parameterName" />
 						</p:inputText>
 
 						<h:outputText id="parameterDesc"
 							value="#{msgs['tlos.workspace.pannel.job.parameterDesc']}" />
-						<p:inputText value="#{backingBean.paramDesc}" style="width: 200pt" >
+						<p:inputText value="#{backingBean.paramDesc}" style="width: 200pt">
 							<p:ajax event="blur" update="parameterDesc" />
 						</p:inputText>
 
@@ -60,14 +60,16 @@
 							</p:selectOneMenu>
 							<p:selectBooleanButton value="#{backingBean.ioType}"
 								onLabel="#{msgs['tlos.workspace.pannel.job.parameterOutput']}"
-								offLabel="#{msgs['tlos.workspace.pannel.job.parameterInput']}" />
+								offLabel="#{msgs['tlos.workspace.pannel.job.parameterInput']}">
+								<p:ajax partialSubmit="true" update="localParameters" />
+							</p:selectBooleanButton>
 						</p:panelGrid>
 
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameterValue']}" />
-						<h:outputText value=""
-							rendered="#{backingBean.paramType eq ''}" autoResize="false" style="width: 150pt" />
-						
+						<h:outputText value="" rendered="#{backingBean.paramType eq ''}"
+							autoResize="false" style="width: 150pt" />
+
 						<p:inputTextarea value="#{backingBean.paramPreValue}"
 							autoResize="false" style="width: 150pt"
 							rendered="#{backingBean.paramType eq '2' or backingBean.paramType eq '6'}" />
@@ -90,24 +92,26 @@
 								mask="99:99:99"
 								rendered="#{backingBean.paramType eq '4' or backingBean.paramType eq '5'}" />
 						</p:panelGrid>
-							
+
 						<h:outputText
 							value="#{msgs['tlos.workspace.pannel.job.parameter.active']}" />
 						<p:selectBooleanCheckbox id="isParamActive"
 							value="#{backingBean.paramActive}">
 						</p:selectBooleanCheckbox>
-						
-						<h:outputText
+
+						<h:outputText rendered="#{!backingBean.ioType}"
 							value="#{msgs['tlos.workspace.pannel.job.parameterGrouping']}" />
-						<p:selectOneMenu rendered="#{!backingBean.ioType}" style='width:100pt;'
-							value="#{backingBean.selectedJob}">
-							<f:selectItem itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}" itemValue="" />
+						<p:selectOneMenu rendered="#{!backingBean.ioType}"
+							style='width:100pt;' value="#{backingBean.selectedJob}">
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}"
+								itemValue="" />
 							<f:selectItems value="#{backingBean.dependentJobParamList}" />
 							<p:ajax update="parameterDataTable"
 								listener="#{backingBean.handleParamListChange}" />
 						</p:selectOneMenu>
 					</p:panelGrid>
-					<br/>
+					<br />
 					<p:commandButton
 						value="#{msgs['tlos.workspace.pannel.job.addParameter']}"
 						rendered="#{!backingBean.isShowAddParameterGrid()}"
@@ -143,10 +147,9 @@
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
 						sortBy="#{item.name}">
-						<h:outputText value="#{item.name}"
-							style="text-align: center;" />
+						<h:outputText value="#{item.name}" style="text-align: center;" />
 					</p:column>
-					
+
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterIoType']}"
 						sortBy="#{item.ioType}">
@@ -154,7 +157,7 @@
 							value="#{item.ioType ? msgs['tlos.workspace.pannel.job.parameterOutput'] : msgs['tlos.workspace.pannel.job.parameterInput']}" />
 					</p:column>
 
-					<p:column 
+					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterDesc']}"
 						sortBy="#{item.desc}">
 						<h:outputText value="#{item.desc}" style="text-align: center;" />
@@ -171,7 +174,8 @@
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameter.connectedId']}"
 						sortBy="#{item.connectedId}">
-						<h:outputText value="#{(item.connectedId == 0) ? '' : item.connectedId}"
+						<h:outputText
+							value="#{(item.connectedId == 0) ? '' : item.connectedId}"
 							style="text-align: center;" />
 					</p:column>
 
@@ -197,10 +201,13 @@
 						<h:outputText value="#{msgs['tlos.combo.xPath']}"
 							style="text-align: center;" rendered="#{item.preValue.type eq 6}" />
 					</p:column>
-					<p:column headerText="#{msgs['tlos.workspace.pannel.job.parameterGrouping']}">
-						<p:selectOneMenu rendered="#{!item.ioType and !item.mapped}" style='width:100pt;'
-							value="#{backingBean.selectedJob}">
-							<f:selectItem itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}" itemValue="" />
+					<p:column
+						headerText="#{msgs['tlos.workspace.pannel.job.parameterGrouping']}">
+						<p:selectOneMenu rendered="#{!item.ioType and !item.mapped}"
+							style='width:100pt;' value="#{backingBean.selectedJob}">
+							<f:selectItem
+								itemLabel="#{msgs['tlos.workspace.pannel.job.parameterSelection']}"
+								itemValue="" />
 							<f:selectItems value="#{backingBean.dependentJobParamList}" />
 							<p:ajax update="parameterDataTable"
 								listener="#{backingBean.handleParamListChange}" />
