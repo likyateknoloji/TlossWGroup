@@ -55,7 +55,7 @@ public class DependencyResolver extends TlosSWBaseBean implements Serializable {
 
 			Item item = (Item) (dependencyArrayIterator.next());
 
-			JobProperties jobPropertiesDep = sessionMediator.getDbOperations().getJobFromId("sjData", sessionMediator.getWebAppUser().getId(), 1, item.getJsId());
+			JobProperties jobPropertiesDep = sessionMediator.getDbOperations().getJobFromId("sjData", sessionMediator.getWebAppUser().getId(), sessionMediator.getDocumentScope("sjData"), item.getJsId());
 
 			if (jobPropertiesDep != null) {
 				if(jobPropertiesDep.getLocalParameters().getOutParam() != null) {
