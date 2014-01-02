@@ -68,7 +68,7 @@ public class ReadLocalFileProcess extends FileProcessExecuter {
 				}
 
 			} catch (Exception e) {
-				myLogger.error("Yerel Dosya Okuma hatasi !");
+				myLogger.error("Yerel Dosya Okuma hatasi !"  + e.getMessage());
 
 				try {
 					getOutputFile().write(DateUtils.getCurrentTimeWithMilliseconds() + " Yerel Dosya Okuma hatasi !" + System.getProperty("line.separator"));
