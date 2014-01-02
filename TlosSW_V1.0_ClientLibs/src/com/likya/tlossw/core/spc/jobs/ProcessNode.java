@@ -154,55 +154,11 @@ public class ProcessNode extends Job {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		String fileContent = null;
 		// StreamSource XSLTCode = null;
-
-		LocalParameters localParameters = jobProperties.getLocalParameters();
-
-		if (localParameters != null && localParameters.getInParam() != null) {
-
-			Parameter[] inParamList = localParameters.getInParam().getParameterArray();
-			ArrayList<Parameter> parameterList = new ArrayList<Parameter>(Arrays.asList(inParamList));
-
-			Iterator<Parameter> parameterIterator = parameterList.iterator();
-
-			while (parameterIterator.hasNext()) {
-
-				Parameter parameter = parameterIterator.next();
-
-				if (parameter.getIoName() == null || !parameter.getIoName().contains("input"))
-					continue;
-				/*
-				 * if (parameter.getName().equals(ProcessNode.XSLT_CODE)) {
-				 * 
-				 * StringReader xslReader = new StringReader(parameter.getValueString());
-				 * 
-				 * XSLTCode = new StreamSource(xslReader);
-				 * //break; illaki islenecek birseyler bulmasi lazim. hs
-				 * 
-				 * }
-				 */
-				// if (parameter.getIoType()) { // OutPut
-				// if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
-				// fileContent = parameter.getValueString();
-				// // break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
-				//
-				// } else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
-				// fileContent = parameter.getValueString();
-				// // break;
-				// } else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
-				// fileContent = parameter.getValueString();
-				// // break;
-				// } else if (parameter.getName().equals(PN_RESULT)) {
-				// fileContent = parameter.getValueString();
-				// // break;
-				// }
-				// }
-				// input parametresi ilgili degiskene ataniyor.
-				if (!parameter.getIoType() && parameter.getIoName().equalsIgnoreCase("input1")) { // OutPut
-					fileContent = parameter.getValueString();
-				}
-			}
-		}
-
+        String[] inputArray;
+        
+		inputArray = getInputParameters(jobProperties);
+		fileContent = inputArray[0];
+		
 		// if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
 		//
 		// Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();

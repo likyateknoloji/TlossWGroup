@@ -2,6 +2,7 @@ package com.likya.tlossw.core.spc.jobs;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,9 +11,11 @@ import java.util.Observable;
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.DatetimeType;
+import com.likya.tlos.model.xmlbeans.common.LocalParametersDocument.LocalParameters;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
 import com.likya.tlos.model.xmlbeans.data.JsRealTimeDocument.JsRealTime;
 import com.likya.tlos.model.xmlbeans.data.LogAnalysisDocument.LogAnalysis;
+import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.LiveStateInfoDocument.LiveStateInfo;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
@@ -566,6 +569,65 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 		return;
 	}
 
+	public String[] getInputParameters(JobProperties jobProperties) {
+		
+		LocalParameters localParameters = jobProperties.getLocalParameters();
+        String[] inputArray = new String[3];
+        
+		if (localParameters != null && localParameters.getInParam() != null) {
+
+			Parameter[] inParamList = localParameters.getInParam().getParameterArray();
+			ArrayList<Parameter> parameterList = new ArrayList<Parameter>(Arrays.asList(inParamList));
+
+			Iterator<Parameter> parameterIterator = parameterList.iterator();
+
+			while (parameterIterator.hasNext()) {
+
+				Parameter parameter = parameterIterator.next();
+
+				if (parameter.getIoName() == null || !parameter.getIoName().contains("input"))
+					continue;
+				/*
+				 * if (parameter.getName().equals(ProcessNode.XSLT_CODE)) {
+				 * 
+				 * StringReader xslReader = new StringReader(parameter.getValueString());
+				 * 
+				 * XSLTCode = new StreamSource(xslReader);
+				 * //break; illaki islenecek birseyler bulmasi lazim. hs
+				 * 
+				 * }
+				 */
+				// if (parameter.getIoType()) { // OutPut
+				// if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break; sonuclardan birini alacagiz, nasil bir mantik kurgulamali? hs
+				//
+				// } else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// } else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// } else if (parameter.getName().equals(PN_RESULT)) {
+				// fileContent = parameter.getValueString();
+				// // break;
+				// }
+				// }
+				// input parametresi ilgili degiskene ataniyor.
+				if (!parameter.getIoType() && parameter.getIoName().equalsIgnoreCase("input1")) { // OutPut
+					inputArray[0] = parameter.getValueString();
+				}
+				if (!parameter.getIoType() && parameter.getIoName().equalsIgnoreCase("input2")) { // OutPut
+					inputArray[1] = parameter.getValueString();
+				}
+				if (!parameter.getIoType() && parameter.getIoName().equalsIgnoreCase("input3")) { // OutPut
+					inputArray[2] = parameter.getValueString();
+				}
+			}
+		}
+		return inputArray;
+	}
+	
 	public void processParameters(ArrayList<ParamList> paramList, StringBuffer stringBufferForOUTPUT, StringBuffer stringBufferForERROR) {
 
 		if (stringBufferForOUTPUT != null && stringBufferForOUTPUT.length() > 1) {

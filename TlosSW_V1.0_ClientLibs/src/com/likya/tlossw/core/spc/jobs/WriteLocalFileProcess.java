@@ -13,6 +13,7 @@ import com.likya.tlos.model.xmlbeans.parameters.ParameterDocument.Parameter;
 import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
+import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
 import com.likya.tlossw.utils.FileUtils;
 import com.likya.tlossw.utils.GlobalRegistry;
@@ -38,6 +39,8 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
 
+		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
+		
 		while (true) {
 
 			startWathcDogTimer();
@@ -53,34 +56,42 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 
 				String fileContent = "";
 
-				if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
-
-					Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();
-					ArrayList<Parameter> dependencyList = new ArrayList<Parameter>(Arrays.asList(inParamList));
-
-					Iterator<Parameter> parameterIterator = dependencyList.iterator();
-
-					while (parameterIterator.hasNext()) {
-
-						Parameter parameter = parameterIterator.next();
-
-						if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
-							fileContent = parameter.getValueString();
-							break;
-
-						} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
-							fileContent = parameter.getValueString();
-							break;
-
-						} else if (parameter.getName().equals(ProcessNode.PN_RESULT)) {
-							fileContent = parameter.getValueString();
-							break;
-						} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
-						fileContent = parameter.getValueString();
-						    break;
-					    }
-					}
-				}
+		        String[] inputArray;
+		        
+				inputArray = getInputParameters(jobProperties);
+				fileContent = inputArray[0];
+				
+				ParamList thisParam = new ParamList(WRITE_FILE_SOURCE, "STRING", "VARIABLE", fileContent);
+				myParamList.add(thisParam);
+				
+//				if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
+//
+//					Parameter[] inParamList = jobProperties.getLocalParameters().getInParam().getParameterArray();
+//					ArrayList<Parameter> dependencyList = new ArrayList<Parameter>(Arrays.asList(inParamList));
+//
+//					Iterator<Parameter> parameterIterator = dependencyList.iterator();
+//
+//					while (parameterIterator.hasNext()) {
+//
+//						Parameter parameter = parameterIterator.next();
+//
+//						if (parameter.getName().equals(FileProcessExecuter.READ_FILE_RESULT)) {
+//							fileContent = parameter.getValueString();
+//							break;
+//
+//						} else if (parameter.getName().equals(WebServiceExecuter.WS_RESULT)) {
+//							fileContent = parameter.getValueString();
+//							break;
+//
+//						} else if (parameter.getName().equals(ProcessNode.PN_RESULT)) {
+//							fileContent = parameter.getValueString();
+//							break;
+//						} else if (parameter.getName().equals(JDBCPostgreSQLSentenceExecuter.DB_RESULT)) {
+//						fileContent = parameter.getValueString();
+//						    break;
+//					    }
+//					}
+//				}
 
 				boolean result = FileUtils.writeFile(targetFile, fileContent);
 
