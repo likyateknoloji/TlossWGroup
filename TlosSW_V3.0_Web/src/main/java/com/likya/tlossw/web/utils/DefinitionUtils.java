@@ -77,11 +77,14 @@ public class DefinitionUtils {
 	}
 
 	public static Calendar stringToCalendar(String dateStr, String format, String timeZone) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		//Date timeStr = Calendar.getInstance().getTime();
+		//return formatter.format(timeStr);
 		
-		DateFormat formatter = new SimpleDateFormat(format);
+		//DateFormat formatter = new SimpleDateFormat(format);
 		java.util.Date date = null;
 		try {
-			date = formatter.parse(dateStr);
+			date = formatter.parse(dateStr); //formatter.parse(dateStr);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
