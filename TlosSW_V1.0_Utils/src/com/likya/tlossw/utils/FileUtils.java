@@ -155,6 +155,10 @@ public class FileUtils {
 		Writer output = null;
 
 		try {
+			
+			if(fileContent == null)
+				System.out.println("WARNING : File content is null !!");
+			
 			output = new BufferedWriter(new FileWriter(fileName));
 			
 			output.write(fileContent);
