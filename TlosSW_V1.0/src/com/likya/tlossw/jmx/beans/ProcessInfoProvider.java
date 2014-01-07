@@ -155,7 +155,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 		jobInfoTypeClient.setJobLogPath(baseJobInfos.getJobLogPath());
 		jobInfoTypeClient.setJobLogName(baseJobInfos.getJobLogFile());
 		jobInfoTypeClient.setoSystem(baseJobInfos.getOSystem().toString());
-
+		jobInfoTypeClient.setFullPath(spcInfoType.getSpcId().getFullPath());
+		jobInfoTypeClient.setRelativePath(spcInfoType.getSpcId().getAbsolutePath());
+		
 		// TODO Geçici olarak tip dönüşümü yaptım.
 		jobInfoTypeClient.setJobPriority(baseJobInfos.getJobPriority().intValue());
 
@@ -832,6 +834,7 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 				for (int i = 0; i < jobListTemp.size(); i++) {
 					Job tmpJob = jobListTemp.get(i);
 					tmpJob.getJobRuntimeProperties().setCurrentRunId(spc.getCurrentRunId());
+					tmpJob.getJobRuntimeProperties().setNativeFullJobPath(spc.getSpcFullPath());
 					jobList.add(tmpJob);
 				}
 			}
@@ -858,7 +861,9 @@ public class ProcessInfoProvider implements ProcessInfoProviderMBean {
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
-
+			jobInfoTypeClient.setFullPath(jobRuntimeProperties.getNativeFullJobPath().getFullPath());
+			jobInfoTypeClient.setRelativePath(jobRuntimeProperties.getNativeFullJobPath().getAbsolutePath());
+			
 			// TODO Gecici olarak tip donusumu yaptim.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
