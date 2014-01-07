@@ -81,7 +81,11 @@ public class ProcessNode extends Job {
 
 				jobProperties.getBaseJobInfos().setJobLogFile(logFileName);
 
-				ParamList thisParam = new ParamList(PN_RESULT, "STRING", "VARIABLE", processInput());
+		        String[] inputArray;
+		        
+				inputArray = getInputParameters(jobProperties);
+				
+				ParamList thisParam = new ParamList(PN_RESULT, "STRING", "VARIABLE", processInput(inputArray));
 				myParamList.add(thisParam);
 
 				if (jobProperties.getStateInfos() != null) {
@@ -149,14 +153,12 @@ public class ProcessNode extends Job {
 		}
 	}
 
-	public String processInput() {
+	public String processInput(String[] inputArray) {
 
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		String fileContent = null;
 		// StreamSource XSLTCode = null;
-        String[] inputArray;
-        
-		inputArray = getInputParameters(jobProperties);
+
 		fileContent = inputArray[0];
 		
 		// if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
