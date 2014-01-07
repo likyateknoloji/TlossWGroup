@@ -448,7 +448,8 @@ public class Spc extends SpcBase {
 
 			try {
 
-				if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING)) {
+				if (!jobLiveStateInfo.getStateName().equals(StateName.PENDING) || 
+						(jobLiveStateInfo.getStateName().equals(StateName.PENDING) && jobLiveStateInfo.getSubstateName().equals(SubstateName.PAUSED) ) ) {
 					// Already executed
 					continue;
 				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME)) {
