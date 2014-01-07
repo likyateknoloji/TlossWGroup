@@ -38,6 +38,8 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private int agentId;
 	private String nativeRunId;
 	private String currentRunId;
+	private String fullPath;
+	private String relativePath;
 	private String LSIDateTime;
 
 	private String outParameterName;
@@ -254,6 +256,22 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	public void setSelectedRow(Parameter selectedRow) {
 		this.selectedRow = selectedRow;
+	}
+
+	public String getFullPath() {
+		return fullPath;
+	}
+
+	public void setFullPath(String fullPath) {
+		this.fullPath = fullPath;
+	}
+
+	public String getRelativePath() {
+		return relativePath;
+	}
+
+	public void setRelativePath(String relativePath) {
+		this.relativePath = relativePath;
 	}
 
 }
