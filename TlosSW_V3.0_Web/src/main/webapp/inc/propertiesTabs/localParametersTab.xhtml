@@ -215,13 +215,14 @@
 					</p:column>
 
 					<p:column>
-						<p:commandButton value="#{msgs['tlos.button.update']}"
+						<p:commandButton value="#{msgs['tlos.button.edit']}"
 							actionListener="#{backingBean['editParamAction']}"
 							update=":jobDefinitionForm:tabView:parametersPanel">
 						</p:commandButton>
-
-						<p:commandButton value="#{msgs['tlos.button.delete']}"
-							onclick="deleteParam.show()" />
+								
+						<p:commandButton title="#{msgs['tlos.button.delete']}" value="#{msgs['tlos.button.delete']}"
+							icon="ui-icon-trash" onclick="deleteParam.show()" action="#{backingBean.setSelectedRow(item)}" />
+							
 						<p:dialog id="paramDeleteDialog"
 							header="#{msgs['tlos.ask.delete.cHeader']}" severity="alert"
 							widgetVar="deleteParam" resizable="false">
