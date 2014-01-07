@@ -1,11 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<?xml version="1.0" encoding="UTF-8"?>
 
-<h:body>
-	<ui:composition>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
-		<p:dataTable id="jobListDataTable" var="item" value="#{backingBean.jobInfoList}" 
+		<p:dataTable id="jobListDataTablee" var="item" value="#{backingBean.jobInfoList}" 
 		    rowStyleClass="#{userPreferencesBean.getJobStateColorCss(item.liveStateInfo)}" 
 		    widgetVar="itemsTable"
 			resizableColumns="true" binding="#{backingBean.jobDataTable}" filteredValue="#{backingBean.filteredJobs}" emptyMessage="No records found with given criteria" sortMode="multiple" width="100%"
@@ -16,7 +14,7 @@
 				<p:outputPanel id="searchBox">
 					<h:outputText value="#{msgs['tlos.search.all']}" />
 					<p:inputText id="globalFilter" onkeyup="itemsTable.filter()" style="position:relative; left:400pt; width:150px" />
-					<p:watermark for="globalFilter" value="#{msgs['tlos.live.pannel.job.searchInAllFields']}" />
+					<p:watermark id="waterMark" for="globalFilter" value="#{msgs['tlos.live.pannel.job.searchInAllFields']}" />
 				</p:outputPanel>
 			</f:facet>
 			
@@ -136,5 +134,3 @@
 		</p:confirmDialog>
 
 	</ui:composition>
-</h:body>
-</html>

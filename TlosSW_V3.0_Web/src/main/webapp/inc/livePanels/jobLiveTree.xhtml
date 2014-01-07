@@ -163,9 +163,15 @@
 						<h:outputText value="#{item.desc}" style="text-align: center;" />
 					</p:column>
 
-					<p:column
+					<p:column 
+					rendered="#{!((jobMBean.jobInTyCl.retriable and security.RetryJob) or (jobMBean.jobInTyCl.successable and security.SetSuccessJob) 
+								or (jobMBean.jobInTyCl.skippable and security.SkipJob) or (jobMBean.jobInTyCl.stopable and security.StopJob) 
+								or (jobMBean.jobInTyCl.pausable and security.PauseJob and jobMBean.jobInTyCl.liveStateInfo.statusName ne 'USER-WAITING' and jobMBean.jobInTyCl.liveStateInfo.statusName ne 'USER-CHOOSE-RESOURCE') 
+								or (jobMBean.jobInTyCl.resumable and security.ResumeJob) or (jobMBean.jobInTyCl.startable and security.StartJob) 
+								or (jobMBean.jobInTyCl.liveStateInfo.statusName eq 'USER-WAITING' and security.StartUserBasedJob) 
+								or (jobMBean.jobInTyCl.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob))}"
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterValue']}">
-							<p:inputTextarea value="#{item.valueString != null ? item.valueString : item.preValue.stringValue}"
+							<p:inputTextarea value="#{item.valueString != null ? item.valueString : (item.preValue != null ? item.preValue.stringValue : ' ')}"
 								rows="3"
 								cols="100" autoResize="false" />
 					</p:column>

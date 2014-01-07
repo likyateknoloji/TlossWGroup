@@ -89,7 +89,7 @@
 
 		<p:panel id="jobListPanel" styleClass="tlosFormBorderHighlight"
 					rendered="#{not empty filteredJobListMBean.jobInfoList}">
-			<p:dataTable var="item" rows="10" id="jobListDataTable" resizableColumns="true"  
+			<p:dataTable var="item" rows="10" id="jobListDataTablex" resizableColumns="true"  
 					    filteredValue="#{filteredJobListMBean.filteredJobs}"
 						width="100%" value="#{filteredJobListMBean.jobInfoList}"
 						binding="#{filteredJobListMBean.jobDataTable}"
