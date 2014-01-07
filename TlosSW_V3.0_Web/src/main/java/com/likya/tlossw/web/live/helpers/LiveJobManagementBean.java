@@ -8,6 +8,8 @@ import org.primefaces.component.column.Column;
 
 import com.likya.tlossw.model.auth.WebAppUser;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
+import com.likya.tlossw.model.path.BasePathType;
+import com.likya.tlossw.model.path.TlosSWPathType;
 import com.likya.tlossw.web.live.JobManagementInterface;
 import com.likya.tlossw.web.utils.LiveUtils;
 import com.likya.tlossw.webclient.TEJmxMpClient;
@@ -48,6 +50,12 @@ public class LiveJobManagementBean implements Serializable {
 		} else {
 			jobInfoTypeClient = getJobInTyCl();
 		}
+		
+			String jobId = jobInfoTypeClient.getJobId();
+			TlosSWPathType tlosSWPathType = new TlosSWPathType(BasePathType.getRootPath() + "." +  jobInfoTypeClient.getCurrentRunId() + "." + jobInfoTypeClient.getTreePath());
+			jobInfoTypeClient.setFullPath(tlosSWPathType.getFullPath());
+			jobInfoTypeClient.setRelativePath(tlosSWPathType.getAbsolutePath());
+		
 		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
 		refreshLivePanel(jobInfoTypeClient.getTreePath());
 
