@@ -4,9 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -67,6 +65,8 @@ public class LocalParametersTabBean extends BaseTabBean {
 	private ArrayList<Parameter> parameterList = null;
 	private Parameter selectedRow;
 
+	private Parameter parameter;
+	
 	private String selectedJob;
 	private List<SelectItem> dependentJobParamList;
 
@@ -87,6 +87,7 @@ public class LocalParametersTabBean extends BaseTabBean {
 		connectedId = "0";
 		paramDetails = false;
 		paramPreValueTF = false;
+		paramPreValue = "";
 	}
 
 	public void resetTab(boolean resetList) {
@@ -276,10 +277,9 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public void deleteParamAction(ActionEvent e) {
 
-		int parameterIndex = parameterTable.getRowIndex();
-		Parameter ioParam = (Parameter) parameterTable.getRowData();
-
-		parameterList.remove(parameterIndex);
+		//int parameterIndex = parameterTable.getRowIndex();
+		//Parameter selectedRowParam = (Parameter) parameterTable.getRowData();
+		parameterList.remove(selectedRow);
 
 		// parameterList.remove(selectedRow);
 
@@ -881,6 +881,14 @@ public class LocalParametersTabBean extends BaseTabBean {
 
 	public boolean isParamValueNeedsTextArea(String param) {
 		return param.length() > 20 ? true : false;
+	}
+
+	public Parameter getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(Parameter parameter) {
+		this.parameter = parameter;
 	}
 
 }
