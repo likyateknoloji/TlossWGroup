@@ -332,6 +332,11 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				startTime.setTime(myCalendar);
 				jobPlannedTime.setStartTime(startTime);
 
+//				if (myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName().equals(SubstateName.IDLED)) {
+//					myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.WAITING.intValue());
+//					logger.info("[startUserBasedJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
+//				}
+				
 				logger.info("[startJob] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
 		}
