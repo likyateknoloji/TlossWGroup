@@ -73,7 +73,7 @@
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 
 						<p:column>
-							<p:commandButton ajax="false" rendered="#{security.FTPAccessEdit}" immediate="false" value="#{msgs['tlos.button.update']}" action="ftpAccessPanel.xhtml">
+							<p:commandButton ajax="false" rendered="#{security.FTPAccessEdit}" immediate="false" value="#{msgs['tlos.button.edit']}" action="ftpAccessPanel.xhtml">
 								<f:param name="selectedFTPAccessID" value="#{item.id}" />
 								<f:param name="insertCheck" value="update" />
 							</p:commandButton>
