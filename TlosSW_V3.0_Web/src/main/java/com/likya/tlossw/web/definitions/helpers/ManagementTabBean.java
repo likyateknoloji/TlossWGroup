@@ -101,13 +101,26 @@ public class ManagementTabBean {
 
 		Calendars calendars = Calendars.Factory.newInstance();
 		
+		Calendar jobStartDate = management.getTimeManagement().getJsPlannedTime().getStartTime().getDate();
+		startDate = "";
+		if (jobStartDate != null) {
+			String dateOutputFormat = new String("dd.MM.yyyy");
+			startDate = DefinitionUtils.dateToStringDate(jobStartDate.getTime(), selectedTZone, dateOutputFormat);
+		}
+		
 		if (useCalendarDef) {
 			for (int i = 0; i < calendarList.length; i++) {
 					calendars.addCalendarId(new BigInteger(calendarList[i]));
 			}
-			management.getTimeManagement().setCalendars(calendars);
+			
 		}
-
+		management.getTimeManagement().setCalendars(calendars);
+		
+		if (!startDate.isEmpty()) {
+			Calendar date = Calendar.getInstance();
+			date.setTime(specificDate);management.getTimeManagement().getJsPlannedTime().getStartTime().getDate();
+			management.getTimeManagement().getJsPlannedTime().getStartTime().setDate(date);
+		}
 		management.setTrigger(Trigger.Enum.forString(trigger));
 
 		// event tabanli bir is ise event turunu set ediyor
@@ -265,10 +278,10 @@ public class ManagementTabBean {
 					// String jobLocalStartTime = localStartTime.toDateTimeToday(zone).toString(formatter);
 
 					startTime = DefinitionUtils.calendarTimeToStringTimeFormat(jobStartTime, selectedTZone, timeOutputFormat);
-
+					
 					if (jobStartDate != null) {
 						String dateOutputFormat = new String("dd.MM.yyyy");
-						startDate = DefinitionUtils.calendarDateToStringTimeFormat(jobStartDate, selectedTZone, dateOutputFormat);
+						startDate = DefinitionUtils.dateToStringDate(jobStartDate.getTime(), selectedTZone, dateOutputFormat);
 					}
 				}
 			if (management.getTimeManagement().getJsPlannedTime().getStopTime() != null) {
