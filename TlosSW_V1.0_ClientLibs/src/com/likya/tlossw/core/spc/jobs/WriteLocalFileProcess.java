@@ -39,7 +39,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 		JobProperties jobProperties = getJobRuntimeProperties().getJobProperties();
 		FileAdapterProperties fileProcessProperties = jobProperties.getBaseJobInfos().getJobTypeDetails().getSpecialParameters().getFileAdapterProperties();
 
-		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
+//		ArrayList<ParamList> myParamList = new ArrayList<ParamList>();
 		
 		while (true) {
 
@@ -61,8 +61,8 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 				inputArray = getInputParameters(jobProperties);
 				fileContent = inputArray[0];
 				
-				ParamList thisParam = new ParamList(WRITE_FILE_SOURCE, "STRING", "VARIABLE", fileContent);
-				myParamList.add(thisParam);
+//				ParamList thisParam = new ParamList(WRITE_FILE_SOURCE, "STRING", "VARIABLE", fileContent);
+//				myParamList.add(thisParam);
 				
 //				if (jobProperties.getLocalParameters() != null && jobProperties.getLocalParameters().getInParam() != null) {
 //
@@ -92,8 +92,7 @@ public class WriteLocalFileProcess extends FileProcessExecuter {
 //					    }
 //					}
 //				}
-                System.out.println("targetFile" + targetFile);
-                System.out.println("fileContent" + fileContent);
+
 				boolean result = FileUtils.writeFile(targetFile, fileContent);
 
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, (result == true ? StatusName.INT_SUCCESS : StatusName.INT_FAILED));
