@@ -18,7 +18,7 @@ public class LiveUtils {
 
 	public static String jobPath(JobInfoTypeClient job) {
 		String jobPath = new String();
-		jobPath = job.getTreePath() + "." + job.getJobId();
+		jobPath = job.getFullPath() + "." + job.getJobId(); //job.getTreePath() + "." + job.getJobId();
 		return jobPath;
 	}
 
