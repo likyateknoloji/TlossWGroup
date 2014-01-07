@@ -299,7 +299,9 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 			jobInfoTypeClient.setJobLogPath(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogPath());
 			jobInfoTypeClient.setJobLogName(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobLogFile());
 			jobInfoTypeClient.setoSystem(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getOSystem().toString());
-
+			jobInfoTypeClient.setFullPath(spcInfoType.getSpcId().getFullPath());
+			jobInfoTypeClient.setRelativePath(spcInfoType.getSpcId().getAbsolutePath());
+			
 			// TODO Geçici olarak tip dönüşümü yaptım.
 			jobInfoTypeClient.setJobPriority(jobRuntimeProperties.getJobProperties().getBaseJobInfos().getJobPriority().intValue());
 
