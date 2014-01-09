@@ -1,23 +1,68 @@
-			.ui-success-state-icon {
-				.ui-icon-check !important;
+			.ui-development-state-icon {
+				background: .ui-icon-scissors !important;
 			}
-			.ui-failed-state-icon {
-				background: .ui-icon-alert !important;
+			.ui-test-state-icon {
+				background: .ui-icon-scissors !important;
 			}
-			.ui-working-state-icon {
-				background: .ui-icon-play !important;
+			.ui-request-state-icon {
+				background: .ui-icon-scissors !important;
 			}
-			.ui-timeout-state-icon {
-				background: .ui-icon-notice !important;
+			.ui-deployed-state-icon {
+				background: .ui-icon-scissors !important;
 			}
-			.ui-timein-state-icon {
-				background: .ui-icon-play !important;
+			.ui-deactivated-state-icon {
+				background: .ui-icon-circle-minus !important;
+			}
+			.ui-validated-state-icon {
+				background: .ui-icon-circle-check !important;
+			}
+			.ui-look4resource-state-icon {
+				background: .ui-icon-search !important;
+			}
+			.ui-user-choose-resource-state-icon {
+				background: .ui-icon-cart !important;
+			}
+			.ui-user-waiting-state-icon {
+				background: .ui-icon-person !important;
 			}
 			.ui-waiting-state-icon {
 				background: .ui-icon-clock !important;
 			}
-			.ui-bytime-state-icon {
-				background: .ui-icon-clock !important;
+			.ui-transferring-state-icon {
+				background: .ui-icon-transferthick-e-w !important;
+			}
+		    .ui-paused-state-icon {
+				background: .ui-icon-flag !important;
+			}
+		    .ui-stage-in-state-icon {
+				background: .ui-icon-play !important;
+			}
+		    .ui-migrating-state-icon {
+				background: .ui-icon-arrowthickstop-1-e !important;
+			}
+		    .ui-time-in-state-icon {
+				background: .ui-icon-play !important;
+			}
+		    .ui-time-out-state-icon {
+				background: .ui-icon-notice !important;
+			}
+		    .ui-held-state-icon {
+				background: .ui-icon-bullet !important;
+			}
+		    .ui-stage-out-state-icon {
+				background: .ui-icon-play !important;
+			}
+            .ui-success-state-icon {
+				background: .ui-icon-check !important;
+			}
+			.ui-failed-state-icon {
+				background: .ui-icon-alert !important;
+			}
+			.ui-skipped-state-icon {
+				background: .ui-icon-arrowrefresh-1-s !important;
+			}
+			.ui-stopped-state-icon {
+				background: .ui-icon-circle-close !important;
 			}
 			.ui-default-state-icon {
 				background: .ui-icon-help !important;
