@@ -40,6 +40,7 @@ public class LiveMBean extends TlosSWBaseBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		getScenarioMBean().setTransformToLocalTime(transformToLocalTime);
 		getJobMBean().setTransformToLocalTime(transformToLocalTime);
 	}
