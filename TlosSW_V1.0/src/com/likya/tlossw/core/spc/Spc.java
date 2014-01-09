@@ -452,6 +452,8 @@ public class Spc extends SpcBase {
 						(jobLiveStateInfo.getStateName().equals(StateName.PENDING) && jobLiveStateInfo.getSubstateName().equals(SubstateName.PAUSED) ) ) {
 					// Already executed
 					continue;
+				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.READY, StatusName.LOOKFOR_RESOURCE)) {
+					System.out.println("DEBUG");
 				} else if (LiveStateInfoUtils.equalStates(jobLiveStateInfo, StateName.PENDING, SubstateName.IDLED, StatusName.BYTIME)) {
 					// job in PENDING olmasi halinde yapilacaklarin başladığı yer.
 					// is calismaya hazir (PENDING/IDLED), fakat calistirma islemleri baslatilmamis bir job ise islemleri baslat.
