@@ -5,6 +5,7 @@ module namespace dss = "http://tlos.dss.com/";
 import module namespace lk = "http://likya.tlos.com/" at "moduleNrpeOperations.xquery";
 import module namespace met = "http://meta.tlos.com/" at "moduleMetaDataOperations.xquery";
 import module namespace sq = "http://sq.tlos.com/" at "moduleSequenceOperations.xquery";
+import module namespace functx = "http://www.functx.com/" at "moduleFunctxOperations.xquery";
 
 declare namespace dat = "http://www.likyateknoloji.com/XML_data_types";
 declare namespace com = "http://www.likyateknoloji.com/XML_common_types";
@@ -18,7 +19,6 @@ declare namespace nrpr= "http://www.likyateknoloji.com/XML_nrpe_results";
 declare namespace res = "http://www.likyateknoloji.com/resource-extension-defs";
 declare namespace sla = "http://www.likyateknoloji.com/XML_SLA_types";
 declare namespace pp  = "http://www.likyateknoloji.com/XML_PP_types";
-declare namespace functx = "http://www.functx.com"; 
 declare namespace funcp = "http://www.likyateknoloji.com/XML_FuncPass_types";
 
 (:
@@ -30,45 +30,6 @@ $programProvisioningDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWProgramProvisionin
 $resourcesDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWResources10.xml")
 $nrpeDataDocumentUrl = doc("//db/TLOSSW/xmls/tlosSWNrpeData10.xml")
 :)
-
-declare function functx:is-value-in-sequence 
-  ( $value as xs:anyAtomicType? ,
-    $seq as xs:anyAtomicType* )  as xs:boolean {
-       
-   $value = $seq
- } ;
- 
-declare function functx:repeat-string 
-  ( $stringToRepeat as xs:string? ,
-    $count as xs:integer )  as xs:string {
-       
-   string-join((for $i in 1 to $count return $stringToRepeat),
-                        '')
- } ;
-
- declare function functx:pad-integer-to-length 
-  ( $integerToPad as xs:anyAtomicType? ,
-    $length as xs:integer )  as xs:string {
-       
-   if ($length < string-length(string($integerToPad)))
-   then error(xs:QName('functx:Integer_Longer_Than_Length'))
-   else concat
-         (functx:repeat-string(
-            '0',$length - string-length(string($integerToPad))),
-          string($integerToPad))
- } ;
-
-declare function functx:time 
-  ( $hour as xs:anyAtomicType ,
-    $minute as xs:anyAtomicType ,
-    $second as xs:anyAtomicType )  as xs:time {
-       
-   xs:time(
-     concat(
-       functx:pad-integer-to-length(xs:integer($hour),2),':',
-       functx:pad-integer-to-length(xs:integer($minute),2),':',
-       functx:pad-integer-to-length(xs:integer($second),2)))
- } ;
  
 declare function dss:is-node-in-sequence-deep-equal 
   ( $node as node()? ,
