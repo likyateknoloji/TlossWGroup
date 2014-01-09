@@ -82,7 +82,7 @@ public class ScenarioMBean extends TlosSWBaseBean implements JobManagementInterf
 		spcInfoTypeClient.setStartable(spcInfoTypeClient.getStartable());
 
 		setSpcInfoTypeClient(spcInfoTypeClient);
-
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getJobInfoTypeClientList(getWebAppUser(), getSpcInfoTypeClient().getSpcId(), transformToLocalTime);
 		// JobInfoTypeClient in icinde bu atamayi yapamadigim icin burada yapiyorum. Orada yapilirsa bunu kaldiririz. hs
 		for (JobInfoTypeClient job : jobInfoList) {
