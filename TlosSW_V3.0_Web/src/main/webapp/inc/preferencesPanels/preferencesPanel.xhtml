@@ -43,6 +43,14 @@
 					<f:selectItems value="#{userPreferencesBean.jobStateIconCssPaths}" />
 					<p:ajax listener="#{userPreferencesBean.saveJobStateIconCssPath}" />
 				</p:selectOneMenu>
+				
+                <h:outputLabel for="transformToLocalTime" style="font-size:0.9em" value="#{msgs['tlos.options.viewPreferences.transformToLocalTime']}" /> 
+				<p:selectOneMenu id="transformToLocalTime" style="width:200px"
+					value="#{userPreferencesBean.transformToLocalTime}">
+					<f:selectItem itemLabel="#{msgs['tlos.options.viewPreferences.choose']}" itemValue="" />
+					<f:selectItems value="#{userPreferencesBean.transformToLocalTimeTF}" />
+					<p:ajax listener="#{userPreferencesBean.saveTransformToLocalTime}" />
+				</p:selectOneMenu>
 			</h:panelGrid>
 
 		</p:panel>
