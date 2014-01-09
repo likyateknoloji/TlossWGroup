@@ -46,7 +46,7 @@
 					<h:outputText
 						value="#{msgs['tlos.live.pannel.job.commandContent']}"
 						rendered="#{jobMBean.jobInTyCl.jobCommandType eq 'BATCH PROCESS' or jobMBean.jobInTyCl.jobCommandType eq 'SYSTEM COMMAND'}" />
-					<p:commandButton value="#{msgs['tlos.button.open']}"
+					<p:commandButton id="openJobCommandContent" value="#{msgs['tlos.button.open']}"
 						rendered="#{(jobMBean.jobInTyCl.jobCommandType eq 'BATCH PROCESS' or jobMBean.jobInTyCl.jobCommandType eq 'SYSTEM COMMAND') and jobMBean.jobCommandExist}"
 						action="#{jobMBean.openJobCommandAction}"
 						update=":liveForm:jobCommandPanel"
