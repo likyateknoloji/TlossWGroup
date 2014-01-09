@@ -159,7 +159,7 @@ public class ProcessManagementInterface implements ProcessManagementInterfaceMBe
 				//myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().setLiveStateInfoArray(0, XmlBeansTransformer.generateLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.TRANSFERING.intValue()));
 
 				// Kütüphaneye ekledim
-				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.READY.intValue(), StatusName.LOOKFOR_RESOURCE.intValue());
+				myJob.insertNewLiveStateInfo(StateName.PENDING.intValue(), SubstateName.IDLED.intValue(), StatusName.BYTIME.intValue());
 				
 				logger.info("[retryExecution] command exucuted ! New Status of " + jobId + " is " + myJob.getJobRuntimeProperties().getJobProperties().getStateInfos().getLiveStateInfos().getLiveStateInfoArray(0).getSubstateName());
 			}
