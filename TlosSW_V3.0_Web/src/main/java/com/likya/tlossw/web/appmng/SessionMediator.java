@@ -53,6 +53,8 @@ public class SessionMediator implements Serializable {
 	private String jobStateColorCssPath;
 
 	private String jobIconCssPath;
+	
+	private String transformToLocalTime;
 
 	private void initMetaData() {
 
@@ -269,5 +271,13 @@ public class SessionMediator implements Serializable {
 	
 	public void setCurrentDoc(int columnId, String currentDocId) {
 	    webSpaceWideRegistery.getDocMetaDataInfo().getCurrentDocs()[columnId-1] = currentDocId;
+	}
+
+	public String isTransformToLocalTime() {
+		return transformToLocalTime;
+	}
+
+	public void setTransformToLocalTime(String transformToLocalTime) {
+		this.transformToLocalTime = transformToLocalTime;
 	}
 }
