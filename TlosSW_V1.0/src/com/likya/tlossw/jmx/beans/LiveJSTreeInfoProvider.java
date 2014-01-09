@@ -321,10 +321,10 @@ public class LiveJSTreeInfoProvider implements LiveJSTreeInfoProviderMBean {
 				}
 
 			} else if (jobRuntimeProperties.getPlannedExecutionDate() != null) {
-				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.calendarToString(jobRuntimeProperties.getPlannedExecutionDate(), false));
+				jobInfoTypeClient.setPlannedExecutionDate(DateUtils.calendarToString(jobRuntimeProperties.getPlannedExecutionDate(), transformToLocalTime));
 
 				if (jobRuntimeProperties.getCompletionDate() != null) {
-					jobInfoTypeClient.setCompletionDate(DateUtils.calendarToString(jobRuntimeProperties.getCompletionDate(), false));
+					jobInfoTypeClient.setCompletionDate(DateUtils.calendarToString(jobRuntimeProperties.getCompletionDate(), transformToLocalTime));
 				}
 			}
 
