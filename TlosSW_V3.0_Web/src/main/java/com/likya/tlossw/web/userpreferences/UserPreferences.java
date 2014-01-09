@@ -36,20 +36,24 @@ public class UserPreferences implements Serializable {
 	
 	private String jobIconCssPath  = null;
 	
+	private boolean transformToLocalTime  = true;
+	
 	
 	public UserPreferences() {
 		theme = new String("cupertino");
 		jobStateIconCssPath = new String("job-state-icon-flags");
 		jobStateColorCssPath = new String("job-state-color-default");
 		jobIconCssPath = new String("job-icon-set1");
+		transformToLocalTime = true;
 	}
 	
 	public UserPreferences(String theme, String jobStateIconCssPath,
-			String jobStateColorCssPath, String jobIconCssPath) {
+			String jobStateColorCssPath, String jobIconCssPath, boolean transformToLocalTime) {
 		this.theme = theme;
 		this.jobStateIconCssPath = jobStateIconCssPath;
 		this.jobStateColorCssPath = jobStateColorCssPath;
 		this.jobIconCssPath = jobIconCssPath;
+		this.transformToLocalTime = transformToLocalTime;
 	}
 
 	public String getTheme() {
@@ -106,5 +110,17 @@ public class UserPreferences implements Serializable {
 
 	public void setJobIconCssPath(String jobIconCssPath) {
 		this.jobIconCssPath = jobIconCssPath;
+	}
+
+	public boolean isTransformToLocalTime() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		if (params.containsKey("transformToLocalTime")) {
+			transformToLocalTime = Boolean.getBoolean(params.get("transformToLocalTime"));
+		}
+		return transformToLocalTime;
+	}
+
+	public void setTransformToLocalTime(boolean transformToLocalTime) {
+		this.transformToLocalTime = transformToLocalTime;
 	}
 }
