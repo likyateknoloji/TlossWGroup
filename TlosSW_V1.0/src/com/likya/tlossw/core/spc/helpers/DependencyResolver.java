@@ -100,15 +100,15 @@ public class DependencyResolver {
 					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
 				}
 			} else if (itemStateName != null && itemSubstateName != null && itemStatusName == null) {
-				if (jobStateName.equals(itemStateName) && jobSubstateName.equals(itemSubstateName)) {
+				if (jobStateName.equals(itemStateName) && (jobSubstateName.equals(itemSubstateName) || jobSubstateName.equals(SubstateName.Enum.forString("SKIPPED")))) {
 					variables.put(item.getDependencyID(), new BigDecimal(1)); // true
 				} else {
 					variables.put(item.getDependencyID(), new BigDecimal(0)); // false
 				}
 			} else if (itemStateName != null && itemSubstateName != null && itemStatusName != null && jobStateName != null && jobSubstateName != null) {
-				if (jobStateName.equals(itemStateName) && jobSubstateName.equals(itemSubstateName)) {
+				if (jobStateName.equals(itemStateName) && (jobSubstateName.equals(itemSubstateName) || jobSubstateName.equals(SubstateName.Enum.forString("SKIPPED")))) {
 					if (jobStatusName != null)
-						if (jobStatusName.equals(itemStatusName)) {
+						if (jobStatusName.equals(itemStatusName) || (jobSubstateName.equals(SubstateName.Enum.forString("SKIPPED")) && jobStatusName.equals(StatusName.Enum.forString("BYUSER"))) ) {
 							variables.put(item.getDependencyID(), new BigDecimal(1)); // true
 						} else {
 							variables.put(item.getDependencyID(), new BigDecimal(0)); // false
