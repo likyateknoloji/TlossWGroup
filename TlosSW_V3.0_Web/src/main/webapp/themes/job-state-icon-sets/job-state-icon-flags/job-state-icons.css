@@ -1,24 +1,88 @@
-			.ui-success-state-icon {
+			.ui-development-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Black_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-test-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Black_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-request-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Black_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-deployed-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Black_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-deactivated-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_White_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-validated-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Yellow_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-look4resource-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Pink_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-user-choose-resource-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Orange_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-user-waiting-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Orange_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-waiting-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Brown_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			.ui-transferring-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Light_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-paused-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Purple_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+			
+		    .ui-stage-in-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-migrating-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-time-in-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-time-out-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Light_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-held-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Brown_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+		    .ui-stage-out-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Light_Blue_16x16.png) no-repeat !important;
+				background-size: 100% 100%;
+			}
+            .ui-success-state-icon {
 				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Green_16x16.png) no-repeat !important;
 				background-size: 100% 100%;
 			}
 			.ui-failed-state-icon {
 				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Red_16x16.png) no-repeat !important;
 			}
-			.ui-working-state-icon {
-				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Blue_16x16.png) no-repeat !important;
+			.ui-skipped-state-icon {
+				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Brown_16x16.png) no-repeat !important;
 			}
-			.ui-timeout-state-icon {
+			.ui-stopped-state-icon {
 				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Pink_16x16.png) no-repeat !important;
-			}
-			.ui-timein-state-icon {
-				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Light_Blue_16x16.png) no-repeat !important;
-			}
-			.ui-waiting-state-icon {
-				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Brown_16x16.png) no-repeat !important;
-			}
-			.ui-bytime-state-icon {
-				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Brown_16x16.png) no-repeat !important;
 			}
 			.ui-default-state-icon {
 				background: url(../../../images/job-state-icon-sets/job-state-icon-flags/Flag_Orange_16x16.png) no-repeat !important;
