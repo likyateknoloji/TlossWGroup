@@ -63,7 +63,7 @@ public class TlosAgentMBean extends TlosSWBaseBean implements JobManagementInter
 		} else {
 			tlosAgentInfoTypeClient.setAgentName(ConstantDefinitions.AGENT_NAME + tlosAgentInfoTypeClient.getAgentId());
 		}
-
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		jobInfoList = (ArrayList<JobInfoTypeClient>) TEJmxMpClient.getAgentsJobList(getWebAppUser(), agentId, transformToLocalTime);
 
 		oSList.add(OsType.WINDOWS.toString());
