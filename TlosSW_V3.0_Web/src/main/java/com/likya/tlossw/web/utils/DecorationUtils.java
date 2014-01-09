@@ -30,41 +30,73 @@ public class DecorationUtils {
 			if (jobState.getSubstateName() != null) {
 				switch (jobState.getSubstateName().intValue()) {
 				case SubstateName.INT_CREATED:
-					cssName = "ui-icon-gear";
+					if (jobState.getStatusName() != null) {
+						if (jobState.getStatusName().equals(StatusName.DEVELOPMENT)) {
+							cssName = "ui-development-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.TEST)) {
+							cssName = "ui-test-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.REQUEST)) {
+							cssName = "ui-request-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.DEPLOYED)) {
+							cssName = "ui-deployed-state";
+							break;
+						}
+					}
+				case SubstateName.INT_DEACTIVATED:
+					cssName = "ui-deactivated-state";
 					break;
 				case SubstateName.INT_VALIDATED:
-					cssName = "ui-icon-lightbulb";
+					cssName = "ui-validated-state";
 					break;
 				case SubstateName.INT_IDLED:
 					cssName = "ui-default-state";
 					break;
 				case SubstateName.INT_READY:
-					cssName = "ui-waiting-state";
-					break;
+					if (jobState.getStatusName() != null) {
+						if (jobState.getStatusName().equals(StatusName.LOOKFOR_RESOURCE)) {
+							cssName = "ui-look4resource-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.USER_CHOOSE_RESOURCE)) {
+							cssName = "ui-user-choose-resource-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.USER_WAITING)) {
+							cssName = "ui-user-waiting-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.WAITING)) {
+							cssName = "ui-waiting-state";
+							break;
+						} else if (jobState.getStatusName().equals(StatusName.TRANSFERING)) {
+							cssName = "ui-transferring-state";
+							break;
+						}
+					}
 				case SubstateName.INT_PAUSED:
-					cssName = "ui-icon-info";
+					cssName = "ui-paused-state";
 					break;
 				case SubstateName.INT_STAGE_IN:
-					cssName = "ui-icon-arrowrefresh-1-s";
+					cssName = "ui-stage-in-state";
 					break;
 				case SubstateName.INT_MIGRATING:
-					cssName = "ui-icon-extlink";
+					cssName = "ui-migrating-state";
 					break;
 				case SubstateName.INT_ON_RESOURCE:
 					if (jobState.getStatusName() != null) {
 						if (jobState.getStatusName().equals(StatusName.TIME_IN)) {
-							cssName = "ui-working-state";
+							cssName = "ui-time-in-state";
 							break;
 						} else if (jobState.getStatusName().equals(StatusName.TIME_OUT)) {
-							cssName = "ui-timeout-state";
+							cssName = "ui-time-out-state";
 							break;
 						}
 					}
 				case SubstateName.INT_HELD:
-					cssName = "ui-icon-pause";
+					cssName = "ui-held-state";
 					break;
 				case SubstateName.INT_STAGE_OUT:
-					cssName = "ui-icon-arrowrefresh-1-n";
+					cssName = "ui-stage-out-state";
 					break;
 				case SubstateName.INT_COMPLETED:
 					if ((jobState.getStateName() != null && jobState.getStateName().equals(StateName.FINISHED)) && (jobState.getStatusName() != null && jobState.getStatusName().equals(StatusName.SUCCESS))) {
@@ -75,10 +107,10 @@ public class DecorationUtils {
 						break;
 					}
 				case SubstateName.INT_SKIPPED:
-					cssName = "ui-icon-seek-next";
+					cssName = "ui-skipped-state";
 					break;
 				case SubstateName.INT_STOPPED:
-					cssName = "ui-icon-cancel";
+					cssName = "ui-stopped-state";
 					break;
 				}
 			}
