@@ -34,7 +34,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.pauseJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.pause");
@@ -57,7 +57,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient.setRelativePath(tlosSWPathType.getAbsolutePath());
 		
 		TEJmxMpClient.startUserBasedJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
@@ -73,7 +73,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.startJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.start");
@@ -89,7 +89,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.retryJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.retry");
@@ -105,7 +105,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.doSuccess(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.doSuccess");
@@ -121,7 +121,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.skipJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.skip");
@@ -137,7 +137,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.stopJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.stop");
@@ -153,7 +153,7 @@ public class LiveJobManagementBean implements Serializable {
 			jobInfoTypeClient = getJobInTyCl();
 		}
 		TEJmxMpClient.resumeJob(getWebAppUser(), LiveUtils.jobPath(jobInfoTypeClient));
-		refreshLivePanel(jobInfoTypeClient.getTreePath());
+		refreshLivePanel(jobInfoTypeClient.getFullPath());
 
 		/*
 		 * TraceBean.traceData(Thread.currentThread().getStackTrace()[1], "id=" + job.getJobKey(), e.getComponent().getId(), "tlos.trace.live.job.resume");
