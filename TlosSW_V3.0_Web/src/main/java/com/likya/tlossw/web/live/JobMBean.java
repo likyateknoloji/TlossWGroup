@@ -78,6 +78,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	public void setJobInfo(String spcFullPath, String jobId) {
 		jobInTyCl = new JobInfoTypeClient();
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		jobInTyCl = TEJmxMpClient.getJobInfoTypeClient(getWebAppUser(), spcFullPath, jobId, transformToLocalTime);
 
 		if (jobInTyCl != null) {
@@ -149,11 +150,13 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 		String docId = getDocId(DocMetaDataHolder.FIRST_COLUMN);
 		int numberOfRun = 3;
-
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
+		
 		jobBaseReportList = getDbOperations().getJobResultList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), numberOfRun, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
+		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		jobAlarmList = getDbOperations().getJobAlarmHistory(jobInTyCl.getJobId(), transformToLocalTime);
 	}
 
@@ -178,7 +181,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	}
 
 	public void refreshLivePanel(String scenarioPath) {
-		fillJobLivePanel(jobInTyCl.getTreePath(), jobInTyCl.getJobId());
+		fillJobLivePanel(jobInTyCl.getFullPath(), jobInTyCl.getJobId());
 
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.update("liveForm");
