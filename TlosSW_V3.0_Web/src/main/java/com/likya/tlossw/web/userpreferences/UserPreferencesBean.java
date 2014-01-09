@@ -47,6 +47,8 @@ public class UserPreferencesBean implements Serializable {
 	private Map<String, String> jobStateColorCssPaths;
 	
 	private Map<String, String> jobIconCssPaths;
+	
+	private Map<String, String> transformToLocalTimeTF;
    
     private List<Theme> advancedThemes;
    
@@ -57,6 +59,8 @@ public class UserPreferencesBean implements Serializable {
 	private String jobStateColorCssPath  = null;
 	
 	private String jobIconCssPath  = null;
+	
+	private boolean transformToLocalTime  = true;
 	
     private UserPreferences up;
 
@@ -72,7 +76,8 @@ public class UserPreferencesBean implements Serializable {
         jobStateIconCssPath = up.getJobStateIconCssPath();
         jobStateColorCssPath = up.getJobStateColorCssPath();
         jobIconCssPath = up.getJobIconCssPath();
-
+        transformToLocalTime = up.isTransformToLocalTime();
+        
         jobStateIconCssPaths = new TreeMap<String, String>();
         jobStateIconCssPaths.put("Default", "job-state-icon-default");
         jobStateIconCssPaths.put("Flags", "job-state-icon-flags");
@@ -87,7 +92,10 @@ public class UserPreferencesBean implements Serializable {
         jobIconCssPaths.put("Default", "job-icon-default");
         jobIconCssPaths.put("Set1", "job-icon-set1");
 
-        
+        transformToLocalTimeTF = new TreeMap<String, String>();
+        transformToLocalTimeTF.put("true", "true");
+        transformToLocalTimeTF.put("false", "false");
+
         advancedThemes = new ArrayList<Theme>();
         advancedThemes.add(new Theme("afterdark", "afterdark.png"));
         advancedThemes.add(new Theme("afternoon", "afternoon.png"));
@@ -167,6 +175,8 @@ public class UserPreferencesBean implements Serializable {
         //themes.put("UI-Darkness", "ui-darkness");
         //themes.put("UI-Lightness", "ui-lightness");
         //themes.put("Vader", "vader");
+        
+        transformToLocalTime  = true;
     }
 
 	public String getJobStateColorCss(LiveStateInfo jobState) {
@@ -248,6 +258,10 @@ public class UserPreferencesBean implements Serializable {
         up.setJobIconCssPath(jobIconCssPath);
     }
     
+    public void saveTransformToLocalTime() {
+        up.setTransformToLocalTime(transformToLocalTime);
+    }
+    
     public void displayPrefereneces() {  
         FacesMessage msg = new FacesMessage("Selected", "Theme:" + theme + ", jobStateIconCssPath: " + jobStateIconCssPath);  
   
@@ -264,5 +278,21 @@ public class UserPreferencesBean implements Serializable {
 
 	public Map<String, String> getJobIconCssPaths() {
 		return jobIconCssPaths;
+	}
+
+	public boolean isTransformToLocalTime() {
+		return transformToLocalTime;
+	}
+
+	public void setTransformToLocalTime(boolean transformToLocalTime) {
+		this.transformToLocalTime = transformToLocalTime;
+	}
+
+	public Map<String, String> getTransformToLocalTimeTF() {
+		return transformToLocalTimeTF;
+	}
+
+	public void setTransformToLocalTimeTF(Map<String, String> transformToLocalTimeTF) {
+		this.transformToLocalTimeTF = transformToLocalTimeTF;
 	}  
 }
