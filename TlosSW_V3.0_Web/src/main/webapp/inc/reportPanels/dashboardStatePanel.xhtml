@@ -14,10 +14,10 @@
 
 			<p:growl id="messages" showDetail="true" autoUpdate="true" />
 
-			<p:fieldset legend="#{msgs['tlos.reports.chartState.header']}"
+			<p:fieldset id="stateFieldSetId" legend="#{msgs['tlos.reports.chartState.header']}"
 				widgetVar="dashWidget" style="width: 1300px;">
 
-				<p:dashboard id="board" model="#{currentStatesOfJobsMBean.model}">
+				<p:dashboard id="stateDashboard" model="#{currentStatesOfJobsMBean.model}">
 					<p:ajax event="reorder"
 						listener="#{currentStatesOfJobsMBean.handleReorder}"
 						update="messages" />
@@ -141,7 +141,7 @@
 							style="width:500px;height:336px;font-weight: bold;color : F8FBEF; font-size:1.5em"
 							seriesColors="#{currentStatesOfJobsMBean.pieColorList}" />
 						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
-							ajax="true" update="board" actionListener="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
+							ajax="true" update="stateDashboard" actionListener="#{currentStatesOfJobsMBean.refreshDashboardChart}" />
 					</p:panel>
 
 				</p:dashboard>
