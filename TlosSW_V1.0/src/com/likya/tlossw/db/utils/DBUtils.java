@@ -104,6 +104,21 @@ public class DBUtils extends DBBase {
 		return returnValue;
 	}
 
+	public static boolean updateLSIDateTimeInScenario(String runId, String LSIDateTime, String scenarioId) {
+		
+		boolean returnValue = false;
+		
+		String xQueryStr = scenarioFunctionConstructor("hs:updateLSIDateTimeInScenario", dbDocId, dbUserId, "true()", getXString(runId), getXString(scenarioId) , getXString(LSIDateTime));
+		
+		ArrayList<Object> objectList = moduleGeneric(xQueryStr);
+
+		for(Object currentObject : objectList) {
+			returnValue = Boolean.parseBoolean(currentObject.toString());
+		}
+
+		return returnValue;
+	}
+	
 	public static boolean updateFirstJob(JobProperties jobProperties, String jobPath) {
 
 		boolean returnValue = false;
@@ -477,5 +492,9 @@ public class DBUtils extends DBBase {
 		}
 		
 		return tlosData;
+	}
+	
+	public static String getXString(String str) {
+		return "\"" + str + "\""; 
 	}
 }
