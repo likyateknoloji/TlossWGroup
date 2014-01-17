@@ -1,8 +1,8 @@
 package com.likya.tlossw.web.mng.reports;
 
+
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import java.math.BigDecimal;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,13 +14,15 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.DashboardReorderEvent;
-import org.primefaces.model.chart.OhlcChartModel;
-import org.primefaces.model.chart.OhlcChartSeries;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.xmldb.api.base.XMLDBException;
 
 import com.likya.tlos.model.xmlbeans.report.JobArrayDocument.JobArray;
 import com.likya.tlos.model.xmlbeans.report.JobDocument.Job;
+import com.likya.tlossw.utils.date.DateUtils;
 import com.likya.tlossw.web.db.DBOperations;
 import com.likya.tlossw.web.mng.reports.helpers.ReportsParameters;
 import com.likya.tlossw.web.utils.ConstantDefinitions;
@@ -35,15 +37,13 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 	private DBOperations dbOperations;
 
 	private static final Logger logger = Logger.getLogger(JobsDistributionGraphicsMBean.class);
-
-	private OhlcChartModel ohlcModel;
-
-	private int derinlik;
-	
-	private String pieColorList;
+	private CartesianChartModel curDurationModel;
+	private CartesianChartModel prevDurationModel;
+ 
+	private int sizeOfReport;
 	
 	private JobArray jobsArray;
-
+	
 	@PostConstruct
 	public void init() {
 
@@ -53,15 +53,17 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		String parameter_value = (String) facesContext.getExternalContext().getRequestParameterMap().get("id");
 
 		System.out.println(parameter_value);
-
+		
 		if (getReportParameters() == null) {
-		   setReportParameters(new ReportsParameters());
+			setReportParameters(new ReportsParameters());
 		}
-		createOhlcModel();
+		
+		curDurationModel = createCurCategoryModel();
+		//prevDurationModel = createCurCategoryModel(1, -1, 0, "true()", "xs:string(\"descending\")", 10);
 
 		logger.info("end : init");
 
-		setActiveReportPanel(ConstantDefinitions.JOB_DISTRIBUTION_REPORT);
+		setActiveReportPanel(ConstantDefinitions.JOB_DURATION_REPORT);
 	}
 
 	public void handleReorder(DashboardReorderEvent event) {
@@ -71,72 +73,183 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		message.setDetail("Item index: " + event.getItemIndex() + ", Column index: " + event.getColumnIndex() + ", Sender index: " + event.getSenderColumnIndex());
 	}
 	
-	public String getChartSeriesColors() {
-        return "red, blue, 0x18e0b1, 0xd5e018";
-    }
-	
-	public String getDatatipFormat(){
-		   return "<span style=\"display:none;\">%s</span><span>%s</span>";
-		}
-	
-	public void refreshOhlcChart() {
-		createOhlcModel();
+	public void refreshCurDurationChart() {
+
+		createCurCategoryModel();
 	}
 
-	public long getMilliSec(long param) {
-		return param - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(param));
-	}
-	
-	private void createOhlcModel() {
+	public void refreshPrevDurationChart() {
 		
+		createCurCategoryModel();
+	}
+/**
+ * 	get related Jobs with getJobsReport(
+            Number of runs that dealt with for the report, 
+            Run Id for which we are focusing and take a referans point, if its value is 0 then it means we are focusing the last run,
+			 Job Id if we focusing just a job, or enter 0 for all job related with the second argument,
+			 true() if we choose the run id as a referance point, false() otherwise
+ * 
+ *  get job array with requested data with getJobArray(
+                 output of the getJobsReport function,
+				 "ascending|descending" for ascending or descending ordered jobs based on real work time,
+				 number of maksimum jobs in the array
+				  Whether unfinished jobs used for stats
+ * 
+ *  * hs:getJobArray(hs:getJobsReport(1,-1,0, true()),"descending",10, false())
+ * @return 
+ */
+
+	private CartesianChartModel createCurCategoryModel() {
+
 		getReportParameters().fillReportParameters();
 		
-        ohlcModel = new OhlcChartModel();  
-
+		CartesianChartModel curDurationModel = new CartesianChartModel();
+		
 		try {
-			jobsArray = getDbOperations().getOverallReport(getReportParameters().getReportParametersXML());
+			jobsArray = getDbOperations().getOverallReport( getReportParameters().getReportParametersXML() );
 		} catch (XMLDBException e) {
 			e.printStackTrace();
 		}
-		
-		//BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
-		Calendar overallStart = Calendar.getInstance();
-		if(jobsArray.sizeOfJobArray() > 0) {
-		  overallStart = jobsArray.getOverallStart();
-		}
-		//Calendar overallStop = jobsArray.getOverallStop();
 
-				// and here's how to get the String representation
-		//final String timeString =
-		    //new SimpleDateFormat("HH:mm:ss.SSS").format(overallStart.getTimeInMillis());
+		BigDecimal dividend = new BigDecimal(1); //new BigDecimal("60");
 		
-		for (Job job : jobsArray.getJobArray()) {
+		int i=0;
+		
+		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi?
+	
+		ChartSeries jobsAbsoluteZero = new ChartSeries();
+		jobsAbsoluteZero.setLabel("0");
+		
+		ChartSeries jobsStarting = new ChartSeries();
+		jobsStarting.setLabel("Waiting");
+		
+		ChartSeries jobsPending = new ChartSeries();
+		jobsPending.setLabel("Pending Job Durations");
+		
+		ChartSeries jobsRunning = new ChartSeries();
+		jobsRunning.setLabel("Running Job Durations");
 
-			String result = String.format("%d sec", 
-				    getMilliSec(job.getStartTime().getTimeInMillis())
-				);
-			System.out.println(result);
-			Calendar figure = null;
+		ChartSeries jobsFinishedS = new ChartSeries();
+		jobsFinishedS.setLabel("Fİnished Success");
+
+		ChartSeries jobsFinishedF = new ChartSeries();
+		jobsFinishedF.setLabel("Fİnished Failed");
+		
+		i=0;
+		long MINTIME1 = 3000;
+		long MINTIME2 = 1500;
+		
+		if(jobsArray!=null) {
+		  for (Job job : jobsArray.getJobArray()) {
+			i++;
+			BigDecimal figure = null;
+			
+			long absoluteZeroTime = 0;
+			long startingTime = 0;
+			long pendingTime = 0;
+			long runningTime = 0;
+			long finishTime = 0;
+			long finishTimeS = 0;
+			long finishTimeF = 0;
+			
 			try {
-			   figure = job.getStopTime();
+				
+				if(!job.getPendingTime().isEmpty())
+					pendingTime = DateUtils.dateToXmlTime(job.getPendingTime(), serverTimeZone).getTimeInMillis();
+				
+				
+				
+				if(!job.getRunningTime().isEmpty())
+					runningTime = DateUtils.dateToXmlTime(job.getRunningTime(), serverTimeZone).getTimeInMillis();
+				else
+					runningTime = DateUtils.dateToXmlTime(job.getLSIDateTime().toString(), serverTimeZone).getTimeInMillis();
+				
+				pendingTime = runningTime - pendingTime;
+				
+				if(!job.getFinishTime().isEmpty()) {
+					finishTime = DateUtils.dateToXmlTime(job.getFinishTime(), serverTimeZone).getTimeInMillis();
+					runningTime = finishTime - runningTime;
+				}
+				
+				if(job.getRunningTime().isEmpty())
+					runningTime = 0;
+				
+				startingTime = pendingTime - MINTIME2;
+				pendingTime = 0;
+				
+				finishTimeS = (job.getResult().equalsIgnoreCase("success") ? MINTIME2 : 0);
+                finishTimeF = (job.getResult().equalsIgnoreCase("fail") ? MINTIME2 : 0);
+			   //figure = job.getBigDecimalValue().divide(dividend, 0).round(new MathContext(2, RoundingMode.HALF_UP)); //setScale(2, RoundingMode.HALF_UP);
 			}
 			catch(XmlValueOutOfRangeException e){
 	            //do something clever with the exception
-				figure = job.getStartTime();
+				figure = new BigDecimal(0);
 	            System.out.println(e.getMessage());				
 			}
+			/* Cok kucuk olursa ekranda gorunmedigi icin normalizasyon yapiyoruz. */
+			if(pendingTime < MINTIME1 && !job.getPendingTime().isEmpty()) pendingTime = MINTIME1;
+			if(runningTime < MINTIME1 && !job.getRunningTime().isEmpty()) runningTime = MINTIME1;
+
+			startingTime = (long) (startingTime / 1000) % 60 ;
+			pendingTime = (long) (pendingTime / 1000) % 60 ;
+			runningTime = (long) (runningTime / 1000) % 60 ;
+			finishTimeS = (long) (finishTimeS / 1000) % 60 ;
+			finishTimeF = (long) (finishTimeF / 1000) % 60 ;
 			
-			ohlcModel.add(new OhlcChartSeries(TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()), 
-					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
-					(double) TimeUnit.MILLISECONDS.toSeconds(figure.getTimeInMillis() - overallStart.getTimeInMillis()) ,
-					(double) TimeUnit.MILLISECONDS.toSeconds(job.getStartTime().getTimeInMillis() - overallStart.getTimeInMillis()) ,
-					(double) TimeUnit.MILLISECONDS.toSeconds(figure.getTimeInMillis() - overallStart.getTimeInMillis())
-					));
+//			int minutes = (int) ((milliseconds / (1000*60)) % 60);
+//			int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+			
+			jobsAbsoluteZero.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), absoluteZeroTime);
+			jobsStarting.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), startingTime);
+			jobsPending.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), pendingTime);
+			jobsRunning.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), runningTime);
+			jobsFinishedS.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeS);
+			jobsFinishedF.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeF);
+
+		  }
 		}
+		
+		setSizeOfReport(jobsPending.getData().size());
+		System.out.println(jobsPending.getData().size() + " adet data var");
+		
+		if (getSizeOfReport()>0) {
+			addSuccessMessage("Job Duration Statistics", "tlos.success.report.done", null);
+			//addMessage("Job Duration Statistics", FacesMessage.SEVERITY_INFO, "tlos.success.report.done", null);
+		} else {
+			addFailMessage("Job Duration Statistics", "tlos.error.report.done", null);;
+			//addMessage("Job Duration Statistics", FacesMessage.SEVERITY_ERROR, "tlos.error.report.done", null);
+		}
+		
+		RequestContext context = RequestContext.getCurrentInstance();
+		context.update(":dashboardReports");
+		
+		curDurationModel.addSeries(jobsStarting);
+		curDurationModel.addSeries(jobsPending);
+		curDurationModel.addSeries(jobsRunning);
+		curDurationModel.addSeries(jobsFinishedS);
+		curDurationModel.addSeries(jobsFinishedF);
+		
+        return curDurationModel;
 	}
 
 	public void refreshReport(ActionEvent actionEvent) {
-		createOhlcModel();
+		curDurationModel = createCurCategoryModel();
+	}
+
+	public CartesianChartModel getPrevDurationModel() {
+		return prevDurationModel;
+	}
+
+	public void setPrevDurationModel(CartesianChartModel prevDurationModel) {
+		this.prevDurationModel = prevDurationModel;
+	}
+
+	public CartesianChartModel getCurDurationModel() {
+		return curDurationModel;
+	}
+
+	public void setCurDurationModel(CartesianChartModel curDurationModel) {
+		this.curDurationModel = curDurationModel;
 	}
 
 	public DBOperations getDbOperations() {
@@ -147,30 +260,6 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		this.dbOperations = dbOperations;
 	}
 
-	public int getDerinlik() {
-		return derinlik;
-	}
-
-	public void setDerinlik(int derinlik) {
-		this.derinlik = derinlik;
-	}
-
-	public String getPieColorList() {
-		return pieColorList;
-	}
-
-	public void setPieColorList(String pieColorList) {
-		this.pieColorList = pieColorList;
-	}
-
-	public OhlcChartModel getOhlcModel() {
-		return ohlcModel;
-	}
-
-	public void setOhlcModel(OhlcChartModel ohlcModel) {
-		this.ohlcModel = ohlcModel;
-	}
-
 	public JobArray getJobsArray() {
 		return jobsArray;
 	}
@@ -178,5 +267,13 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 	public void setJobsArray(JobArray jobsArray) {
 		this.jobsArray = jobsArray;
 	}
+	
+	public int getSizeOfReport() {
+		return sizeOfReport;
+	}
+
+	public void setSizeOfReport(int sizeOfReport) {
+		this.sizeOfReport = sizeOfReport;
+	} 
 
 }
