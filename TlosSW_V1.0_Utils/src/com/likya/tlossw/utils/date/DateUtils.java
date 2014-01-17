@@ -151,7 +151,7 @@ public class DateUtils {
 
 	public static Date getDateTime(String dateTimeInString) {
 
-		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		DateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 		Date dateTime = null;
 
 		try {
