@@ -175,6 +175,24 @@ declare function hs:updateScenarioName($documentUrl as xs:string,  $docId as xs:
     return update replace $doc//$scenarioPath/dat:baseScenarioInfos/com:jsName with <com:jsName>{data($name)}</com:jsName>
 };
 
+declare function hs:updateLSIDateTimeInScenario($documentUrl as xs:string, $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $runId as xs:string, $scenarioId as xs:string, $lSIDateTime as xs:string) as node()*
+{
+    let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
+    
+    let $doc := doc($dataDocumentUrl)
+    let $scenario := if($scenarioId eq "0") 
+                     then $doc//RUN[@id=$runId]/dat:TlosProcessData[@ID=$scenarioId] 
+                     else $doc//RUN[@id=$runId]//dat:scenario[@ID=$scenarioId]
+
+    let $updateIt :=
+      if (exists($scenario/@LSIDateTime))
+      then update value $scenario/@LSIDateTime with $lSIDateTime
+      else update insert attribute LSIDateTime {$lSIDateTime} into $scenario 
+      
+    return <a>{$updateIt}</a>
+     
+};
+
 declare function hs:updateScenarioComment($documentUrl as xs:string,  $docId as xs:string, $userId as xs:string, $isGlobal as xs:boolean, $scenarioPath as node(),$comment)
 {
     let $dataDocumentUrl := met:getDataDocument($documentUrl,  $docId , $userId, $isGlobal)
