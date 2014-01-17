@@ -135,9 +135,26 @@ public class Spc extends SpcBase {
 		// sendEndInfo(Thread.currentThread().getName(), jobRuntimeProperties.getJobProperties());
 
 		LiveStateInfo savedLiveStateInfo = null;
+		boolean updateLSIDateTime = false;
+		
+		String runId = getSpcNativeFullPath().getRunId();
+		setLSIDateTime(DateUtils.getServerW3CDateTime());
+		
+		String referenceDateForUpdate = getLSIDateTime();
+		
+		boolean isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
 		
 		while (executionPermission) { // Senaryonun caslistirilmasi icin gerek sart !
 
+			long diff = DateUtils.dateDiffWithNow( DateUtils.getDateTime(referenceDateForUpdate));
+
+			setLSIDateTime(DateUtils.getServerW3CDateTime());
+			
+			if(diff > 15000 ) {
+				updateLSIDateTime = true;
+				referenceDateForUpdate = getLSIDateTime();
+			}
+			
 			// Gelen deger saniye tipine çevriliyor.
 			long chekInterval = getSpaceWideRegistry().getTlosSWConfigInfo().getSettings().getTlosFrequency().getFrequency() * 1000;
 
@@ -191,8 +208,9 @@ public class Spc extends SpcBase {
 				    	SimpleDateFormat sdf = new SimpleDateFormat("ss");
 				    	String saniye = sdf.format(cal.getTime());
 				    	
-						if( saniye.equalsIgnoreCase("00") || saniye.equalsIgnoreCase("15") || saniye.equalsIgnoreCase("30") || saniye.equalsIgnoreCase("45"))
+						if( saniye.equalsIgnoreCase("00") || saniye.equalsIgnoreCase("15") || saniye.equalsIgnoreCase("30") || saniye.equalsIgnoreCase("45") || updateLSIDateTime) {
 							JobQueueOperations.dumpJobQueue(getSpcAbsolutePath(), getJobQueue());
+						}
 					}
 
 				} catch (Throwable t) {
@@ -203,9 +221,16 @@ public class Spc extends SpcBase {
 					continue;
 				}
 
-				JobQueueResult jobQueueResult = JobQueueOperations.isJobQueueOver(getJobQueue());
-
+				// Senaryoda guncelleme oldugunu kontrol icin bu kismi ekledik. Infobus a konacak. hs
+				if(updateLSIDateTime) {
+					isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
+					updateLSIDateTime = false;
+				}
+				
 				// Job kuyrugundaki islerin hepsi bitti mi, bitti ise LiveStateInfo yu set et.
+				
+				JobQueueResult jobQueueResult = JobQueueOperations.isJobQueueOver(getJobQueue());
+				
 				if (jobQueueResult.isJobQueueOver()) {
 					/**
 					 * Şimdilik istenen koşulu aşağıdaki şekilde kabul ettim ancak
