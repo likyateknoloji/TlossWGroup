@@ -182,8 +182,25 @@
 					<xs:attribute name="jname" use="required" type="xs:string" />
 					<xs:attribute name="startTime" use="required" type="xs:dateTime" />
 					<xs:attribute name="stopTime" use="required" type="xs:dateTime" />
+					<xs:attribute name="pendingTime" use="optional" type="xs:string" />
+					<xs:attribute name="runningTime" use="optional" type="xs:string" />
+					<xs:attribute name="finishTime" use="optional" type="xs:string" />
 					<xs:attribute name="isFinished" default="true" use="optional"
 						type="xs:boolean" />
+					<xs:attribute name="LSIDateTime" use="optional"
+						type="xs:dateTime" />
+					<xs:attribute name="jobId" default="0" use="optional"
+						type="xs:string" />
+					<xs:attribute name="scenarioId" default="0" use="optional"
+						type="xs:string" />
+					<xs:attribute name="result" default="0" use="optional"
+						type="xs:string" />
+					<xs:attribute name="planId" default="0" use="optional"
+						type="xs:string" />
+					<xs:attribute name="runId" default="0" use="optional"
+						type="xs:integer" />
+					<xs:attribute name="agentId" default="0" use="optional"
+						type="xs:integer" />
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
