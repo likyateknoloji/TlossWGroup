@@ -1,0 +1,76 @@
+<ui:composition template="/templates/common/commonLayout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="title"
+		value="Tlos SW Workload Automation Software v1.0 - Dashboard" />
+
+	<ui:define name="center">
+
+
+		<h:form id="dashboardReports" prependId="false">
+
+			<p:messages id="messages" showDetail="true" autoUpdate="true" />
+
+			<p:fieldset legend="#{msgs['tlos.reports.chartDuration.header']}" widgetVar="dashWidget"
+				style="width: 1300px;">
+
+
+                    <p:poll interval="15" update="jobsDuration" />
+
+					<p:panel id="jobsDuration"
+						header="#{msgs['tlos.reports.chartDuration.header']}">
+						<p:barChart id="curHorizontal" 
+						    xaxisAngle="20"
+						    min="0.0"
+						    stacked="true"
+						    xaxisLabel="Durations as Sec"
+						    yaxisLabel="Job Names"
+							value="#{jobsStateDurationsReportMBean.curDurationModel}"
+							seriesColors="000000, FFFF00, 0000FF, 01DF01, FF0000" 
+							animate="true" 
+							zoom="true"
+							legendPosition="ne" 
+							style="width:1200px;height:600px"
+							orientation="horizontal" 
+							widgetVar="jobsDurationWidget"/>
+							
+						<p:commandButton value="#{msgs['tlos.button.chartRefresh']}"
+							ajax="true" update="jobsDuration" actionListener="#{jobsStateDurationsReportMBean.refreshCurDurationChart}" />
+							
+						<p:commandButton type="button" value="Export"
+							icon="ui-icon-extlink" onclick="exportChart()" />
+
+						<p:dialog widgetVar="dlg" showEffect="fade" modal="true" appendToBody="true"
+							header="Chart as an Image">
+							<p:outputPanel id="output" layout="block"
+								style="width:400px;height:400px" />
+						</p:dialog>
+					</p:panel>
+
+					<br />
+
+					<ui:include src="/inc/reportPanels/parameterSettingPanel.xhtml">
+						<ui:param name="backingBean" value="#{jobsStateDurationsReportMBean}" />
+					</ui:include>
+
+			</p:fieldset>
+
+		</h:form>
+		<script type="text/javascript">
+			function exportChart() {
+				//export image  
+				$('#output').empty().append(jobsDurationWidget.exportAsImage());
+
+				//show the dialog  
+				dlg.show();
+			}
+		</script>
+	</ui:define>
+	<ui:define name="west">
+		<ui:include src="/inc/reportPanels/dashboardReportTypes.xhtml" />
+	</ui:define>
+</ui:composition>
