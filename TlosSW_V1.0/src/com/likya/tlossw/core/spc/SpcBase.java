@@ -55,7 +55,8 @@ public abstract class SpcBase implements Runnable, Serializable {
 	private String nativeRunId;
 	private boolean concurrent;
 	private String userId;
-
+    private String LSIDateTime;
+    
 	private BaseScenarioInfos baseScenarioInfos;
 	private DependencyList dependencyList;
 	private ScenarioStatusList scenarioStatusList;
@@ -588,6 +589,14 @@ public abstract class SpcBase implements Runnable, Serializable {
 
 	public void setManagement(Management management) {
 		this.management = management;
+	}
+
+	public String getLSIDateTime() {
+		return LSIDateTime;
+	}
+
+	public void setLSIDateTime(String lSIDateTime) {
+		LSIDateTime = lSIDateTime;
 	}
 
 }
