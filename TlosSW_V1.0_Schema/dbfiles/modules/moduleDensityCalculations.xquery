@@ -165,8 +165,7 @@ declare function density:recStat($documentUrl as xs:string, $reportParameters as
   let $order := $sortingA/@order
 
   let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
-  let $includedJobs  := $stateRelatedA2/@includedJobs
-  let $includePendingJobs  := $stateRelatedA2/@includePendingJobs
+  let $stateFilter  := $stateRelatedA2/@stateFilter
 
   let $statisticsA := $reportParameters/rep:statisticsA
   let $statSampleNumber  := $statisticsA/@statSampleNumber
