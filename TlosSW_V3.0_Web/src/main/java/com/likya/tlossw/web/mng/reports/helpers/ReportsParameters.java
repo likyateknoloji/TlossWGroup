@@ -80,8 +80,7 @@ public class ReportsParameters implements Serializable {
 	private LiveStateInfosType liveStateInfos;
 
 	/* STATERELATEDA2 */
-	private FilterByResult.Enum includedJobs = FilterByResult.RESULTED;
-	private Boolean includePendingJobs = true;
+	private FilterByResult.Enum includedJobs = FilterByResult.FINISHED;
 
 	/* STATISTICSA */
 	private short statSampleNumber = 3;
@@ -134,7 +133,7 @@ public class ReportsParameters implements Serializable {
 		substateNameStr = SubstateName.ON_RESOURCE.toString();
 		statusNameStr = StatusName.TIME_IN.toString();
 
-		includedJobsStr = FilterByResult.RESULTED.toString();
+		includedJobsStr = FilterByResult.FINISHED.toString();
 
 		orderByStr = OrderByType.DURATION.toString();
 		orderStr = OrderType.DESCENDING.toString();
@@ -237,13 +236,12 @@ public class ReportsParameters implements Serializable {
 		return stateRelatedA1;
 	}
 
-	private void setStateRelatedA2(FilterByResult.Enum includedJobs, Boolean includePendingJobs) {
+	private void setStateRelatedA2(FilterByResult.Enum stateFilter) {
 		if (stateRelatedA2 == null) {
 			stateRelatedA2 = reportParams.addNewStateRelatedA2();
 		}
 
-		stateRelatedA2.setIncludedJobs(includedJobs);
-		stateRelatedA2.setIncludePendingJobs(includePendingJobs);
+		stateRelatedA2.setStateFilter(stateFilter);
 	}
 
 	private StateRelatedA2 getStateRelatedA2() {
@@ -347,7 +345,7 @@ public class ReportsParameters implements Serializable {
 
 		setStateRelatedA1(stateName, substateName, statusName);
 
-		setStateRelatedA2(includedJobs, includePendingJobs);
+		setStateRelatedA2(includedJobs);
 
 		setStatisticsA(statSampleNumber);
 
@@ -381,14 +379,6 @@ public class ReportsParameters implements Serializable {
 
 	public void setReportParametersXML(String reportParametersXML) {
 		this.reportParametersXML = reportParametersXML;
-	}
-
-	public Boolean getIncludePendingJobs() {
-		return includePendingJobs;
-	}
-
-	public void setIncludePendingJobs(Boolean includePendingJobs) {
-		this.includePendingJobs = includePendingJobs;
 	}
 
 	public String getJobId() {
