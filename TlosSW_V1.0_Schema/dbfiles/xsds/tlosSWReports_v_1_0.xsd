@@ -223,8 +223,10 @@
 
 	<xs:simpleType name="filterByResult">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="RESULTED" />
-			<xs:enumeration value="RUNNING" />
+		    <xs:enumeration value="PENDING" />
+		    <xs:enumeration value="RUNNING" />
+			<xs:enumeration value="FINISHED" />
+			
 			<xs:enumeration value="ALL" />
 		</xs:restriction>
 	</xs:simpleType>
@@ -283,7 +285,7 @@
 
 	<xs:element name="stateRelatedA2">
 		<xs:complexType>
-			<xs:attribute name="includedJobs" default="ALL" use="optional"
+			<xs:attribute name="stateFilter" default="ALL" use="optional"
 				type="filterByResult" />
 			<xs:attribute name="includePendingJobs" default="false"
 				use="optional" type="xs:boolean" />
