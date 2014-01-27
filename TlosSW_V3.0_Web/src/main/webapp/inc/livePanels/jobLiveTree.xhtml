@@ -8,13 +8,21 @@
 
 	<h:form id="liveForm">
 		<p:growl id="messages" showDetail="true" sticky="false" />
-
 		<br></br>
 
 		<p:fieldset id="jobManagement"
 			legend="#{msgs['tlos.live.pannel.job.header']} - #{jobMBean.jobInTyCl.jobName}"
 			style="width: 96%;">
-
+			<p:panel id="jobProgressPanel">
+              <p:panelGrid id="progress" columns="4">
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.progress']}" />
+					<p:progressBar style="width: 150px;" value="#{jobMBean.normalizedDuration}" labelTemplate="{value}%" displayOnly="true"/>
+						
+					<h:outputText value="#{msgs['tlos.workspace.pannel.job.duration']}" />
+					<p:inputText value="#{jobMBean.jobInTyCl.workDuration}" readonly="true"
+						maxlength="500" style="width: 150px;" />
+              </p:panelGrid>
+            </p:panel>
 			<p:panel id="jobInfoPanel">
 				<p:panelGrid columns="4">
 					<h:outputText value="#{msgs['tlos.live.pannel.job.jobName']}" />
@@ -24,7 +32,7 @@
 					<h:outputText value="#{msgs['tlos.workspace.pannel.job.oSystem']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.oSystem}" readonly="true"
 						maxlength="500" style="width: 150px;" />
-
+						
 					<h:outputText
 						value="#{msgs['tlos.live.pannel.job.jobCommandType']}" />
 					<p:inputText value="#{jobMBean.jobInTyCl.jobCommandType}"
@@ -46,7 +54,8 @@
 					<h:outputText
 						value="#{msgs['tlos.live.pannel.job.commandContent']}"
 						rendered="#{jobMBean.jobInTyCl.jobCommandType eq 'BATCH PROCESS' or jobMBean.jobInTyCl.jobCommandType eq 'SYSTEM COMMAND'}" />
-					<p:commandButton id="openJobCommandContent" value="#{msgs['tlos.button.open']}"
+					<p:commandButton id="openJobCommandContent"
+						value="#{msgs['tlos.button.open']}"
 						rendered="#{(jobMBean.jobInTyCl.jobCommandType eq 'BATCH PROCESS' or jobMBean.jobInTyCl.jobCommandType eq 'SYSTEM COMMAND') and jobMBean.jobCommandExist}"
 						action="#{jobMBean.openJobCommandAction}"
 						update=":liveForm:jobCommandPanel"
@@ -88,12 +97,16 @@
 					<p:inputText value="#{jobMBean.jobInTyCl.jobPriority}"
 						readonly="true" maxlength="500" style="width: 150px;" />
 
+					<h:outputText id="completionDateText" value="#{msgs['tlos.live.pannel.job.priority']}" />
+					<p:inputText id="completionDateOutput" value="#{jobMBean.jobInTyCl.completionDate}"
+						readonly="true" maxlength="500" style="width: 150px;" />
+						
 					<h:outputText value="#{msgs['tlos.live.pannel.job.status']}" />
 					<p:inputText
 						styleClass="#{userPreferencesBean.getJobStateColorCss(jobMBean.jobInTyCl.liveStateInfo)}"
 						value="#{jobMBean.jobInTyCl.liveStateInfo.statusName}"
 						readonly="true" maxlength="500" style="width: 150px;" />
-
+						
 					<h:outputText value="#{msgs['tlos.live.pannel.job.ResultDesc']}" />
 					<p:inputTextarea value="#{jobMBean.jobInTyCl.errorMessage}"
 						rows="3" cols="40" readonly="true" maxlength="100"
@@ -140,7 +153,8 @@
 
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameter.active']}">
-						<p:selectBooleanCheckbox id="isActive" value="#{item.active}" disabled="true" />
+						<p:selectBooleanCheckbox id="isActive" value="#{item.active}"
+							disabled="true" />
 					</p:column>
 
 					<p:column
@@ -153,8 +167,7 @@
 					<p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterName']}"
 						sortBy="#{item.name}">
-						<h:outputText value="#{item.name}"
-							style="text-align: center;" />
+						<h:outputText value="#{item.name}" style="text-align: center;" />
 					</p:column>
 
 					<p:column
@@ -163,19 +176,19 @@
 						<h:outputText value="#{item.desc}" style="text-align: center;" />
 					</p:column>
 
-					<p:column 
-					rendered="#{!((jobMBean.jobInTyCl.retriable and security.RetryJob) or (jobMBean.jobInTyCl.successable and security.SetSuccessJob) 
+					<p:column
+						rendered="#{!((jobMBean.jobInTyCl.retriable and security.RetryJob) or (jobMBean.jobInTyCl.successable and security.SetSuccessJob) 
 								or (jobMBean.jobInTyCl.skippable and security.SkipJob) or (jobMBean.jobInTyCl.stopable and security.StopJob) 
 								or (jobMBean.jobInTyCl.pausable and security.PauseJob and jobMBean.jobInTyCl.liveStateInfo.statusName ne 'USER-WAITING' and jobMBean.jobInTyCl.liveStateInfo.statusName ne 'USER-CHOOSE-RESOURCE') 
 								or (jobMBean.jobInTyCl.resumable and security.ResumeJob) or (jobMBean.jobInTyCl.startable and security.StartJob) 
 								or (jobMBean.jobInTyCl.liveStateInfo.statusName eq 'USER-WAITING' and security.StartUserBasedJob) 
 								or (jobMBean.jobInTyCl.liveStateInfo.statusName eq 'USER-CHOOSE-RESOURCE' and security.ShowAvailableResourcesForJob))}"
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterValue']}">
-							<p:inputTextarea value="#{item.valueString != null ? item.valueString : (item.preValue != null ? item.preValue.stringValue : ' ')}"
-								rows="3"
-								cols="100" autoResize="false" />
+						<p:inputTextarea
+							value="#{item.valueString != null ? item.valueString : (item.preValue != null ? item.preValue.stringValue : ' ')}"
+							rows="3" cols="100" autoResize="false" />
 					</p:column>
-						
+
 					<!-- p:column
 						headerText="#{msgs['tlos.workspace.pannel.job.parameterPreValue']}"
 						sortBy="#{item.preValue.stringValue}">
@@ -482,7 +495,7 @@
 							<h:outputText value="#{msgs['tlos.live.pannel.job.jobReport']}" />
 						</f:facet>
 
-						<p:commandButton id="jobReportButton"
+						<p:commandButton id="jobReportButton1"
 							value="#{msgs['tlos.live.pannel.job.getReport']}"
 							action="#{jobMBean.openReportDetailAction}"
 							update=":liveForm:jobReportDetailPanel"
@@ -588,4 +601,28 @@
 
 	</h:form>
 
+	<script type="text/javascript">
+		function start() {
+			PF('startButton1').disable();
+
+			window['progress'] = setInterval(
+					function() {
+						var pbClient = PF('pbClient'), oldValue = pbClient
+								.getValue(), newValue = oldValue + 10;
+
+						pbClient.setValue(pbClient.getValue() + 10);
+
+						if (newValue === 100) {
+							clearInterval(window['progress']);
+						}
+
+					}, 1000);
+		}
+
+		function cancel() {
+			clearInterval(window['progress']);
+			PF('pbClient').setValue(0);
+			PF('startButton1').enable();
+		}
+	</script>
 </ui:composition>
