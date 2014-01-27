@@ -118,19 +118,19 @@ public class JobsStateDurationsReportMBean extends ReportBase implements Seriali
 		String serverTimeZone = new String("Europe/Istanbul"); // Bu server ın olduğu makinadan otomatik mi alınsın, yoksa kullanıcı mı seçsin. Yoksa ikisi birlikte mi?
 		
 		ChartSeries jobsStarting = new ChartSeries();
-		jobsStarting.setLabel("Starting");
+		jobsStarting.setLabel(resolveMessage("tlos.workspace.pannel.successCode.starting"));
 		
 		ChartSeries jobsPending = new ChartSeries();
-		jobsPending.setLabel("Pending Job Durations");
+		jobsPending.setLabel(resolveMessage("tlos.workspace.pannel.successCode.pending"));
 		
 		ChartSeries jobsRunning = new ChartSeries();
-		jobsRunning.setLabel("Running Job Durations");
+		jobsRunning.setLabel(resolveMessage("tlos.workspace.pannel.successCode.working"));
 
 		ChartSeries jobsFinishedS = new ChartSeries();
-		jobsFinishedS.setLabel("Fİnished Success");
+		jobsFinishedS.setLabel(resolveMessage("tlos.workspace.pannel.successCode.success"));
 
 		ChartSeries jobsFinishedF = new ChartSeries();
-		jobsFinishedF.setLabel("Fİnished Failed");
+		jobsFinishedF.setLabel(resolveMessage("tlos.workspace.pannel.successCode.fail"));
 		
 		i=0;
 		long MINTIME1 = 3000;
@@ -180,20 +180,23 @@ public class JobsStateDurationsReportMBean extends ReportBase implements Seriali
 			if(pendingTime < MINTIME1 && !job.getPendingTime().isEmpty()) pendingTime = MINTIME1;
 			if(runningTime < MINTIME1 && !job.getRunningTime().isEmpty()) runningTime = MINTIME1;
 
-			startingTime = (long) (startingTime / 1000) % 60 ;
-			pendingTime = (long) (pendingTime / 1000) % 60 ;
-			runningTime = (long) (runningTime / 1000) % 60 ;
-			finishTimeS = (long) (finishTimeS / 1000) % 60 ;
-			finishTimeF = (long) (finishTimeF / 1000) % 60 ;
+			startingTime = (long) (startingTime / 1000);
+			pendingTime = (long) (pendingTime / 1000);
+			runningTime = (long) (runningTime / 1000);
+			finishTimeS = (long) (finishTimeS / 1000);
+			finishTimeF = (long) (finishTimeF / 1000);
+			
+			long maxValue = java.lang.Math.max(java.lang.Math.max(java.lang.Math.max(startingTime, pendingTime), runningTime), finishTimeS);
+			long unitValue = maxValue / 20;
 			
 //			int minutes = (int) ((milliseconds / (1000*60)) % 60);
 //			int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
 			
-			jobsStarting.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), startingTime);
-			jobsPending.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), pendingTime);
-			jobsRunning.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), runningTime);
-			jobsFinishedS.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeS);
-			jobsFinishedF.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeF);
+			jobsStarting.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), startingTime < unitValue ? unitValue : startingTime);
+			jobsPending.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), pendingTime < unitValue ? unitValue : pendingTime);
+			jobsRunning.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), runningTime < unitValue ? unitValue : runningTime);
+			jobsFinishedS.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeS < unitValue && finishTimeS != 0 ? unitValue : finishTimeS);
+			jobsFinishedF.set( i + "-" + job.getId() + " " + job.getJname() + (job.getIsFinished() ? "" : " *"), finishTimeF < unitValue && finishTimeF != 0  ? unitValue : finishTimeF);
 
 		  }
 		}
