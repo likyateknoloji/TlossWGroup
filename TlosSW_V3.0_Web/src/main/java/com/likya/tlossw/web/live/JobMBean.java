@@ -1,7 +1,12 @@
 package com.likya.tlossw.web.live;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -13,6 +18,7 @@ import org.primefaces.context.RequestContext;
 
 import com.likya.tlos.model.xmlbeans.alarmhistory.AlarmDocument.Alarm;
 import com.likya.tlos.model.xmlbeans.data.JobPropertiesDocument.JobProperties;
+import com.likya.tlos.model.xmlbeans.state.StateNameDocument.StateName;
 import com.likya.tlossw.model.AlarmInfoTypeClient;
 import com.likya.tlossw.model.DocMetaDataHolder;
 import com.likya.tlossw.model.client.spc.JobInfoTypeClient;
@@ -63,6 +69,12 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	private boolean transformToLocalTime;
 
+	private long durationInMillis;
+	
+	private long normalizedDuration;
+	
+	private String startDate;
+	
 	private LiveJobManagementBean liveJobManagementBean;
 
 	@PostConstruct
@@ -71,8 +83,8 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 	}
 
 	public void fillJobLivePanel(String spcFullPath, String jobId) {
+		fillJobReportGrid(jobId);
 		setJobInfo(spcFullPath, jobId);
-		fillJobReportGrid();
 		fillJobAlarmGrid();
 	}
 
@@ -101,6 +113,54 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 				}
 				jobDependencyListStr = jobDependencyListStr.substring(0, jobDependencyListStr.length() - 1);
 			}
+			
+			// Stats
+			    double tot = 0.0;
+			    double minValue = 1000000.0;
+			    double maxValue = 0.0;
+			    int freq = 0;
+			    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+			    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+			    
+				for (Iterator<JobInfoTypeClient> iter = jobBaseReportList.iterator(); iter.hasNext(); ) {
+					JobInfoTypeClient var = iter.next();
+					Date duration = null;
+					try {
+						duration = dateFormat.parse(var.getWorkDuration());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					double durationInMillis = duration.getTime();
+										
+					if(var.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
+						freq++;
+						tot += durationInMillis;
+
+						if(durationInMillis < minValue) {
+							minValue = durationInMillis;
+						}
+						if(durationInMillis > maxValue) {
+							maxValue = durationInMillis;
+						}
+					}
+				}
+				jobInTyCl.setMin(minValue);
+				jobInTyCl.setMax(maxValue);
+				jobInTyCl.setAvg(tot / freq);
+				try {
+					durationInMillis = dateFormat.parse(jobInTyCl.getWorkDuration()).getTime();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				normalizedDuration = 100;
+				if(!jobInTyCl.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
+				  if(jobInTyCl.getAvg() != 0.0) 
+				    normalizedDuration = (long) ((durationInMillis > (long) jobInTyCl.getAvg()) ? 100 : (durationInMillis/jobInTyCl.getAvg())*100 );
+				}
+				
+				startDate = jobInTyCl.getCompletionDate();
 		} else {
 			System.out.println("Sunucudan is bilgisi alinamadi. Sunucu kapali, yada erisim saglanamiyor !!!");
 		}
@@ -145,14 +205,14 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 		jobLog = TEJmxMpClient.readFile(getWebAppUser(), LiveUtils.getConcatenatedPathAndFileName(jobDef.getJobLogPath(), jobDef.getJobLogName())).toString();
 	}
 
-	public void fillJobReportGrid() {
+	public void fillJobReportGrid(String jobId) {
 		// son 3 rundaki calisma listesini istiyor
 
 		String docId = getDocId(DocMetaDataHolder.FIRST_COLUMN);
 		int numberOfRun = 3;
 		transformToLocalTime = getSessionMediator().getUserPreferencesBean().isTransformToLocalTime();
 		
-		jobBaseReportList = getDbOperations().getJobResultList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobInTyCl.getJobId(), numberOfRun, transformToLocalTime);
+		jobBaseReportList = getDbOperations().getJobResultList(docId, getWebAppUser().getId(), getSessionMediator().getDocumentScope(docId), jobId, numberOfRun, transformToLocalTime);
 	}
 
 	public void fillJobAlarmGrid() {
@@ -354,6 +414,30 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 
 	public void setParameterTable(DataTable parameterTable) {
 		this.parameterTable = parameterTable;
+	}
+
+	public long getDurationInMillis() {
+		return durationInMillis;
+	}
+
+	public void setDurationInMillis(long durationInMillis) {
+		this.durationInMillis = durationInMillis;
+	}
+
+	public long getNormalizedDuration() {
+		return normalizedDuration;
+	}
+
+	public void setNormalizedDuration(long normalizedDuration) {
+		this.normalizedDuration = normalizedDuration;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
 	}
 
 }
