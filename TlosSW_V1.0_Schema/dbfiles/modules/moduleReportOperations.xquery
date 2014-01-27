@@ -62,8 +62,7 @@ declare function hs:calculateBaseStats($documentUrl as xs:string, $reportParamet
   let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
 
   let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
-  let $includedJobs  := $stateRelatedA2/@includedJobs
-  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
+  let $stateFilter  := $stateRelatedA2/@stateFilter
 
   let $statisticsA := $reportParameters/rep:statisticsA
   let $statSampleNumber  := $statisticsA/@statSampleNumber
@@ -176,8 +175,7 @@ declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters a
   let $countInstancesAsOne := xs:boolean($setA/@countInstancesAsOne)
 
   let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
-  let $includedJobs  := $stateRelatedA2/@includedJobs
-  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
+  let $stateFilter  := $stateRelatedA2/@stateFilter
 
 
     let $dailyScenariosDocumentUrl := met:getMetaData($documentUrl, "scenarios")
@@ -204,24 +202,24 @@ declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters a
                             if($justFirstLevel)
                             then (: $rootScenarioFirstLevelJobs :)
                              for $runx in $x/dat:jobList/dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $stateFilter eq xs:string("PENDING") or $stateFilter eq xs:string("ALL"))]
                              order by $runx/@id descending
                              return $runx
                             else (: $rootScenarioAllJobs :)
                              for $runx in $x//dat:jobProperties
-                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
+                             where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $stateFilter eq xs:string("PENDING") or $stateFilter eq xs:string("ALL"))]
                              order by $runx/@id descending
                              return $runx
                           else
                             if($justFirstLevel)
                             then (: $otherScenarioFirstLevelJobs :)
                               for $runx in $x//dat:scenario[@ID = $scenarioId]/dat:jobList/dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $stateFilter eq xs:string("PENDING") or $stateFilter eq xs:string("ALL"))]
                               order by $runx/@id descending
                               return $runx
                             else (: $otherScenarioAllJobs :)
                               for $runx in $x//dat:scenario[@ID = $scenarioId]//dat:jobProperties
-                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $includePendingJobs)]
+                              where $runx[(@ID = $jobId or $jobId = 0) and ( (boolean(@agentId) and not(@agentId='0')) or $stateFilter eq xs:string("PENDING") or $stateFilter eq xs:string("ALL"))]
                               order by $runx/@id descending
                               return $runx
                               
@@ -253,7 +251,7 @@ declare function hs:getJobsReport($documentUrl as xs:string, $reportParameters a
                    let $scenario :=  if($scenarioId eq "0") 
                                      then $runElements/dat:TlosProcessData[@ID eq $scenarioId]
                                      else $runElements/dat:TlosProcessData//dat:scenario[@ID eq $scenarioId]
-                   let $isJobFinished := hs:isJobFinished($xjob/dat:stateInfos/state-types:LiveStateInfos)
+                   let $isJobFinished := hs:isJobInState($xjob/dat:stateInfos/state-types:LiveStateInfos, xs:string("FINISHED"))
                    
                    let $startdate := hs:getJobStartDate( $xjob )
                    let $starttime := hs:getJobStartTime( $xjob )
@@ -317,15 +315,15 @@ declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:
   let $order := $sortingA/@order
 
   let $stateRelatedA2 := $reportParameters/rep:stateRelatedA2
-  let $includedJobs  := $stateRelatedA2/@includedJobs
-  let $includePendingJobs  := xs:boolean($stateRelatedA2/@includePendingJobs)
+  let $stateFilter  := $stateRelatedA2/@stateFilter
 
   let $resultArrayAsc := <rep:jobArray> {
      for $job in $n/dat:jobProperties
     (: hs. is bazen transfering state de kalabiliyor. Bu durumda LSIDateTime dan baslama zamanini aliyoruz. Belkide N/A yapmak gerekir. Emin degilim :)
     
-     let $isJobFinished := hs:isJobFinished($job/dat:stateInfos/state-types:LiveStateInfos)
-      
+     let $isJobFinished := hs:isJobInState($job/dat:stateInfos/state-types:LiveStateInfos, xs:string("FINISHED"))
+     let $isJobPending := hs:isJobInState($job/dat:stateInfos/state-types:LiveStateInfos, xs:string("PENDING"))
+	 
      let $startdate := hs:getJobStartDate( $job )
      let $starttime := hs:getJobStartTime( $job )
                        
@@ -361,7 +359,7 @@ declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:
                        else if( compare($orderBy, xs:string("STARTTIME")) = 0 )
                        then dateTime($startdate, $starttime)
                        else dateTime($stopdate, $stoptime)
-     let $includeJob := $isJobFinished or $includePendingJobs
+     let $includeJob := $stateFilter eq xs:string("ALL") or ( $isJobFinished and $stateFilter eq xs:string("FINISHED") ) or ( $isJobPending and $stateFilter eq xs:string("PENDING") )
      where $includeJob
      order by $orderByTD
     return <rep:job id="{$job/@ID}" jname="{$job/dat:baseJobInfos/com:jsName}" startTime="{$startDateTime}" stopTime="{$stopDateTime}" pendingTime="{$pendingDT}" runningTime="{$runningDT}" finishTime="{$finishDT}" isFinished="{$isJobFinished}" result="{$finishResult}" LSIDateTime="{$job/@LSIDateTime}" runId="{$job/@runId}" planId="{$job/@planId}" scenarioId="{$job/@scenarioId}" agentId="{$job/@agentId}" > { $diffInTime }</rep:job>
@@ -377,14 +375,14 @@ declare function hs:getJobArray($n as node()*, $reportParameters as element(rep:
    
   let $durationList := 
     for $dur in $resultArrayAsc/rep:job
-    where not(hs:nACheck($dur/@stopTime)) or $includePendingJobs (: ya sonlanmis is olacak yada pending state de olsa bile listeye dahil et denecek :)
+    where $stateFilter eq xs:string("ALL") or ( $dur/@isFinished and $stateFilter eq xs:string("FINISHED") ) or ( not($dur/@isFinished) and $stateFilter eq xs:string("PENDING") )  (: ya sonlanmis is olacak yada pending state de olsa bile listeye dahil et denecek :)
     return
       $dur
 
 
   let $isUnfinishedCount := 
     count( for $dur in $resultArrayAsc/rep:job
-           where ( not(hs:nACheck($dur/@stopTime)) or $includePendingJobs) and not(xs:boolean($dur/@isFinished)) (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
+           where $stateFilter eq xs:string("ALL") or ( $dur/@isFinished and $stateFilter eq xs:string("FINISHED") ) or ( not($dur/@isFinished) and $stateFilter eq xs:string("PENDING") ) and not(xs:boolean($dur/@isFinished)) (: ya sonlanmis is olacak yada sonuclanmasa bile listeye dahil et denecek :)
            return $dur )
   
   let $isFinished := if( $isUnfinishedCount>0 ) then false() else true()
@@ -426,7 +424,8 @@ declare function hs:getJobStateDT( $states as element(state-types:LiveStateInfos
                                 else
                                   ()
                  return $thisState
-    return $theState/@LSIDateTime
+    let $theState1 := $theState[1]
+    return $theState1/@LSIDateTime
 };
 
 declare function hs:getOverallReport($documentUrl as xs:string, $reportParameters as element(rep:reportParameters)) as node()*
@@ -507,9 +506,9 @@ declare function hs:get-dayTimeDuration-from-dateTimes($dateTime1 as xs:dateTime
     $dateTime1 - $dateTime2
 };
 
-declare function hs:isJobFinished( $states as element(state-types:LiveStateInfos) ) as xs:boolean
+declare function hs:isJobInState( $states as element(state-types:LiveStateInfos), $inState as xs:string) as xs:boolean
 {
-    if( compare( $states/state-types:LiveStateInfo[position() = 1]/state-types:StateName/text(), xs:string("FINISHED")) eq 0 ) 
+    if( compare( $states/state-types:LiveStateInfo[position() = 1]/state-types:StateName/text(), $inState) eq 0 ) 
     then true() 
     else false()
 };
