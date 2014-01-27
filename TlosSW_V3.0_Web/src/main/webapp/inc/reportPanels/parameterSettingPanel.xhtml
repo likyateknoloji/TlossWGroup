@@ -110,10 +110,6 @@
 						<p:ajax partialSubmit="true"></p:ajax>
 					</p:selectOneMenu>
 
-					<h:outputText
-						value="#{msgs['tlos.report.param.includePendingJobs']}" />
-					<p:selectBooleanCheckbox
-						value="#{backingBean.reportParameters.includePendingJobs}" />
 				</p:panelGrid>
 				<h:panelGrid id="jsStatePanel" columns="1"
 					rendered="#{backingBean.isParameterVisible(backingBean.getStateRelateda1())}">
