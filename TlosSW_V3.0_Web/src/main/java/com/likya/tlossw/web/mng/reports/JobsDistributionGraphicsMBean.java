@@ -121,19 +121,19 @@ public class JobsDistributionGraphicsMBean extends ReportBase implements Seriali
 		jobsAbsoluteZero.setLabel("0");
 		
 		ChartSeries jobsStarting = new ChartSeries();
-		jobsStarting.setLabel("Waiting");
+		jobsStarting.setLabel(resolveMessage("tlos.workspace.pannel.successCode.waiting"));
 		
 		ChartSeries jobsPending = new ChartSeries();
-		jobsPending.setLabel("Pending Job Durations");
+		jobsPending.setLabel(resolveMessage("tlos.workspace.pannel.successCode.pending"));
 		
 		ChartSeries jobsRunning = new ChartSeries();
-		jobsRunning.setLabel("Running Job Durations");
+		jobsRunning.setLabel(resolveMessage("tlos.workspace.pannel.successCode.working"));
 
 		ChartSeries jobsFinishedS = new ChartSeries();
-		jobsFinishedS.setLabel("Fİnished Success");
+		jobsFinishedS.setLabel(resolveMessage("tlos.workspace.pannel.successCode.success"));
 
 		ChartSeries jobsFinishedF = new ChartSeries();
-		jobsFinishedF.setLabel("Fİnished Failed");
+		jobsFinishedF.setLabel(resolveMessage("tlos.workspace.pannel.successCode.fail"));
 		
 		i=0;
 		long MINTIME1 = 3000;
