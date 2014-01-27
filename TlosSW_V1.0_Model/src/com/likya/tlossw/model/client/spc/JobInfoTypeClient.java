@@ -49,6 +49,11 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 	private String inParameterName;
 	private int inParameterType;
 	private String inParameterValue;
+	
+	// Stats
+	private double max;
+	private double min;
+	private double avg;
 
 	private ArrayList<Parameter> parameterList = new ArrayList<Parameter>();
 	private Parameter selectedRow;
@@ -272,6 +277,30 @@ public class JobInfoTypeClient extends JobInfoTypeClientBase {
 
 	public void setRelativePath(String relativePath) {
 		this.relativePath = relativePath;
+	}
+
+	public double getMax() {
+		return max;
+	}
+
+	public void setMax(double max) {
+		this.max = max;
+	}
+
+	public double getMin() {
+		return min;
+	}
+
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+	public double getAvg() {
+		return avg;
+	}
+
+	public void setAvg(double avg) {
+		this.avg = avg;
 	}
 
 }
