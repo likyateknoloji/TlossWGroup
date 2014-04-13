@@ -137,12 +137,12 @@ public class Spc extends SpcBase {
 		LiveStateInfo savedLiveStateInfo = null;
 		boolean updateLSIDateTime = false;
 		
-		String runId = getSpcNativeFullPath().getRunId();
+		// String runId = getSpcNativeFullPath().getRunId();
 		setLSIDateTime(DateUtils.getServerW3CDateTime());
 		
 		String referenceDateForUpdate = getLSIDateTime();
 		
-		boolean isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
+		// boolean isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
 		
 		while (executionPermission) { // Senaryonun caslistirilmasi icin gerek sart !
 
@@ -223,7 +223,7 @@ public class Spc extends SpcBase {
 
 				// Senaryoda guncelleme oldugunu kontrol icin bu kismi ekledik. Infobus a konacak. hs
 				if(updateLSIDateTime) {
-					isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
+					// isLSIDateTimeUpdated = DBUtils.updateLSIDateTimeInScenario( runId, referenceDateForUpdate,  getSpcNativeFullPath().getId().toString());
 					updateLSIDateTime = false;
 				}
 				
