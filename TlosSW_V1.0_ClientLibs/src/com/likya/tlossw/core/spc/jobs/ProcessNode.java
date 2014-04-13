@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import javax.xml.transform.TransformerException;
+
 import org.apache.log4j.Logger;
 
 import com.likya.tlos.model.xmlbeans.common.SpecialParametersDocument.SpecialParameters;
@@ -18,6 +20,7 @@ import com.likya.tlos.model.xmlbeans.state.StatusNameDocument.StatusName;
 import com.likya.tlos.model.xmlbeans.state.SubstateNameDocument.SubstateName;
 import com.likya.tlossw.core.spc.helpers.ParamList;
 import com.likya.tlossw.core.spc.model.JobRuntimeProperties;
+import com.likya.tlossw.exceptions.TransformCodeCreateException;
 import com.likya.tlossw.utils.GlobalRegistry;
 import com.likya.tlossw.utils.LiveStateInfoUtils;
 import com.likya.tlossw.utils.ParsingUtils;
@@ -228,14 +231,14 @@ public class ProcessNode extends Job {
 								// TODO Auto-generated catch block
 								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 								e.printStackTrace();
-							// } catch (TransformCodeCreateException e) {
+							} catch (TransformCodeCreateException e) {
 								// TODO Auto-generated catch block
-							//	e.printStackTrace();
-							//	insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
-							//} catch (TransformerException e) {
-							//	// TODO Auto-generated catch block
-							//	e.printStackTrace();
-							//	insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
+								e.printStackTrace();
+								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
+							} catch (TransformerException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, e.getMessage());
 							}
 						} else if (processNode.getFilter() != null && processNode.getFilter().getType().toString().equalsIgnoreCase("xpath")) {
 							// String inputs[] = null;
