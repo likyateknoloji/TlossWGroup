@@ -3,7 +3,6 @@
 	<property name="appname" value="tlossw-xsd" />
 	
 	<property file="build.properties" />
-	<property name="home.dir" value="${basedir}/.." />
 
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="build.dir" value="${basedir}/build/classes" />
@@ -14,7 +13,7 @@
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
-			<pathelement location="${home.dir}/${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
+			<pathelement location="${libbase.dir}/${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 
@@ -53,7 +52,7 @@
 	</target>
 
 	<target name="initxmlbeans" depends="cleanUp">
-		<property name="xmlbeans.lib" value="${home.dir}/${sharedlib.dir}/xmlbeans-2.5.0" />
+		<property name="xmlbeans.lib" value="${libbase.dir}/${sharedlib.dir}/xmlbeans-2.5.0" />
 
 		<!-- check for xbean.jar from binary distribution -->
 		<available property="xmlbeans.lib" value="${xmlbeans.home}/lib" file="${xmlbeans.home}/lib/xbean.jar" />
