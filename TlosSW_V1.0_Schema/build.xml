@@ -13,7 +13,7 @@
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
-			<pathelement location="${libbase.dir}/${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
+			<pathelement location="${sharedlib.dir}/antlib/ant-contrib-1.0b3.jar" />
 		</classpath>
 	</taskdef>
 
@@ -52,7 +52,7 @@
 	</target>
 
 	<target name="initxmlbeans" depends="cleanUp">
-		<property name="xmlbeans.lib" value="${libbase.dir}/${sharedlib.dir}/xmlbeans-2.5.0" />
+		<property name="xmlbeans.lib" value="${sharedlib.dir}/xmlbeans-2.5.0" />
 
 		<!-- check for xbean.jar from binary distribution -->
 		<available property="xmlbeans.lib" value="${xmlbeans.home}/lib" file="${xmlbeans.home}/lib/xbean.jar" />
