@@ -1,7 +1,7 @@
 <con:AgentConfigInfo xmlns:con="http://www.likyateknoloji.com/XML_agentconfig_types" xmlns:com="http://www.likyateknoloji.com/XML_common_types"  xmlns:res="http://www.likyateknoloji.com/resource-extension-defs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.likyateknoloji.com/XML_agentconfig_types ../xsds/tlosSWAgentConfig_v_1_0.xsd">
     <con:productInfo>
         <com:comment>urun hakkindaki temel bilgileri icerir.</com:comment>
-        <com:date>2014-01-01</com:date>
+        <com:date>2015-01-01</com:date>
         <com:version>1.0 Beta</com:version>
         <com:company>
 			<com:name>Likya Bilgi Teknolojileri</com:name>
