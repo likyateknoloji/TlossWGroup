@@ -131,7 +131,7 @@ public class JobMBean extends TlosSWBaseBean implements JobManagementInterface, 
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					double durationInMillis = duration.getTime();
+					double durationInMillis = duration != null ? duration.getTime() : 0;
 										
 					if(var.getLiveStateInfo().getStateName().equals(StateName.FINISHED)) {
 						freq++;
