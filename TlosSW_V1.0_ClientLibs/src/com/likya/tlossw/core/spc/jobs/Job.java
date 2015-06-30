@@ -79,12 +79,12 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 	private GenericInfoSender genericInfoSender;
 
-	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
+	// GÃ¼n dÃ¶nÃ¼mÃ¼ sonrasÄ± takip eden iÅŸlerle ilgili parametreler
 	// private Job followerJob;
 	// private boolean hasActiveFollower = false;
 	// private boolean safeToRemove = false;
 
-	// Gün dönümü sonrası takip eden işlerle ilgili parametreler
+	// GÃ¼n dÃ¶nÃ¼mÃ¼ sonrasÄ± takip eden iÅŸlerle ilgili parametreler
 
 	boolean updateMySelfAfterMe = false;
 	private boolean stopRepeatativity = false;
@@ -145,7 +145,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 				// yeni zamana kuruldu
 				insertNewLiveStateInfo(StateName.INT_PENDING, SubstateName.INT_IDLED, StatusName.INT_BYTIME);
 			} else {
-				// yeni zamana kurulmadı, artık çalışmayacak
+				// yeni zamana kurulmadÄ±, artÄ±k Ã§alÄ±ÅŸmayacak
 				insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED);
 			}
 		}
@@ -294,7 +294,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 			getGlobalRegistry().getInfoBus().addInfo(jobAllInfo);
 		} else {
 			// System.out.println("Job.sendEndInfo : getGlobalRegistry().getInfoBusManager() == null !");
-			System.out.println("sendFirstJobInfo yapamadım,  getGlobalRegistry().getInfoBus() == null !!");
+			System.out.println("sendFirstJobInfo yapamadÄ±m,  getGlobalRegistry().getInfoBus() == null !!");
 		}
 	}
 
@@ -400,7 +400,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		getJobRuntimeProperties().getJobProperties().getManagement().getTimeManagement().setJsRealTime(jobRealTime);
 
-		// TODO Burayı incelememiz gerekiyor 01.08.2012 Serkan Taş
+		// TODO BurayÄ± incelememiz gerekiyor 01.08.2012 Serkan TaÅŸ
 		// System.err.println("jobRuntimeProperties : " + jobRuntimeProperties);
 		// System.err.println("jobRuntimeProperties.getNativeFullJobPath() : " + jobRuntimeProperties.getNativeFullJobPath());
 		// System.err.println("jobRuntimeProperties.getNativeFullJobPath().getFullPath() : " + jobRuntimeProperties.getNativeFullJobPath().getFullPath());
@@ -548,7 +548,7 @@ public abstract class Job extends Observable implements Runnable, Serializable {
 
 		/* FINISHED state i yoksa ekle */
 		if (!LiveStateInfoUtils.equalStates(jobProperties, StateName.FINISHED, SubstateName.COMPLETED)) {
-			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, err.getMessage());
+			insertNewLiveStateInfo(StateName.INT_FINISHED, SubstateName.INT_COMPLETED, StatusName.INT_FAILED, err.getMessage() != null ? err.getMessage() : " Unkonwn Error, Null pointer exception !");
 		}
 
 		globalLogger.error(err.getMessage());
