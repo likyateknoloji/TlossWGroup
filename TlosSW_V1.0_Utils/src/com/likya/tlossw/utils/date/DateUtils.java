@@ -189,8 +189,22 @@ public class DateUtils {
 
 	public static Calendar addPeriod2TransitionDateTime(Calendar transitionDateTime, Calendar transitionPeriod) {
 		DateTime transitionDateTime2 = new DateTime(transitionDateTime); 
-		transitionDateTime2.plus(transitionPeriod.getTimeInMillis());
-		return transitionDateTime2.toCalendar(Locale.US);
+		
+		int hourOfDay  = transitionPeriod.get(Calendar.HOUR_OF_DAY); // 24 hour clock
+		int minute     = transitionPeriod.get(Calendar.MINUTE);
+		int second     = transitionPeriod.get(Calendar.SECOND);
+		int millisecond= transitionPeriod.get(Calendar.MILLISECOND);
+		
+		if (millisecond == 999 || millisecond == 99)  millisecond += 1;
+		
+		long millisInSec = hourOfDay*60*60*1000 +
+				minute*60*1000 +
+				second*1000 +
+				millisecond;
+
+		
+		return transitionDateTime2.plus(millisInSec).toCalendar(Locale.US);
+		//return transitionDateTime2.toCalendar(Locale.US);
 	}
 	
 	public static Calendar getTransitionDateTime(DatetimeType transitionDateTime) {
