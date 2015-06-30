@@ -46,7 +46,7 @@ public final class LikyaDayKeeper implements Runnable {
 
 			Date currentTime = Calendar.getInstance().getTime();
 
-			if (transitionTime.before(currentTime)) {
+			if (transitionTime.getTime().before(currentTime)) {
 
 				SpaceWideRegistry.getGlobalLogger().info("");
 				SpaceWideRegistry.getGlobalLogger().info("   > Gündönümü gelmiştir !!");
